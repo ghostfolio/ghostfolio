@@ -226,7 +226,7 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 | `accountId`  | `string` (optional) | Id of the account                                                   |
 | `comment`    | `string` (optional) | Comment of the activity                                             |
 | `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                        |
-| `dataSource` | `string`            | `COINGECKO` \| `MANUAL` (for valuables with type `BUY`) \| `YAHOO`  |
+| `dataSource` | `string`            | `COINGECKO` \| `MANUAL` \| `YAHOO`                                  |
 | `date`       | `string`            | Date in the format `ISO-8601`                                       |
 | `fee`        | `number`            | Fee of the activity                                                 |
 | `quantity`   | `number`            | Quantity of the activity                                            |
