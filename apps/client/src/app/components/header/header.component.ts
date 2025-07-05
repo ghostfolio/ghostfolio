@@ -36,8 +36,8 @@ import {
   menuOutline,
   optionsOutline,
   personCircleOutline,
-  radioButtonOnOutline,
-  radioButtonOffOutline
+  radioButtonOffOutline,
+  radioButtonOnOutline
 } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -133,8 +133,8 @@ export class HeaderComponent implements OnChanges {
       menuOutline,
       optionsOutline,
       personCircleOutline,
-      radioButtonOnOutline,
-      radioButtonOffOutline
+      radioButtonOffOutline,
+      radioButtonOnOutline
     });
   }
 

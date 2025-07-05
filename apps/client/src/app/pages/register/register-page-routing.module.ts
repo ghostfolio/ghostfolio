@@ -3,7 +3,6 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 
 import { RegisterPageComponent } from './register-page.component';
 
@@ -17,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [IonIcon, RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class RegisterPageRoutingModule {}
