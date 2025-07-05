@@ -5,7 +5,6 @@
     dividend: activityType === 'DIVIDEND',
     fee: activityType === 'FEE',
     interest: activityType === 'INTEREST',
-    item: activityType === 'ITEM',
     liability: activityType === 'LIABILITY',
     sell: activityType === 'SELL'
   }"
@@ -16,8 +15,6 @@
     <ion-icon name="add-circle-outline" />
   } @else if (activityType === 'FEE') {
     <ion-icon name="hammer-outline" />
-  } @else if (activityType === 'ITEM') {
-    <ion-icon name="cube-outline" />
   } @else if (activityType === 'LIABILITY') {
     <ion-icon name="flame-outline" />
   } @else if (activityType === 'SELL') {

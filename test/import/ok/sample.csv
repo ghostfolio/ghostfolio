@@ -2,5 +2,5 @@ Date,Code,DataSource,Currency,Price,Quantity,Action,Fee,Note
 01-09-2021,Account Opening Fee,MANUAL,USD,0,0,fee,49,
 16-09-2021,MSFT,YAHOO,USD,298.580,5,buy,19.00,My first order 🤓
 17/11/2021,MSFT,YAHOO,USD,0.62,5,dividend,0.00,
-01.01.2022,Penthouse Apartment,MANUAL,USD,500000.0,1,item,0.00,
+01.01.2022,Penthouse Apartment,MANUAL,USD,500000.0,1,buy,0.00,
 20500606,US5949181045,YAHOO,USD,0.00,0,buy,0.00,

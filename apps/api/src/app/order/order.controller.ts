@@ -189,12 +189,15 @@ export class OrderController {
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
     const currency = data.currency;
     const customCurrency = data.customCurrency;
+    const dataSource = data.dataSource;
 
     if (customCurrency) {
       data.currency = customCurrency;
 
       delete data.customCurrency;
     }
+
+    delete data.dataSource;
 
     const order = await this.orderService.createOrder({
       ...data,
@@ -203,12 +206,12 @@ export class OrderController {
         connectOrCreate: {
           create: {
             currency,
-            dataSource: data.dataSource,
+            dataSource,
             symbol: data.symbol
           },
           where: {
             dataSource_symbol: {
-              dataSource: data.dataSource,
+              dataSource,
               symbol: data.symbol
             }
           }
@@ -218,13 +221,13 @@ export class OrderController {
       userId: this.request.user.id
     });
 
-    if (data.dataSource && !order.isDraft) {
+    if (dataSource && !order.isDraft) {
       // Gather symbol data in the background, if data source is set
       // (not MANUAL) and not draft
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
-            dataSource: data.dataSource,
+            dataSource,
             date: order.date,
             symbol: data.symbol
           }
@@ -256,6 +259,7 @@ export class OrderController {
 
     const accountId = data.accountId;
     const customCurrency = data.customCurrency;
+    const dataSource = data.dataSource;
 
     delete data.accountId;
 
@@ -264,6 +268,8 @@ export class OrderController {
 
       delete data.customCurrency;
     }
+
+    delete data.dataSource;
 
     return this.orderService.updateOrder({
       data: {
@@ -277,7 +283,7 @@ export class OrderController {
         SymbolProfile: {
           connect: {
             dataSource_symbol: {
-              dataSource: data.dataSource,
+              dataSource,
               symbol: data.symbol
             }
           },

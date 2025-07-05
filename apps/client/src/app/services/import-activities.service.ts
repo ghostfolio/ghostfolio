@@ -343,8 +343,6 @@ export class ImportActivitiesService {
             return 'FEE';
           case 'interest':
             return 'INTEREST';
-          case 'item':
-            return 'ITEM';
           case 'liability':
             return 'LIABILITY';
           case 'sell':
