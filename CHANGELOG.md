@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Set the name column to sticky in the table of the benchmark component
-  
+
 ## 2.177.0 - 2025-07-03
 
 ### Added
