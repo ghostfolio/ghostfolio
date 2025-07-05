@@ -45,8 +45,4 @@ export class PortfolioSnapshot {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   totalLiabilitiesWithCurrencyEffect: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  totalValuablesWithCurrencyEffect: Big;
 }

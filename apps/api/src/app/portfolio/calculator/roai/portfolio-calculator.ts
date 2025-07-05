@@ -108,8 +108,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       createdAt: new Date(),
       errors: [],
       historicalData: [],
-      totalLiabilitiesWithCurrencyEffect: new Big(0),
-      totalValuablesWithCurrencyEffect: new Big(0)
+      totalLiabilitiesWithCurrencyEffect: new Big(0)
     };
   }
 
@@ -179,8 +178,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let totalLiabilitiesInBaseCurrency = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
     let totalUnits = new Big(0);
-    let totalValuables = new Big(0);
-    let totalValuablesInBaseCurrency = new Big(0);
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
@@ -224,9 +221,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
         totalLiabilities: new Big(0),
-        totalLiabilitiesInBaseCurrency: new Big(0),
-        totalValuables: new Big(0),
-        totalValuablesInBaseCurrency: new Big(0)
+        totalLiabilitiesInBaseCurrency: new Big(0)
       };
     }
 
@@ -274,9 +269,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
         totalLiabilities: new Big(0),
-        totalLiabilitiesInBaseCurrency: new Big(0),
-        totalValuables: new Big(0),
-        totalValuablesInBaseCurrency: new Big(0)
+        totalLiabilitiesInBaseCurrency: new Big(0)
       };
     }
 
@@ -411,13 +404,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         totalInterest = totalInterest.plus(interest);
         totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
           interest.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'ITEM') {
-        const valuables = order.quantity.mul(order.unitPrice);
-
-        totalValuables = totalValuables.plus(valuables);
-        totalValuablesInBaseCurrency = totalValuablesInBaseCurrency.plus(
-          valuables.mul(exchangeRateAtOrderDate ?? 1)
         );
       } else if (order.type === 'LIABILITY') {
         const liabilities = order.quantity.mul(order.unitPrice);
@@ -971,8 +957,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       totalInvestmentWithCurrencyEffect,
       totalLiabilities,
       totalLiabilitiesInBaseCurrency,
-      totalValuables,
-      totalValuablesInBaseCurrency,
       grossPerformance: totalGrossPerformance,
       grossPerformanceWithCurrencyEffect:
         totalGrossPerformanceWithCurrencyEffect,

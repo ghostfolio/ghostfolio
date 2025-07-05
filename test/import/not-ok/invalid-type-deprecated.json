@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "date": "2023-02-05T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "accountId": null,
+      "comment": null,
+      "fee": 0,
+      "quantity": 1,
+      "type": "ITEM",
+      "unitPrice": 500000,
+      "currency": "USD",
+      "dataSource": "MANUAL",
+      "date": "2022-01-01T00:00:00.000Z",
+      "symbol": "Penthouse Apartment"
+    }
+  ]
+}

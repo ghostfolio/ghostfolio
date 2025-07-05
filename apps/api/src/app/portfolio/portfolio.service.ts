@@ -1825,8 +1825,6 @@ export class PortfolioService {
     const liabilities =
       await portfolioCalculator.getLiabilitiesInBaseCurrency();
 
-    const valuables = await portfolioCalculator.getValuablesInBaseCurrency();
-
     const totalBuy = this.getSumOfActivityType({
       userCurrency,
       activities: nonExcludedActivities,
@@ -1875,7 +1873,6 @@ export class PortfolioService {
 
     const netWorth = new Big(balanceInBaseCurrency)
       .plus(currentValueInBaseCurrency)
-      .plus(valuables)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
       .toNumber();
@@ -1934,7 +1931,6 @@ export class PortfolioService {
         .plus(fees)
         .toNumber(),
       interest: interest.toNumber(),
-      items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
       totalValueInBaseCurrency: netWorth

@@ -93,7 +93,6 @@ export class OrderService {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
-      dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
       updateAccountBalance?: boolean;
@@ -118,7 +117,11 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
+    if (
+      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type) ||
+      (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
+        data.type === 'BUY')
+    ) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
@@ -164,7 +167,6 @@ export class OrderService {
       delete data.comment;
     }
 
-    delete data.dataSource;
     delete data.symbol;
     delete data.tags;
     delete data.updateAccountBalance;
@@ -631,7 +633,6 @@ export class OrderService {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
-      dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
       type?: ActivityType;
@@ -675,7 +676,6 @@ export class OrderService {
 
     delete data.assetClass;
     delete data.assetSubClass;
-    delete data.dataSource;
     delete data.symbol;
     delete data.tags;
 

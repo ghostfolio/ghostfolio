@@ -194,9 +194,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       )
       .subscribe(async () => {
         if (
-          this.activityForm.get('type').value === 'BUY' ||
-          this.activityForm.get('type').value === 'FEE' ||
-          this.activityForm.get('type').value === 'ITEM'
+          ['BUY', 'FEE', 'ITEM'].includes(this.activityForm.get('type').value)
         ) {
           this.total =
             this.activityForm.get('quantity').value *
@@ -215,12 +213,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm.get('accountId').valueChanges.subscribe((accountId) => {
       const type = this.activityForm.get('type').value;
 
-      if (
-        type === 'FEE' ||
-        type === 'INTEREST' ||
-        type === 'ITEM' ||
-        type === 'LIABILITY'
-      ) {
+      if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)) {
         const currency =
           this.data.accounts.find(({ id }) => {
             return id === accountId;
@@ -472,6 +465,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           object: activity
         });
 
+        if (activity.type === 'ITEM') {
+          // Transform deprecated type ITEM
+          activity.dataSource = 'MANUAL';
+          activity.type = 'BUY';
+        }
+
         this.dialogRef.close(activity);
       } else {
         (activity as UpdateOrderDto).id = this.data.activity?.id;
@@ -482,6 +481,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           ignoreFields: ['dataSource', 'date'],
           object: activity as UpdateOrderDto
         });
+
+        if (activity.type === 'ITEM') {
+          // Transform deprecated type ITEM
+          activity.dataSource = 'MANUAL';
+          activity.type = 'BUY';
+        }
 
         this.dialogRef.close(activity as UpdateOrderDto);
       }
