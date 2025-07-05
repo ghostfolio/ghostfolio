@@ -19,7 +19,7 @@ import { addIcons } from 'ionicons';
 import {
   logoGithub,
   logoLinkedin,
-  logoStackoverflow,
+  logoSlack,
   logoX,
   mail
 } from 'ionicons/icons';
@@ -62,7 +62,7 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
       permissions.enableSubscription
     );
 
-    addIcons({ logoGithub, logoLinkedin, logoStackoverflow, logoX, mail });
+    addIcons({ logoGithub, logoLinkedin, logoSlack, logoX, mail });
   }
 
   public ngOnInit() {
