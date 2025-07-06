@@ -12,6 +12,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -33,6 +34,7 @@ import { ImportService } from './import.service';
     PrismaModule,
     RedisCacheModule,
     SymbolProfileModule,
+    TagModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],
