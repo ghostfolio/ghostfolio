@@ -52,15 +52,16 @@
                 @if (element.subscription?.expiresAt) {
                   <gf-premium-indicator
                     class="ml-1"
+                    i18n-title
+                    title="{{
+                      `Expires ${formatDistanceToNow(
+                        element.subscription.expiresAt
+                      )} (${
+                        (element.subscription.expiresAt
+                        | date: defaultDateFormat)
+                      })`
+                    }}"
                     [enableLink]="false"
-                    [title]="
-                      'Expires ' +
-                      formatDistanceToNow(element.subscription.expiresAt) +
-                      ' (' +
-                      (element.subscription.expiresAt
-                        | date: defaultDateFormat) +
-                      ')'
-                    "
                   />
                 }
               </div>

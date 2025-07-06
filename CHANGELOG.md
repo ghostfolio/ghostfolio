@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization in the users table of the admin control panel
 - Refactored the portfolio pages to standalone
 - Renamed `Settings` to `settings` in the `User` database schema
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Español (`es`)
+- Improved the language localization for German (`de`)
 - Upgraded `ionicons` from version `7.4.0` to `8.0.10`
 
 ## 2.178.0 - 2025-07-05

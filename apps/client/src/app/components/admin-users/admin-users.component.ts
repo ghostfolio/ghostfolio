@@ -1,6 +1,10 @@
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { getDateFormatString, getEmojiFlag } from '@ghostfolio/common/helper';
+import {
+  getDateFnsLocale,
+  getDateFormatString,
+  getEmojiFlag
+} from '@ghostfolio/common/helper';
 import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
@@ -125,7 +129,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
-        addSuffix: true
+        addSuffix: true,
+        locale: getDateFnsLocale(this.user?.settings?.language)
       });
 
       return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
