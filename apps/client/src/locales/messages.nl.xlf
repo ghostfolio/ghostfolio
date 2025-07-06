@@ -7960,7 +7960,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="translated">Het grootste deel van uw huidige investering staat niet in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> Het grootste deel van uw huidige investering staat niet in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">63</context>
@@ -7968,7 +7968,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="translated">Het grootste deel van uw huidige investering bevindt zich in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> Het grootste deel van uw huidige investering bevindt zich in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">67</context>
@@ -7992,7 +7992,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="translated">Het grootste deel van uw huidige investering is in ${currency} (${maxValueRatio}%) en overschrijdt ${thresholdMax}% niet</target>
+        <target state="translated"> Het grootste deel van uw huidige investering is in ${currency} (${maxValueRatio}%) en overschrijdt ${thresholdMax}% niet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">76</context>
