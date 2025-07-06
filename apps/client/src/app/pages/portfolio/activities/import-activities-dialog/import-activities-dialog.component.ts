@@ -20,7 +20,12 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -62,7 +67,8 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatStepperModule
+    MatStepperModule,
+    ReactiveFormsModule
   ],
   selector: 'gf-import-activities-dialog',
   styleUrls: ['./import-activities-dialog.scss'],
