@@ -14,7 +14,7 @@ const ossFriends = require('../../../../assets/oss-friends.json');
   styleUrls: ['./oss-friends-page.scss'],
   templateUrl: './oss-friends-page.html'
 })
-export class OpenSourceSoftwareFriendsPageComponent implements OnDestroy {
+export class GfOpenSourceSoftwareFriendsPageComponent implements OnDestroy {
   public ossFriends = ossFriends.data;
 
   private unsubscribeSubject = new Subject<void>();

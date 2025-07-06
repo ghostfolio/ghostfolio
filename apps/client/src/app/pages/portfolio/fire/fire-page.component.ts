@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./fire-page.scss'],
   templateUrl: './fire-page.html'
 })
-export class FirePageComponent implements OnDestroy, OnInit {
+export class GfFirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public fireWealth: Big;
   public hasImpersonationId: boolean;

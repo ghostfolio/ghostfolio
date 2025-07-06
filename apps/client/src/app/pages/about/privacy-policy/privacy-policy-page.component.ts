@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./privacy-policy-page.scss'],
   templateUrl: './privacy-policy-page.html'
 })
-export class PrivacyPolicyPageComponent implements OnDestroy {
+export class GfPrivacyPolicyPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnDestroy() {

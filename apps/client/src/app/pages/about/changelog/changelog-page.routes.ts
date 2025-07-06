@@ -3,12 +3,12 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { ChangelogPageComponent } from './changelog-page.component';
+import { GfChangelogPageComponent } from './changelog-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: ChangelogPageComponent,
+    component: GfChangelogPageComponent,
     path: '',
     title: publicRoutes.about.subRoutes.changelog.title
   }

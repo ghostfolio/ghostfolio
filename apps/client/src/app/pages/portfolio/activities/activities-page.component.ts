@@ -27,8 +27,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
-import { ImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
+import { GfCreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
+import { GfImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
@@ -44,7 +44,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
 })
-export class ActivitiesPageComponent implements OnDestroy, OnInit {
+export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -245,7 +245,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+    const dialogRef = this.dialog.open(GfImportActivitiesDialog, {
       data: {
         deviceType: this.deviceType,
         user: this.user
@@ -267,7 +267,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImportDividends() {
-    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+    const dialogRef = this.dialog.open(GfImportActivitiesDialog, {
       data: {
         activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
@@ -304,7 +304,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public openUpdateActivityDialog(activity: Activity) {
-    const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
       data: {
         activity,
         accounts: this.user?.accounts,
@@ -345,7 +345,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
+        const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
           data: {
             accounts: this.user?.accounts,
             activity: {

@@ -48,7 +48,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'
 })
-export class AllocationsPageComponent implements OnDestroy, OnInit {
+export class GfAllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
