@@ -12,6 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AdminMarketDataComponent } from './admin-market-data.component';
@@ -29,6 +30,7 @@ import { GfCreateAssetProfileDialogModule } from './create-asset-profile-dialog/
     GfPremiumIndicatorComponent,
     GfSymbolModule,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,

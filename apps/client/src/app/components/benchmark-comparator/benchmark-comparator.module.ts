@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { BenchmarkComparatorComponent } from './benchmark-comparator.component';
@@ -16,6 +17,7 @@ import { BenchmarkComparatorComponent } from './benchmark-comparator.component';
     CommonModule,
     FormsModule,
     GfPremiumIndicatorComponent,
+    IonIcon,
     MatSelectModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,

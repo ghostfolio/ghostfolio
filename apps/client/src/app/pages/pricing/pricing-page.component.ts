@@ -7,6 +7,8 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { checkmarkCircleOutline, checkmarkOutline } from 'ionicons/icons';
 import { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { Subject } from 'rxjs';
@@ -53,7 +55,9 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     private notificationService: NotificationService,
     private stripeService: StripeService,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ checkmarkCircleOutline, checkmarkOutline });
+  }
 
   public ngOnInit() {
     const { baseCurrency, subscriptionOffer } = this.dataService.fetchInfo();

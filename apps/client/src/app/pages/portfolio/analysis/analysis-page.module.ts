@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { IonIcon } from '@ionic/angular/standalone';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AnalysisPageRoutingModule } from './analysis-page-routing.module';
@@ -27,6 +28,7 @@ import { AnalysisPageComponent } from './analysis-page.component';
     GfPremiumIndicatorComponent,
     GfToggleModule,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatCardModule,
     MatMenuModule,

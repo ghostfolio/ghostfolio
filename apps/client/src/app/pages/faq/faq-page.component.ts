@@ -4,6 +4,8 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { cloudyOutline, readerOutline, serverOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
@@ -50,6 +52,8 @@ export class FaqPageComponent implements OnDestroy, OnInit {
         routerLink: publicRoutes.faq.subRoutes.selfHosting.routerLink
       }
     ];
+
+    addIcons({ cloudyOutline, readerOutline, serverOutline });
   }
 
   public ngOnInit() {

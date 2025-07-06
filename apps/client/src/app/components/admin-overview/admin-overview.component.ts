@@ -28,6 +28,14 @@ import {
   formatDistanceToNowStrict,
   parseISO
 } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  closeCircleOutline,
+  ellipsisHorizontal,
+  informationCircleOutline,
+  syncOutline,
+  trashOutline
+} from 'ionicons/icons';
 import ms, { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -94,6 +102,14 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           );
         }
       });
+
+    addIcons({
+      closeCircleOutline,
+      ellipsisHorizontal,
+      informationCircleOutline,
+      syncOutline,
+      trashOutline
+    });
   }
 
   public ngOnInit() {

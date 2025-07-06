@@ -11,6 +11,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
+import { IonIcon } from '@ionic/angular/standalone';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AccountDetailDialog } from './account-detail-dialog.component';
@@ -26,6 +27,7 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     GfHoldingsTableComponent,
     GfInvestmentChartModule,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatDialogModule,
     MatTabsModule,

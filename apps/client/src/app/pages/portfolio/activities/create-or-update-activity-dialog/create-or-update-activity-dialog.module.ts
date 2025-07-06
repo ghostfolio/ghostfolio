@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog.component';
 
@@ -25,6 +26,7 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
     GfSymbolAutocompleteComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatDatepickerModule,

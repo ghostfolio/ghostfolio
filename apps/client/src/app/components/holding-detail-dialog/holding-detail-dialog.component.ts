@@ -47,8 +47,17 @@ import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  flagOutline,
+  readerOutline,
+  serverOutline,
+  swapVerticalOutline,
+  walletOutline
+} from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -70,6 +79,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfPortfolioProportionChartComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatChipsModule,
     MatDialogModule,
@@ -140,7 +150,15 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({
+      flagOutline,
+      readerOutline,
+      serverOutline,
+      swapVerticalOutline,
+      walletOutline
+    });
+  }
 
   public ngOnInit() {
     this.activityForm = this.formBuilder.group({

@@ -22,6 +22,8 @@ import { SortDirection } from '@angular/material/sort';
 import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { AssetClass } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -68,7 +70,9 @@ export class ImportActivitiesDialog implements OnDestroy {
     public dialogRef: MatDialogRef<ImportActivitiesDialog>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    addIcons({ cloudUploadOutline, warningOutline });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

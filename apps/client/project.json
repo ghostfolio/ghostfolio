@@ -180,9 +180,6 @@
             "command": "shx mkdir -p dist/apps/client/assets"
           },
           {
-            "command": "shx mkdir -p dist/apps/client/ionicons"
-          },
-          {
             "command": "shx cp -r apps/client/src/assets/* dist/apps/client/assets"
           },
           {
@@ -196,15 +193,6 @@
           },
           {
             "command": "shx cp apps/client/src/assets/robots.txt dist/apps/client"
-          },
-          {
-            "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
-          },
-          {
-            "command": "shx cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
-          },
-          {
-            "command": "shx cp -r node_modules/ionicons/dist/ionicons/* dist/apps/client/ionicons"
           },
           {
             "command": "shx cp CHANGELOG.md dist/apps/client/assets"

@@ -39,9 +39,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { differenceInYears } from 'date-fns';
 import Fuse from 'fuse.js';
+import { addIcons } from 'ionicons';
+import {
+  closeCircleOutline,
+  closeOutline,
+  searchOutline
+} from 'ionicons/icons';
 import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
@@ -72,6 +79,7 @@ import {
     GfAssistantListItemComponent,
     GfEntityLogoComponent,
     GfSymbolModule,
+    IonIcon,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -176,7 +184,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    addIcons({ closeCircleOutline, closeOutline, searchOutline });
+  }
 
   public ngOnInit() {
     this.assetClasses = Object.keys(AssetClass).map((assetClass) => {

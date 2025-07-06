@@ -14,6 +14,13 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { addIcons } from 'ionicons';
+import {
+  ellipsisHorizontal,
+  linkOutline,
+  lockClosedOutline,
+  lockOpenOutline
+} from 'ionicons/icons';
 import ms from 'ms';
 
 @Component({
@@ -38,7 +45,14 @@ export class AccessTableComponent implements OnChanges {
     private clipboard: Clipboard,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    addIcons({
+      ellipsisHorizontal,
+      linkOutline,
+      lockClosedOutline,
+      lockOpenOutline
+    });
+  }
 
   public ngOnChanges() {
     this.displayedColumns = ['alias', 'grantee', 'type', 'details'];
