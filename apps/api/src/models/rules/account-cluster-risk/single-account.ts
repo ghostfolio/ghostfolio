@@ -1,6 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PortfolioDetails, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
@@ -8,11 +9,13 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
-      key: AccountClusterRiskSingleAccount.name,
-      name: 'Single Account'
+      languageCode,
+      key: AccountClusterRiskSingleAccount.name
     });
 
     this.accounts = accounts;
@@ -23,19 +26,36 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
 
     if (accounts.length === 1) {
       return {
-        evaluation: `Your net worth is managed by a single account`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRiskSingleAccount.false',
+          languageCode: this.getLanguageCode()
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `Your net worth is managed by ${accounts.length} accounts`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.accountClusterRiskSingleAccount.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          accountsLength: accounts.length
+        }
+      }),
       value: true
     };
   }
 
   public getConfiguration() {
     return undefined;
+  }
+
+  public getName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.accountClusterRiskSingleAccount',
+      languageCode: this.getLanguageCode()
+    });
+    return 'Single Account';
   }
 
   public getSettings({ xRayRules }: UserSettings): RuleSettings {

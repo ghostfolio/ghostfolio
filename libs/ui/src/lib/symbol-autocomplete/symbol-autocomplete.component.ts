@@ -1,4 +1,3 @@
-
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { LookupItem } from '@ghostfolio/common/interfaces';
@@ -13,8 +12,10 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -76,20 +77,21 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnInit, OnDestroy
+  implements OnChanges, OnDestroy, OnInit
 {
-  @Input() private includeIndices = false;
+  @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoadingLocal = false;
   @Input() public isLoadingRemote = false;
 
-  @ViewChild(MatInput) private input: MatInput;
-
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
+
+  @Input() private includeIndices = false;
+
+  @ViewChild(MatInput) private input: MatInput;
 
   public control = new FormControl();
   public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
     [];
-
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -120,7 +122,13 @@ export class GfSymbolAutocompleteComponent
     this.control.valueChanges
       .pipe(
         filter((query) => {
-          return isString(query) && query.length > 1;
+          if (query.length === 0) {
+            this.showDefaultOptions();
+
+            return false;
+          }
+
+          return isString(query);
         }),
         tap(() => {
           this.isLoadingRemote = true;
@@ -175,6 +183,12 @@ export class GfSymbolAutocompleteComponent
       });
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes['defaultLookupItems'] && this.defaultLookupItems?.length) {
+      this.showDefaultOptions();
+    }
+  }
+
   public displayFn(aLookupItem: LookupItem) {
     return aLookupItem?.symbol ?? '';
   }
@@ -218,6 +232,17 @@ export class GfSymbolAutocompleteComponent
 
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private showDefaultOptions() {
+    this.filteredLookupItems = this.defaultLookupItems.map((lookupItem) => {
+      return {
+        ...lookupItem,
+        assetSubClassString: translate(lookupItem.assetSubClass)
+      };
+    });
+
+    this.changeDetectorRef.markForCheck();
   }
 
   private validateRequired() {

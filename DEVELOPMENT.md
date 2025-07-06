@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 20+)
+- [Node.js](https://nodejs.org/en/download) (version 22+)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
@@ -30,7 +30,13 @@ Run `npm run start:server`
 
 ### Start Client
 
-Run `npm run start:client` and open https://localhost:4200/en in your browser
+#### English (Default)
+
+Run `npm run start:client` and open https://localhost:4200/en in your browser.
+
+#### Other Languages
+
+To start the client in a different language, such as German (`de`), adapt the `start:client` script in the `package.json` file by changing `--configuration=development-en` to `--configuration=development-de`. Then, run `npm run start:client` and open https://localhost:4200/de in your browser.
 
 ### Start _Storybook_
 

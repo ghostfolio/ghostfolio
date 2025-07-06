@@ -1,6 +1,8 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -32,35 +34,45 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
+          this.user = state.user;
+
           this.tabs = [
             {
               iconName: 'analytics-outline',
-              label: $localize`Overview`,
-              path: ['/home']
+              label: internalRoutes.home.title,
+              routerLink: internalRoutes.home.routerLink
             },
             {
               iconName: 'wallet-outline',
-              label: $localize`Holdings`,
-              path: ['/home', 'holdings']
+              label: internalRoutes.home.subRoutes.holdings.title,
+              routerLink: internalRoutes.home.subRoutes.holdings.routerLink
             },
             {
               iconName: 'reader-outline',
-              label: $localize`Summary`,
-              path: ['/home', 'summary']
+              label: internalRoutes.home.subRoutes.summary.title,
+              routerLink: internalRoutes.home.subRoutes.summary.routerLink
             },
             {
               iconName: 'bookmark-outline',
-              label: $localize`Watchlist`,
-              path: ['/home', 'watchlist']
+              label: internalRoutes.home.subRoutes.watchlist.title,
+              routerLink: internalRoutes.home.subRoutes.watchlist.routerLink
             },
             {
               iconName: 'newspaper-outline',
-              label: $localize`Markets`,
-              path: ['/home', 'market']
+              label: hasPermission(
+                this.user?.permissions,
+                permissions.readMarketDataOfMarkets
+              )
+                ? internalRoutes.home.subRoutes.marketsPremium.title
+                : internalRoutes.home.subRoutes.markets.title,
+              routerLink: hasPermission(
+                this.user?.permissions,
+                permissions.readMarketDataOfMarkets
+              )
+                ? internalRoutes.home.subRoutes.marketsPremium.routerLink
+                : internalRoutes.home.subRoutes.markets.routerLink
             }
           ];
-
-          this.user = state.user;
 
           this.changeDetectorRef.markForCheck();
         }

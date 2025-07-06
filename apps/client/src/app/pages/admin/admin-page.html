@@ -16,14 +16,14 @@
         mat-tab-link
         routerLinkActive
         [active]="rla.isActive"
-        [routerLink]="tab.path"
+        [routerLink]="tab.routerLink"
         [routerLinkActiveOptions]="{ exact: true }"
       >
         <ion-icon
           [name]="tab.iconName"
           [size]="deviceType === 'mobile' ? 'large' : 'small'"
         />
-        <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
+        <div class="d-none d-sm-block ml-2" [innerHTML]="tab.label"></div>
       </a>
     }
   }

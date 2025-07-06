@@ -12,13 +12,13 @@ datasource db {
 model Access {
   alias         String?
   createdAt     DateTime           @default(now())
+  granteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   granteeUserId String?
   id            String             @id @default(uuid())
   permissions   AccessPermission[] @default([READ_RESTRICTED])
   updatedAt     DateTime           @updatedAt
   userId        String
-  GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
-  User          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
+  user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
   @@index([granteeUserId])
@@ -35,11 +35,11 @@ model Account {
   id         String           @default(uuid())
   isExcluded Boolean          @default(false)
   name       String?
+  platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
   updatedAt  DateTime         @updatedAt
+  user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String
-  Platform   Platform?        @relation(fields: [platformId], references: [id])
-  User       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@id([id, userId])
   @@index([currency])
@@ -50,6 +50,7 @@ model Account {
 }
 
 model AccountBalance {
+  account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
   accountId String
   createdAt DateTime @default(now())
   date      DateTime @default(now())
@@ -57,7 +58,6 @@ model AccountBalance {
   updatedAt DateTime @updatedAt
   userId    String
   value     Float
-  Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 
   @@unique([accountId, date])
   @@index([accountId])
@@ -70,8 +70,8 @@ model Analytics {
   dataProviderGhostfolioDailyRequests Int      @default(0)
   lastRequestAt                       DateTime @default(now())
   updatedAt                           DateTime @updatedAt
+  user                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                              String   @id
-  User                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([lastRequestAt])
   @@index([updatedAt])
@@ -82,8 +82,8 @@ model ApiKey {
   hashedKey String   @unique
   id        String   @id @default(uuid())
   updatedAt DateTime @updatedAt
-  userId    String
   user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId    String
 
   @@index([userId])
 }
@@ -95,8 +95,8 @@ model AuthDevice {
   counter             Int
   id                  String   @id @default(uuid())
   updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId              String
-  User                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([userId])
 }
@@ -120,6 +120,7 @@ model MarketData {
 }
 
 model Order {
+  account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId       String?
   accountUserId   String?
   comment         String?
@@ -135,10 +136,9 @@ model Order {
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId          String
-  Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
-  User            User          @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([accountId])
   @@index([date])
@@ -163,8 +163,8 @@ model Property {
 model Settings {
   settings  Json?
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId    String   @id
-  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 }
 
 model SymbolProfile {
@@ -191,10 +191,10 @@ model SymbolProfile {
   symbol                 String
   symbolMapping          Json?
   url                    String?
+  user                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                 String?
   watchedBy              User[]                  @relation("UserWatchlist")
   SymbolProfileOverrides SymbolProfileOverrides?
-  User                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@unique([dataSource, symbol])
   @@index([assetClass])
@@ -233,37 +233,37 @@ model Subscription {
 }
 
 model Tag {
-  id     String  @id @default(uuid())
-  name   String
-  orders Order[]
-  userId String?
-  User   User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  activities Order[]
+  id         String  @id @default(uuid())
+  name       String
+  user       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId     String?
 
   @@unique([name, userId])
   @@index([name])
 }
 
 model User {
+  accessesGet   Access[]        @relation("accessGet")
   accessToken   String?
+  accounts      Account[]
   activities    Order[]
+  analytics     Analytics?
+  apiKeys       ApiKey[]
   authChallenge String?
+  authDevices   AuthDevice[]
   createdAt     DateTime        @default(now())
   id            String          @id @default(uuid())
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
   subscriptions Subscription[]
+  tags          Tag[]
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
   watchlist     SymbolProfile[] @relation("UserWatchlist")
-  Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
-  Account       Account[]
-  Analytics     Analytics?
-  ApiKey        ApiKey[]
-  AuthDevice    AuthDevice[]
   Settings      Settings?
   SymbolProfile SymbolProfile[]
-  Tag           Tag[]
 
   @@index([accessToken])
   @@index([createdAt])

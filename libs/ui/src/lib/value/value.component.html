@@ -1,18 +1,24 @@
-<div *ngIf="icon" class="align-self-center mr-3">
-  <ion-icon class="h3 m-0" [name]="icon" />
-</div>
+@if (icon) {
+  <div class="align-self-center mr-3">
+    <ion-icon class="h3 m-0" [name]="icon" />
+  </div>
+}
 <div class="d-flex flex-column w-100">
   <ng-template #label><ng-content></ng-content></ng-template>
-  <ng-container *ngIf="value || value === 0 || value === null">
+  @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
       [ngClass]="position === 'end' ? 'justify-content-end' : ''"
     >
-      <ng-container *ngIf="isNumber || value === null">
-        <ng-container *ngIf="colorizeSign && !useAbsoluteValue">
-          <div *ngIf="+value > 0" class="mr-1 text-success">+</div>
-          <div *ngIf="+value < 0" class="mr-1 text-danger">-</div>
-        </ng-container>
+      @if (isNumber || value === null) {
+        @if (colorizeSign && !useAbsoluteValue) {
+          @if (+value > 0) {
+            <div class="mr-1 text-success">+</div>
+          }
+          @if (+value < 0) {
+            <div class="mr-1 text-danger">-</div>
+          }
+        }
         @if (isPercent) {
           <div
             class="mb-0 value"
@@ -43,14 +49,17 @@
           </div>
         }
         @if (unit) {
-          <small *ngIf="size === 'medium'" class="ml-1">
-            {{ unit }}
-          </small>
-          <div *ngIf="size !== 'medium'" class="ml-1">
-            {{ unit }}
-          </div>
+          @if (size === 'medium') {
+            <small class="ml-1">
+              {{ unit }}
+            </small>
+          } @else {
+            <div class="ml-1">
+              {{ unit }}
+            </div>
+          }
         }
-      </ng-container>
+      }
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
@@ -63,7 +72,7 @@
         </div>
       }
     </div>
-  </ng-container>
+  }
 
   @if (value === undefined) {
     <ngx-skeleton-loader
@@ -76,15 +85,18 @@
     />
   }
 
-  <ng-container>
-    <div *ngIf="size === 'large'" class="text-truncate">
+  @if (size === 'large') {
+    <div class="text-truncate">
       <span class="h6"
         ><ng-container *ngTemplateOutlet="label"></ng-container
       ></span>
-      <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
+      @if (subLabel) {
+        <span class="text-muted"> {{ subLabel }}</span>
+      }
     </div>
-    <small *ngIf="size !== 'large'" class="d-block text-truncate">
+  } @else {
+    <small class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
-  </ng-container>
+  }
 </div>

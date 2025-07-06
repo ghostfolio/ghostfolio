@@ -14,7 +14,7 @@ import {
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
-  ghostfolioFearAndGreedIndexDataSource
+  ghostfolioFearAndGreedIndexDataSourceStocks
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -54,19 +54,20 @@ export class InfoService {
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
-          ghostfolioFearAndGreedIndexDataSource
+          ghostfolioFearAndGreedIndexDataSourceStocks
         );
       } else {
-        info.fearAndGreedDataSource = ghostfolioFearAndGreedIndexDataSource;
+        info.fearAndGreedDataSource =
+          ghostfolioFearAndGreedIndexDataSourceStocks;
       }
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
-      isReadOnlyMode = (await this.propertyService.getByKey(
+      isReadOnlyMode = await this.propertyService.getByKey<boolean>(
         PROPERTY_IS_READ_ONLY_MODE
-      )) as boolean;
+      );
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
@@ -81,9 +82,9 @@ export class InfoService {
       globalPermissions.push(permissions.enableSubscription);
 
       info.countriesOfSubscribers =
-        ((await this.propertyService.getByKey(
+        (await this.propertyService.getByKey<string[]>(
           PROPERTY_COUNTRIES_OF_SUBSCRIBERS
-        )) as string[]) ?? [];
+        )) ?? [];
       info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
@@ -133,11 +134,11 @@ export class InfoService {
         AND: [
           {
             NOT: {
-              Analytics: null
+              analytics: null
             }
           },
           {
-            Analytics: {
+            analytics: {
               lastRequestAt: {
                 gt: subDays(new Date(), aDays)
               }
@@ -216,7 +217,7 @@ export class InfoService {
         AND: [
           {
             NOT: {
-              Analytics: null
+              analytics: null
             }
           },
           {
@@ -230,15 +231,15 @@ export class InfoService {
   }
 
   private async countSlackCommunityUsers() {
-    return (await this.propertyService.getByKey(
+    return await this.propertyService.getByKey<string>(
       PROPERTY_SLACK_COMMUNITY_USERS
-    )) as string;
+    );
   }
 
   private async getDemoAuthToken() {
-    const demoUserId = (await this.propertyService.getByKey(
+    const demoUserId = await this.propertyService.getByKey<string>(
       PROPERTY_DEMO_USER_ID
-    )) as string;
+    );
 
     if (demoUserId) {
       return this.jwtService.sign({
@@ -298,9 +299,9 @@ export class InfoService {
   private async getUptime(): Promise<number> {
     {
       try {
-        const monitorId = (await this.propertyService.getByKey(
+        const monitorId = await this.propertyService.getByKey<string>(
           PROPERTY_BETTER_UPTIME_MONITOR_ID
-        )) as string;
+        );
 
         const { data } = await fetch(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(

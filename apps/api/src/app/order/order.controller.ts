@@ -53,14 +53,19 @@ export class OrderController {
   @Delete()
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteOrders(
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<number> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
+      filterByDataSource,
+      filterBySymbol,
       filterByTags
     });
 
@@ -184,12 +189,15 @@ export class OrderController {
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
     const currency = data.currency;
     const customCurrency = data.customCurrency;
+    const dataSource = data.dataSource;
 
     if (customCurrency) {
       data.currency = customCurrency;
 
       delete data.customCurrency;
     }
+
+    delete data.dataSource;
 
     const order = await this.orderService.createOrder({
       ...data,
@@ -198,28 +206,28 @@ export class OrderController {
         connectOrCreate: {
           create: {
             currency,
-            dataSource: data.dataSource,
+            dataSource,
             symbol: data.symbol
           },
           where: {
             dataSource_symbol: {
-              dataSource: data.dataSource,
+              dataSource,
               symbol: data.symbol
             }
           }
         }
       },
-      User: { connect: { id: this.request.user.id } },
+      user: { connect: { id: this.request.user.id } },
       userId: this.request.user.id
     });
 
-    if (data.dataSource && !order.isDraft) {
+    if (dataSource && !order.isDraft) {
       // Gather symbol data in the background, if data source is set
       // (not MANUAL) and not draft
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
-            dataSource: data.dataSource,
+            dataSource,
             date: order.date,
             symbol: data.symbol
           }
@@ -251,6 +259,7 @@ export class OrderController {
 
     const accountId = data.accountId;
     const customCurrency = data.customCurrency;
+    const dataSource = data.dataSource;
 
     delete data.accountId;
 
@@ -260,11 +269,13 @@ export class OrderController {
       delete data.customCurrency;
     }
 
+    delete data.dataSource;
+
     return this.orderService.updateOrder({
       data: {
         ...data,
         date,
-        Account: {
+        account: {
           connect: {
             id_userId: { id: accountId, userId: this.request.user.id }
           }
@@ -272,7 +283,7 @@ export class OrderController {
         SymbolProfile: {
           connect: {
             dataSource_symbol: {
-              dataSource: data.dataSource,
+              dataSource,
               symbol: data.symbol
             }
           },
@@ -282,7 +293,7 @@ export class OrderController {
             name: data.symbol
           }
         },
-        User: { connect: { id: this.request.user.id } }
+        user: { connect: { id: this.request.user.id } }
       },
       where: {
         id

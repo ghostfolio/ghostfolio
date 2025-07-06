@@ -29,7 +29,7 @@ import {
 import { hasRole } from '@ghostfolio/common/permissions';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isBefore, isValid } from 'date-fns';
@@ -37,7 +37,7 @@ import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
-export class DataProviderService {
+export class DataProviderService implements OnModuleInit {
   private dataProviderMapping: { [dataProviderName: string]: string };
 
   public constructor(
@@ -48,15 +48,13 @@ export class DataProviderService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService
-  ) {
-    this.initialize();
-  }
+  ) {}
 
-  public async initialize() {
+  public async onModuleInit() {
     this.dataProviderMapping =
-      ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
+      (await this.propertyService.getByKey<{
         [dataProviderName: string]: string;
-      }) ?? {};
+      }>(PROPERTY_DATA_SOURCE_MAPPING)) ?? {};
   }
 
   public async checkQuote(dataSource: DataSource) {
@@ -163,8 +161,10 @@ export class DataProviderService {
   }
 
   public async getDataSources({
+    includeGhostfolio = false,
     user
   }: {
+    includeGhostfolio?: boolean;
     user: UserWithSettings;
   }): Promise<DataSource[]> {
     let dataSourcesKey: 'DATA_SOURCES' | 'DATA_SOURCES_LEGACY' = 'DATA_SOURCES';
@@ -183,11 +183,11 @@ export class DataProviderService {
         return DataSource[dataSource];
       });
 
-    const ghostfolioApiKey = (await this.propertyService.getByKey(
+    const ghostfolioApiKey = await this.propertyService.getByKey<string>(
       PROPERTY_API_KEY_GHOSTFOLIO
-    )) as string;
+    );
 
-    if (ghostfolioApiKey || hasRole(user, 'ADMIN')) {
+    if (includeGhostfolio || ghostfolioApiKey) {
       dataSources.push('GHOSTFOLIO');
     }
 
@@ -663,9 +663,6 @@ export class DataProviderService {
         // Only allow symbols with supported currency
         return currency ? true : false;
       })
-      .sort(({ name: name1 }, { name: name2 }) => {
-        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
-      })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
           if (user.subscription.type === 'Premium') {
@@ -679,7 +676,21 @@ export class DataProviderService {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
+        if (
+          lookupItem.assetSubClass === 'CRYPTOCURRENCY' &&
+          user?.Settings?.settings.isExperimentalFeatures
+        ) {
+          // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
+          lookupItem.name = lookupItem.name.replace(
+            new RegExp(` ${DEFAULT_CURRENCY}$`),
+            ''
+          );
+        }
+
         return lookupItem;
+      })
+      .sort(({ name: name1 }, { name: name2 }) => {
+        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
       });
 
     return {

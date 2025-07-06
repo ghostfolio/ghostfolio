@@ -10,7 +10,7 @@
                 (click)="onCreateAccount()"
               >
                 <span i18n>You are using the Live Demo.</span>
-                <span class="a ml-2" i18n>Create Account</span>
+                <span class="a ml-2 p-1" i18n>Create Account</span>
               </div></a
             >
           }
@@ -70,7 +70,7 @@
             <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
             @if (hasPermissionForSubscription) {
               <li>
-                <a i18n [routerLink]="['/blog']">Blog</a>
+                <a i18n [routerLink]="routerLinkBlog">Blog</a>
               </li>
             }
             <li>
@@ -91,7 +91,7 @@
             }
             @if (hasPermissionForStatistics) {
               <li>
-                <a [routerLink]="['/open']">Open Startup</a>
+                <a [routerLink]="routerLinkOpenStartup">Open Startup</a>
               </li>
             }
             @if (hasPermissionForSubscription) {

@@ -1,6 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
@@ -8,11 +9,13 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
-      key: AssetClassClusterRiskFixedIncome.name,
-      name: 'Fixed Income'
+      languageCode,
+      key: AssetClassClusterRiskFixedIncome.name
     });
 
     this.holdings = holdings;
@@ -41,26 +44,39 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
 
     if (fixedIncomeValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The fixed income contribution of your current investment (${(fixedIncomeValueRatio * 100).toPrecision(3)}%) exceeds ${(
-          ruleSettings.thresholdMax * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRiskFixedIncome.false.max',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            fixedIncomeValueRatio: (fixedIncomeValueRatio * 100).toPrecision(3),
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     } else if (fixedIncomeValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The fixed income contribution of your current investment (${(fixedIncomeValueRatio * 100).toPrecision(3)}%) is below ${(
-          ruleSettings.thresholdMin * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRiskFixedIncome.false.min',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            fixedIncomeValueRatio: (fixedIncomeValueRatio * 100).toPrecision(3),
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
-
     return {
-      evaluation: `The fixed income contribution of your current investment (${(fixedIncomeValueRatio * 100).toPrecision(3)}%) is within the range of ${(
-        ruleSettings.thresholdMin * 100
-      ).toPrecision(
-        3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.assetClassClusterRiskFixedIncome.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          fixedIncomeValueRatio: (fixedIncomeValueRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
+          thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -76,6 +92,13 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.assetClassClusterRiskFixedIncome',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

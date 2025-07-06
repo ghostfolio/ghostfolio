@@ -1,6 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnInit } from '@angular/core';
 
@@ -13,10 +14,8 @@ import { Component, OnInit } from '@angular/core';
 export class ResourcesGlossaryPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public routerLinkResourcesPersonalFinanceTools = [
-    '/' + $localize`:snake-case:resources`,
-    'personal-finance-tools'
-  ];
+  public routerLinkResourcesPersonalFinanceTools =
+    publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
 
   public constructor(private dataService: DataService) {
     this.info = this.dataService.fetchInfo();

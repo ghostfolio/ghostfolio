@@ -23,7 +23,9 @@ import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
-  private readonly yahooFinance = new YahooFinance();
+  private readonly yahooFinance = new YahooFinance({
+    suppressNotices: ['yahooSurvey']
+  });
 
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService

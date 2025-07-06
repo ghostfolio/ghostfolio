@@ -93,17 +93,16 @@ export class OrderService {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
-      dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
       updateAccountBalance?: boolean;
       userId: string;
     }
   ): Promise<Order> {
-    let Account: Prisma.AccountCreateNestedOneWithoutActivitiesInput;
+    let account: Prisma.AccountCreateNestedOneWithoutActivitiesInput;
 
     if (data.accountId) {
-      Account = {
+      account = {
         connect: {
           id_userId: {
             userId: data.userId,
@@ -118,7 +117,11 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
+    if (
+      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
+        data.type === 'BUY')
+    ) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
@@ -164,7 +167,6 @@ export class OrderService {
       delete data.comment;
     }
 
-    delete data.dataSource;
     delete data.symbol;
     delete data.tags;
     delete data.updateAccountBalance;
@@ -172,14 +174,14 @@ export class OrderService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)
+    const isDraft = ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type)
       ? false
       : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {
         ...orderData,
-        Account,
+        account,
         isDraft,
         tags: {
           connect: tags.map(({ id }) => {
@@ -335,7 +337,7 @@ export class OrderService {
     ];
     const where: Prisma.OrderWhereInput = { userId };
 
-    let symbolProfileConditions: Prisma.SymbolProfileWhereInput[] = [];
+    const symbolProfileConditions: Prisma.SymbolProfileWhereInput[] = [];
     where.SymbolProfile = {
       AND: symbolProfileConditions
     };
@@ -489,8 +491,8 @@ export class OrderService {
 
     if (withExcludedAccounts === false) {
       where.OR = [
-        { Account: null },
-        { Account: { NOT: { isExcluded: true } } }
+        { account: null },
+        { account: { NOT: { isExcluded: true } } }
       ];
     }
 
@@ -501,10 +503,9 @@ export class OrderService {
         take,
         where,
         include: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          Account: {
+          account: {
             include: {
-              Platform: true
+              platform: true
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -646,7 +647,6 @@ export class OrderService {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
-      dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
       type?: ActivityType;
@@ -661,12 +661,17 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
-      delete data.SymbolProfile.connect;
-
-      if (data.Account?.connect?.id_userId?.id === null) {
-        data.Account = { disconnect: true };
+    if (
+      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
+        data.type === 'BUY')
+    ) {
+      if (data.account?.connect?.id_userId?.id === null) {
+        data.account = { disconnect: true };
       }
+
+      delete data.SymbolProfile.connect;
+      delete data.SymbolProfile.update.name;
     } else {
       delete data.SymbolProfile.update;
 
@@ -690,17 +695,17 @@ export class OrderService {
 
     delete data.assetClass;
     delete data.assetSubClass;
-    delete data.dataSource;
     delete data.symbol;
     delete data.tags;
 
     // Remove existing tags
     await this.prismaService.order.update({
-      data: { tags: { set: [] } },
-      where
+      where,
+      data: { tags: { set: [] } }
     });
 
     const order = await this.prismaService.order.update({
+      where,
       data: {
         ...data,
         isDraft,
@@ -709,8 +714,7 @@ export class OrderService {
             return { id };
           })
         }
-      },
-      where
+      }
     });
 
     this.eventEmitter.emit(

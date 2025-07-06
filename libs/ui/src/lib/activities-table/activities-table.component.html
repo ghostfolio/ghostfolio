@@ -124,7 +124,7 @@
     <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <gf-asset-profile-icon
+        <gf-entity-logo
           [dataSource]="element.SymbolProfile?.dataSource"
           [symbol]="element.SymbolProfile?.symbol"
           [tooltip]="element.SymbolProfile?.name"
@@ -309,14 +309,14 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          @if (element.Account?.Platform?.url) {
-            <gf-asset-profile-icon
+          @if (element.account?.platform?.url) {
+            <gf-entity-logo
               class="mr-1"
-              [tooltip]="element.Account?.Platform?.name"
-              [url]="element.Account?.Platform?.url"
+              [tooltip]="element.account?.platform?.name"
+              [url]="element.account?.platform?.url"
             />
           }
-          <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
+          <span class="d-none d-lg-block">{{ element.account?.name }}</span>
         </div>
       </td>
     </ng-container>
@@ -468,7 +468,7 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToOpenDetails &&
-          row.Account?.isExcluded !== true &&
+          row.account?.isExcluded !== true &&
           row.isDraft === false &&
           ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"

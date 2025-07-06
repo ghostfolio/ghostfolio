@@ -1,0 +1,60 @@
+<div class="container">
+  <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Markets</h1>
+  <div class="mb-5 row">
+    <div class="col-xs-12 col-md-10 offset-md-1">
+      @if (user?.settings?.isExperimentalFeatures) {
+        <div class="align-items-center d-flex flex-grow-1 justify-content-end">
+          <gf-toggle
+            class="d-none d-lg-block"
+            [defaultValue]="fearAndGreedIndexMode"
+            [isLoading]="false"
+            [options]="fearAndGreedIndexModeOptions"
+            (change)="onChangeFearAndGreedIndexMode($event.value)"
+          />
+        </div>
+      }
+      <div class="mb-2 text-center text-muted">
+        <small i18n>Last {{ numberOfDays }} Days</small>
+      </div>
+      <gf-line-chart
+        class="mb-3"
+        symbol="Fear & Greed Index"
+        [colorScheme]="user?.settings?.colorScheme"
+        [historicalDataItems]="historicalDataItems"
+        [isAnimated]="true"
+        [locale]="user?.settings?.locale || undefined"
+        [showXAxis]="true"
+        [showYAxis]="true"
+        [yMax]="100"
+        [yMaxLabel]="greedLabel"
+        [yMin]="0"
+        [yMinLabel]="fearLabel"
+      />
+      <gf-fear-and-greed-index
+        class="d-flex justify-content-center"
+        [fearAndGreedIndex]="fearAndGreedIndex"
+      />
+    </div>
+  </div>
+
+  <div class="mb-3 row">
+    <div class="col-xs-12 col-md-10 offset-md-1">
+      <gf-benchmark
+        [benchmarks]="benchmarks"
+        [deviceType]="deviceType"
+        [locale]="user?.settings?.locale || undefined"
+        [user]="user"
+      />
+      @if (benchmarks?.length > 0) {
+        <div
+          class="gf-text-wrap-balance line-height-1 mt-3 text-center text-muted"
+        >
+          <small i18n>
+            Calculations are based on delayed market data and may not be
+            displayed in real-time.</small
+          >
+        </div>
+      }
+    </div>
+  </div>
+</div>

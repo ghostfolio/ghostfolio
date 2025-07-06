@@ -2,23 +2,36 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [CommonModule, MatButtonModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],
-  templateUrl: './about-overview-page.html',
-  standalone: false
+  templateUrl: './about-overview-page.html'
 })
 export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
-  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+  public routerLinkFaq = publicRoutes.faq.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

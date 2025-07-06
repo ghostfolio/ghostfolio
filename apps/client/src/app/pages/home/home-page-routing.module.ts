@@ -3,7 +3,9 @@ import { HomeMarketComponent } from '@ghostfolio/client/components/home-market/h
 import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
+import { MarketsComponent } from '@ghostfolio/client/components/markets/markets.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,33 +21,34 @@ const routes: Routes = [
         component: HomeOverviewComponent
       },
       {
-        path: 'holdings',
+        path: internalRoutes.home.subRoutes.holdings.path,
         component: HomeHoldingsComponent,
-        title: $localize`Holdings`
+        title: internalRoutes.home.subRoutes.holdings.title
       },
       {
-        path: 'holdings',
-        component: HomeHoldingsComponent,
-        title: $localize`Holdings`
-      },
-      {
-        path: 'summary',
+        path: internalRoutes.home.subRoutes.summary.path,
         component: HomeSummaryComponent,
-        title: $localize`Summary`
+        title: internalRoutes.home.subRoutes.summary.title
       },
       {
-        path: 'market',
+        path: internalRoutes.home.subRoutes.markets.path,
         component: HomeMarketComponent,
-        title: $localize`Markets`
+        title: internalRoutes.home.subRoutes.markets.title
       },
       {
-        path: 'watchlist',
+        path: internalRoutes.home.subRoutes.marketsPremium.path,
+        component: MarketsComponent,
+        title: internalRoutes.home.subRoutes.marketsPremium.title
+      },
+      {
+        path: internalRoutes.home.subRoutes.watchlist.path,
         component: HomeWatchlistComponent,
-        title: $localize`Watchlist`
+        title: internalRoutes.home.subRoutes.watchlist.title
       }
     ],
     component: HomePageComponent,
-    path: ''
+    path: '',
+    title: internalRoutes.home.title
   }
 ];
 

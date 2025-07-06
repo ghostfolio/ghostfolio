@@ -147,7 +147,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
-          .generateAccessToken(aUserId)
+          .updateUserAccessToken(aUserId)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(({ accessToken }) => {
             this.notificationService.alert({

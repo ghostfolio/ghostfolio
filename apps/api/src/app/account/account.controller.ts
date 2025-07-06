@@ -152,8 +152,8 @@ export class AccountController {
       return this.accountService.createAccount(
         {
           ...data,
-          Platform: { connect: { id: platformId } },
-          User: { connect: { id: this.request.user.id } }
+          platform: { connect: { id: platformId } },
+          user: { connect: { id: this.request.user.id } }
         },
         this.request.user.id
       );
@@ -163,7 +163,7 @@ export class AccountController {
       return this.accountService.createAccount(
         {
           ...data,
-          User: { connect: { id: this.request.user.id } }
+          user: { connect: { id: this.request.user.id } }
         },
         this.request.user.id
       );
@@ -250,8 +250,8 @@ export class AccountController {
         {
           data: {
             ...data,
-            Platform: { connect: { id: platformId } },
-            User: { connect: { id: this.request.user.id } }
+            platform: { connect: { id: platformId } },
+            user: { connect: { id: this.request.user.id } }
           },
           where: {
             id_userId: {
@@ -270,10 +270,10 @@ export class AccountController {
         {
           data: {
             ...data,
-            Platform: originalAccount.platformId
+            platform: originalAccount.platformId
               ? { disconnect: true }
               : undefined,
-            User: { connect: { id: this.request.user.id } }
+            user: { connect: { id: this.request.user.id } }
           },
           where: {
             id_userId: {
