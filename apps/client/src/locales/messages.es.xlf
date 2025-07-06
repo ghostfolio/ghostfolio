@@ -6431,7 +6431,7 @@
       </trans-unit>
       <trans-unit id="1099393285611854080" datatype="html">
         <source>Wealth</source>
-        <target state="new">Wealth</target>
+        <target state="translated">Riqueza</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">96</context>
@@ -6439,7 +6439,7 @@
       </trans-unit>
       <trans-unit id="3311387105238837884" datatype="html">
         <source>Wealth Management</source>
-        <target state="new">Wealth Management</target>
+        <target state="translated">Gestión de patrimonios</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">97</context>
@@ -6447,7 +6447,7 @@
       </trans-unit>
       <trans-unit id="797743923912773831" datatype="html">
         <source>Australia</source>
-        <target state="new">Australia</target>
+        <target state="translated">Australia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">74</context>
@@ -6455,7 +6455,7 @@
       </trans-unit>
       <trans-unit id="21641575311466062" datatype="html">
         <source>Austria</source>
-        <target state="new">Austria</target>
+        <target state="translated">Austria</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">75</context>
@@ -6463,7 +6463,7 @@
       </trans-unit>
       <trans-unit id="6787546539374733271" datatype="html">
         <source>Belgium</source>
-        <target state="new">Belgium</target>
+        <target state="translated">Bélgica</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">76</context>
@@ -6471,7 +6471,7 @@
       </trans-unit>
       <trans-unit id="8273479446468988017" datatype="html">
         <source>Bulgaria</source>
-        <target state="new">Bulgaria</target>
+        <target state="translated">Bulgaria</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">78</context>
@@ -6479,7 +6479,7 @@
       </trans-unit>
       <trans-unit id="3486679398271885916" datatype="html">
         <source>Canada</source>
-        <target state="new">Canada</target>
+        <target state="translated">Canadá</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">79</context>
@@ -6487,7 +6487,7 @@
       </trans-unit>
       <trans-unit id="724957661944599897" datatype="html">
         <source>Czech Republic</source>
-        <target state="new">Czech Republic</target>
+        <target state="translated">República Checa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">80</context>
@@ -6495,7 +6495,7 @@
       </trans-unit>
       <trans-unit id="8812557643580169825" datatype="html">
         <source>Finland</source>
-        <target state="new">Finland</target>
+        <target state="translated">Finlandia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">81</context>
@@ -6503,7 +6503,7 @@
       </trans-unit>
       <trans-unit id="956678847762152494" datatype="html">
         <source>France</source>
-        <target state="new">France</target>
+        <target state="translated">Francia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">82</context>
@@ -6511,7 +6511,7 @@
       </trans-unit>
       <trans-unit id="6014862663057951430" datatype="html">
         <source>Germany</source>
-        <target state="new">Germany</target>
+        <target state="translated">Alemania</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">83</context>
@@ -6519,7 +6519,7 @@
       </trans-unit>
       <trans-unit id="212820117866187249" datatype="html">
         <source>India</source>
-        <target state="new">India</target>
+        <target state="translated">India</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">84</context>
