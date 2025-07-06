@@ -255,7 +255,7 @@ export class AdminController {
     return this.adminService.addAssetProfile({
       dataSource,
       symbol,
-      currency: this.request.user.Settings.settings.baseCurrency
+      currency: this.request.user.settings.settings.baseCurrency
     });
   }
 

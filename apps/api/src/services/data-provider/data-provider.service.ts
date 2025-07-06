@@ -678,7 +678,7 @@ export class DataProviderService implements OnModuleInit {
 
         if (
           lookupItem.assetSubClass === 'CRYPTOCURRENCY' &&
-          user?.Settings?.settings.isExperimentalFeatures
+          user?.settings?.settings.isExperimentalFeatures
         ) {
           // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
           lookupItem.name = lookupItem.name.replace(

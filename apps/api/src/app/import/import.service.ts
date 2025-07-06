@@ -159,7 +159,7 @@ export class ImportService {
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
-    const userCurrency = user.Settings.settings.baseCurrency;
+    const userCurrency = user.settings.settings.baseCurrency;
 
     if (!isDryRun && accountsWithBalancesDto?.length) {
       const [existingAccounts, existingPlatforms] = await Promise.all([

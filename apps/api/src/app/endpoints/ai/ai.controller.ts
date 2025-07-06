@@ -49,8 +49,8 @@ export class AiController {
       filters,
       mode,
       impersonationId: undefined,
-      languageCode: this.request.user.Settings.settings.language,
-      userCurrency: this.request.user.Settings.settings.baseCurrency,
+      languageCode: this.request.user.settings.settings.language,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
       userId: this.request.user.id
     });
 

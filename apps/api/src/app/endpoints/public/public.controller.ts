@@ -108,7 +108,7 @@ export class PublicController {
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
             currency,
-            this.request.user?.Settings?.settings.baseCurrency ??
+            this.request.user?.settings?.settings.baseCurrency ??
               DEFAULT_CURRENCY
           )
         );

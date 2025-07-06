@@ -256,13 +256,13 @@ model User {
   id            String          @id @default(uuid())
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
+  settings      Settings?
   subscriptions Subscription[]
   tags          Tag[]
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
   watchlist     SymbolProfile[] @relation("UserWatchlist")
   AccessGive    Access[]        @relation("accessGive")
-  Settings      Settings?
   SymbolProfile SymbolProfile[]
 
   @@index([accessToken])

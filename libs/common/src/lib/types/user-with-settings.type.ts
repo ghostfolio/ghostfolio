@@ -10,7 +10,7 @@ export type UserWithSettings = User & {
   activityCount: number;
   dataProviderGhostfolioDailyRequests: number;
   permissions?: string[];
-  Settings: Settings & { settings: UserSettings };
+  settings: Settings & { settings: UserSettings };
   subscription?: {
     expiresAt?: Date;
     offer: SubscriptionOffer;

@@ -197,5 +197,5 @@ export function hasRole(aUser: UserWithSettings, aRole: Role) {
 }
 
 export function isRestrictedView(aUser: UserWithSettings) {
-  return aUser.Settings.settings.isRestrictedView ?? false;
+  return aUser.settings.settings.isRestrictedView ?? false;
 }
