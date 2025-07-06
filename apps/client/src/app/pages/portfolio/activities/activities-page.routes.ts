@@ -3,12 +3,12 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { ActivitiesPageComponent } from './activities-page.component';
+import { GfActivitiesPageComponent } from './activities-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: ActivitiesPageComponent,
+    component: GfActivitiesPageComponent,
     path: '',
     title: internalRoutes.portfolio.subRoutes.activities.title
   }

@@ -35,7 +35,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './x-ray-page.component.scss',
   templateUrl: './x-ray-page.component.html'
 })
-export class XRayPageComponent {
+export class GfXRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];
   public assetClassClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];

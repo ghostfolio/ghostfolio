@@ -74,7 +74,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   styleUrls: ['./import-activities-dialog.scss'],
   templateUrl: 'import-activities-dialog.html'
 })
-export class ImportActivitiesDialog implements OnDestroy {
+export class GfImportActivitiesDialog implements OnDestroy {
   public accounts: CreateAccountDto[] = [];
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
@@ -102,7 +102,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<ImportActivitiesDialog>,
+    public dialogRef: MatDialogRef<GfImportActivitiesDialog>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
   ) {
