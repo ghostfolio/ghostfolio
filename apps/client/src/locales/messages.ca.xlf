@@ -2279,7 +2279,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">307</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -2686,20 +2686,12 @@
           <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="59d87bdb983dda90c1e86d086430552ec05c7a4d" datatype="html">
-        <source>Valuables</source>
-        <target state="translated">Objectes de valor</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">156</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="2201b2004bc4997a66f6f8ea2511a4e1311f3de1" datatype="html">
         <source>Emergency Fund</source>
         <target state="translated">Fons d’emergència</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -2715,7 +2707,7 @@
         <target state="translated">Efectiu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ee8f8008bae6ce3a49840c4e1d39b4af23d4c263" datatype="html">
@@ -2723,7 +2715,7 @@
         <target state="translated">Actius</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8cce9d03787606e0052d19c2ae7e7fa5ff785e94" datatype="html">
@@ -2731,7 +2723,7 @@
         <target state="translated">Poder adquisitiu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="98fc3013bfcbf452b9f37bbfcdb77b9b882866e3" datatype="html">
@@ -2739,7 +2731,7 @@
         <target state="translated">Exclòs de l’anàlisi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="0b1e2c97e139808a34bd77b7da3504ece6c570cb" datatype="html">
@@ -2747,7 +2739,7 @@
         <target state="translated">Passius</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">243</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -2759,7 +2751,7 @@
         <target state="translated">Valor net</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e702514cebbfb335331b6d6156ffeacb8c3b14e4" datatype="html">
@@ -2767,7 +2759,7 @@
         <target state="translated"> Rendiment anualitzat </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="fe788dd32538034a1afe978e956f3d2403e2df83" datatype="html">
@@ -2775,7 +2767,7 @@
         <target state="translated">Interès</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5403336912114537863" datatype="html">

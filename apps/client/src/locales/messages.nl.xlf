@@ -1229,20 +1229,12 @@
           <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="59d87bdb983dda90c1e86d086430552ec05c7a4d" datatype="html">
-        <source>Valuables</source>
-        <target state="translated">Kostbaarheden</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">156</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="2201b2004bc4997a66f6f8ea2511a4e1311f3de1" datatype="html">
         <source>Emergency Fund</source>
         <target state="translated">Noodfonds</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -1258,7 +1250,7 @@
         <target state="translated">Koopkracht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="67251f04518ae452230c68a748b3fa2838b4db74" datatype="html">
@@ -1266,7 +1258,7 @@
         <target state="translated">Netto waarde</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e702514cebbfb335331b6d6156ffeacb8c3b14e4" datatype="html">
@@ -1274,7 +1266,7 @@
         <target state="translated">Rendement per jaar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d3aa83bd247983dd056a62f56ffb25269bd98d47" datatype="html">
@@ -1286,7 +1278,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">307</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -1850,7 +1842,7 @@
         <target state="translated">Contant geld</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="32072c7fb0469aaf82d256a59b3e0d6ecce973b9" datatype="html">
@@ -2890,7 +2882,7 @@
         <target state="translated">Uitgesloten van analyse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="616064537937996961" datatype="html">
@@ -4146,7 +4138,7 @@
         <target state="translated">Verplichtingen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">243</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -4546,7 +4538,7 @@
         <target state="translated">Assets</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6333857424161463201" datatype="html">
@@ -5480,7 +5472,7 @@
         <target state="translated">Rente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5e848e3fe28ec248b20a7dfb7e874a379312c1f6" datatype="html">
@@ -7960,7 +7952,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="new"> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> Het grootste deel van uw huidige investering staat niet in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">63</context>
@@ -7968,7 +7960,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="new"> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> Het grootste deel van uw huidige investering bevindt zich in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">67</context>
@@ -7976,7 +7968,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">Investering</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">71</context>
@@ -7984,7 +7976,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </source>
-        <target state="new"> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </target>
+        <target state="translated"> Meer dan ${thresholdMax}% van uw huidige investering is in ${currency} (${maxValueRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">72</context>
@@ -7992,7 +7984,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="new"> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </target>
+        <target state="translated"> Het grootste deel van uw huidige investering is in ${currency} (${maxValueRatio}%) en overschrijdt ${thresholdMax}% niet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">76</context>
@@ -8000,7 +7992,7 @@
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
         <source>start</source>
-        <target state="new">start</target>
+        <target state="translated">start</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -8013,7 +8005,7 @@
       </trans-unit>
       <trans-unit id="5608465303990699628" datatype="html">
         <source>Do you really want to generate a new security token?</source>
-        <target state="new">Do you really want to generate a new security token?</target>
+        <target state="translated">Wilt u echt een nieuwe securitytoken genereren?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">150</context>
@@ -8021,7 +8013,7 @@
       </trans-unit>
       <trans-unit id="1b258b258b4cc475ceb2871305b61756b0134f4a" datatype="html">
         <source>Generate</source>
-        <target state="new">Generate</target>
+        <target state="translated">Genereren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
           <context context-type="linenumber">43</context>
@@ -8029,7 +8021,7 @@
       </trans-unit>
       <trans-unit id="2732382861635368484" datatype="html">
         <source>Stocks</source>
-        <target state="new">Stocks</target>
+        <target state="translated">Aandelen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">54</context>
@@ -8037,7 +8029,7 @@
       </trans-unit>
       <trans-unit id="1419479195323304896" datatype="html">
         <source>Cryptocurrencies</source>
-        <target state="new">Cryptocurrencies</target>
+        <target state="translated">Cryptovaluta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">55</context>

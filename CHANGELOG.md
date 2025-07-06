@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed `Settings` to `settings` in the `User` database schema
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Español (`es`)
 
 ## 2.178.0 - 2025-07-05
 

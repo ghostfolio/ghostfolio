@@ -1230,20 +1230,12 @@
           <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="59d87bdb983dda90c1e86d086430552ec05c7a4d" datatype="html">
-        <source>Valuables</source>
-        <target state="translated">Objetos de valor</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">156</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="2201b2004bc4997a66f6f8ea2511a4e1311f3de1" datatype="html">
         <source>Emergency Fund</source>
         <target state="translated">Fondo de emergencia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -1259,7 +1251,7 @@
         <target state="translated">Capacidad de compra</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="67251f04518ae452230c68a748b3fa2838b4db74" datatype="html">
@@ -1267,7 +1259,7 @@
         <target state="translated">Patrimonio neto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e702514cebbfb335331b6d6156ffeacb8c3b14e4" datatype="html">
@@ -1275,7 +1267,7 @@
         <target state="translated">Rendimiento anualizado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d3aa83bd247983dd056a62f56ffb25269bd98d47" datatype="html">
@@ -1287,7 +1279,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">319</context>
+          <context context-type="linenumber">307</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -1851,7 +1843,7 @@
         <target state="translated">Efectivo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="32072c7fb0469aaf82d256a59b3e0d6ecce973b9" datatype="html">
@@ -2891,7 +2883,7 @@
         <target state="translated">Excluido del análisis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="616064537937996961" datatype="html">
@@ -4147,7 +4139,7 @@
         <target state="translated">Pasivos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">255</context>
+          <context context-type="linenumber">243</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -4547,7 +4539,7 @@
         <target state="translated">Activos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6333857424161463201" datatype="html">
@@ -5481,7 +5473,7 @@
         <target state="translated">Interés</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5e848e3fe28ec248b20a7dfb7e874a379312c1f6" datatype="html">
@@ -5690,7 +5682,7 @@
       </trans-unit>
       <trans-unit id="metaKeywords" datatype="html">
         <source> app, asset, cryptocurrency, dashboard, etf, finance, management, performance, portfolio, software, stock, trading, wealth, web3 </source>
-        <target state="new"> app, asset, cryptocurrency, dashboard, etf, finance, management, performance, portfolio, software, stock, trading, wealth, web3 </target>
+        <target state="translated">aplicación, activo, criptomoneda, panel, ETF, finanzas, gestión, rendimiento, cartera, software, acciones, comercio, riqueza, web3 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">9</context>
@@ -6014,7 +6006,7 @@
       </trans-unit>
       <trans-unit id="f42ea256db85ae2dba48b04a7bf0eb1614abac2f" datatype="html">
         <source> If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, based on your total assets of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> and a withdrawal rate of 4%. </source>
-        <target state="new"> If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, based on your total assets of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> and a withdrawal rate of 4%. </target>
+        <target state="translated"> Si te jubilaras hoy, podrías retirar <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> por año<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> o <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> por mes<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, basado en tus activos totales de <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> y una tasa de retiro del 4%. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">67</context>
@@ -6086,7 +6078,7 @@
       </trans-unit>
       <trans-unit id="3148027764877909511" datatype="html">
         <source>Self-Hosting</source>
-        <target state="new">Self-Hosting</target>
+        <target state="translated">Autoalojamiento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.component.ts</context>
           <context context-type="linenumber">49</context>
@@ -6111,7 +6103,7 @@
       </trans-unit>
       <trans-unit id="2998033970178753887" datatype="html">
         <source>Oops! It looks like you’re making too many requests. Please slow down a bit.</source>
-        <target state="new">Oops! It looks like you’re making too many requests. Please slow down a bit.</target>
+        <target state="translated">¡Vaya! Parece que estás haciendo demasiadas solicitudes. Por favor, reduce la velocidad un poco.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">106</context>
@@ -6135,7 +6127,7 @@
       </trans-unit>
       <trans-unit id="7860418101283165917" datatype="html">
         <source>Closed</source>
-        <target state="new">Closed</target>
+        <target state="translated">Cerrado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
           <context context-type="linenumber">38</context>
@@ -6143,7 +6135,7 @@
       </trans-unit>
       <trans-unit id="f2005fa461c06dc2e04d8918bbabedf23604b5b7" datatype="html">
         <source>Activity</source>
-        <target state="new">Activity</target>
+        <target state="translated">Actividad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">222</context>
@@ -6151,7 +6143,7 @@
       </trans-unit>
       <trans-unit id="00ab08d0337ad99d0fabd37b521f8908a33f8550" datatype="html">
         <source>Dividend Yield</source>
-        <target state="new">Dividend Yield</target>
+        <target state="translated">Rendimiento por dividendo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">190</context>
@@ -6175,7 +6167,7 @@
       </trans-unit>
       <trans-unit id="8236987838684066590" datatype="html">
         <source>This action is not allowed.</source>
-        <target state="new">This action is not allowed.</target>
+        <target state="translated">Esta acción no está permitida.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">67</context>
@@ -6207,7 +6199,7 @@
       </trans-unit>
       <trans-unit id="fadfefc05dea78ad9b9e0121f7073d768781776f" datatype="html">
         <source>Delete Activities</source>
-        <target state="new">Delete Activities</target>
+        <target state="translated">Eliminar actividades</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">67</context>
@@ -6247,7 +6239,7 @@
       </trans-unit>
       <trans-unit id="9d11f76485fd1306f47e2c2d585183ea844760f4" datatype="html">
         <source>By ETF Holding</source>
-        <target state="new">By ETF Holding</target>
+        <target state="translated">Por tenencia de ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">333</context>
@@ -6255,7 +6247,7 @@
       </trans-unit>
       <trans-unit id="3d30a34e40fd0afa4f0233005752e4ab615e83a0" datatype="html">
         <source>Approximation based on the top holdings of each ETF</source>
-        <target state="new">Approximation based on the top holdings of each ETF</target>
+        <target state="translated">Aproximación basada en las principales participaciones de cada ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">340</context>
@@ -6263,7 +6255,7 @@
       </trans-unit>
       <trans-unit id="8289b77182a57fbf7ebe3bfd506b85e3fdd9e537" datatype="html">
         <source> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></source>
-        <target state="new"> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
+        <target state="translated">Únete ahora <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> o consulta la cuenta de ejemplo <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">434</context>
@@ -6271,7 +6263,7 @@
       </trans-unit>
       <trans-unit id="5724720497710437101" datatype="html">
         <source>Oops! There was an error setting up biometric authentication.</source>
-        <target state="new">Oops! There was an error setting up biometric authentication.</target>
+        <target state="translated">¡Ups! Hubo un error al configurar la autenticación biométrica.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">302</context>
