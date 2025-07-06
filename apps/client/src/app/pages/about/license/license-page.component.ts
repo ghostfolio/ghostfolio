@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./license-page.scss'],
   templateUrl: './license-page.html'
 })
-export class LicensePageComponent implements OnDestroy {
+export class GfLicensePageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnDestroy() {

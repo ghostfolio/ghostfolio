@@ -3,12 +3,12 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { PrivacyPolicyPageComponent } from './privacy-policy-page.component';
+import { GfPrivacyPolicyPageComponent } from './privacy-policy-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: PrivacyPolicyPageComponent,
+    component: GfPrivacyPolicyPageComponent,
     path: '',
     title: publicRoutes.about.subRoutes.privacyPolicy.title
   }
