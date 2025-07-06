@@ -1,8 +1,13 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
+import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import {
   StepperOrientation,
@@ -15,12 +20,27 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SortDirection } from '@angular/material/sort';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import { AssetClass } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
@@ -34,10 +54,25 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    GfActivitiesTableComponent,
+    GfDialogFooterModule,
+    GfDialogHeaderModule,
+    GfFileDropModule,
+    GfSymbolModule,
+    IonIcon,
+    MatButtonModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatStepperModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-import-activities-dialog',
   styleUrls: ['./import-activities-dialog.scss'],
-  templateUrl: 'import-activities-dialog.html',
-  standalone: false
+  templateUrl: 'import-activities-dialog.html'
 })
 export class ImportActivitiesDialog implements OnDestroy {
   public accounts: CreateAccountDto[] = [];

@@ -103,9 +103,7 @@ const routes: Routes = [
   {
     path: internalRoutes.portfolio.path,
     loadChildren: () =>
-      import('./pages/portfolio/portfolio-page.module').then(
-        (m) => m.PortfolioPageModule
-      )
+      import('./pages/portfolio/portfolio-page.routes').then((m) => m.routes)
   },
   {
     path: publicRoutes.pricing.path,

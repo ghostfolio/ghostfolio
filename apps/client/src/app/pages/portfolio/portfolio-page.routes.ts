@@ -1,45 +1,38 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { PortfolioPageComponent } from './portfolio-page.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     canActivate: [AuthGuard],
     children: [
       {
         path: '',
         loadChildren: () =>
-          import('./analysis/analysis-page.module').then(
-            (m) => m.AnalysisPageModule
-          )
+          import('./analysis/analysis-page.routes').then((m) => m.routes)
       },
       {
         path: internalRoutes.portfolio.subRoutes.activities.path,
         loadChildren: () =>
-          import('./activities/activities-page.module').then(
-            (m) => m.ActivitiesPageModule
-          )
+          import('./activities/activities-page.routes').then((m) => m.routes)
       },
       {
         path: internalRoutes.portfolio.subRoutes.allocations.path,
         loadChildren: () =>
-          import('./allocations/allocations-page.module').then(
-            (m) => m.AllocationsPageModule
-          )
+          import('./allocations/allocations-page.routes').then((m) => m.routes)
       },
       {
         path: internalRoutes.portfolio.subRoutes.fire.path,
         loadChildren: () =>
-          import('./fire/fire-page.module').then((m) => m.FirePageModule)
+          import('./fire/fire-page.routes').then((m) => m.routes)
       },
       {
         path: internalRoutes.portfolio.subRoutes.xRay.path,
         loadChildren: () =>
-          import('./x-ray/x-ray-page.module').then((m) => m.XRayPageModule)
+          import('./x-ray/x-ray-page.routes').then((m) => m.routes)
       }
     ],
     component: PortfolioPageComponent,
@@ -47,9 +40,3 @@ const routes: Routes = [
     title: internalRoutes.portfolio.title
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class PortfolioPageRoutingModule {}

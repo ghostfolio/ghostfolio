@@ -9,13 +9,17 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
@@ -29,10 +33,16 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 
 @Component({
   host: { class: 'has-fab' },
+  imports: [
+    GfActivitiesTableComponent,
+    IonIcon,
+    MatButtonModule,
+    MatSnackBarModule,
+    RouterModule
+  ],
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
-  templateUrl: './activities-page.html',
-  standalone: false
+  templateUrl: './activities-page.html'
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Activity>;

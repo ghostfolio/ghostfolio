@@ -14,7 +14,7 @@
     [selectedIndex]="importStep"
     (selectionChange)="onImportStepChange($event)"
   >
-    <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
+    <mat-step [completed]="importStep === 0">
       <ng-template matStepLabel>
         @if (mode === 'DIVIDEND') {
           <ng-container i18n>Select Holding</ng-container>
@@ -107,7 +107,7 @@
       </div>
     </mat-step>
 
-    <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
+    <mat-step [completed]="importStep === 1">
       <ng-template matStepLabel>
         @if (mode === 'DIVIDEND') {
           <ng-container i18n>Select Dividends</ng-container>
