@@ -16,8 +16,8 @@ const routes: Routes = [
   {
     path: internalRoutes.account.path,
     loadChildren: () =>
-      import('./pages/user-account/user-account-page.module').then(
-        (m) => m.UserAccountPageModule
+      import('./pages/user-account/user-account-page.routes').then(
+        (m) => m.routes
       )
   },
   {
