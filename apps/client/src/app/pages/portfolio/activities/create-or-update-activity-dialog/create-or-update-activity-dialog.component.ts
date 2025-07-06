@@ -49,6 +49,7 @@ import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
     GfEntityLogoComponent,
@@ -67,7 +68,6 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-activity-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-activity-dialog.scss'],
   templateUrl: 'create-or-update-activity-dialog.html'
 })
