@@ -57,7 +57,7 @@ export class ExportService {
       })
     )
       .filter(({ id }) => {
-        return activities.length > 0
+        return activityIds?.length > 0
           ? activities.some(({ accountId }) => {
               return accountId === id;
             })
