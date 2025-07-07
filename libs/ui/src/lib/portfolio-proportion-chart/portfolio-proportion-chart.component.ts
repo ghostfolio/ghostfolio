@@ -29,6 +29,7 @@ import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { isUUID } from 'class-validator';
 import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -245,9 +246,13 @@ export class GfPortfolioProportionChartComponent
       let lightnessRatio = 0.2;
 
       Object.keys(item.subCategory ?? {}).forEach((subCategory) => {
-        backgroundColorSubCategory.push(
-          Color(item.color).lighten(lightnessRatio).hex()
-        );
+        if (item.name === UNKNOWN_KEY) {
+          backgroundColorSubCategory.push(item.color);
+        } else {
+          backgroundColorSubCategory.push(
+            Color(item.color).lighten(lightnessRatio).hex()
+          );
+        }
         dataSubCategory.push(item.subCategory[subCategory].value.toNumber());
         labelSubCategory.push(subCategory);
 
@@ -344,8 +349,14 @@ export class GfPortfolioProportionChartComponent
                     align: 'end',
                     anchor: 'end',
                     formatter: (value, context) => {
+                      const symbol = context.chart.data.labels?.[
+                        context.dataIndex
+                      ] as string;
+
                       return value > 0
-                        ? context.chart.data.labels?.[context.dataIndex]
+                        ? isUUID(symbol)
+                          ? (translate(this.data[symbol]?.name) ?? symbol)
+                          : symbol
                         : '';
                     },
                     offset: 8

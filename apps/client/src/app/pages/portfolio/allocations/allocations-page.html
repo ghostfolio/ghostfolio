@@ -70,7 +70,7 @@
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
-            [data]="positions"
+            [data]="holdings"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['currency']"
             [locale]="user?.settings?.locale"
@@ -92,7 +92,7 @@
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
-            [data]="positions"
+            [data]="holdings"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['assetClassLabel', 'assetSubClassLabel']"
             [locale]="user?.settings?.locale"
@@ -313,7 +313,7 @@
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
-            [data]="positions"
+            [data]="holdings"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['etfProvider']"
             [locale]="user?.settings?.locale"
