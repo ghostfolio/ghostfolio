@@ -46,12 +46,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  createOutline,
   flagOutline,
   readerOutline,
   serverOutline,
@@ -85,7 +86,8 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     MatDialogModule,
     MatFormFieldModule,
     MatTabsModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holding-detail-dialog',
@@ -127,6 +129,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public quantity: number;
   public quantityPrecision = 2;
   public reportDataGlitchMail: string;
+  public routerLinkAdminControlMarketData =
+    internalRoutes.adminControl.subRoutes.marketData.routerLink;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -152,6 +156,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     addIcons({
+      createOutline,
       flagOutline,
       readerOutline,
       serverOutline,

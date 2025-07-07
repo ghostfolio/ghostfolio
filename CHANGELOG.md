@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Manage Asset Profile_ button for administrators to the holding detail dialog
+
 ### Changed
 
 - Improved the language localization in the users table of the admin control panel
