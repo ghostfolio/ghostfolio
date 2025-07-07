@@ -2,7 +2,17 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -10,12 +20,13 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [CommonModule, IonIcon, MatTabsModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-user-account-page',
   styleUrls: ['./user-account-page.scss'],
-  templateUrl: './user-account-page.html',
-  standalone: false
+  templateUrl: './user-account-page.html'
 })
-export class UserAccountPageComponent implements OnDestroy, OnInit {
+export class GfUserAccountPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
   public user: User;
