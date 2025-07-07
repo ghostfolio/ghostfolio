@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization in the users table of the admin control panel
 - Refactored the portfolio pages to standalone
+- Refactored the accounts pages to standalone
 - Renamed `Settings` to `settings` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
