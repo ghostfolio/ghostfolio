@@ -412,16 +412,37 @@
     />
 
     @if (
-      dataSource?.data.length > 0 &&
-      data.hasPermissionToReportDataGlitch === true
+      data.hasPermissionToAccessAdminControl ||
+      (dataSource?.data.length > 0 &&
+        data.hasPermissionToReportDataGlitch === true)
     ) {
       <div class="row">
         <div class="col">
           <hr />
-          <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
-            ><ion-icon class="mr-1" name="flag-outline"></ion-icon
-            ><span i18n>Report Data Glitch</span></a
-          >
+          @if (data.hasPermissionToAccessAdminControl) {
+            <a
+              class="mr-2"
+              mat-stroked-button
+              [queryParams]="{
+                assetProfileDialog: true,
+                dataSource: SymbolProfile?.dataSource,
+                symbol: SymbolProfile?.symbol
+              }"
+              [routerLink]="routerLinkAdminControlMarketData"
+              (click)="onClose()"
+              ><ion-icon class="mr-1" name="create-outline"></ion-icon
+              ><span i18n>Manage Asset Profile</span>...</a
+            >
+          }
+          @if (
+            dataSource?.data.length > 0 &&
+            data.hasPermissionToReportDataGlitch === true
+          ) {
+            <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+              ><ion-icon class="mr-1" name="flag-outline"></ion-icon
+              ><span i18n>Report Data Glitch</span>...</a
+            >
+          }
         </div>
       </div>
     }
