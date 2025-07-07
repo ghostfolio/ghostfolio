@@ -30,6 +30,7 @@ import { Subject } from 'rxjs';
 import { TransferBalanceDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
     GfEntityLogoComponent,
@@ -41,11 +42,10 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule
   ],
   selector: 'gf-transfer-balance-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./transfer-balance-dialog.scss'],
   templateUrl: 'transfer-balance-dialog.html'
 })
-export class TransferBalanceDialog implements OnDestroy {
+export class GfTransferBalanceDialogComponent implements OnDestroy {
   public accounts: Account[] = [];
   public currency: string;
   public transferBalanceForm: FormGroup;
@@ -54,7 +54,7 @@ export class TransferBalanceDialog implements OnDestroy {
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: TransferBalanceDialogParams,
-    public dialogRef: MatDialogRef<TransferBalanceDialog>,
+    public dialogRef: MatDialogRef<GfTransferBalanceDialogComponent>,
     private formBuilder: FormBuilder
   ) {}
 

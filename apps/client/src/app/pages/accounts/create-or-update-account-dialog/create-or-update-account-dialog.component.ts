@@ -37,6 +37,7 @@ import { map, startWith } from 'rxjs/operators';
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
     CommonModule,
@@ -52,11 +53,10 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-account-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-account-dialog.scss'],
   templateUrl: 'create-or-update-account-dialog.html'
 })
-export class CreateOrUpdateAccountDialog implements OnDestroy {
+export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
   public accountForm: FormGroup;
   public currencies: string[] = [];
   public filteredPlatforms: Observable<Platform[]>;
@@ -67,7 +67,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<CreateOrUpdateAccountDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccountDialogComponent>,
     private formBuilder: FormBuilder
   ) {}
 

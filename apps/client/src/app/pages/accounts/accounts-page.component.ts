@@ -23,8 +23,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
-import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
+import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
+import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
   host: { class: 'has-fab page' },
@@ -38,7 +38,7 @@ import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialo
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
 })
-export class AccountsPageComponent implements OnDestroy, OnInit {
+export class GfAccountsPageComponent implements OnDestroy, OnInit {
   public accounts: AccountModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -185,7 +185,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     name,
     platformId
   }: AccountModel) {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance,
@@ -259,7 +259,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openCreateAccountDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance: 0,
@@ -301,7 +301,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openTransferBalanceDialog() {
-    const dialogRef = this.dialog.open(TransferBalanceDialog, {
+    const dialogRef = this.dialog.open(GfTransferBalanceDialogComponent, {
       data: {
         accounts: this.accounts
       },
