@@ -5338,7 +5338,7 @@
       </trans-unit>
       <trans-unit id="ecdfd0aa6379102d20ffcf1e9e762edc54f148f4" datatype="html">
         <source>❌ No</source>
-        <target state="new">❌ No</target>
+        <target state="translated">❌ No</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">147</context>
@@ -5374,7 +5374,7 @@
       </trans-unit>
       <trans-unit id="ff2d2e1c823a7f2f04ab702a021c486d9bfe9854" datatype="html">
         <source> Self-Hosting </source>
-        <target state="new"> Self-Hosting </target>
+        <target state="translated"> Autoallotjament </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">170</context>
@@ -5382,7 +5382,7 @@
       </trans-unit>
       <trans-unit id="fbce449c2e3719c495e4e3ba0107df816b039ebe" datatype="html">
         <source> Use anonymously </source>
-        <target state="new"> Use anonymously </target>
+        <target state="translated"> Utilitza de manera anònima </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">209</context>
@@ -5390,7 +5390,7 @@
       </trans-unit>
       <trans-unit id="f37bf6923c7cffbb879c67fcb782950e28c431d0" datatype="html">
         <source> Free Plan </source>
-        <target state="new"> Free Plan </target>
+        <target state="translated"> Pla gratuït </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">248</context>
@@ -5398,7 +5398,7 @@
       </trans-unit>
       <trans-unit id="ef3b860007773ebddac904fb42a1694b12d285c6" datatype="html">
         <source>Starting from</source>
-        <target state="new">Starting from</target>
+        <target state="translated">A partir de</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">289</context>
@@ -5410,7 +5410,7 @@
       </trans-unit>
       <trans-unit id="752daa6baad0f8b4684b5c6775345b02bed6746e" datatype="html">
         <source>year</source>
-        <target state="new">year</target>
+        <target state="translated">any</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">290</context>
@@ -5422,7 +5422,7 @@
       </trans-unit>
       <trans-unit id="fcde58253a4cfd52c228eebdae74e1be7a1ab714" datatype="html">
         <source>Notes</source>
-        <target state="new">Notes</target>
+        <target state="translated">Notes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">302</context>
@@ -5446,7 +5446,7 @@
       </trans-unit>
       <trans-unit id="47e58765787443fe08ef8ccc25a1419310e43b2a" datatype="html">
         <source> Effortlessly track, analyze, and visualize your wealth with Ghostfolio. </source>
-        <target state="new"> Effortlessly track, analyze, and visualize your wealth with Ghostfolio. </target>
+        <target state="translated"> Fes un seguiment, analitza i visualitza el teu patrimoni sense esforç amb Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">328</context>
@@ -5454,7 +5454,7 @@
       </trans-unit>
       <trans-unit id="968ab39db7fbb2621ba4536940768e6b6ee9c71f" datatype="html">
         <source> Get Started </source>
-        <target state="new"> Get Started </target>
+        <target state="translated"> Comença </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">333</context>
@@ -5462,7 +5462,7 @@
       </trans-unit>
       <trans-unit id="2a9166b3eef0128afb3981b4eeed6e087414adbd" datatype="html">
         <source>Personal Finance Tools</source>
-        <target state="new">Personal Finance Tools</target>
+        <target state="translated">Eines de finances personals</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">351</context>
@@ -5470,7 +5470,7 @@
       </trans-unit>
       <trans-unit id="2446117790692479672" datatype="html">
         <source>Resources</source>
-        <target state="new">Resources</target>
+        <target state="translated">Recursos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">332</context>
@@ -5478,7 +5478,7 @@
       </trans-unit>
       <trans-unit id="464e2dd48454ce55302532bf14e73bb0650480ac" datatype="html">
         <source>Guides</source>
-        <target state="new">Guides</target>
+        <target state="translated">Guies</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/guides/resources-guides.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5486,7 +5486,7 @@
       </trans-unit>
       <trans-unit id="6edd1a650db2af580ebe746813024c45f1d854b1" datatype="html">
         <source>Glossary</source>
-        <target state="new">Glossary</target>
+        <target state="translated">Glossari</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/glossary/resources-glossary.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5494,7 +5494,7 @@
       </trans-unit>
       <trans-unit id="3737711445155929474" datatype="html">
         <source>Membership</source>
-        <target state="new">Membership</target>
+        <target state="translated">Pertinença</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">31</context>
@@ -5502,7 +5502,7 @@
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
         <source>Access</source>
-        <target state="new">Access</target>
+        <target state="translated">Access</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">26</context>
@@ -5510,7 +5510,7 @@
       </trans-unit>
       <trans-unit id="3453373677180899990" datatype="html">
         <source>My Ghostfolio</source>
-        <target state="new">My Ghostfolio</target>
+        <target state="translated">El meu Ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page-routing.module.ts</context>
           <context context-type="linenumber">34</context>
