@@ -23,9 +23,7 @@ const routes: Routes = [
   {
     path: internalRoutes.accounts.path,
     loadChildren: () =>
-      import('./pages/accounts/accounts-page.module').then(
-        (m) => m.AccountsPageModule
-      )
+      import('./pages/accounts/accounts-page.routes').then((m) => m.routes)
   },
   {
     path: internalRoutes.adminControl.path,

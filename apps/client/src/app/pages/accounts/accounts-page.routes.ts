@@ -1,12 +1,11 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { AccountsPageComponent } from './accounts-page.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     canActivate: [AuthGuard],
     component: AccountsPageComponent,
@@ -14,9 +13,3 @@ const routes: Routes = [
     title: internalRoutes.accounts.title
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class AccountsPageRoutingModule {}

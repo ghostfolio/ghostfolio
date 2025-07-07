@@ -1,4 +1,5 @@
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {
   ChangeDetectionStrategy,
@@ -10,10 +11,19 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
+  ReactiveFormsModule,
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { Account } from '@prisma/client';
 import { Subject } from 'rxjs';
 
@@ -21,11 +31,19 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'h-100' },
+  imports: [
+    GfEntityLogoComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-transfer-balance-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./transfer-balance-dialog.scss'],
-  templateUrl: 'transfer-balance-dialog.html',
-  standalone: false
+  templateUrl: 'transfer-balance-dialog.html'
 })
 export class TransferBalanceDialog implements OnDestroy {
   public accounts: Account[] = [];
