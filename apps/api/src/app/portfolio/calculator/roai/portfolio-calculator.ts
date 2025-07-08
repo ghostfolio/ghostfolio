@@ -231,7 +231,19 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const startDateString = format(start, DATE_FORMAT);
 
     const unitPriceAtStartDate = marketSymbolMap[startDateString]?.[symbol];
-    const unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
+    let unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
+
+    const lastOrder = orders.at(-1);
+    if (
+      !unitPriceAtEndDate &&
+      dataSource === 'MANUAL' &&
+      lastOrder?.type === 'BUY' &&
+      lastOrder?.unitPrice
+    ) {
+      // For BUY activities with a MANUAL data source where no historical market price is available,
+      // the calculation should fall back to using the activity's unit price.
+      unitPriceAtEndDate = lastOrder.unitPrice;
+    }
 
     if (
       !unitPriceAtEndDate ||
