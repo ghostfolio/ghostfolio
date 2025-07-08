@@ -7,9 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added alternative investment as an asset class
+- Added collectible as an asset sub class
+
 ### Changed
 
+- Respected the filter by account for accounts when exporting activities on the portfolio activities page
+- Improved the label for asset profiles with `MANUAL` data source in the chart of the holdings tab on the home page
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Fixed the export functionality for accounts without activities
 
 ## 2.179.0 - 2025-07-07
 

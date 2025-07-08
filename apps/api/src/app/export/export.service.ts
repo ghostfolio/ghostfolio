@@ -5,7 +5,8 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { Filter, Export } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
-import { Platform } from '@prisma/client';
+import { Platform, Prisma } from '@prisma/client';
+import { groupBy } from 'lodash';
 
 @Injectable()
 export class ExportService {
@@ -26,6 +27,9 @@ export class ExportService {
     userCurrency: string;
     userId: string;
   }): Promise<Export> {
+    const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
+      return type;
+    });
     const platformsMap: { [platformId: string]: Platform } = {};
 
     let { activities } = await this.orderService.getOrders({
@@ -44,20 +48,30 @@ export class ExportService {
       });
     }
 
+    const where: Prisma.AccountWhereInput = { userId };
+
+    if (filtersByAccount?.length > 0) {
+      where.id = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
+    }
+
     const accounts = (
       await this.accountService.accounts({
+        where,
         include: {
           balances: true,
           platform: true
         },
         orderBy: {
           name: 'asc'
-        },
-        where: { userId }
+        }
       })
     )
       .filter(({ id }) => {
-        return activities.length > 0
+        return activityIds?.length > 0
           ? activities.some(({ accountId }) => {
               return accountId === id;
             })
