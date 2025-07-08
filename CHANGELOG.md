@@ -14,23 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Respected the filter by account for accounts when exporting activities on the portfolio activities page
 - Improved the language localization for Catalan (`ca`)
+
+### Fixed
+
+- Fixed the export functionality for accounts without activities
 
 ## 2.179.0 - 2025-07-07
 
 ### Added
 
 - Added a _Manage Asset Profile_ button for administrators to the holding detail dialog
-
-### Changed
-
-- Respected the filter by account for accounts when exporting activities on the portfolio activities page
-
-### Fixed
-
-- Fixed the export functionality for accounts without activities
-
-## Unreleased
 
 ### Changed
 
