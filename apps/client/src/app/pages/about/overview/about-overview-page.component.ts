@@ -33,7 +33,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./about-overview-page.scss'],
   templateUrl: './about-overview-page.html'
 })
-export class AboutOverviewPageComponent implements OnDestroy, OnInit {
+export class GfAboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;

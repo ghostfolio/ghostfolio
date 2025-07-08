@@ -320,6 +320,10 @@ export class AppComponent implements OnDestroy, OnInit {
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToAccessAdminControl: hasPermission(
+              this.user?.permissions,
+              permissions.accessAdminControl
+            ),
             hasPermissionToCreateOrder:
               !this.hasImpersonationId &&
               hasPermission(this.user?.permissions, permissions.createOrder) &&

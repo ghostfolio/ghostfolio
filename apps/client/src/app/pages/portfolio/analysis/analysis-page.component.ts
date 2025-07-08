@@ -62,7 +62,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./analysis-page.scss'],
   templateUrl: './analysis-page.html'
 })
-export class AnalysisPageComponent implements OnDestroy, OnInit {
+export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
 
   public benchmark: Partial<SymbolProfile>;

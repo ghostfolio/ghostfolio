@@ -3,12 +3,12 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { OpenSourceSoftwareFriendsPageComponent } from './oss-friends-page.component';
+import { GfOpenSourceSoftwareFriendsPageComponent } from './oss-friends-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: OpenSourceSoftwareFriendsPageComponent,
+    component: GfOpenSourceSoftwareFriendsPageComponent,
     path: '',
     title: publicRoutes.about.subRoutes.ossFriends.title
   }

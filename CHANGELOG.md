@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added alternative investment as an asset class
+- Added collectible as an asset sub class
+
+### Changed
+
+- Improved the language localization for Catalan (`ca`)
+
+## 2.179.0 - 2025-07-07
+
+### Added
+
+- Added a _Manage Asset Profile_ button for administrators to the holding detail dialog
+
 ### Changed
 
 - Respected the filter by account for accounts when exporting activities on the portfolio activities page
@@ -20,12 +35,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization in the users table of the admin control panel
+- Refactored the accounts pages to standalone
 - Refactored the portfolio pages to standalone
+- Refactored the user account pages to standalone
 - Renamed `Settings` to `settings` in the `User` database schema
+- Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Español (`es`)
 - Improved the language localization for German (`de`)
 - Upgraded `ionicons` from version `7.4.0` to `8.0.10`
+
+### Fixed
+
+- Fixed the allocations by asset class for unknown asset classes on the allocations page
 
 ## 2.178.0 - 2025-07-05
 

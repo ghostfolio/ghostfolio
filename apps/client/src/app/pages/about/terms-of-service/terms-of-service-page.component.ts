@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./terms-of-service-page.scss'],
   templateUrl: './terms-of-service-page.html'
 })
-export class TermsOfServicePageComponent implements OnDestroy {
+export class GfTermsOfServicePageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnDestroy() {

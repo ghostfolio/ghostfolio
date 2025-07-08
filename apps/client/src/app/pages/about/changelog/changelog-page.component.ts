@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./changelog-page.scss'],
   templateUrl: './changelog-page.html'
 })
-export class ChangelogPageComponent implements OnDestroy {
+export class GfChangelogPageComponent implements OnDestroy {
   public isLoading = true;
 
   private unsubscribeSubject = new Subject<void>();
