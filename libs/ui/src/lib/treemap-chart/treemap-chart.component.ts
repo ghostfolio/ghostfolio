@@ -29,6 +29,7 @@ import { ChartConfiguration } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
+import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -199,18 +200,18 @@ export class GfTreemapChartComponent
     const data: ChartConfiguration<'treemap'>['data'] = {
       datasets: [
         {
-          backgroundColor: (ctx) => {
+          backgroundColor: (context) => {
             let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
                   max([
-                    ctx.raw._data.dateOfFirstActivity ?? new Date(0),
+                    context.raw._data.dateOfFirstActivity ?? new Date(0),
                     startDate
                   ])
                 ),
                 netPerformancePercentage: new Big(
-                  ctx.raw._data.netPerformancePercentWithCurrencyEffect
+                  context.raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
 
@@ -230,18 +231,18 @@ export class GfTreemapChartComponent
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: (ctx) => {
+            color: (context) => {
               let annualizedNetPerformancePercent =
                 getAnnualizedPerformancePercent({
                   daysInMarket: differenceInDays(
                     endDate,
                     max([
-                      ctx.raw._data.dateOfFirstActivity ?? new Date(0),
+                      context.raw._data.dateOfFirstActivity ?? new Date(0),
                       startDate
                     ])
                   ),
                   netPerformancePercentage: new Big(
-                    ctx.raw._data.netPerformancePercentWithCurrencyEffect
+                    context.raw._data.netPerformancePercentWithCurrencyEffect
                   )
                 }).toNumber();
 
@@ -259,11 +260,11 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: (ctx) => {
+            formatter: ({ raw }) => {
               // Round to 4 decimal places
               let netPerformancePercentWithCurrencyEffect =
                 Math.round(
-                  ctx.raw._data.netPerformancePercentWithCurrencyEffect * 10000
+                  raw._data.netPerformancePercentWithCurrencyEffect * 10000
                 ) / 10000;
 
               if (Math.abs(netPerformancePercentWithCurrencyEffect) === 0) {
@@ -272,8 +273,11 @@ export class GfTreemapChartComponent
                 );
               }
 
+              const name = raw._data.name;
+              const symbol = raw._data.symbol;
+
               return [
-                ctx.raw._data.symbol,
+                isUUID(symbol) ? (name ?? symbol) : symbol,
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
@@ -341,19 +345,17 @@ export class GfTreemapChartComponent
         locale: this.locale
       }),
       callbacks: {
-        label: (context) => {
-          const allocationInPercentage = `${((context.raw._data.allocationInPercentage as number) * 100).toFixed(2)}%`;
-          const name = context.raw._data.name;
+        label: ({ raw }) => {
+          const allocationInPercentage = `${((raw._data.allocationInPercentage as number) * 100).toFixed(2)}%`;
+          const name = raw._data.name;
           const sign =
-            context.raw._data.netPerformancePercentWithCurrencyEffect > 0
-              ? '+'
-              : '';
-          const symbol = context.raw._data.symbol;
+            raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
+          const symbol = raw._data.symbol;
 
-          const netPerformanceInPercentageWithSign = `${sign}${(context.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
+          const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
-          if (context.raw._data.valueInBaseCurrency !== null) {
-            const value = context.raw._data.valueInBaseCurrency as number;
+          if (raw._data.valueInBaseCurrency !== null) {
+            const value = raw._data.valueInBaseCurrency as number;
 
             return [
               `${name ?? symbol} (${allocationInPercentage})`,
@@ -363,7 +365,7 @@ export class GfTreemapChartComponent
               })} ${this.baseCurrency}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
-              `${sign}${context.raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+              `${sign}${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
                 this.locale,
                 {
                   maximumFractionDigits: 2,

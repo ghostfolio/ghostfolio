@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the label for asset profiles with `MANUAL` data source in the chart of the holdings tab on the home page
 - Improved the language localization for Catalan (`ca`)
 
 ## 2.179.0 - 2025-07-07
