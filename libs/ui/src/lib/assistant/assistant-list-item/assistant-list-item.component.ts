@@ -1,4 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { SearchMode } from '@ghostfolio/ui/assistant/enums/search-mode';
 import {
   IAssetSearchResultItem,
@@ -54,13 +55,16 @@ export class GfAssistantListItemComponent
         dataSource: this.item?.dataSource,
         symbol: this.item?.symbol
       };
-      this.routerLink = ['/admin', 'market-data'];
+
+      this.routerLink =
+        internalRoutes.adminControl.subRoutes.marketData.routerLink;
     } else if (this.item?.mode === SearchMode.HOLDING) {
       this.queryParams = {
         dataSource: this.item?.dataSource,
         holdingDetailDialog: true,
         symbol: this.item?.symbol
       };
+
       this.routerLink = [];
     } else if (this.item?.mode === SearchMode.QUICK_LINK) {
       this.queryParams = {};
