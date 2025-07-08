@@ -8057,7 +8057,7 @@
       </trans-unit>
       <trans-unit id="2978009302056542263" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">Alternative Investition</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">44</context>
@@ -8065,7 +8065,7 @@
       </trans-unit>
       <trans-unit id="5795124554973640871" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">Sammlerobjekt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
