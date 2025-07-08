@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Respected the filter by account for accounts when exporting activities on the portfolio activities page
+
+### Fixed
+
+- Fixed the export functionality for accounts without activities
+
+## Unreleased
+
+### Changed
+
 - Improved the language localization in the users table of the admin control panel
 - Refactored the portfolio pages to standalone
 - Renamed `Settings` to `settings` in the `User` database schema
@@ -16,10 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Español (`es`)
 - Improved the language localization for German (`de`)
 - Upgraded `ionicons` from version `7.4.0` to `8.0.10`
-
-### Fixed
-
-- Fixed the export functionality for accounts without activities
 
 ## 2.178.0 - 2025-07-05
 
