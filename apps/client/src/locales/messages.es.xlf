@@ -6735,7 +6735,7 @@
       </trans-unit>
       <trans-unit id="5beadaafe995fa04343008b0ab57e579c9fc81b9" datatype="html">
         <source>From the beginning</source>
-        <target state="new">From the beginning</target>
+        <target state="translated">Desde el principio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">60</context>
@@ -6743,7 +6743,7 @@
       </trans-unit>
       <trans-unit id="f7ed8f2e1ac78c5a63741ae684779bcf7a99ab16" datatype="html">
         <source>Oops! Invalid currency.</source>
-        <target state="new">Oops! Invalid currency.</target>
+        <target state="translated">¡Ups! Moneda inválida.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/create-asset-profile-dialog/create-asset-profile-dialog.html</context>
           <context context-type="linenumber">49</context>
@@ -6751,7 +6751,7 @@
       </trans-unit>
       <trans-unit id="f1cc4a59110dd72517210565f76118df74336fec" datatype="html">
         <source>This page has been archived.</source>
-        <target state="new">This page has been archived.</target>
+        <target state="translated">Esta página ha sido archivada.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">14</context>
@@ -6759,7 +6759,7 @@
       </trans-unit>
       <trans-unit id="ea66ce0bb1cb1dcee2bcb86a8876c5f2c2fa65f6" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is Open Source Software</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is Open Source Software</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> es software de código abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">139</context>
@@ -6767,7 +6767,7 @@
       </trans-unit>
       <trans-unit id="aa945d3772281b66851cc8b86d6de9726e65db70" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is not Open Source Software</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is not Open Source Software</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> no es software de código abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">146</context>
@@ -6775,7 +6775,7 @@
       </trans-unit>
       <trans-unit id="942e46b94b9d9662c3c3b7b5e7f9005c7b9feab7" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> is Open Source Software</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> is Open Source Software</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> es software de código abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">156</context>
@@ -6783,7 +6783,7 @@
       </trans-unit>
       <trans-unit id="08beed5100360c242c0aec92e8706d92f0cb70f3" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> is not Open Source Software</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> is not Open Source Software</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> no es software de código abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">163</context>
@@ -6791,7 +6791,7 @@
       </trans-unit>
       <trans-unit id="1302d86668c92816f6e69a61fee77d573ace918b" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be self-hosted</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be self-hosted</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> se puede autoalojar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">178</context>
@@ -6799,7 +6799,7 @@
       </trans-unit>
       <trans-unit id="2371f735292afd7ed2b6c90640068d33667933e7" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be self-hosted</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be self-hosted</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> no se puede autoalojar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">185</context>
@@ -6807,7 +6807,7 @@
       </trans-unit>
       <trans-unit id="4803807735afa465179312a0094a432c7d8e1a55" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> can be self-hosted</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> can be self-hosted</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> se puede autoalojar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">195</context>
@@ -6815,7 +6815,7 @@
       </trans-unit>
       <trans-unit id="e44d1606f6b1c8b549b5bbc22c8f2d53b6626404" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> cannot be self-hosted</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> cannot be self-hosted</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> no se puede autoalojar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">202</context>
@@ -6823,7 +6823,7 @@
       </trans-unit>
       <trans-unit id="575dc02bb1fbd579cb7ecca00198bbf2893d6115" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be used anonymously</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be used anonymously</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> se puede usar de forma anónima</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">217</context>
@@ -6831,7 +6831,7 @@
       </trans-unit>
       <trans-unit id="60bcadcc133112179baf414d6bca496616026ddf" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be used anonymously</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be used anonymously</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> no se puede usar de forma anónima</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">224</context>
@@ -6839,7 +6839,7 @@
       </trans-unit>
       <trans-unit id="ea9dead7214d6e5e68bedcfc41ed92e6f331b476" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> can be used anonymously</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> can be used anonymously</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> se puede usar de forma anónima</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">234</context>
@@ -6847,7 +6847,7 @@
       </trans-unit>
       <trans-unit id="d69adb6f3253a16368a171d0a5d998e9a6b95717" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> cannot be used anonymously</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> cannot be used anonymously</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> no se puede usar de forma anónima</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">241</context>
@@ -6855,7 +6855,7 @@
       </trans-unit>
       <trans-unit id="0499b37a6ed7d654307685844b35684df638a95f" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> offers a free plan</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> offers a free plan</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ofrece un plan gratuito</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">256</context>
@@ -6863,7 +6863,7 @@
       </trans-unit>
       <trans-unit id="0a3bfda56ea7cd7ae419cb5091e3a68ade032c30" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> does not offer a free plan</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> does not offer a free plan</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> no ofrece un plan gratuito</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">263</context>
@@ -6871,7 +6871,7 @@
       </trans-unit>
       <trans-unit id="04eede9cafd81f04b01b6c7937e047824f78b05d" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> offers a free plan</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> offers a free plan</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> ofrece un plan gratuito</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">273</context>
@@ -6879,7 +6879,7 @@
       </trans-unit>
       <trans-unit id="2452ec985c64ade4904d93697e68d3846beb2bf4" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> does not offer a free plan</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> does not offer a free plan</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> no ofrece un plan gratuito</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">280</context>
