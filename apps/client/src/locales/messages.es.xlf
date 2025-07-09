@@ -6727,7 +6727,7 @@
       </trans-unit>
       <trans-unit id="65cefcc53d1f6445df7568e8a40c49165f1090ee" datatype="html">
         <source>This year</source>
-        <target state="translated">este año</target>
+        <target state="translated">Este año</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">42</context>
