@@ -200,6 +200,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public initialize() {
     this.historicalDataItems = undefined;
 
+    this.adminService
+      .fetchAdminData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ settings }) => {
+        this.isDataGatheringEnabled =
+          settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -286,16 +296,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         });
 
         this.assetProfileForm.markAsPristine();
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.adminService
-      .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ settings }) => {
-        this.isDataGatheringEnabled =
-          settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
 
         this.changeDetectorRef.markForCheck();
       });
