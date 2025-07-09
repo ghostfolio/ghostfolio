@@ -245,6 +245,7 @@ model Tag {
 
 model User {
   accessesGet   Access[]        @relation("accessGet")
+  accessesGive  Access[]        @relation("accessGive")
   accessToken   String?
   accounts      Account[]
   activities    Order[]
@@ -262,7 +263,6 @@ model User {
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
   watchlist     SymbolProfile[] @relation("UserWatchlist")
-  AccessGive    Access[]        @relation("accessGive")
   SymbolProfile SymbolProfile[]
 
   @@index([accessToken])
@@ -278,6 +278,7 @@ enum AccessPermission {
 }
 
 enum AssetClass {
+  ALTERNATIVE_INVESTMENT
   COMMODITY
   EQUITY
   FIXED_INCOME
@@ -288,6 +289,7 @@ enum AssetClass {
 enum AssetSubClass {
   BOND
   CASH
+  COLLECTIBLE
   COMMODITY
   CRYPTOCURRENCY
   ETF

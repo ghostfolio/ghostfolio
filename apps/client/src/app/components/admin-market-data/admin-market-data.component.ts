@@ -68,16 +68,10 @@ export class AdminMarketDataComponent
   @ViewChild(MatSort) sort: MatSort;
 
   public activeFilters: Filter[] = [];
-  public allFilters: Filter[] = [
-    AssetSubClass.BOND,
-    AssetSubClass.COMMODITY,
-    AssetSubClass.CRYPTOCURRENCY,
-    AssetSubClass.ETF,
-    AssetSubClass.MUTUALFUND,
-    AssetSubClass.PRECIOUS_METAL,
-    AssetSubClass.PRIVATE_EQUITY,
-    AssetSubClass.STOCK
-  ]
+  public allFilters: Filter[] = Object.keys(AssetSubClass)
+    .filter((assetSubClass) => {
+      return assetSubClass !== 'CASH';
+    })
     .map((assetSubClass) => {
       return {
         id: assetSubClass.toString(),

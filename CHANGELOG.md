@@ -7,10 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Fixed a Biometric authentication issue related to matching passkeys
+
+## 2.180.0 - 2025-07-08
+
+### Added
+
+- Added alternative investment as an asset class
+- Added collectible as an asset sub class
+
+### Changed
+
+- Respected the filter by account for accounts when exporting activities on the portfolio activities page
+- Improved the label for asset profiles with `MANUAL` data source in the chart of the holdings tab on the home page
+- Renamed `AccessGive` to `accessesGive` in the `User` database schema
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Fixed the export functionality for accounts without activities
+
+## 2.179.0 - 2025-07-07
+
+### Added
+
+- Added a _Manage Asset Profile_ button for administrators to the holding detail dialog
+
 ### Changed
 
 - Improved the language localization in the users table of the admin control panel
+- Refactored the accounts pages to standalone
 - Refactored the portfolio pages to standalone
+- Refactored the user account pages to standalone
 - Renamed `Settings` to `settings` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
@@ -20,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed a Biometric authentication issue related to matching passkeys
+- Fixed the allocations by asset class for unknown asset classes on the allocations page
 
 ## 2.178.0 - 2025-07-05
 

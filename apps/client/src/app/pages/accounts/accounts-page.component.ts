@@ -2,7 +2,9 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
+import { GfAccountDetailDialogModule } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.module';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-table/accounts-table.module';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -11,8 +13,9 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
@@ -20,17 +23,22 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
-import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
+import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
+import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
   host: { class: 'has-fab page' },
+  imports: [
+    GfAccountDetailDialogModule,
+    GfAccountsTableModule,
+    MatButtonModule,
+    RouterModule
+  ],
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
-  templateUrl: './accounts-page.html',
-  standalone: false
+  templateUrl: './accounts-page.html'
 })
-export class AccountsPageComponent implements OnDestroy, OnInit {
+export class GfAccountsPageComponent implements OnDestroy, OnInit {
   public accounts: AccountModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -177,7 +185,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     name,
     platformId
   }: AccountModel) {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance,
@@ -251,7 +259,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openCreateAccountDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance: 0,
@@ -293,7 +301,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openTransferBalanceDialog() {
-    const dialogRef = this.dialog.open(TransferBalanceDialog, {
+    const dialogRef = this.dialog.open(GfTransferBalanceDialogComponent, {
       data: {
         accounts: this.accounts
       },
