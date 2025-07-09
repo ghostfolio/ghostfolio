@@ -1272,26 +1272,36 @@ export class PortfolioService {
               [
                 new RegionalMarketClusterRiskAsiaPacific(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.asiaPacific.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskEmergingMarkets(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.emergingMarkets.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskEurope(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.europe.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskJapan(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.japan.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskNorthAmerica(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.northAmerica.valueInBaseCurrency
                 )

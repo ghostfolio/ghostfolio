@@ -1,5 +1,6 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Settings } from './interfaces/rule-settings.interface';
@@ -10,10 +11,13 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     currentValueInBaseCurrency: number,
     emergingMarketsValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: RegionalMarketClusterRiskEmergingMarkets.name
     });
 
@@ -30,26 +34,40 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
     if (emergingMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The Emerging Markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) exceeds ${(
-          ruleSettings.thresholdMax * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.regionClusterRiskEmergingMarkets.false.max',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     } else if (emergingMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The Emerging Markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is below ${(
-          ruleSettings.thresholdMin * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.regionClusterRiskEmergingMarkets.false.min',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The Emerging Markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is within the range of ${(
-        ruleSettings.thresholdMin * 100
-      ).toPrecision(
-        3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.regionClusterRiskEmergingMarkets.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+          thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -72,6 +90,10 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
   }
 
   public getName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.regionClusterRiskEmergingMarkets',
+      languageCode: this.getLanguageCode()
+    });
     return 'Emerging Markets';
   }
 
