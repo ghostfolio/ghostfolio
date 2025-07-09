@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the asset profile dialog’s data gathering checkbox of the admin control panel to reflect the global settings
+
 ## 2.180.0 - 2025-07-08
 
 ### Added
@@ -98,7 +104,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Account` to `account` in the `Order` database schema
 - Improved the language localization for German (`de`)
 - Upgraded `prettier` from version `3.5.3` to `3.6.2`
-- Improved the _Asset Profile_ dialog to synchronize the state of the _Data Gathering_ checkbox with global settings
 
 ## 2.175.0 - 2025-06-28
 
