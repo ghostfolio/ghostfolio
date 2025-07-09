@@ -60,8 +60,8 @@ export class WebAuthService {
       timeout: 60000,
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
-        requireResidentKey: false,
-        userVerification: 'required'
+        residentKey: 'required',
+        userVerification: 'preferred'
       }
     };
 
@@ -91,6 +91,7 @@ export class WebAuthService {
         expectedChallenge,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
+        requireUserVerification: false,
         response: {
           clientExtensionResults: credential.clientExtensionResults,
           id: credential.id,
@@ -152,12 +153,7 @@ export class WebAuthService {
     }
 
     const opts: GenerateAuthenticationOptionsOpts = {
-      allowCredentials: [
-        {
-          id: isoBase64URL.fromBuffer(device.credentialId),
-          transports: ['internal']
-        }
-      ],
+      allowCredentials: [],
       rpID: this.rpID,
       timeout: 60000,
       userVerification: 'preferred'
@@ -200,6 +196,7 @@ export class WebAuthService {
         expectedChallenge: `${user.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
+        requireUserVerification: false,
         response: {
           clientExtensionResults: credential.clientExtensionResults,
           id: credential.id,
