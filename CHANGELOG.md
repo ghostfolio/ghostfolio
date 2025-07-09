@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Spanish (`es`)
+
 ### Fixed
 
 - Fixed a Biometric authentication issue related to matching passkeys
