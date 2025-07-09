@@ -18,6 +18,7 @@ import {
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import {
+  LookupItem,
   PortfolioDetails,
   PortfolioDividends,
   PortfolioHoldingResponse,
@@ -426,6 +427,28 @@ export class PortfolioController {
     });
 
     return { holdings };
+  }
+
+  @Get('lookup')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async lookupSymbol(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('query') filterBySearchQuery?: string
+  ): Promise<{ items: LookupItem[] }> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterBySearchQuery
+    });
+
+    return {
+      items: await this.portfolioService.getLookup({
+        filters,
+        impersonationId,
+        userId: this.request.user.id
+      })
+    };
   }
 
   @Get('investments')
