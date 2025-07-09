@@ -6591,7 +6591,7 @@
       </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
-        <target state="new">Error</target>
+        <target state="translated">Error</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">540</context>
@@ -6599,7 +6599,7 @@
       </trans-unit>
       <trans-unit id="c95505b5a74151a0c235b19b9c41db7983205ba7" datatype="html">
         <source>Deactivate</source>
-        <target state="new">Deactivate</target>
+        <target state="translated">Desactivar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">72</context>
@@ -6607,7 +6607,7 @@
       </trans-unit>
       <trans-unit id="a8f5a3b30397a5dc1051a9c90c1cfa22537d7c4d" datatype="html">
         <source>Activate</source>
-        <target state="new">Activate</target>
+        <target state="translated">Activar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">74</context>
@@ -6615,7 +6615,7 @@
       </trans-unit>
       <trans-unit id="43c4133c7a0263d2e33dd4c2e74d40784b2e4b1c" datatype="html">
         <source>Inactive</source>
-        <target state="new">Inactive</target>
+        <target state="translated">Inactiva</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">232</context>
@@ -6623,7 +6623,7 @@
       </trans-unit>
       <trans-unit id="2159130950882492111" datatype="html">
         <source>Cancel</source>
-        <target state="new">Cancel</target>
+        <target state="translated">Cancelar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">9</context>
@@ -6631,7 +6631,7 @@
       </trans-unit>
       <trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source>
-        <target state="new">Close</target>
+        <target state="translated">Cerca</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">11</context>
@@ -6639,7 +6639,7 @@
       </trans-unit>
       <trans-unit id="2807800733729323332" datatype="html">
         <source>Yes</source>
-        <target state="new">Yes</target>
+        <target state="translated">Sí</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">32</context>
@@ -6647,7 +6647,7 @@
       </trans-unit>
       <trans-unit id="665692df9ab12bc228c1276f7d04e97902ff9afc" datatype="html">
         <source>Copy link to clipboard</source>
-        <target state="new">Copy link to clipboard</target>
+        <target state="translated">Copiar enlace al portapapeles</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">70</context>
@@ -6655,7 +6655,7 @@
       </trans-unit>
       <trans-unit id="306e3758e5303c780f0984c003e6283d49796f79" datatype="html">
         <source>Portfolio Snapshot</source>
-        <target state="new">Portfolio Snapshot</target>
+        <target state="translated">Instantánea de la cartera</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">39</context>
@@ -6679,7 +6679,7 @@
       </trans-unit>
       <trans-unit id="5502bf2eace842803c7b3f5ce5f600e102d3424a" datatype="html">
         <source>Threshold Min</source>
-        <target state="new">Threshold Min</target>
+        <target state="translated">Umbral mínimo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
           <context context-type="linenumber">54</context>
@@ -6687,7 +6687,7 @@
       </trans-unit>
       <trans-unit id="012b48ee5281a77c66760b2007c3ccd7e34aa340" datatype="html">
         <source>Threshold Max</source>
-        <target state="new">Threshold Max</target>
+        <target state="translated">Umbral máximo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
           <context context-type="linenumber">92</context>
@@ -6695,7 +6695,7 @@
       </trans-unit>
       <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
         <source>Close</source>
-        <target state="new">Close</target>
+        <target state="translated">Cerca</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
           <context context-type="linenumber">129</context>
@@ -6703,7 +6703,7 @@
       </trans-unit>
       <trans-unit id="072d4d4ec83a5a97345a1c13b90c213b47326d09" datatype="html">
         <source>Customize</source>
-        <target state="new">Customize</target>
+        <target state="translated">Personalizar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">67</context>
@@ -6711,7 +6711,7 @@
       </trans-unit>
       <trans-unit id="06296af0cdaf7bed02043379359ed1975fc22077" datatype="html">
         <source>No auto-renewal.</source>
-        <target state="new">No auto-renewal.</target>
+        <target state="translated">Sin renovación automática.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
           <context context-type="linenumber">70</context>
@@ -6719,7 +6719,7 @@
       </trans-unit>
       <trans-unit id="7fb1099e29660162f9154d5b2feee7743a423df6" datatype="html">
         <source>Today</source>
-        <target state="new">Today</target>
+        <target state="translated">Hoy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">24</context>
@@ -6727,7 +6727,7 @@
       </trans-unit>
       <trans-unit id="65cefcc53d1f6445df7568e8a40c49165f1090ee" datatype="html">
         <source>This year</source>
-        <target state="new">This year</target>
+        <target state="translated">este año</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">42</context>
