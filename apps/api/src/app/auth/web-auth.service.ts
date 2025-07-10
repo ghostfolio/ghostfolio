@@ -25,6 +25,7 @@ import {
   VerifyRegistrationResponseOpts
 } from '@simplewebauthn/server';
 import { isoBase64URL, isoUint8Array } from '@simplewebauthn/server/helpers';
+import ms from 'ms';
 
 import {
   AssertionCredentialJSON,
@@ -41,42 +42,42 @@ export class WebAuthService {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  get rpID() {
-    return new URL(this.configurationService.get('ROOT_URL')).hostname;
+  private get expectedOrigin() {
+    return this.configurationService.get('ROOT_URL');
   }
 
-  get expectedOrigin() {
-    return this.configurationService.get('ROOT_URL');
+  private get rpID() {
+    return new URL(this.configurationService.get('ROOT_URL')).hostname;
   }
 
   public async generateRegistrationOptions() {
     const user = this.request.user;
 
     const opts: GenerateRegistrationOptionsOpts = {
-      rpName: 'Ghostfolio',
-      rpID: this.rpID,
-      userID: isoUint8Array.fromUTF8String(user.id),
-      userName: '',
-      timeout: 60000,
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
         residentKey: 'required',
         userVerification: 'preferred'
-      }
+      },
+      rpID: this.rpID,
+      rpName: 'Ghostfolio',
+      timeout: ms('60 seconds'),
+      userID: isoUint8Array.fromUTF8String(user.id),
+      userName: ''
     };
 
-    const options = await generateRegistrationOptions(opts);
+    const registrationOptions = await generateRegistrationOptions(opts);
 
     await this.userService.updateUser({
       data: {
-        authChallenge: options.challenge
+        authChallenge: registrationOptions.challenge
       },
       where: {
         id: user.id
       }
     });
 
-    return options;
+    return registrationOptions;
   }
 
   public async verifyAttestation(
@@ -84,8 +85,8 @@ export class WebAuthService {
   ): Promise<AuthDeviceDto> {
     const user = this.request.user;
     const expectedChallenge = user.authChallenge;
-
     let verification: VerifiedRegistrationResponse;
+
     try {
       const opts: VerifyRegistrationResponseOpts = {
         expectedChallenge,
@@ -100,6 +101,7 @@ export class WebAuthService {
           type: 'public-key'
         }
       };
+
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
       Logger.error(error, 'WebAuthService');
@@ -145,7 +147,7 @@ export class WebAuthService {
     throw new InternalServerErrorException('An unknown error occurred');
   }
 
-  public async generateAssertionOptions(deviceId: string) {
+  public async generateAuthenticationOptions(deviceId: string) {
     const device = await this.deviceService.authDevice({ id: deviceId });
 
     if (!device) {
@@ -155,25 +157,25 @@ export class WebAuthService {
     const opts: GenerateAuthenticationOptionsOpts = {
       allowCredentials: [],
       rpID: this.rpID,
-      timeout: 60000,
+      timeout: ms('60 seconds'),
       userVerification: 'preferred'
     };
 
-    const options = await generateAuthenticationOptions(opts);
+    const authenticationOptions = await generateAuthenticationOptions(opts);
 
     await this.userService.updateUser({
       data: {
-        authChallenge: options.challenge
+        authChallenge: authenticationOptions.challenge
       },
       where: {
         id: device.userId
       }
     });
 
-    return options;
+    return authenticationOptions;
   }
 
-  public async verifyAssertion(
+  public async verifyAuthentication(
     deviceId: string,
     credential: AssertionCredentialJSON
   ) {
@@ -186,6 +188,7 @@ export class WebAuthService {
     const user = await this.userService.user({ id: device.userId });
 
     let verification: VerifiedAuthenticationResponse;
+
     try {
       const opts: VerifyAuthenticationResponseOpts = {
         credential: {
@@ -205,13 +208,14 @@ export class WebAuthService {
           type: 'public-key'
         }
       };
+
       verification = await verifyAuthenticationResponse(opts);
     } catch (error) {
       Logger.error(error, 'WebAuthService');
       throw new InternalServerErrorException({ error: error.message });
     }
 
-    const { verified, authenticationInfo } = verification;
+    const { authenticationInfo, verified } = verification;
 
     if (verified) {
       device.counter = authenticationInfo.newCounter;
