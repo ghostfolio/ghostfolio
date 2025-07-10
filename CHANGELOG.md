@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Spanish (`es`)
+
+## 2.180.0 - 2025-07-08
+
 ### Added
 
 - Added alternative investment as an asset class
@@ -16,7 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Respected the filter by account for accounts when exporting activities on the portfolio activities page
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the holdings tab on the home page
+- Renamed `AccessGive` to `accessesGive` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 
 ### Fixed
