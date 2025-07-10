@@ -534,8 +534,8 @@
     <div class="gf-spacer">
       <mat-checkbox
         color="primary"
-        [checked]="assetProfile?.isActive ?? false"
-        [disabled]="isEditAssetProfileIdentifierMode"
+        [checked]="isDataGatheringEnabled && (assetProfile?.isActive ?? false)"
+        [disabled]="!isDataGatheringEnabled || isEditAssetProfileIdentifierMode"
         (change)="onToggleIsActive($event)"
       >
         <ng-container i18n>Data Gathering</ng-container>
