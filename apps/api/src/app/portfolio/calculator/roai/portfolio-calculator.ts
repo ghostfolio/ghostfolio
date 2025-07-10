@@ -237,10 +237,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     if (
       !unitPriceAtEndDate &&
       dataSource === 'MANUAL' &&
-      lastOrder?.type === 'BUY' &&
+      ['BUY', 'SELL'].includes(lastOrder?.type) &&
       lastOrder?.unitPrice
     ) {
-      // For BUY activities with a MANUAL data source where no historical market price is available,
+      // For BUY/SELL activities with a MANUAL data source where no historical market price is available,
       // the calculation should fall back to using the activity's unit price.
       unitPriceAtEndDate = lastOrder.unitPrice;
     }
