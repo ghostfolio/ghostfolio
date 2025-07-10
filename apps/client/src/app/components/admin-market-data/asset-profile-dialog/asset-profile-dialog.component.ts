@@ -56,7 +56,10 @@ import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { AssetProfileDialogParams } from './interfaces/interfaces';
+import {
+  AssetProfileDialogParams,
+  SelectOptionValue
+} from './interfaces/interfaces';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -76,20 +79,30 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
   public assetProfileClass: string;
+  public assetProfileSubClass: string;
 
-  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
-    return { id: assetClass, label: translate(assetClass) };
+  public assetClasses = Object.keys(AssetClass).map((id) => {
+    return { id, label: translate(id) };
   });
-
-  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
-    return { id: assetSubClass, label: translate(assetSubClass) };
-  });
+  public allAssetSubClasses = Object.keys(AssetSubClass).reduce(
+    (acc, id) => {
+      acc[id] = {
+        id,
+        label: translate(id)
+      };
+      return acc;
+    },
+    {} as Record<AssetSubClass, SelectOptionValue>
+  );
+  public assetSubClasses: SelectOptionValue[] = [];
 
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
+  public assetClassControl = new FormControl<AssetClass>(undefined);
+  public assetSubClassControl = new FormControl<AssetSubClass>(undefined);
   public assetProfileForm = this.formBuilder.group({
-    assetClass: new FormControl<AssetClass>(undefined),
-    assetSubClass: new FormControl<AssetSubClass>(undefined),
+    assetClass: this.assetClassControl,
+    assetSubClass: this.assetSubClassControl,
     comment: '',
     countries: '',
     currency: '',
@@ -125,7 +138,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
   );
 
-  public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
 
   public countries: {
@@ -216,6 +228,49 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
         }
+      });
+
+    this.assetClassControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((assetClass) => {
+        switch (assetClass) {
+          case AssetClass.ALTERNATIVE_INVESTMENT:
+            this.assetSubClasses = [
+              this.allAssetSubClasses[AssetSubClass.COLLECTIBLE]
+            ];
+            break;
+          case AssetClass.COMMODITY:
+            this.assetSubClasses = [
+              this.allAssetSubClasses[AssetSubClass.COMMODITY],
+              this.allAssetSubClasses[AssetSubClass.PRECIOUS_METAL]
+            ];
+            break;
+          case AssetClass.EQUITY:
+            this.assetSubClasses = [
+              this.allAssetSubClasses[AssetSubClass.ETF],
+              this.allAssetSubClasses[AssetSubClass.PRIVATE_EQUITY],
+              this.allAssetSubClasses[AssetSubClass.STOCK]
+            ];
+            break;
+          case AssetClass.FIXED_INCOME:
+            this.assetSubClasses = [
+              this.allAssetSubClasses[AssetSubClass.BOND],
+              this.allAssetSubClasses[AssetSubClass.MUTUALFUND]
+            ];
+            break;
+          case AssetClass.LIQUIDITY:
+            this.assetSubClasses = [
+              this.allAssetSubClasses[AssetSubClass.CRYPTOCURRENCY]
+            ];
+            break;
+          default:
+            this.assetSubClasses = [];
+            break;
+        }
+
+        this.assetSubClassControl.setValue(this.assetSubClasses[0]?.id);
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService
