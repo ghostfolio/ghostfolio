@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed a Biometric authentication issue related to matching passkeys
+- Fixed an issue in the biometric authentication related to matching passkeys
 
 ## 2.180.0 - 2025-07-08
 
