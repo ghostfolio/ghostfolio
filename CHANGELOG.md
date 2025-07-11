@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Spanish (`es`)
 - Improved the language localization for Turkish (`tr`)
 
+### Fixed
+
+- Fixed an issue in the biometric authentication related to matching passkeys
+
 ## 2.180.0 - 2025-07-08
 
 ### Added
