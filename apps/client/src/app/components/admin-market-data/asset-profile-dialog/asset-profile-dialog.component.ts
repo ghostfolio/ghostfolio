@@ -6,6 +6,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import {
+  ASSET_CLASS_MAPPING,
   ghostfolioScraperApiSymbolPrefix,
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
@@ -58,7 +59,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 
 import {
   AssetProfileDialogParams,
-  SelectOptionValue
+  SelectOption
 } from './interfaces/interfaces';
 
 @Component({
@@ -82,19 +83,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfileSubClass: string;
 
   public assetClasses = Object.keys(AssetClass).map((id) => {
-    return { id, label: translate(id) };
+    return { id, label: translate(id) } as SelectOption;
   });
-  public allAssetSubClasses = Object.keys(AssetSubClass).reduce(
-    (acc, id) => {
-      acc[id] = {
-        id,
-        label: translate(id)
-      };
-      return acc;
-    },
-    {} as Record<AssetSubClass, SelectOptionValue>
-  );
-  public assetSubClasses: SelectOptionValue[] = [];
+  public assetSubClasses: SelectOption[] = [];
 
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
@@ -233,42 +224,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.assetClassControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((assetClass) => {
-        switch (assetClass) {
-          case AssetClass.ALTERNATIVE_INVESTMENT:
-            this.assetSubClasses = [
-              this.allAssetSubClasses[AssetSubClass.COLLECTIBLE]
-            ];
-            break;
-          case AssetClass.COMMODITY:
-            this.assetSubClasses = [
-              this.allAssetSubClasses[AssetSubClass.COMMODITY],
-              this.allAssetSubClasses[AssetSubClass.PRECIOUS_METAL]
-            ];
-            break;
-          case AssetClass.EQUITY:
-            this.assetSubClasses = [
-              this.allAssetSubClasses[AssetSubClass.ETF],
-              this.allAssetSubClasses[AssetSubClass.PRIVATE_EQUITY],
-              this.allAssetSubClasses[AssetSubClass.STOCK]
-            ];
-            break;
-          case AssetClass.FIXED_INCOME:
-            this.assetSubClasses = [
-              this.allAssetSubClasses[AssetSubClass.BOND],
-              this.allAssetSubClasses[AssetSubClass.MUTUALFUND]
-            ];
-            break;
-          case AssetClass.LIQUIDITY:
-            this.assetSubClasses = [
-              this.allAssetSubClasses[AssetSubClass.CRYPTOCURRENCY]
-            ];
-            break;
-          default:
-            this.assetSubClasses = [];
-            break;
-        }
+        const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
 
-        this.assetSubClassControl.setValue(this.assetSubClasses[0]?.id);
+        this.assetSubClasses = assetSubClasses.map((assetSubClass) => {
+          return {
+            id: assetSubClass,
+            label: translate(assetSubClass)
+          };
+        });
+
+        this.assetSubClassControl.setValue(null);
 
         this.changeDetectorRef.markForCheck();
       });

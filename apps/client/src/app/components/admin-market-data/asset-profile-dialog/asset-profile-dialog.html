@@ -316,6 +316,7 @@
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-label i18n>Asset Sub Class</mat-label>
           <mat-select formControlName="assetSubClass">
+            <mat-option [value]="null" />
             @for (assetSubClass of assetSubClasses; track assetSubClass) {
               <mat-option [value]="assetSubClass.id">{{
                 assetSubClass.label

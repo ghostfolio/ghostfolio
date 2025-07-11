@@ -10,7 +10,7 @@ export interface AssetProfileDialogParams {
   symbol: string;
 }
 
-export interface SelectOptionValue {
+export interface SelectOption {
   id: AssetSubClass;
   label: string;
 }

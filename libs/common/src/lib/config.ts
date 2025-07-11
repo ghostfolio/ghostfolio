@@ -1,4 +1,4 @@
-import { DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
@@ -33,6 +33,21 @@ export const warnColorRgb = {
   g: 53,
   b: 69
 };
+
+export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
+  [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
+  [
+    AssetClass.COMMODITY,
+    [AssetSubClass.COMMODITY, AssetSubClass.PRECIOUS_METAL]
+  ],
+  [
+    AssetClass.EQUITY,
+    [AssetSubClass.ETF, AssetSubClass.PRIVATE_EQUITY, AssetSubClass.STOCK]
+  ],
+  [AssetClass.FIXED_INCOME, [AssetSubClass.BOND, AssetSubClass.MUTUALFUND]],
+  [AssetClass.LIQUIDITY, [AssetSubClass.BOND, AssetSubClass.CRYPTOCURRENCY]],
+  [AssetClass.REAL_ESTATE, []]
+]);
 
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
