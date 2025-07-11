@@ -1,6 +1,11 @@
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+
+export interface AssetClassSelectOption {
+  id: AssetClass | AssetSubClass;
+  label: string;
+}
 
 export interface AssetProfileDialogParams {
   colorScheme: ColorScheme;
@@ -8,9 +13,4 @@ export interface AssetProfileDialogParams {
   deviceType: string;
   locale: string;
   symbol: string;
-}
-
-export interface SelectOption {
-  id: AssetSubClass;
-  label: string;
 }

@@ -58,8 +58,8 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import {
-  AssetProfileDialogParams,
-  SelectOption
+  AssetClassSelectOption,
+  AssetProfileDialogParams
 } from './interfaces/interfaces';
 
 @Component({
@@ -79,21 +79,24 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   @ViewChild('assetProfileFormElement')
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
-  public assetProfileClass: string;
-  public assetProfileSubClass: string;
-
-  public assetClassOptions = Object.keys(AssetClass).map((id) => {
-    return { id, label: translate(id) } as SelectOption;
-  });
-  public assetSubClassOptions: SelectOption[] = [];
-
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
-  public assetClassControl = new FormControl<AssetClass>(undefined);
-  public assetSubClassControl = new FormControl<AssetSubClass>(undefined);
+  public assetClassLabel: string;
+  public assetSubClassLabel: string;
+
+  public assetClassOptions: AssetClassSelectOption[] = Object.keys(AssetClass)
+    .map((id) => {
+      return { id, label: translate(id) } as AssetClassSelectOption;
+    })
+    .sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
+
+  public assetSubClassOptions: AssetClassSelectOption[] = [];
+
   public assetProfileForm = this.formBuilder.group({
-    assetClass: this.assetClassControl,
-    assetSubClass: this.assetSubClassControl,
+    assetClass: new FormControl<AssetClass>(undefined),
+    assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
     countries: '',
     currency: '',
@@ -221,19 +224,22 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
       });
 
-    this.assetClassControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+    this.assetProfileForm
+      .get('assetClass')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((assetClass) => {
         const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
 
-        this.assetSubClassOptions = assetSubClasses.map((assetSubClass) => {
-          return {
-            id: assetSubClass,
-            label: translate(assetSubClass)
-          };
-        });
+        this.assetSubClassOptions = assetSubClasses
+          .map((assetSubClass) => {
+            return {
+              id: assetSubClass,
+              label: translate(assetSubClass)
+            };
+          })
+          .sort((a, b) => a.label.localeCompare(b.label));
 
-        this.assetSubClassControl.setValue(null);
+        this.assetProfileForm.get('assetSubClass').setValue(null);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -247,8 +253,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
-        this.assetProfileClass = translate(this.assetProfile?.assetClass);
-        this.assetProfileSubClass = translate(this.assetProfile?.assetSubClass);
+        this.assetClassLabel = translate(this.assetProfile?.assetClass);
+        this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
 
         this.isBenchmark = this.benchmarks.some(({ id }) => {

@@ -209,8 +209,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!assetProfileClass"
-          [value]="assetProfileClass"
+          [hidden]="!assetClassLabel"
+          [value]="assetClassLabel"
           >Asset Class</gf-value
         >
       </div>
@@ -218,8 +218,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!assetProfileSubClass"
-          [value]="assetProfileSubClass"
+          [hidden]="!assetSubClassLabel"
+          [value]="assetSubClassLabel"
           >Asset Sub Class</gf-value
         >
       </div>
@@ -306,7 +306,7 @@
             <mat-option [value]="null" />
             @for (
               assetClassOption of assetClassOptions;
-              track assetClassOption
+              track assetClassOption.id
             ) {
               <mat-option [value]="assetClassOption.id">{{
                 assetClassOption.label
@@ -322,7 +322,7 @@
             <mat-option [value]="null" />
             @for (
               assetSubClassOption of assetSubClassOptions;
-              track assetSubClassOption
+              track assetSubClassOption.id
             ) {
               <mat-option [value]="assetSubClassOption.id">{{
                 assetSubClassOption.label
