@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="routes.about" datatype="html">
         <source>about</source>
-        <target state="translated">关于</target>
+        <target state="translated">about</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -37,7 +37,7 @@
       </trans-unit>
       <trans-unit id="routes.faq" datatype="html">
         <source>faq</source>
-        <target state="translated">常见问题</target>
+        <target state="translated">faq</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -58,7 +58,7 @@
       </trans-unit>
       <trans-unit id="routes.features" datatype="html">
         <source>features</source>
-        <target state="translated">功能</target>
+        <target state="translated">features</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="routes.about.license" datatype="html">
         <source>license</source>
-        <target state="translated">许可证</target>
+        <target state="translated">license</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -84,7 +84,7 @@
       </trans-unit>
       <trans-unit id="routes.markets" datatype="html">
         <source>markets</source>
-        <target state="translated">市场</target>
+        <target state="translated">markets</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -97,7 +97,7 @@
       </trans-unit>
       <trans-unit id="routes.pricing" datatype="html">
         <source>pricing</source>
-        <target state="translated">价钱</target>
+        <target state="translated">pricing</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -110,7 +110,7 @@
       </trans-unit>
       <trans-unit id="routes.about.privacyPolicy" datatype="html">
         <source>privacy-policy</source>
-        <target state="translated">隐私政策</target>
+        <target state="translated">privacy-policy</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="routes.register" datatype="html">
         <source>register</source>
-        <target state="translated">注册</target>
+        <target state="translated">register</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -136,7 +136,7 @@
       </trans-unit>
       <trans-unit id="routes.resources" datatype="html">
         <source>resources</source>
-        <target state="translated">资源</target>
+        <target state="translated">resources</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -4749,7 +4749,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools.openSourceAlternativeTo" datatype="html">
         <source>open-source-alternative-to</source>
-        <target state="translated">开源替代方案</target>
+        <target state="translated">open-source-alternative-to</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6046,7 +6046,7 @@
       </trans-unit>
       <trans-unit id="routes.faq.selfHosting" datatype="html">
         <source>self-hosting</source>
-        <target state="translated">自托管</target>
+        <target state="translated">self-hosting</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6959,7 +6959,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.guides" datatype="html">
         <source>guides</source>
-        <target state="translated">指南</target>
+        <target state="translated">guides</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6972,7 +6972,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.glossary" datatype="html">
         <source>glossary</source>
-        <target state="translated">词汇表</target>
+        <target state="translated">glossary</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7425,7 +7425,7 @@
       </trans-unit>
       <trans-unit id="routes.about.termsOfService" datatype="html">
         <source>terms-of-service</source>
-        <target state="translated">服务条款</target>
+        <target state="translated">terms-of-service</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7598,7 +7598,7 @@
       </trans-unit>
       <trans-unit id="routes.about.changelog" datatype="html">
         <source>changelog</source>
-        <target state="translated">变更日志</target>
+        <target state="translated">changelog</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7707,7 +7707,7 @@
       </trans-unit>
       <trans-unit id="440264111109852789" datatype="html">
         <source>Live Demo</source>
-        <target state="new">Live Demo</target>
+        <target state="translated">现场演示</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">231</context>
@@ -7715,7 +7715,7 @@
       </trans-unit>
       <trans-unit id="5263776643657358606" datatype="html">
         <source>Open Source Alternative to</source>
-        <target state="new">Open Source Alternative to</target>
+        <target state="translated">开源替代方案</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">326</context>
@@ -7723,7 +7723,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount" datatype="html">
         <source>Single Account</source>
-        <target state="new">Single Account</target>
+        <target state="translated">单一账户</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">24</context>
@@ -7731,7 +7731,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source> Your net worth is managed by a single account </source>
-        <target state="new"> Your net worth is managed by a single account </target>
+        <target state="translated"> 您的净资产由单一账户管理 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">25</context>
@@ -7739,7 +7739,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source> Your net worth is managed by ${accountsLength} accounts </source>
-        <target state="new"> Your net worth is managed by ${accountsLength} accounts </target>
+        <target state="translated"> 您的净资产由 ${accountsLength} 个账户管理 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">28</context>
@@ -7747,7 +7747,7 @@
       </trans-unit>
       <trans-unit id="0a1fd4a1825c34244edae54609c766dc27593e2c" datatype="html">
         <source> Holdings </source>
-        <target state="new"> Holdings </target>
+        <target state="translated"> 持仓 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">69</context>
@@ -7755,7 +7755,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
         <source>personal-finance-tools</source>
-        <target state="new">personal-finance-tools</target>
+        <target state="translated">personal-finance-tools</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7772,7 +7772,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.markets" datatype="html">
         <source>markets</source>
-        <target state="new">markets</target>
+        <target state="translated">markets</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7785,7 +7785,7 @@
       </trans-unit>
       <trans-unit id="df98e97764e5a97f077f8a565189b670eff41300" datatype="html">
         <source> Fuel your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>self-hosted Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>powerful data provider<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to access <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80,000+ tickers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> from over <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 exchanges<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> worldwide. </source>
-        <target state="new"> Fuel your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>self-hosted Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>powerful data provider<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to access <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80,000+ tickers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> from over <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 exchanges<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> worldwide. </target>
+        <target state="translated"> 使用 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>强大的数据提供商<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>为您的 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>自托管 Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 提供数据，访问来自全球超过 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 家交易所<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 的 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80,000+ 个股票代码<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>。 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">15</context>
@@ -7793,7 +7793,7 @@
       </trans-unit>
       <trans-unit id="101d5e861e35b1aacb9a620938c2b886dbbb515a" datatype="html">
         <source>Get Access</source>
-        <target state="new">Get Access</target>
+        <target state="translated">获取访问权限</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">27</context>
@@ -7801,7 +7801,7 @@
       </trans-unit>
       <trans-unit id="e2dcf27db9c6a5e249960c576014aa40b3883360" datatype="html">
         <source>Learn more</source>
-        <target state="new">Learn more</target>
+        <target state="translated">了解更多</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">38</context>
@@ -7809,7 +7809,7 @@
       </trans-unit>
       <trans-unit id="50b3e721b5c4731ab004595b348ce2a7737e81b3" datatype="html">
         <source>new</source>
-        <target state="new">new</target>
+        <target state="translated">新增</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">67</context>
@@ -7817,7 +7817,7 @@
       </trans-unit>
       <trans-unit id="2b3030c13e8ffdfbfcaf6d487dbe23e4f9b8f4d7" datatype="html">
         <source>Limited Offer!</source>
-        <target state="new">Limited Offer!</target>
+        <target state="translated">限时优惠！</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">311</context>
@@ -7825,7 +7825,7 @@
       </trans-unit>
       <trans-unit id="48a079ff7a0ed08569e9ee315a387efeaa05f09c" datatype="html">
         <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
-        <target state="new">Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
+        <target state="translated">获取额外 <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">313</context>
@@ -7833,7 +7833,7 @@
       </trans-unit>
       <trans-unit id="b7da3e3505cc80f9bf3cffc8444c53e8a9ec70a5" datatype="html">
         <source>Available</source>
-        <target state="new">Available</target>
+        <target state="translated">可用</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/data-provider-status/data-provider-status.component.html</context>
           <context context-type="linenumber">3</context>
@@ -7841,7 +7841,7 @@
       </trans-unit>
       <trans-unit id="15c02cb6b6c3be53477e502d3e1ee26955b23af0" datatype="html">
         <source>Unavailable</source>
-        <target state="new">Unavailable</target>
+        <target state="translated">不可用</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/data-provider-status/data-provider-status.component.html</context>
           <context context-type="linenumber">5</context>
@@ -7849,7 +7849,7 @@
       </trans-unit>
       <trans-unit id="7387635272539030076" datatype="html">
         <source>new</source>
-        <target state="new">new</target>
+        <target state="translated">新增</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page.component.ts</context>
           <context context-type="linenumber">53</context>
@@ -7857,7 +7857,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">投资</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7865,7 +7865,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) </source>
-        <target state="new"> Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) </target>
+        <target state="translated"> 您当前投资中有超过 ${thresholdMax}% 的资金在 ${maxAccountName} (${maxInvestmentRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
@@ -7873,7 +7873,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="new"> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </target>
+        <target state="translated"> 您的当前投资大部分位于 ${maxAccountName} (${maxInvestmentRatio}%) 且不超过 ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">19</context>
@@ -7881,7 +7881,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">股权</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">31</context>
@@ -7889,7 +7889,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> 您目前投资中股权占比 (${equityValueRatio}%) 超过了 ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">32</context>
@@ -7897,7 +7897,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> 您目前投资中股权占比 (${equityValueRatio}%) 低于 ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -7905,7 +7905,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> 您目前投资中股权占比 (${equityValueRatio}%) 在 ${thresholdMin}% 和 ${thresholdMax}% 之间 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">40</context>
@@ -7913,7 +7913,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">固定收益</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">45</context>
@@ -7921,7 +7921,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> 您目前投资中固定收益占比 (${fixedIncomeValueRatio}%) 超过了 ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">46</context>
@@ -7929,7 +7929,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> 您目前投资中固定收益占比 (${fixedIncomeValueRatio}%) 低于 ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">50</context>
@@ -7937,7 +7937,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> 您目前投资中固定收益占比 (${fixedIncomeValueRatio}%) 在 ${thresholdMin}% 和 ${thresholdMax}% 之间 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">55</context>
@@ -7945,7 +7945,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment" datatype="html">
         <source> Investment: Base Currency </source>
-        <target state="new"> Investment: Base Currency </target>
+        <target state="translated"> 投资：基础货币 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">60</context>
@@ -7953,7 +7953,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="new"> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> 您的当前投资的主要部分未以您的基础货币计价 ( ${baseCurrency} 仅占 ${baseCurrencyValueRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">63</context>
@@ -7961,7 +7961,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="new"> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> 您的当前投资的主要部分以您的基础货币计价（其中 ${baseCurrency} 占比 ${baseCurrencyValueRatio}%） </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">67</context>
@@ -7969,7 +7969,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">投资</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">71</context>
@@ -7977,7 +7977,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </source>
-        <target state="new"> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </target>
+        <target state="translated"> 超过 ${thresholdMax}% 的当前投资在 ${currency} 中（占比 ${maxValueRatio}%） </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">72</context>
@@ -7985,7 +7985,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="new"> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </target>
+        <target state="translated"> 您的当前投资的主要部分以 ${currency} 计价（占比 ${maxValueRatio}%），并且未超过 ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">76</context>
@@ -7993,7 +7993,7 @@
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
         <source>start</source>
-        <target state="new">start</target>
+        <target state="translated">start</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -8006,7 +8006,7 @@
       </trans-unit>
       <trans-unit id="5608465303990699628" datatype="html">
         <source>Do you really want to generate a new security token?</source>
-        <target state="new">Do you really want to generate a new security token?</target>
+        <target state="translated">您真的想要生成一个新的安全令牌吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">176</context>
@@ -8014,7 +8014,7 @@
       </trans-unit>
       <trans-unit id="1b258b258b4cc475ceb2871305b61756b0134f4a" datatype="html">
         <source>Generate</source>
-        <target state="new">Generate</target>
+        <target state="translated">生成</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
           <context context-type="linenumber">43</context>
@@ -8022,7 +8022,7 @@
       </trans-unit>
       <trans-unit id="2732382861635368484" datatype="html">
         <source>Stocks</source>
-        <target state="new">Stocks</target>
+        <target state="translated">股票</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">54</context>
@@ -8030,7 +8030,7 @@
       </trans-unit>
       <trans-unit id="1419479195323304896" datatype="html">
         <source>Cryptocurrencies</source>
-        <target state="new">Cryptocurrencies</target>
+        <target state="translated">加密货币</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">55</context>
@@ -8040,8 +8040,8 @@
         <source>
           <x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/>
         </source>
-        <target state="new">
-          <x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/>
+        <target state="translated">
+          <x id="INTERPOLATION" equiv-text="{{ `过期时间 ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
@@ -8050,7 +8050,7 @@
       </trans-unit>
       <trans-unit id="61c6a7fddc76f4d72eda9551defde5de2e026989" datatype="html">
         <source>Manage Asset Profile</source>
-        <target state="new">Manage Asset Profile</target>
+        <target state="translated">管理资产概况</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">434</context>
@@ -8058,7 +8058,7 @@
       </trans-unit>
       <trans-unit id="2978009302056542263" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">另类投资</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">44</context>
@@ -8066,7 +8066,7 @@
       </trans-unit>
       <trans-unit id="5795124554973640871" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">收藏品</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
