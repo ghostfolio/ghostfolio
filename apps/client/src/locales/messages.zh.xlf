@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="routes.about" datatype="html">
         <source>about</source>
-        <target state="translated">关于</target>
+        <target state="translated">about</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -37,7 +37,7 @@
       </trans-unit>
       <trans-unit id="routes.faq" datatype="html">
         <source>faq</source>
-        <target state="translated">常见问题</target>
+        <target state="translated">faq</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -58,7 +58,7 @@
       </trans-unit>
       <trans-unit id="routes.features" datatype="html">
         <source>features</source>
-        <target state="translated">功能</target>
+        <target state="translated">features</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="routes.about.license" datatype="html">
         <source>license</source>
-        <target state="translated">许可证</target>
+        <target state="translated">license</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -84,7 +84,7 @@
       </trans-unit>
       <trans-unit id="routes.markets" datatype="html">
         <source>markets</source>
-        <target state="translated">市场</target>
+        <target state="translated">markets</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -97,7 +97,7 @@
       </trans-unit>
       <trans-unit id="routes.pricing" datatype="html">
         <source>pricing</source>
-        <target state="translated">价钱</target>
+        <target state="translated">pricing</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -110,7 +110,7 @@
       </trans-unit>
       <trans-unit id="routes.about.privacyPolicy" datatype="html">
         <source>privacy-policy</source>
-        <target state="translated">隐私政策</target>
+        <target state="translated">privacy-policy</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="routes.register" datatype="html">
         <source>register</source>
-        <target state="translated">注册</target>
+        <target state="translated">register</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -136,7 +136,7 @@
       </trans-unit>
       <trans-unit id="routes.resources" datatype="html">
         <source>resources</source>
-        <target state="translated">资源</target>
+        <target state="translated">resources</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -4749,7 +4749,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools.openSourceAlternativeTo" datatype="html">
         <source>open-source-alternative-to</source>
-        <target state="translated">开源替代方案</target>
+        <target state="translated">open-source-alternative-to</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6046,7 +6046,7 @@
       </trans-unit>
       <trans-unit id="routes.faq.selfHosting" datatype="html">
         <source>self-hosting</source>
-        <target state="translated">自托管</target>
+        <target state="translated">self-hosting</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6959,7 +6959,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.guides" datatype="html">
         <source>guides</source>
-        <target state="translated">指南</target>
+        <target state="translated">guides</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6972,7 +6972,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.glossary" datatype="html">
         <source>glossary</source>
-        <target state="translated">词汇表</target>
+        <target state="translated">glossary</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7425,7 +7425,7 @@
       </trans-unit>
       <trans-unit id="routes.about.termsOfService" datatype="html">
         <source>terms-of-service</source>
-        <target state="translated">服务条款</target>
+        <target state="translated">terms-of-service</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7598,7 +7598,7 @@
       </trans-unit>
       <trans-unit id="routes.about.changelog" datatype="html">
         <source>changelog</source>
-        <target state="translated">变更日志</target>
+        <target state="translated">changelog</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
