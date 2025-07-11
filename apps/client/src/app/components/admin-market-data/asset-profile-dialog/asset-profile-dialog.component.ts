@@ -79,8 +79,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   @ViewChild('assetProfileFormElement')
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
-  public assetProfile: AdminMarketDataDetails['assetProfile'];
-
   public assetClassLabel: string;
   public assetSubClassLabel: string;
 
@@ -93,6 +91,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     });
 
   public assetSubClassOptions: AssetClassSelectorOption[] = [];
+
+  public assetProfile: AdminMarketDataDetails['assetProfile'];
 
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
