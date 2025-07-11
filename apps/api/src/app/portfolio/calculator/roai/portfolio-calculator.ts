@@ -231,7 +231,20 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const startDateString = format(start, DATE_FORMAT);
 
     const unitPriceAtStartDate = marketSymbolMap[startDateString]?.[symbol];
-    const unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
+    let unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
+
+    let latestActivity = orders.at(-1);
+
+    if (
+      dataSource === 'MANUAL' &&
+      ['BUY', 'SELL'].includes(latestActivity?.type) &&
+      latestActivity?.unitPrice &&
+      !unitPriceAtEndDate
+    ) {
+      // For BUY / SELL activities with a MANUAL data source where no historical market price is available,
+      // the calculation should fall back to using the activity’s unit price.
+      unitPriceAtEndDate = latestActivity.unitPrice;
+    }
 
     if (
       !unitPriceAtEndDate ||
@@ -344,9 +357,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         });
       }
 
-      const lastOrder = orders.at(-1);
+      latestActivity = orders.at(-1);
 
-      lastUnitPrice = lastOrder.unitPriceFromMarketData ?? lastOrder.unitPrice;
+      lastUnitPrice =
+        latestActivity.unitPriceFromMarketData ?? latestActivity.unitPrice;
     }
 
     // Sort orders so that the start and end placeholder order are at the correct
