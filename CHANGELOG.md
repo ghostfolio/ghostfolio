@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the asset profile dialog’s asset sub class selector of the admin control panel to update the options dynamically based on the selected asset class
 - Improved the asset profile dialog’s data gathering checkbox of the admin control panel to reflect the global settings
-- Improved the asset profile dialog’s asset sub class dropdown by dynamically updating options based on the selected asset class
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
