@@ -114,14 +114,8 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('500000'),
-        // TODO: []
-        errors: [
-          {
-            dataSource: 'MANUAL',
-            symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
-          }
-        ],
-        hasErrors: true, // TODO: false
+        errors: [],
+        hasErrors: false,
         positions: [
           {
             averagePrice: new Big('500000'),
@@ -132,31 +126,35 @@ describe('PortfolioCalculator', () => {
             fee: new Big('0'),
             feeInBaseCurrency: new Big('0'),
             firstBuyDate: '2022-01-01',
-            grossPerformance: null,
-            grossPerformancePercentage: null,
-            grossPerformancePercentageWithCurrencyEffect: null,
-            grossPerformanceWithCurrencyEffect: null,
-            investment: new Big('0'), // TODO: new Big('500000')
-            investmentWithCurrencyEffect: new Big('0'), // TODO: new Big('500000')
+            grossPerformance: new Big('0'),
+            grossPerformancePercentage: new Big('0'),
+            grossPerformancePercentageWithCurrencyEffect: new Big('0'),
+            grossPerformanceWithCurrencyEffect: new Big('0'),
+            investment: new Big('500000'),
+            investmentWithCurrencyEffect: new Big('500000'),
             marketPrice: null,
             marketPriceInBaseCurrency: 500000,
-            netPerformance: null,
-            netPerformancePercentage: null,
-            netPerformancePercentageWithCurrencyEffectMap: null,
-            netPerformanceWithCurrencyEffectMap: null,
+            netPerformance: new Big('0'),
+            netPerformancePercentage: new Big('0'),
+            netPerformancePercentageWithCurrencyEffectMap: {
+              max: new Big('0')
+            },
+            netPerformanceWithCurrencyEffectMap: {
+              max: new Big('0')
+            },
             quantity: new Big('1'),
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
             tags: [],
-            timeWeightedInvestment: new Big('0'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('0'),
+            timeWeightedInvestment: new Big('500000'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('500000'),
             transactionCount: 1,
             valueInBaseCurrency: new Big('500000')
           }
         ],
         totalFeesWithCurrencyEffect: new Big('0'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('0'), // TODO: new Big('500000')
-        totalInvestmentWithCurrencyEffect: new Big('0'), // TODO: new Big('500000')
+        totalInvestment: new Big('500000'),
+        totalInvestmentWithCurrencyEffect: new Big('500000'),
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
@@ -166,7 +164,7 @@ describe('PortfolioCalculator', () => {
           netPerformanceInPercentage: 0,
           netPerformanceInPercentageWithCurrencyEffect: 0,
           netPerformanceWithCurrencyEffect: 0,
-          totalInvestmentValueWithCurrencyEffect: 0 // TODO: 500000
+          totalInvestmentValueWithCurrencyEffect: 500000
         })
       );
     });
