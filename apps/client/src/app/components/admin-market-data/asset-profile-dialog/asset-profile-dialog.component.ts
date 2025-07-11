@@ -58,7 +58,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import {
-  AssetClassSelectOption,
+  AssetClassSelectorOption,
   AssetProfileDialogParams
 } from './interfaces/interfaces';
 
@@ -84,15 +84,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetClassLabel: string;
   public assetSubClassLabel: string;
 
-  public assetClassOptions: AssetClassSelectOption[] = Object.keys(AssetClass)
+  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
     .map((id) => {
-      return { id, label: translate(id) } as AssetClassSelectOption;
+      return { id, label: translate(id) } as AssetClassSelectorOption;
     })
     .sort((a, b) => {
       return a.label.localeCompare(b.label);
     });
 
-  public assetSubClassOptions: AssetClassSelectOption[] = [];
+  public assetSubClassOptions: AssetClassSelectorOption[] = [];
 
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
