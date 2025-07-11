@@ -7968,7 +7968,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">Investissement</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">71</context>
@@ -7976,7 +7976,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </source>
-        <target state="new"> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </target>
+        <target state="translated">Plus de ${thresholdMax}% de votre investissement actuel est en ${currency} (${maxValueRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">72</context>
@@ -7984,7 +7984,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="new"> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </target>
+        <target state="translated">La majeure partie de votre investissement actuel est en ${currency} (${maxValueRatio}%) et n’excède pas ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">76</context>
@@ -7992,7 +7992,7 @@
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
         <source>start</source>
-        <target state="new">start</target>
+        <target state="translated">commencer</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -8005,7 +8005,7 @@
       </trans-unit>
       <trans-unit id="5608465303990699628" datatype="html">
         <source>Do you really want to generate a new security token?</source>
-        <target state="new">Do you really want to generate a new security token?</target>
+        <target state="translated">Voulez-vous vraiment générer un nouveau jeton de sécurité?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">176</context>
@@ -8013,7 +8013,7 @@
       </trans-unit>
       <trans-unit id="1b258b258b4cc475ceb2871305b61756b0134f4a" datatype="html">
         <source>Generate</source>
-        <target state="new">Generate</target>
+        <target state="translated">Générer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
           <context context-type="linenumber">43</context>
@@ -8021,7 +8021,7 @@
       </trans-unit>
       <trans-unit id="2732382861635368484" datatype="html">
         <source>Stocks</source>
-        <target state="new">Stocks</target>
+        <target state="translated">Actions</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">54</context>
@@ -8029,7 +8029,7 @@
       </trans-unit>
       <trans-unit id="1419479195323304896" datatype="html">
         <source>Cryptocurrencies</source>
-        <target state="new">Cryptocurrencies</target>
+        <target state="translated">Crypto-monnaies</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">55</context>
@@ -8039,8 +8039,9 @@
         <source>
           <x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/>
         </source>
-        <target state="new">
-          <x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/>
+        <target state="translated">
+          <x id="INTERPOLATION" equiv-text="{{ `Expire ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/>
+        </target>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
@@ -8049,7 +8050,7 @@
       </trans-unit>
       <trans-unit id="61c6a7fddc76f4d72eda9551defde5de2e026989" datatype="html">
         <source>Manage Asset Profile</source>
-        <target state="new">Manage Asset Profile</target>
+        <target state="translated">Gérer le profil d’actif</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">434</context>
@@ -8057,7 +8058,7 @@
       </trans-unit>
       <trans-unit id="2978009302056542263" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">Investissement alternatif</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">44</context>
@@ -8065,7 +8066,7 @@
       </trans-unit>
       <trans-unit id="5795124554973640871" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">Objet de collection</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
