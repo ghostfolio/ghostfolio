@@ -82,10 +82,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfileClass: string;
   public assetProfileSubClass: string;
 
-  public assetClasses = Object.keys(AssetClass).map((id) => {
+  public assetClassOptions = Object.keys(AssetClass).map((id) => {
     return { id, label: translate(id) } as SelectOption;
   });
-  public assetSubClasses: SelectOption[] = [];
+  public assetSubClassOptions: SelectOption[] = [];
 
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
@@ -226,7 +226,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe((assetClass) => {
         const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
 
-        this.assetSubClasses = assetSubClasses.map((assetSubClass) => {
+        this.assetSubClassOptions = assetSubClasses.map((assetSubClass) => {
           return {
             id: assetSubClass,
             label: translate(assetSubClass)
