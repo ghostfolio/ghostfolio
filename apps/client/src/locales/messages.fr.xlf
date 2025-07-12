@@ -7984,7 +7984,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="translated">La majeure partie de votre investissement actuel est en ${currency} (${maxValueRatio}%) et n’excède pas ${thresholdMax}%</target>
+        <target state="translated"> La majeure partie de votre investissement actuel est en ${currency} (${maxValueRatio}%) et n’excède pas ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">76</context>
