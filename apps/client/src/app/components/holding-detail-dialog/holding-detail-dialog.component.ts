@@ -298,11 +298,13 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             SymbolProfile?.userId === this.user?.id;
 
           this.historicalDataItems = historicalData.map(
-            ({ averagePrice, date, marketPrice }) => {
-              this.benchmarkDataItems.push({
-                date,
-                value: averagePrice
-              });
+            ({ averagePrice, date, marketPrice, quantity }) => {
+              if (quantity) {
+                this.benchmarkDataItems.push({
+                  date,
+                  value: averagePrice
+                });
+              }
 
               return {
                 date,
@@ -451,15 +453,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
-
-          this.benchmarkDataItems = this.benchmarkDataItems.map(
-            ({ date, value }) => {
-              return {
-                date,
-                value: value === 0 ? null : value
-              };
-            }
-          );
 
           if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
             this.fetchMarketData();
