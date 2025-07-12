@@ -6,6 +6,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import {
+  ASSET_CLASS_MAPPING,
   ghostfolioScraperApiSymbolPrefix,
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
@@ -56,7 +57,10 @@ import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { AssetProfileDialogParams } from './interfaces/interfaces';
+import {
+  AssetClassSelectorOption,
+  AssetProfileDialogParams
+} from './interfaces/interfaces';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -75,15 +79,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   @ViewChild('assetProfileFormElement')
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
-  public assetProfileClass: string;
+  public assetClassLabel: string;
+  public assetSubClassLabel: string;
 
-  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
-    return { id: assetClass, label: translate(assetClass) };
-  });
+  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
+    .map((id) => {
+      return { id, label: translate(id) } as AssetClassSelectorOption;
+    })
+    .sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
 
-  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
-    return { id: assetSubClass, label: translate(assetSubClass) };
-  });
+  public assetSubClassOptions: AssetClassSelectorOption[] = [];
 
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
@@ -125,7 +132,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
   );
 
-  public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
 
   public countries: {
@@ -218,6 +224,26 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
       });
 
+    this.assetProfileForm
+      .get('assetClass')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((assetClass) => {
+        const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
+
+        this.assetSubClassOptions = assetSubClasses
+          .map((assetSubClass) => {
+            return {
+              id: assetSubClass,
+              label: translate(assetSubClass)
+            };
+          })
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        this.assetProfileForm.get('assetSubClass').setValue(null);
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.dataService
       .fetchMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -227,8 +253,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
-        this.assetProfileClass = translate(this.assetProfile?.assetClass);
-        this.assetProfileSubClass = translate(this.assetProfile?.assetSubClass);
+        this.assetClassLabel = translate(this.assetProfile?.assetClass);
+        this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
 
         this.isBenchmark = this.benchmarks.some(({ id }) => {

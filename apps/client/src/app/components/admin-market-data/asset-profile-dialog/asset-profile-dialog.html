@@ -209,8 +209,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!assetProfileClass"
-          [value]="assetProfileClass"
+          [hidden]="!assetClassLabel"
+          [value]="assetClassLabel"
           >Asset Class</gf-value
         >
       </div>
@@ -218,8 +218,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!assetProfileSubClass"
-          [value]="assetProfileSubClass"
+          [hidden]="!assetSubClassLabel"
+          [value]="assetSubClassLabel"
           >Asset Sub Class</gf-value
         >
       </div>
@@ -304,9 +304,12 @@
           <mat-label i18n>Asset Class</mat-label>
           <mat-select formControlName="assetClass">
             <mat-option [value]="null" />
-            @for (assetClass of assetClasses; track assetClass) {
-              <mat-option [value]="assetClass.id">{{
-                assetClass.label
+            @for (
+              assetClassOption of assetClassOptions;
+              track assetClassOption.id
+            ) {
+              <mat-option [value]="assetClassOption.id">{{
+                assetClassOption.label
               }}</mat-option>
             }
           </mat-select>
@@ -317,9 +320,12 @@
           <mat-label i18n>Asset Sub Class</mat-label>
           <mat-select formControlName="assetSubClass">
             <mat-option [value]="null" />
-            @for (assetSubClass of assetSubClasses; track assetSubClass) {
-              <mat-option [value]="assetSubClass.id">{{
-                assetSubClass.label
+            @for (
+              assetSubClassOption of assetSubClassOptions;
+              track assetSubClassOption.id
+            ) {
+              <mat-option [value]="assetSubClassOption.id">{{
+                assetSubClassOption.label
               }}</mat-option>
             }
           </mat-select>
