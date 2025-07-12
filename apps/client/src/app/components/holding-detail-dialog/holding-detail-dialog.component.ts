@@ -352,16 +352,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           this.quantity = quantity;
 
-          if (Number.isInteger(this.quantity)) {
-            this.quantityPrecision = 0;
-          } else if (SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
-            if (this.quantity < 1) {
-              this.quantityPrecision = 7;
-            } else if (this.quantity < 1000) {
-              this.quantityPrecision = 5;
-            } else if (this.quantity >= 10000000) {
-              this.quantityPrecision = 0;
-            }
+          this.quantityPrecision = 0;
+          if (this.quantity < 10) {
+            this.quantityPrecision = 5;
+          } else if (this.quantity < 1) {
+            this.quantityPrecision = 8;
           }
 
           this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
