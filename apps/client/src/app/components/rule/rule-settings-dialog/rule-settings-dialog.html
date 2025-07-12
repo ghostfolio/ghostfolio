@@ -1,4 +1,10 @@
-<div mat-dialog-title>{{ data.rule.name }}</div>
+<div mat-dialog-title>
+  @if (data.rule.category) {
+    {{ data.rule.category }} › {{ data.rule.name }}
+  } @else {
+    {{ data.rule.name }}
+  }
+</div>
 
 <div class="py-3" mat-dialog-content>
   @if (
