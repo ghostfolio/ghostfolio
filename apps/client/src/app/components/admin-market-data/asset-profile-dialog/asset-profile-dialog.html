@@ -72,10 +72,12 @@
       [colorScheme]="user?.settings?.colorScheme"
       [historicalDataItems]="historicalDataItems"
       [isAnimated]="true"
+      [label]="
+        isUUID(data.symbol) ? (assetProfile?.name ?? data.symbol) : data.symbol
+      "
       [locale]="data.locale"
       [showXAxis]="true"
       [showYAxis]="true"
-      [symbol]="data.symbol"
     />
     <div class="mb-3">
       <mat-accordion class="my-3">

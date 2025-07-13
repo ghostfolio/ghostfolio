@@ -229,6 +229,8 @@ export const Simple: Story = {
         value: 86666.03082624623
       }
     ],
-    isAnimated: true
+    isAnimated: true,
+    label: 'Net Worth',
+    unit: 'USD'
   }
 };
