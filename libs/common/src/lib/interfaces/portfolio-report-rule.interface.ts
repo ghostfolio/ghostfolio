@@ -1,5 +1,5 @@
 export interface PortfolioReportRule {
-  category?: string;
+  categoryName?: string;
   configuration?: {
     threshold?: {
       max: number;

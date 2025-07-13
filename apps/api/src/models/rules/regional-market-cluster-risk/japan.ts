@@ -69,6 +69,10 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     return 'Japan';
   }
 
+  public getCategoryName() {
+    return 'Regional Market Cluster Risk';
+  }
+
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,

@@ -70,6 +70,10 @@ export class EconomicMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     return 'Emerging Markets';
   }
 
+  public getCategoryName() {
+    return 'Economic Market Cluster Risk';
+  }
+
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,
