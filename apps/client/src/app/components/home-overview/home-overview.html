@@ -65,12 +65,12 @@
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
-            symbol="Performance"
             unit="%"
             [colorScheme]="user?.settings?.colorScheme"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
             [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
+            [label]="performanceLabel"
             [locale]="user?.settings?.locale"
             [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
             [showGradient]="true"
