@@ -8077,7 +8077,7 @@
       </trans-unit>
       <trans-unit id="5053948923184155554" datatype="html">
         <source>Average Unit Price</source>
-        <target state="new">Average Unit Price</target>
+        <target state="translated">Ø Preis pro Einheit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.component.ts</context>
           <context context-type="linenumber">105</context>
