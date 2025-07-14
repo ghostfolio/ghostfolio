@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a message to the assistant if no results have been found
+
 ### Changed
 
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the asset profile details dialog in the admin control panel
