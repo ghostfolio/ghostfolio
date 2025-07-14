@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the label for asset profiles with `MANUAL` data source in the chart of the asset profile details dialog in the admin control panel
+- Improved the label for asset profiles with `MANUAL` data source in the chart of the holding detail dialog
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Spanish (`es`)
+
 ## 2.181.0 - 2025-07-11
 
 ### Changed

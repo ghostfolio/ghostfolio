@@ -36,6 +36,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
+  public performanceLabel = $localize`Performance`;
   public precision = 2;
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
