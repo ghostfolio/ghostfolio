@@ -1148,7 +1148,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
@@ -3484,7 +3484,7 @@
         <target state="translated">开源财富管理软件</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
@@ -6682,7 +6682,7 @@
         <target state="translated">最小阈值</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="012b48ee5281a77c66760b2007c3ccd7e34aa340" datatype="html">
@@ -6690,7 +6690,7 @@
         <target state="translated">最大阈值</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
@@ -6698,7 +6698,7 @@
         <target state="translated">自定义</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="072d4d4ec83a5a97345a1c13b90c213b47326d09" datatype="html">
@@ -6988,7 +6988,7 @@
         <target state="translated">阈值范围</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f907cfe9cf0c373052ff3964f941a5b784c57f06" datatype="html">
@@ -8070,62 +8070,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.accountClusterRisk.category" datatype="html">
-        <source>Account Cluster Risk</source>
-        <target state="new">Account Cluster Risk</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.assetClassClusterRisk.category" datatype="html">
-        <source> Asset Class Cluster Risk </source>
-        <target state="new"> Asset Class Cluster Risk </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.currencyClusterRisk.category" datatype="html">
-        <source>Currency Cluster Risk</source>
-        <target state="new">Currency Cluster Risk</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">101</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.emergencyFund.category" datatype="html">
-        <source>Emergency Fund</source>
-        <target state="new">Emergency Fund</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.fees.category" datatype="html">
-        <source>Fees</source>
-        <target state="new">Fees</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.economicMarketClusterRisk.category" datatype="html">
-        <source> Economic Market Cluster Risk </source>
-        <target state="new"> Economic Market Cluster Risk </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">104</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="rule.regionalMarketClusterRisk.category" datatype="html">
-        <source> Regional Market Cluster Risk </source>
-        <target state="new"> Regional Market Cluster Risk </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
     </body>

@@ -85,6 +85,13 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.accountClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
   public getConfiguration() {
     return {
       threshold: {
@@ -100,13 +107,6 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.accountClusterRiskCurrentInvestment',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.accountClusterRisk.category',
       languageCode: this.getLanguageCode()
     });
   }

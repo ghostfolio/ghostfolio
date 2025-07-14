@@ -53,6 +53,10 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return 'Economic Market Cluster Risk'; // TODO: Replace hardcoded text with i18n translation
+  }
+
   public getConfiguration() {
     return {
       threshold: {
@@ -68,10 +72,6 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
 
   public getName() {
     return 'Developed Markets';
-  }
-
-  public getCategoryName() {
-    return 'Economic Market Cluster Risk';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

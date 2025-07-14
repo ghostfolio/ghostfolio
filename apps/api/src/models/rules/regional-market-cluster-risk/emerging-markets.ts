@@ -54,6 +54,10 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return 'Regional Market Cluster Risk'; // TODO: Replace hardcoded text with i18n translation
+  }
+
   public getConfiguration() {
     return {
       threshold: {
@@ -69,10 +73,6 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
   public getName() {
     return 'Emerging Markets';
-  }
-
-  public getCategoryName() {
-    return 'Regional Market Cluster Risk';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

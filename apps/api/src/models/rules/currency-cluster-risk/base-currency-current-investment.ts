@@ -79,6 +79,13 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     };
   }
 
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.currencyClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
   public getConfiguration() {
     return undefined;
   }
@@ -86,13 +93,6 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.currencyClusterRisk.category',
       languageCode: this.getLanguageCode()
     });
   }

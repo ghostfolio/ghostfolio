@@ -72,6 +72,13 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.currencyClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
   public getConfiguration() {
     return {
       threshold: {
@@ -87,13 +94,6 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.currencyClusterRiskCurrentInvestment',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.currencyClusterRisk.category',
       languageCode: this.getLanguageCode()
     });
   }

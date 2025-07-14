@@ -56,6 +56,13 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.fees.category',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
   public getConfiguration() {
     return {
       threshold: {
@@ -71,13 +78,6 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.feeRatioInitialInvestment',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.fees.category',
       languageCode: this.getLanguageCode()
     });
   }

@@ -70,13 +70,13 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
 
   public abstract evaluate(aRuleSettings: T): EvaluationResult;
 
+  public abstract getCategoryName(): string;
+
   public abstract getConfiguration(): Partial<
     PortfolioReportRule['configuration']
   >;
 
   public abstract getName(): string;
-
-  public abstract getCategoryName(): string;
 
   public abstract getSettings(aUserSettings: UserSettings): T;
 }

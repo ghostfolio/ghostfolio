@@ -81,6 +81,13 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.assetClassClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
   public getConfiguration() {
     return {
       threshold: {
@@ -97,13 +104,6 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.assetClassClusterRiskFixedIncome',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.assetClassClusterRisk.category',
       languageCode: this.getLanguageCode()
     });
   }
