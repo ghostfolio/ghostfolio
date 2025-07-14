@@ -53,6 +53,10 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
     };
   }
 
+  public getCategoryName() {
+    return 'Economic Market Cluster Risk'; // TODO: Replace hardcoded text with i18n translation
+  }
+
   public getConfiguration() {
     return {
       threshold: {
