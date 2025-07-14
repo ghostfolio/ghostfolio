@@ -38,87 +38,100 @@
     </div>
     @if (searchFormControl.value) {
       <div class="overflow-auto py-2 result-container">
-        @if (searchResults?.quickLinks?.length !== 0 || isLoading.quickLinks) {
-          <div class="mb-2">
-            <div class="font-weight-bold px-3 text-muted title" i18n>
-              Quick Links
-            </div>
-            @for (
-              searchResultItem of searchResults.quickLinks;
-              track searchResultItem
-            ) {
-              <gf-assistant-list-item
-                [item]="searchResultItem"
-                (clicked)="onCloseAssistant()"
-              />
-            }
-            @if (isLoading.quickLinks) {
-              <ngx-skeleton-loader
-                animation="pulse"
-                class="mx-3"
-                [theme]="{
-                  height: '1.5rem',
-                  width: '100%'
-                }"
-              />
-            }
-          </div>
-        }
-        @if (searchResults?.holdings?.length !== 0 || isLoading.holdings) {
-          <div>
-            <div class="font-weight-bold px-3 text-muted title" i18n>
-              Holdings
-            </div>
-            @for (
-              searchResultItem of searchResults.holdings;
-              track searchResultItem
-            ) {
-              <gf-assistant-list-item
-                [item]="searchResultItem"
-                (clicked)="onCloseAssistant()"
-              />
-            }
-            @if (isLoading.holdings) {
-              <ngx-skeleton-loader
-                animation="pulse"
-                class="mx-3"
-                [theme]="{
-                  height: '1.5rem',
-                  width: '100%'
-                }"
-              />
-            }
-          </div>
-        }
         @if (
-          hasPermissionToAccessAdminControl &&
-          (searchResults?.assetProfiles?.length !== 0 ||
-            isLoading.assetProfiles)
+          !isLoading.assetProfiles &&
+          !isLoading.holdings &&
+          !isLoading.quickLinks &&
+          searchResults.assetProfiles?.length === 0 &&
+          searchResults.holdings?.length === 0 &&
+          searchResults.quickLinks?.length === 0
         ) {
-          <div class="mt-2">
-            <div class="font-weight-bold px-3 text-muted title" i18n>
-              Asset Profiles
+          <div class="px-3 py-1 text-muted" i18n>No results found...</div>
+        } @else {
+          @if (
+            isLoading.quickLinks || searchResults?.quickLinks?.length !== 0
+          ) {
+            <div class="mb-2">
+              <div class="font-weight-bold px-3 text-muted title" i18n>
+                Quick Links
+              </div>
+              @for (
+                searchResultItem of searchResults.quickLinks;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.quickLinks) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
             </div>
-            @for (
-              searchResultItem of searchResults.assetProfiles;
-              track searchResultItem
-            ) {
-              <gf-assistant-list-item
-                [item]="searchResultItem"
-                (clicked)="onCloseAssistant()"
-              />
-            }
-            @if (isLoading.assetProfiles) {
-              <ngx-skeleton-loader
-                animation="pulse"
-                class="mx-3"
-                [theme]="{
-                  height: '1.5rem',
-                  width: '100%'
-                }"
-              />
-            }
-          </div>
+          }
+          @if (isLoading.holdings || searchResults?.holdings?.length !== 0) {
+            <div>
+              <div class="font-weight-bold px-3 text-muted title" i18n>
+                Holdings
+              </div>
+              @for (
+                searchResultItem of searchResults.holdings;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.holdings) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
+          @if (
+            hasPermissionToAccessAdminControl &&
+            (isLoading.assetProfiles ||
+              searchResults?.assetProfiles?.length !== 0)
+          ) {
+            <div class="mt-2">
+              <div class="font-weight-bold px-3 text-muted title" i18n>
+                Asset Profiles
+              </div>
+              @for (
+                searchResultItem of searchResults.assetProfiles;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.assetProfiles) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
         }
       </div>
     }
