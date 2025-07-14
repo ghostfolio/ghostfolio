@@ -6,7 +6,7 @@ import { Filter, Export } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { Platform, Prisma } from '@prisma/client';
-import { groupBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash';
 
 @Injectable()
 export class ExportService {
@@ -108,6 +108,15 @@ export class ExportService {
         }
       );
 
+    const assetProfiles = uniqBy(
+      activities.map(({ SymbolProfile }) => {
+        return SymbolProfile;
+      }),
+      ({ id }) => {
+        return id;
+      }
+    );
+
     const tags = (await this.tagService.getTagsForUser(userId))
       .filter(
         ({ id, isUsed }) =>
@@ -128,6 +137,54 @@ export class ExportService {
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
       accounts,
+      assetProfiles: assetProfiles.map(
+        ({
+          assetClass,
+          assetSubClass,
+          comment,
+          countries,
+          currency,
+          cusip,
+          dataSource,
+          figi,
+          figiComposite,
+          figiShareClass,
+          holdings,
+          id,
+          isActive,
+          isin,
+          name,
+          scraperConfiguration,
+          sectors,
+          symbol,
+          symbolMapping,
+          url
+        }) => {
+          return {
+            assetClass,
+            assetSubClass,
+            comment,
+            countries: countries as unknown as Prisma.JsonArray,
+            currency,
+            cusip,
+            dataSource,
+            figi,
+            figiComposite,
+            figiShareClass,
+            holdings: holdings as unknown as Prisma.JsonArray,
+            id,
+            isActive,
+            isin,
+            name,
+            scraperConfiguration:
+              scraperConfiguration as unknown as Prisma.JsonArray,
+            sectors: sectors as unknown as Prisma.JsonArray,
+            symbol,
+            symbolMapping,
+            url
+          };
+        }
+      ),
       platforms: Object.values(platformsMap),
       tags,
       activities: activities.map(
@@ -145,6 +202,7 @@ export class ExportService {
           unitPrice
         }) => {
           return {
+            assetProfileId: SymbolProfile.userId ? SymbolProfile.id : undefined,
             accountId,
             comment,
             fee,
