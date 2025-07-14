@@ -1,6 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
@@ -9,11 +10,14 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
     currentValueInBaseCurrency: number,
-    developedMarketsValueInBaseCurrency: number
+    developedMarketsValueInBaseCurrency: number,
+    languageCode: string
   ) {
     super(exchangeRateDataService, {
-      key: EconomicMarketClusterRiskDevelopedMarkets.name
+      key: EconomicMarketClusterRiskDevelopedMarkets.name,
+      languageCode
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -29,26 +33,46 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
 
     if (developedMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The developed markets contribution of your current investment (${(developedMarketsValueRatio * 100).toPrecision(3)}%) exceeds ${(
-          ruleSettings.thresholdMax * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.economicMarketClusterRiskDevelopedMarkets.false.max',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            developedMarketsValueRatio: (
+              developedMarketsValueRatio * 100
+            ).toPrecision(3),
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     } else if (developedMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The developed markets contribution of your current investment (${(developedMarketsValueRatio * 100).toPrecision(3)}%) is below ${(
-          ruleSettings.thresholdMin * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.economicMarketClusterRiskDevelopedMarkets.false.min',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            developedMarketsValueRatio: (
+              developedMarketsValueRatio * 100
+            ).toPrecision(3),
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The developed markets contribution of your current investment (${(developedMarketsValueRatio * 100).toPrecision(3)}%) is within the range of ${(
-        ruleSettings.thresholdMin * 100
-      ).toPrecision(
-        3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.economicMarketClusterRiskDevelopedMarkets.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          developedMarketsValueRatio: (
+            developedMarketsValueRatio * 100
+          ).toPrecision(3),
+          thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -71,7 +95,10 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
   }
 
   public getName() {
-    return 'Developed Markets';
+    return this.i18nService.getTranslation({
+      id: 'rule.economicMarketClusterRiskDevelopedMarkets',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
