@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the asset profile details dialog in the admin control panel
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the holding detail dialog
+- Removed the date range query parameter from the search for the holdings in the assistant
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
