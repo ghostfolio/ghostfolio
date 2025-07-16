@@ -446,7 +446,8 @@ export abstract class PortfolioCalculator {
           currentRateErrors.find(({ dataSource, symbol }) => {
             return dataSource === item.dataSource && symbol === item.symbol;
           })) &&
-        item.investment.gt(0)
+        item.investment.gt(0) &&
+        item.skipErrors === false
       ) {
         errors.push({ dataSource: item.dataSource, symbol: item.symbol });
       }
@@ -896,9 +897,14 @@ export abstract class PortfolioCalculator {
       unitPrice
     } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
-      const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
 
+      const currency = SymbolProfile.currency;
+      const dataSource = SymbolProfile.dataSource;
       const factor = getFactor(type);
+      const skipErrors = !!SymbolProfile.userId; // Skip errors for custom asset profiles
+      const symbol = SymbolProfile.symbol;
+
+      const oldAccumulatedSymbol = symbols[symbol];
 
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
@@ -918,32 +924,34 @@ export abstract class PortfolioCalculator {
         }
 
         currentTransactionPointItem = {
+          currency,
+          dataSource,
           investment,
+          skipErrors,
+          symbol,
           averagePrice: newQuantity.gt(0)
             ? investment.div(newQuantity)
             : new Big(0),
-          currency: SymbolProfile.currency,
-          dataSource: SymbolProfile.dataSource,
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           quantity: newQuantity,
-          symbol: SymbolProfile.symbol,
           tags: oldAccumulatedSymbol.tags.concat(tags),
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
         currentTransactionPointItem = {
+          currency,
+          dataSource,
           fee,
+          skipErrors,
+          symbol,
           tags,
           averagePrice: unitPrice,
-          currency: SymbolProfile.currency,
-          dataSource: SymbolProfile.dataSource,
           dividend: new Big(0),
           firstBuyDate: date,
           investment: unitPrice.mul(quantity).mul(factor),
           quantity: quantity.mul(factor),
-          symbol: SymbolProfile.symbol,
           transactionCount: 1
         };
       }

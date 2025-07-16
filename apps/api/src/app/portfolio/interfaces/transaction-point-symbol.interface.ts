@@ -10,6 +10,7 @@ export interface TransactionPointSymbol {
   firstBuyDate: string;
   investment: Big;
   quantity: Big;
+  skipErrors: boolean;
   symbol: string;
   tags?: Tag[];
   transactionCount: number;
