@@ -609,8 +609,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             id: aSearchTerm,
             type: 'SEARCH_QUERY'
           }
-        ],
-        range: '1d'
+        ]
       })
       .pipe(
         catchError(() => {
