@@ -1,6 +1,9 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  ghostfolioPrefix,
+  PROPERTY_CURRENCIES
+} from '@ghostfolio/common/config';
 
 import {
   ChangeDetectionStrategy,
@@ -55,7 +58,9 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         addCurrency: new FormControl(null, [
           this.iso4217CurrencyCodeValidator()
         ]),
-        addSymbol: new FormControl(null, [Validators.required]),
+        addSymbol: new FormControl(`${ghostfolioPrefix}_`, [
+          Validators.required
+        ]),
         searchSymbol: new FormControl(null, [Validators.required])
       },
       {
