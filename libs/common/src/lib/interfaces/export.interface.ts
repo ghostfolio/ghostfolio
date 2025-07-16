@@ -16,7 +16,9 @@ export interface Export {
     | 'updatedAt'
     | 'userId'
   > & { assetProfileId?: string; date: string; symbol: string })[];
-  assetProfiles: Omit<SymbolProfile, 'createdAt' | 'updatedAt' | 'userId'>[];
+  assetProfiles: (Omit<SymbolProfile, 'createdAt' | 'updatedAt' | 'userId'> & {
+    marketData: { date: string; marketPrice: number }[];
+  })[];
   meta: {
     date: string;
     version: string;
