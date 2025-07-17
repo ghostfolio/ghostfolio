@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Italian (`it`)
+- Improved the language localization for Portuguese (`pt`)
 
 ## 2.182.0 - 2025-07-16
 
