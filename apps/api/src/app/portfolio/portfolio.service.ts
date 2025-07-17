@@ -1223,13 +1223,17 @@ export class PortfolioService {
               [
                 new EconomicMarketClusterRiskDevelopedMarkets(
                   this.exchangeRateDataService,
+                  this.i18nService,
                   marketsTotalInBaseCurrency,
-                  markets.developedMarkets.valueInBaseCurrency
+                  markets.developedMarkets.valueInBaseCurrency,
+                  userSettings.language
                 ),
                 new EconomicMarketClusterRiskEmergingMarkets(
                   this.exchangeRateDataService,
+                  this.i18nService,
                   marketsTotalInBaseCurrency,
-                  markets.emergingMarkets.valueInBaseCurrency
+                  markets.emergingMarkets.valueInBaseCurrency,
+                  userSettings.language
                 )
               ],
               userSettings
