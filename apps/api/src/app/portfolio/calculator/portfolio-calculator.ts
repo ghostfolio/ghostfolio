@@ -13,6 +13,7 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
+  INVESTMENT_ACTIVITY_TYPES,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH,
@@ -898,70 +899,72 @@ export abstract class PortfolioCalculator {
     } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
 
-      const currency = SymbolProfile.currency;
-      const dataSource = SymbolProfile.dataSource;
-      const factor = getFactor(type);
-      const skipErrors = !!SymbolProfile.userId; // Skip errors for custom asset profiles
-      const symbol = SymbolProfile.symbol;
+      if (INVESTMENT_ACTIVITY_TYPES.includes(type)) {
+        const currency = SymbolProfile.currency;
+        const dataSource = SymbolProfile.dataSource;
+        const factor = getFactor(type);
+        const skipErrors = !!SymbolProfile.userId; // Skip errors for custom asset profiles
+        const symbol = SymbolProfile.symbol;
 
-      const oldAccumulatedSymbol = symbols[symbol];
+        const oldAccumulatedSymbol = symbols[symbol];
 
-      if (oldAccumulatedSymbol) {
-        let investment = oldAccumulatedSymbol.investment;
+        if (oldAccumulatedSymbol) {
+          let investment = oldAccumulatedSymbol.investment;
 
-        const newQuantity = quantity
-          .mul(factor)
-          .plus(oldAccumulatedSymbol.quantity);
+          const newQuantity = quantity
+            .mul(factor)
+            .plus(oldAccumulatedSymbol.quantity);
 
-        if (type === 'BUY') {
-          investment = oldAccumulatedSymbol.investment.plus(
-            quantity.mul(unitPrice)
-          );
-        } else if (type === 'SELL') {
-          investment = oldAccumulatedSymbol.investment.minus(
-            quantity.mul(oldAccumulatedSymbol.averagePrice)
-          );
+          if (type === 'BUY') {
+            investment = oldAccumulatedSymbol.investment.plus(
+              quantity.mul(unitPrice)
+            );
+          } else if (type === 'SELL') {
+            investment = oldAccumulatedSymbol.investment.minus(
+              quantity.mul(oldAccumulatedSymbol.averagePrice)
+            );
+          }
+
+          currentTransactionPointItem = {
+            currency,
+            dataSource,
+            investment,
+            skipErrors,
+            symbol,
+            averagePrice: newQuantity.gt(0)
+              ? investment.div(newQuantity)
+              : new Big(0),
+            dividend: new Big(0),
+            fee: oldAccumulatedSymbol.fee.plus(fee),
+            firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
+            quantity: newQuantity,
+            tags: oldAccumulatedSymbol.tags.concat(tags),
+            transactionCount: oldAccumulatedSymbol.transactionCount + 1
+          };
+        } else {
+          currentTransactionPointItem = {
+            currency,
+            dataSource,
+            fee,
+            skipErrors,
+            symbol,
+            tags,
+            averagePrice: unitPrice,
+            dividend: new Big(0),
+            firstBuyDate: date,
+            investment: unitPrice.mul(quantity).mul(factor),
+            quantity: quantity.mul(factor),
+            transactionCount: 1
+          };
         }
 
-        currentTransactionPointItem = {
-          currency,
-          dataSource,
-          investment,
-          skipErrors,
-          symbol,
-          averagePrice: newQuantity.gt(0)
-            ? investment.div(newQuantity)
-            : new Big(0),
-          dividend: new Big(0),
-          fee: oldAccumulatedSymbol.fee.plus(fee),
-          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
-          quantity: newQuantity,
-          tags: oldAccumulatedSymbol.tags.concat(tags),
-          transactionCount: oldAccumulatedSymbol.transactionCount + 1
-        };
-      } else {
-        currentTransactionPointItem = {
-          currency,
-          dataSource,
-          fee,
-          skipErrors,
-          symbol,
-          tags,
-          averagePrice: unitPrice,
-          dividend: new Big(0),
-          firstBuyDate: date,
-          investment: unitPrice.mul(quantity).mul(factor),
-          quantity: quantity.mul(factor),
-          transactionCount: 1
-        };
+        currentTransactionPointItem.tags = uniqBy(
+          currentTransactionPointItem.tags,
+          'id'
+        );
+
+        symbols[SymbolProfile.symbol] = currentTransactionPointItem;
       }
-
-      currentTransactionPointItem.tags = uniqBy(
-        currentTransactionPointItem.tags,
-        'id'
-      );
-
-      symbols[SymbolProfile.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
 
@@ -969,7 +972,9 @@ export abstract class PortfolioCalculator {
         return symbol !== SymbolProfile.symbol;
       });
 
-      newItems.push(currentTransactionPointItem);
+      if (currentTransactionPointItem) {
+        newItems.push(currentTransactionPointItem);
+      }
 
       newItems.sort((a, b) => {
         return a.symbol?.localeCompare(b.symbol);
