@@ -7631,7 +7631,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Set up</source>
-        <target state="new">Fondo di emergenza: istituito</target>
+        <target state="translated">Fondo di emergenza: istituito</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">90</context>
@@ -7869,7 +7869,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) </source>
-        <target state="new"> Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) </target>
+        <target state="translated"> Oltre il ${thresholdMax}% del tuo investimento attuale è pari a ${maxAccountName} (${maxInvestmentRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">16</context>
@@ -7877,7 +7877,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="new"> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </target>
+        <target state="translated"> La maggior parte del tuo investimento attuale è pari a ${maxAccountName} (${maxInvestmentRatio}%) e non supera ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">20</context>
@@ -7893,7 +7893,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> Il contributo azionario del tuo investimento attuale (${equityValueRatio}%) supera ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -7901,7 +7901,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> Il contributo azionario del tuo investimento attuale (${equityValueRatio}%) è inferiore a ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">40</context>
@@ -7909,7 +7909,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> Il contributo azionario del tuo investimento attuale (${equityValueRatio}%) è compreso tra ${thresholdMin}% e ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">44</context>
@@ -7925,7 +7925,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> Il contributo a reddito fisso del tuo investimento attuale (${fixedIncomeValueRatio}%) supera ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">50</context>
@@ -7933,7 +7933,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> Il contributo a reddito fisso del tuo investimento attuale (${fixedIncomeValueRatio}%) è inferiore a ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">54</context>
@@ -7941,7 +7941,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> Il contributo a reddito fisso del tuo investimento attuale (${fixedIncomeValueRatio}%) è compreso tra ${thresholdMin}% e ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">59</context>
@@ -7957,7 +7957,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="new"> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> La maggior parte del tuo investimento attuale non è nella valuta di base (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">68</context>
@@ -7965,7 +7965,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
-        <target state="new"> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
+        <target state="translated"> La maggior parte del tuo investimento attuale è nella valuta di base (${baseCurrencyValueRatio}% in ${baseCurrency}) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">72</context>
