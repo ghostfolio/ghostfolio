@@ -226,7 +226,6 @@ export class ExportService {
           unitPrice
         }) => {
           return {
-            assetProfileId: SymbolProfile.userId ? SymbolProfile.id : undefined,
             accountId,
             comment,
             fee,
@@ -237,11 +236,7 @@ export class ExportService {
             currency: currency ?? SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol:
-              ['FEE', 'INTEREST', 'LIABILITY'].includes(type) ||
-              (SymbolProfile.dataSource === 'MANUAL' && type === 'BUY')
-                ? SymbolProfile.name
-                : SymbolProfile.symbol,
+            symbol: SymbolProfile.symbol,
             tags: currentTags.map(({ id: tagId }) => {
               return tagId;
             })

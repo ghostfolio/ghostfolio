@@ -1,4 +1,11 @@
-import { Account, Order, Platform, SymbolProfile, Tag } from '@prisma/client';
+import {
+  Account,
+  DataSource,
+  Order,
+  Platform,
+  SymbolProfile,
+  Tag
+} from '@prisma/client';
 
 import { AccountBalance } from './account-balance.interface';
 
@@ -15,7 +22,7 @@ export interface Export {
     | 'symbolProfileId'
     | 'updatedAt'
     | 'userId'
-  > & { assetProfileId?: string; date: string; symbol: string })[];
+  > & { dataSource: DataSource; date: string; symbol: string })[];
   assetProfiles: (Omit<SymbolProfile, 'createdAt' | 'updatedAt' | 'userId'> & {
     marketData: { date: string; marketPrice: number }[];
   })[];
