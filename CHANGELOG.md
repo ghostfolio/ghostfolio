@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
+- Improved the holdings dialog not to include non-investment activities
 
 ## 2.182.0 - 2025-07-16
 
