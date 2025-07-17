@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the platform icon in the create or update platform dialog of the admin control
+- Localized the durations of the coupon system
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Italian (`it`)
