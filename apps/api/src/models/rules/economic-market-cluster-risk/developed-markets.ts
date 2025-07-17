@@ -16,8 +16,8 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
     languageCode: string
   ) {
     super(exchangeRateDataService, {
-      key: EconomicMarketClusterRiskDevelopedMarkets.name,
-      languageCode
+      languageCode,
+      key: EconomicMarketClusterRiskDevelopedMarkets.name
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -78,7 +78,10 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
   }
 
   public getCategoryName() {
-    return 'Economic Market Cluster Risk'; // TODO: Replace hardcoded text with i18n translation
+    return this.i18nService.getTranslation({
+      id: 'rule.economicMarketClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getConfiguration() {
