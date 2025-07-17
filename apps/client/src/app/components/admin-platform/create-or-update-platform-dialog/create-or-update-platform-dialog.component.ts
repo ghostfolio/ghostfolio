@@ -34,7 +34,7 @@ export class CreateOrUpdatePlatformDialog implements OnDestroy {
   ) {
     this.platformForm = this.formBuilder.group({
       name: [this.data.platform.name, Validators.required],
-      url: [this.data.platform.url, Validators.required]
+      url: [this.data.platform.url ?? 'https://', Validators.required]
     });
   }
 
