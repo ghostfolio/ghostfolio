@@ -1,4 +1,4 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
@@ -127,6 +127,13 @@ export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
 export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
+
+export const INVESTMENT_ACTIVITY_TYPES = [
+  Type.BUY,
+  Type.DIVIDEND,
+  Type.ITEM,
+  Type.SELL
+] as Type[];
 
 export const MAX_TOP_HOLDINGS = 50;
 
