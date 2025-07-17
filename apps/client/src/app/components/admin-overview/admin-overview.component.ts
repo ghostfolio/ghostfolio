@@ -12,6 +12,7 @@ import {
   PROPERTY_SYSTEM_MESSAGE,
   ghostfolioPrefix
 } from '@ghostfolio/common/config';
+import { getDateFnsLocale } from '@ghostfolio/common/helper';
 import {
   Coupon,
   InfoItem,
@@ -24,6 +25,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  addMilliseconds,
   differenceInSeconds,
   formatDistanceToNowStrict,
   parseISO
@@ -129,6 +131,15 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     }
 
     return '';
+  }
+
+  public formatStringValue(aStringValue: StringValue) {
+    return formatDistanceToNowStrict(
+      addMilliseconds(new Date(), ms(aStringValue)),
+      {
+        locale: getDateFnsLocale(this.user?.settings?.language)
+      }
+    );
   }
 
   public onAddCoupon() {

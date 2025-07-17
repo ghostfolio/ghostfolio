@@ -105,7 +105,9 @@
                   @for (coupon of coupons; track coupon) {
                     <tr>
                       <td class="text-monospace">{{ coupon.code }}</td>
-                      <td class="pl-2 text-right">{{ coupon.duration }}</td>
+                      <td class="pl-2 text-right">
+                        {{ formatStringValue(coupon.duration) }}
+                      </td>
                       <td>
                         <button
                           class="mx-1 no-min-width px-2"
@@ -145,12 +147,24 @@
                         [value]="couponDuration"
                         (selectionChange)="onChangeCouponDuration($event.value)"
                       >
-                        <mat-option value="7 days">7 Days</mat-option>
-                        <mat-option value="14 days">14 Days</mat-option>
-                        <mat-option value="30 days">30 Days</mat-option>
-                        <mat-option value="90 days">90 Days</mat-option>
-                        <mat-option value="180 days">180 Days</mat-option>
-                        <mat-option value="1 year">1 Year</mat-option>
+                        <mat-option value="7 days">{{
+                          formatStringValue('7 days')
+                        }}</mat-option>
+                        <mat-option value="14 days">{{
+                          formatStringValue('14 days')
+                        }}</mat-option>
+                        <mat-option value="30 days">{{
+                          formatStringValue('30 days')
+                        }}</mat-option>
+                        <mat-option value="90 days">{{
+                          formatStringValue('90 days')
+                        }}</mat-option>
+                        <mat-option value="180 days">{{
+                          formatStringValue('180 days')
+                        }}</mat-option>
+                        <mat-option value="1 year">{{
+                          formatStringValue('1 year')
+                        }}</mat-option>
                       </mat-select>
                     </mat-form-field>
                     <button
