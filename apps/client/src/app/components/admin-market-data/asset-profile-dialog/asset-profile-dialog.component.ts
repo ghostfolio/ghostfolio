@@ -49,6 +49,7 @@ import {
   Prisma,
   SymbolProfile
 } from '@prisma/client';
+import { isUUID } from 'class-validator';
 import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
@@ -144,6 +145,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public isBenchmark = false;
   public isDataGatheringEnabled: boolean;
   public isEditAssetProfileIdentifierMode = false;
+  public isUUID = isUUID;
   public marketDataItems: MarketData[] = [];
 
   public modeValues = [

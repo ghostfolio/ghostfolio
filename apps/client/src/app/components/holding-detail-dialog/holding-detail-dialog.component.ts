@@ -49,6 +49,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Account, MarketData, Tag } from '@prisma/client';
+import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
@@ -101,6 +102,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public assetSubClass: string;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
+  public benchmarkLabel = $localize`Average Unit Price`;
   public countries: {
     [code: string]: { name: string; value: number };
   };
@@ -116,6 +118,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public historicalDataItems: LineChartItem[];
   public investmentInBaseCurrencyWithCurrencyEffect: number;
   public investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
+  public isUUID = isUUID;
   public marketDataItems: MarketData[] = [];
   public marketPrice: number;
   public marketPriceMax: number;

@@ -302,10 +302,14 @@ export class UserService {
         new EconomicMarketClusterRiskDevelopedMarkets(
           undefined,
           undefined,
+          undefined,
+          undefined,
           undefined
         ).getSettings(user.settings.settings),
       EconomicMarketClusterRiskEmergingMarkets:
         new EconomicMarketClusterRiskEmergingMarkets(
+          undefined,
+          undefined,
           undefined,
           undefined,
           undefined
