@@ -17,7 +17,7 @@ import { GfSymbolAutocompleteComponent } from './symbol-autocomplete.component';
 
 const DEFAULT_OPTIONS: LookupItem[] = [
   {
-    assetClass: 'COMMODITY',
+    assetClass: 'EQUITY',
     assetSubClass: 'ETF',
     currency: 'USD',
     dataProviderInfo: {
@@ -44,7 +44,7 @@ const DEFAULT_OPTIONS: LookupItem[] = [
 
 const FILTERED_OPTIONS: LookupItem[] = [
   {
-    assetClass: 'COMMODITY',
+    assetClass: 'EQUITY',
     assetSubClass: 'ETF',
     currency: 'USD',
     dataProviderInfo: {
