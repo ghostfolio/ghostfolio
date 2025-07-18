@@ -9,6 +9,7 @@ export interface TransactionPointSymbol {
   fee: Big;
   firstBuyDate: string;
   investment: Big;
+  isInvestmentAssetProfileItem: boolean;
   quantity: Big;
   skipErrors: boolean;
   symbol: string;

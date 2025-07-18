@@ -118,6 +118,13 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
 };
 
+export const INVESTMENT_ACTIVITY_TYPES = [
+  Type.BUY,
+  Type.DIVIDEND,
+  Type.ITEM,
+  Type.SELL
+] as Type[];
+
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
@@ -127,13 +134,6 @@ export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
 export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
-
-export const INVESTMENT_ACTIVITY_TYPES = [
-  Type.BUY,
-  Type.DIVIDEND,
-  Type.ITEM,
-  Type.SELL
-] as Type[];
 
 export const MAX_TOP_HOLDINGS = 50;
 
