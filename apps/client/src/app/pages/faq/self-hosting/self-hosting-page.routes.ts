@@ -3,12 +3,12 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { SelfHostingPageComponent } from './self-hosting-page.component';
+import { GfSelfHostingPageComponent } from './self-hosting-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: SelfHostingPageComponent,
+    component: GfSelfHostingPageComponent,
     path: '',
     title: `${publicRoutes.faq.subRoutes.selfHosting.title} - ${publicRoutes.faq.title}`
   }

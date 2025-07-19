@@ -3,7 +3,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { FaqPageComponent } from './faq-page.component';
+import { GfFaqPageComponent } from './faq-page.component';
 
 export const routes: Routes = [
   {
@@ -27,7 +27,7 @@ export const routes: Routes = [
           )
       }
     ],
-    component: FaqPageComponent,
+    component: GfFaqPageComponent,
     path: '',
     title: publicRoutes.faq.title
   }

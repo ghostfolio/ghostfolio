@@ -25,7 +25,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./faq-page.scss'],
   templateUrl: './faq-page.html'
 })
-export class FaqPageComponent implements OnDestroy, OnInit {
+export class GfFaqPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];

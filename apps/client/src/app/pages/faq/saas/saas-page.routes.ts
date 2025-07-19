@@ -3,12 +3,12 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { SaasPageComponent } from './saas-page.component';
+import { GfSaasPageComponent } from './saas-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: SaasPageComponent,
+    component: GfSaasPageComponent,
     path: '',
     title: `${publicRoutes.faq.subRoutes.saas.title} - ${publicRoutes.faq.title}`
   }
