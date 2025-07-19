@@ -333,6 +333,7 @@ export class YahooFinanceService implements DataProviderInterface {
       }
     } catch (error) {
       Logger.error(error, 'YahooFinanceService');
+      return { items: [] };
     }
 
     return { items };
