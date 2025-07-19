@@ -355,7 +355,6 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('fee').setValue(0);
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
-          this.activityForm.get('quantity').setValue(1);
           this.activityForm
             .get('searchSymbol')
             .removeValidators(Validators.required);
