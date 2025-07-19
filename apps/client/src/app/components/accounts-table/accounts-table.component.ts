@@ -117,6 +117,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
       this.displayedColumns.push('valueInBaseCurrency');
     }
 
+    this.displayedColumns.push('allocation');
     this.displayedColumns.push('comment');
 
     if (this.showActions) {
