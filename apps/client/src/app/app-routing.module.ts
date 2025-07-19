@@ -75,7 +75,7 @@ const routes: Routes = [
   {
     path: internalRoutes.home.path,
     loadChildren: () =>
-      import('./pages/home/home-page.module').then((m) => m.HomePageModule)
+      import('./pages/home/home-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
