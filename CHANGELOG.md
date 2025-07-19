@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the export functionality by custom asset profiles
 - Improved the platform icon in the create or update platform dialog of the admin control
 - Localized the durations of the coupon system
 - Refactored the resources pages to standalone

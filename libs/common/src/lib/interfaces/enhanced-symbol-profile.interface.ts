@@ -14,6 +14,7 @@ export interface EnhancedSymbolProfile {
   countries: Country[];
   createdAt: Date;
   currency?: string;
+  cusip?: string;
   dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   dateOfFirstActivity?: Date;
