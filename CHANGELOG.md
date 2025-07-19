@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
+- Fixed the quantity value in the update activity dialog
 
 ### Fixed
 
