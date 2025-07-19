@@ -5890,7 +5890,7 @@
       </trans-unit>
       <trans-unit id="7608037008789240367" datatype="html">
         <source>Asset Sub Class</source>
-        <target state="translated">Subclasse d'actiu</target>
+        <target state="translated">Subclasse d’actiu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">7</context>
@@ -5938,7 +5938,7 @@
       </trans-unit>
       <trans-unit id="6268646680388419543" datatype="html">
         <source>Emergency Fund</source>
-        <target state="translated">Fons d'emergència</target>
+        <target state="translated">Fons d’emergència</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">15</context>

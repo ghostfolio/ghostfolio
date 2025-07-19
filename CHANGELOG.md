@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Improved the language localization for Catalan (`ca`)
 - Set up the language localization for the static portfolio analysis rule: _Economic Market Cluster Risks_ (Developed Markets)
 - Set up the language localization for the static portfolio analysis rule: _Economic Market Cluster Risks_ (Emerging Markets)
 
