@@ -8213,7 +8213,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false.invalid" datatype="html">
         <source> No accounts have been set up </source>
-        <target state="new"> No accounts have been set up </target>
+        <target state="translated"> Es wurden noch keine Konten eingerichtet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">20</context>
@@ -8221,7 +8221,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
         <source> Your net worth is managed by 0 accounts </source>
-        <target state="new"> Your net worth is managed by 0 accounts </target>
+        <target state="translated"> Dein Gesamtvermögen wird von 0 Konten verwaltet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">32</context>
