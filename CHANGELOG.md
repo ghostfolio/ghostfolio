@@ -17,7 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the export functionality by custom asset profiles
 - Improved the platform icon in the create or update platform dialog of the admin control
 - Localized the durations of the coupon system
+- Refactored the Frequently Asked Questions (FAQ) pages to standalone
 - Refactored the resources pages to standalone
+- Refactored the accounts table component to standalone
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for German (`de`)
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the horizontal ellipsis icon in the accounts table component
 - Fixed the static portfolio analysis rule for no accounts: _Account Cluster Risks_ (Current Investment)
 - Fixed the static portfolio analysis rule for no accounts: _Account Cluster Risks_ (Single Account)
 

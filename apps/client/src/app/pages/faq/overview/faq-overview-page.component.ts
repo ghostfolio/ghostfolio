@@ -1,18 +1,27 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy
+} from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [GfPremiumIndicatorComponent, MatCardModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-faq-overview-page',
   styleUrls: ['./faq-overview-page.scss'],
-  templateUrl: './faq-overview-page.html',
-  standalone: false
+  templateUrl: './faq-overview-page.html'
 })
-export class FaqOverviewPageComponent implements OnDestroy {
+export class GfFaqOverviewPageComponent implements OnDestroy {
   public pricingUrl = `https://ghostfol.io/${document.documentElement.lang}/${publicRoutes.pricing.path}`;
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public user: User;
