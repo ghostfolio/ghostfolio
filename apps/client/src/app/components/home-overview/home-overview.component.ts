@@ -14,7 +14,6 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
-import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -34,7 +33,6 @@ import { takeUntil } from 'rxjs/operators';
   imports: [
     CommonModule,
     GfLineChartComponent,
-    GfNoTransactionsInfoComponent,
     GfPortfolioPerformanceModule,
     MatButtonModule,
     RouterModule

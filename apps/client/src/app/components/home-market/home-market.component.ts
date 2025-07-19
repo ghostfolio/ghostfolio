@@ -13,7 +13,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -27,7 +26,6 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
-    CommonModule,
     GfBenchmarkComponent,
     GfFearAndGreedIndexModule,
     GfLineChartComponent

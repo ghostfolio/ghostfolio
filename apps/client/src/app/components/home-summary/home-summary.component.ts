@@ -9,7 +9,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -23,7 +22,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  imports: [CommonModule, GfPortfolioSummaryModule, MatCardModule],
+  imports: [GfPortfolioSummaryModule, MatCardModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-summary',
   styleUrls: ['./home-summary.scss'],
