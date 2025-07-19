@@ -8149,7 +8149,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets" datatype="html">
         <source> Developed Markets </source>
-        <target state="new"> Developed Markets </target>
+        <target state="translated"> Entwickelte Länder </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">89</context>
@@ -8157,7 +8157,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
         <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> Der Anteil entwickelter Länder deiner aktuellen Investition (${developedMarketsValueRatio}%) übersteigt ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">92</context>
@@ -8165,7 +8165,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
         <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> Der Anteil entwickelter Länder deiner aktuellen Investition (${developedMarketsValueRatio}%) liegt unter ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">97</context>
@@ -8173,7 +8173,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
         <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> Der Anteil entwickelter Länder deiner aktuellen Investition (${developedMarketsValueRatio}%) liegt im Bereich zwischen ${thresholdMin}% und ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">102</context>
@@ -8181,7 +8181,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets" datatype="html">
         <source> Emerging Markets </source>
-        <target state="new"> Emerging Markets </target>
+        <target state="translated"> Schwellenländer </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">107</context>
@@ -8189,7 +8189,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> Der Anteil der Schwellenländer deiner aktuellen Investition (${emergingMarketsValueRatio}%) übersteigt ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">110</context>
@@ -8197,7 +8197,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> Der Anteil der Schwellenländer deiner aktuellen Investition (${emergingMarketsValueRatio}%) liegt unter ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">115</context>
@@ -8205,7 +8205,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> Der Anteil der Schwellenländer deiner aktuellen Investition (${emergingMarketsValueRatio}%) liegt im Bereich zwischen ${thresholdMin}% und ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">120</context>
