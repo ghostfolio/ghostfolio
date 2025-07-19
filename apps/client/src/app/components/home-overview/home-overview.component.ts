@@ -1,3 +1,4 @@
+import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -12,17 +13,36 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    CommonModule,
+    GfLineChartComponent,
+    GfNoTransactionsInfoComponent,
+    GfPortfolioPerformanceModule,
+    MatButtonModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-overview',
   styleUrls: ['./home-overview.scss'],
-  templateUrl: './home-overview.html',
-  standalone: false
+  templateUrl: './home-overview.html'
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;

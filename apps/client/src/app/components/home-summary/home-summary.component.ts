@@ -1,3 +1,4 @@
+import { GfPortfolioSummaryModule } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -8,16 +9,25 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [CommonModule, GfPortfolioSummaryModule, MatCardModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-summary',
   styleUrls: ['./home-summary.scss'],
-  templateUrl: './home-summary.html',
-  standalone: false
+  templateUrl: './home-summary.html'
 })
 export class HomeSummaryComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;

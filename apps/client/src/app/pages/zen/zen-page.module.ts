@@ -1,5 +1,5 @@
-import { GfHomeHoldingsModule } from '@ghostfolio/client/components/home-holdings/home-holdings.module';
-import { GfHomeOverviewModule } from '@ghostfolio/client/components/home-overview/home-overview.module';
+import { HomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
+import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -14,8 +14,8 @@ import { ZenPageComponent } from './zen-page.component';
   declarations: [ZenPageComponent],
   imports: [
     CommonModule,
-    GfHomeHoldingsModule,
-    GfHomeOverviewModule,
+    HomeHoldingsComponent,
+    HomeOverviewComponent,
     IonIcon,
     MatTabsModule,
     RouterModule,
