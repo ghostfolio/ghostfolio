@@ -1,12 +1,13 @@
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
+  imports: [RouterModule],
   selector: 'gf-resources-overview',
   styleUrls: ['./resources-overview.component.scss'],
-  templateUrl: './resources-overview.component.html',
-  standalone: false
+  templateUrl: './resources-overview.component.html'
 })
 export class ResourcesOverviewComponent {
   public overviewItems = [

@@ -127,9 +127,7 @@ const routes: Routes = [
   {
     path: publicRoutes.resources.path,
     loadChildren: () =>
-      import('./pages/resources/resources-page.module').then(
-        (m) => m.ResourcesPageModule
-      )
+      import('./pages/resources/resources-page.routes').then((m) => m.routes)
   },
   {
     path: publicRoutes.start.path,
