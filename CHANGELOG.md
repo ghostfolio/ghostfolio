@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the horizontal ellipsis icon in the accounts table component
+- Fixed the static portfolio analysis rule for no accounts: _Account Cluster Risks_ (Current Investment)
+- Fixed the static portfolio analysis rule for no accounts: _Account Cluster Risks_ (Single Account)
 
 ## 2.182.0 - 2025-07-16
 

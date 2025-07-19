@@ -37,6 +37,16 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       };
     }
 
+    if (Object.keys(accounts).length === 0) {
+      return {
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRiskCurrentInvestment.false.invalid',
+          languageCode: this.getLanguageCode()
+        }),
+        value: false
+      };
+    }
+
     let maxAccount: (typeof accounts)[0];
     let totalInvestment = 0;
 
