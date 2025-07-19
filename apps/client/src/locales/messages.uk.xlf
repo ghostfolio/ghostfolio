@@ -943,7 +943,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
@@ -1531,7 +1531,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/create-or-update-tag-dialog/create-or-update-tag-dialog.html</context>
@@ -1579,7 +1579,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/create-or-update-tag-dialog/create-or-update-tag-dialog.html</context>
@@ -1675,7 +1675,7 @@
         <target state="translated">Ви дійсно хочете видалити цей купон?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">169</context>
         </context-group>
       </trans-unit>
       <trans-unit id="297546430113071258" datatype="html">
@@ -1683,7 +1683,7 @@
         <target state="translated">Ви дійсно хочете видалити це системне повідомлення?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6470890277760887814" datatype="html">
@@ -1691,7 +1691,7 @@
         <target state="translated">Ви дійсно хочете очистити кеш?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2712770700065625080" datatype="html">
@@ -1699,7 +1699,7 @@
         <target state="translated">Будь ласка, встановіть ваше системне повідомлення:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8fe73a4787b8068b2ba61f54ab7e0f9af2ea1fc9" datatype="html">
@@ -1791,7 +1791,7 @@
         <target state="translated">Додати</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/account-balances/account-balances.component.html</context>
@@ -1803,7 +1803,7 @@
         <target state="translated">Прибирання</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c7ac907e52a7ce2ac70b1786eb5f403ce306ce1f" datatype="html">
@@ -1811,7 +1811,7 @@
         <target state="translated">Очистити кеш</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7418ba6a757086804d7e00948f8b328050d99040" datatype="html">
@@ -3735,7 +3735,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/resources-page.component.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -4000,7 +4000,7 @@
         <target state="translated">Ринки</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/resources-page.component.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -4048,7 +4048,7 @@
         <target state="translated">Програмне забезпечення управління багатством з відкритим кодом</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
@@ -5472,7 +5472,7 @@
         <target state="translated">Глосарій</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/resources-page.component.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -5492,7 +5492,7 @@
         <target state="translated">Посібники</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/resources-page.component.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7617,7 +7617,7 @@
         <target state="new">Demo user account has been synced.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="18fe01d6ae816d6787148e59ea1a39d0bb542e24" datatype="html">
@@ -7625,7 +7625,7 @@
         <target state="new">Sync Demo User Account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
@@ -7633,7 +7633,7 @@
         <target state="new">Set up</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
@@ -7641,7 +7641,7 @@
         <target state="new"> No emergency fund has been set up </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.true" datatype="html">
@@ -7649,7 +7649,7 @@
         <target state="new"> An emergency fund has been set up </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment" datatype="html">
@@ -7657,7 +7657,7 @@
         <target state="new">Fee Ratio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.false" datatype="html">
@@ -7665,7 +7665,7 @@
         <target state="new"> The fees do exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.true" datatype="html">
@@ -7673,7 +7673,7 @@
         <target state="new"> The fees do not exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="253d612b439c367d21c4ba59763df303a6106968" datatype="html">
@@ -8120,7 +8120,7 @@
         <target state="new">Emergency Fund</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.fees.category" datatype="html">
@@ -8128,7 +8128,7 @@
         <target state="new">Fees</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRisk.category" datatype="html">
@@ -8136,7 +8136,7 @@
         <target state="new"> Regional Market Cluster Risks </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="144e11a337803cb0cc6ddfa18ec1c41007f088ca" datatype="html">
@@ -8145,6 +8145,70 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets" datatype="html">
+        <source> Developed Markets </source>
+        <target state="new"> Developed Markets </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
+        <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}% </source>
+        <target state="new"> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}% </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
+        <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}% </source>
+        <target state="new"> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}% </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
+        <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <target state="new"> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets" datatype="html">
+        <source> Emerging Markets </source>
+        <target state="new"> Emerging Markets </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
+        <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}% </source>
+        <target state="new"> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}% </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
+        <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}% </source>
+        <target state="new"> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}% </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
+        <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <target state="new"> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
     </body>

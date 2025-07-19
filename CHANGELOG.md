@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the resources pages to standalone
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
