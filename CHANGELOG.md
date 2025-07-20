@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the language localization for Catalan (`ca`)
+
 ## 2.183.0 - 2025-07-20
 
 ### Added
 
-- Improved the language localization for Catalan (`ca`)
 - Set up the language localization for the static portfolio analysis rule: _Economic Market Cluster Risks_ (Developed Markets)
 - Set up the language localization for the static portfolio analysis rule: _Economic Market Cluster Risks_ (Emerging Markets)
 
