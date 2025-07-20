@@ -4,6 +4,7 @@ import {
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import {
   ChangeDetectionStrategy,
@@ -17,11 +18,17 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 import { isISO4217CurrencyCode } from 'class-validator';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -30,10 +37,19 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    FormsModule,
+    GfSymbolAutocompleteComponent,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-asset-profile-dialog',
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
-  templateUrl: 'create-asset-profile-dialog.html',
-  standalone: false
+  templateUrl: 'create-asset-profile-dialog.html'
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;

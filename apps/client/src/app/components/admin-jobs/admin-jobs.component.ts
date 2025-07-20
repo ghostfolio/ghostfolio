@@ -10,6 +10,7 @@ import {
 import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
 import { AdminJobs, User } from '@ghostfolio/common/interfaces';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,8 +18,17 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import { JobStatus } from 'bull';
 import { addIcons } from 'ionicons';
 import {
@@ -34,17 +44,28 @@ import {
   removeCircleOutline,
   timeOutline
 } from 'ionicons/icons';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-admin-jobs',
   styleUrls: ['./admin-jobs.scss'],
-  templateUrl: './admin-jobs.html',
-  standalone: false
+  templateUrl: './admin-jobs.html'
 })
-export class AdminJobsComponent implements OnDestroy, OnInit {
+export class GfAdminJobsComponent implements OnDestroy, OnInit {
   public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
   public DATA_GATHERING_QUEUE_PRIORITY_HIGH =
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;

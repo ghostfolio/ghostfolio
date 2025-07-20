@@ -7,7 +7,10 @@ import {
 } from '@ghostfolio/common/helper';
 import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -15,8 +18,15 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import {
   differenceInSeconds,
   formatDistanceToNowStrict,
@@ -29,6 +39,7 @@ import {
   keyOutline,
   trashOutline
 } from 'ionicons/icons';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -40,12 +51,22 @@ import { ImpersonationStorageService } from '../../services/impersonation-storag
 import { UserService } from '../../services/user/user.service';
 
 @Component({
+  imports: [
+    CommonModule,
+    GfPremiumIndicatorComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-admin-users',
-  standalone: false,
   styleUrls: ['./admin-users.scss'],
   templateUrl: './admin-users.html'
 })
-export class AdminUsersComponent implements OnDestroy, OnInit {
+export class GfAdminUsersComponent implements OnDestroy, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();

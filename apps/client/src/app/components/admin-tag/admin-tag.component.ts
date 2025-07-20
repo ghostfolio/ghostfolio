@@ -13,10 +13,13 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Tag } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
@@ -32,12 +35,19 @@ import { CreateOrUpdateTagDialog } from './create-or-update-tag-dialog/create-or
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatSortModule,
+    MatTableModule,
+    RouterModule
+  ],
   selector: 'gf-admin-tag',
   styleUrls: ['./admin-tag.component.scss'],
-  templateUrl: './admin-tag.component.html',
-  standalone: false
+  templateUrl: './admin-tag.component.html'
 })
-export class AdminTagComponent implements OnInit, OnDestroy {
+export class GfAdminTagComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Tag>();

@@ -18,8 +18,17 @@ import {
   ScraperConfiguration,
   User
 } from '@ghostfolio/common/interfaces';
+import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -36,12 +45,27 @@ import {
   AbstractControl,
   FormBuilder,
   FormControl,
+  FormsModule,
+  ReactiveFormsModule,
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule
+} from '@angular/material/checkbox';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
   AssetSubClass,
@@ -67,11 +91,32 @@ import {
   host: { class: 'd-flex flex-column h-100' },
   selector: 'gf-asset-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfCurrencySelectorComponent,
+    GfEntityLogoComponent,
+    GfHistoricalMarketDataEditorComponent,
+    GfLineChartComponent,
+    GfPortfolioProportionChartComponent,
+    GfSymbolAutocompleteComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+    TextFieldModule
+  ],
   templateUrl: 'asset-profile-dialog.html',
-  styleUrls: ['./asset-profile-dialog.component.scss'],
-  standalone: false
+  styleUrls: ['./asset-profile-dialog.component.scss']
 })
-export class AssetProfileDialog implements OnDestroy, OnInit {
+export class GfAssetProfileDialog implements OnDestroy, OnInit {
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
     DATE_FORMAT
@@ -175,7 +220,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<AssetProfileDialog>,
+    public dialogRef: MatDialogRef<GfAssetProfileDialog>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
@@ -302,7 +347,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           ),
           currency: this.assetProfile?.currency,
           historicalData: {
-            csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
+            csvString: GfAssetProfileDialog.HISTORICAL_DATA_TEMPLATE
           },
           isActive: this.assetProfile?.isActive,
           name: this.assetProfile.name ?? this.assetProfile.symbol,

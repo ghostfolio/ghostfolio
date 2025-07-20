@@ -1,3 +1,6 @@
+import { GfAdminPlatformComponent } from '@ghostfolio/client/components/admin-platform/admin-platform.component';
+import { GfAdminTagComponent } from '@ghostfolio/client/components/admin-tag/admin-tag.component';
+import { GfDataProviderStatusComponent } from '@ghostfolio/client/components/data-provider-status/data-provider-status.component';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
@@ -11,7 +14,11 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,19 +26,42 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfAdminPlatformComponent,
+    GfAdminTagComponent,
+    GfDataProviderStatusComponent,
+    GfEntityLogoComponent,
+    GfPremiumIndicatorComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatProgressBarModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
   selector: 'gf-admin-settings',
   styleUrls: ['./admin-settings.component.scss'],
-  templateUrl: './admin-settings.component.html',
-  standalone: false
+  templateUrl: './admin-settings.component.html'
 })
-export class AdminSettingsComponent implements OnDestroy, OnInit {
+export class GfAdminSettingsComponent implements OnDestroy, OnInit {
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
   public displayedColumns = [

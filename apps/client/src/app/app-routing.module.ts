@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: internalRoutes.adminControl.path,
     loadChildren: () =>
-      import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
+      import('./pages/admin/admin-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
