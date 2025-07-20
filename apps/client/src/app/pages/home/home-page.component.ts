@@ -34,7 +34,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-page.scss'],
   templateUrl: './home-page.html'
 })
-export class HomePageComponent implements OnDestroy, OnInit {
+export class GfHomePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public tabs: TabConfiguration[] = [];

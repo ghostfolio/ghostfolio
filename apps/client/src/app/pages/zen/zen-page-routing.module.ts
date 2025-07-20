@@ -1,5 +1,5 @@
-import { HomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
-import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
+import { GfHomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
+import { GfHomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
@@ -14,11 +14,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomeOverviewComponent
+        component: GfHomeOverviewComponent
       },
       {
         path: internalRoutes.zen.subRoutes.holdings.path,
-        component: HomeHoldingsComponent,
+        component: GfHomeHoldingsComponent,
         title: internalRoutes.home.subRoutes.holdings.title
       }
     ],

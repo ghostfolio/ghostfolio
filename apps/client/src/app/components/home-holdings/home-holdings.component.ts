@@ -51,7 +51,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-holdings.scss'],
   templateUrl: './home-holdings.html'
 })
-export class HomeHoldingsComponent implements OnDestroy, OnInit {
+export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
   public deviceType: string;
@@ -68,7 +68,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     internalRoutes.portfolio.subRoutes.activities.routerLink;
   public user: User;
   public viewModeFormControl = new FormControl<HoldingsViewMode>(
-    HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+    GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
   );
 
   private unsubscribeSubject = new Subject<void>();
@@ -178,14 +178,14 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
       this.viewModeFormControl.setValue(
         this.deviceType === 'mobile'
-          ? HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+          ? GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
           : this.user?.settings?.holdingsViewMode ||
-              HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+              GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
         { emitEvent: false }
       );
     } else if (this.holdingType === 'CLOSED') {
       this.viewModeFormControl.setValue(
-        HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+        GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
         { emitEvent: false }
       );
     }

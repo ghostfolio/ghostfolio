@@ -42,7 +42,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-overview.scss'],
   templateUrl: './home-overview.html'
 })
-export class HomeOverviewComponent implements OnDestroy, OnInit {
+export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public errors: AssetProfileIdentifier[];

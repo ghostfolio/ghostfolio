@@ -28,7 +28,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-summary.scss'],
   templateUrl: './home-summary.html'
 })
-export class HomeSummaryComponent implements OnDestroy, OnInit {
+export class GfHomeSummaryComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
