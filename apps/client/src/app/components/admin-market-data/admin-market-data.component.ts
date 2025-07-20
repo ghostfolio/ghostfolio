@@ -67,9 +67,9 @@ import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
-import { GfAssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
+import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
-import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
+import { GfCreateAssetProfileDialogComponent } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
 
 @Component({
@@ -422,7 +422,7 @@ export class GfAdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(GfAssetProfileDialog, {
+        const dialogRef = this.dialog.open(GfAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -457,14 +457,17 @@ export class GfAdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
-          autoFocus: false,
-          data: {
-            deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          } as CreateAssetProfileDialogParams,
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
+        const dialogRef = this.dialog.open(
+          GfCreateAssetProfileDialogComponent,
+          {
+            autoFocus: false,
+            data: {
+              deviceType: this.deviceType,
+              locale: this.user?.settings?.locale
+            } as CreateAssetProfileDialogParams,
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          }
+        );
 
         dialogRef
           .afterClosed()

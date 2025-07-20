@@ -41,14 +41,14 @@ import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-tag-dialog.scss'],
   templateUrl: 'create-or-update-tag-dialog.html'
 })
-export class CreateOrUpdateTagDialog implements OnDestroy {
+export class GfCreateOrUpdateTagDialogComponent implements OnDestroy {
   public tagForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTagDialogParams,
-    public dialogRef: MatDialogRef<CreateOrUpdateTagDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateTagDialogComponent>,
     private formBuilder: FormBuilder
   ) {
     this.tagForm = this.formBuilder.group({

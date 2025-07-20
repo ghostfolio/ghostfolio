@@ -51,7 +51,7 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
   templateUrl: 'create-asset-profile-dialog.html'
 })
-export class CreateAssetProfileDialog implements OnInit, OnDestroy {
+export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
   public mode: CreateAssetProfileDialogMode;
 
@@ -62,7 +62,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
-    public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
+    public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
     public readonly formBuilder: FormBuilder
   ) {}
 

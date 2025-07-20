@@ -116,7 +116,7 @@ import {
   templateUrl: 'asset-profile-dialog.html',
   styleUrls: ['./asset-profile-dialog.component.scss']
 })
-export class GfAssetProfileDialog implements OnDestroy, OnInit {
+export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
     DATE_FORMAT
@@ -220,7 +220,7 @@ export class GfAssetProfileDialog implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<GfAssetProfileDialog>,
+    public dialogRef: MatDialogRef<GfAssetProfileDialogComponent>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
@@ -347,7 +347,7 @@ export class GfAssetProfileDialog implements OnDestroy, OnInit {
           ),
           currency: this.assetProfile?.currency,
           historicalData: {
-            csvString: GfAssetProfileDialog.HISTORICAL_DATA_TEMPLATE
+            csvString: GfAssetProfileDialogComponent.HISTORICAL_DATA_TEMPLATE
           },
           isActive: this.assetProfile?.isActive,
           name: this.assetProfile.name ?? this.assetProfile.symbol,

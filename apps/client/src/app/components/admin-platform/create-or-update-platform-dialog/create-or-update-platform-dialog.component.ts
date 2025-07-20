@@ -44,14 +44,14 @@ import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-platform-dialog.scss'],
   templateUrl: 'create-or-update-platform-dialog.html'
 })
-export class CreateOrUpdatePlatformDialog implements OnDestroy {
+export class GfCreateOrUpdatePlatformDialogComponent implements OnDestroy {
   public platformForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdatePlatformDialogParams,
-    public dialogRef: MatDialogRef<CreateOrUpdatePlatformDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdatePlatformDialogComponent>,
     private formBuilder: FormBuilder
   ) {
     this.platformForm = this.formBuilder.group({

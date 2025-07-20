@@ -31,7 +31,7 @@ import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CreateOrUpdateTagDialog } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
+import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,7 +149,7 @@ export class GfAdminTagComponent implements OnInit, OnDestroy {
   }
 
   private openCreateTagDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdateTagDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
           name: null
@@ -184,7 +184,7 @@ export class GfAdminTagComponent implements OnInit, OnDestroy {
   }
 
   private openUpdateTagDialog({ id, name }) {
-    const dialogRef = this.dialog.open(CreateOrUpdateTagDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
           id,

@@ -33,7 +33,7 @@ import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
+import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -153,16 +153,19 @@ export class GfAdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   private openCreatePlatformDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
-      data: {
-        platform: {
-          name: null,
-          url: null
-        }
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
+    const dialogRef = this.dialog.open(
+      GfCreateOrUpdatePlatformDialogComponent,
+      {
+        data: {
+          platform: {
+            name: null,
+            url: null
+          }
+        },
+        height: this.deviceType === 'mobile' ? '98vh' : undefined,
+        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      }
+    );
 
     dialogRef
       .afterClosed()
@@ -189,17 +192,20 @@ export class GfAdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   private openUpdatePlatformDialog({ id, name, url }) {
-    const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
-      data: {
-        platform: {
-          id,
-          name,
-          url
-        }
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
+    const dialogRef = this.dialog.open(
+      GfCreateOrUpdatePlatformDialogComponent,
+      {
+        data: {
+          platform: {
+            id,
+            name,
+            url
+          }
+        },
+        height: this.deviceType === 'mobile' ? '98vh' : undefined,
+        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      }
+    );
 
     dialogRef
       .afterClosed()
