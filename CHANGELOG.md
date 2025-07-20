@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the Frequently Asked Questions (FAQ) pages to standalone
 - Refactored the home pages to standalone
 - Refactored the resources pages to standalone
+- Refactored the access table component to standalone
 - Refactored the accounts table component to standalone
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
