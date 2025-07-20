@@ -88,9 +88,8 @@ import {
 } from './interfaces/interfaces';
 
 @Component({
-  host: { class: 'd-flex flex-column h-100' },
-  selector: 'gf-asset-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'd-flex flex-column h-100' },
   imports: [
     CommonModule,
     FormsModule,
@@ -113,8 +112,10 @@ import {
     ReactiveFormsModule,
     TextFieldModule
   ],
-  templateUrl: 'asset-profile-dialog.html',
-  styleUrls: ['./asset-profile-dialog.component.scss']
+  providers: [AdminMarketDataService],
+  selector: 'gf-asset-profile-dialog',
+  styleUrls: ['./asset-profile-dialog.component.scss'],
+  templateUrl: 'asset-profile-dialog.html'
 })
 export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(

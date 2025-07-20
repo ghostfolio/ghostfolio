@@ -91,6 +91,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
     NgxSkeletonLoaderModule,
     RouterModule
   ],
+  providers: [AdminMarketDataService],
   selector: 'gf-admin-market-data',
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'
