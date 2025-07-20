@@ -1,3 +1,4 @@
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -14,9 +15,13 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -26,11 +31,24 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
+import {
+  MatSort,
+  MatSortModule,
+  Sort,
+  SortDirection
+} from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { addIcons } from 'ionicons';
@@ -44,24 +62,41 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
-import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
+import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
-import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
+import { GfCreateAssetProfileDialogComponent } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'has-fab' },
+  imports: [
+    CommonModule,
+    GfActivitiesFilterComponent,
+    GfPremiumIndicatorComponent,
+    GfSymbolModule,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
+  providers: [AdminMarketDataService],
   selector: 'gf-admin-market-data',
   styleUrls: ['./admin-market-data.scss'],
-  templateUrl: './admin-market-data.html',
-  standalone: false
+  templateUrl: './admin-market-data.html'
 })
-export class AdminMarketDataComponent
+export class GfAdminMarketDataComponent
   implements AfterViewInit, OnDestroy, OnInit
 {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -388,7 +423,7 @@ export class AdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(AssetProfileDialog, {
+        const dialogRef = this.dialog.open(GfAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -423,14 +458,17 @@ export class AdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
-          autoFocus: false,
-          data: {
-            deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          } as CreateAssetProfileDialogParams,
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
+        const dialogRef = this.dialog.open(
+          GfCreateAssetProfileDialogComponent,
+          {
+            autoFocus: false,
+            data: {
+              deviceType: this.deviceType,
+              locale: this.user?.settings?.locale
+            } as CreateAssetProfileDialogParams,
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          }
+        );
 
         dialogRef
           .afterClosed()

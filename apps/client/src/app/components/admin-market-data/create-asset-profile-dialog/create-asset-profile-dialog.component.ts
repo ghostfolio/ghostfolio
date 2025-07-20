@@ -4,6 +4,7 @@ import {
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import {
   ChangeDetectionStrategy,
@@ -17,11 +18,17 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 import { isISO4217CurrencyCode } from 'class-validator';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -30,12 +37,21 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    FormsModule,
+    GfSymbolAutocompleteComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-asset-profile-dialog',
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
-  templateUrl: 'create-asset-profile-dialog.html',
-  standalone: false
+  templateUrl: 'create-asset-profile-dialog.html'
 })
-export class CreateAssetProfileDialog implements OnInit, OnDestroy {
+export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
   public mode: CreateAssetProfileDialogMode;
 
@@ -46,7 +62,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
-    public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
+    public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
     public readonly formBuilder: FormBuilder
   ) {}
 
