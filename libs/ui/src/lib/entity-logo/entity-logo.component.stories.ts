@@ -29,9 +29,9 @@ type Story = StoryObj<GfEntityLogoComponent>;
 export const LogoByDataSourceAndSymbol: Story = {
   args: {
     dataSource: 'YAHOO',
-    symbol: 'AAPL',
     size: 'large',
-    tooltip: 'Ghostfolio'
+    symbol: 'AAPL',
+    tooltip: 'Apple Inc.'
   }
 };
 

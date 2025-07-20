@@ -5,14 +5,14 @@ import { DataSource } from '@prisma/client';
   providedIn: 'root'
 })
 export class EntityLogoImageSourceService {
-  public getLogoSourceByDataSourceAndSymbol(
+  public getLogoUrlByDataSourceAndSymbol(
     dataSource: DataSource,
     symbol: string
-  ): string {
+  ) {
     return `../api/v1/logo/${dataSource}/${symbol}`;
   }
 
-  public getLogoSourceByUrl(url: string): string {
-    return `..//api/v1/logo?url=${url}`;
+  public getLogoUrlByUrl(url: string) {
+    return `../api/v1/logo?url=${url}`;
   }
 }
