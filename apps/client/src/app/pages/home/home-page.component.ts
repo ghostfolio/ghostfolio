@@ -4,7 +4,16 @@ import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   analyticsOutline,
@@ -19,12 +28,13 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [IonIcon, MatTabsModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-page',
   styleUrls: ['./home-page.scss'],
-  templateUrl: './home-page.html',
-  standalone: false
+  templateUrl: './home-page.html'
 })
-export class HomePageComponent implements OnDestroy, OnInit {
+export class GfHomePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public tabs: TabConfiguration[] = [];

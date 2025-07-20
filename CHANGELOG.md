@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the platform icon in the create or update platform dialog of the admin control
 - Localized the durations of the coupon system
 - Refactored the Frequently Asked Questions (FAQ) pages to standalone
+- Refactored the home pages to standalone
 - Refactored the resources pages to standalone
 - Refactored the accounts table component to standalone
 - Improved the language localization for Catalan (`ca`)
