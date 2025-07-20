@@ -849,7 +849,7 @@
         <source>Do you really want to delete this account?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="779aa6949e9d62c58ad44357d11a3157ef6780f5" datatype="html">
@@ -3020,8 +3020,8 @@
       <trans-unit id="5308814695487483464" datatype="html">
         <source>Frequently Asked Questions (FAQ)</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/overview/faq-overview-page-routing.module.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="sourcefile">apps/client/src/app/pages/faq/overview/faq-overview-page.routes.ts</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -3218,7 +3218,7 @@
         <source>Open Source Wealth Management Software</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
@@ -5510,7 +5510,7 @@
         <source>Self-Hosting</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -5532,14 +5532,14 @@
         <source>General</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7201815346028553735" datatype="html">
         <source>Cloud</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.component.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6879,42 +6879,42 @@
         <source>Set up</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
         <source> No emergency fund has been set up </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.true" datatype="html">
         <source> An emergency fund has been set up </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment" datatype="html">
         <source>Fee Ratio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.false" datatype="html">
         <source> The fees do exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.true" datatype="html">
         <source> The fees do not exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7784226024223865620" datatype="html">
@@ -6956,21 +6956,21 @@
         <source>Single Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source> Your net worth is managed by a single account </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source> Your net worth is managed by ${accountsLength} accounts </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e2944b02f48c741644ceee1c366ba35cdce71d86" datatype="html">
@@ -7089,105 +7089,105 @@
         <source> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity" datatype="html">
         <source>Equity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome" datatype="html">
         <source>Fixed Income</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment" datatype="html">
         <source> Investment: Base Currency </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source> The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency}) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
@@ -7285,98 +7285,112 @@
         <source> Asset Class Cluster Risks </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRisk.category" datatype="html">
         <source>Currency Cluster Risks</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRisk.category" datatype="html">
         <source> Economic Market Cluster Risks </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFund.category" datatype="html">
         <source>Emergency Fund</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">131</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.fees.category" datatype="html">
         <source>Fees</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">148</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRisk.category" datatype="html">
         <source> Regional Market Cluster Risks </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets" datatype="html">
         <source> Developed Markets </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
         <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
         <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
         <source> The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets" datatype="html">
         <source> Emerging Markets </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source> The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.accountClusterRiskCurrentInvestment.false.invalid" datatype="html">
+        <source> No accounts have been set up </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
+        <source> Your net worth is managed by 0 accounts </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
     </body>

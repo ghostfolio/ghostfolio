@@ -61,7 +61,7 @@ const routes: Routes = [
   {
     path: publicRoutes.faq.path,
     loadChildren: () =>
-      import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
+      import('./pages/faq/faq-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
