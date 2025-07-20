@@ -33,8 +33,8 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     if (northAmericaMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskNorthAmerica.false.max',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskNorthAmerica.false.max',
           placeholders: {
             valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
@@ -45,8 +45,8 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     } else if (northAmericaMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskNorthAmerica.false.min',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskNorthAmerica.false.min',
           placeholders: {
             valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
@@ -58,8 +58,8 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.regionClusterRiskNorthAmerica.true',
         languageCode: this.getLanguageCode(),
+        id: 'rule.regionalMarketClusterRiskNorthAmerica.true',
         placeholders: {
           valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
@@ -89,10 +89,9 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.regionClusterRiskNorthAmerica',
-      languageCode: this.getLanguageCode()
+      languageCode: this.getLanguageCode(),
+      id: 'rule.regionalMarketClusterRiskNorthAmerica'
     });
-    return 'North America';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

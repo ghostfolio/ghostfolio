@@ -35,8 +35,8 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     if (emergingMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskEmergingMarkets.false.max',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskEmergingMarkets.false.max',
           placeholders: {
             valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
@@ -47,8 +47,8 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     } else if (emergingMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskEmergingMarkets.false.min',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskEmergingMarkets.false.min',
           placeholders: {
             valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
@@ -60,8 +60,8 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.regionClusterRiskEmergingMarkets.true',
         languageCode: this.getLanguageCode(),
+        id: 'rule.regionalMarketClusterRiskEmergingMarkets.true',
         placeholders: {
           valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
@@ -91,10 +91,9 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.regionClusterRiskEmergingMarkets',
-      languageCode: this.getLanguageCode()
+      languageCode: this.getLanguageCode(),
+      id: 'rule.regionalMarketClusterRiskEmergingMarkets'
     });
-    return 'Emerging Markets';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

@@ -33,8 +33,8 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
     if (asiaPacificMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskAsiaPacific.false.max',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskAsiaPacific.false.max',
           placeholders: {
             valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
@@ -45,8 +45,8 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
     } else if (asiaPacificMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskAsiaPacific.false.min',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskAsiaPacific.false.min',
           placeholders: {
             valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
@@ -58,8 +58,8 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.regionClusterRiskAsiaPacific.true',
         languageCode: this.getLanguageCode(),
+        id: 'rule.regionalMarketClusterRiskAsiaPacific.true',
         placeholders: {
           valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
@@ -89,10 +89,9 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.regionClusterRiskAsiaPacific',
-      languageCode: this.getLanguageCode()
+      languageCode: this.getLanguageCode(),
+      id: 'rule.regionalMarketClusterRiskAsiaPacific'
     });
-    return 'Asia-Pacific';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

@@ -33,8 +33,8 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     if (japanMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskJapan.false.max',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskJapan.false.max',
           placeholders: {
             valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
@@ -45,8 +45,8 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     } else if (japanMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskJapan.false.min',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskJapan.false.min',
           placeholders: {
             valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
@@ -58,8 +58,8 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.regionClusterRiskJapan.true',
         languageCode: this.getLanguageCode(),
+        id: 'rule.regionalMarketClusterRiskJapan.true',
         placeholders: {
           valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
@@ -89,10 +89,9 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.regionClusterRiskJapan',
-      languageCode: this.getLanguageCode()
+      languageCode: this.getLanguageCode(),
+      id: 'rule.regionalMarketClusterRiskJapan'
     });
-    return 'Japan';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

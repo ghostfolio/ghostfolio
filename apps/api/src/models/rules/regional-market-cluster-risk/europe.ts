@@ -33,8 +33,8 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
     if (europeMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskEurope.false.max',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskEurope.false.max',
           placeholders: {
             valueRatio: (europeMarketValueRatio * 100).toPrecision(3),
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
@@ -45,8 +45,8 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
     } else if (europeMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.regionClusterRiskEurope.false.min',
           languageCode: this.getLanguageCode(),
+          id: 'rule.regionalMarketClusterRiskEurope.false.min',
           placeholders: {
             valueRatio: (europeMarketValueRatio * 100).toPrecision(3),
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
@@ -58,8 +58,8 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.regionClusterRiskEurope.true',
         languageCode: this.getLanguageCode(),
+        id: 'rule.regionalMarketClusterRiskEurope.true',
         placeholders: {
           valueRatio: (europeMarketValueRatio * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
@@ -89,10 +89,9 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.regionClusterRiskEurope',
-      languageCode: this.getLanguageCode()
+      languageCode: this.getLanguageCode(),
+      id: 'rule.regionalMarketClusterRiskEurope'
     });
-    return 'Europe';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
