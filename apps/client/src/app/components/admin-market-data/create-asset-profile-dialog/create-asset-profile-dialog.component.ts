@@ -40,8 +40,8 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   imports: [
     FormsModule,
     GfSymbolAutocompleteComponent,
-    MatDialogModule,
     MatButtonModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
