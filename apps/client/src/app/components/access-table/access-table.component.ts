@@ -3,17 +3,23 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Clipboard } from '@angular/cdk/clipboard';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
   Input,
   OnChanges,
   Output
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   ellipsisHorizontal,
@@ -24,13 +30,22 @@ import {
 import ms from 'ms';
 
 @Component({
-  selector: 'gf-access-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ClipboardModule,
+    CommonModule,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatTableModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-access-table',
   templateUrl: './access-table.component.html',
-  styleUrls: ['./access-table.component.scss'],
-  standalone: false
+  styleUrls: ['./access-table.component.scss']
 })
-export class AccessTableComponent implements OnChanges {
+export class GfAccessTableComponent implements OnChanges {
   @Input() accesses: Access[];
   @Input() showActions: boolean;
   @Input() user: User;

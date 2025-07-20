@@ -1,5 +1,5 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
-import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
+import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -39,8 +39,8 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
   host: { class: 'has-fab' },
   imports: [
     CommonModule,
+    GfAccessTableComponent,
     GfCreateOrUpdateAccessDialogModule,
-    GfPortfolioAccessTableModule,
     GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,
