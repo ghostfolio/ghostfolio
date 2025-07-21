@@ -1,5 +1,6 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Settings } from './interfaces/rule-settings.interface';
@@ -10,10 +11,13 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     currentValueInBaseCurrency: number,
     asiaPacificValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: RegionalMarketClusterRiskAsiaPacific.name
     });
 
@@ -28,26 +32,40 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
     if (asiaPacificMarketValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The Asia-Pacific market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
-          ruleSettings.thresholdMax * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.regionalMarketClusterRiskAsiaPacific.false.max',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
+            valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     } else if (asiaPacificMarketValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The Asia-Pacific market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) is below ${(
-          ruleSettings.thresholdMin * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.regionalMarketClusterRiskAsiaPacific.false.min',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
+            valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The Asia-Pacific market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
-        ruleSettings.thresholdMin * 100
-      ).toPrecision(
-        3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.regionalMarketClusterRiskAsiaPacific.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
+          thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
+          valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -70,7 +88,10 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
   }
 
   public getName() {
-    return 'Asia-Pacific';
+    return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRiskAsiaPacific',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

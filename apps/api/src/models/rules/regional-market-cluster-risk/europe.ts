@@ -1,5 +1,6 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Settings } from './interfaces/rule-settings.interface';
@@ -10,10 +11,13 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     currentValueInBaseCurrency: number,
     europeValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: RegionalMarketClusterRiskEurope.name
     });
 
@@ -28,26 +32,40 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
 
     if (europeMarketValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The Europe market contribution of your current investment (${(europeMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
-          ruleSettings.thresholdMax * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.regionalMarketClusterRiskEurope.false.max',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
+            valueRatio: (europeMarketValueRatio * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     } else if (europeMarketValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The Europe market contribution of your current investment (${(europeMarketValueRatio * 100).toPrecision(3)}%) is below ${(
-          ruleSettings.thresholdMin * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.regionalMarketClusterRiskEurope.false.min',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
+            valueRatio: (europeMarketValueRatio * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The Europe market contribution of your current investment (${(europeMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
-        ruleSettings.thresholdMin * 100
-      ).toPrecision(
-        3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.regionalMarketClusterRiskEurope.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
+          thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
+          valueRatio: (europeMarketValueRatio * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -70,7 +88,10 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
   }
 
   public getName() {
-    return 'Europe';
+    return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRiskEurope',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
