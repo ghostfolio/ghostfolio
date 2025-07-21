@@ -30,7 +30,8 @@ module.exports = [
           prefix: 'gf',
           style: 'camelCase'
         }
-      ]
+      ],
+      '@angular-eslint/prefer-inject': 'off'
     }
   },
   {

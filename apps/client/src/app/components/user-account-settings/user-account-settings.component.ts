@@ -13,7 +13,6 @@ import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -50,7 +49,6 @@ import { catchError, takeUntil } from 'rxjs/operators';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     IonIcon,
     MatButtonModule,

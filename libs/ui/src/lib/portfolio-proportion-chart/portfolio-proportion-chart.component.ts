@@ -6,7 +6,6 @@ import {
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -32,6 +31,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { isUUID } from 'class-validator';
 import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { translate } from '../i18n';
 
 const {
   blue,

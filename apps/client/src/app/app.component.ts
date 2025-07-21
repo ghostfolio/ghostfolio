@@ -6,7 +6,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,7 +13,8 @@ import {
   HostBinding,
   Inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  DOCUMENT
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';

@@ -1,6 +1,5 @@
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,7 +25,6 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    CommonModule,
     FormsModule,
     GfSymbolAutocompleteComponent,
     MatButtonModule,

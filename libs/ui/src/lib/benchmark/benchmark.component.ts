@@ -6,9 +6,6 @@ import {
   Benchmark,
   User
 } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
-import { GfTrendIndicatorComponent } from '@ghostfolio/ui/trend-indicator';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -35,6 +32,9 @@ import { get, isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
+import { translate } from '../i18n';
+import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.component';
+import { GfValueComponent } from '../value/value.component';
 import { GfBenchmarkDetailDialogComponent } from './benchmark-detail-dialog/benchmark-detail-dialog.component';
 import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interfaces/interfaces';
 
