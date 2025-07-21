@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Spanish (`es`)
 - Upgraded `countries-and-timezones` from version `3.7.2` to `3.8.0`
 
 ## 2.183.0 - 2025-07-20
