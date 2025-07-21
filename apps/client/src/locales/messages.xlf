@@ -3218,7 +3218,7 @@
         <source>Open Source Wealth Management Software</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
@@ -7391,6 +7391,146 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific" datatype="html">
+        <source>Asia-Pacific</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.max" datatype="html">
+        <source> The Asia-Pacific market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.min" datatype="html">
+        <source> The Asia-Pacific market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.true" datatype="html">
+        <source> The Asia-Pacific market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">161</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets" datatype="html">
+        <source> Emerging Markets </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.max" datatype="html">
+        <source> The Emerging Markets contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.min" datatype="html">
+        <source> The Emerging Markets contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.true" datatype="html">
+        <source> The Emerging Markets contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">177</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEurope" datatype="html">
+        <source>Europe</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEurope.false.max" datatype="html">
+        <source> The Europe market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEurope.false.min" datatype="html">
+        <source> The Europe market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskEurope.true" datatype="html">
+        <source> The Europe market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskJapan" datatype="html">
+        <source>Japan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
+        <source> The Japan market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
+        <source> The Japan market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
+        <source> The Japan market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">205</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica" datatype="html">
+        <source>North America</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
+        <source> The North America market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
+        <source> The North America market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
+        <source> The North America market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
     </body>
