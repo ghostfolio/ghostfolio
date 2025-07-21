@@ -33,11 +33,11 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     if (japanMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskJapan.false.max',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
             valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
-            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
           }
         }),
         value: false
@@ -45,11 +45,11 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     } else if (japanMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskJapan.false.min',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
             valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
-            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
           }
         }),
         value: false
@@ -58,12 +58,12 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        languageCode: this.getLanguageCode(),
         id: 'rule.regionalMarketClusterRiskJapan.true',
+        languageCode: this.getLanguageCode(),
         placeholders: {
-          valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
         }
       }),
       value: true
@@ -89,8 +89,8 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRiskJapan',
       languageCode: this.getLanguageCode(),
-      id: 'rule.regionalMarketClusterRiskJapan'
     });
   }
 

@@ -35,11 +35,11 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     if (emergingMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskEmergingMarkets.false.max',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
             valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
-            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
           }
         }),
         value: false
@@ -47,11 +47,11 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     } else if (emergingMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskEmergingMarkets.false.min',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
             valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
-            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
           }
         }),
         value: false
@@ -60,12 +60,12 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        languageCode: this.getLanguageCode(),
         id: 'rule.regionalMarketClusterRiskEmergingMarkets.true',
+        languageCode: this.getLanguageCode(),
         placeholders: {
-          valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
         }
       }),
       value: true
@@ -91,8 +91,8 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRiskEmergingMarkets',
       languageCode: this.getLanguageCode(),
-      id: 'rule.regionalMarketClusterRiskEmergingMarkets'
     });
   }
 

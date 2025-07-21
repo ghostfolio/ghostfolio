@@ -33,23 +33,23 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
     if (asiaPacificMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskAsiaPacific.false.max',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
             valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
-            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
-          }
+          },
         }),
         value: false
       };
     } else if (asiaPacificMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskAsiaPacific.false.min',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
             valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
-            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
           }
         }),
         value: false
@@ -58,12 +58,12 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        languageCode: this.getLanguageCode(),
         id: 'rule.regionalMarketClusterRiskAsiaPacific.true',
+        languageCode: this.getLanguageCode(),
         placeholders: {
-          valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          valueRatio: (asiaPacificMarketValueRatio * 100).toPrecision(3),
         }
       }),
       value: true
@@ -89,8 +89,8 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRiskAsiaPacific',
       languageCode: this.getLanguageCode(),
-      id: 'rule.regionalMarketClusterRiskAsiaPacific'
     });
   }
 

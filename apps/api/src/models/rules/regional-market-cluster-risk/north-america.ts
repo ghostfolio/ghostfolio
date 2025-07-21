@@ -33,11 +33,11 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     if (northAmericaMarketValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskNorthAmerica.false.max',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
             valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
-            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
           }
         }),
         value: false
@@ -45,11 +45,11 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     } else if (northAmericaMarketValueRatio < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          languageCode: this.getLanguageCode(),
           id: 'rule.regionalMarketClusterRiskNorthAmerica.false.min',
+          languageCode: this.getLanguageCode(),
           placeholders: {
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
             valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
-            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
           }
         }),
         value: false
@@ -58,12 +58,12 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        languageCode: this.getLanguageCode(),
         id: 'rule.regionalMarketClusterRiskNorthAmerica.true',
+        languageCode: this.getLanguageCode(),
         placeholders: {
-          valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          valueRatio: (northAmericaMarketValueRatio * 100).toPrecision(3),
         }
       }),
       value: true
@@ -89,8 +89,8 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRiskNorthAmerica',
       languageCode: this.getLanguageCode(),
-      id: 'rule.regionalMarketClusterRiskNorthAmerica'
     });
   }
 
