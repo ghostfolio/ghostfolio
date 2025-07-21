@@ -37,7 +37,7 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
           languageCode: this.getLanguageCode(),
           placeholders: {
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
-            valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
+            valueRatio: (japanMarketValueRatio * 100).toPrecision(3)
           }
         }),
         value: false
@@ -49,7 +49,7 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
           languageCode: this.getLanguageCode(),
           placeholders: {
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-            valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
+            valueRatio: (japanMarketValueRatio * 100).toPrecision(3)
           }
         }),
         value: false
@@ -63,7 +63,7 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
         placeholders: {
           thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-          valueRatio: (japanMarketValueRatio * 100).toPrecision(3),
+          valueRatio: (japanMarketValueRatio * 100).toPrecision(3)
         }
       }),
       value: true
@@ -90,7 +90,7 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.regionalMarketClusterRiskJapan',
-      languageCode: this.getLanguageCode(),
+      languageCode: this.getLanguageCode()
     });
   }
 

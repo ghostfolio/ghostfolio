@@ -39,7 +39,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
           languageCode: this.getLanguageCode(),
           placeholders: {
             thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
-            valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+            valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3)
           }
         }),
         value: false
@@ -51,7 +51,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
           languageCode: this.getLanguageCode(),
           placeholders: {
             thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-            valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+            valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3)
           }
         }),
         value: false
@@ -65,7 +65,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
         placeholders: {
           thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
           thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3),
-          valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3),
+          valueRatio: (emergingMarketsValueRatio * 100).toPrecision(3)
         }
       }),
       value: true
@@ -92,7 +92,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
   public getName() {
     return this.i18nService.getTranslation({
       id: 'rule.regionalMarketClusterRiskEmergingMarkets',
-      languageCode: this.getLanguageCode(),
+      languageCode: this.getLanguageCode()
     });
   }
 
