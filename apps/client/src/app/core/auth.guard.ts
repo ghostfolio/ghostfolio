@@ -14,20 +14,6 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
-  private static PUBLIC_PAGE_ROUTES = [
-    `/${publicRoutes.about.path}`,
-    `/${publicRoutes.blog.path}`,
-    `/${publicRoutes.demo.path}`,
-    `/${publicRoutes.faq.path}`,
-    `/${publicRoutes.features.path}`,
-    `/${publicRoutes.markets.path}`,
-    `/${publicRoutes.openStartup.path}`,
-    `/${publicRoutes.pricing.path}`,
-    `/${publicRoutes.public.path}`,
-    `/${publicRoutes.register.path}`,
-    `/${publicRoutes.resources.path}`
-  ];
-
   public constructor(
     private dataService: DataService,
     private router: Router,
@@ -54,10 +40,14 @@ export class AuthGuard {
               this.router.navigate(publicRoutes.register.routerLink);
               resolve(false);
             } else if (
-              AuthGuard.PUBLIC_PAGE_ROUTES.some((publicPageRoute) => {
-                const [, url] = decodeURIComponent(state.url).split('/');
-                return `/${url}` === publicPageRoute;
-              })
+              Object.values(publicRoutes)
+                .map(({ path }) => {
+                  return `/${path}`;
+                })
+                .some((publicPageRoute) => {
+                  const [, url] = decodeURIComponent(state.url).split('/');
+                  return `/${url}` === publicPageRoute;
+                })
             ) {
               resolve(true);
               return EMPTY;

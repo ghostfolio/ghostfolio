@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `countries-and-timezones` from version `3.7.2` to `3.8.0`
 - Upgraded `prisma` from version `6.11.1` to `6.12.0`
 
+### Fixed
+
+- Fixed an issue with the landing page related to the public page routes of the `AuthGuard`
+
 ## 2.183.0 - 2025-07-20
 
 ### Added
