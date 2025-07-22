@@ -4106,7 +4106,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">164</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1c275927e7e22395d21a86e4ab459e428bcac27e" datatype="html">
@@ -8385,6 +8385,66 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">219</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1fcac88ae8e9a85075cdb79b41e8e01d99929e36" datatype="html">
+        <source>Find Ghostfolio on GitHub</source>
+        <target state="translated">Finde Ghostfolio auf GitHub</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="83437c98bf84f17c50c20f5519608f162881a2c8" datatype="html">
+        <source>Join the Ghostfolio Slack community</source>
+        <target state="translated">Tritt der Ghostfolio Slack Community bei</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f5df23754cae65f4637314605cfad153569c3462" datatype="html">
+        <source>Follow Ghostfolio on X (formerly Twitter)</source>
+        <target state="translated">Folge Ghostfolio auf X (ehemals Twitter)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="71c7491454b583e05a73d278aef040220b122086" datatype="html">
+        <source>Send an e-mail</source>
+        <target state="translated">E-Mail senden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b62bff3fbe3999076ed3927ba4beaaa1530ebc33" datatype="html">
+        <source>Follow Ghostfolio on LinkedIn</source>
+        <target state="translated">Folge Ghostfolio auf LinkedIn</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4dc6baa510f0fc18e63021108e86605a3ba16e76" datatype="html">
+        <source>Ghostfolio is an independent &amp; bootstrapped business</source>
+        <target state="translated">Ghostfolio ist ein unabhängiges &amp; selbstfinanziertes Unternehmen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1739057cce181564a4b34537df2aacbd017e5778" datatype="html">
+        <source>Support Ghostfolio</source>
+        <target state="translated">Unterstütze Ghostfolio</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
     </body>
