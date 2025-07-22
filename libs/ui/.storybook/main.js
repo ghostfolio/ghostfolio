@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 
 const require = createRequire(import.meta.url);
+
 /** @type {import('@storybook/angular').StorybookConfig} */
 const config = {
   addons: [getAbsolutePath('@storybook/addon-docs')],

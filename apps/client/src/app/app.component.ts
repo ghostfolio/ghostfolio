@@ -10,11 +10,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DOCUMENT,
   HostBinding,
   Inject,
   OnDestroy,
-  OnInit,
-  DOCUMENT
+  OnInit
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';

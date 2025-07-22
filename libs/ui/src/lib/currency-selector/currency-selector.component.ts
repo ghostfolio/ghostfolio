@@ -4,12 +4,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   Input,
   OnDestroy,
   OnInit,
-  ViewChild,
-  DoCheck
+  ViewChild
 } from '@angular/core';
 import {
   FormControl,
@@ -59,7 +59,7 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 })
 export class GfCurrencySelectorComponent
   extends AbstractMatFormField<string>
-  implements OnInit, OnDestroy, DoCheck
+  implements DoCheck, OnDestroy, OnInit
 {
   @Input() private currencies: string[] = [];
   @Input() private formControlName: string;

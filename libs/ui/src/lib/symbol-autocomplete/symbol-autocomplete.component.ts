@@ -8,14 +8,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewChild,
-  DoCheck
+  ViewChild
 } from '@angular/core';
 import {
   FormControl,
@@ -77,7 +77,7 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnChanges, OnDestroy, OnInit, DoCheck
+  implements DoCheck, OnChanges, OnDestroy, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
