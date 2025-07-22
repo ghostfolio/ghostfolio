@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
+import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { IonIcon } from '@ionic/angular/standalone';
 
 import { GfActivityTypeComponent } from './activity-type.component';
 
@@ -57,4 +57,4 @@ export const Sell: Story = {
   args: {
     activityType: 'SELL'
   }
-}; 
+};
