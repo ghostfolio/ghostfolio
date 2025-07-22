@@ -13,6 +13,7 @@ import { DataSource } from '@prisma/client';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
+  providers: [EntityLogoImageSourceService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-entity-logo',
   styleUrls: ['./entity-logo.component.scss'],
