@@ -13,11 +13,11 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
-  selector: 'gf-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatRadioModule, ReactiveFormsModule],
-  templateUrl: './toggle.component.html',
-  styleUrls: ['./toggle.component.scss']
+  selector: 'gf-toggle',
+  styleUrls: ['./toggle.component.scss'],
+  templateUrl: './toggle.component.html'
 })
 export class GfToggleComponent implements OnChanges {
   public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
