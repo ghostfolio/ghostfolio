@@ -12,7 +12,14 @@ export default {
     moduleMetadata({
       imports: [CommonModule, IonIcon]
     })
-  ]
+  ],
+  argTypes: {
+    activityType: {
+      control: 'select',
+      options: ['BUY', 'DIVIDEND', 'FEE', 'INTEREST', 'LIABILITY', 'SELL'],
+      description: 'Type of activity to display'
+    }
+  }
 } as Meta<GfActivityTypeComponent>;
 
 type Story = StoryObj<GfActivityTypeComponent>;
@@ -20,41 +27,5 @@ type Story = StoryObj<GfActivityTypeComponent>;
 export const Default: Story = {
   args: {
     activityType: 'BUY'
-  }
-};
-
-export const Buy: Story = {
-  args: {
-    activityType: 'BUY'
-  }
-};
-
-export const Dividend: Story = {
-  args: {
-    activityType: 'DIVIDEND'
-  }
-};
-
-export const Fee: Story = {
-  args: {
-    activityType: 'FEE'
-  }
-};
-
-export const Interest: Story = {
-  args: {
-    activityType: 'INTEREST'
-  }
-};
-
-export const Liability: Story = {
-  args: {
-    activityType: 'LIABILITY'
-  }
-};
-
-export const Sell: Story = {
-  args: {
-    activityType: 'SELL'
   }
 };

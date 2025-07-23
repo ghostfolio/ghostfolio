@@ -204,7 +204,6 @@
     "replace-in-file": "8.3.0",
     "shx": "0.3.4",
     "storybook": "8.6.12",
-    "stylus": "github:stylus/stylus#0.59.0",
     "ts-jest": "29.1.0",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
@@ -216,8 +215,5 @@
   },
   "prisma": {
     "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
-  },
-  "overrides": {
-    "stylus": "github:stylus/stylus#0.59.0"
   }
 }
