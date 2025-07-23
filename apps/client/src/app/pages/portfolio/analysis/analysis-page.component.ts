@@ -1,7 +1,6 @@
 import { GfBenchmarkComparatorModule } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.module';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
-import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
-import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -49,7 +48,7 @@ import { takeUntil } from 'rxjs/operators';
     GfBenchmarkComparatorModule,
     GfInvestmentChartModule,
     GfPremiumIndicatorComponent,
-    GfToggleModule,
+    GfToggleComponent,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
@@ -69,7 +68,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: PortfolioPosition[];
-  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public dateRangeOptions = GfToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
