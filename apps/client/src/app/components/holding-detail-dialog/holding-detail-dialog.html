@@ -350,7 +350,7 @@
           [locale]="data.locale"
           [showActions]="
             !data.hasImpersonationId &&
-            data.hasPermissionToCreateOrder &&
+            data.hasPermissionToCreateActivity &&
             user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "

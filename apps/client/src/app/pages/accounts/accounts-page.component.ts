@@ -239,7 +239,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
         accountId: aAccountId,
         deviceType: this.deviceType,
         hasImpersonationId: this.hasImpersonationId,
-        hasPermissionToCreateOrder:
+        hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView

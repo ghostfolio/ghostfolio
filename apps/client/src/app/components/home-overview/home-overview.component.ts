@@ -48,7 +48,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public errors: AssetProfileIdentifier[];
   public hasError: boolean;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
+  public hasPermissionToCreateActivity: boolean;
   public historicalDataItems: LineChartItem[];
   public isAllTimeHigh: boolean;
   public isAllTimeLow: boolean;
@@ -80,7 +80,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOrder = hasPermission(
+          this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
             permissions.createOrder
           );
