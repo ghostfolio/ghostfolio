@@ -1,4 +1,4 @@
-import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -38,7 +38,7 @@ import { takeUntil } from 'rxjs/operators';
     CommonModule,
     FormsModule,
     GfHoldingsTableComponent,
-    GfToggleModule,
+    GfToggleComponent,
     GfTreemapChartComponent,
     IonIcon,
     MatButtonModule,

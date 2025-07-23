@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a _Storybook_ story for the activity type component
 
+### Changed
+
+- Refactored the toggle component to standalone
+
+
 ## 2.184.0 - 2025-07-22
 
 ### Added

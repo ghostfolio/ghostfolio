@@ -1,5 +1,5 @@
 import { GfFearAndGreedIndexModule } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.module';
-import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -34,7 +34,7 @@ import { takeUntil } from 'rxjs/operators';
     GfBenchmarkComponent,
     GfFearAndGreedIndexModule,
     GfLineChartComponent,
-    GfToggleModule
+    GfToggleComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-markets',
