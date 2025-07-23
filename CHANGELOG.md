@@ -100,8 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the portfolio calculations for activities without historical market data
-- Improved the asset profile dialog's asset sub class selector of the admin control panel to update the options dynamically based on the selected asset class
-- Improved the asset profile dialog's data gathering checkbox of the admin control panel to reflect the global settings
+- Improved the asset profile dialog’s asset sub class selector of the admin control panel to update the options dynamically based on the selected asset class
+- Improved the asset profile dialog’s data gathering checkbox of the admin control panel to reflect the global settings
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for German (`de`)
@@ -195,7 +195,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for generating a new _Security Token_ via the user's account access panel
+- Added support for generating a new _Security Token_ via the user’s account access panel
 
 ### Changed
 
@@ -221,7 +221,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the selector handling of the scraper configuration for more use cases
 - Extended the _AI_ service by an access to _OpenRouter_ (experimental)
-- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
+- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
 - Renamed `Account` to `account` in the `AccountBalance` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
@@ -281,7 +281,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Adapted the options of the date range selector in the assistant dynamically based on the user's first activity
+- Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
 - Switched the data provider service to `OnModuleInit`, ensuring (currency) quotes are fetched only once
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow
@@ -938,7 +938,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the language localization for Polski (`pl`) from experimental to general availability
 - Extended the _Financial Modeling Prep_ service
-- Switched to _ESLint_'s flat config format
+- Switched to _ESLint_’s flat config format
 - Upgraded `bull` from version `4.16.2` to `4.16.4`
 - Upgraded `chart.js` from version `4.2.0` to `4.4.7`
 - Upgraded `chartjs-chart-treemap` from version `2.3.1` to `3.1.0`
@@ -1368,7 +1368,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of various action menus by introducing horizontal lines to separate the delete action
 - Improved the chart in the account detail dialog (experimental)
 - Aligned the holdings and regions of the public page with the allocations page
-- Considered the user's language in the link of the access table to share the portfolio
+- Considered the user’s language in the link of the access table to share the portfolio
 - Improved the language localization for German (`de`)
 
 ## 2.109.0 - 2024-09-21
@@ -1438,7 +1438,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Rewritten the portfolio calculator
+- Reworked the portfolio calculator
 - Improved the caching of the portfolio snapshot in the portfolio calculator by returning cached data and recalculating in the background when it expires
 - Exposed the log levels as an environment variable (`LOG_LEVELS`)
 - Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
@@ -2027,7 +2027,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the export functionality by the user account's currency
+- Extended the export functionality by the user account’s currency
 - Added support to override the name of an asset profile in the asset profile details dialog of the admin control
 
 ### Changed
@@ -2834,7 +2834,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the search for a holding from experimental to general availability
 - Improved the error message in the activities import for `csv` files
 - Removed the application version from the client
-- Allowed to edit today's historical market data in the asset profile details dialog of the admin control panel
+- Allowed to edit today’s historical market data in the asset profile details dialog of the admin control panel
 
 ### Fixed
 
@@ -2868,7 +2868,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the checkboxes to slide toggles in the user settings of the user account page
-- Extended the `copy-assets` `Nx` target to copy the locales to the server's assets
+- Extended the `copy-assets` `Nx` target to copy the locales to the server’s assets
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `5.2.1` to `8.3`
 
 ### Fixed
@@ -2998,13 +2998,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the preselected currency based on the account's currency in the create or edit activity dialog
+- Improved the preselected currency based on the account’s currency in the create or edit activity dialog
 - Unlocked the experimental features setting for all users
 - Upgraded `prisma` from version `5.2.0` to `5.3.1`
 
 ### Fixed
 
-- Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
+- Fixed a memory leak related to the server’s timezone (behind UTC) in the data gathering
 
 ## 2.3.0 - 2023-09-17
 
@@ -3155,7 +3155,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Optimized the activities import by allowing a different currency than the asset's official one
+- Optimized the activities import by allowing a different currency than the asset’s official one
 - Added a timeout to the _EOD Historical Data_ requests
 - Migrated the requests from `bent` to `got` in the _EOD Historical Data_ service
 
@@ -3662,7 +3662,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Persisted today's market data continuously
+- Persisted today’s market data continuously
 
 ### Fixed
 
@@ -3808,7 +3808,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a blog post: _Ghostfolio reaches 1'000 Stars on GitHub_
+- Added a blog post: _Ghostfolio reaches 1’000 Stars on GitHub_
 - Added a breadcrumb navigation to the blog post pages
 
 ### Changed
@@ -3896,7 +3896,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Filtered activities with type `ITEM` from search results
-- Considered the user's language in the _Stripe_ checkout
+- Considered the user’s language in the _Stripe_ checkout
 - Upgraded the _Stripe_ dependencies
 - Upgraded `twitter-api-v2` from version `1.10.3` to `1.14.2`
 
@@ -4315,7 +4315,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the browserslist database
 - Upgraded `ionicons` from version `5.5.1` to `6.0.4`
 - Upgraded `uuid` from version `8.3.2` to `9.0.0`
-- Upgraded `yahoo-finance2` from version `2.8.0` to `2.8.1`
 
 ## 1.214.0 - 19.11.2022
 
@@ -5571,7 +5570,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the countries and sectors charts in the position detail dialog
-- Distinguished today's data point of historical data in the admin control panel
+- Distinguished today’s data point of historical data in the admin control panel
 - Restructured the server modules
 
 ### Fixed
@@ -6312,7 +6311,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the navigation to always show the portfolio page
 - Migrated the data type of currencies from `enum` to `string` in the database
 - Supported unlimited currencies (instead of `CHF`, `EUR`, `GBP` and `USD`)
-- Respected the accounts' currencies in the exchange rate service
+- Respected the accounts’ currencies in the exchange rate service
 
 ### Fixed
 
