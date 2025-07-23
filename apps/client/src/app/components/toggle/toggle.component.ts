@@ -1,5 +1,6 @@
 import { ToggleOption } from '@ghostfolio/common/interfaces';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,16 +9,17 @@ import {
   OnChanges,
   Output
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
-  selector: 'gf-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './toggle.component.html',
+  imports: [CommonModule, MatRadioModule, ReactiveFormsModule],
+  selector: 'gf-toggle',
   styleUrls: ['./toggle.component.scss'],
-  standalone: false
+  templateUrl: './toggle.component.html'
 })
-export class ToggleComponent implements OnChanges {
+export class GfToggleComponent implements OnChanges {
   public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
     { label: $localize`Today`, value: '1d' },
     { label: $localize`YTD`, value: 'ytd' },
