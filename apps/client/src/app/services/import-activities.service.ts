@@ -1,4 +1,5 @@
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
+import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-maketdata.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
@@ -73,20 +74,22 @@ export class ImportActivitiesService {
   public importJson({
     accounts,
     activities,
+    assetProfiles,
     isDryRun = false
   }: {
     activities: CreateOrderDto[];
-    accounts?: CreateAccountDto[];
+    accounts?: CreateAccountWithBalancesDto[];
+    assetProfiles?: CreateAssetProfileWithMarketDataDto[];
     isDryRun?: boolean;
   }): Promise<{
     activities: Activity[];
-    accounts?: CreateAccountDto[];
   }> {
     return new Promise((resolve, reject) => {
       this.postImport(
         {
           accounts,
-          activities
+          activities,
+          assetProfiles
         },
         isDryRun
       )
@@ -106,13 +109,14 @@ export class ImportActivitiesService {
 
   public importSelectedActivities({
     accounts,
-    activities
+    activities,
+    assetProfiles
   }: {
-    accounts: CreateAccountDto[];
+    accounts?: CreateAccountWithBalancesDto[];
     activities: Activity[];
+    assetProfiles?: CreateAssetProfileWithMarketDataDto[];
   }): Promise<{
     activities: Activity[];
-    accounts?: CreateAccountDto[];
   }> {
     const importData: CreateOrderDto[] = [];
 
@@ -120,7 +124,7 @@ export class ImportActivitiesService {
       importData.push(this.convertToCreateOrderDto(activity));
     }
 
-    return this.importJson({ accounts, activities: importData });
+    return this.importJson({ accounts, activities: importData, assetProfiles });
   }
 
   private convertToCreateOrderDto({
@@ -383,7 +387,11 @@ export class ImportActivitiesService {
   }
 
   private postImport(
-    aImportData: { accounts: CreateAccountDto[]; activities: CreateOrderDto[] },
+    aImportData: {
+      accounts?: CreateAccountWithBalancesDto[];
+      activities: CreateOrderDto[];
+      assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+    },
     aIsDryRun = false
   ) {
     return this.http.post<{ activities: Activity[] }>(

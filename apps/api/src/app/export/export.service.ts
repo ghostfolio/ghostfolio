@@ -195,7 +195,6 @@ export class ExportService {
             figiComposite,
             figiShareClass,
             holdings: holdings as unknown as Prisma.JsonArray,
-            id,
             isActive,
             isin,
             marketData: marketDataByAssetProfile[id],

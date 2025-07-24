@@ -10,6 +10,7 @@ import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
@@ -31,6 +32,7 @@ import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
+import { CreateAssetProfileDto } from '../admin/create-asset-profile.dto';
 import { ImportDataDto } from './import-data.dto';
 
 @Injectable()
@@ -40,6 +42,7 @@ export class ImportService {
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly marketDataService: MarketDataService,
     private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
     private readonly portfolioService: PortfolioService,
@@ -148,17 +151,20 @@ export class ImportService {
   public async import({
     accountsWithBalancesDto,
     activitiesDto,
+    assetProfilesWithMarketDataDto,
     isDryRun = false,
     maxActivitiesToImport,
     user
   }: {
     accountsWithBalancesDto: ImportDataDto['accounts'];
     activitiesDto: ImportDataDto['activities'];
+    assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
+    const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
 
     if (!isDryRun && accountsWithBalancesDto?.length) {
@@ -230,6 +236,64 @@ export class ImportService {
       }
     }
 
+    if (!isDryRun && assetProfilesWithMarketDataDto?.length) {
+      const existingAssetProfiles =
+        await this.symbolProfileService.getSymbolProfiles(
+          assetProfilesWithMarketDataDto.map(({ dataSource, symbol }) => {
+            return { dataSource, symbol };
+          })
+        );
+
+      for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        // Check if there is any existing asset profile
+        const existingAssetProfile = existingAssetProfiles.find(
+          (existingAssetProfile) => {
+            return (
+              existingAssetProfile.dataSource ===
+                assetProfileWithMarketData.dataSource &&
+              existingAssetProfile.symbol === assetProfileWithMarketData.symbol
+            );
+          }
+        );
+
+        // If there is no asset profile or if the asset profile belongs to a different user then create a new asset profile
+        if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
+          const assetProfile: CreateAssetProfileDto = omit(
+            assetProfileWithMarketData,
+            'marketData'
+          );
+
+          // Asset profile belongs to a different user
+          if (existingAssetProfile) {
+            const symbol = uuidv4(); // Generate a new symbol for the asset profile
+            assetProfileSymbolMapping[assetProfile.symbol] = symbol;
+            assetProfile.symbol = symbol;
+          }
+
+          // Create a new asset profile
+          const assetProfileObject: Prisma.SymbolProfileCreateInput = {
+            ...assetProfile,
+            user: { connect: { id: user.id } }
+          };
+
+          await this.symbolProfileService.add(assetProfileObject);
+        }
+
+        // Insert or update market data
+        const marketDataObjects = assetProfileWithMarketData.marketData.map(
+          (marketData) => {
+            return {
+              ...marketData,
+              dataSource: assetProfileWithMarketData.dataSource,
+              symbol: assetProfileWithMarketData.symbol
+            } as Prisma.MarketDataUpdateInput;
+          }
+        );
+
+        await this.marketDataService.updateMany({ data: marketDataObjects });
+      }
+    }
+
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
         if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
@@ -240,10 +304,15 @@ export class ImportService {
         }
       }
 
-      // If a new account is created, then update the accountId in all activities
       if (!isDryRun) {
-        if (Object.keys(accountIdMapping).includes(activity.accountId)) {
+        // If a new account is created, then update the accountId in all activities
+        if (accountIdMapping[activity.accountId]) {
           activity.accountId = accountIdMapping[activity.accountId];
+        }
+
+        // If a new asset profile is created, then update the symbol in all activities
+        if (assetProfileSymbolMapping[activity.symbol]) {
+          activity.symbol = assetProfileSymbolMapping[activity.symbol];
         }
       }
     }
