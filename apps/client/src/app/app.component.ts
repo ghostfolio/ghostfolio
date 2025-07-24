@@ -324,7 +324,7 @@ export class AppComponent implements OnDestroy, OnInit {
               this.user?.permissions,
               permissions.accessAdminControl
             ),
-            hasPermissionToCreateOrder:
+            hasPermissionToCreateActivity:
               !this.hasImpersonationId &&
               hasPermission(this.user?.permissions, permissions.createOrder) &&
               !this.user?.settings?.isRestrictedView,

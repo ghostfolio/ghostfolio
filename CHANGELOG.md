@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the date format of the retirement date in the _FIRE_ calculator
+- Fixed an issue with the permissions of the impersonation mode related to the onboarding on the overview tab of the home page
+- Fixed an issue with the permissions of the impersonation mode related to the manage activities button of the holdings tab on the home page
 
 ## 2.184.0 - 2025-07-22
 

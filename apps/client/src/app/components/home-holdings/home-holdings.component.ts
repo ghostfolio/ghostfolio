@@ -57,7 +57,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToAccessHoldingsChart: boolean;
-  public hasPermissionToCreateOrder: boolean;
+  public hasPermissionToCreateActivity: boolean;
   public holdings: PortfolioPosition[];
   public holdingType: HoldingType = 'ACTIVE';
   public holdingTypeOptions: ToggleOption[] = [
@@ -105,7 +105,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
             permissions.accessHoldingsChart
           );
 
-          this.hasPermissionToCreateOrder = hasPermission(
+          this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
             permissions.createOrder
           );
