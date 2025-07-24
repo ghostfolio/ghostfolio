@@ -4,7 +4,6 @@ import {
   AssetProfileIdentifier,
   HoldingWithParents
 } from '@ghostfolio/common/interfaces';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   animate,
@@ -30,6 +29,8 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
+
+import { GfValueComponent } from '../value/value.component';
 
 @Component({
   animations: [

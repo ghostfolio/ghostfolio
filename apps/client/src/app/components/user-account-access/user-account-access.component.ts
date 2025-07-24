@@ -9,7 +9,6 @@ import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -38,7 +37,6 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'has-fab' },
   imports: [
-    CommonModule,
     GfAccessTableComponent,
     GfCreateOrUpdateAccessDialogModule,
     GfPremiumIndicatorComponent,

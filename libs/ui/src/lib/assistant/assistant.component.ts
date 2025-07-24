@@ -6,11 +6,8 @@ import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
-import { translate } from '@ghostfolio/ui/i18n';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -63,6 +60,8 @@ import {
   tap
 } from 'rxjs/operators';
 
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { translate } from '../i18n';
 import { GfAssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
 import { SearchMode } from './enums/search-mode';
 import {
@@ -74,7 +73,6 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     GfAssistantListItemComponent,
     GfEntityLogoComponent,
@@ -529,7 +527,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onChangeDateRange(dateRangeString: string) {
-    this.dateRangeChanged.emit(dateRangeString as DateRange);
+    this.dateRangeChanged.emit(dateRangeString);
   }
 
   public onCloseAssistant() {

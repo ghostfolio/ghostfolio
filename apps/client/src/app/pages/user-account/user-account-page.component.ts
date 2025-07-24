@@ -2,7 +2,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -20,7 +19,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page has-tabs' },
-  imports: [CommonModule, IonIcon, MatTabsModule, RouterModule],
+  imports: [IonIcon, MatTabsModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-user-account-page',
   styleUrls: ['./user-account-page.scss'],

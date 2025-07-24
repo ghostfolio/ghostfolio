@@ -1,8 +1,6 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { LookupItem } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
-import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
@@ -10,6 +8,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   Input,
   OnChanges,
@@ -45,7 +44,9 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
+import { translate } from '../i18n';
 import { GfPremiumIndicatorComponent } from '../premium-indicator';
+import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,7 +77,7 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnChanges, OnDestroy, OnInit
+  implements DoCheck, OnChanges, OnDestroy, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;

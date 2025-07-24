@@ -6,8 +6,6 @@ import {
   AdminMarketDataDetails,
   LineChartItem
 } from '@ghostfolio/common/interfaces';
-import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -27,6 +25,8 @@ import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { GfLineChartComponent } from '../../line-chart/line-chart.component';
+import { GfValueComponent } from '../../value/value.component';
 import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
