@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the toggle component to standalone
+- Improved the language localization for Turkish (`tr`)
 
 ## 2.184.0 - 2025-07-22
 
