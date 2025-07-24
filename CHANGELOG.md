@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `Nx` from version `21.1.2` to `21.2.4`
 - Upgraded `storybook` from version `8.6.12` to `9.0.17`
 
+### Fixed
+
+- Fixed an issue with the permissions of the impersonation mode related to the onboarding on the overview tab of the home page
+- Fixed an issue with the permissions of the impersonation mode related to the manage activities button of the holdings tab on the home page
+
 ## 2.184.0 - 2025-07-22
 
 ### Added
