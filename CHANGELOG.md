@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the toggle component to standalone
-- Upgraded `nx` from version `21.1.2` to `21.2.4`
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Turkish (`tr`)
 - Upgraded `angular` from version `19.2.1` to `20.0.7`
 - Upgraded `ngx-device-detector` from version `9.0.0` to `10.0.2`
 - Upgraded `ngx-markdown` from version `19.0.0` to `20.0.0`
 - Upgraded `ngx-stripe` from version `19.7.0` to `20.7.0`
+- Upgraded `Nx` from version `21.1.2` to `21.2.4`
 - Upgraded `storybook` from version `8.6.12` to `9.0.17`
 
 ## 2.184.0 - 2025-07-22
