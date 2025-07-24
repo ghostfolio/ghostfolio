@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `ngx-stripe` from version `19.7.0` to `20.7.0`
 - Upgraded `Nx` from version `21.1.2` to `21.2.4`
 - Upgraded `storybook` from version `8.6.12` to `9.0.17`
+- Extended the import functionality by custom asset profiles
 
 ### Fixed
 
