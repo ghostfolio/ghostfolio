@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Spanish (`es`)
 - Refactored the toggle component to standalone
 
 ## 2.184.0 - 2025-07-22
