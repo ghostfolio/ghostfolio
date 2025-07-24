@@ -16,8 +16,7 @@ export default {
   argTypes: {
     activityType: {
       control: 'select',
-      options: ['BUY', 'DIVIDEND', 'FEE', 'INTEREST', 'LIABILITY', 'SELL'],
-      description: 'Type of activity to display'
+      options: ['BUY', 'DIVIDEND', 'FEE', 'INTEREST', 'LIABILITY', 'SELL']
     }
   }
 } as Meta<GfActivityTypeComponent>;
