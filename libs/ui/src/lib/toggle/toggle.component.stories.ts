@@ -6,14 +6,6 @@ import type { Meta, StoryObj } from '@storybook/angular';
 
 import { GfToggleComponent } from './toggle.component';
 
-const DEFAULT_OPTIONS = [
-  { label: 'Today', value: '1d' },
-  { label: 'YTD', value: 'ytd' },
-  { label: '1Y', value: '1y' },
-  { label: '5Y', value: '5y' },
-  { label: 'Max', value: 'max' }
-];
-
 export default {
   title: 'Toggle',
   component: GfToggleComponent,
@@ -28,8 +20,14 @@ type Story = StoryObj<GfToggleComponent>;
 
 export const Default: Story = {
   args: {
-    options: DEFAULT_OPTIONS,
     defaultValue: '1d',
-    isLoading: true
+    isLoading: false,
+    options: [
+      { label: 'Today', value: '1d' },
+      { label: 'YTD', value: 'ytd' },
+      { label: '1Y', value: '1y' },
+      { label: '5Y', value: '5y' },
+      { label: 'Max', value: 'max' }
+    ]
   }
 };
