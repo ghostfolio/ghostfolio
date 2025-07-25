@@ -168,6 +168,7 @@
     "@nx/node": "21.2.4",
     "@nx/storybook": "21.2.4",
     "@nx/web": "21.2.4",
+    "@nx/webpack": "21.2.4",
     "@nx/workspace": "21.2.4",
     "@schematics/angular": "20.0.6",
     "@storybook/addon-docs": "9.0.17",
