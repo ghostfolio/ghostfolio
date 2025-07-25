@@ -1,5 +1,4 @@
 import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
-import { GfToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -14,6 +13,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -43,7 +43,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnDestroy, OnInit {
-  public dateRangeOptions = GfToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public dateRangeOptions = GfToggleComponent;
   public deviceType: string;
   public errors: AssetProfileIdentifier[];
   public hasError: boolean;

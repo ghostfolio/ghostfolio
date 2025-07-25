@@ -375,7 +375,7 @@
           [defaultValue]="mode"
           [isLoading]="false"
           [options]="modeOptions"
-          (change)="onChangeGroupBy($event.value)"
+          (valueChange)="onChangeGroupBy($event.value)"
         />
       </div>
       @if (streaks) {
@@ -432,7 +432,7 @@
           [defaultValue]="mode"
           [isLoading]="false"
           [options]="modeOptions"
-          (change)="onChangeGroupBy($event.value)"
+          (valueChange)="onChangeGroupBy($event.value)"
         />
       </div>
       <div class="chart-container">

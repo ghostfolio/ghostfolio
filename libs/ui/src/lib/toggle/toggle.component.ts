@@ -16,23 +16,16 @@ import { MatRadioModule } from '@angular/material/radio';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatRadioModule, ReactiveFormsModule],
   selector: 'gf-toggle',
+  standalone: true,
   styleUrls: ['./toggle.component.scss'],
   templateUrl: './toggle.component.html'
 })
 export class GfToggleComponent implements OnChanges {
-  public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
-    { label: $localize`Today`, value: '1d' },
-    { label: $localize`YTD`, value: 'ytd' },
-    { label: $localize`1Y`, value: '1y' },
-    { label: $localize`5Y`, value: '5y' },
-    { label: $localize`Max`, value: 'max' }
-  ];
-
   @Input() defaultValue: string;
-  @Input() isLoading: boolean;
-  @Input() options: ToggleOption[];
+  @Input() isLoading = false;
+  @Input() options: ToggleOption[] = [];
 
-  @Output() change = new EventEmitter<Pick<ToggleOption, 'value'>>();
+  @Output() valueChange = new EventEmitter<Pick<ToggleOption, 'value'>>();
 
   public optionFormControl = new FormControl<string>(undefined);
 
@@ -41,6 +34,6 @@ export class GfToggleComponent implements OnChanges {
   }
 
   public onValueChange() {
-    this.change.emit({ value: this.optionFormControl.value });
+    this.valueChange.emit({ value: this.optionFormControl.value });
   }
 }
