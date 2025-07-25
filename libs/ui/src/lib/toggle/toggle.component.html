@@ -1,6 +1,5 @@
 <mat-radio-group
   class="d-block text-nowrap"
-  [disabled]="isLoading"
   [formControl]="optionFormControl"
   (change)="onValueChange()"
 >
@@ -9,7 +8,7 @@
       class="d-inline-flex"
       [disabled]="isLoading"
       [ngClass]="{
-        'cursor-default': option.value === optionFormControl.value || isLoading,
+        'cursor-default': option.value === optionFormControl.value,
         'cursor-pointer': !isLoading && option.value !== optionFormControl.value
       }"
       [value]="option.value"

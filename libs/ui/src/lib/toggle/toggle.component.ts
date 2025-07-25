@@ -16,13 +16,12 @@ import { MatRadioModule } from '@angular/material/radio';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatRadioModule, ReactiveFormsModule],
   selector: 'gf-toggle',
-  standalone: true,
   styleUrls: ['./toggle.component.scss'],
   templateUrl: './toggle.component.html'
 })
 export class GfToggleComponent implements OnChanges {
   @Input() defaultValue: string;
-  @Input() isLoading = false;
+  @Input() isLoading: boolean;
   @Input() options: ToggleOption[] = [];
 
   @Output() valueChange = new EventEmitter<Pick<ToggleOption, 'value'>>();

@@ -29,13 +29,6 @@ type Story = StoryObj<GfToggleComponent>;
 export const Default: Story = {
   args: {
     options: DEFAULT_OPTIONS,
-    defaultValue: '1d'
-  }
-};
-
-export const Loading: Story = {
-  args: {
-    options: DEFAULT_OPTIONS,
     defaultValue: '1d',
     isLoading: true
   }

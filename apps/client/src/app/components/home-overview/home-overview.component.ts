@@ -13,7 +13,6 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
-import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -43,7 +42,6 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnDestroy, OnInit {
-  public dateRangeOptions = GfToggleComponent;
   public deviceType: string;
   public errors: AssetProfileIdentifier[];
   public hasError: boolean;
