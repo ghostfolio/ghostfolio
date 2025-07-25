@@ -6,10 +6,6 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { GfActivityTypeComponent } from '@ghostfolio/ui/activity-type';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
-import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
@@ -61,6 +57,11 @@ import {
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription, takeUntil } from 'rxjs';
+
+import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { GfNoTransactionsInfoComponent } from '../no-transactions-info/no-transactions-info.component';
+import { GfValueComponent } from '../value/value.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

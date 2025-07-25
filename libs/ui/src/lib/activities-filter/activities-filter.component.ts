@@ -1,6 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
@@ -33,6 +32,8 @@ import { closeOutline, searchOutline } from 'ionicons/icons';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { translate } from '../i18n';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

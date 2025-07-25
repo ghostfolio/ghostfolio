@@ -4,8 +4,6 @@ import {
   AssetProfileIdentifier,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -27,6 +25,9 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
+
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { GfValueComponent } from '../value/value.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

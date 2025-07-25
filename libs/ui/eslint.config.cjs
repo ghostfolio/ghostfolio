@@ -40,6 +40,7 @@ module.exports = [
             style: 'kebab-case'
           }
         ],
+        '@angular-eslint/prefer-inject': 'off',
         '@angular-eslint/prefer-standalone': 'off'
       },
       languageOptions: {

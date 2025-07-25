@@ -1,5 +1,3 @@
-import { translate } from '@ghostfolio/ui/i18n';
-
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -19,6 +17,8 @@ import {
   flameOutline,
   hammerOutline
 } from 'ionicons/icons';
+
+import { translate } from '../i18n';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

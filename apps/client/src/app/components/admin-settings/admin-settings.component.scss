@@ -10,7 +10,7 @@
   }
 
   .mat-mdc-card {
-    --mdc-outlined-card-container-color: whitesmoke;
+    --mat-card-outlined-container-color: whitesmoke;
 
     .mat-mdc-card-actions {
       min-height: 0;
@@ -18,8 +18,8 @@
   }
 
   .mat-mdc-progress-bar {
-    --mdc-linear-progress-active-indicator-height: 0.5rem;
-    --mdc-linear-progress-track-height: 0.5rem;
+    --mat-progress-bar-active-indicator-height: 0.5rem;
+    --mat-progress-bar-track-height: 0.5rem;
     border-radius: 0.25rem;
 
     ::ng-deep {
@@ -32,6 +32,6 @@
 
 :host-context(.theme-dark) {
   .mat-mdc-card {
-    --mdc-outlined-card-container-color: #222222;
+    --mat-card-outlined-container-color: #222222;
   }
 }

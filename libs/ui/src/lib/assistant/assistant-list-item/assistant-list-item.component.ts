@@ -1,10 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { SearchMode } from '@ghostfolio/ui/assistant/enums/search-mode';
-import {
-  IAssetSearchResultItem,
-  ISearchResultItem
-} from '@ghostfolio/ui/assistant/interfaces/interfaces';
 
 import { FocusableOption } from '@angular/cdk/a11y';
 import {
@@ -20,6 +15,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { Params, RouterModule } from '@angular/router';
+
+import { SearchMode } from '../enums/search-mode';
+import {
+  IAssetSearchResultItem,
+  ISearchResultItem
+} from '../interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
