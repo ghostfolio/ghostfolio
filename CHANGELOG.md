@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Excluded the holdings originated of `FEE`, `INTEREST` and `LIABILITY` activities from the closed holdings on the portfolio holdings page
 - Fixed the date format of the retirement date in the _FIRE_ calculator
 - Fixed an issue with the permissions of the impersonation mode related to the onboarding on the overview tab of the home page
 - Fixed an issue with the permissions of the impersonation mode related to the manage activities button of the holdings tab on the home page
@@ -83,7 +84,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
-- Improved the holdings dialog not to include non-investment activities
 
 ### Fixed
 
