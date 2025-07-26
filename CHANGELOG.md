@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `ng-extract-i18n-merge` from version `2.15.1` to `3.0.0`
 
+### Fixed
+
+- Excluded the holdings originated of `FEE`, `INTEREST` and `LIABILITY` activities from the closed holdings on the portfolio holdings page
+
 ## 2.185.0 - 2025-07-26
 
 ### Added
