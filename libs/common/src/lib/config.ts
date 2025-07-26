@@ -121,7 +121,6 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
 export const INVESTMENT_ACTIVITY_TYPES = [
   Type.BUY,
   Type.DIVIDEND,
-  Type.ITEM,
   Type.SELL
 ] as Type[];
 

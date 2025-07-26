@@ -288,12 +288,12 @@ export abstract class PortfolioCalculator {
       firstIndex--;
     }
 
-    const positions: (TimelinePosition & {
-      isInvestmentAssetProfilePosition: boolean;
-    })[] = [];
+    const errors: ResponseError['errors'] = [];
     let hasAnySymbolMetricsErrors = false;
 
-    const errors: ResponseError['errors'] = [];
+    const positions: (TimelinePosition & {
+      includeInHoldings: boolean;
+    })[] = [];
 
     const accumulatedValuesByDate: {
       [date: string]: {
@@ -412,9 +412,9 @@ export abstract class PortfolioCalculator {
         grossPerformanceWithCurrencyEffect: !hasErrors
           ? (grossPerformanceWithCurrencyEffect ?? null)
           : null,
+        includeInHoldings: item.includeInHoldings,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
-        isInvestmentAssetProfilePosition: item.isInvestmentAssetProfileItem,
         marketPrice:
           marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? null,
         marketPriceInBaseCurrency:
@@ -609,12 +609,12 @@ export abstract class PortfolioCalculator {
 
     const overall = this.calculateOverallPerformance(positions);
 
-    const investmentPositions = positions
-      .filter(({ isInvestmentAssetProfilePosition }) => {
-        return isInvestmentAssetProfilePosition;
+    const positionsIncludedInHoldings = positions
+      .filter(({ includeInHoldings }) => {
+        return includeInHoldings;
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(({ isInvestmentAssetProfilePosition, ...rest }) => {
+      .map(({ includeInHoldings, ...rest }) => {
         return rest;
       });
 
@@ -625,7 +625,7 @@ export abstract class PortfolioCalculator {
       totalInterestWithCurrencyEffect,
       totalLiabilitiesWithCurrencyEffect,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors,
-      positions: investmentPositions
+      positions: positionsIncludedInHoldings
     };
   }
 
@@ -948,8 +948,7 @@ export abstract class PortfolioCalculator {
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
-          isInvestmentAssetProfileItem:
-            oldAccumulatedSymbol.isInvestmentAssetProfileItem,
+          includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
           tags: oldAccumulatedSymbol.tags.concat(tags),
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
@@ -965,9 +964,8 @@ export abstract class PortfolioCalculator {
           averagePrice: unitPrice,
           dividend: new Big(0),
           firstBuyDate: date,
+          includeInHoldings: INVESTMENT_ACTIVITY_TYPES.includes(type),
           investment: unitPrice.mul(quantity).mul(factor),
-          isInvestmentAssetProfileItem:
-            INVESTMENT_ACTIVITY_TYPES.includes(type),
           quantity: quantity.mul(factor),
           transactionCount: 1
         };
