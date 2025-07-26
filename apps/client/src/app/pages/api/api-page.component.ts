@@ -44,7 +44,7 @@ export class GfApiPageComponent implements OnInit {
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
     this.isinLookupItems$ = this.fetchLookupItems({ query: 'US0378331005' });
     this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });
-    this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO.US'] });
+    this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO'] });
     this.status$ = this.fetchStatus();
   }
 

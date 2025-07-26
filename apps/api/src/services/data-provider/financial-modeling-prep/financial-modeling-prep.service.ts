@@ -46,7 +46,6 @@ import {
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
   private apiKey: string;
-  private readonly URL = this.getUrl({ version: 3 });
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -81,7 +80,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         );
       } else if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
         const [quote] = await fetch(
-          `${this.URL}/quote/${symbol}?apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/quote?symbol=${symbol}&apikey=${this.apiKey}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -95,7 +94,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         response.name = quote.name;
       } else {
         const [assetProfile] = await fetch(
-          `${this.URL}/profile/${symbol}?apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/profile?symbol=${symbol}&apikey=${this.apiKey}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -109,7 +108,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
         if (assetSubClass === AssetSubClass.ETF) {
           const etfCountryWeightings = await fetch(
-            `${this.URL}/etf-country-weightings/${symbol}?apikey=${this.apiKey}`,
+            `${this.getUrl({ version: 'stable' })}/etf/country-weightings?symbol=${symbol}&apikey=${this.apiKey}`,
             {
               signal: AbortSignal.timeout(requestTimeout)
             }
@@ -171,7 +170,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
 
           const etfSectorWeightings = await fetch(
-            `${this.URL}/etf-sector-weightings/${symbol}?apikey=${this.apiKey}`,
+            `${this.getUrl({ version: 'stable' })}/etf/sector-weightings?symbol=${symbol}&apikey=${this.apiKey}`,
             {
               signal: AbortSignal.timeout(requestTimeout)
             }
@@ -181,7 +180,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             ({ sector, weightPercentage }) => {
               return {
                 name: sector,
-                weight: parseFloat(weightPercentage.slice(0, -1)) / 100
+                weight: weightPercentage / 100
               };
             }
           );
@@ -246,14 +245,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         [date: string]: IDataProviderHistoricalResponse;
       } = {};
 
-      const { historical = [] } = await fetch(
-        `${this.URL}/historical-price-full/stock_dividend/${symbol}?apikey=${this.apiKey}`,
+      const dividends = await fetch(
+        `${this.getUrl({ version: 'stable' })}/dividends?symbol=${symbol}&apikey=${this.apiKey}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
       ).then((res) => res.json());
 
-      historical
+      dividends
         .filter(({ date }) => {
           return (
             (isSameDay(parseISO(date), from) ||
@@ -307,21 +306,21 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           ? addYears(currentFrom, MAX_YEARS_PER_REQUEST)
           : to;
 
-        const { historical = [] } = await fetch(
-          `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}&from=${format(currentFrom, DATE_FORMAT)}&to=${format(currentTo, DATE_FORMAT)}`,
+        const historical = await fetch(
+          `${this.getUrl({ version: 'stable' })}/historical-price-eod/full?symbol=${symbol}&apikey=${this.apiKey}&from=${format(currentFrom, DATE_FORMAT)}&to=${format(currentTo, DATE_FORMAT)}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
         ).then((res) => res.json());
 
-        for (const { adjClose, date } of historical) {
+        for (const { close, date } of historical) {
           if (
             (isSameDay(parseDate(date), currentFrom) ||
               isAfter(parseDate(date), currentFrom)) &&
             isBefore(parseDate(date), currentTo)
           ) {
             result[symbol][date] = {
-              marketPrice: adjClose
+              marketPrice: close
             };
           }
         }
@@ -454,7 +453,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         });
       } else {
         const result = await fetch(
-          `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/search-symbol?query=${query}&apikey=${this.apiKey}`,
           {
             signal: AbortSignal.timeout(
               this.configurationService.get('REQUEST_TIMEOUT')
