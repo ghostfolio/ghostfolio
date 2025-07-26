@@ -1,4 +1,4 @@
-import { MarketData } from '@ghostfolio/common/interfaces/market-data.interface';
+import { MarketData } from '@ghostfolio/common/interfaces';
 
 import { IsArray, IsOptional } from 'class-validator';
 
