@@ -1,4 +1,5 @@
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
+import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
@@ -75,9 +76,10 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class GfImportActivitiesDialog implements OnDestroy {
-  public accounts: CreateAccountDto[] = [];
+  public accounts: CreateAccountWithBalancesDto[] = [];
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
+  public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public details: any[] = [];
   public deviceType: string;
@@ -166,7 +168,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
 
       await this.importActivitiesService.importSelectedActivities({
         accounts: this.accounts,
-        activities: this.selectedActivities
+        activities: this.selectedActivities,
+        assetProfiles: this.assetProfiles
       });
 
       this.snackBar.open(
@@ -293,6 +296,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
           const content = JSON.parse(fileContent);
 
           this.accounts = content.accounts;
+          this.assetProfiles = content.assetProfiles;
 
           if (!isArray(content.activities)) {
             if (isArray(content.orders)) {
@@ -323,6 +327,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
               await this.importActivitiesService.importJson({
                 accounts: content.accounts,
                 activities: content.activities,
+                assetProfiles: content.assetProfiles,
                 isDryRun: true
               });
             this.activities = activities;
