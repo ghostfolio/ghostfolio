@@ -1,5 +1,4 @@
 import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
-import { GfToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -43,7 +42,6 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnDestroy, OnInit {
-  public dateRangeOptions = GfToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public errors: AssetProfileIdentifier[];
   public hasError: boolean;
