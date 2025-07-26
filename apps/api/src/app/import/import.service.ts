@@ -237,71 +237,59 @@ export class ImportService {
     }
 
     if (!isDryRun && assetProfilesWithMarketDataDto?.length) {
-      // Filter out not custom asset profiles
-      assetProfilesWithMarketDataDto = assetProfilesWithMarketDataDto.filter(
-        ({ dataSource }) => {
-          return dataSource === DataSource.MANUAL;
-        }
-      );
+      const existingAssetProfiles =
+        await this.symbolProfileService.getSymbolProfiles(
+          assetProfilesWithMarketDataDto.map(({ dataSource, symbol }) => {
+            return { dataSource, symbol };
+          })
+        );
 
-      if (assetProfilesWithMarketDataDto.length) {
-        const existingAssetProfiles =
-          await this.symbolProfileService.getSymbolProfiles(
-            assetProfilesWithMarketDataDto.map(({ dataSource, symbol }) => {
-              return { dataSource, symbol };
-            })
-          );
-
-        for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
-          // Check if there is any existing asset profile
-          const existingAssetProfile = existingAssetProfiles.find(
-            ({ dataSource, symbol }) => {
-              return (
-                dataSource === assetProfileWithMarketData.dataSource &&
-                symbol === assetProfileWithMarketData.symbol
-              );
-            }
-          );
-
-          // If there is no asset profile or if the asset profile belongs to a different user, then create a new asset profile
-          if (
-            !existingAssetProfile ||
-            existingAssetProfile.userId !== user.id
-          ) {
-            const assetProfile: CreateAssetProfileDto = omit(
-              assetProfileWithMarketData,
-              'marketData'
+      for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        // Check if there is any existing asset profile
+        const existingAssetProfile = existingAssetProfiles.find(
+          ({ dataSource, symbol }) => {
+            return (
+              dataSource === assetProfileWithMarketData.dataSource &&
+              symbol === assetProfileWithMarketData.symbol
             );
+          }
+        );
 
-            // Asset profile belongs to a different user
-            if (existingAssetProfile) {
-              const symbol = uuidv4(); // Generate a new symbol for the asset profile
-              assetProfileSymbolMapping[assetProfile.symbol] = symbol;
-              assetProfile.symbol = symbol;
-            }
+        // If there is no asset profile or if the asset profile belongs to a different user, then create a new asset profile
+        if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
+          const assetProfile: CreateAssetProfileDto = omit(
+            assetProfileWithMarketData,
+            'marketData'
+          );
 
-            // Create a new asset profile
-            const assetProfileObject: Prisma.SymbolProfileCreateInput = {
-              ...assetProfile,
-              user: { connect: { id: user.id } }
-            };
-
-            await this.symbolProfileService.add(assetProfileObject);
+          // Asset profile belongs to a different user
+          if (existingAssetProfile) {
+            const symbol = uuidv4();
+            assetProfileSymbolMapping[assetProfile.symbol] = symbol;
+            assetProfile.symbol = symbol;
           }
 
-          // Insert or update market data
-          const marketDataObjects = assetProfileWithMarketData.marketData.map(
-            (marketData) => {
-              return {
-                ...marketData,
-                dataSource: assetProfileWithMarketData.dataSource,
-                symbol: assetProfileWithMarketData.symbol
-              } as Prisma.MarketDataUpdateInput;
-            }
-          );
+          // Create a new asset profile
+          const assetProfileObject: Prisma.SymbolProfileCreateInput = {
+            ...assetProfile,
+            user: { connect: { id: user.id } }
+          };
 
-          await this.marketDataService.updateMany({ data: marketDataObjects });
+          await this.symbolProfileService.add(assetProfileObject);
         }
+
+        // Insert or update market data
+        const marketDataObjects = assetProfileWithMarketData.marketData.map(
+          (marketData) => {
+            return {
+              ...marketData,
+              dataSource: assetProfileWithMarketData.dataSource,
+              symbol: assetProfileWithMarketData.symbol
+            } as Prisma.MarketDataUpdateInput;
+          }
+        );
+
+        await this.marketDataService.updateMany({ data: marketDataObjects });
       }
     }
 

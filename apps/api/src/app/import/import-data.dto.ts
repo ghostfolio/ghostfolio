@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';
 
 import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
-import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-maketdata.dto';
+import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-market-data.dto';
 
 export class ImportDataDto {
   @IsArray()
