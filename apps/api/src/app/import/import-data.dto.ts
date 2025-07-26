@@ -7,11 +7,11 @@ import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto
 import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-maketdata.dto';
 
 export class ImportDataDto {
-  @IsOptional()
   @IsArray()
+  @IsOptional()
   @Type(() => CreateAccountWithBalancesDto)
   @ValidateNested({ each: true })
-  accounts: CreateAccountWithBalancesDto[];
+  accounts?: CreateAccountWithBalancesDto[];
 
   @IsArray()
   @Type(() => CreateOrderDto)
@@ -19,7 +19,8 @@ export class ImportDataDto {
   activities: CreateOrderDto[];
 
   @IsArray()
+  @IsOptional()
   @Type(() => CreateAssetProfileWithMarketDataDto)
   @ValidateNested({ each: true })
-  assetProfiles: CreateAssetProfileWithMarketDataDto[];
+  assetProfiles?: CreateAssetProfileWithMarketDataDto[];
 }
