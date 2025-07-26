@@ -124,7 +124,7 @@ export class ImportActivitiesService {
       importData.push(this.convertToCreateOrderDto(activity));
     }
 
-    return this.importJson({ accounts, activities: importData, assetProfiles });
+    return this.importJson({ accounts, assetProfiles, activities: importData });
   }
 
   private convertToCreateOrderDto({

@@ -236,11 +236,11 @@ export class ImportService {
       }
     }
 
-    if (!isDryRun && assetProfilesWithMarketDataDto) {
+    if (!isDryRun && assetProfilesWithMarketDataDto?.length) {
       // Filter out not custom asset profiles
       assetProfilesWithMarketDataDto = assetProfilesWithMarketDataDto.filter(
-        (assetProfile) => {
-          return assetProfile.dataSource === DataSource.MANUAL;
+        ({ dataSource }) => {
+          return dataSource === DataSource.MANUAL;
         }
       );
 
@@ -255,17 +255,15 @@ export class ImportService {
         for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
           // Check if there is any existing asset profile
           const existingAssetProfile = existingAssetProfiles.find(
-            (existingAssetProfile) => {
+            ({ dataSource, symbol }) => {
               return (
-                existingAssetProfile.dataSource ===
-                  assetProfileWithMarketData.dataSource &&
-                existingAssetProfile.symbol ===
-                  assetProfileWithMarketData.symbol
+                dataSource === assetProfileWithMarketData.dataSource &&
+                symbol === assetProfileWithMarketData.symbol
               );
             }
           );
 
-          // If there is no asset profile or if the asset profile belongs to a different user then create a new asset profile
+          // If there is no asset profile or if the asset profile belongs to a different user, then create a new asset profile
           if (
             !existingAssetProfile ||
             existingAssetProfile.userId !== user.id
