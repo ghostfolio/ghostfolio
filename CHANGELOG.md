@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the get country and sector weightings, dividends, historical price, profile, quote and symbol search functionalities of the _Financial Modeling Prep_ service to its stable API version
 - Refactored the toggle component to standalone
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Portuguese (`pt`)
