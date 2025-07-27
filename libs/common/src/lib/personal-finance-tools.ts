@@ -102,6 +102,24 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Take control of your financial future'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'capitally',
+    name: 'Capitally',
+    origin: 'Poland',
+    pricingPerYear: '€50',
+    slogan: 'Optimize your investments performance'
+  },
+  {
+    founded: 2022,
+    isArchived: true,
+    key: 'capmon',
+    name: 'CapMon.org',
+    origin: 'Germany',
+    note: 'CapMon.org was discontinued in 2023',
+    slogan: 'Next Generation Assets Tracking'
+  },
+  {
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -121,46 +139,6 @@ export const personalFinanceTools: Product[] = [
     origin: 'Germany',
     pricingPerYear: '$120',
     slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator'
-  },
-  {
-    founded: 2016,
-    hasFreePlan: true,
-    hasSelfHostingAbility: false,
-    key: 'defi-portfolio-tracker-by-zerion',
-    languages: ['English'],
-    name: 'DeFi Portfolio Tracker by Zerion',
-    origin: 'United States',
-    pricingPerYear: '$99',
-    slogan: 'DeFi Portfolio Tracker for All Chains'
-  },
-  {
-    founded: 2022,
-    hasFreePlan: true,
-    hasSelfHostingAbility: false,
-    key: 'degiro-portfolio-tracker-by-capitalyse',
-    languages: ['English'],
-    name: 'DEGIRO Portfolio Tracker by Capitalyse',
-    origin: 'Netherlands',
-    pricingPerYear: '€24',
-    slogan: 'Democratizing Data Analytics'
-  },
-  {
-    hasFreePlan: true,
-    hasSelfHostingAbility: false,
-    key: 'capitally',
-    name: 'Capitally',
-    origin: 'Poland',
-    pricingPerYear: '€50',
-    slogan: 'Optimize your investments performance'
-  },
-  {
-    founded: 2022,
-    isArchived: true,
-    key: 'capmon',
-    name: 'CapMon.org',
-    origin: 'Germany',
-    note: 'CapMon.org was discontinued in 2023',
-    slogan: 'Next Generation Assets Tracking'
   },
   {
     founded: 2019,
@@ -193,6 +171,28 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'De.Fi',
     slogan: 'DeFi Portfolio Tracker'
+  },
+  {
+    founded: 2016,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'defi-portfolio-tracker-by-zerion',
+    languages: ['English'],
+    name: 'DeFi Portfolio Tracker by Zerion',
+    origin: 'United States',
+    pricingPerYear: '$99',
+    slogan: 'DeFi Portfolio Tracker for All Chains'
+  },
+  {
+    founded: 2022,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'degiro-portfolio-tracker-by-capitalyse',
+    languages: ['English'],
+    name: 'DEGIRO Portfolio Tracker by Capitalyse',
+    origin: 'Netherlands',
+    pricingPerYear: '€24',
+    slogan: 'Democratizing Data Analytics'
   },
   {
     founded: 2017,
