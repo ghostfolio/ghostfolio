@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the allocation column to the accounts table component of the holding detail dialog
+
 ### Changed
 
 - Restructured the response of the portfolio report endpoint (_X-ray_)

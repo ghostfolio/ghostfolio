@@ -191,6 +191,7 @@ export class PortfolioService {
         ...account,
         transactionCount,
         valueInBaseCurrency,
+        allocationInPercentage: null, // TODO
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
