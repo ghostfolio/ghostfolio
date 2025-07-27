@@ -60,7 +60,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() showActions: boolean;
-  @Input() showAllocationInPercentage = false;
+  @Input() showAllocationInPercentage: boolean;
   @Input() showBalance = true;
   @Input() showFooter = true;
   @Input() showTransactions = true;
