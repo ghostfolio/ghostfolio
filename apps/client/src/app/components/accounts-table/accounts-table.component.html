@@ -255,17 +255,9 @@
       </td>
       <td
         *matFooterCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1"
         mat-footer-cell
-      >
-        <gf-value
-          class="d-inline-block justify-content-end"
-          [isPercent]="true"
-          [locale]="locale"
-          [precision]="2"
-          [value]="1"
-        />
-      </td>
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="comment">
@@ -328,7 +320,11 @@
           </button>
         </mat-menu>
       </td>
-      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-footer-cell
+      ></td>
     </ng-container>
 
     <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
