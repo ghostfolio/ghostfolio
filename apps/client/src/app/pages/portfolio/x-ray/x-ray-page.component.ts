@@ -47,7 +47,7 @@ export class GfXRayPageComponent {
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
   public regionalMarketClusterRiskRules: PortfolioReportRule[];
-  public statistics: PortfolioReportResponse['statistics'];
+  public statistics: PortfolioReportResponse['x-ray']['statistics'];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -115,7 +115,7 @@ export class GfXRayPageComponent {
     this.dataService
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ rules, statistics }) => {
+      .subscribe(({ 'x-ray': { rules, statistics } }) => {
         this.inactiveRules = this.mergeInactiveRules(rules);
         this.statistics = statistics;
 
@@ -161,7 +161,7 @@ export class GfXRayPageComponent {
   }
 
   private mergeInactiveRules(
-    rules: PortfolioReportResponse['rules']
+    rules: PortfolioReportResponse['x-ray']['rules']
   ): PortfolioReportRule[] {
     let inactiveRules: PortfolioReportRule[] = [];
 
