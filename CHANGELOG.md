@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Simplified the users table of the admin control panel
 - Restructured the response of the portfolio report endpoint (_X-ray_)
+- Simplified the users table of the admin control panel
 
 ### Fixed
 
