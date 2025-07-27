@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Restructured the response of the portfolio report endpoint (_X-ray_)
+
 ### Fixed
 
 - Excluded the holdings originated of `FEE`, `INTEREST` and `LIABILITY` activities from the closed holdings on the portfolio holdings page
