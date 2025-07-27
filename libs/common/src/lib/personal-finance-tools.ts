@@ -484,12 +484,11 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2021,
-    hasSelfHostingAbility: false,
     isArchived: true,
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
-    note: 'Maybe Finance was discontinued in 2023',
+    note: 'Maybe Finance was discontinued in 2023, relaunched in 2024, and discontinued again in 2025',
     origin: 'United States',
     pricingPerYear: '$145',
     regions: ['United States'],
