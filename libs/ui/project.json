@@ -26,10 +26,15 @@
     "storybook": {
       "executor": "@storybook/angular:start-storybook",
       "options": {
-        "port": 4400,
-        "configDir": "libs/ui/.storybook",
         "browserTarget": "ui:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "configDir": "libs/ui/.storybook",
+        "port": 4400,
+        "styles": [
+          "apps/client/src/assets/fonts/inter.css",
+          "apps/client/src/styles/theme.scss",
+          "apps/client/src/styles.scss"
+        ]
       },
       "configurations": {
         "ci": {
@@ -41,10 +46,10 @@
       "executor": "@storybook/angular:build-storybook",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/apps/client/development/storybook",
-        "configDir": "libs/ui/.storybook",
         "browserTarget": "ui:build-storybook",
         "compodoc": false,
+        "configDir": "libs/ui/.storybook",
+        "outputDir": "dist/apps/client/development/storybook",
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",

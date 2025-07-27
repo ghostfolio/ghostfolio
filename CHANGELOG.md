@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Excluded the holdings originated of `FEE`, `INTEREST` and `LIABILITY` activities from the closed holdings on the portfolio holdings page
+- Fixed an issue with serving _Storybook_ related to missing styles
 
 ## 2.185.0 - 2025-07-26
 
