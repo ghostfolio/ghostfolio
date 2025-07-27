@@ -553,6 +553,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Gain financial control and keep your data private.'
   },
   {
+    founded: 2025,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'monsy',
+    languages: ['English'],
+    name: 'Monsy',
+    origin: 'Indonesia',
+    pricingPerYear: '$20',
+    slogan: 'Smart, simple, stress-free money tracking.'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'morningstar-portfolio-manager',
