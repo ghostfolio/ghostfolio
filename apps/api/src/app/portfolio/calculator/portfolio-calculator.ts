@@ -13,6 +13,7 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
+  INVESTMENT_ACTIVITY_TYPES,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH,
@@ -287,10 +288,12 @@ export abstract class PortfolioCalculator {
       firstIndex--;
     }
 
-    const positions: TimelinePosition[] = [];
+    const errors: ResponseError['errors'] = [];
     let hasAnySymbolMetricsErrors = false;
 
-    const errors: ResponseError['errors'] = [];
+    const positions: (TimelinePosition & {
+      includeInHoldings: boolean;
+    })[] = [];
 
     const accumulatedValuesByDate: {
       [date: string]: {
@@ -409,6 +412,7 @@ export abstract class PortfolioCalculator {
         grossPerformanceWithCurrencyEffect: !hasErrors
           ? (grossPerformanceWithCurrencyEffect ?? null)
           : null,
+        includeInHoldings: item.includeInHoldings,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
         marketPrice:
@@ -605,14 +609,23 @@ export abstract class PortfolioCalculator {
 
     const overall = this.calculateOverallPerformance(positions);
 
+    const positionsIncludedInHoldings = positions
+      .filter(({ includeInHoldings }) => {
+        return includeInHoldings;
+      })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(({ includeInHoldings, ...rest }) => {
+        return rest;
+      });
+
     return {
       ...overall,
       errors,
       historicalData,
-      positions,
       totalInterestWithCurrencyEffect,
       totalLiabilitiesWithCurrencyEffect,
-      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
+      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors,
+      positions: positionsIncludedInHoldings
     };
   }
 
@@ -935,6 +948,7 @@ export abstract class PortfolioCalculator {
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
+          includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
           tags: oldAccumulatedSymbol.tags.concat(tags),
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
@@ -950,6 +964,7 @@ export abstract class PortfolioCalculator {
           averagePrice: unitPrice,
           dividend: new Big(0),
           firstBuyDate: date,
+          includeInHoldings: INVESTMENT_ACTIVITY_TYPES.includes(type),
           investment: unitPrice.mul(quantity).mul(factor),
           quantity: quantity.mul(factor),
           transactionCount: 1

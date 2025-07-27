@@ -9,9 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Spanish (`es`)
+- Restructured the response of the portfolio report endpoint (_X-ray_)
+
+### Fixed
+
+- Excluded the holdings originated of `FEE`, `INTEREST` and `LIABILITY` activities from the closed holdings on the portfolio holdings page
+
+## 2.185.0 - 2025-07-26
+
+### Added
+
+- Added a _Storybook_ story for the activity type component
+- Added a _Storybook_ story for the toggle component
+
+### Changed
+
+- Extended the import functionality by custom asset profiles
+- Migrated the get country and sector weightings, dividends, ETF holdings, ETF info, historical price, profile, quote and symbol search functionalities of the _Financial Modeling Prep_ service to its stable API version
 - Refactored the toggle component to standalone
 - Improved the language localization for Dutch (`nl`)
-- Improved the language localization for Spanish (`es`)
+- Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Turkish (`tr`)
 - Upgraded the _Stripe_ dependencies
 - Upgraded `angular` from version `19.2.1` to `20.0.7`
@@ -23,8 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the date format of the retirement date in the _FIRE_ calculator
 - Fixed an issue with the permissions of the impersonation mode related to the onboarding on the overview tab of the home page
 - Fixed an issue with the permissions of the impersonation mode related to the manage activities button of the holdings tab on the home page
+- Fixed an issue with the currency detection related to `USD.AX` in the _Yahoo Finance_ service
 
 ## 2.184.0 - 2025-07-22
 

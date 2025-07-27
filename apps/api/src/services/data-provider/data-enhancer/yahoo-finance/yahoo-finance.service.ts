@@ -63,7 +63,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       if (
         isCurrency(
           aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
-        )
+        ) &&
+        isCurrency(aSymbol.substring(aSymbol.length - DEFAULT_CURRENCY.length))
       ) {
         return `${aSymbol}=X`;
       } else if (

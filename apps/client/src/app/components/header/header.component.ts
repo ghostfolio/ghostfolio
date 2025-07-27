@@ -82,6 +82,7 @@ export class HeaderComponent implements OnChanges {
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
   public hasFilters: boolean;
+  public hasImpersonationId: boolean;
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
@@ -124,6 +125,7 @@ export class HeaderComponent implements OnChanges {
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
       });
 

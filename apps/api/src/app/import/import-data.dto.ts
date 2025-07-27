@@ -4,16 +4,23 @@ import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';
 
 import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
+import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-market-data.dto';
 
 export class ImportDataDto {
-  @IsOptional()
   @IsArray()
+  @IsOptional()
   @Type(() => CreateAccountWithBalancesDto)
   @ValidateNested({ each: true })
-  accounts: CreateAccountWithBalancesDto[];
+  accounts?: CreateAccountWithBalancesDto[];
 
   @IsArray()
   @Type(() => CreateOrderDto)
   @ValidateNested({ each: true })
   activities: CreateOrderDto[];
+
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreateAssetProfileWithMarketDataDto)
+  @ValidateNested({ each: true })
+  assetProfiles?: CreateAssetProfileWithMarketDataDto[];
 }
