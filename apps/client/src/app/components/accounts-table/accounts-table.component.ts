@@ -60,6 +60,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() showActions: boolean;
+  @Input() showAllocationInPercentage = false;
   @Input() showBalance = true;
   @Input() showFooter = true;
   @Input() showTransactions = true;
@@ -117,7 +118,10 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
       this.displayedColumns.push('valueInBaseCurrency');
     }
 
-    this.displayedColumns.push('allocation');
+    if (this.showAllocationInPercentage) {
+      this.displayedColumns.push('allocation');
+    }
+
     this.displayedColumns.push('comment');
 
     if (this.showActions) {

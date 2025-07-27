@@ -72,7 +72,6 @@ import {
   Order,
   Platform,
   Prisma,
-  SymbolProfile,
   Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
@@ -161,11 +160,7 @@ export class PortfolioService {
       this.accountService.accounts({
         where,
         include: {
-          activities: {
-            include: {
-              SymbolProfile: true
-            }
-          },
+          activities: true,
           platform: true
         },
         orderBy: { name: 'asc' }
@@ -180,71 +175,39 @@ export class PortfolioService {
 
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const accountsWithValue = accounts.map((account) => {
+    return accounts.map((account) => {
       let transactionCount = 0;
-      let valueInBaseCurrency =
-        details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
-      if (filterByDataSource && filterBySymbol) {
-        const holding = details.holdings[filterBySymbol];
-
-        const activities = (
-          account.activities as (Order & {
-            SymbolProfile: SymbolProfile;
-          })[]
-        ).filter((activity) => {
-          return (
-            activity.SymbolProfile.dataSource === filterByDataSource &&
-            activity.SymbolProfile.symbol === filterBySymbol
-          );
-        });
-
-        let quantity = new Big(0);
-        for (const activity of activities) {
-          quantity = quantity.plus(
-            new Big(getFactor(activity.type)).mul(activity.quantity)
-          );
-        }
-
-        valueInBaseCurrency = quantity.mul(holding.marketPrice ?? 0).toNumber();
-        transactionCount = activities.length;
-      } else {
-        for (const { isDraft } of account.activities) {
-          if (!isDraft) {
-            transactionCount += 1;
-          }
+      for (const { isDraft } of account.activities) {
+        if (!isDraft) {
+          transactionCount += 1;
         }
       }
 
+      const valueInBaseCurrency =
+        details.accounts[account.id]?.valueInBaseCurrency ?? 0;
+
       const result = {
         ...account,
-        allocationInPercentage: 0,
+        transactionCount,
+        valueInBaseCurrency,
+        allocationInPercentage: undefined, // TODO
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
           userCurrency
         ),
-        transactionCount,
         value: this.exchangeRateDataService.toCurrency(
           valueInBaseCurrency,
           userCurrency,
           account.currency
-        ),
-        valueInBaseCurrency
+        )
       };
 
       delete result.activities;
 
       return result;
     });
-
-    if (filterByDataSource && filterBySymbol) {
-      return accountsWithValue.filter((account) => {
-        return account.transactionCount > 0;
-      });
-    }
-
-    return accountsWithValue;
   }
 
   public async getAccountsWithAggregations({
@@ -273,14 +236,6 @@ export class PortfolioService {
         account.valueInBaseCurrency
       );
       transactionCount += account.transactionCount;
-    }
-
-    for (const account of accounts) {
-      account.allocationInPercentage = totalValueInBaseCurrency.gt(0)
-        ? new Big(account.valueInBaseCurrency)
-            .div(totalValueInBaseCurrency)
-            .toNumber()
-        : 0;
     }
 
     return {
