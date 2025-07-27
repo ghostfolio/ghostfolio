@@ -206,6 +206,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The app to track all your investments. Make smart moves only.'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'digrin',
+    languages: ['English'],
+    name: 'Digrin',
+    pricingPerYear: '$49.90',
+    slogan: 'Dividend Portfolio Tracker'
+  },
+  {
     founded: 2019,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
