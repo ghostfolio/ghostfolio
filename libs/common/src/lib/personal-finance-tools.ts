@@ -120,6 +120,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Next Generation Assets Tracking'
   },
   {
+    founded: 2024,
+    hasFreePlan: true,
+    isOpenSource: true,
+    key: 'cleverbilling',
+    languages: ['Español'],
+    name: 'CleverBilling',
+    slogan: 'Toma el control total de tus finanzas.'
+  },
+  {
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
