@@ -889,6 +889,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Virtual Family Office for Smart Wealth Management'
   },
   {
+    founded: 2020,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'walletguide',
+    name: 'Walletguide',
+    origin: 'Germany',
+    pricingPerYear: '€90',
+    slogan: 'Personal finance reimagined with AI'
+  },
+  {
     hasSelfHostingAbility: false,
     key: 'wallmine',
     languages: ['English'],
