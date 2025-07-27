@@ -123,6 +123,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator'
   },
   {
+    founded: 2016,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'defi-portfolio-tracker-by-zerion',
+    languages: ['English'],
+    name: 'DeFi Portfolio Tracker by Zerion',
+    origin: 'United States',
+    pricingPerYear: '$99',
+    slogan: 'DeFi Portfolio Tracker for All Chains'
+  },
+  {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
