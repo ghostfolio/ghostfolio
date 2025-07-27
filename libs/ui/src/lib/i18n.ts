@@ -84,6 +84,7 @@ const locales = {
   France: $localize`France`,
   Germany: $localize`Germany`,
   India: $localize`India`,
+  Indonesia: $localize`Indonesia`,
   Italy: $localize`Italy`,
   Japan: $localize`Japan`,
   Netherlands: $localize`Netherlands`,
