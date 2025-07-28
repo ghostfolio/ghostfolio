@@ -141,15 +141,16 @@ export class ExportService {
     );
 
     const tags = (await this.tagService.getTagsForUser(userId))
-      .filter(
-        ({ id, isUsed }) =>
+      .filter(({ id, isUsed }) => {
+        return (
           isUsed &&
           activities.some((activity) => {
             return activity.tags.some(({ id: tagId }) => {
               return tagId === id;
             });
           })
-      )
+        );
+      })
       .map(({ id, name }) => {
         return {
           id,
