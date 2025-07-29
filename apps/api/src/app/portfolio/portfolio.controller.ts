@@ -655,11 +655,11 @@ export class PortfolioController {
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === 'Basic'
     ) {
-      for (const rule in report['x-ray'].rules) {
-        report['x-ray'].rules[rule] = null;
+      for (const rule in report.xRay.rules) {
+        report.xRay.rules[rule] = null;
       }
 
-      report['x-ray'].statistics = {
+      report.xRay.statistics = {
         rulesActiveCount: 0,
         rulesFulfilledCount: 0
       };
