@@ -1157,7 +1157,7 @@ export class PortfolioService {
       })
     ).toNumber();
 
-    const rules: PortfolioReportResponse['x-ray']['rules'] = {
+    const rules: PortfolioReportResponse['xRay']['rules'] = {
       accountClusterRisk:
         summary.activityCount > 0
           ? await this.rulesService.evaluate(
@@ -1313,7 +1313,7 @@ export class PortfolioService {
     };
 
     return {
-      'x-ray': {
+      xRay: {
         rules,
         statistics: this.getReportStatistics(rules)
       }
@@ -1737,8 +1737,8 @@ export class PortfolioService {
   }
 
   private getReportStatistics(
-    evaluatedRules: PortfolioReportResponse['x-ray']['rules']
-  ): PortfolioReportResponse['x-ray']['statistics'] {
+    evaluatedRules: PortfolioReportResponse['xRay']['rules']
+  ): PortfolioReportResponse['xRay']['statistics'] {
     const rulesActiveCount = Object.values(evaluatedRules)
       .flat()
       .filter((rule) => {
