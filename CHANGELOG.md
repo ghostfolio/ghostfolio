@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for Dutch (`nl`)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `ng-extract-i18n-merge` from version `2.15.1` to `3.0.0`
 
