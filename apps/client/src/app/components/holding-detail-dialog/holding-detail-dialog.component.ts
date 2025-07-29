@@ -1,5 +1,5 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfAccountsTableComponent } from '@ghostfolio/client/components/accounts-table/accounts-table.component';
+import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { DataService } from '@ghostfolio/client/services/data.service';

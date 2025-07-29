@@ -4,7 +4,7 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { GfAccountDetailDialogModule } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.module';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
-import { GfAccountsTableComponent } from '@ghostfolio/client/components/accounts-table/accounts-table.component';
+import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
