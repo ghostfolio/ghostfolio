@@ -1,7 +1,7 @@
 import { PortfolioReportRule } from '../portfolio-report-rule.interface';
 
 export interface PortfolioReportResponse {
-  'x-ray': {
+  xRay: {
     rules: { [group: string]: PortfolioReportRule[] };
     statistics: {
       rulesActiveCount: number;
