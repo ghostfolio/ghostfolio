@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DataSource } from '@prisma/client';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class EntityLogoImageSourceService {
   public getLogoUrlByDataSourceAndSymbol(
     dataSource: DataSource,
