@@ -3544,7 +3544,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development. </source>
-        <target state="translated"> Nuestra oferta oficial en la nube de Ghostfolio Premium es la forma más sencilla de comenzar. Debido al tiempo que ahorra, esta será la mejor opción para la mayoría de las personas. Los ingresos se utilizan para cubrir los costos de la infraestructura de alojamiento y para financiar el desarrollo continuo.</target>
+        <target state="translated"> Nuestra oferta oficial en la nube Ghostfolio Premium es la forma más fácil de comenzar. Debido al tiempo que ahorra, esta será la mejor opción para la mayoría de las personas. Los ingresos se utilizan para cubrir los costos operativos de la infraestructura de alojamiento y los proveedores de datos profesionales, y para financiar el desarrollo continuo.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
