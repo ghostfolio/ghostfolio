@@ -1,13 +1,7 @@
 import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
 
-import {
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Tag,
-  Type
-} from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsArray,
@@ -71,7 +65,7 @@ export class UpdateOrderDto {
 
   @IsArray()
   @IsOptional()
-  tags?: Tag[];
+  tags?: string[];
 
   @IsString()
   type: Type;
