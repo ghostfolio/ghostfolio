@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the _Top 3_ and _Bottom 3_ performers on the analysis page by removing items without performance
 - Improved the usability of the toggle component
 - Restructured the response of the portfolio report endpoint (_X-ray_)
 - Refreshed the cryptocurrencies list
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the links of the _Top 3_ and _Bottom 3_ performers on the analysis page
 - Excluded the holdings originated of `FEE`, `INTEREST` and `LIABILITY` activities from the closed holdings on the portfolio holdings page
 - Fixed an issue with serving _Storybook_ related to missing styles
 
