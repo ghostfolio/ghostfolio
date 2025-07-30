@@ -3543,7 +3543,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development. </source>
-        <target state="new"> Ons officiële Ghostfolio Premium cloud-aanbod is de eenvoudigste manier om te beginnen. Vanwege de tijd die het bespaart, zal dit voor de meeste mensen de beste optie zijn. De inkomsten worden gebruikt om de hostinginfrastructuur te dekken en de voortdurende ontwikkeling van Ghostfolio te financieren. </target>
+        <target state="translated"> Ons officiële Ghostfolio Premium-cloudaanbod is de gemakkelijkste manier om aan de slag te gaan. Vanwege de tijdsbesparing zal dit voor de meeste mensen de beste optie zijn. De opbrengsten worden gebruikt om de operationele kosten voor de hostinginfrastructuur en professionele dataproviders te dekken, en om de lopende ontwikkeling te financieren. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
@@ -5706,7 +5706,7 @@
       </trans-unit>
       <trans-unit id="5303806780432428245" datatype="html">
         <source>Indonesia</source>
-        <target state="new">Indonesia</target>
+        <target state="translated">Indonesië</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">87</context>
