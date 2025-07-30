@@ -495,7 +495,9 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
           ? undefined
           : this.activityForm.get('searchSymbol')?.value?.symbol) ??
         this.activityForm.get('name')?.value,
-      tags: this.activityForm.get('tags').value,
+      tags: this.activityForm.get('tags').value?.map(({ id }) => {
+        return id;
+      }),
       type: this.activityForm.get('type').value,
       unitPrice: this.activityForm.get('unitPrice').value
     };

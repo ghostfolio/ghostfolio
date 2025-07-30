@@ -217,6 +217,9 @@ export class OrderController {
           }
         }
       },
+      tags: data.tags?.map((id) => {
+        return { id };
+      }),
       user: { connect: { id: this.request.user.id } },
       userId: this.request.user.id
     });
@@ -293,6 +296,9 @@ export class OrderController {
             name: data.symbol
           }
         },
+        tags: data.tags?.map((id) => {
+          return { id };
+        }),
         user: { connect: { id: this.request.user.id } }
       },
       where: {

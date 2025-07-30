@@ -1,3 +1,4 @@
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
@@ -75,11 +76,13 @@ export class ImportActivitiesService {
     accounts,
     activities,
     assetProfiles,
+    tags,
     isDryRun = false
   }: {
     activities: CreateOrderDto[];
     accounts?: CreateAccountWithBalancesDto[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+    tags?: CreateTagDto[];
     isDryRun?: boolean;
   }): Promise<{
     activities: Activity[];
@@ -89,7 +92,8 @@ export class ImportActivitiesService {
         {
           accounts,
           activities,
-          assetProfiles
+          assetProfiles,
+          tags
         },
         isDryRun
       )
@@ -110,11 +114,13 @@ export class ImportActivitiesService {
   public importSelectedActivities({
     accounts,
     activities,
-    assetProfiles
+    assetProfiles,
+    tags
   }: {
     accounts?: CreateAccountWithBalancesDto[];
     activities: Activity[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+    tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
   }> {
@@ -124,7 +130,12 @@ export class ImportActivitiesService {
       importData.push(this.convertToCreateOrderDto(activity));
     }
 
-    return this.importJson({ accounts, assetProfiles, activities: importData });
+    return this.importJson({
+      accounts,
+      assetProfiles,
+      tags,
+      activities: importData
+    });
   }
 
   private convertToCreateOrderDto({
@@ -135,6 +146,7 @@ export class ImportActivitiesService {
     fee,
     quantity,
     SymbolProfile,
+    tags,
     type,
     unitPrice,
     updateAccountBalance
@@ -150,7 +162,8 @@ export class ImportActivitiesService {
       currency: currency ?? SymbolProfile.currency,
       dataSource: SymbolProfile.dataSource,
       date: date.toString(),
-      symbol: SymbolProfile.symbol
+      symbol: SymbolProfile.symbol,
+      tags: tags?.map(({ id }) => id)
     };
   }
 
@@ -391,6 +404,7 @@ export class ImportActivitiesService {
       accounts?: CreateAccountWithBalancesDto[];
       activities: CreateOrderDto[];
       assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+      tags?: CreateTagDto[];
     },
     aIsDryRun = false
   ) {
