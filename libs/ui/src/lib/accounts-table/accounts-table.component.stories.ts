@@ -28,7 +28,11 @@ const mockAccounts = [
     platform: {
       name: 'Bank of America',
       url: 'https://www.bankofamerica.com'
-    }
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    platformId: 'bofa',
+    userId: 'user1'
   },
   {
     id: '2',
@@ -44,7 +48,11 @@ const mockAccounts = [
     platform: {
       name: 'Interactive Brokers',
       url: 'https://www.interactivebrokers.com'
-    }
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    platformId: 'ibkr',
+    userId: 'user1'
   },
   {
     id: '3',
@@ -60,7 +68,11 @@ const mockAccounts = [
     platform: {
       name: 'Deutsche Bank',
       url: 'https://www.deutsche-bank.de'
-    }
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    platformId: 'db',
+    userId: 'user1'
   },
   {
     id: '4',
@@ -76,7 +88,11 @@ const mockAccounts = [
     platform: {
       name: 'Local Credit Union',
       url: null
-    }
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    platformId: 'lcu',
+    userId: 'user1'
   }
 ];
 
