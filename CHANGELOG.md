@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
+- Upgraded `angular` from version `20.0.7` to `20.1.3`
 - Upgraded `ng-extract-i18n-merge` from version `2.15.1` to `3.0.0`
+- Upgraded `nx` from version `21.2.4` to `21.3.9`
 
 ### Fixed
 
