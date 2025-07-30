@@ -4,7 +4,6 @@
   .mat-mdc-radio-button {
     border-radius: 1rem;
     margin: 0 0.25rem;
-    padding: 0.15rem 0.75rem;
 
     &.mat-mdc-radio-checked {
       background-color: rgba(var(--dark-dividers));
@@ -19,7 +18,7 @@
         color: rgba(var(--dark-primary-text), 1);
         cursor: inherit;
         margin: 0;
-        padding: 0;
+        padding: 0.15rem 0.75rem;
       }
     }
   }
