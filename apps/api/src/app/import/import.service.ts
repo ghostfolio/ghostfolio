@@ -302,6 +302,15 @@ export class ImportService {
     if (tagsDto?.length) {
       const existingTags = await this.tagService.getTagsForUser(user.id);
 
+      const canCreateTag = hasPermission(
+        user.permissions,
+        permissions.createTag
+      );
+      const canCreateOwnTag = hasPermission(
+        user.permissions,
+        permissions.createOwnTag
+      );
+
       for (const tag of tagsDto) {
         // Check if there is any existing tag
         const existingTag = existingTags.find(({ name }) => {
@@ -309,19 +318,7 @@ export class ImportService {
         });
 
         // If there is no tag or if the tag belongs to a different user, then create a new tag
-        if (
-          !existingTag ||
-          (existingTag.userId && existingTag.userId !== user.id)
-        ) {
-          const canCreateTag = hasPermission(
-            user.permissions,
-            permissions.createTag
-          );
-          const canCreateOwnTag = hasPermission(
-            user.permissions,
-            permissions.createOwnTag
-          );
-
+        if (!existingTag || existingTag.userId !== user.id) {
           if (!canCreateTag && !canCreateOwnTag) {
             throw new Error('User does not have permission to create tags');
           }
