@@ -101,7 +101,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
     if (this.hasPermissionForSubscription) {
       this.displayedColumns = [
-        'index',
         'user',
         'country',
         'registration',
@@ -114,7 +113,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     } else {
       this.displayedColumns = [
-        'index',
         'user',
         'registration',
         'accounts',
