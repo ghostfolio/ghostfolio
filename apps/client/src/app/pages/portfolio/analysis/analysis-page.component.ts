@@ -32,6 +32,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
 import { addIcons } from 'ionicons';
@@ -55,7 +56,8 @@ import { takeUntil } from 'rxjs/operators';
     MatCardModule,
     MatMenuModule,
     MatProgressSpinnerModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    RouterModule
   ],
   selector: 'gf-analysis-page',
   styleUrls: ['./analysis-page.scss'],
@@ -342,13 +344,20 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
           'netPerformancePercentWithCurrencyEffect'
         ).reverse();
 
-        this.top3 = holdingsSorted.slice(0, 3);
+        this.top3 = holdingsSorted
+          .filter(
+            ({ netPerformancePercentWithCurrencyEffect }) =>
+              netPerformancePercentWithCurrencyEffect > 0
+          )
+          .slice(0, 3);
 
-        if (holdings?.length > 3) {
-          this.bottom3 = holdingsSorted.slice(-3).reverse();
-        } else {
-          this.bottom3 = [];
-        }
+        this.bottom3 = holdingsSorted
+          .filter(
+            ({ netPerformancePercentWithCurrencyEffect }) =>
+              netPerformancePercentWithCurrencyEffect < 0
+          )
+          .slice(-3)
+          .reverse();
 
         this.changeDetectorRef.markForCheck();
       });
