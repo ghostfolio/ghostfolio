@@ -9,7 +9,8 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
-  ghostfolioPrefix
+  ghostfolioPrefix,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
@@ -33,7 +34,7 @@ import {
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
-import { groupBy, uniqBy } from 'lodash';
+import { groupBy, isArray, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activities } from './interfaces/activities.interface';
@@ -481,6 +482,24 @@ export class OrderService {
           })
         }
       };
+    }
+
+    if (withExcludedAccounts === false) {
+      const excludeFromAnalysisTagCondition = {
+        tags: {
+          none: {
+            id: TAG_ID_EXCLUDE_FROM_ANALYSIS
+          }
+        }
+      };
+
+      if (isArray(where.AND)) {
+        where.AND.push(excludeFromAnalysisTagCondition);
+      } else if (where.AND) {
+        where.AND = [where.AND, excludeFromAnalysisTagCondition];
+      } else {
+        where.AND = [excludeFromAnalysisTagCondition];
+      }
     }
 
     if (sortColumn) {

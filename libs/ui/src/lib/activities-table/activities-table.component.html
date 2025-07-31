@@ -468,7 +468,7 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToOpenDetails &&
-          row.account?.isExcluded !== true &&
+          isExcludedFromAnalysis(row) === false &&
           row.isDraft === false &&
           ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"
