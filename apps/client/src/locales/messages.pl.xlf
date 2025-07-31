@@ -3952,7 +3952,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development. </source>
-        <target state="new"> Nasza oficjalna chmurowa usługa Ghostfolio Premium jest najprostszym sposobem by rozpocząć przygodę z Ghostfolio. To najlepsza opcja dla większości osób ze względu na czas, jaki można dzięki niej zaoszczędzić. Uzyskany przychód jest wykorzystywany do pokrycia kosztów infrastruktury hostingowej i finansowania bieżącego rozwoju. </target>
+        <target state="translated">Nasza oficjalna chmurowa usługa Ghostfolio Premium jest najprostszym sposobem, aby rozpocząć przygodę z Ghostfolio. To najlepsza opcja dla większości osób ze względu na czas, jaki można dzięki niej zaoszczędzić. Uzyskany przychód jest wykorzystywany do pokrycia kosztów infrastruktury hostingowej i finansowania bieżącego rozwoju.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
@@ -5706,7 +5706,7 @@
       </trans-unit>
       <trans-unit id="5303806780432428245" datatype="html">
         <source>Indonesia</source>
-        <target state="new">Indonesia</target>
+        <target state="translated">Indonezja</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">87</context>
@@ -7310,7 +7310,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Set up</source>
-        <target state="new">Fundusz awaryjny: Utworzenie</target>
+        <target state="translated">Fundusz awaryjny: Utworzenie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">132</context>
@@ -7390,7 +7390,7 @@
       </trans-unit>
       <trans-unit id="440264111109852789" datatype="html">
         <source>Live Demo</source>
-        <target state="new">Live Demo</target>
+        <target state="translated">Demonstracja na żywo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">49</context>
@@ -7414,7 +7414,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount" datatype="html">
         <source>Single Account</source>
-        <target state="new">Single Account</target>
+        <target state="translated">Konto pojedyncze</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">28</context>
@@ -7422,7 +7422,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source> Your net worth is managed by a single account </source>
-        <target state="new"> Your net worth is managed by a single account </target>
+        <target state="translated">Twój majątek netto jest zarządzany przez jedno konto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">30</context>
@@ -7430,7 +7430,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source> Your net worth is managed by ${accountsLength} accounts </source>
-        <target state="new"> Your net worth is managed by ${accountsLength} accounts </target>
+        <target state="translated">Twój majątek netto jest zarządzany przez ${accountsLength} konta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -7438,7 +7438,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
         <source>personal-finance-tools</source>
-        <target state="new">personal-finance-tools</target>
+        <target state="translated">narzedzia-finansowe-osobiste</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7455,7 +7455,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.markets" datatype="html">
         <source>markets</source>
-        <target state="new">markets</target>
+        <target state="translated">rynki</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7476,7 +7476,7 @@
       </trans-unit>
       <trans-unit id="4579866450954197004" datatype="html">
         <source>Get Access</source>
-        <target state="new">Get Access</target>
+        <target state="translated">Uzyskaj dostęp</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">27</context>
@@ -7484,7 +7484,7 @@
       </trans-unit>
       <trans-unit id="819996403327805209" datatype="html">
         <source>Learn more</source>
-        <target state="new">Learn more</target>
+        <target state="translated">Dowiedz się więcej</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">38</context>
@@ -7492,7 +7492,7 @@
       </trans-unit>
       <trans-unit id="5743832581969115624" datatype="html">
         <source>Limited Offer!</source>
-        <target state="new">Limited Offer!</target>
+        <target state="translated">Oferta ograniczona czasowo!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">312</context>
@@ -7500,7 +7500,7 @@
       </trans-unit>
       <trans-unit id="2415916442984615985" datatype="html">
         <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
-        <target state="new">Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
+        <target state="translated">Uzyskaj <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> dodatkowo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">314</context>
@@ -7508,7 +7508,7 @@
       </trans-unit>
       <trans-unit id="3955868613858648955" datatype="html">
         <source>Available</source>
-        <target state="new">Available</target>
+        <target state="translated">Dostępny</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/data-provider-status/data-provider-status.component.html</context>
           <context context-type="linenumber">3</context>
@@ -7516,7 +7516,7 @@
       </trans-unit>
       <trans-unit id="5643561794785412000" datatype="html">
         <source>Unavailable</source>
-        <target state="new">Unavailable</target>
+        <target state="translated">Niedostępny</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/data-provider-status/data-provider-status.component.html</context>
           <context context-type="linenumber">5</context>
@@ -7524,7 +7524,7 @@
       </trans-unit>
       <trans-unit id="7387635272539030076" datatype="html">
         <source>new</source>
-        <target state="new">new</target>
+        <target state="translated">nowy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">67</context>
@@ -7536,7 +7536,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">Inwestycja</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
