@@ -5707,7 +5707,7 @@
       </trans-unit>
       <trans-unit id="5303806780432428245" datatype="html">
         <source>Indonesia</source>
-        <target state="new">Indonesia</target>
+        <target state="translated">Indonesia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">87</context>
@@ -7166,7 +7166,7 @@
       </trans-unit>
       <trans-unit id="4391289919356861627" datatype="html">
         <source>Apply</source>
-        <target state="new">Apply</target>
+        <target state="translated">Aplicar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">140</context>
@@ -7174,7 +7174,7 @@
       </trans-unit>
       <trans-unit id="6806222370958348229" datatype="html">
         <source>with API access for</source>
-        <target state="new">with API access for</target>
+        <target state="translated">con acceso a la API para</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">253</context>
@@ -7182,7 +7182,7 @@
       </trans-unit>
       <trans-unit id="4396995010887588291" datatype="html">
         <source>Gather Recent Historical Market Data</source>
-        <target state="new">Gather Recent Historical Market Data</target>
+        <target state="translated">Recopilar todos los datos históricos del mercado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">226</context>
@@ -7190,7 +7190,7 @@
       </trans-unit>
       <trans-unit id="4333079359502738389" datatype="html">
         <source>Gather All Historical Market Data</source>
-        <target state="new">Gather All Historical Market Data</target>
+        <target state="translated">Recopilar todos los datos históricos del mercado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">231</context>
@@ -7198,7 +7198,7 @@
       </trans-unit>
       <trans-unit id="2960393019464273155" datatype="html">
         <source>Gather Historical Market Data</source>
-        <target state="new">Gather Historical Market Data</target>
+        <target state="translated">Recopilar datos históricos del mercado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">29</context>
@@ -7206,7 +7206,7 @@
       </trans-unit>
       <trans-unit id="5201942929131534075" datatype="html">
         <source>Data Gathering is off</source>
-        <target state="new">Data Gathering is off</target>
+        <target state="translated">La recopilación de datos está desactivada</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">38</context>
@@ -7214,7 +7214,7 @@
       </trans-unit>
       <trans-unit id="7588205374923801261" datatype="html">
         <source>Performance Calculation</source>
-        <target state="new">Performance Calculation</target>
+        <target state="translated">Cálculo de rendimiento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">31</context>
@@ -7222,7 +7222,7 @@
       </trans-unit>
       <trans-unit id="322229249598827754" datatype="html">
         <source>someone</source>
-        <target state="new">someone</target>
+        <target state="translated">alguien</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.component.ts</context>
           <context context-type="linenumber">33</context>
@@ -7230,7 +7230,7 @@
       </trans-unit>
       <trans-unit id="1071146706139680655" datatype="html">
         <source>Add asset to watchlist</source>
-        <target state="new">Add asset to watchlist</target>
+        <target state="translated">Añadir activo a la lista de seguimiento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-watchlist/create-watchlist-item-dialog/create-watchlist-item-dialog.html</context>
           <context context-type="linenumber">7</context>
@@ -7311,7 +7311,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Set up</source>
-        <target state="new">Fondo de Emergencia: Establecer</target>
+        <target state="translated">Fondo de emergencia: establecer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">132</context>
@@ -7391,7 +7391,7 @@
       </trans-unit>
       <trans-unit id="440264111109852789" datatype="html">
         <source>Live Demo</source>
-        <target state="new">Live Demo</target>
+        <target state="translated">Demostración en vivo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">49</context>
@@ -7415,7 +7415,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount" datatype="html">
         <source>Single Account</source>
-        <target state="new">Single Account</target>
+        <target state="translated">Cuenta única</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">28</context>
@@ -7423,7 +7423,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source> Your net worth is managed by a single account </source>
-        <target state="new"> Your net worth is managed by a single account </target>
+        <target state="translated">Tu patrimonio neto está gestionado por una única cuenta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">30</context>
@@ -7431,7 +7431,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source> Your net worth is managed by ${accountsLength} accounts </source>
-        <target state="new"> Your net worth is managed by ${accountsLength} accounts </target>
+        <target state="translated">Tu patrimonio neto está gestionado por ${accountsLength} cuentas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -7439,7 +7439,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
         <source>personal-finance-tools</source>
-        <target state="new">personal-finance-tools</target>
+        <target state="translated">herramientas-financieras-personales</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
