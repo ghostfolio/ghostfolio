@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the support for changing the asset profile identifier (`dataSource` and `symbol`) in the asset profile details dialog of the admin control panel from experimental to general availability
+- Improved the balance of headings on the landing page
+- Improved the language localization for Spanish (`es`)
 
 ## 2.186.0 - 2025-07-30
 
