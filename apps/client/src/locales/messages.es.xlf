@@ -3544,7 +3544,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development. </source>
-        <target state="new"> Nuestra oferta oficial en la nube de Ghostfolio Premium es la forma más sencilla de comenzar. Debido al tiempo que ahorra, esta será la mejor opción para la mayoría de las personas. Los ingresos se utilizan para cubrir los costos de la infraestructura de alojamiento y para financiar el desarrollo continuo.</target>
+        <target state="translated"> Nuestra oferta oficial en la nube Ghostfolio Premium es la forma más fácil de comenzar. Debido al tiempo que ahorra, esta será la mejor opción para la mayoría de las personas. Los ingresos se utilizan para cubrir los costos operativos de la infraestructura de alojamiento y los proveedores de datos profesionales, y para financiar el desarrollo continuo.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
@@ -8010,7 +8010,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan" datatype="html">
         <source>Japan</source>
-        <target state="new">Japan</target>
+        <target state="translated">Japón</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">196</context>
@@ -8018,7 +8018,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
         <source> The Japan market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The Japan market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> La contribución al mercado japonés de su inversión actual (${valueRatio}%) supera el ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">198</context>
@@ -8026,7 +8026,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
         <source> The Japan market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The Japan market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> La contribución al mercado japonés de su inversión actual (${valueRatio}%) es inferior a ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">202</context>
@@ -8034,7 +8034,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
         <source> The Japan market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The Japan market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> La contribución al mercado japonés de su inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">206</context>
@@ -8042,7 +8042,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica" datatype="html">
         <source>North America</source>
-        <target state="new">North America</target>
+        <target state="translated">Norteamérica</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">210</context>
@@ -8050,7 +8050,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
         <source> The North America market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The North America market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated"> La contribución del mercado de América del Norte de su inversión actual (${valueRatio}%) supera el ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">212</context>
@@ -8058,7 +8058,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
         <source> The North America market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The North America market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated"> La contribución al mercado de América del Norte de su inversión actual (${valueRatio}%) es inferior a ${thresholdMin}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">216</context>
@@ -8066,7 +8066,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
         <source> The North America market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The North America market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated"> La contribución al mercado de América del Norte de su inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}% </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">220</context>
@@ -8074,7 +8074,7 @@
       </trans-unit>
       <trans-unit id="2305116864852661861" datatype="html">
         <source>Find Ghostfolio on GitHub</source>
-        <target state="new">Find Ghostfolio on GitHub</target>
+        <target state="translated">Encuentra Ghostfolio en GitHub</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">74</context>
@@ -8086,7 +8086,7 @@
       </trans-unit>
       <trans-unit id="5606994816647505945" datatype="html">
         <source>Join the Ghostfolio Slack community</source>
-        <target state="new">Join the Ghostfolio Slack community</target>
+        <target state="translated">Únete a la comunidad de Ghostfolio Slack</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">84</context>
@@ -8094,7 +8094,7 @@
       </trans-unit>
       <trans-unit id="2555424753565986929" datatype="html">
         <source>Follow Ghostfolio on X (formerly Twitter)</source>
-        <target state="new">Follow Ghostfolio on X (formerly Twitter)</target>
+        <target state="translated">Siga a Ghostfolio en X (anteriormente Twitter)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">93</context>
@@ -8102,7 +8102,7 @@
       </trans-unit>
       <trans-unit id="3375362149606316745" datatype="html">
         <source>Send an e-mail</source>
-        <target state="new">Send an e-mail</target>
+        <target state="translated">Enviar un correo electrónico</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">103</context>
@@ -8110,7 +8110,7 @@
       </trans-unit>
       <trans-unit id="5162138648470294706" datatype="html">
         <source>Follow Ghostfolio on LinkedIn</source>
-        <target state="new">Follow Ghostfolio on LinkedIn</target>
+        <target state="translated">Siga a Ghostfolio en LinkedIn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">122</context>
@@ -8118,7 +8118,7 @@
       </trans-unit>
       <trans-unit id="4170353658096790081" datatype="html">
         <source>Ghostfolio is an independent &amp; bootstrapped business</source>
-        <target state="new">Ghostfolio is an independent &amp; bootstrapped business</target>
+        <target state="translated">Ghostfolio es una empresa independiente y autónoma</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">132</context>
@@ -8126,7 +8126,7 @@
       </trans-unit>
       <trans-unit id="1184917049575486230" datatype="html">
         <source>Support Ghostfolio</source>
-        <target state="new">Support Ghostfolio</target>
+        <target state="translated">Soporte Ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">141</context>

@@ -3,23 +3,6 @@
     <div class="col">
       <div class="overflow-x-auto">
         <table class="gf-table" mat-table [dataSource]="dataSource">
-          <ng-container matColumnDef="index">
-            <th
-              *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
-              mat-header-cell
-            >
-              #
-            </th>
-            <td
-              *matCellDef="let element; let i = index"
-              class="mat-mdc-cell px-1 py-2 text-right"
-              mat-cell
-            >
-              {{ i + 1 }}
-            </td>
-          </ng-container>
-
           <ng-container matColumnDef="user">
             <th
               *matHeaderCellDef
