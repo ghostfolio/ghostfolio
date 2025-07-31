@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added support to exclude an activity from analysis based on tags
+
 ### Changed
 
 - Improved the balance of headings on the landing page
