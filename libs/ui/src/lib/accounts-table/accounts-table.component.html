@@ -1,13 +1,13 @@
 @if (showActions) {
   <div class="d-flex justify-content-end">
     <button
-      mat-stroked-button
       class="align-items-center d-flex"
+      mat-stroked-button
       [disabled]="dataSource?.data.length < 2"
       (click)="onTransferBalance()"
     >
       <ion-icon class="mr-2" name="arrow-redo-outline" />
-      <ng-container i18n>Transfer Cash Balance</ng-container>
+      <ng-container i18n>Transfer Cash Balance</ng-container>...
     </button>
   </div>
 }
@@ -39,12 +39,7 @@
     </ng-container>
 
     <ng-container matColumnDef="account">
-      <th
-        *matHeaderCellDef
-        class="px-1"
-        mat-header-cell
-        mat-sort-header="name"
-      >
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
@@ -76,11 +71,7 @@
       >
         {{ element.currency }}
       </td>
-      <td
-        *matFooterCellDef
-        class="d-none d-lg-table-cell px-1"
-        mat-footer-cell
-      >
+      <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         {{ baseCurrency }}
       </td>
     </ng-container>
