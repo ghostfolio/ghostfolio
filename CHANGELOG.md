@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the balance of headings on the landing page
+- Improved the language localization for Spanish (`es`)
 - Upgraded `angular` from version `20.0.7` to `20.1.3`
-- Upgraded `nx` from version `21.2.4` to `21.3.9`
+- Upgraded `Nx` from version `21.2.4` to `21.3.9`
 
 ## 2.186.0 - 2025-07-30
 
