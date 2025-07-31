@@ -7182,7 +7182,7 @@
       </trans-unit>
       <trans-unit id="4396995010887588291" datatype="html">
         <source>Gather Recent Historical Market Data</source>
-        <target state="translated">Recopilar todos los datos históricos del mercado</target>
+        <target state="translated">Recopilar datos históricos recientes del mercado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">226</context>
