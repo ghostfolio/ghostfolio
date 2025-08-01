@@ -1800,7 +1800,7 @@ export class PortfolioService {
     const { activities } = await this.orderService.getOrders({
       userCurrency,
       userId,
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     const excludedActivities: Activity[] = [];

@@ -144,7 +144,7 @@ export class OrderController {
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take,
       userId: impersonationUserId || this.request.user.id,
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     return { activities, count };
@@ -165,7 +165,7 @@ export class OrderController {
     const { activities } = await this.orderService.getOrders({
       userCurrency,
       userId: impersonationUserId || this.request.user.id,
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     const activity = activities.find((activity) => {

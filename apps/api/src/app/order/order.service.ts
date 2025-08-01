@@ -276,7 +276,7 @@ export class OrderService {
       userId,
       includeDrafts: true,
       userCurrency: undefined,
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     const { count } = await this.prismaService.order.deleteMany({
@@ -333,7 +333,7 @@ export class OrderService {
     types,
     userCurrency,
     userId,
-    withExcludedAccounts = false
+    withExcludedAccountsAndActivities = false
   }: {
     endDate?: Date;
     filters?: Filter[];
@@ -346,7 +346,7 @@ export class OrderService {
     types?: ActivityType[];
     userCurrency: string;
     userId: string;
-    withExcludedAccounts?: boolean;
+    withExcludedAccountsAndActivities?: boolean;
   }): Promise<Activities> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
       { date: 'asc' },
@@ -492,7 +492,7 @@ export class OrderService {
       where.type = { in: types };
     }
 
-    if (withExcludedAccounts === false) {
+    if (withExcludedAccountsAndActivities === false) {
       where.OR = [
         { account: null },
         { account: { NOT: { isExcluded: true } } }
@@ -617,7 +617,7 @@ export class OrderService {
       filters,
       userCurrency,
       userId,
-      withExcludedAccounts: false // TODO
+      withExcludedAccountsAndActivities: false // TODO
     });
   }
 
