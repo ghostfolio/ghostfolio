@@ -5,12 +5,10 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
+import { addYears } from 'date-fns';
 
 import { GfLogoComponent } from '../logo';
 import { GfMembershipCardComponent } from './membership-card.component';
-
-const expiresAt = new Date();
-expiresAt.setFullYear(expiresAt.getFullYear() + 1);
 
 export default {
   title: 'Membership Card',
@@ -39,15 +37,13 @@ type Story = StoryObj<GfMembershipCardComponent>;
 
 export const Basic: Story = {
   args: {
-    expiresAt: expiresAt.toLocaleDateString(),
-    hasPermissionToCreateApiKey: false,
     name: 'Basic'
   }
 };
 
 export const Premium: Story = {
   args: {
-    expiresAt: expiresAt.toLocaleDateString(),
+    expiresAt: addYears(new Date(), 1).toLocaleDateString(),
     hasPermissionToCreateApiKey: true,
     name: 'Premium'
   }
