@@ -80,7 +80,8 @@ export class TagService {
       id,
       name,
       userId,
-      isUsed: _count.activities > 0 && id !== TAG_ID_EXCLUDE_FROM_ANALYSIS
+      isUsed:
+        _count.activities > 0 && ![TAG_ID_EXCLUDE_FROM_ANALYSIS].includes(id)
     }));
   }
 
