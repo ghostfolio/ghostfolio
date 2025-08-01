@@ -209,7 +209,7 @@
     "webpack-bundle-analyzer": "4.10.2"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18.0"
   },
   "prisma": {
     "seed": "node prisma/seed.ts"
