@@ -34,7 +34,7 @@ import {
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
-import { groupBy, isArray, uniqBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activities } from './interfaces/activities.interface';
@@ -484,24 +484,6 @@ export class OrderService {
       };
     }
 
-    if (withExcludedAccounts === false) {
-      const excludeFromAnalysisTagCondition = {
-        tags: {
-          none: {
-            id: TAG_ID_EXCLUDE_FROM_ANALYSIS
-          }
-        }
-      };
-
-      if (isArray(where.AND)) {
-        where.AND.push(excludeFromAnalysisTagCondition);
-      } else if (where.AND) {
-        where.AND = [where.AND, excludeFromAnalysisTagCondition];
-      } else {
-        where.AND = [excludeFromAnalysisTagCondition];
-      }
-    }
-
     if (sortColumn) {
       orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
     }
@@ -515,6 +497,13 @@ export class OrderService {
         { account: null },
         { account: { NOT: { isExcluded: true } } }
       ];
+
+      where.tags = {
+        ...where.tags,
+        none: {
+          id: TAG_ID_EXCLUDE_FROM_ANALYSIS
+        }
+      };
     }
 
     const [orders, count] = await Promise.all([
