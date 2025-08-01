@@ -212,6 +212,6 @@
     "node": ">=22"
   },
   "prisma": {
-    "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "node prisma/seed.ts"
   }
 }
