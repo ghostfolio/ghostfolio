@@ -41,7 +41,7 @@ export class ExportService {
       includeDrafts: true,
       sortColumn: 'date',
       sortDirection: 'asc',
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     if (activityIds?.length > 0) {

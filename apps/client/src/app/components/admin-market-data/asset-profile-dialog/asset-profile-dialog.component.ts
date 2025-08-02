@@ -233,8 +233,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   public get canEditAssetProfileIdentifier() {
     return (
       this.assetProfile?.assetClass &&
-      !['MANUAL'].includes(this.assetProfile?.dataSource) &&
-      this.user?.settings?.isExperimentalFeatures
+      !['MANUAL'].includes(this.assetProfile?.dataSource)
     );
   }
 

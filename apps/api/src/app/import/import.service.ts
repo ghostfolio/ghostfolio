@@ -533,7 +533,7 @@ export class ImportService {
         userCurrency,
         userId,
         includeDrafts: true,
-        withExcludedAccounts: true
+        withExcludedAccountsAndActivities: true
       });
 
     return activitiesDto.map(
