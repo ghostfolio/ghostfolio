@@ -7,18 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Migrated from _Material Design_ 2 to _Material Design_ 3
+
+## 2.187.0 - 2025-08-02
+
 ### Added
 
+- Added support to exclude an activity from analysis based on tags
+- Added a _Storybook_ story for the accounts table component
 - Added a _Storybook_ story for the membership card component
 
 ### Changed
 
 - Moved the support for changing the asset profile identifier (`dataSource` and `symbol`) in the asset profile details dialog of the admin control panel from experimental to general availability
 - Improved the balance of headings on the landing page
-- Migrated from _Material Design_ 2 to _Material Design_ 3
+- Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `angular` from version `20.0.7` to `20.1.3`
 - Upgraded `Nx` from version `21.2.4` to `21.3.9`
+
+### Fixed
+
+- Fixed the missing localization for "Exclude from Analysis" in the create or update account dialog
 
 ## 2.186.0 - 2025-07-30
 

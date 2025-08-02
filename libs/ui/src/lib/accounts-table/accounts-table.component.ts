@@ -21,7 +21,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Account as AccountModel } from '@prisma/client';
+import { Account } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   arrowRedoOutline,
@@ -54,7 +54,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent implements OnChanges, OnDestroy {
-  @Input() accounts: AccountModel[];
+  @Input() accounts: Account[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
@@ -71,12 +71,12 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Input() transactionCount: number;
 
   @Output() accountDeleted = new EventEmitter<string>();
-  @Output() accountToUpdate = new EventEmitter<AccountModel>();
+  @Output() accountToUpdate = new EventEmitter<Account>();
   @Output() transferBalance = new EventEmitter<void>();
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource = new MatTableDataSource<AccountModel>();
+  public dataSource = new MatTableDataSource<Account>();
   public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
@@ -167,7 +167,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
     this.transferBalance.emit();
   }
 
-  public onUpdateAccount(aAccount: AccountModel) {
+  public onUpdateAccount(aAccount: Account) {
     this.accountToUpdate.emit(aAccount);
   }
 
