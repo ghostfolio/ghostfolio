@@ -33,6 +33,7 @@ import {
 import {
   DEFAULT_CURRENCY,
   TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
@@ -1799,14 +1800,19 @@ export class PortfolioService {
     const { activities } = await this.orderService.getOrders({
       userCurrency,
       userId,
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     const excludedActivities: Activity[] = [];
     const nonExcludedActivities: Activity[] = [];
 
     for (const activity of activities) {
-      if (activity.account?.isExcluded) {
+      if (
+        activity.account?.isExcluded ||
+        activity.tags?.some(({ id }) => {
+          return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+        })
+      ) {
         excludedActivities.push(activity);
       } else {
         nonExcludedActivities.push(activity);
