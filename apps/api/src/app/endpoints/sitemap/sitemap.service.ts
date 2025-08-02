@@ -21,18 +21,42 @@ export class SitemapService {
     const rootUrl = this.configurationService.get('ROOT_URL');
 
     return SUPPORTED_LANGUAGE_CODES.flatMap((languageCode) => {
-      return personalFinanceTools.map(({ alias, key }) => {
-        const route =
-          publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes
-            .product;
-        const params = {
-          currentDate,
-          languageCode,
-          rootUrl,
-          urlPostfix: alias ?? key
-        };
+      const resourcesPath = this.i18nService.getTranslation({
+        languageCode,
+        id: publicRoutes.resources.path.match(
+          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
+        ).groups.id
+      });
 
-        return this.createRouteSitemapUrl({ ...params, route });
+      const personalFinanceToolsPath = this.i18nService.getTranslation({
+        languageCode,
+        id: publicRoutes.resources.subRoutes.personalFinanceTools.path.match(
+          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
+        ).groups.id
+      });
+
+      const productPath = this.i18nService.getTranslation({
+        languageCode,
+        id: publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.path.match(
+          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
+        ).groups.id
+      });
+
+      return personalFinanceTools.map(({ alias, key }) => {
+        const location = [
+          rootUrl,
+          languageCode,
+          resourcesPath,
+          personalFinanceToolsPath,
+          `${productPath}-${alias ?? key}`
+        ].join('/');
+
+        return [
+          '  <url>',
+          `    <loc>${location}</loc>`,
+          `    <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+          '  </url>'
+        ].join('\n');
       });
     }).join('\n');
   }
@@ -58,14 +82,12 @@ export class SitemapService {
     currentDate,
     languageCode,
     rootUrl,
-    route,
-    urlPostfix
+    route
   }: {
     currentDate: string;
     languageCode: string;
     rootUrl: string;
     route?: PublicRoute;
-    urlPostfix?: string;
   }): string {
     const segments =
       route?.routerLink.map((link) => {
@@ -83,9 +105,7 @@ export class SitemapService {
         return segment.replace(/^\/+|\/+$/, '');
       }) ?? [];
 
-    const location =
-      [rootUrl, languageCode, ...segments].join('/') +
-      (urlPostfix ? `-${urlPostfix}` : '');
+    const location = [rootUrl, languageCode, ...segments].join('/');
 
     return [
       '  <url>',
