@@ -12,6 +12,11 @@ import {
   Output
 } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  ellipsisHorizontalCircleOutline,
+  informationCircleOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'gf-portfolio-summary',
@@ -36,12 +41,14 @@ export class PortfolioSummaryComponent implements OnChanges {
   );
   public timeInMarket: string;
 
-  public constructor(private notificationService: NotificationService) {}
+  public constructor(private notificationService: NotificationService) {
+    addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });
+  }
 
   public ngOnChanges() {
     if (this.summary) {
-      if (this.summary.firstOrderDate) {
-        this.timeInMarket = formatDistanceToNow(this.summary.firstOrderDate, {
+      if (this.user.dateOfFirstActivity) {
+        this.timeInMarket = formatDistanceToNow(this.user.dateOfFirstActivity, {
           locale: getDateFnsLocale(this.language)
         });
       } else {

@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { HeaderComponent } from './header.component';
 
@@ -21,6 +22,7 @@ import { HeaderComponent } from './header.component';
     GfAssistantComponent,
     GfLogoComponent,
     GfPremiumIndicatorComponent,
+    IonIcon,
     LoginWithAccessTokenDialogModule,
     MatBadgeModule,
     MatButtonModule,

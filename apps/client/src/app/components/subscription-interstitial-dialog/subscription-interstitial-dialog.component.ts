@@ -1,5 +1,18 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnInit
+} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { addIcons } from 'ionicons';
+import { arrowForwardOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import ms from 'ms';
+import { interval, Subject } from 'rxjs';
+import { take, takeUntil, tap } from 'rxjs/operators';
 
 import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
 
@@ -11,20 +24,49 @@ import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
   templateUrl: 'subscription-interstitial-dialog.html',
   standalone: false
 })
-export class SubscriptionInterstitialDialog {
-  private readonly VARIANTS_COUNT = 2;
+export class SubscriptionInterstitialDialog implements OnInit {
+  private static readonly SKIP_BUTTON_DELAY_IN_SECONDS = 5;
+  private static readonly VARIANTS_COUNT = 2;
 
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public remainingSkipButtonDelay =
+    SubscriptionInterstitialDialog.SKIP_BUTTON_DELAY_IN_SECONDS;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public variantIndex: number;
 
+  private unsubscribeSubject = new Subject<void>();
+
   public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: SubscriptionInterstitialDialogParams,
     public dialogRef: MatDialogRef<SubscriptionInterstitialDialog>
   ) {
-    this.variantIndex = Math.floor(Math.random() * this.VARIANTS_COUNT);
+    this.variantIndex = Math.floor(
+      Math.random() * SubscriptionInterstitialDialog.VARIANTS_COUNT
+    );
+
+    addIcons({ arrowForwardOutline, checkmarkCircleOutline });
+  }
+
+  public ngOnInit() {
+    interval(ms('1 second'))
+      .pipe(
+        take(SubscriptionInterstitialDialog.SKIP_BUTTON_DELAY_IN_SECONDS),
+        tap(() => {
+          this.remainingSkipButtonDelay--;
+
+          this.changeDetectorRef.markForCheck();
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe();
   }
 
   public closeDialog() {
     this.dialogRef.close({});
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

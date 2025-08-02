@@ -1,42 +1,57 @@
+import { TabConfiguration } from '@ghostfolio/common/interfaces';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { Component, OnInit } from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  bookOutline,
+  libraryOutline,
+  newspaperOutline,
+  readerOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [IonIcon, MatTabsModule, RouterModule],
   selector: 'gf-resources-page',
   styleUrls: ['./resources-page.scss'],
-  templateUrl: './resources-page.html',
-  standalone: false
+  templateUrl: './resources-page.html'
 })
 export class ResourcesPageComponent implements OnInit {
   public deviceType: string;
-  public tabs = [
+  public tabs: TabConfiguration[] = [
     {
-      path: '.',
+      iconName: 'reader-outline',
       label: $localize`Overview`,
-      iconName: 'reader-outline'
+      routerLink: publicRoutes.resources.routerLink
     },
     {
-      path: 'guides',
       label: $localize`Guides`,
-      iconName: 'book-outline'
+      iconName: 'book-outline',
+      routerLink: publicRoutes.resources.subRoutes.guides.routerLink
     },
     {
-      path: 'markets',
+      iconName: 'newspaper-outline',
       label: $localize`Markets`,
-      iconName: 'newspaper-outline'
+      routerLink: publicRoutes.resources.subRoutes.markets.routerLink
     },
     {
-      path: 'glossary',
+      iconName: 'library-outline',
       label: $localize`Glossary`,
-      iconName: 'library-outline'
+      routerLink: publicRoutes.resources.subRoutes.glossary.routerLink
     }
   ];
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private deviceService: DeviceDetectorService) {}
+  public constructor(private deviceService: DeviceDetectorService) {
+    addIcons({ bookOutline, libraryOutline, newspaperOutline, readerOutline });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

@@ -35,6 +35,41 @@ export class SymbolProfileService {
     });
   }
 
+  public async getActiveSymbolProfilesByUserSubscription({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }) {
+    return this.prismaService.symbolProfile.findMany({
+      include: {
+        activities: {
+          include: {
+            user: true
+          }
+        }
+      },
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        activities: withUserSubscription
+          ? {
+              some: {
+                user: {
+                  subscriptions: { some: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+          : {
+              every: {
+                user: {
+                  subscriptions: { none: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            },
+        isActive: true
+      }
+    });
+  }
+
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedSymbolProfile[]> {
@@ -42,9 +77,9 @@ export class SymbolProfileService {
       .findMany({
         include: {
           _count: {
-            select: { Order: true }
+            select: { activities: true }
           },
-          Order: {
+          activities: {
             orderBy: {
               date: 'asc'
             },
@@ -74,7 +109,7 @@ export class SymbolProfileService {
       .findMany({
         include: {
           _count: {
-            select: { Order: true }
+            select: { activities: true }
           },
           SymbolProfileOverrides: true
         },
@@ -91,56 +126,42 @@ export class SymbolProfileService {
       });
   }
 
-  public async getSymbolProfilesByUserSubscription({
-    withUserSubscription = false
-  }: {
-    withUserSubscription?: boolean;
-  }) {
-    return this.prismaService.symbolProfile.findMany({
-      include: {
-        Order: {
-          include: {
-            User: true
-          }
-        }
+  public updateAssetProfileIdentifier(
+    oldAssetProfileIdentifier: AssetProfileIdentifier,
+    newAssetProfileIdentifier: AssetProfileIdentifier
+  ) {
+    return this.prismaService.symbolProfile.update({
+      data: {
+        dataSource: newAssetProfileIdentifier.dataSource,
+        symbol: newAssetProfileIdentifier.symbol
       },
-      orderBy: [{ symbol: 'asc' }],
       where: {
-        Order: withUserSubscription
-          ? {
-              some: {
-                User: {
-                  Subscription: { some: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
-          : {
-              every: {
-                User: {
-                  Subscription: { none: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
+        dataSource_symbol: {
+          dataSource: oldAssetProfileIdentifier.dataSource,
+          symbol: oldAssetProfileIdentifier.symbol
+        }
       }
     });
   }
 
-  public updateSymbolProfile({
-    assetClass,
-    assetSubClass,
-    comment,
-    countries,
-    currency,
-    dataSource,
-    holdings,
-    name,
-    scraperConfiguration,
-    sectors,
-    symbol,
-    symbolMapping,
-    SymbolProfileOverrides,
-    url
-  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
+  public updateSymbolProfile(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    {
+      assetClass,
+      assetSubClass,
+      comment,
+      countries,
+      currency,
+      holdings,
+      isActive,
+      name,
+      scraperConfiguration,
+      sectors,
+      symbolMapping,
+      SymbolProfileOverrides,
+      url
+    }: Prisma.SymbolProfileUpdateInput
+  ) {
     return this.prismaService.symbolProfile.update({
       data: {
         assetClass,
@@ -149,6 +170,7 @@ export class SymbolProfileService {
         countries,
         currency,
         holdings,
+        isActive,
         name,
         scraperConfiguration,
         sectors,
@@ -162,8 +184,8 @@ export class SymbolProfileService {
 
   private enhanceSymbolProfiles(
     symbolProfiles: (SymbolProfile & {
-      _count: { Order: number };
-      Order?: {
+      _count: { activities: number };
+      activities?: {
         date: Date;
       }[];
       SymbolProfileOverrides: SymbolProfileOverrides;
@@ -177,17 +199,21 @@ export class SymbolProfileService {
           symbolProfile?.countries as unknown as Prisma.JsonArray
         ),
         dateOfFirstActivity: undefined as Date,
-        holdings: this.getHoldings(symbolProfile),
+        holdings: this.getHoldings(
+          symbolProfile?.holdings as unknown as Prisma.JsonArray
+        ),
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
-        sectors: this.getSectors(symbolProfile),
+        sectors: this.getSectors(
+          symbolProfile?.sectors as unknown as Prisma.JsonArray
+        ),
         symbolMapping: this.getSymbolMapping(symbolProfile)
       };
 
-      item.activitiesCount = symbolProfile._count.Order;
+      item.activitiesCount = symbolProfile._count.activities;
       delete item._count;
 
-      item.dateOfFirstActivity = symbolProfile.Order?.[0]?.date;
-      delete item.Order;
+      item.dateOfFirstActivity = symbolProfile.activities?.[0]?.date;
+      delete item.activities;
 
       if (item.SymbolProfileOverrides) {
         item.assetClass =
@@ -200,8 +226,7 @@ export class SymbolProfileService {
             ?.length > 0
         ) {
           item.countries = this.getCountries(
-            item.SymbolProfileOverrides
-              ?.countries as unknown as Prisma.JsonArray
+            item.SymbolProfileOverrides.countries as unknown as Prisma.JsonArray
           );
         }
 
@@ -209,21 +234,23 @@ export class SymbolProfileService {
           (item.SymbolProfileOverrides.holdings as unknown as Holding[])
             ?.length > 0
         ) {
-          item.holdings = item.SymbolProfileOverrides
-            .holdings as unknown as Holding[];
+          item.holdings = this.getHoldings(
+            item.SymbolProfileOverrides.holdings as unknown as Prisma.JsonArray
+          );
         }
 
-        item.name = item.SymbolProfileOverrides?.name ?? item.name;
+        item.name = item.SymbolProfileOverrides.name ?? item.name;
 
         if (
           (item.SymbolProfileOverrides.sectors as unknown as Sector[])?.length >
           0
         ) {
-          item.sectors = item.SymbolProfileOverrides
-            .sectors as unknown as Sector[];
+          item.sectors = this.getSectors(
+            item.SymbolProfileOverrides.sectors as unknown as Prisma.JsonArray
+          );
         }
 
-        item.url = item.SymbolProfileOverrides?.url ?? item.url;
+        item.url = item.SymbolProfileOverrides.url ?? item.url;
 
         delete item.SymbolProfileOverrides;
       }
@@ -249,18 +276,20 @@ export class SymbolProfileService {
     });
   }
 
-  private getHoldings(symbolProfile: SymbolProfile): Holding[] {
-    return ((symbolProfile?.holdings as Prisma.JsonArray) ?? []).map(
-      (holding) => {
-        const { name, weight } = holding as Prisma.JsonObject;
+  private getHoldings(aHoldings: Prisma.JsonArray = []): Holding[] {
+    if (aHoldings === null) {
+      return [];
+    }
 
-        return {
-          allocationInPercentage: weight as number,
-          name: (name as string) ?? UNKNOWN_KEY,
-          valueInBaseCurrency: undefined
-        };
-      }
-    );
+    return aHoldings.map((holding) => {
+      const { name, weight } = holding as Prisma.JsonObject;
+
+      return {
+        allocationInPercentage: weight as number,
+        name: (name as string) ?? UNKNOWN_KEY,
+        valueInBaseCurrency: undefined
+      };
+    });
   }
 
   private getScraperConfiguration(
@@ -285,17 +314,19 @@ export class SymbolProfileService {
     return null;
   }
 
-  private getSectors(symbolProfile: SymbolProfile): Sector[] {
-    return ((symbolProfile?.sectors as Prisma.JsonArray) ?? []).map(
-      (sector) => {
-        const { name, weight } = sector as Prisma.JsonObject;
+  private getSectors(aSectors: Prisma.JsonArray = []): Sector[] {
+    if (aSectors === null) {
+      return [];
+    }
 
-        return {
-          name: (name as string) ?? UNKNOWN_KEY,
-          weight: weight as number
-        };
-      }
-    );
+    return aSectors.map((sector) => {
+      const { name, weight } = sector as Prisma.JsonObject;
+
+      return {
+        name: (name as string) ?? UNKNOWN_KEY,
+        weight: weight as number
+      };
+    });
   }
 
   private getSymbolMapping(symbolProfile: SymbolProfile) {

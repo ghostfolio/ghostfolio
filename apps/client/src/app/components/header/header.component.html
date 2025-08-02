@@ -20,9 +20,11 @@
           mat-button
           [ngClass]="{
             'font-weight-bold':
-              currentRoute === 'home' || currentRoute === 'zen',
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path,
             'text-decoration-underline':
-              currentRoute === 'home' || currentRoute === 'zen'
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path
           }"
           [routerLink]="['/']"
           >Overview</a
@@ -34,10 +36,11 @@
           i18n
           mat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'portfolio',
-            'text-decoration-underline': currentRoute === 'portfolio'
+            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.portfolio.path
           }"
-          [routerLink]="['/portfolio']"
+          [routerLink]="routerLinkPortfolio"
           >Portfolio</a
         >
       </li>
@@ -47,10 +50,11 @@
           i18n
           mat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'accounts',
-            'text-decoration-underline': currentRoute === 'accounts'
+            'font-weight-bold': currentRoute === internalRoutes.accounts.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.accounts.path
           }"
-          [routerLink]="['/accounts']"
+          [routerLink]="routerLinkAccounts"
           >Accounts</a
         >
       </li>
@@ -61,10 +65,12 @@
             i18n
             mat-button
             [ngClass]="{
-              'font-weight-bold': currentRoute === 'admin',
-              'text-decoration-underline': currentRoute === 'admin'
+              'font-weight-bold':
+                currentRoute === internalRoutes.adminControl.path,
+              'text-decoration-underline':
+                currentRoute === internalRoutes.adminControl.path
             }"
-            [routerLink]="['/admin']"
+            [routerLink]="routerLinkAdminControl"
             >Admin Control</a
           >
         </li>
@@ -134,7 +140,7 @@
           </button>
           <mat-menu
             #assistantMenu="matMenu"
-            class="assistant"
+            class="no-max-width"
             xPosition="before"
             [overlapTrigger]="true"
             (closed)="assistantElement?.setIsOpen(false)"
@@ -181,14 +187,10 @@
             <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
               ><span class="align-items-center d-flex"
                 ><span>
-                  @if (user.subscription.offer === 'default') {
-                    <ng-container i18n>Upgrade Plan</ng-container>
-                  } @else if (
-                    user.subscription.offer === 'renewal' ||
-                    user.subscription.offer === 'renewal-early-bird-2023' ||
-                    user.subscription.offer === 'renewal-early-bird-2024'
-                  ) {
+                  @if (user.subscription.offer.isRenewal) {
                     <ng-container i18n>Renew Plan</ng-container>
+                  } @else {
+                    <ng-container i18n>Upgrade Plan</ng-container>
                   }
                 </span>
                 <gf-premium-indicator
@@ -203,7 +205,7 @@
                 <ion-icon
                   class="mr-2"
                   [name]="
-                    impersonationId
+                    hasImpersonationId
                       ? 'radio-button-off-outline'
                       : 'radio-button-on-outline'
                   "
@@ -239,7 +241,8 @@
             mat-menu-item
             [ngClass]="{
               'font-weight-bold':
-                currentRoute === 'home' || currentRoute === 'zen'
+                currentRoute === internalRoutes.home.path ||
+                currentRoute === internalRoutes.zen.path
             }"
             [routerLink]="['/']"
             >Overview</a
@@ -249,24 +252,28 @@
             i18n
             mat-menu-item
             [ngClass]="{
-              'font-weight-bold': currentRoute === 'portfolio'
+              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
             }"
-            [routerLink]="['/portfolio']"
+            [routerLink]="routerLinkPortfolio"
             >Portfolio</a
           >
           <a
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
-            [routerLink]="['/accounts']"
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.accounts.path
+            }"
+            [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
           <a
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
-            [routerLink]="['/account']"
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.account.path
+            }"
+            [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
           @if (hasPermissionToAccessAdminControl) {
@@ -274,8 +281,11 @@
               class="d-flex d-sm-none"
               i18n
               mat-menu-item
-              [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
-              [routerLink]="['/admin']"
+              [ngClass]="{
+                'font-weight-bold':
+                  currentRoute === internalRoutes.adminControl.path
+              }"
+              [routerLink]="routerLinkAdminControl"
               >Admin Control</a
             >
           }
@@ -316,7 +326,7 @@
             >About Ghostfolio</a
           >
           <hr class="d-flex d-sm-none m-0" />
-          <button mat-menu-item (click)="onSignOut()">Logout</button>
+          <button i18n mat-menu-item (click)="onSignOut()">Log out</button>
         </mat-menu>
       </li>
     </ul>

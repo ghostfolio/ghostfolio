@@ -1,14 +1,14 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   Inject,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,9 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { Subject, takeUntil } from 'rxjs';
 
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
@@ -29,8 +32,8 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    CommonModule,
     FormsModule,
+    IonIcon,
     MatButtonModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -43,7 +46,9 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   styleUrls: ['./historical-market-data-editor-dialog.scss'],
   templateUrl: 'historical-market-data-editor-dialog.html'
 })
-export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
+export class GfHistoricalMarketDataEditorDialogComponent
+  implements OnDestroy, OnInit
+{
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -55,7 +60,9 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
     private dateAdapter: DateAdapter<any>,
     public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>,
     @Inject(MAT_DATE_LOCALE) private locale: string
-  ) {}
+  ) {
+    addIcons({ calendarClearOutline, refreshOutline });
+  }
 
   public ngOnInit() {
     this.locale = this.data.user?.settings?.locale;

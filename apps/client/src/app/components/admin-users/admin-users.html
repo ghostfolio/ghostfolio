@@ -3,23 +3,6 @@
     <div class="col">
       <div class="overflow-x-auto">
         <table class="gf-table" mat-table [dataSource]="dataSource">
-          <ng-container matColumnDef="index">
-            <th
-              *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
-              mat-header-cell
-            >
-              #
-            </th>
-            <td
-              *matCellDef="let element; let i = index"
-              class="mat-mdc-cell px-1 py-2 text-right"
-              mat-cell
-            >
-              {{ i + 1 }}
-            </td>
-          </ng-container>
-
           <ng-container matColumnDef="user">
             <th
               *matHeaderCellDef
@@ -49,18 +32,19 @@
                   }"
                   >{{ (element.id | slice: 0 : 5) + '...' }}</span
                 >
-                @if (element?.subscription?.type === 'Premium') {
+                @if (element.subscription?.expiresAt) {
                   <gf-premium-indicator
                     class="ml-1"
+                    i18n-title
+                    title="{{
+                      `Expires ${formatDistanceToNow(
+                        element.subscription.expiresAt
+                      )} (${
+                        (element.subscription.expiresAt
+                        | date: defaultDateFormat)
+                      })`
+                    }}"
                     [enableLink]="false"
-                    [title]="
-                      'Expires ' +
-                      formatDistanceToNow(element.subscription.expiresAt) +
-                      ' (' +
-                      (element.subscription.expiresAt
-                        | date: defaultDateFormat) +
-                      ')'
-                    "
                   />
                 }
               </div>
@@ -142,7 +126,7 @@
               <gf-value
                 class="d-inline-block justify-content-end"
                 [locale]="user?.settings?.locale"
-                [value]="element.transactionCount"
+                [value]="element.activityCount"
               />
             </td>
           </ng-container>
@@ -239,8 +223,17 @@
                       <span i18n>Impersonate User</span>
                     </span>
                   </button>
-                  <hr class="m-0" />
                 }
+                <button
+                  mat-menu-item
+                  (click)="onGenerateAccessToken(element.id)"
+                >
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="key-outline" />
+                    <span i18n>Generate Security Token</span>
+                  </span>
+                </button>
+                <hr class="m-0" />
                 <button
                   mat-menu-item
                   [disabled]="element.id === user?.id"

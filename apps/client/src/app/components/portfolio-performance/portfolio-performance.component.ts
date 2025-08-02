@@ -18,6 +18,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { CountUp } from 'countup.js';
+import { addIcons } from 'ionicons';
+import { timeOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 
 @Component({
@@ -41,7 +43,9 @@ export class PortfolioPerformanceComponent implements OnChanges {
 
   @ViewChild('value') value: ElementRef;
 
-  public constructor(private notificationService: NotificationService) {}
+  public constructor(private notificationService: NotificationService) {
+    addIcons({ timeOutline });
+  }
 
   public ngOnChanges() {
     this.precision = this.precision >= 0 ? this.precision : 2;

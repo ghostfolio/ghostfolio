@@ -1,7 +1,10 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { getLocale } from '@ghostfolio/common/helper';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,27 +15,52 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Account as AccountModel } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import {
+  arrowRedoOutline,
+  createOutline,
+  documentTextOutline,
+  ellipsisHorizontal,
+  eyeOffOutline,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'gf-accounts-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './accounts-table.component.html',
+  imports: [
+    CommonModule,
+    GfEntityLogoComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatSortModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
+  selector: 'gf-accounts-table',
   styleUrls: ['./accounts-table.component.scss'],
-  standalone: false
+  templateUrl: './accounts-table.component.html'
 })
-export class AccountsTableComponent implements OnChanges, OnDestroy {
+export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Input() accounts: AccountModel[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() showActions: boolean;
+  @Input() showAllocationInPercentage: boolean;
   @Input() showBalance = true;
   @Input() showFooter = true;
   @Input() showTransactions = true;
@@ -58,7 +86,16 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
   public constructor(
     private notificationService: NotificationService,
     private router: Router
-  ) {}
+  ) {
+    addIcons({
+      arrowRedoOutline,
+      createOutline,
+      documentTextOutline,
+      ellipsisHorizontal,
+      eyeOffOutline,
+      trashOutline
+    });
+  }
 
   public ngOnChanges() {
     this.displayedColumns = ['status', 'account', 'platform'];
@@ -79,6 +116,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
 
     if (this.showValueInBaseCurrency) {
       this.displayedColumns.push('valueInBaseCurrency');
+    }
+
+    if (this.showAllocationInPercentage) {
+      this.displayedColumns.push('allocation');
     }
 
     this.displayedColumns.push('comment');

@@ -1,5 +1,6 @@
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -15,23 +16,45 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfTopHoldingsComponent } from '@ghostfolio/ui/top-holdings';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Account, AssetClass, DataSource, Platform } from '@prisma/client';
+import {
+  Account,
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Platform
+} from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    GfPortfolioProportionChartComponent,
+    GfPremiumIndicatorComponent,
+    GfTopHoldingsComponent,
+    GfValueComponent,
+    GfWorldMapChartModule,
+    MatCardModule,
+    MatProgressBarModule,
+    NgClass
+  ],
   selector: 'gf-allocations-page',
   styleUrls: ['./allocations-page.scss'],
-  templateUrl: './allocations-page.html',
-  standalone: false
+  templateUrl: './allocations-page.html'
 })
-export class AllocationsPageComponent implements OnDestroy, OnInit {
+export class GfAllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
@@ -46,6 +69,18 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   };
   public deviceType: string;
   public hasImpersonationId: boolean;
+  public holdings: {
+    [symbol: string]: Pick<
+      PortfolioPosition,
+      | 'assetClass'
+      | 'assetClassLabel'
+      | 'assetSubClass'
+      | 'assetSubClassLabel'
+      | 'currency'
+      | 'exchange'
+      | 'name'
+    > & { etfProvider: string; value: number };
+  };
   public isLoading = false;
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
@@ -64,18 +99,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
   };
   public portfolioDetails: PortfolioDetails;
-  public positions: {
-    [symbol: string]: Pick<
-      PortfolioPosition,
-      | 'assetClass'
-      | 'assetClassLabel'
-      | 'assetSubClass'
-      | 'assetSubClassLabel'
-      | 'currency'
-      | 'exchange'
-      | 'name'
-    > & { etfProvider: string; value: number };
-  };
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -220,6 +243,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+    this.holdings = {};
     this.marketsAdvanced = {
       [UNKNOWN_KEY]: {
         id: UNKNOWN_KEY,
@@ -260,11 +284,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.platforms = {};
     this.portfolioDetails = {
       accounts: {},
+      createdAt: undefined,
       holdings: {},
       platforms: {},
       summary: undefined
     };
-    this.positions = {};
     this.sectors = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -301,16 +325,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
     }
 
-    this.markets = this.portfolioDetails.markets;
-
-    Object.values(this.portfolioDetails.marketsAdvanced).forEach(
-      ({ id, valueInBaseCurrency, valueInPercentage }) => {
-        this.marketsAdvanced[id].value = isNumber(valueInBaseCurrency)
-          ? valueInBaseCurrency
-          : valueInPercentage;
-      }
-    );
-
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
@@ -322,12 +336,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value = position.valueInBaseCurrency;
       }
 
-      this.positions[symbol] = {
+      this.holdings[symbol] = {
         value,
-        assetClass: position.assetClass,
-        assetClassLabel: position.assetClassLabel,
-        assetSubClass: position.assetSubClass,
-        assetSubClassLabel: position.assetSubClassLabel,
+        assetClass: position.assetClass || (UNKNOWN_KEY as AssetClass),
+        assetClassLabel: position.assetClassLabel || UNKNOWN_KEY,
+        assetSubClass: position.assetSubClass || (UNKNOWN_KEY as AssetSubClass),
+        assetSubClassLabel: position.assetSubClassLabel || UNKNOWN_KEY,
         currency: position.currency,
         etfProvider: this.extractEtfProvider({
           assetSubClass: position.assetSubClass,
@@ -444,8 +458,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (this.positions[symbol].assetSubClass === 'ETF') {
-        this.totalValueInEtf += this.positions[symbol].value;
+      if (this.holdings[symbol].assetSubClass === 'ETF') {
+        this.totalValueInEtf += this.holdings[symbol].value;
       }
 
       this.symbols[prettifySymbol(symbol)] = {
@@ -457,6 +471,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           : position.valueInPercentage
       };
     }
+
+    this.markets = this.portfolioDetails.markets;
+
+    Object.values(this.portfolioDetails.marketsAdvanced).forEach(
+      ({ id, valueInBaseCurrency, valueInPercentage }) => {
+        this.marketsAdvanced[id].value = isNumber(valueInBaseCurrency)
+          ? valueInBaseCurrency
+          : valueInPercentage;
+      }
+    );
 
     for (const [
       id,
@@ -540,7 +564,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         accountId: aAccountId,
         deviceType: this.deviceType,
         hasImpersonationId: this.hasImpersonationId,
-        hasPermissionToCreateOrder:
+        hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView

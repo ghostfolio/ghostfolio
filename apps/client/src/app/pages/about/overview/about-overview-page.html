@@ -23,7 +23,9 @@
           >
           @if (hasPermissionForStatistics) {
             and we share aggregated
-            <a title="Open Startup" [routerLink]="['/open']">key metrics</a>
+            <a title="Open Startup" [routerLink]="routerLinkOpenStartup"
+              >key metrics</a
+            >
             of the platform’s performance
           }
           . The project has been initiated by
@@ -68,6 +70,7 @@
           or start a discussion at
           <a
             href="https://github.com/ghostfolio/ghostfolio"
+            i18n-title
             title="Find Ghostfolio on GitHub"
             >GitHub</a
           >.
@@ -75,7 +78,17 @@
         <p class="align-items-center d-flex justify-content-center">
           <a
             class="mx-2"
+            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            i18n-title
+            mat-icon-button
+            title="Join the Ghostfolio Slack community"
+          >
+            <ion-icon name="logo-slack" />
+          </a>
+          <a
+            class="mx-2"
             href="https://x.com/ghostfolio_"
+            i18n-title
             mat-icon-button
             title="Follow Ghostfolio on X (formerly Twitter)"
           >
@@ -85,6 +98,7 @@
             <a
               class="mx-2"
               href="mailto:hi@ghostfol.io"
+              i18n-title
               mat-icon-button
               title="Send an e-mail"
             >
@@ -93,25 +107,28 @@
           }
           <a
             class="mx-2"
-            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
-            mat-icon-button
-            title="Join the Ghostfolio Slack community"
-          >
-            <ion-icon name="logo-slack" />
-          </a>
-          <a
-            class="mx-2"
             href="https://github.com/ghostfolio/ghostfolio"
+            i18n-title
             mat-icon-button
             title="Find Ghostfolio on GitHub"
           >
             <ion-icon name="logo-github" />
+          </a>
+          <a
+            class="mx-2"
+            href="https://linkedin.com/company/ghostfolio"
+            i18n-title
+            mat-icon-button
+            title="Follow Ghostfolio on LinkedIn"
+          >
+            <ion-icon name="logo-linkedin" />
           </a>
         </p>
         @if (hasPermissionForSubscription) {
           <div class="d-flex justify-content-center">
             <div
               class="independent-and-bootstrapped-logo mb-2"
+              i18n-title
               title="Ghostfolio is an independent & bootstrapped business"
             ></div>
           </div>
@@ -119,6 +136,7 @@
           <div class="d-flex justify-content-center">
             <a
               href="https://www.buymeacoffee.com/ghostfolio"
+              i18n-title
               target="_blank"
               title="Support Ghostfolio"
               ><img
@@ -152,7 +170,7 @@
           class="py-4 w-100"
           color="primary"
           mat-flat-button
-          [routerLink]="['/blog']"
+          [routerLink]="routerLinkBlog"
           >Blog</a
         >
       </div>

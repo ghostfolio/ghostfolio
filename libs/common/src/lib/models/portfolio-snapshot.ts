@@ -9,6 +9,10 @@ import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
 export class PortfolioSnapshot {
+  activitiesCount: number;
+
+  createdAt: Date;
+
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
@@ -41,8 +45,4 @@ export class PortfolioSnapshot {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   totalLiabilitiesWithCurrencyEffect: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  totalValuablesWithCurrencyEffect: Big;
 }

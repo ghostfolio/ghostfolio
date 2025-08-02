@@ -5,6 +5,7 @@ import {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export interface UserSettings {
   annualInterestRate?: number;
@@ -22,6 +23,7 @@ export interface UserSettings {
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;
+  performanceCalculationType?: PerformanceCalculationType;
   projectedTotalAmount?: number;
   retirementDate?: string;
   savingsRate?: number;

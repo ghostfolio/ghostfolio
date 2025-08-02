@@ -1,6 +1,7 @@
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {
   ChangeDetectionStrategy,
@@ -8,8 +9,21 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 
 import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
@@ -17,24 +31,32 @@ import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    FormsModule,
+    GfEntityLogoComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-or-update-platform-dialog',
   styleUrls: ['./create-or-update-platform-dialog.scss'],
-  templateUrl: 'create-or-update-platform-dialog.html',
-  standalone: false
+  templateUrl: 'create-or-update-platform-dialog.html'
 })
-export class CreateOrUpdatePlatformDialog implements OnDestroy {
+export class GfCreateOrUpdatePlatformDialogComponent implements OnDestroy {
   public platformForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdatePlatformDialogParams,
-    public dialogRef: MatDialogRef<CreateOrUpdatePlatformDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdatePlatformDialogComponent>,
     private formBuilder: FormBuilder
   ) {
     this.platformForm = this.formBuilder.group({
       name: [this.data.platform.name, Validators.required],
-      url: [this.data.platform.url, Validators.required]
+      url: [this.data.platform.url ?? 'https://', Validators.required]
     });
   }
 

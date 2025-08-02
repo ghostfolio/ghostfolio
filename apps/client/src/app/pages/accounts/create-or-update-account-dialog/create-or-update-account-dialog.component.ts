@@ -2,7 +2,10 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
+import { CommonModule, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,10 +16,20 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
+  ReactiveFormsModule,
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Platform } from '@prisma/client';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -24,14 +37,26 @@ import { map, startWith } from 'rxjs/operators';
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 
 @Component({
-  host: { class: 'h-100' },
-  selector: 'gf-create-or-update-account-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'h-100' },
+  imports: [
+    CommonModule,
+    GfCurrencySelectorComponent,
+    GfEntityLogoComponent,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgClass,
+    ReactiveFormsModule
+  ],
+  selector: 'gf-create-or-update-account-dialog',
   styleUrls: ['./create-or-update-account-dialog.scss'],
-  templateUrl: 'create-or-update-account-dialog.html',
-  standalone: false
+  templateUrl: 'create-or-update-account-dialog.html'
 })
-export class CreateOrUpdateAccountDialog implements OnDestroy {
+export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
   public accountForm: FormGroup;
   public currencies: string[] = [];
   public filteredPlatforms: Observable<Platform[]>;
@@ -42,7 +67,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<CreateOrUpdateAccountDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccountDialogComponent>,
     private formBuilder: FormBuilder
   ) {}
 

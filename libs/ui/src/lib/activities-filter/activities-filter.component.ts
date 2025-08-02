@@ -1,6 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
@@ -27,15 +26,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { closeOutline, searchOutline } from 'ionicons/icons';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { translate } from '../i18n';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     GfSymbolModule,
+    IonIcon,
     MatAutocompleteModule,
     MatButtonModule,
     MatChipsModule,
@@ -82,6 +87,8 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
           this.filterGroups$.next(this.getGroupedFilters());
         }
       });
+
+    addIcons({ closeOutline, searchOutline });
   }
 
   public ngOnChanges(changes: SimpleChanges) {

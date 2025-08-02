@@ -1,8 +1,14 @@
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
+import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
+import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import {
   StepperOrientation,
@@ -15,14 +21,32 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SortDirection } from '@angular/material/sort';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import { AssetClass } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -31,15 +55,31 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    GfActivitiesTableComponent,
+    GfDialogFooterModule,
+    GfDialogHeaderModule,
+    GfFileDropModule,
+    GfSymbolModule,
+    IonIcon,
+    MatButtonModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatStepperModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-import-activities-dialog',
   styleUrls: ['./import-activities-dialog.scss'],
-  templateUrl: 'import-activities-dialog.html',
-  standalone: false
+  templateUrl: 'import-activities-dialog.html'
 })
-export class ImportActivitiesDialog implements OnDestroy {
-  public accounts: CreateAccountDto[] = [];
+export class GfImportActivitiesDialog implements OnDestroy {
+  public accounts: CreateAccountWithBalancesDto[] = [];
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
+  public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public details: any[] = [];
   public deviceType: string;
@@ -64,10 +104,12 @@ export class ImportActivitiesDialog implements OnDestroy {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<ImportActivitiesDialog>,
+    public dialogRef: MatDialogRef<GfImportActivitiesDialog>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    addIcons({ cloudUploadOutline, warningOutline });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
@@ -126,14 +168,15 @@ export class ImportActivitiesDialog implements OnDestroy {
 
       await this.importActivitiesService.importSelectedActivities({
         accounts: this.accounts,
-        activities: this.selectedActivities
+        activities: this.selectedActivities,
+        assetProfiles: this.assetProfiles
       });
 
       this.snackBar.open(
         '✅ ' + $localize`Import has been completed`,
         undefined,
         {
-          duration: 3000
+          duration: ms('3 seconds')
         }
       );
     } catch (error) {
@@ -142,7 +185,9 @@ export class ImportActivitiesDialog implements OnDestroy {
           ' ' +
           $localize`Please try again later.`,
         $localize`Okay`,
-        { duration: 3000 }
+        {
+          duration: ms('3 seconds')
+        }
       );
     } finally {
       this.dialogRef.close();
@@ -244,12 +289,14 @@ export class ImportActivitiesDialog implements OnDestroy {
 
     reader.onload = async (readerEvent) => {
       const fileContent = readerEvent.target.result as string;
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
       try {
-        if (file.name.endsWith('.json')) {
+        if (fileExtension === 'json') {
           const content = JSON.parse(fileContent);
 
           this.accounts = content.accounts;
+          this.assetProfiles = content.assetProfiles;
 
           if (!isArray(content.activities)) {
             if (isArray(content.orders)) {
@@ -280,6 +327,7 @@ export class ImportActivitiesDialog implements OnDestroy {
               await this.importActivitiesService.importJson({
                 accounts: content.accounts,
                 activities: content.activities,
+                assetProfiles: content.assetProfiles,
                 isDryRun: true
               });
             this.activities = activities;
@@ -291,7 +339,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           }
 
           return;
-        } else if (file.name.endsWith('.csv')) {
+        } else if (fileExtension === 'csv') {
           const content = fileContent.split('\n').slice(1);
 
           try {
@@ -326,6 +374,7 @@ export class ImportActivitiesDialog implements OnDestroy {
       } finally {
         this.importStep = ImportStep.SELECT_ACTIVITIES;
         this.snackBar.dismiss();
+        this.updateSelection(this.activities);
 
         stepper.next();
 

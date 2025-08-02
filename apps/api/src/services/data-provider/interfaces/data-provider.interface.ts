@@ -15,9 +15,7 @@ export interface DataProviderInterface {
 
   getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>>;
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>>;
 
   getDataProviderInfo(): DataProviderInfo;
 
@@ -55,6 +53,11 @@ export interface DataProviderInterface {
   search({ includeIndices, query }: GetSearchParams): Promise<LookupResponse>;
 }
 
+export interface GetAssetProfileParams {
+  requestTimeout?: number;
+  symbol: string;
+}
+
 export interface GetDividendsParams {
   from: Date;
   granularity?: Granularity;
@@ -79,5 +82,6 @@ export interface GetQuotesParams {
 export interface GetSearchParams {
   includeIndices?: boolean;
   query: string;
+  requestTimeout?: number;
   userId?: string;
 }

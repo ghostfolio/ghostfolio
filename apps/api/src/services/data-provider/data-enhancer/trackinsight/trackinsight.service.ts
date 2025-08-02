@@ -7,7 +7,6 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { countries } from 'countries-list';
-import got from 'got';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
@@ -45,64 +44,54 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await got(
-      `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,
+    let trackinsightSymbol = await this.searchTrackinsightSymbol({
+      requestTimeout,
+      symbol
+    });
+
+    if (!trackinsightSymbol) {
+      trackinsightSymbol = await this.searchTrackinsightSymbol({
+        requestTimeout,
+        symbol: symbol.split('.')?.[0]
+      });
+    }
+
+    if (!trackinsightSymbol) {
+      return response;
+    }
+
+    const profile = await fetch(
+      `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
       {
-        // @ts-ignore
         signal: AbortSignal.timeout(requestTimeout)
       }
     )
-      .json<any>()
+      .then((res) => res.json())
       .catch(() => {
-        return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/funds/${
-            symbol.split('.')?.[0]
-          }.json`,
-          {
-            // @ts-ignore
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        )
-          .json<any>()
-          .catch(() => {
-            return {};
-          });
+        return {};
       });
 
-    const isin = profile?.isin?.split(';')?.[0];
+    const cusip = profile?.cusip;
+
+    if (cusip) {
+      response.cusip = cusip;
+    }
+
+    const isin = profile?.isins?.[0];
 
     if (isin) {
       response.isin = isin;
     }
 
-    const holdings = await got(
-      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
+    const holdings = await fetch(
+      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
       {
-        // @ts-ignore
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
+        signal: AbortSignal.timeout(requestTimeout)
       }
     )
-      .json<any>()
+      .then((res) => res.json())
       .catch(() => {
-        return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-            symbol.split('.')?.[0]
-          }.json`,
-          {
-            // @ts-ignore
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        )
-          .json<any>()
-          .catch(() => {
-            return {};
-          });
+        return {};
       });
 
     if (
@@ -184,5 +173,37 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
   public getTestSymbol() {
     return 'QQQ';
+  }
+
+  private async searchTrackinsightSymbol({
+    requestTimeout,
+    symbol
+  }: {
+    requestTimeout: number;
+    symbol: string;
+  }) {
+    return fetch(
+      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+      {
+        signal: AbortSignal.timeout(requestTimeout)
+      }
+    )
+      .then((res) => res.json())
+      .then((jsonRes) => {
+        if (
+          jsonRes['results']?.['count'] === 1 ||
+          // Allow exact match
+          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol ||
+          // Allow EXCHANGE:SYMBOL
+          jsonRes['results']?.['docs']?.[0]?.['ticker']?.endsWith(`:${symbol}`)
+        ) {
+          return jsonRes['results']['docs'][0]['ticker'];
+        }
+
+        return undefined;
+      })
+      .catch(() => {
+        return undefined;
+      });
   }
 }

@@ -21,7 +21,7 @@ const locales = {
   MONTH: $localize`Month`,
   MONTHS: $localize`Months`,
   OTHER: $localize`Other`,
-  PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM: $localize`Get access to 100’000+ tickers from over 50 exchanges`,
+  PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM: $localize`Get access to 80’000+ tickers from over 50 exchanges`,
   PRESET_ID: $localize`Preset`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,
   SATELLITE: $localize`Satellite`,
@@ -41,7 +41,7 @@ const locales = {
   SELL: $localize`Sell`,
 
   // AssetClass (enum)
-  CASH: $localize`Cash`,
+  ALTERNATIVE_INVESTMENT: $localize`Alternative Investment`,
   COMMODITY: $localize`Commodity`,
   EQUITY: $localize`Equity`,
   FIXED_INCOME: $localize`Fixed Income`,
@@ -50,6 +50,8 @@ const locales = {
 
   // AssetSubClass (enum)
   BOND: $localize`Bond`,
+  CASH: $localize`Cash`,
+  COLLECTIBLE: $localize`Collectible`,
   CRYPTOCURRENCY: $localize`Cryptocurrency`,
   ETF: $localize`ETF`,
   MUTUALFUND: $localize`Mutual Fund`,
@@ -70,9 +72,11 @@ const locales = {
   'South America': $localize`South America`,
 
   // Countries
+  Armenia: $localize`Armenia`,
   Australia: $localize`Australia`,
   Austria: $localize`Austria`,
   Belgium: $localize`Belgium`,
+  'British Virgin Islands': $localize`British Virgin Islands`,
   Bulgaria: $localize`Bulgaria`,
   Canada: $localize`Canada`,
   'Czech Republic': $localize`Czech Republic`,
@@ -80,16 +84,19 @@ const locales = {
   France: $localize`France`,
   Germany: $localize`Germany`,
   India: $localize`India`,
+  Indonesia: $localize`Indonesia`,
   Italy: $localize`Italy`,
   Japan: $localize`Japan`,
   Netherlands: $localize`Netherlands`,
   'New Zealand': $localize`New Zealand`,
   Poland: $localize`Poland`,
   Romania: $localize`Romania`,
+  Singapore: $localize`Singapore`,
   'South Africa': $localize`South Africa`,
   Switzerland: $localize`Switzerland`,
   Thailand: $localize`Thailand`,
   Ukraine: $localize`Ukraine`,
+  'United Kingdom': $localize`United Kingdom`,
   'United States': $localize`United States`,
 
   // Fear and Greed Index

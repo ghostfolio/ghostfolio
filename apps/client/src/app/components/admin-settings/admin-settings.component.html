@@ -1,77 +1,193 @@
 <div class="container">
-  <div class="d-md-block d-none mb-5 row">
+  <div class="mb-5 row">
     <div class="col">
       <h2 class="text-center" i18n>Data Providers</h2>
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <div class="align-items-center d-flex my-3">
-            <div class="w-50">
-              <a
-                class="align-items-center d-inline-flex"
-                target="_blank"
-                [href]="pricingUrl"
-              >
-                @if (isGhostfolioApiKeyValid === false) {
-                  <span class="badge badge-warning mr-1" i18n>NEW</span>
-                }
-                Ghostfolio Premium
-                <gf-premium-indicator
-                  class="d-inline-block ml-1"
-                  [enableLink]="false"
-                />
-              </a>
-              @if (isGhostfolioApiKeyValid === true) {
-                <div class="line-height-1">
-                  <small class="text-muted">
-                    <ng-container i18n>Valid until</ng-container>
-                    {{
-                      ghostfolioApiStatus?.subscription?.expiresAt
-                        | date: defaultDateFormat
-                    }}</small
-                  >
-                </div>
-              }
+      @if (isGhostfolioApiKeyValid === false) {
+        <mat-card appearance="outlined" class="my-3 special">
+          <mat-card-header>
+            <mat-card-title class="align-items-center d-flex m-0"
+              >Ghostfolio Premium
+              <gf-premium-indicator
+                class="d-inline-block mx-1"
+                [enableLink]="false"
+            /></mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="gf-text-wrap-balance py-3" i18n>
+            Fuel your <strong>self-hosted Ghostfolio</strong> with a
+            <strong>powerful data provider</strong> to access
+            <strong>80,000+ tickers</strong> from over
+            <strong>50 exchanges</strong> worldwide.
+          </mat-card-content>
+          <mat-card-actions class="pb-3 pt-0 px-3">
+            <a
+              class="special"
+              href="mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Data Provider&body=Hello,%0D%0DI am interested in the Ghostfolio Premium data provider. Could you please give me access so I can try it for some time?%0D%0DKind regards"
+              mat-flat-button
+            >
+              <ng-container i18n>Get Access</ng-container>
+            </a>
+            <div class="mx-3 text-muted">
+              <small i18n>or</small>
             </div>
-            <div class="w-50">
-              @if (isGhostfolioApiKeyValid === true) {
-                <div class="align-items-center d-flex flex-wrap">
-                  <div class="flex-grow-1 mr-3">
-                    {{ ghostfolioApiStatus.dailyRequests }}
-                    <ng-container i18n>of</ng-container>
-                    {{ ghostfolioApiStatus.dailyRequestsMax }}
-                    <ng-container i18n>daily requests</ng-container>
-                  </div>
-                  <button
-                    class="mx-1 no-min-width px-2"
-                    mat-button
-                    [matMenuTriggerFor]="ghostfolioApiMenu"
-                    (click)="$event.stopPropagation()"
+            <a
+              color="accent"
+              mat-stroked-button
+              target="_blank"
+              [href]="pricingUrl"
+            >
+              <ng-container i18n>Learn more</ng-container>
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      }
+      <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
+            <ng-container i18n>Name</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            <div class="d-flex align-items-center">
+              <gf-entity-logo class="mr-1" [url]="element.url" />
+              <div>
+                @if (isGhostfolioDataProvider(element)) {
+                  <a
+                    class="align-items-center d-inline-flex"
+                    target="_blank"
+                    [href]="pricingUrl"
                   >
-                    <ion-icon name="ellipsis-horizontal" />
+                    Ghostfolio Premium
+                    <gf-premium-indicator
+                      class="d-inline-block ml-1"
+                      [enableLink]="false"
+                    />
+                    @if (isGhostfolioApiKeyValid === false) {
+                      <span
+                        class="badge badge-pill badge-secondary ml-2 text-uppercase"
+                        i18n
+                        >new</span
+                      >
+                    }
+                  </a>
+                  @if (isGhostfolioApiKeyValid === true) {
+                    <div class="line-height-1">
+                      <small class="text-muted">
+                        <ng-container i18n>Valid until</ng-container>
+                        {{
+                          ghostfolioApiStatus?.subscription?.expiresAt
+                            | date: defaultDateFormat
+                        }}
+                      </small>
+                    </div>
+                  }
+                } @else {
+                  {{ element.name }}
+                }
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
+            <ng-container i18n>Status</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            @if (
+              !isGhostfolioDataProvider(element) ||
+              isGhostfolioApiKeyValid === true
+            ) {
+              <gf-data-provider-status [dataSource]="element.dataSource" />
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetProfileCount">
+          <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+            <ng-container i18n>Asset Profiles</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            <gf-value
+              class="d-inline-block justify-content-end"
+              [locale]="user?.settings?.locale"
+              [value]="element.assetProfileCount"
+            />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="usage">
+          <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            @if (
+              isGhostfolioDataProvider(element) &&
+              isGhostfolioApiKeyValid === true
+            ) {
+              <mat-progress-bar
+                mode="determinate"
+                [value]="
+                  100 -
+                  (ghostfolioApiStatus.dailyRequests /
+                    ghostfolioApiStatus.dailyRequestsMax) *
+                    100
+                "
+              />
+              <small class="text-muted">
+                {{ ghostfolioApiStatus.dailyRequests }}
+                <ng-container i18n>of</ng-container>
+                {{ ghostfolioApiStatus.dailyRequestsMax }}
+                <ng-container i18n>daily requests</ng-container>
+              </small>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            @if (isGhostfolioDataProvider(element)) {
+              @if (isGhostfolioApiKeyValid === true) {
+                <button
+                  class="mx-1 no-min-width px-2"
+                  mat-button
+                  [matMenuTriggerFor]="ghostfolioApiMenu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon name="ellipsis-horizontal" />
+                </button>
+                <mat-menu #ghostfolioApiMenu="matMenu" xPosition="before">
+                  <button mat-menu-item (click)="onRemoveGhostfolioApiKey()">
+                    <span class="align-items-center d-flex">
+                      <ion-icon class="mr-2" name="trash-outline" />
+                      <span i18n>Remove API key</span>
+                    </span>
                   </button>
-                  <mat-menu #ghostfolioApiMenu="matMenu" xPosition="before">
-                    <button mat-menu-item (click)="onRemoveGhostfolioApiKey()">
-                      <span class="align-items-center d-flex">
-                        <ion-icon class="mr-2" name="trash-outline" />
-                        <span i18n>Remove API key</span>
-                      </span>
-                    </button>
-                  </mat-menu>
-                </div>
+                </mat-menu>
               } @else if (isGhostfolioApiKeyValid === false) {
                 <button
-                  color="accent"
+                  class="special"
                   mat-flat-button
                   (click)="onSetGhostfolioApiKey()"
                 >
-                  <ion-icon class="mr-1" name="key-outline" />
-                  <span i18n>Set API key</span>
+                  <ng-container i18n>Set API key</ng-container>
                 </button>
               }
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+            }
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="px-4 py-3"
+          [theme]="{
+            height: '1.5rem',
+            width: '100%'
+          }"
+        />
+      }
     </div>
   </div>
   <div class="mb-5 row">

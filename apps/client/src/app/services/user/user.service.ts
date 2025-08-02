@@ -1,5 +1,3 @@
-import { SubscriptionInterstitialDialogParams } from '@ghostfolio/client/components/subscription-interstitial-dialog/interfaces/interfaces';
-import { SubscriptionInterstitialDialog } from '@ghostfolio/client/components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
@@ -13,6 +11,8 @@ import { Observable, Subject, of } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 
+import { SubscriptionInterstitialDialogParams } from '../../components/subscription-interstitial-dialog/interfaces/interfaces';
+import { SubscriptionInterstitialDialog } from '../../components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { UserStoreActions } from './user-store.actions';
 import { UserStoreState } from './user-store.state';
 
@@ -121,6 +121,7 @@ export class UserService extends ObservableStore<UserStoreState> {
             data: {
               user
             } as SubscriptionInterstitialDialogParams,
+            disableClose: true,
             height: this.deviceType === 'mobile' ? '98vh' : '80vh',
             width: this.deviceType === 'mobile' ? '100vw' : '50rem'
           });

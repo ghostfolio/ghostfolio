@@ -9,6 +9,8 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'gf-login-with-access-token-dialog',
@@ -27,7 +29,9 @@ export class LoginWithAccessTokenDialog {
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService
-  ) {}
+  ) {
+    addIcons({ eyeOffOutline, eyeOutline });
+  }
 
   public onChangeStaySignedIn(aValue: MatCheckboxChange) {
     this.settingsStorageService.setSetting(

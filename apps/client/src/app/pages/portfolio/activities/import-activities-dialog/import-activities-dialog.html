@@ -8,13 +8,13 @@
 <div class="flex-grow-1" mat-dialog-content>
   <mat-stepper
     #stepper
-    animationDuration="0"
+    animationDuration="0ms"
     [linear]="true"
     [orientation]="stepperOrientation"
     [selectedIndex]="importStep"
     (selectionChange)="onImportStepChange($event)"
   >
-    <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
+    <mat-step [completed]="importStep === 0">
       <ng-template matStepLabel>
         @if (mode === 'DIVIDEND') {
           <ng-container i18n>Select Holding</ng-container>
@@ -90,13 +90,13 @@
                   >The following file formats are supported:</span
                 >
                 <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.csv"
                   target="_blank"
                   >CSV</a
                 >
                 <span class="mx-1" i18n>or</span>
                 <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.json"
                   target="_blank"
                   >JSON</a
                 >
@@ -107,7 +107,7 @@
       </div>
     </mat-step>
 
-    <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
+    <mat-step [completed]="importStep === 1">
       <ng-template matStepLabel>
         @if (mode === 'DIVIDEND') {
           <ng-container i18n>Select Dividends</ng-container>

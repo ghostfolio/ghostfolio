@@ -19,8 +19,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MarkdownModule } from 'ngx-markdown';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { IonIcon } from '@ionic/angular/standalone';
+import { provideMarkdown } from 'ngx-markdown';
+import { provideNgxSkeletonLoader } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
 
 import { environment } from '../environments/environment';
@@ -50,13 +52,12 @@ export function NgxStripeFactory(): string {
     GfLogoComponent,
     GfNotificationModule,
     GfSubscriptionInterstitialDialogModule,
-    MarkdownModule.forRoot(),
+    IonIcon,
     MatAutocompleteModule,
     MatChipsModule,
     MatNativeDateModule,
     MatSnackBarModule,
     MatTooltipModule,
-    NgxSkeletonLoaderModule,
     NgxStripeModule.forRoot(environment.stripePublicKey),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
@@ -68,6 +69,9 @@ export function NgxStripeFactory(): string {
     httpResponseInterceptorProviders,
     LanguageService,
     provideHttpClient(withInterceptorsFromDi()),
+    provideIonicAngular(),
+    provideMarkdown(),
+    provideNgxSkeletonLoader(),
     {
       provide: DateAdapter,
       useClass: CustomDateAdapter,

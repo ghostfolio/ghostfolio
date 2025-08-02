@@ -7,6 +7,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { GfDialogHeaderModule } from '../dialog-header/dialog-header.module';
 import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.component';
@@ -17,6 +18,7 @@ import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.com
     CommonModule,
     FormsModule,
     GfDialogHeaderModule,
+    IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,

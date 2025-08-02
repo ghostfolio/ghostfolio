@@ -48,10 +48,12 @@
           </p>
           <p>
             The software is used daily by a thriving global community. With over
-            <a [routerLink]="['/open']">2’600 stars on GitHub</a> and
-            <a [routerLink]="['/open']">300’000+ pulls on Docker Hub</a>,
-            Ghostfolio has gained widespread recognition for its user-friendly
-            experience and simplicity.
+            <a [routerLink]="routerLinkOpenStartup">2’600 stars on GitHub</a>
+            and
+            <a [routerLink]="routerLinkOpenStartup"
+              >300’000+ pulls on Docker Hub</a
+            >, Ghostfolio has gained widespread recognition for its
+            user-friendly experience and simplicity.
           </p>
         </section>
         <section class="mb-4">
@@ -178,7 +180,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a i18n [routerLink]="['/blog']">Blog</a>
+              <a i18n [routerLink]="routerLinkBlog">Blog</a>
             </li>
             <li
               aria-current="page"

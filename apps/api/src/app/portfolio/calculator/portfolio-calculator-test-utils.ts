@@ -6,10 +6,14 @@ export const activityDummyData = {
   comment: undefined,
   createdAt: new Date(),
   currency: undefined,
+  fee: undefined,
+  feeInAssetProfileCurrency: undefined,
   feeInBaseCurrency: undefined,
   id: undefined,
   isDraft: false,
   symbolProfileId: undefined,
+  unitPrice: undefined,
+  unitPriceInAssetProfileCurrency: undefined,
   updatedAt: new Date(),
   userId: undefined,
   value: undefined,
@@ -24,6 +28,7 @@ export const symbolProfileDummyData = {
   createdAt: undefined,
   holdings: [],
   id: undefined,
+  isActive: true,
   sectors: [],
   updatedAt: undefined
 };

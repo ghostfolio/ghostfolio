@@ -10,6 +10,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import {
@@ -26,6 +27,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  cashOutline,
+  swapVerticalOutline,
+  walletOutline
+} from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -85,6 +92,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({ cashOutline, swapVerticalOutline, walletOutline });
   }
 
   public ngOnInit() {
@@ -92,9 +101,12 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onCloneActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
-      queryParams: { activityId: aActivity.id, createDialog: true }
-    });
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink,
+      {
+        queryParams: { activityId: aActivity.id, createDialog: true }
+      }
+    );
 
     this.dialogRef.close();
   }
@@ -151,9 +163,12 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
-      queryParams: { activityId: aActivity.id, editDialog: true }
-    });
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink,
+      {
+        queryParams: { activityId: aActivity.id, editDialog: true }
+      }
+    );
 
     this.dialogRef.close();
   }
@@ -167,7 +182,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           balance,
           currency,
           name,
-          Platform,
+          platform,
           transactionCount,
           value,
           valueInBaseCurrency
@@ -182,7 +197,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           }
 
           this.name = name;
-          this.platformName = Platform?.name ?? '-';
+          this.platformName = platform?.name ?? '-';
           this.transactionCount = transactionCount;
           this.valueInBaseCurrency = valueInBaseCurrency;
 

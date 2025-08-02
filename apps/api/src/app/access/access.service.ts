@@ -13,7 +13,7 @@ export class AccessService {
   ): Promise<AccessWithGranteeUser | null> {
     return this.prismaService.access.findFirst({
       include: {
-        GranteeUser: true
+        granteeUser: true
       },
       where: accessWhereInput
     });

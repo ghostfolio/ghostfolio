@@ -12,6 +12,7 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
@@ -28,6 +29,16 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import {
+  closeOutline,
+  logoGithub,
+  menuOutline,
+  optionsOutline,
+  personCircleOutline,
+  radioButtonOffOutline,
+  radioButtonOnOutline
+} from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -71,6 +82,7 @@ export class HeaderComponent implements OnChanges {
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
   public hasFilters: boolean;
+  public hasImpersonationId: boolean;
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
@@ -78,18 +90,23 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
+  public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
-  public routeAbout = $localize`:snake-case:about`;
-  public routeFeatures = $localize`:snake-case:features`;
-  public routeMarkets = $localize`:snake-case:markets`;
-  public routePricing = $localize`:snake-case:pricing`;
-  public routeResources = $localize`:snake-case:resources`;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routeAbout = publicRoutes.about.path;
+  public routeFeatures = publicRoutes.features.path;
+  public routeMarkets = publicRoutes.markets.path;
+  public routePricing = publicRoutes.pricing.path;
+  public routeResources = publicRoutes.resources.path;
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkAccount = internalRoutes.account.routerLink;
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
+  public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
+  public routerLinkRegister = publicRoutes.register.routerLink;
+  public routerLinkResources = publicRoutes.resources.routerLink;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -108,8 +125,19 @@ export class HeaderComponent implements OnChanges {
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
       });
+
+    addIcons({
+      closeOutline,
+      logoGithub,
+      menuOutline,
+      optionsOutline,
+      personCircleOutline,
+      radioButtonOffOutline,
+      radioButtonOnOutline
+    });
   }
 
   public ngOnChanges() {

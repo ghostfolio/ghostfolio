@@ -5,18 +5,21 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy
 } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarRef,
-  TextOnlySnackBar
-} from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
 import ms, { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
@@ -24,12 +27,19 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfMembershipCardComponent,
+    GfPremiumIndicatorComponent,
+    MatButtonModule,
+    MatCardModule,
+    RouterModule
+  ],
   selector: 'gf-user-account-membership',
   styleUrls: ['./user-account-membership.scss'],
-  templateUrl: './user-account-membership.html',
-  standalone: false
+  templateUrl: './user-account-membership.html'
 })
-export class UserAccountMembershipComponent implements OnDestroy {
+export class GfUserAccountMembershipComponent implements OnDestroy {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
@@ -40,8 +50,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public trySubscriptionMail =
     'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;
@@ -56,8 +65,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
     private stripeService: StripeService,
     private userService: UserService
   ) {
-    const { baseCurrency, globalPermissions, subscriptionOffers } =
-      this.dataService.fetchInfo();
+    const { baseCurrency, globalPermissions } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
 
@@ -86,18 +94,12 @@ export class UserAccountMembershipComponent implements OnDestroy {
             permissions.updateUserSettings
           );
 
-          this.coupon =
-            subscriptionOffers?.[this.user.subscription.offer]?.coupon;
-          this.couponId =
-            subscriptionOffers?.[this.user.subscription.offer]?.couponId;
+          this.coupon = this.user?.subscription?.offer?.coupon;
+          this.couponId = this.user?.subscription?.offer?.couponId;
           this.durationExtension =
-            subscriptionOffers?.[
-              this.user.subscription.offer
-            ]?.durationExtension;
-          this.price =
-            subscriptionOffers?.[this.user.subscription.offer]?.price;
-          this.priceId =
-            subscriptionOffers?.[this.user.subscription.offer]?.priceId;
+            this.user?.subscription?.offer?.durationExtension;
+          this.price = this.user?.subscription?.offer?.price;
+          this.priceId = this.user?.subscription?.offer?.priceId;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -186,22 +188,22 @@ export class UserAccountMembershipComponent implements OnDestroy {
               takeUntil(this.unsubscribeSubject)
             )
             .subscribe(() => {
-              this.snackBarRef = this.snackBar.open(
+              const snackBarRef = this.snackBar.open(
                 '✅ ' + $localize`Coupon code has been redeemed`,
                 $localize`Reload`,
                 {
-                  duration: 3000
+                  duration: ms('3 seconds')
                 }
               );
 
-              this.snackBarRef
+              snackBarRef
                 .afterDismissed()
                 .pipe(takeUntil(this.unsubscribeSubject))
                 .subscribe(() => {
                   window.location.reload();
                 });
 
-              this.snackBarRef
+              snackBarRef
                 .onAction()
                 .pipe(takeUntil(this.unsubscribeSubject))
                 .subscribe(() => {

@@ -5,55 +5,142 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
-import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import {
+  ASSET_CLASS_MAPPING,
+  ghostfolioScraperApiSymbolPrefix,
+  PROPERTY_IS_DATA_GATHERING_ENABLED
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   AssetProfileIdentifier,
   LineChartItem,
+  ScraperConfiguration,
   User
 } from '@ghostfolio/common/interfaces';
+import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild,
+  signal
 } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule
+} from '@angular/material/checkbox';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
   AssetSubClass,
   MarketData,
+  Prisma,
   SymbolProfile
 } from '@prisma/client';
+import { isUUID } from 'class-validator';
 import { format } from 'date-fns';
+import { StatusCodes } from 'http-status-codes';
+import { addIcons } from 'ionicons';
+import { createOutline, ellipsisVertical } from 'ionicons/icons';
+import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { AssetProfileDialogParams } from './interfaces/interfaces';
+import {
+  AssetClassSelectorOption,
+  AssetProfileDialogParams
+} from './interfaces/interfaces';
 
 @Component({
-  host: { class: 'd-flex flex-column h-100' },
-  selector: 'gf-asset-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'asset-profile-dialog.html',
+  host: { class: 'd-flex flex-column h-100' },
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfCurrencySelectorComponent,
+    GfEntityLogoComponent,
+    GfHistoricalMarketDataEditorComponent,
+    GfLineChartComponent,
+    GfPortfolioProportionChartComponent,
+    GfSymbolAutocompleteComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+    TextFieldModule
+  ],
+  providers: [AdminMarketDataService],
+  selector: 'gf-asset-profile-dialog',
   styleUrls: ['./asset-profile-dialog.component.scss'],
-  standalone: false
+  templateUrl: 'asset-profile-dialog.html'
 })
-export class AssetProfileDialog implements OnDestroy, OnInit {
-  public assetProfileClass: string;
-  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
-    return { id: assetClass, label: translate(assetClass) };
-  });
-  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
-    return { id: assetSubClass, label: translate(assetSubClass) };
-  });
+export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
+
+  @ViewChild('assetProfileFormElement')
+  assetProfileFormElement: ElementRef<HTMLFormElement>;
+
+  public assetClassLabel: string;
+  public assetSubClassLabel: string;
+
+  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
+    .map((id) => {
+      return { id, label: translate(id) } as AssetClassSelectorOption;
+    })
+    .sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
+
+  public assetSubClassOptions: AssetClassSelectorOption[] = [];
+
   public assetProfile: AdminMarketDataDetails['assetProfile'];
+
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -63,31 +150,69 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
+    isActive: [true],
     name: ['', Validators.required],
-    scraperConfiguration: '',
+    scraperConfiguration: this.formBuilder.group({
+      defaultMarketPrice: null,
+      headers: JSON.stringify({}),
+      locale: '',
+      mode: '',
+      selector: '',
+      url: ''
+    }),
     sectors: '',
     symbolMapping: '',
     url: ''
   });
-  public assetProfileSubClass: string;
+
+  public assetProfileIdentifierForm = this.formBuilder.group(
+    {
+      assetProfileIdentifier: new FormControl<AssetProfileIdentifier>(
+        { symbol: null, dataSource: null },
+        [Validators.required]
+      )
+    },
+    {
+      validators: (control) => {
+        return this.isNewSymbolValid(control);
+      }
+    }
+  );
+
   public benchmarks: Partial<SymbolProfile>[];
+
   public countries: {
     [code: string]: { name: string; value: number };
   };
+
   public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
+  public isDataGatheringEnabled: boolean;
+  public isEditAssetProfileIdentifierMode = false;
+  public isUUID = isUUID;
   public marketDataItems: MarketData[] = [];
+
+  public modeValues = [
+    {
+      value: 'lazy',
+      viewValue: $localize`Lazy` + ' (' + $localize`end of day` + ')'
+    },
+    {
+      value: 'instant',
+      viewValue: $localize`Instant` + ' (' + $localize`real-time` + ')'
+    }
+  ];
+
+  public scraperConfiguationIsExpanded = signal(false);
+
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+
   public user: User;
 
-  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
-    new Date(),
-    DATE_FORMAT
-  )};123.45`;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -96,11 +221,25 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<AssetProfileDialog>,
+    public dialogRef: MatDialogRef<GfAssetProfileDialogComponent>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
+    private snackBar: MatSnackBar,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ createOutline, ellipsisVertical });
+  }
+
+  public get canEditAssetProfileIdentifier() {
+    return (
+      this.assetProfile?.assetClass &&
+      !['MANUAL'].includes(this.assetProfile?.dataSource)
+    );
+  }
+
+  public get canSaveAssetProfileIdentifier() {
+    return !this.assetProfileForm.dirty;
+  }
 
   public ngOnInit() {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
@@ -114,12 +253,42 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public initialize() {
     this.historicalDataItems = undefined;
 
+    this.adminService
+      .fetchAdminData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ settings }) => {
+        this.isDataGatheringEnabled =
+          settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
         }
+      });
+
+    this.assetProfileForm
+      .get('assetClass')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((assetClass) => {
+        const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
+
+        this.assetSubClassOptions = assetSubClasses
+          .map((assetSubClass) => {
+            return {
+              id: assetSubClass,
+              label: translate(assetSubClass)
+            };
+          })
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        this.assetProfileForm.get('assetSubClass').setValue(null);
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService
@@ -131,8 +300,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
-        this.assetProfileClass = translate(this.assetProfile?.assetClass);
-        this.assetProfileSubClass = translate(this.assetProfile?.assetSubClass);
+        this.assetClassLabel = translate(this.assetProfile?.assetClass);
+        this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
 
         this.isBenchmark = this.benchmarks.some(({ id }) => {
@@ -178,12 +347,22 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           ),
           currency: this.assetProfile?.currency,
           historicalData: {
-            csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
+            csvString: GfAssetProfileDialogComponent.HISTORICAL_DATA_TEMPLATE
           },
+          isActive: this.assetProfile?.isActive,
           name: this.assetProfile.name ?? this.assetProfile.symbol,
-          scraperConfiguration: JSON.stringify(
-            this.assetProfile?.scraperConfiguration ?? {}
-          ),
+          scraperConfiguration: {
+            defaultMarketPrice:
+              this.assetProfile?.scraperConfiguration?.defaultMarketPrice ??
+              null,
+            headers: JSON.stringify(
+              this.assetProfile?.scraperConfiguration?.headers ?? {}
+            ),
+            locale: this.assetProfile?.scraperConfiguration?.locale ?? '',
+            mode: this.assetProfile?.scraperConfiguration?.mode ?? 'lazy',
+            selector: this.assetProfile?.scraperConfiguration?.selector ?? '',
+            url: this.assetProfile?.scraperConfiguration?.url ?? ''
+          },
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
           url: this.assetProfile?.url ?? ''
@@ -193,6 +372,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public onCancelEditAssetProfileIdentifierMode() {
+    this.isEditAssetProfileIdentifierMode = false;
+
+    this.assetProfileForm.enable();
+
+    this.assetProfileIdentifierForm.reset();
   }
 
   public onClose() {
@@ -241,9 +428,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public async onSubmit() {
+  public onSetEditAssetProfileIdentifierMode() {
+    this.isEditAssetProfileIdentifierMode = true;
+
+    this.assetProfileForm.disable();
+  }
+
+  public async onSubmitAssetProfileForm() {
     let countries = [];
-    let scraperConfiguration = {};
+    let scraperConfiguration: ScraperConfiguration = {
+      selector: '',
+      url: ''
+    };
     let sectors = [];
     let symbolMapping = {};
 
@@ -252,9 +448,35 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     try {
-      scraperConfiguration = JSON.parse(
-        this.assetProfileForm.get('scraperConfiguration').value
-      );
+      scraperConfiguration = {
+        defaultMarketPrice:
+          (this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'defaultMarketPrice'
+          ].value as number) || undefined,
+        headers: JSON.parse(
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'headers'
+          ].value
+        ),
+        locale:
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'locale'
+          ].value || undefined,
+        mode: this.assetProfileForm.controls['scraperConfiguration'].controls[
+          'mode'
+        ].value as ScraperConfiguration['mode'],
+        selector:
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'selector'
+          ].value,
+        url: this.assetProfileForm.controls['scraperConfiguration'].controls[
+          'url'
+        ].value
+      };
+
+      if (!scraperConfiguration.selector || !scraperConfiguration.url) {
+        scraperConfiguration = undefined;
+      }
     } catch {}
 
     try {
@@ -267,16 +489,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       );
     } catch {}
 
-    const assetProfileData: UpdateAssetProfileDto = {
+    const assetProfile: UpdateAssetProfileDto = {
       countries,
-      scraperConfiguration,
       sectors,
       symbolMapping,
       assetClass: this.assetProfileForm.get('assetClass').value,
       assetSubClass: this.assetProfileForm.get('assetSubClass').value,
       comment: this.assetProfileForm.get('comment').value || null,
       currency: this.assetProfileForm.get('currency').value,
+      isActive: this.assetProfileForm.get('isActive').value,
       name: this.assetProfileForm.get('name').value,
+      scraperConfiguration:
+        scraperConfiguration as unknown as Prisma.InputJsonObject,
       url: this.assetProfileForm.get('url').value || null
     };
 
@@ -284,7 +508,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       await validateObjectForForm({
         classDto: UpdateAssetProfileDto,
         form: this.assetProfileForm,
-        object: assetProfileData
+        object: assetProfile
       });
     } catch (error) {
       console.error(error);
@@ -292,13 +516,77 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
 
     this.adminService
-      .patchAssetProfile({
-        ...assetProfileData,
-        dataSource: this.data.dataSource,
-        symbol: this.data.symbol
-      })
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        assetProfile
+      )
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public async onSubmitAssetProfileIdentifierForm() {
+    const assetProfileIdentifier: UpdateAssetProfileDto = {
+      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.dataSource,
+      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.symbol
+    };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileIdentifierForm,
+        object: assetProfileIdentifier
+      });
+    } catch (error) {
+      console.error(error);
+
+      return;
+    }
+
+    this.adminService
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        assetProfileIdentifier
+      )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === StatusCodes.CONFLICT) {
+            this.snackBar.open(
+              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          } else {
+            this.snackBar.open(
+              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          }
+
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(() => {
+        const newAssetProfileIdentifier = {
+          dataSource: assetProfileIdentifier.dataSource,
+          symbol: assetProfileIdentifier.symbol
+        };
+
+        this.dialogRef.close(newAssetProfileIdentifier);
       });
   }
 
@@ -306,8 +594,30 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .testMarketData({
         dataSource: this.data.dataSource,
-        scraperConfiguration: this.assetProfileForm.get('scraperConfiguration')
-          .value,
+        scraperConfiguration: {
+          defaultMarketPrice: this.assetProfileForm.controls[
+            'scraperConfiguration'
+          ].controls['defaultMarketPrice'].value as number,
+          headers: JSON.parse(
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'headers'
+            ].value
+          ),
+          locale:
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'locale'
+            ].value || undefined,
+          mode: this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'mode'
+          ].value,
+          selector:
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'selector'
+            ].value,
+          url: this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'url'
+          ].value
+        },
         symbol: this.data.symbol
       })
       .pipe(
@@ -332,6 +642,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
+  public onToggleIsActive({ checked }: MatCheckboxChange) {
+    if (checked) {
+      this.assetProfileForm.get('isActive')?.setValue(true);
+    } else {
+      this.assetProfileForm.get('isActive')?.setValue(false);
+    }
+
+    if (checked === this.assetProfile.isActive) {
+      this.assetProfileForm.get('isActive')?.markAsPristine();
+    } else {
+      this.assetProfileForm.get('isActive')?.markAsDirty();
+    }
+  }
+
   public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
@@ -348,5 +672,25 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  public onTriggerSubmitAssetProfileForm() {
+    if (this.assetProfileForm) {
+      this.assetProfileFormElement.nativeElement.requestSubmit();
+    }
+  }
+
+  private isNewSymbolValid(control: AbstractControl): ValidationErrors {
+    const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
+      control.get('assetProfileIdentifier').value;
+
+    if (
+      currentAssetProfileIdentifier?.dataSource === this.data?.dataSource &&
+      currentAssetProfileIdentifier?.symbol === this.data?.symbol
+    ) {
+      return {
+        equalsPreviousProfileIdentifier: true
+      };
+    }
   }
 }

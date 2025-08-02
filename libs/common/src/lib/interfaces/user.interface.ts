@@ -1,8 +1,8 @@
-import { SubscriptionOfferKey } from '@ghostfolio/common/types';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 
 import { Access, Account, Tag } from '@prisma/client';
 
+import { SubscriptionOffer } from './subscription-offer.interface';
 import { SystemMessage } from './system-message.interface';
 import { UserSettings } from './user-settings.interface';
 
@@ -10,6 +10,7 @@ import { UserSettings } from './user-settings.interface';
 export interface User {
   access: Pick<Access, 'alias' | 'id' | 'permissions'>[];
   accounts: Account[];
+  activitiesCount: number;
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
@@ -17,7 +18,7 @@ export interface User {
   systemMessage?: SystemMessage;
   subscription: {
     expiresAt?: Date;
-    offer: SubscriptionOfferKey;
+    offer: SubscriptionOffer;
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];

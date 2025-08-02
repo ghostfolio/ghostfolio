@@ -1,13 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
+import { MarkdownModule } from 'ngx-markdown';
 import { Subject } from 'rxjs';
 
 @Component({
+  imports: [MarkdownModule],
   selector: 'gf-license-page',
   styleUrls: ['./license-page.scss'],
-  templateUrl: './license-page.html',
-  standalone: false
+  templateUrl: './license-page.html'
 })
-export class LicensePageComponent implements OnDestroy {
+export class GfLicensePageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnDestroy() {

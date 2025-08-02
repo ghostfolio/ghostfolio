@@ -6,6 +6,8 @@ import {
 
 import { Injectable } from '@nestjs/common';
 
+import { PropertyValue } from './interfaces/interfaces';
+
 @Injectable()
 export class PropertyService {
   public constructor(private readonly prismaService: PrismaService) {}
@@ -18,7 +20,7 @@ export class PropertyService {
 
   public async get() {
     const response: {
-      [key: string]: boolean | object | string | string[];
+      [key: string]: PropertyValue;
     } = {
       [PROPERTY_CURRENCIES]: []
     };
@@ -38,15 +40,14 @@ export class PropertyService {
     return response;
   }
 
-  public async getByKey(aKey: string) {
+  public async getByKey<TValue extends PropertyValue>(aKey: string) {
     const properties = await this.get();
-    return properties?.[aKey];
+    return properties[aKey] as TValue;
   }
 
   public async isUserSignupEnabled() {
     return (
-      ((await this.getByKey(PROPERTY_IS_USER_SIGNUP_ENABLED)) as boolean) ??
-      true
+      (await this.getByKey<boolean>(PROPERTY_IS_USER_SIGNUP_ENABLED)) ?? true
     );
   }
 

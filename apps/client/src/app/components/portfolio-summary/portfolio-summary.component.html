@@ -7,11 +7,11 @@
   </div>
   <div
     class="flex-nowrap px-3 py-1 row"
-    [hidden]="summary?.ordersCount === null"
+    [hidden]="summary?.activityCount === null"
   >
     <div class="d-flex flex-grow-1 ml-3 text-truncate">
-      {{ summary?.ordersCount }}
-      <ng-container i18n>{summary?.ordersCount, plural,
+      {{ summary?.activityCount }}
+      <ng-container i18n>{summary?.activityCount, plural,
         =1 {activity}
         other {activities}
       }</ng-container>
@@ -117,8 +117,8 @@
       <ng-container i18n>Net Performance</ng-container>
       <abbr
         class="initialism ml-2 text-muted"
-        title="Time-Weighted Rate of Return"
-        >(TWR)</abbr
+        title="Return on Average Investment"
+        >(ROAI)</abbr
       >
     </div>
     <div class="flex-column flex-wrap justify-content-end">
@@ -149,18 +149,6 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentValueInBaseCurrency"
-      />
-    </div>
-  </div>
-  <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Valuables</div>
-    <div class="justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        [isCurrency]="true"
-        [locale]="locale"
-        [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.items"
       />
     </div>
   </div>

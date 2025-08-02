@@ -1,6 +1,10 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  ghostfolioPrefix,
+  PROPERTY_CURRENCIES
+} from '@ghostfolio/common/config';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import {
   ChangeDetectionStrategy,
@@ -14,11 +18,18 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { uniq } from 'lodash';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { isISO4217CurrencyCode } from 'class-validator';
 import { Subject, takeUntil } from 'rxjs';
 
 import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
@@ -26,12 +37,21 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    FormsModule,
+    GfSymbolAutocompleteComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatRadioModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-asset-profile-dialog',
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
-  templateUrl: 'create-asset-profile-dialog.html',
-  standalone: false
+  templateUrl: 'create-asset-profile-dialog.html'
 })
-export class CreateAssetProfileDialog implements OnInit, OnDestroy {
+export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
   public mode: CreateAssetProfileDialogMode;
 
@@ -42,7 +62,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
-    public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
+    public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
     public readonly formBuilder: FormBuilder
   ) {}
 
@@ -52,11 +72,11 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     this.createAssetProfileForm = this.formBuilder.group(
       {
         addCurrency: new FormControl(null, [
-          Validators.maxLength(3),
-          Validators.minLength(3),
+          this.iso4217CurrencyCodeValidator()
+        ]),
+        addSymbol: new FormControl(`${ghostfolioPrefix}_`, [
           Validators.required
         ]),
-        addSymbol: new FormControl(null, [Validators.required]),
         searchSymbol: new FormControl(null, [Validators.required])
       },
       {
@@ -83,11 +103,13 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
       });
     } else if (this.mode === 'currency') {
-      const currency = this.createAssetProfileForm
-        .get('addCurrency')
-        .value.toUpperCase();
+      const currency = (
+        this.createAssetProfileForm.get('addCurrency').value as string
+      ).toUpperCase();
 
-      const currencies = uniq([...this.customCurrencies, currency]);
+      const currencies = Array.from(
+        new Set([...this.customCurrencies, currency])
+      ).sort();
 
       this.dataService
         .putAdminSetting(PROPERTY_CURRENCIES, {
@@ -109,10 +131,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     const addCurrencyFormControl =
       this.createAssetProfileForm.get('addCurrency');
 
-    if (
-      addCurrencyFormControl.hasError('maxlength') ||
-      addCurrencyFormControl.hasError('minlength')
-    ) {
+    if (addCurrencyFormControl.hasError('invalidCurrency')) {
       return true;
     }
 
@@ -160,5 +179,15 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private iso4217CurrencyCodeValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!isISO4217CurrencyCode(control.value?.toUpperCase())) {
+        return { invalidCurrency: true };
+      }
+
+      return null;
+    };
   }
 }

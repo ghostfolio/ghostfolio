@@ -1,11 +1,15 @@
-import { DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
 export const ghostfolioPrefix = 'GF';
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
-export const ghostfolioFearAndGreedIndexDataSource = DataSource.RAPID_API;
+export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
+  DataSource.MANUAL;
+export const ghostfolioFearAndGreedIndexDataSourceStocks = DataSource.RAPID_API;
 export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
+export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
+export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
 
 export const locale = 'en-US';
 
@@ -30,6 +34,23 @@ export const warnColorRgb = {
   b: 69
 };
 
+export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
+  [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
+  [AssetClass.COMMODITY, [AssetSubClass.PRECIOUS_METAL]],
+  [
+    AssetClass.EQUITY,
+    [
+      AssetSubClass.ETF,
+      AssetSubClass.MUTUALFUND,
+      AssetSubClass.PRIVATE_EQUITY,
+      AssetSubClass.STOCK
+    ]
+  ],
+  [AssetClass.FIXED_INCOME, [AssetSubClass.BOND]],
+  [AssetClass.LIQUIDITY, [AssetSubClass.CRYPTOCURRENCY]],
+  [AssetClass.REAL_ESTATE, []]
+]);
+
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
 
@@ -48,13 +69,14 @@ export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
 
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
+export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
+export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
-export const DEFAULT_ROOT_URL = 'https://localhost:4200';
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -75,10 +97,8 @@ export const DERIVED_CURRENCIES = [
   }
 ];
 
-export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
-
-export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
-export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
+export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
+export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   attempts: 12,
   backoff: {
     delay: ms('1 minute'),
@@ -98,6 +118,12 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
 };
 
+export const INVESTMENT_ACTIVITY_TYPES = [
+  Type.BUY,
+  Type.DIVIDEND,
+  Type.SELL
+] as Type[];
+
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
@@ -113,6 +139,7 @@ export const MAX_TOP_HOLDINGS = 50;
 export const NUMERICAL_PRECISION_THRESHOLD = 100000;
 
 export const PROPERTY_API_KEY_GHOSTFOLIO = 'API_KEY_GHOSTFOLIO';
+export const PROPERTY_API_KEY_OPENROUTER = 'API_KEY_OPENROUTER';
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';
 export const PROPERTY_COUNTRIES_OF_SUBSCRIBERS = 'COUNTRIES_OF_SUBSCRIBERS';
@@ -121,10 +148,12 @@ export const PROPERTY_CURRENCIES = 'CURRENCIES';
 export const PROPERTY_DATA_SOURCE_MAPPING = 'DATA_SOURCE_MAPPING';
 export const PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS =
   'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS';
+export const PROPERTY_DEMO_ACCOUNT_ID = 'DEMO_ACCOUNT_ID';
 export const PROPERTY_DEMO_USER_ID = 'DEMO_USER_ID';
 export const PROPERTY_IS_DATA_GATHERING_ENABLED = 'IS_DATA_GATHERING_ENABLED';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
+export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
@@ -153,6 +182,8 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const STORYBOOK_PATH = '/development/storybook';
+
 export const SUPPORTED_LANGUAGE_CODES = [
   'ca',
   'de',
@@ -164,7 +195,11 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'pl',
   'pt',
   'tr',
+  'uk',
   'zh'
 ];
+
+export const TAG_ID_EMERGENCY_FUND = '4452656d-9fa4-4bd0-ba38-70492e31d180';
+export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 
 export const UNKNOWN_KEY = 'UNKNOWN';

@@ -54,13 +54,13 @@ export class GfLineChartComponent
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
+  @Input() label: string;
   @Input() locale = getLocale();
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
   @Input() showXAxis = false;
   @Input() showYAxis = false;
-  @Input() symbol: string;
   @Input() unit: string;
   @Input() yMax: number;
   @Input() yMaxLabel: string;
@@ -162,7 +162,7 @@ export class GfLineChartComponent
           borderWidth: 2,
           data: marketPrices,
           fill: true,
-          label: this.symbol,
+          label: this.label,
           pointRadius: 0
         }
       ]

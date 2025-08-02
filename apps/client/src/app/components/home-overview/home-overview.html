@@ -1,7 +1,11 @@
 <div
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
-  @if (hasPermissionToCreateOrder && historicalDataItems?.length === 0) {
+  @if (
+    !hasImpersonationId &&
+    hasPermissionToCreateActivity &&
+    user?.activitiesCount === 0
+  ) {
     <div class="justify-content-center row w-100">
       <div class="col introduction">
         <h4 i18n>Welcome to Ghostfolio</h4>
@@ -11,7 +15,7 @@
             class="mb-2"
             [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
           >
-            <a class="d-block" [routerLink]="['/accounts']"
+            <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
               <span class="font-weight-normal" i18n
                 >Get a comprehensive financial overview by adding your bank and
@@ -20,7 +24,7 @@
             >
           </li>
           <li class="mb-2">
-            <a class="d-block" [routerLink]="['/portfolio', 'activities']">
+            <a class="d-block" [routerLink]="routerLinkPortfolioActivities">
               <span i18n>Capture your activities</span><br />
               <span class="font-weight-normal" i18n
                 >Record your investment activities to keep your portfolio up to
@@ -29,7 +33,7 @@
             >
           </li>
           <li class="mb-2">
-            <a class="d-block" [routerLink]="['/portfolio']">
+            <a class="d-block" [routerLink]="routerLinkPortfolio">
               <span i18n>Monitor and analyze your portfolio</span><br />
               <span class="font-weight-normal" i18n
                 >Track your progress in real-time with comprehensive analysis
@@ -40,14 +44,18 @@
         </ol>
         <div class="d-flex justify-content-center">
           @if (user?.accounts?.length === 1) {
-            <a color="primary" mat-flat-button [routerLink]="['/accounts']">
+            <a
+              color="primary"
+              mat-flat-button
+              [routerLink]="routerLinkAccounts"
+            >
               <ng-container i18n>Setup accounts</ng-container>
             </a>
           } @else if (user?.accounts?.length > 1) {
             <a
               color="primary"
               mat-flat-button
-              [routerLink]="['/portfolio', 'activities']"
+              [routerLink]="routerLinkPortfolioActivities"
             >
               <ng-container i18n>Add activity</ng-container>
             </a>
@@ -61,12 +69,12 @@
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
-            symbol="Performance"
             unit="%"
             [colorScheme]="user?.settings?.colorScheme"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
             [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
+            [label]="performanceLabel"
             [locale]="user?.settings?.locale"
             [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
             [showGradient]="true"

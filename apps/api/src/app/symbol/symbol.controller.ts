@@ -47,7 +47,7 @@ export class SymbolController {
     try {
       return this.symbolService.lookup({
         includeIndices,
-        query: query.toLowerCase(),
+        query,
         user: this.request.user
       });
     } catch {

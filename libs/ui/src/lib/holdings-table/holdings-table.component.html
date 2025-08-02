@@ -10,7 +10,7 @@
     <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <gf-asset-profile-icon
+        <gf-entity-logo
           [dataSource]="element.dataSource"
           [symbol]="element.symbol"
           [tooltip]="element.name"
@@ -196,13 +196,5 @@
     <button mat-stroked-button (click)="onShowAllHoldings()">
       <ng-container i18n>Show all</ng-container>
     </button>
-  </div>
-}
-
-@if (
-  dataSource.data.length === 0 && hasPermissionToCreateActivity && !isLoading
-) {
-  <div class="p-3 text-center">
-    <gf-no-transactions-info-indicator [hasBorder]="false" />
   </div>
 }

@@ -15,12 +15,14 @@
           z-index: 999;
 
           .info-message {
-            color: rgba(var(--palette-foreground-text), 1);
+            color: rgba(var(--light-primary-text));
             font-size: 80%;
+            font-weight: 500;
             max-width: 100%;
 
             .a {
-              font-weight: 500;
+              border: 1px solid rgba(var(--light-primary-text));
+              border-radius: 0.25rem;
             }
           }
         }

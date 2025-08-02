@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -10,6 +11,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -41,9 +43,7 @@ export class AlphaVantageService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     return {
       symbol,
       dataSource: this.getName()
@@ -52,6 +52,7 @@ export class AlphaVantageService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.ALPHA_VANTAGE,
       isPremium: false,
       name: 'Alpha Vantage',
       url: 'https://www.alphavantage.co'
@@ -73,7 +74,9 @@ export class AlphaVantageService implements DataProviderInterface {
       const historicalData: {
         [symbol: string]: IAlphaVantageHistoricalResponse[];
       } = await this.alphaVantage.crypto.daily(
-        symbol.substring(0, symbol.length - 3).toLowerCase(),
+        symbol
+          .substring(0, symbol.length - DEFAULT_CURRENCY.length)
+          .toLowerCase(),
         'usd'
       );
 

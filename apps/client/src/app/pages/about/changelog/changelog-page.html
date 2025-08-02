@@ -2,8 +2,51 @@
   <div class="mb-5 row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Changelog</h1>
+
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{
+            height: '1.5rem',
+            width: '12rem'
+          }"
+        />
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mt-3"
+          [theme]="{
+            height: '1.25rem',
+            width: '5rem'
+          }"
+        />
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mt-3"
+          [theme]="{
+            height: '1.25rem',
+            width: '50%'
+          }"
+        />
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mt-2"
+          [theme]="{
+            height: '1.25rem',
+            width: '75%'
+          }"
+        />
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mt-2"
+          [theme]="{
+            height: '1.25rem',
+            width: '67%'
+          }"
+        />
+      }
+
       <div class="changelog">
-        <markdown [src]="'../assets/CHANGELOG.md'"></markdown>
+        <markdown [src]="'../assets/CHANGELOG.md'" (load)="onLoad()"></markdown>
       </div>
     </div>
   </div>

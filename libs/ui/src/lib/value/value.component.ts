@@ -8,12 +8,13 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
+import { IonIcon } from '@ionic/angular/standalone';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [CommonModule, IonIcon, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
   styleUrls: ['./value.component.scss'],
@@ -47,7 +48,7 @@ export class GfValueComponent implements OnChanges {
       if (isNumber(this.value)) {
         this.isNumber = true;
         this.isString = false;
-        this.absoluteValue = Math.abs(this.value as number);
+        this.absoluteValue = Math.abs(this.value);
 
         if (this.colorizeSign) {
           if (this.isCurrency) {

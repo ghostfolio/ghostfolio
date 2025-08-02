@@ -45,7 +45,7 @@ export class WebAuthnService {
           return of(null);
         }),
         switchMap((attOps) => {
-          return startRegistration(attOps);
+          return startRegistration({ optionsJSON: attOps });
         }),
         switchMap((credential) => {
           return this.http.post<AuthDeviceDto>(
@@ -85,16 +85,16 @@ export class WebAuthnService {
 
     return this.http
       .post<PublicKeyCredentialRequestOptionsJSON>(
-        `/api/v1/auth/webauthn/generate-assertion-options`,
+        '/api/v1/auth/webauthn/generate-authentication-options',
         { deviceId }
       )
       .pipe(
-        switchMap((requestOptionsJSON) => {
-          return startAuthentication(requestOptionsJSON);
+        switchMap((optionsJSON) => {
+          return startAuthentication({ optionsJSON });
         }),
         switchMap((credential) => {
           return this.http.post<{ authToken: string }>(
-            `/api/v1/auth/webauthn/verify-assertion`,
+            '/api/v1/auth/webauthn/verify-authentication',
             {
               credential,
               deviceId

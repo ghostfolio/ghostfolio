@@ -1,4 +1,5 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { GfRulesModule } from '@ghostfolio/client/components/rules/rules.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -8,17 +9,33 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { User } from '@ghostfolio/common/interfaces/user.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  checkmarkCircleOutline,
+  removeCircleOutline,
+  warningOutline
+} from 'ionicons/icons';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
+  imports: [
+    GfPremiumIndicatorComponent,
+    GfRulesModule,
+    IonIcon,
+    NgClass,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-x-ray-page',
   styleUrl: './x-ray-page.component.scss',
-  templateUrl: './x-ray-page.component.html',
-  standalone: false
+  templateUrl: './x-ray-page.component.html'
 })
-export class XRayPageComponent {
+export class GfXRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];
   public assetClassClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
@@ -29,7 +46,8 @@ export class XRayPageComponent {
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
-  public statistics: PortfolioReportResponse['statistics'];
+  public regionalMarketClusterRiskRules: PortfolioReportRule[];
+  public statistics: PortfolioReportResponse['xRay']['statistics'];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -39,7 +57,9 @@ export class XRayPageComponent {
     private dataService: DataService,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ checkmarkCircleOutline, removeCircleOutline, warningOutline });
+  }
 
   public ngOnInit() {
     this.impersonationStorageService
@@ -95,7 +115,7 @@ export class XRayPageComponent {
     this.dataService
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ rules, statistics }) => {
+      .subscribe(({ xRay: { rules, statistics } }) => {
         this.inactiveRules = this.mergeInactiveRules(rules);
         this.statistics = statistics;
 
@@ -129,6 +149,11 @@ export class XRayPageComponent {
             return isActive;
           }) ?? null;
 
+        this.regionalMarketClusterRiskRules =
+          rules['regionalMarketClusterRisk']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
@@ -136,7 +161,7 @@ export class XRayPageComponent {
   }
 
   private mergeInactiveRules(
-    rules: PortfolioReportResponse['rules']
+    rules: PortfolioReportResponse['xRay']['rules']
   ): PortfolioReportRule[] {
     let inactiveRules: PortfolioReportRule[] = [];
 

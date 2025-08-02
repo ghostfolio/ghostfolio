@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -27,7 +28,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
-import got, { Headers } from 'got';
 import * as jsonpath from 'jsonpath';
 
 @Injectable()
@@ -44,9 +44,7 @@ export class ManualService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     const assetProfile: Partial<SymbolProfile> = {
       symbol,
       dataSource: this.getName()
@@ -66,6 +64,7 @@ export class ManualService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.MANUAL,
       isPremium: false
     };
   }
@@ -105,7 +104,7 @@ export class ManualService implements DataProviderInterface {
         }
 
         return historical;
-      } else if (selector === undefined || url === undefined) {
+      } else if (!selector || !url) {
         return {};
       }
 
@@ -163,7 +162,11 @@ export class ManualService implements DataProviderInterface {
 
       const symbolProfilesWithScraperConfigurationAndInstantMode =
         symbolProfiles.filter(({ scraperConfiguration }) => {
-          return scraperConfiguration?.mode === 'instant';
+          return (
+            scraperConfiguration?.mode === 'instant' &&
+            scraperConfiguration?.selector &&
+            scraperConfiguration?.url
+          );
         });
 
       const scraperResultPromises =
@@ -274,39 +277,48 @@ export class ManualService implements DataProviderInterface {
   private async scrape(
     scraperConfiguration: ScraperConfiguration
   ): Promise<number> {
-    try {
-      let locale = scraperConfiguration.locale;
-      const { body, headers } = await got(scraperConfiguration.url, {
-        headers: scraperConfiguration.headers as Headers,
-        // @ts-ignore
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
+    let locale = scraperConfiguration.locale;
+
+    const response = await fetch(scraperConfiguration.url, {
+      headers: scraperConfiguration.headers as HeadersInit,
+      signal: AbortSignal.timeout(
+        this.configurationService.get('REQUEST_TIMEOUT')
+      )
+    });
+
+    let value: string;
+
+    if (response.headers.get('content-type')?.includes('application/json')) {
+      const data = await response.json();
+
+      value = String(jsonpath.query(data, scraperConfiguration.selector)[0]);
+    } else {
+      const $ = cheerio.load(await response.text());
+
+      if (!locale) {
+        try {
+          locale = $('html').attr('lang');
+        } catch {}
+      }
+
+      value = $(scraperConfiguration.selector).first().text();
+
+      const lines = value?.split('\n') ?? [];
+
+      const lineWithDigits = lines.find((line) => {
+        return /\d/.test(line);
       });
 
-      if (headers['content-type'].includes('application/json')) {
-        const data = JSON.parse(body);
-        const value = String(
-          jsonpath.query(data, scraperConfiguration.selector)[0]
-        );
-
-        return extractNumberFromString({ locale, value });
-      } else {
-        const $ = cheerio.load(body);
-
-        if (!locale) {
-          try {
-            locale = $('html').attr('lang');
-          } catch {}
-        }
-
-        return extractNumberFromString({
-          locale,
-          value: $(scraperConfiguration.selector).first().text()
-        });
+      if (lineWithDigits) {
+        value = lineWithDigits;
       }
-    } catch (error) {
-      throw error;
+
+      return extractNumberFromString({
+        locale,
+        value
+      });
     }
+
+    return extractNumberFromString({ locale, value });
   }
 }

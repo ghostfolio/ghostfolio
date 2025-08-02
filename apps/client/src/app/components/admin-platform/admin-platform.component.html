@@ -1,115 +1,94 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <div class="d-flex justify-content-end">
-        <a
-          color="primary"
-          i18n
-          mat-flat-button
-          [queryParams]="{ createPlatformDialog: true }"
-          [routerLink]="[]"
-        >
-          Add Platform
-        </a>
-      </div>
-      <table
-        class="gf-table w-100"
-        mat-table
-        matSort
-        matSortActive="name"
-        matSortDirection="asc"
-        [dataSource]="dataSource"
-      >
-        <ng-container matColumnDef="name">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="name"
-          >
-            <ng-container i18n>Name</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            @if (element.url) {
-              <gf-asset-profile-icon
-                class="d-inline mr-1"
-                [tooltip]="element.name"
-                [url]="element.url"
-              />
-            }
-            <span>{{ element.name }}</span>
-          </td></ng-container
-        >
-
-        <ng-container matColumnDef="url">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="url"
-          >
-            <ng-container i18n>Url</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.url }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="accounts">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="accountCount"
-          >
-            <ng-container i18n>Accounts</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.accountCount }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions" stickyEnd>
-          <th
-            *matHeaderCellDef
-            class="px-1 text-center"
-            i18n
-            mat-header-cell
-          ></th>
-          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-            <button
-              class="mx-1 no-min-width px-2"
-              mat-button
-              [matMenuTriggerFor]="platformMenu"
-              (click)="$event.stopPropagation()"
-            >
-              <ion-icon name="ellipsis-horizontal" />
-            </button>
-            <mat-menu #platformMenu="matMenu" xPosition="before">
-              <button mat-menu-item (click)="onUpdatePlatform(element)">
-                <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="create-outline" />
-                  <span i18n>Edit</span>
-                </span>
-              </button>
-              <hr class="m-0" />
-              <button
-                mat-menu-item
-                [disabled]="element.accountCount > 0"
-                (click)="onDeletePlatform(element.id)"
-              >
-                <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="trash-outline" />
-                  <span i18n>Delete</span>
-                </span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
-
-        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-      </table>
-    </div>
-  </div>
+<div class="d-flex justify-content-end">
+  <a
+    color="primary"
+    i18n
+    mat-flat-button
+    [queryParams]="{ createPlatformDialog: true }"
+    [routerLink]="[]"
+  >
+    Add Platform
+  </a>
 </div>
+<table
+  class="gf-table w-100"
+  mat-table
+  matSort
+  matSortActive="name"
+  matSortDirection="asc"
+  [dataSource]="dataSource"
+>
+  <ng-container matColumnDef="name">
+    <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
+      <ng-container i18n>Name</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      @if (element.url) {
+        <gf-entity-logo
+          class="d-inline mr-1"
+          [tooltip]="element.name"
+          [url]="element.url"
+        />
+      }
+      <span>{{ element.name }}</span>
+    </td></ng-container
+  >
+
+  <ng-container matColumnDef="url">
+    <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="url">
+      <ng-container i18n>Url</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      {{ element.url }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="accounts">
+    <th
+      *matHeaderCellDef
+      class="px-1"
+      mat-header-cell
+      mat-sort-header="accountCount"
+    >
+      <ng-container i18n>Accounts</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      {{ element.accountCount }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions" stickyEnd>
+    <th *matHeaderCellDef class="px-1 text-center" i18n mat-header-cell></th>
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="platformMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-horizontal" />
+      </button>
+      <mat-menu #platformMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="onUpdatePlatform(element)">
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="create-outline" />
+            <span i18n>Edit</span>
+          </span>
+        </button>
+        <hr class="m-0" />
+        <button
+          mat-menu-item
+          [disabled]="element.accountCount > 0"
+          (click)="onDeletePlatform(element.id)"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="trash-outline" />
+            <span i18n>Delete</span>
+          </span>
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+</table>

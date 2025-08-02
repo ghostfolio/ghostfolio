@@ -4,6 +4,7 @@ export interface AdminUsers {
   count: number;
   users: {
     accountCount: number;
+    activityCount: number;
     country: string;
     createdAt: Date;
     dailyApiRequests: number;
@@ -11,6 +12,5 @@ export interface AdminUsers {
     id: string;
     lastActivity: Date;
     role: Role;
-    transactionCount: number;
   }[];
 }

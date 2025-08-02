@@ -1,10 +1,11 @@
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
+@Injectable()
 export class I18nService {
   private localesPath = join(__dirname, 'assets', 'locales');
   private translations: { [locale: string]: cheerio.CheerioAPI } = {};
@@ -15,10 +16,12 @@ export class I18nService {
 
   public getTranslation({
     id,
-    languageCode
+    languageCode,
+    placeholders
   }: {
     id: string;
     languageCode: string;
+    placeholders?: Record<string, string | number>;
   }): string {
     const $ = this.translations[languageCode];
 
@@ -26,7 +29,7 @@ export class I18nService {
       Logger.warn(`Translation not found for locale '${languageCode}'`);
     }
 
-    const translatedText = $(
+    let translatedText = $(
       `trans-unit[id="${id}"] > ${
         languageCode === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
       }`
@@ -36,6 +39,12 @@ export class I18nService {
       Logger.warn(
         `Translation not found for id '${id}' in locale '${languageCode}'`
       );
+    }
+
+    if (placeholders) {
+      for (const [key, value] of Object.entries(placeholders)) {
+        translatedText = translatedText.replace(`\${${key}}`, String(value));
+      }
     }
 
     return translatedText.trim();

@@ -1,11 +1,19 @@
-import { Account, Order } from '@prisma/client';
+import {
+  Account,
+  DataSource,
+  Order,
+  Platform,
+  SymbolProfile,
+  Tag
+} from '@prisma/client';
+
+import { AccountBalance } from './account-balance.interface';
+import { MarketData } from './market-data.interface';
 
 export interface Export {
-  meta: {
-    date: string;
-    version: string;
-  };
-  accounts: Omit<Account, 'createdAt' | 'updatedAt' | 'userId'>[];
+  accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
+    balances: AccountBalance[];
+  })[];
   activities: (Omit<
     Order,
     | 'accountUserId'
@@ -15,6 +23,18 @@ export interface Export {
     | 'symbolProfileId'
     | 'updatedAt'
     | 'userId'
-  > & { date: string; symbol: string })[];
+  > & { dataSource: DataSource; date: string; symbol: string })[];
+  assetProfiles: (Omit<
+    SymbolProfile,
+    'createdAt' | 'id' | 'updatedAt' | 'userId'
+  > & {
+    marketData: MarketData[];
+  })[];
+  meta: {
+    date: string;
+    version: string;
+  };
+  platforms: Platform[];
+  tags: Omit<Tag, 'userId'>[];
   user: { settings: { currency: string } };
 }

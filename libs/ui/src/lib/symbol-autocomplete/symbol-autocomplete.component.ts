@@ -1,8 +1,6 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { LookupItem } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
-import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
@@ -10,10 +8,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -43,7 +44,9 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
+import { translate } from '../i18n';
 import { GfPremiumIndicatorComponent } from '../premium-indicator';
+import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,18 +77,19 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnInit, OnDestroy
+  implements DoCheck, OnChanges, OnDestroy, OnInit
 {
-  @Input() private includeIndices = false;
+  @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
-
-  @ViewChild(MatInput) private input: MatInput;
 
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
+  @Input() private includeIndices = false;
+
+  @ViewChild(MatInput) private input: MatInput;
+
   public control = new FormControl();
-  public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
-    [];
+  public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -117,7 +121,13 @@ export class GfSymbolAutocompleteComponent
     this.control.valueChanges
       .pipe(
         filter((query) => {
-          return isString(query) && query.length > 1;
+          if (query.length === 0) {
+            this.showDefaultOptions();
+
+            return false;
+          }
+
+          return isString(query);
         }),
         tap(() => {
           this.isLoading = true;
@@ -135,7 +145,7 @@ export class GfSymbolAutocompleteComponent
         })
       )
       .subscribe((filteredLookupItems) => {
-        this.filteredLookupItems = filteredLookupItems.map((lookupItem) => {
+        this.lookupItems = filteredLookupItems.map((lookupItem) => {
           return {
             ...lookupItem,
             assetSubClassString: translate(lookupItem.assetSubClass)
@@ -146,6 +156,12 @@ export class GfSymbolAutocompleteComponent
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes['defaultLookupItems'] && this.defaultLookupItems?.length) {
+      this.showDefaultOptions();
+    }
   }
 
   public displayFn(aLookupItem: LookupItem) {
@@ -161,7 +177,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public isValueInOptions(value: string) {
-    return this.filteredLookupItems.some((item) => {
+    return this.lookupItems.some((item) => {
       return item.symbol === value;
     });
   }
@@ -191,6 +207,17 @@ export class GfSymbolAutocompleteComponent
 
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private showDefaultOptions() {
+    this.lookupItems = this.defaultLookupItems.map((lookupItem) => {
+      return {
+        ...lookupItem,
+        assetSubClassString: translate(lookupItem.assetSubClass)
+      };
+    });
+
+    this.changeDetectorRef.markForCheck();
   }
 
   private validateRequired() {

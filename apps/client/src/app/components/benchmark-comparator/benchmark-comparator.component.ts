@@ -13,6 +13,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
@@ -39,6 +40,8 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { addIcons } from 'ionicons';
+import { arrowForwardOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'gf-benchmark-comparator',
@@ -63,6 +66,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public chart: Chart<'line'>;
   public hasPermissionToAccessAdminControl: boolean;
+  public routerLinkAdminControlMarketData =
+    internalRoutes.adminControl.subRoutes.marketData.routerLink;
 
   public constructor() {
     Chart.register(
@@ -77,6 +82,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
     Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
       getTooltipPositionerMapTop(this.chart, position);
+
+    addIcons({ arrowForwardOutline });
   }
 
   public ngOnChanges() {

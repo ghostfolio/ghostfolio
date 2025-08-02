@@ -37,20 +37,20 @@ export class AccessController {
   public async getAllAccesses(): Promise<Access[]> {
     const accessesWithGranteeUser = await this.accessService.accesses({
       include: {
-        GranteeUser: true
+        granteeUser: true
       },
       orderBy: { granteeUserId: 'asc' },
       where: { userId: this.request.user.id }
     });
 
     return accessesWithGranteeUser.map(
-      ({ alias, GranteeUser, id, permissions }) => {
-        if (GranteeUser) {
+      ({ alias, granteeUser, id, permissions }) => {
+        if (granteeUser) {
           return {
             alias,
             id,
             permissions,
-            grantee: GranteeUser?.id,
+            grantee: granteeUser?.id,
             type: 'PRIVATE'
           };
         }
@@ -85,11 +85,11 @@ export class AccessController {
     try {
       return this.accessService.createAccess({
         alias: data.alias || undefined,
-        GranteeUser: data.granteeUserId
+        granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
-        User: { connect: { id: this.request.user.id } }
+        user: { connect: { id: this.request.user.id } }
       });
     } catch {
       throw new HttpException(
