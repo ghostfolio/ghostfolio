@@ -17,7 +17,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold':
               currentRoute === internalRoutes.home.path ||
@@ -34,7 +34,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
             'text-decoration-underline':
@@ -48,7 +48,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === internalRoutes.accounts.path,
             'text-decoration-underline':
@@ -63,7 +63,7 @@
           <a
             class="d-none d-sm-block"
             i18n
-            mat-flat-button
+            mat-button
             [ngClass]="{
               'font-weight-bold':
                 currentRoute === internalRoutes.adminControl.path,
@@ -79,7 +79,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeResources,
             'text-decoration-underline': currentRoute === routeResources
@@ -94,7 +94,7 @@
         <li class="list-inline-item">
           <a
             class="d-none d-sm-block"
-            mat-flat-button
+            mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
@@ -114,7 +114,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeAbout,
             'text-decoration-underline': currentRoute === routeAbout
@@ -164,7 +164,7 @@
       <li class="list-inline-item">
         <button
           class="no-min-width px-1"
-          mat-flat-button
+          mat-button
           [matMenuTriggerFor]="accountMenu"
           (menuClosed)="onMenuClosed()"
           (menuOpened)="onMenuOpened()"
@@ -352,7 +352,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeFeatures,
             'text-decoration-underline': currentRoute === routeFeatures
@@ -365,7 +365,7 @@
         <a
           class="d-none d-sm-block"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeAbout,
             'text-decoration-underline': currentRoute === routeAbout
@@ -378,7 +378,7 @@
         <li class="list-inline-item">
           <a
             class="d-sm-block"
-            mat-flat-button
+            mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
@@ -399,7 +399,7 @@
           <a
             class="d-none d-sm-block"
             i18n
-            mat-flat-button
+            mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routeMarkets,
               'text-decoration-underline': currentRoute === routeMarkets
@@ -413,12 +413,12 @@
         <a
           class="d-none d-sm-block no-min-width p-1"
           href="https://github.com/ghostfolio/ghostfolio"
-          mat-flat-button
+          mat-button
           ><ion-icon name="logo-github"></ion-icon
         ></a>
       </li>
       <li class="list-inline-item">
-        <button class="d-sm-block" mat-flat-button (click)="openLoginDialog()">
+        <button class="d-sm-block" mat-button (click)="openLoginDialog()">
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
