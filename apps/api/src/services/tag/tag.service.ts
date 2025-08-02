@@ -1,5 +1,4 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/client';
@@ -80,8 +79,7 @@ export class TagService {
       id,
       name,
       userId,
-      isUsed:
-        _count.activities > 0 && ![TAG_ID_EXCLUDE_FROM_ANALYSIS].includes(id)
+      isUsed: _count.activities > 0
     }));
   }
 
