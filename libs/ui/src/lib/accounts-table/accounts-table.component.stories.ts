@@ -7,9 +7,9 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
+import { NotificationService } from 'apps/client/src/app/core/notification/notification.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { NotificationService } from 'apps/client/src/app/core/notification/notification.service';
 import { GfEntityLogoComponent } from '../entity-logo';
 import { GfValueComponent } from '../value';
 import { GfAccountsTableComponent } from './accounts-table.component';
@@ -114,7 +114,7 @@ export default {
         NgxSkeletonLoaderModule,
         RouterModule.forChild([])
       ],
-      providers: [NotificationService],
+      providers: [NotificationService]
     })
   ]
 } as Meta<GfAccountsTableComponent>;
