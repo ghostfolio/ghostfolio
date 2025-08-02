@@ -112,9 +112,9 @@ export default {
         MatSortModule,
         MatTableModule,
         NgxSkeletonLoaderModule,
-        RouterModule.forChild([]),
+        RouterModule.forChild([])
       ],
-      providers: [NotificationService]
+      providers: [NotificationService],
     })
   ]
 } as Meta<GfAccountsTableComponent>;
