@@ -154,13 +154,9 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
     if (filename === '/assets/LICENSE') {
       return true;
     } else if (
-      filename.includes('auth/ey') ||
-      filename.includes(
-        'personal-finance-tools/open-source-alternative-to-de.fi'
-      ) ||
-      filename.includes(
-        'personal-finance-tools/open-source-alternative-to-markets.sh'
-      )
+      filename.endsWith('-de.fi') ||
+      filename.endsWith('-markets.sh') ||
+      filename.includes('auth/ey')
     ) {
       return false;
     }
