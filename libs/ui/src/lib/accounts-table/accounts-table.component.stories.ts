@@ -9,6 +9,7 @@ import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
+import { NotificationService } from 'apps/client/src/app/core/notification/notification.service';
 import { GfEntityLogoComponent } from '../entity-logo';
 import { GfValueComponent } from '../value';
 import { GfAccountsTableComponent } from './accounts-table.component';
@@ -103,16 +104,17 @@ export default {
     moduleMetadata({
       imports: [
         CommonModule,
-        NgxSkeletonLoaderModule,
+        GfEntityLogoComponent,
+        GfValueComponent,
+        IonIcon,
         MatButtonModule,
         MatMenuModule,
         MatSortModule,
         MatTableModule,
-        RouterModule.forRoot([]),
-        IonIcon,
-        GfEntityLogoComponent,
-        GfValueComponent
-      ]
+        NgxSkeletonLoaderModule,
+        RouterModule.forChild([]),
+      ],
+      providers: [NotificationService]
     })
   ]
 } as Meta<GfAccountsTableComponent>;
@@ -123,7 +125,7 @@ export const Loading: Story = {
   args: {
     accounts: [],
     baseCurrency: 'USD',
-    deviceType: 'web',
+    deviceType: 'desktop',
     locale: 'en-US',
     showActions: false,
     showAllocationInPercentage: false,
@@ -142,7 +144,7 @@ export const Default: Story = {
   args: {
     accounts: mockAccounts,
     baseCurrency: 'USD',
-    deviceType: 'web',
+    deviceType: 'desktop',
     locale: 'en-US',
     showActions: false,
     showAllocationInPercentage: false,
@@ -161,7 +163,7 @@ export const WithActions: Story = {
   args: {
     accounts: mockAccounts,
     baseCurrency: 'USD',
-    deviceType: 'web',
+    deviceType: 'desktop',
     locale: 'en-US',
     showActions: true,
     showAllocationInPercentage: true,
@@ -199,7 +201,7 @@ export const WithoutFooter: Story = {
   args: {
     accounts: mockAccounts,
     baseCurrency: 'USD',
-    deviceType: 'web',
+    deviceType: 'desktop',
     locale: 'en-US',
     showActions: false,
     showAllocationInPercentage: true,
