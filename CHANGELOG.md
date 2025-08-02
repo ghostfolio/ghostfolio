@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to exclude an activity from analysis based on tags
+- Added a _Storybook_ story for the accounts table component
 - Added a _Storybook_ story for the membership card component
 
 ### Changed
