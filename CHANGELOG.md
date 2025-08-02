@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Enhanced the performance of the dynamically composed sitemap
 - Improved the language localization for Polish (`pl`)
 
 ## 2.187.0 - 2025-08-02
