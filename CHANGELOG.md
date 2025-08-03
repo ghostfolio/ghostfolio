@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.188.0 - 2025-08-02
 
 ### Changed
 
+- Enhanced the performance of the dynamically composed sitemap
 - Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
 
 ## 2.187.0 - 2025-08-02
 

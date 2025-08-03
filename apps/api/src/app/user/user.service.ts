@@ -28,6 +28,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
   locale
 } from '@ghostfolio/common/config';
 import {
@@ -121,7 +122,9 @@ export class UserService {
     const access = userData[0];
     const activitiesCount = userData[1];
     const firstActivity = userData[2];
-    let tags = userData[3];
+    let tags = userData[3].filter((tag) => {
+      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    });
 
     let systemMessage: SystemMessage;
 
