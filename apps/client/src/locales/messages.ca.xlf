@@ -4049,7 +4049,7 @@
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
         <source>Exclude from Analysis</source>
-        <target state="translated">Excluir de l'anàlisi</target>
+        <target state="translated">Excluir de l’anàlisi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">90</context>
@@ -5882,7 +5882,7 @@
       </trans-unit>
       <trans-unit id="8539938855673078773" datatype="html">
         <source>Time to add your first activity.</source>
-        <target state="translated">És hora d'afegir la teva primera activitat.</target>
+        <target state="translated">És hora d’afegir la teva primera activitat.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-transactions-info/no-transactions-info.component.html</context>
           <context context-type="linenumber">12</context>
