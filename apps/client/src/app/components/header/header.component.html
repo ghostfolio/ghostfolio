@@ -2,7 +2,7 @@
   @if (user) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
-        class="align-items-center justify-content-start rounded-0"
+        class="align-items-center h-100 justify-content-start rounded-0"
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
@@ -15,7 +15,7 @@
     <ul class="align-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -32,7 +32,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -46,7 +46,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -61,7 +61,7 @@
       @if (hasPermissionToAccessAdminControl) {
         <li class="list-inline-item">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block rounded"
             i18n
             mat-button
             [ngClass]="{
@@ -77,7 +77,7 @@
       }
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -93,7 +93,7 @@
       ) {
         <li class="list-inline-item">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block rounded"
             mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
@@ -112,7 +112,7 @@
       }
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -334,7 +334,7 @@
   @if (user === null) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
-        class="align-items-center justify-content-start rounded-0"
+        class="align-items-center h-100 justify-content-start rounded-0"
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
@@ -350,7 +350,7 @@
     <ul class="align-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -363,7 +363,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
           mat-button
           [ngClass]="{
@@ -377,7 +377,7 @@
       @if (hasPermissionForSubscription) {
         <li class="list-inline-item">
           <a
-            class="d-sm-block"
+            class="d-sm-block rounded"
             mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
@@ -397,7 +397,7 @@
       @if (hasPermissionToAccessFearAndGreedIndex) {
         <li class="list-inline-item">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block rounded"
             i18n
             mat-button
             [ngClass]="{
@@ -418,14 +418,18 @@
         ></a>
       </li>
       <li class="list-inline-item">
-        <button class="d-sm-block" mat-button (click)="openLoginDialog()">
+        <button
+          class="d-sm-block rounded"
+          mat-button
+          (click)="openLoginDialog()"
+        >
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
       @if (currentRoute !== 'register' && hasPermissionToCreateUser) {
         <li class="list-inline-item ml-1">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block px-3 rounded"
             color="primary"
             mat-flat-button
             [routerLink]="routerLinkRegister"
