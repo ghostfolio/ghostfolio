@@ -155,17 +155,17 @@ export class ImportService {
     accountsWithBalancesDto,
     activitiesDto,
     assetProfilesWithMarketDataDto,
-    tagsDto,
     isDryRun = false,
     maxActivitiesToImport,
+    tagsDto,
     user
   }: {
     accountsWithBalancesDto: ImportDataDto['accounts'];
     activitiesDto: ImportDataDto['activities'];
     assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
-    tagsDto: ImportDataDto['tags'];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
+    tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};

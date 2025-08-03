@@ -14,8 +14,8 @@ export interface Activity extends Order {
   feeInAssetProfileCurrency: number;
   feeInBaseCurrency: number;
   SymbolProfile?: EnhancedSymbolProfile;
-  tags?: Tag[];
   tagIds?: string[];
+  tags?: Tag[];
   unitPriceInAssetProfileCurrency: number;
   updateAccountBalance?: boolean;
   value: number;

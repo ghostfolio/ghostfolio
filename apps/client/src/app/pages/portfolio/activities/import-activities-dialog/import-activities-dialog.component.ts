@@ -81,7 +81,6 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
   public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
-  public tags: CreateTagDto[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public details: any[] = [];
   public deviceType: string;
@@ -96,6 +95,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
   public stepperOrientation: StepperOrientation;
+  public tags: CreateTagDto[] = [];
   public totalItems: number;
 
   private unsubscribeSubject = new Subject<void>();
@@ -332,8 +332,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
                 accounts: content.accounts,
                 activities: content.activities,
                 assetProfiles: content.assetProfiles,
-                tags: content.tags,
-                isDryRun: true
+                isDryRun: true,
+                tags: content.tags
               });
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());

@@ -76,14 +76,14 @@ export class ImportActivitiesService {
     accounts,
     activities,
     assetProfiles,
-    tags,
-    isDryRun = false
+    isDryRun = false,
+    tags
   }: {
     activities: CreateOrderDto[];
     accounts?: CreateAccountWithBalancesDto[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
-    tags?: CreateTagDto[];
     isDryRun?: boolean;
+    tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
   }> {
