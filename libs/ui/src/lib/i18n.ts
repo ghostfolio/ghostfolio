@@ -13,6 +13,7 @@ const locales = {
   DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS: $localize`Switch to Ghostfolio Premium easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM: $localize`Switch to Ghostfolio Open Source or Ghostfolio Basic easily`,
   EMERGENCY_FUND: $localize`Emergency Fund`,
+  EXCLUDE_FROM_ANALYSIS: $localize`Exclude from Analysis`,
   Global: $localize`Global`,
   GRANT: $localize`Grant`,
   HIGHER_RISK: $localize`Higher Risk`,

@@ -41,7 +41,7 @@ export class ExportService {
       includeDrafts: true,
       sortColumn: 'date',
       sortDirection: 'asc',
-      withExcludedAccounts: true
+      withExcludedAccountsAndActivities: true
     });
 
     if (activityIds?.length > 0) {
@@ -141,15 +141,16 @@ export class ExportService {
     );
 
     const tags = (await this.tagService.getTagsForUser(userId))
-      .filter(
-        ({ id, isUsed }) =>
+      .filter(({ id, isUsed }) => {
+        return (
           isUsed &&
           activities.some((activity) => {
             return activity.tags.some(({ id: tagId }) => {
               return tagId === id;
             });
           })
-      )
+        );
+      })
       .map(({ id, name }) => {
         return {
           id,
