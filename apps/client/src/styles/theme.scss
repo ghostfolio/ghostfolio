@@ -158,6 +158,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-default);
 
+  @include mat.table-overrides(
+    (
+      row-item-outline-color: rgba(var(--dark-dividers))
+    )
+  );
+
   --mdc-outlined-card-container-color: unset;
 }
 
@@ -177,6 +183,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   );
 
   @include mat.all-component-themes($gf-theme-dark);
+
+  @include mat.table-overrides(
+    (
+      row-item-outline-color: rgba(var(--light-dividers))
+    )
+  );
 
   --mdc-outlined-card-container-color: unset;
 }
