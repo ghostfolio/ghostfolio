@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 @import './styles/bootstrap';
 @import './styles/table';
 
@@ -557,6 +559,12 @@ ngx-skeleton-loader {
 
     @media (min-width: 576px) {
       flex-direction: row-reverse;
+
+      @include mat.tabs-overrides(
+        (
+          divider-height: 0
+        )
+      );
 
       .mat-mdc-tab-header {
         background-color: rgba(var(--palette-foreground-base), 0.02);
