@@ -158,6 +158,11 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-default);
 
+  @include mat.fab-overrides(
+    (
+      container-color: var(--gf-theme-primary-500)
+    )
+  );
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--dark-dividers))
@@ -184,6 +189,11 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-dark);
 
+  @include mat.fab-overrides(
+    (
+      container-color: var(--gf-theme-primary-500)
+    )
+  );
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--light-dividers))
