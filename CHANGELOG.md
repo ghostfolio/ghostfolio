@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for German (`de`)
 
 ## 2.188.0 - 2025-08-02
 
