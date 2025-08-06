@@ -175,15 +175,6 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       row-item-outline-color: rgba(var(--dark-dividers))
     )
   );
-  @include mat.tabs-overrides(
-    (
-      active-focus-label-text-color: var(--gf-theme-primary-500),
-      active-hover-label-text-color: var(--gf-theme-primary-500),
-      active-label-text-color: var(--gf-theme-primary-500),
-      active-ripple-color: var(--gf-theme-primary-500),
-      inactive-ripple-color: var(--gf-theme-primary-500)
-    )
-  );
 
   --mdc-outlined-card-container-color: unset;
 }
@@ -222,17 +213,31 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       row-item-outline-color: rgba(var(--light-dividers))
     )
   );
+
+  --mdc-outlined-card-container-color: unset;
+}
+
+.theme-dark,
+.theme-light {
+  @media (max-width: 575.98px) {
+    @include mat.tabs-overrides(
+      (
+        container-height: 3rem
+      )
+    );
+  }
   @include mat.tabs-overrides(
     (
       active-focus-label-text-color: var(--gf-theme-primary-500),
       active-hover-label-text-color: var(--gf-theme-primary-500),
+      active-indicator-height: 0,
       active-label-text-color: var(--gf-theme-primary-500),
       active-ripple-color: var(--gf-theme-primary-500),
-      inactive-ripple-color: var(--gf-theme-primary-500)
+      container-height: 2rem,
+      inactive-ripple-color: var(--gf-theme-primary-500),
+      label-text-tracking: normal
     )
   );
-
-  --mdc-outlined-card-container-color: unset;
 }
 
 :root {
