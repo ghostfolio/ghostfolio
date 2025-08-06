@@ -300,30 +300,27 @@ export class ImportService {
     }
 
     if (tagsDto?.length) {
-      const existingTags = await this.tagService.getTagsForUser(user.id);
+      const existingTagsOfUser = await this.tagService.getTagsForUser(user.id);
 
-      const canCreateTag = hasPermission(
-        user.permissions,
-        permissions.createTag
-      );
       const canCreateOwnTag = hasPermission(
         user.permissions,
         permissions.createOwnTag
       );
 
       for (const tag of tagsDto) {
-        // Check if there is any existing tag
-        const existingTag = existingTags.find(({ name }) => {
-          return name === tag.name;
+        const existingTagOfUser = existingTagsOfUser.find(({ id }) => {
+          return id === tag.id;
         });
 
-        // If there is no tag or if the tag belongs to a different user, then create a new tag
-        if (!existingTag || existingTag.userId !== user.id) {
-          if (!canCreateTag && !canCreateOwnTag) {
-            throw new Error('User does not have permission to create tags');
+        if (!existingTagOfUser || existingTagOfUser.userId !== null) {
+          if (!canCreateOwnTag) {
+            throw new Error(
+              `Insufficient permissions to create custom tag ("${tag.name}")`
+            );
           }
 
           if (!isDryRun) {
+            const existingTag = await this.tagService.getTag({ id: tag.id });
             let oldTagId: string;
 
             if (existingTag) {
@@ -338,7 +335,6 @@ export class ImportService {
 
             const newTag = await this.tagService.createTag(tagObject);
 
-            // Store the new to old tag ID mappings for updating activities
             if (existingTag && oldTagId) {
               tagIdMapping[oldTagId] = newTag.id;
             }
@@ -667,7 +663,6 @@ export class ImportService {
           error,
           fee,
           quantity,
-          tagIds: tags,
           type,
           unitPrice,
           SymbolProfile: {
@@ -684,7 +679,8 @@ export class ImportService {
             isActive: true,
             sectors: undefined,
             updatedAt: undefined
-          }
+          },
+          tagIds: tags
         };
       }
     );

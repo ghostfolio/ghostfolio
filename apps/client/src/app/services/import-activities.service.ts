@@ -163,7 +163,9 @@ export class ImportActivitiesService {
       dataSource: SymbolProfile.dataSource,
       date: date.toString(),
       symbol: SymbolProfile.symbol,
-      tags: tags?.map(({ id }) => id)
+      tags: tags?.map(({ id }) => {
+        return id;
+      })
     };
   }
 
