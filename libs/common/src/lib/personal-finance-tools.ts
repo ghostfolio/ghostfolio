@@ -365,6 +365,24 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Take control over your investments'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'gasti',
+    languages: [
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Português'
+    ],
+    name: 'Gasti',
+    origin: 'Argentina',
+    pricingPerYear: '$60',
+    regions: ['Global'],
+    slogan: 'Take control of your finances from WhatsApp'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,

@@ -74,6 +74,7 @@ const locales = {
 
   // Countries
   Armenia: $localize`Armenia`,
+  Argentina: $localize`Argentina`,
   Australia: $localize`Australia`,
   Austria: $localize`Austria`,
   Belgium: $localize`Belgium`,
