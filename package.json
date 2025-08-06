@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.187.0",
+  "version": "2.189.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -209,9 +209,9 @@
     "webpack-bundle-analyzer": "4.10.2"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18.0"
   },
   "prisma": {
-    "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "node prisma/seed.ts"
   }
 }

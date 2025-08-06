@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
 
+## Next
+
+### Changed
+
+- Migrated from _Material Design_ 2 to _Material Design_ 3
+
+## 2.189.0 - 2025-08-05
+
+### Changed
+
+- Improved the meta data in `html` files
+- Removed `ts-node` from the database seeding process
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for German (`de`)
+- Upgraded the `Node.js` engine from version `>=22` to `>=22.18.0` (`package.json`)
+
+## 2.188.0 - 2025-08-02
+
+### Changed
+
+- Enhanced the performance of the dynamically composed sitemap
+- Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
+
 ## 2.187.0 - 2025-08-02
 
 ### Added

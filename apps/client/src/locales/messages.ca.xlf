@@ -1664,7 +1664,7 @@
       </trans-unit>
       <trans-unit id="5303806780432428245" datatype="html">
         <source>Indonesia</source>
-        <target state="new">Indonesia</target>
+        <target state="translated">Indonèsia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">88</context>
@@ -4049,7 +4049,7 @@
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
         <source>Exclude from Analysis</source>
-        <target state="new">Exclude from Analysis</target>
+        <target state="translated">Excluir de l’anàlisi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">90</context>
@@ -4409,7 +4409,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development. </source>
-        <target state="new"> La nostra oferta oficial al núvol Ghostfolio Premium és la manera més senzilla de començar. A causa del temps que estalvia, aquesta serà la millor opció per a la majoria de la gent. Els ingressos s’utilitzen per cobrir els costos de la infraestructura d’allotjament i per finançar el desenvolupament en curs. </target>
+        <target state="translated"> La nostra oferta oficial al núvol Ghostfolio Premium és la manera més senzilla de començar. A causa del temps que estalvia, aquesta serà la millor opció per a la majoria de la gent. Els ingressos s’utilitzen per cobrir els costos de la infraestructura d’allotjament i per finançar el desenvolupament en curs. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
@@ -5846,7 +5846,7 @@
       </trans-unit>
       <trans-unit id="1189482335778578193" datatype="html">
         <source>Extreme Fear</source>
-        <target state="new">Extreme Fear</target>
+        <target state="translated">Por extrema</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">104</context>
@@ -5854,7 +5854,7 @@
       </trans-unit>
       <trans-unit id="2634398159221205491" datatype="html">
         <source>Extreme Greed</source>
-        <target state="new">Extreme Greed</target>
+        <target state="translated">Avarícia extrema</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">105</context>
@@ -5862,7 +5862,7 @@
       </trans-unit>
       <trans-unit id="3511545370905854666" datatype="html">
         <source>Neutral</source>
-        <target state="new">Neutral</target>
+        <target state="translated">Neutral</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">108</context>
@@ -5870,7 +5870,7 @@
       </trans-unit>
       <trans-unit id="1488866007739765367" datatype="html">
         <source>Valid until</source>
-        <target state="new">Valid until</target>
+        <target state="translated">Vàlid fins a</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">74</context>
@@ -5882,7 +5882,7 @@
       </trans-unit>
       <trans-unit id="8539938855673078773" datatype="html">
         <source>Time to add your first activity.</source>
-        <target state="new">Time to add your first activity.</target>
+        <target state="translated">És hora d’afegir la teva primera activitat.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-transactions-info/no-transactions-info.component.html</context>
           <context context-type="linenumber">12</context>
@@ -5890,7 +5890,7 @@
       </trans-unit>
       <trans-unit id="4893616715766810081" datatype="html">
         <source>No data available</source>
-        <target state="new">No data available</target>
+        <target state="translated">No hi ha dades disponibles</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">250</context>
@@ -5918,7 +5918,7 @@
       </trans-unit>
       <trans-unit id="7215101881367554791" datatype="html">
         <source>Show more</source>
-        <target state="new">Show more</target>
+        <target state="translated">Mostra més</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
           <context context-type="linenumber">174</context>
@@ -5926,7 +5926,7 @@
       </trans-unit>
       <trans-unit id="4455104386790567151" datatype="html">
         <source>Alternative</source>
-        <target state="new">Alternative</target>
+        <target state="translated">Alternativa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -5934,7 +5934,7 @@
       </trans-unit>
       <trans-unit id="2818570902941667477" datatype="html">
         <source>App</source>
-        <target state="new">App</target>
+        <target state="translated">Aplicació</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">81</context>
@@ -5942,7 +5942,7 @@
       </trans-unit>
       <trans-unit id="647668541461749965" datatype="html">
         <source>Budgeting</source>
-        <target state="new">Budgeting</target>
+        <target state="translated">Pressupost</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">82</context>
@@ -5950,7 +5950,7 @@
       </trans-unit>
       <trans-unit id="1274247756500564795" datatype="html">
         <source>Community</source>
-        <target state="new">Community</target>
+        <target state="translated">Comunitat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
           <context context-type="linenumber">130</context>
@@ -6006,7 +6006,7 @@
       </trans-unit>
       <trans-unit id="4622218074144052433" datatype="html">
         <source>Family Office</source>
-        <target state="new">Family Office</target>
+        <target state="translated">Oficina familiar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">84</context>

@@ -158,6 +158,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-default);
 
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--light-background),
+      outlined-outline-color: rgba(var(--dark-dividers)),
+      title-text-line-height: 1.2
+    )
+  );
   @include mat.fab-overrides(
     (
       container-color: var(--gf-theme-primary-500)
@@ -189,6 +196,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-dark);
 
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--dark-background),
+      outlined-outline-color: rgba(var(--light-dividers)),
+      title-text-line-height: 1.2
+    )
+  );
   @include mat.fab-overrides(
     (
       container-color: var(--gf-theme-primary-500)

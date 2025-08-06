@@ -251,11 +251,6 @@ body {
       }
     }
 
-    .mat-mdc-card {
-      --mat-card-elevated-container-color: var(--dark-background);
-      --mat-card-outlined-container-color: var(--dark-background);
-    }
-
     .mat-mdc-paginator {
       background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
@@ -407,8 +402,6 @@ ngx-skeleton-loader {
 
 .mat-mdc-card {
   .mat-mdc-card-title {
-    --mat-card-title-text-line-height: 1.2;
-
     margin-bottom: 0.5rem;
   }
 }
