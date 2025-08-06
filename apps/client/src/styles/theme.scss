@@ -175,6 +175,15 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       row-item-outline-color: rgba(var(--dark-dividers))
     )
   );
+  @include mat.tabs-overrides(
+    (
+      active-focus-label-text-color: var(--gf-theme-primary-500),
+      active-hover-label-text-color: var(--gf-theme-primary-500),
+      active-label-text-color: var(--gf-theme-primary-500),
+      active-ripple-color: var(--gf-theme-primary-500),
+      inactive-ripple-color: var(--gf-theme-primary-500)
+    )
+  );
 
   --mdc-outlined-card-container-color: unset;
 }
@@ -211,6 +220,15 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--light-dividers))
+    )
+  );
+  @include mat.tabs-overrides(
+    (
+      active-focus-label-text-color: var(--gf-theme-primary-500),
+      active-hover-label-text-color: var(--gf-theme-primary-500),
+      active-label-text-color: var(--gf-theme-primary-500),
+      active-ripple-color: var(--gf-theme-primary-500),
+      inactive-ripple-color: var(--gf-theme-primary-500)
     )
   );
 
