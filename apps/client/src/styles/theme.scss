@@ -165,7 +165,11 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       title-text-line-height: 1.2
     )
   );
-
+  @include mat.fab-overrides(
+    (
+      container-color: var(--gf-theme-primary-500)
+    )
+  );
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--dark-dividers))
@@ -199,7 +203,11 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       title-text-line-height: 1.2
     )
   );
-
+  @include mat.fab-overrides(
+    (
+      container-color: var(--gf-theme-primary-500)
+    )
+  );
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--light-dividers))
