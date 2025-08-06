@@ -170,8 +170,6 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       row-item-outline-color: rgba(var(--dark-dividers))
     )
   );
-
-  --mdc-outlined-card-container-color: unset;
 }
 
 .theme-dark {
@@ -203,8 +201,6 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       row-item-outline-color: rgba(var(--light-dividers))
     )
   );
-
-  --mdc-outlined-card-container-color: unset;
 }
 
 .theme-dark,
