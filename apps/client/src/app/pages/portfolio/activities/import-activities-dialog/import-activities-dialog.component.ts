@@ -1,3 +1,4 @@
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -94,6 +95,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
   public stepperOrientation: StepperOrientation;
+  public tags: CreateTagDto[] = [];
   public totalItems: number;
 
   private unsubscribeSubject = new Subject<void>();
@@ -169,7 +171,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
       await this.importActivitiesService.importSelectedActivities({
         accounts: this.accounts,
         activities: this.selectedActivities,
-        assetProfiles: this.assetProfiles
+        assetProfiles: this.assetProfiles,
+        tags: this.tags
       });
 
       this.snackBar.open(
@@ -297,6 +300,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
 
           this.accounts = content.accounts;
           this.assetProfiles = content.assetProfiles;
+          this.tags = content.tags;
 
           if (!isArray(content.activities)) {
             if (isArray(content.orders)) {
@@ -328,7 +332,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
                 accounts: content.accounts,
                 activities: content.activities,
                 assetProfiles: content.assetProfiles,
-                isDryRun: true
+                isDryRun: true,
+                tags: content.tags
               });
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
