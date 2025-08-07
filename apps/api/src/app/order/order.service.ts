@@ -97,7 +97,7 @@ export class OrderService {
       assetSubClass?: AssetSubClass;
       currency?: string;
       symbol?: string;
-      tags?: Tag[];
+      tags?: { id: string }[];
       updateAccountBalance?: boolean;
       userId: string;
     }
@@ -201,9 +201,7 @@ export class OrderService {
         account,
         isDraft,
         tags: {
-          connect: tags.map(({ id }) => {
-            return { id };
-          })
+          connect: tags
         }
       },
       include: { SymbolProfile: true }
@@ -658,7 +656,7 @@ export class OrderService {
       assetSubClass?: AssetSubClass;
       currency?: string;
       symbol?: string;
-      tags?: Tag[];
+      tags?: { id: string }[];
       type?: ActivityType;
     };
     where: Prisma.OrderWhereUniqueInput;
@@ -720,9 +718,7 @@ export class OrderService {
         ...data,
         isDraft,
         tags: {
-          connect: tags.map(({ id }) => {
-            return { id };
-          })
+          connect: tags
         }
       }
     });
