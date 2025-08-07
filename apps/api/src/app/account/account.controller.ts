@@ -89,6 +89,7 @@ export class AccountController {
   public async getAllAccounts(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('dataSource') filterByDataSource?: string,
+    @Query('query') filterBySearchQuery?: string,
     @Query('symbol') filterBySymbol?: string
   ): Promise<AccountsResponse> {
     const impersonationUserId =
@@ -101,6 +102,7 @@ export class AccountController {
 
     return this.portfolioService.getAccountsWithAggregations({
       filters,
+      query: filterBySearchQuery,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccounts: true
     });
