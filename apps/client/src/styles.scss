@@ -264,10 +264,6 @@ body {
 
     .page {
       &.has-tabs {
-        .mat-mdc-tab-nav-bar {
-          --mat-tab-inactive-label-text-color: rgba(var(--light-primary-text));
-        }
-
         @media (min-width: 576px) {
           .mat-mdc-tab-header {
             background-color: rgba(var(--palette-foreground-base-dark), 0.02);
@@ -522,21 +518,8 @@ ngx-skeleton-loader {
       }
     }
 
-    .mat-mdc-tab-nav-bar {
-      --mat-tab-active-focus-indicator-color: transparent;
-      --mat-tab-active-hover-indicator-color: transparent;
-      --mat-tab-inactive-label-text-color: rgba(var(--dark-primary-text));
-      --mat-tab-active-indicator-color: transparent;
-    }
-
     .mat-mdc-tab-nav-panel {
       padding: 2rem 0;
-    }
-
-    @media (max-width: 575.98px) {
-      .mat-mdc-tab-link {
-        --mat-tab-container-height: 3rem;
-      }
     }
 
     @media (min-width: 576px) {
@@ -546,8 +529,6 @@ ngx-skeleton-loader {
         background-color: rgba(var(--palette-foreground-base), 0.02);
         padding: 2rem 0;
         width: 14rem;
-        --mat-tab-label-text-tracking: normal;
-        --mat-tab-container-height: 2rem;
 
         .mat-mdc-tab-links {
           flex-direction: column;
