@@ -292,13 +292,11 @@ export class PortfolioService {
     dateRange,
     filters,
     impersonationId,
-    query,
     userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     impersonationId: string;
-    query?: string;
     userId: string;
   }) {
     userId = await this.getUserId(impersonationId, userId);
@@ -311,13 +309,17 @@ export class PortfolioService {
 
     let holdings = Object.values(holdingsMap);
 
-    if (query) {
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
+
+    if (searchQuery) {
       const fuse = new Fuse(holdings, {
         keys: ['isin', 'name', 'symbol'],
         threshold: 0.3
       });
 
-      holdings = fuse.search(query).map(({ item }) => {
+      holdings = fuse.search(searchQuery).map(({ item }) => {
         return item;
       });
     }

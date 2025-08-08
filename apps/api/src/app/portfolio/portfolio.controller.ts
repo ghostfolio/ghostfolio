@@ -413,6 +413,7 @@ export class PortfolioController {
       filterByAssetClasses,
       filterByDataSource,
       filterByHoldingType,
+      filterBySearchQuery,
       filterBySymbol,
       filterByTags
     });
@@ -421,7 +422,6 @@ export class PortfolioController {
       dateRange,
       filters,
       impersonationId,
-      query: filterBySearchQuery,
       userId: this.request.user.id
     });
 
