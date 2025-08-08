@@ -1,6 +1,22 @@
 :host {
   display: block;
 
+  .mat-column-nameWithSymbol {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    max-width: 250px;
+    width: 60%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    word-break: break-word;
+
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
   .gf-table {
     th {
       ::ng-deep {
@@ -10,4 +26,8 @@
       }
     }
   }
+}
+
+.mat-sort-header-sorted {
+  position: sticky !important;
 }
