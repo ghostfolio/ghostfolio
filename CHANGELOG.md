@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Introduced fuzzy search for the accounts endpoint
+- Extended the import functionality by tags
+- Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
 
 ## 2.189.0 - 2025-08-05
 
