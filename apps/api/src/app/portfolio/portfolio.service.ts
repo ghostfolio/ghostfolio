@@ -161,7 +161,7 @@ export class PortfolioService {
       this.accountService.accounts({
         where,
         include: {
-          activities: true,
+          activities: { include: { SymbolProfile: true } },
           platform: true
         },
         orderBy: { name: 'asc' }
@@ -177,9 +177,34 @@ export class PortfolioService {
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     return accounts.map((account) => {
+      let dividendInBaseCurrency = 0;
+      let interestInBaseCurrency = 0;
       let transactionCount = 0;
 
-      for (const { isDraft } of account.activities) {
+      for (const {
+        isDraft,
+        currency,
+        SymbolProfile,
+        type,
+        unitPrice
+      } of account.activities) {
+        switch (type) {
+          case ActivityType.DIVIDEND:
+            dividendInBaseCurrency += this.exchangeRateDataService.toCurrency(
+              unitPrice,
+              currency ?? SymbolProfile.currency,
+              userCurrency
+            );
+            break;
+          case ActivityType.INTEREST:
+            interestInBaseCurrency += this.exchangeRateDataService.toCurrency(
+              unitPrice,
+              currency ?? SymbolProfile.currency,
+              userCurrency
+            );
+            break;
+        }
+
         if (!isDraft) {
           transactionCount += 1;
         }
@@ -190,6 +215,8 @@ export class PortfolioService {
 
       const result = {
         ...account,
+        dividendInBaseCurrency,
+        interestInBaseCurrency,
         transactionCount,
         valueInBaseCurrency,
         allocationInPercentage: null, // TODO
@@ -242,12 +269,20 @@ export class PortfolioService {
     }
 
     let totalBalanceInBaseCurrency = new Big(0);
+    let totalDividendInBaseCurrency = new Big(0);
+    let totalInterestInBaseCurrency = new Big(0);
     let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
 
     for (const account of accounts) {
       totalBalanceInBaseCurrency = totalBalanceInBaseCurrency.plus(
         account.balanceInBaseCurrency
+      );
+      totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+        account.dividendInBaseCurrency
+      );
+      totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+        account.interestInBaseCurrency
       );
       totalValueInBaseCurrency = totalValueInBaseCurrency.plus(
         account.valueInBaseCurrency
@@ -259,6 +294,8 @@ export class PortfolioService {
       accounts,
       transactionCount,
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
+      totalDividendInBaseCurrency: totalDividendInBaseCurrency.toNumber(),
+      totalInterestInBaseCurrency: totalInterestInBaseCurrency.toNumber(),
       totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
     };
   }
