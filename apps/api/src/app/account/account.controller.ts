@@ -89,6 +89,7 @@ export class AccountController {
   public async getAllAccounts(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('dataSource') filterByDataSource?: string,
+    @Query('query') filterBySearchQuery?: string,
     @Query('symbol') filterBySymbol?: string
   ): Promise<AccountsResponse> {
     const impersonationUserId =
@@ -96,6 +97,7 @@ export class AccountController {
 
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByDataSource,
+      filterBySearchQuery,
       filterBySymbol
     });
 
