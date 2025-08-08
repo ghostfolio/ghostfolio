@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the fuzzy search for the holdings of the assistant
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
+- Added the dividend and interest to the endpoint `GET api/v1/account/:id`
 
 ## 2.189.0 - 2025-08-05
 
