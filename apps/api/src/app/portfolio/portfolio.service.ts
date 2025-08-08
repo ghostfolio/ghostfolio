@@ -86,12 +86,13 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import Fuse from 'fuse.js';
 import { isEmpty } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { RulesService } from './rules.service';
+
+const Fuse = require('fuse.js');
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
@@ -212,12 +213,10 @@ export class PortfolioService {
 
   public async getAccountsWithAggregations({
     filters,
-    query,
     userId,
     withExcludedAccounts = false
   }: {
     filters?: Filter[];
-    query?: string;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<AccountsResponse> {
@@ -227,13 +226,17 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    if (query) {
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
+
+    if (searchQuery) {
       const fuse = new Fuse(accounts, {
         keys: ['name', 'platform.name'],
         threshold: 0.3
       });
 
-      accounts = fuse.search(query).map(({ item }) => {
+      accounts = fuse.search(searchQuery).map(({ item }) => {
         return item;
       });
     }

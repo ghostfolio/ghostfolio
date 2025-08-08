@@ -97,12 +97,12 @@ export class AccountController {
 
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByDataSource,
+      filterBySearchQuery,
       filterBySymbol
     });
 
     return this.portfolioService.getAccountsWithAggregations({
       filters,
-      query: filterBySearchQuery,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccounts: true
     });
