@@ -22,6 +22,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 })
 export class GfValueComponent implements OnChanges {
   @Input() colorizeSign = false;
+  @Input() deviceType: string;
   @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
@@ -118,7 +119,7 @@ export class GfValueComponent implements OnChanges {
             {
               day: '2-digit',
               month: '2-digit',
-              year: 'numeric'
+              year: this.deviceType === 'mobile' ? '2-digit' : 'numeric'
             }
           );
         } else {

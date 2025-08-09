@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the import functionality by tags
+- Improved the dynamic numerical precision for various values in the holding detail dialog
+- Shortened the date in the activities table on mobile
 - Introduced the fuzzy search for the accounts endpoint
 - Refactored the fuzzy search for the holdings of the assistant
 - Eliminated the warnings of the database seeding process
