@@ -230,14 +230,21 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     (
       active-focus-label-text-color: var(--gf-theme-primary-500),
       active-hover-label-text-color: var(--gf-theme-primary-500),
-      active-indicator-height: 0,
       active-label-text-color: var(--gf-theme-primary-500),
       active-ripple-color: var(--gf-theme-primary-500),
-      container-height: 2rem,
-      inactive-ripple-color: var(--gf-theme-primary-500),
-      label-text-tracking: normal
+      inactive-ripple-color: var(--gf-theme-primary-500)
     )
   );
+
+  .page.has-tabs {
+    @include mat.tabs-overrides(
+      (
+        active-indicator-height: 0,
+        container-height: 2rem,
+        label-text-tracking: normal
+      )
+    );
+  }
 }
 
 :root {
