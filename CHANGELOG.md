@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
+- Removed the unused `codelyzer` dependency
 
 ## 2.189.0 - 2025-08-05
 

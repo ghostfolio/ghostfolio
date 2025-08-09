@@ -182,7 +182,6 @@
     "@types/passport-google-oauth20": "2.0.16",
     "@typescript-eslint/eslint-plugin": "8.29.0",
     "@typescript-eslint/parser": "8.29.0",
-    "codelyzer": "6.0.1",
     "cypress": "6.2.1",
     "eslint": "9.24.0",
     "eslint-config-prettier": "10.1.1",
