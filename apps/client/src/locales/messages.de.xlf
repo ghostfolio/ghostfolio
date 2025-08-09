@@ -5449,7 +5449,7 @@
       </trans-unit>
       <trans-unit id="2575998129003872734" datatype="html">
         <source>Argentina</source>
-        <target state="new">Argentina</target>
+        <target state="translated">Argentinien</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">77</context>
