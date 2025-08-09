@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shortened the date in the activities table on mobile
 - Introduced the fuzzy search for the accounts endpoint
 - Refactored the fuzzy search for the holdings of the assistant
+- Eliminated the warnings of the database seeding process
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
 
