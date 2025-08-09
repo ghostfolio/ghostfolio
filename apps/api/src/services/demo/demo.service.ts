@@ -2,9 +2,9 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_DEMO_ACCOUNT_ID,
-  PROPERTY_DEMO_USER_ID
+  PROPERTY_DEMO_USER_ID,
+  TAG_ID_DEMO
 } from '@ghostfolio/common/config';
-import { TAG_ID_DEMO } from '@ghostfolio/common/tag-ids.mjs';
 
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';

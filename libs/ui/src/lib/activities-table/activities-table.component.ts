@@ -2,10 +2,12 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import {
+  DEFAULT_PAGE_SIZE,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
-import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/tag-ids.mjs';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { SelectionModel } from '@angular/cdk/collections';

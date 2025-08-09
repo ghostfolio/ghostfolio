@@ -9,7 +9,8 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
-  ghostfolioPrefix
+  ghostfolioPrefix,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
@@ -17,7 +18,6 @@ import {
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
-import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/tag-ids.mjs';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
