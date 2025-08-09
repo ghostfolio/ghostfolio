@@ -176,66 +176,73 @@ export class PortfolioService {
 
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    return accounts.map((account) => {
-      let dividendInBaseCurrency = 0;
-      let interestInBaseCurrency = 0;
-      let transactionCount = 0;
+    return Promise.all(
+      accounts.map(async (account) => {
+        let dividendInBaseCurrency = 0;
+        let interestInBaseCurrency = 0;
+        let transactionCount = 0;
 
-      for (const {
-        isDraft,
-        currency,
-        SymbolProfile,
-        type,
-        unitPrice
-      } of account.activities) {
-        switch (type) {
-          case ActivityType.DIVIDEND:
-            dividendInBaseCurrency += this.exchangeRateDataService.toCurrency(
-              unitPrice,
-              currency ?? SymbolProfile.currency,
-              userCurrency
-            );
-            break;
-          case ActivityType.INTEREST:
-            interestInBaseCurrency += this.exchangeRateDataService.toCurrency(
-              unitPrice,
-              currency ?? SymbolProfile.currency,
-              userCurrency
-            );
-            break;
+        for (const {
+          currency,
+          date,
+          isDraft,
+          SymbolProfile,
+          type,
+          unitPrice
+        } of account.activities) {
+          switch (type) {
+            case ActivityType.DIVIDEND:
+              dividendInBaseCurrency +=
+                await this.exchangeRateDataService.toCurrencyAtDate(
+                  unitPrice,
+                  currency ?? SymbolProfile.currency,
+                  userCurrency,
+                  date
+                );
+              break;
+            case ActivityType.INTEREST:
+              interestInBaseCurrency +=
+                await this.exchangeRateDataService.toCurrencyAtDate(
+                  unitPrice,
+                  currency ?? SymbolProfile.currency,
+                  userCurrency,
+                  date
+                );
+              break;
+          }
+
+          if (!isDraft) {
+            transactionCount += 1;
+          }
         }
 
-        if (!isDraft) {
-          transactionCount += 1;
-        }
-      }
+        const valueInBaseCurrency =
+          details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
-      const valueInBaseCurrency =
-        details.accounts[account.id]?.valueInBaseCurrency ?? 0;
-
-      const result = {
-        ...account,
-        dividendInBaseCurrency,
-        interestInBaseCurrency,
-        transactionCount,
-        valueInBaseCurrency,
-        allocationInPercentage: null, // TODO
-        balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          account.balance,
-          account.currency,
-          userCurrency
-        ),
-        value: this.exchangeRateDataService.toCurrency(
+        const result = {
+          ...account,
+          dividendInBaseCurrency,
+          interestInBaseCurrency,
+          transactionCount,
           valueInBaseCurrency,
-          userCurrency,
-          account.currency
-        )
-      };
+          allocationInPercentage: null, // TODO
+          balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            account.balance,
+            account.currency,
+            userCurrency
+          ),
+          value: this.exchangeRateDataService.toCurrency(
+            valueInBaseCurrency,
+            userCurrency,
+            account.currency
+          )
+        };
 
-      delete result.activities;
+        delete result.activities;
 
-      return result;
-    });
+        return result;
+      })
+    );
   }
 
   public async getAccountsWithAggregations({
