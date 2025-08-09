@@ -212,11 +212,23 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       )
     );
 
-    @include mat.tabs-overrides(
-      (
-        container-height: 3rem
-      )
-    );
+    .page.has-tabs {
+      @include mat.tabs-overrides(
+        (
+          container-height: 3rem
+        )
+      );
+    }
+  }
+
+  @media (min-width: 576px) {
+    .page.has-tabs {
+      @include mat.tabs-overrides(
+        (
+          container-height: 2rem
+        )
+      );
+    }
   }
 
   @include mat.dialog-overrides(
@@ -246,7 +258,6 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     @include mat.tabs-overrides(
       (
         active-indicator-height: 0,
-        container-height: 2rem,
         label-text-tracking: normal
       )
     );
