@@ -28,7 +28,6 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS,
   locale
 } from '@ghostfolio/common/config';
 import {
@@ -41,6 +40,7 @@ import {
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
+import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/tag-ids.mjs';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 

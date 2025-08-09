@@ -1,16 +1,21 @@
 import { PrismaClient } from '@prisma/client';
 
+import {
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '../libs/common/src/lib/tag-ids.mjs';
+
 const prisma = new PrismaClient();
 
 async function main() {
   await prisma.tag.createMany({
     data: [
       {
-        id: '4452656d-9fa4-4bd0-ba38-70492e31d180',
+        id: TAG_ID_EMERGENCY_FUND,
         name: 'EMERGENCY_FUND'
       },
       {
-        id: 'f2e868af-8333-459f-b161-cbc6544c24bd',
+        id: TAG_ID_EXCLUDE_FROM_ANALYSIS,
         name: 'EXCLUDE_FROM_ANALYSIS'
       }
     ],

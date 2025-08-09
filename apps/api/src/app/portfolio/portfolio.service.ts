@@ -30,12 +30,7 @@ import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
-import {
-  DEFAULT_CURRENCY,
-  TAG_ID_EMERGENCY_FUND,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS,
-  UNKNOWN_KEY
-} from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   AccountsResponse,
@@ -53,6 +48,10 @@ import {
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
+import {
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '@ghostfolio/common/tag-ids.mjs';
 import {
   AccountWithValue,
   DateRange,
