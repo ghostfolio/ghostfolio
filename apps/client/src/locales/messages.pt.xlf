@@ -2119,7 +2119,7 @@
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
         <source>Exclude from Analysis</source>
-        <target state="new">Exclude from Analysis</target>
+        <target state="translated">Excluir da Análise</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">90</context>
@@ -3555,7 +3555,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development. </source>
-        <target state="new">A nossa oferta oficial Ghostfolio Premium na nuvem é a maneira mais fácil de começar. Com o tempo que poupa, esta será a melhor opção para a maioria das pessoas. A receita é utilizada para cobrir a infraestrutura de hospedagem e financiar o desenvolvimento contínuo do Ghostfolio. </target>
+        <target state="translated">A nossa oferta oficial Ghostfolio Premium na nuvem é a maneira mais fácil de começar. Com o tempo que poupa, esta será a melhor opção para a maioria das pessoas. A receita é utilizada para cobrir a infraestrutura de hospedagem e financiar o desenvolvimento contínuo do Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
@@ -5718,7 +5718,7 @@
       </trans-unit>
       <trans-unit id="5303806780432428245" datatype="html">
         <source>Indonesia</source>
-        <target state="new">Indonesia</target>
+        <target state="translated">Indonésia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">88</context>
@@ -6700,7 +6700,7 @@
       </trans-unit>
       <trans-unit id="1486033335993102285" datatype="html">
         <source>Please enter your Ghostfolio API key:</source>
-        <target state="new">Please enter your Ghostfolio API key:</target>
+        <target state="translated">Por favor, insira a sua chave da API do Ghostfolio:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/api/api-page.component.ts</context>
           <context context-type="linenumber">41</context>
@@ -6708,7 +6708,7 @@
       </trans-unit>
       <trans-unit id="4052176452894384912" datatype="html">
         <source>API Requests Today</source>
-        <target state="new">API Requests Today</target>
+        <target state="translated">Pedidos de API Hoje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">162</context>
@@ -6716,7 +6716,7 @@
       </trans-unit>
       <trans-unit id="6461489707382666493" datatype="html">
         <source>Could not generate an API key</source>
-        <target state="new">Could not generate an API key</target>
+        <target state="translated">Não foi possível gerar uma chave de API</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">141</context>
@@ -6724,7 +6724,7 @@
       </trans-unit>
       <trans-unit id="9173945515149078768" datatype="html">
         <source>Set this API key in your self-hosted environment:</source>
-        <target state="new">Set this API key in your self-hosted environment:</target>
+        <target state="translated">Defina esta chave de API no seu ambiente auto-hospedado:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">156</context>
@@ -6732,7 +6732,7 @@
       </trans-unit>
       <trans-unit id="7954609080122968528" datatype="html">
         <source>Ghostfolio Premium Data Provider API Key</source>
-        <target state="new">Ghostfolio Premium Data Provider API Key</target>
+        <target state="translated">Chave de API do Provedor de Dados do Ghostfolio Premium</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">159</context>
@@ -6740,7 +6740,7 @@
       </trans-unit>
       <trans-unit id="7165424720111432862" datatype="html">
         <source>Do you really want to generate a new API key?</source>
-        <target state="new">Do you really want to generate a new API key?</target>
+        <target state="translated">Você realmente deseja gerar uma nova chave de API?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">164</context>
@@ -6748,7 +6748,7 @@
       </trans-unit>
       <trans-unit id="8517109745758603034" datatype="html">
         <source>API Key</source>
-        <target state="new">API Key</target>
+        <target state="translated">Chave de API</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/membership-card/membership-card.component.html</context>
           <context context-type="linenumber">18</context>
@@ -6756,7 +6756,7 @@
       </trans-unit>
       <trans-unit id="2224199164108745234" datatype="html">
         <source>Generate Ghostfolio Premium Data Provider API key for self-hosted environments...</source>
-        <target state="new">Generate Ghostfolio Premium Data Provider API key for self-hosted environments...</target>
+        <target state="translated">Gerar chave de API do Provedor de Dados do Ghostfolio Premium para ambientes auto-hospedados...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/membership-card/membership-card.component.html</context>
           <context context-type="linenumber">26</context>
@@ -6764,7 +6764,7 @@
       </trans-unit>
       <trans-unit id="2674923893812666804" datatype="html">
         <source>out of</source>
-        <target state="new">out of</target>
+        <target state="translated">de</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">56</context>
@@ -6772,7 +6772,7 @@
       </trans-unit>
       <trans-unit id="140710645823112071" datatype="html">
         <source>rules align with your portfolio.</source>
-        <target state="new">rules align with your portfolio.</target>
+        <target state="translated">regras alinham-se com o seu portfólio.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">58</context>
@@ -6780,7 +6780,7 @@
       </trans-unit>
       <trans-unit id="3768927257183755959" datatype="html">
         <source>Save</source>
-        <target state="new">Save</target>
+        <target state="translated">Guardar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">559</context>
@@ -6828,7 +6828,7 @@
       </trans-unit>
       <trans-unit id="3762787835987480964" datatype="html">
         <source>Asset Class Cluster Risks</source>
-        <target state="new">Asset Class Cluster Risks</target>
+        <target state="translated">Riscos do Cluster de Classes de Ativos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">117</context>
