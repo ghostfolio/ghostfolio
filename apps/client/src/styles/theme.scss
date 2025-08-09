@@ -213,6 +213,14 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     );
   }
 
+  @include mat.dialog-overrides(
+    (
+      container-max-width: 80vw,
+      container-shape: 4px,
+      container-small-max-width: 96vw
+    )
+  );
+
   @include mat.fab-overrides(
     (
       container-color: var(--gf-theme-primary-500)
