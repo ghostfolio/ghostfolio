@@ -129,6 +129,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Toma el control total de tus finanzas.'
   },
   {
+    founded: 2011,
+    isOpenSource: false,
+    key: 'cobalt',
+    name: 'Cobalt',
+    slogan: 'Next-Level Portfolio Monitoring'
+  },
+  {
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
