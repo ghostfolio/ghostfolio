@@ -54,6 +54,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The Intelligent Family Office Suite'
   },
   {
+    founded: 2016,
+    key: 'atominvest',
+    name: 'Atominvest',
+    origin: 'London',
+    slogan: 'Portfolio Management'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -127,6 +134,12 @@ export const personalFinanceTools: Product[] = [
     languages: ['Español'],
     name: 'CleverBilling',
     slogan: 'Toma el control total de tus finanzas.'
+  },
+  {
+    founded: 2011,
+    key: 'cobalt',
+    name: 'Cobalt',
+    slogan: 'Next-Level Portfolio Monitoring'
   },
   {
     founded: 2017,
