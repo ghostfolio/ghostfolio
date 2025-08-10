@@ -42,6 +42,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [precision]="balancePrecision"
           [unit]="currency"
           [value]="balance"
           >Cash Balance</gf-value
@@ -53,6 +54,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [precision]="equityPrecision"
           [unit]="currency"
           [value]="equity"
           >Equity</gf-value
