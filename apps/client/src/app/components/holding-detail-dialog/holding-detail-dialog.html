@@ -77,6 +77,7 @@
                 [colorizeSign]="true"
                 [isPercent]="true"
                 [locale]="data.locale"
+                [precision]="netPerformancePercentWithCurrencyEffectPrecision"
                 [value]="netPerformancePercentWithCurrencyEffect"
               >
                 @if (
@@ -95,6 +96,7 @@
                 size="medium"
                 [isCurrency]="true"
                 [locale]="data.locale"
+                [precision]="averagePricePrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="averagePrice"
                 >Average Unit Price</gf-value
@@ -106,6 +108,7 @@
                 size="medium"
                 [isCurrency]="true"
                 [locale]="data.locale"
+                [precision]="marketPricePrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPrice"
                 >Market Price</gf-value
@@ -122,6 +125,7 @@
                     marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
                     marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
                 }"
+                [precision]="marketPriceMinPrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPriceMin"
                 >Minimum Price</gf-value
@@ -138,6 +142,7 @@
                     marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
                     marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
                 }"
+                [precision]="marketPriceMaxPrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPriceMax"
                 >Maximum Price</gf-value
@@ -208,6 +213,7 @@
               <gf-value
                 i18n
                 size="medium"
+                [deviceType]="data.deviceType"
                 [isDate]="true"
                 [locale]="data.locale"
                 [value]="firstBuyDate"

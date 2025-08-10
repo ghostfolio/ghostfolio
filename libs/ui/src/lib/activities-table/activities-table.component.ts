@@ -6,7 +6,7 @@ import {
   DEFAULT_PAGE_SIZE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
-import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
+import { getLocale } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
@@ -128,7 +128,6 @@ export class GfActivitiesTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
   public hasDrafts = false;
@@ -175,8 +174,6 @@ export class GfActivitiesTableComponent
   }
 
   public ngOnChanges() {
-    this.defaultDateFormat = getDateFormatString(this.locale);
-
     this.displayedColumns = [
       'select',
       'importStatus',
