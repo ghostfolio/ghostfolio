@@ -57,7 +57,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2016,
     key: 'atominvest',
     name: 'Atominvest',
-    origin: 'London',
+    origin: 'United Kingdom',
     slogan: 'Portfolio Management'
   },
   {
@@ -139,6 +139,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2011,
     key: 'cobalt',
     name: 'Cobalt',
+    origin: 'United States',
     slogan: 'Next-Level Portfolio Monitoring'
   },
   {
