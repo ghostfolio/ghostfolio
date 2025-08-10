@@ -54,6 +54,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The Intelligent Family Office Suite'
   },
   {
+    founded: 2016,
+    key: 'atominvest',
+    name: 'Atominvest',
+    origin: 'London',
+    slogan: 'Portfolio Management'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
