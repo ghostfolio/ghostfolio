@@ -685,6 +685,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Your Personal Finance Hub'
   },
   {
+    founded: 2015,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'pocketguard',
+    name: 'PocketGuard',
+    origin: 'United States',
+    pricingPerYear: '$74.99',
+    slogan: 'Budgeting App & Finance Planner'
+  },
+  {
     founded: 2008,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
