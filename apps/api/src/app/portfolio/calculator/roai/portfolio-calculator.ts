@@ -554,6 +554,16 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
           initialValueWithCurrencyEffect =
             transactionInvestmentWithCurrencyEffect;
+        } else if (
+          order.quantity.gt(0) &&
+          ['BUY', 'SELL'].includes(order.type) &&
+          !order.itemType
+        ) {
+          initialValue = order.quantity.mul(marketPriceInBaseCurrency);
+
+          initialValueWithCurrencyEffect = order.quantity.mul(
+            marketPriceInBaseCurrencyWithCurrencyEffect
+          );
         }
       }
 
@@ -783,7 +793,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         ? totalGrossPerformance.div(
             timeWeightedAverageInvestmentBetweenStartAndEndDate
           )
-        : new Big(0);
+        : totalGrossPerformance
+          ? new Big(1)
+          : new Big(0);
 
     const grossPerformancePercentageWithCurrencyEffect =
       timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect.gt(
@@ -792,7 +804,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         ? totalGrossPerformanceWithCurrencyEffect.div(
             timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
           )
-        : new Big(0);
+        : totalGrossPerformanceWithCurrencyEffect
+          ? new Big(1)
+          : new Big(0);
 
     const feesPerUnit = totalUnits.gt(0)
       ? fees.minus(feesAtStartDate).div(totalUnits)
@@ -809,7 +823,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         ? totalNetPerformance.div(
             timeWeightedAverageInvestmentBetweenStartAndEndDate
           )
-        : new Big(0);
+        : totalNetPerformance
+          ? new Big(1)
+          : new Big(0);
 
     const netPerformancePercentageWithCurrencyEffectMap: {
       [key: DateRange]: Big;
@@ -902,7 +918,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
         ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
-        : new Big(0);
+        : netPerformanceWithCurrencyEffectMap[dateRange]
+          ? new Big(1)
+          : new Big(0);
     }
 
     if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -938,9 +956,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         Net performance: ${totalNetPerformance.toFixed(
           2
         )} / ${netPerformancePercentage.mul(100).toFixed(2)}%
-        Net performance with currency effect: ${netPerformancePercentageWithCurrencyEffectMap[
-          'max'
-        ].toFixed(2)}%`
+        Net performance with currency effect: ${netPerformanceValuesWithCurrencyEffect[
+          endDateString
+        ].toFixed(2)} / ${netPerformancePercentageWithCurrencyEffectMap['max']
+          .mul(100)
+          .toFixed(2)}%`
       );
     }
 
