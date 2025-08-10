@@ -9,14 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Added the dividend and interest to the accounts endpoint
+
+## 2.190.0 - 2025-08-09
+
+### Changed
+
 - Extended the import functionality by tags
 - Improved the dynamic numerical precision for various values in the holding detail dialog
 - Shortened the date in the activities table on mobile
 - Introduced the fuzzy search for the accounts endpoint
 - Refactored the fuzzy search for the holdings of the assistant
+- Eliminated the warnings of the database seeding process
+- Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
-- Added the dividend and interest to the endpoint `GET api/v1/account/:id`
+- Removed the unused `codelyzer` dependency
 
 ## 2.189.0 - 2025-08-05
 
