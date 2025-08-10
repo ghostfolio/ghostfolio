@@ -285,8 +285,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.averagePrice = averagePrice;
 
           if (
-            this.data.deviceType === 'mobile' &&
-            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES &&
+            this.data.deviceType === 'mobile'
           ) {
             this.averagePricePrecision = 0;
           }
