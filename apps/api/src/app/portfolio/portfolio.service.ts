@@ -186,6 +186,7 @@ export class PortfolioService {
           currency,
           date,
           isDraft,
+          quantity,
           SymbolProfile,
           type,
           unitPrice
@@ -194,7 +195,7 @@ export class PortfolioService {
             case ActivityType.DIVIDEND:
               dividendInBaseCurrency +=
                 await this.exchangeRateDataService.toCurrencyAtDate(
-                  unitPrice,
+                  new Big(quantity).mul(unitPrice).toNumber(),
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
