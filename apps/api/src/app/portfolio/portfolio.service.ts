@@ -161,7 +161,7 @@ export class PortfolioService {
       this.accountService.accounts({
         where,
         include: {
-          activities: true,
+          activities: { include: { SymbolProfile: true } },
           platform: true
         },
         orderBy: { name: 'asc' }
@@ -176,39 +176,74 @@ export class PortfolioService {
 
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    return accounts.map((account) => {
-      let transactionCount = 0;
+    return Promise.all(
+      accounts.map(async (account) => {
+        let dividendInBaseCurrency = 0;
+        let interestInBaseCurrency = 0;
+        let transactionCount = 0;
 
-      for (const { isDraft } of account.activities) {
-        if (!isDraft) {
-          transactionCount += 1;
+        for (const {
+          currency,
+          date,
+          isDraft,
+          quantity,
+          SymbolProfile,
+          type,
+          unitPrice
+        } of account.activities) {
+          switch (type) {
+            case ActivityType.DIVIDEND:
+              dividendInBaseCurrency +=
+                await this.exchangeRateDataService.toCurrencyAtDate(
+                  new Big(quantity).mul(unitPrice).toNumber(),
+                  currency ?? SymbolProfile.currency,
+                  userCurrency,
+                  date
+                );
+              break;
+            case ActivityType.INTEREST:
+              interestInBaseCurrency +=
+                await this.exchangeRateDataService.toCurrencyAtDate(
+                  unitPrice,
+                  currency ?? SymbolProfile.currency,
+                  userCurrency,
+                  date
+                );
+              break;
+          }
+
+          if (!isDraft) {
+            transactionCount += 1;
+          }
         }
-      }
 
-      const valueInBaseCurrency =
-        details.accounts[account.id]?.valueInBaseCurrency ?? 0;
+        const valueInBaseCurrency =
+          details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
-      const result = {
-        ...account,
-        transactionCount,
-        valueInBaseCurrency,
-        allocationInPercentage: null, // TODO
-        balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          account.balance,
-          account.currency,
-          userCurrency
-        ),
-        value: this.exchangeRateDataService.toCurrency(
+        const result = {
+          ...account,
+          dividendInBaseCurrency,
+          interestInBaseCurrency,
+          transactionCount,
           valueInBaseCurrency,
-          userCurrency,
-          account.currency
-        )
-      };
+          allocationInPercentage: null, // TODO
+          balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            account.balance,
+            account.currency,
+            userCurrency
+          ),
+          value: this.exchangeRateDataService.toCurrency(
+            valueInBaseCurrency,
+            userCurrency,
+            account.currency
+          )
+        };
 
-      delete result.activities;
+        delete result.activities;
 
-      return result;
-    });
+        return result;
+      })
+    );
   }
 
   public async getAccountsWithAggregations({
@@ -242,12 +277,20 @@ export class PortfolioService {
     }
 
     let totalBalanceInBaseCurrency = new Big(0);
+    let totalDividendInBaseCurrency = new Big(0);
+    let totalInterestInBaseCurrency = new Big(0);
     let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
 
     for (const account of accounts) {
       totalBalanceInBaseCurrency = totalBalanceInBaseCurrency.plus(
         account.balanceInBaseCurrency
+      );
+      totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+        account.dividendInBaseCurrency
+      );
+      totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+        account.interestInBaseCurrency
       );
       totalValueInBaseCurrency = totalValueInBaseCurrency.plus(
         account.valueInBaseCurrency
@@ -259,6 +302,8 @@ export class PortfolioService {
       accounts,
       transactionCount,
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
+      totalDividendInBaseCurrency: totalDividendInBaseCurrency.toNumber(),
+      totalInterestInBaseCurrency: totalInterestInBaseCurrency.toNumber(),
       totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
     };
   }
