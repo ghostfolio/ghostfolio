@@ -137,7 +137,6 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2011,
-    isOpenSource: false,
     key: 'cobalt',
     name: 'Cobalt',
     slogan: 'Next-Level Portfolio Monitoring'
