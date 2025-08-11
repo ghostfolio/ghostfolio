@@ -57,7 +57,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2016,
     key: 'atominvest',
     name: 'Atominvest',
-    origin: 'London',
+    origin: 'United Kingdom',
     slogan: 'Portfolio Management'
   },
   {
@@ -139,6 +139,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2011,
     key: 'cobalt',
     name: 'Cobalt',
+    origin: 'United States',
     slogan: 'Next-Level Portfolio Monitoring'
   },
   {
@@ -682,6 +683,16 @@ export const personalFinanceTools: Product[] = [
     name: 'Plannix',
     origin: 'Italy',
     slogan: 'Your Personal Finance Hub'
+  },
+  {
+    founded: 2015,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'pocketguard',
+    name: 'PocketGuard',
+    origin: 'United States',
+    pricingPerYear: '$74.99',
+    slogan: 'Budgeting App & Finance Planner'
   },
   {
     founded: 2008,
