@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the dynamic numerical precision for various values in the account detail dialog
+- Improved the usability of the _Cancel_ / _Close_ and _Save_ buttons in various dialogs
 - Extended the accounts endpoint by dividend and interest
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
