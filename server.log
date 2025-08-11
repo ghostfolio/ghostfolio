@@ -1,0 +1,14 @@
+
+> ghostfolio@2.190.0 start:server
+> nx run api:copy-assets && nx run api:serve --watch
+
+
+> nx run api:copy-assets
+
+> shx rm -rf dist/apps/api
+
+> shx mkdir -p dist/apps/api/assets/locales
+
+> shx cp -r apps/api/src/assets/* dist/apps/api/assets
+
+> shx cp -r apps/client/src/locales/* dist/apps/api/assets/locales

@@ -1,0 +1,14 @@
+
+> ghostfolio@2.190.0 start:client
+> nx run client:copy-assets && nx run client:serve --configuration=development-en --hmr -o
+
+
+> nx run client:copy-assets
+
+> shx rm -rf dist/apps/client
+
+> shx mkdir -p dist/apps/client/.well-known
+
+> shx mkdir -p dist/apps/client/assets
+
+> shx cp -r apps/client/src/assets/* dist/apps/client/assets

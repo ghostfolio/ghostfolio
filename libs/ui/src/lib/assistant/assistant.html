@@ -226,6 +226,19 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <div class="mb-3">
+          <mat-form-field appearance="outline" class="w-100 without-hint">
+            <mat-label i18n>Base Currency</mat-label>
+            <mat-select formControlName="baseCurrency">
+              <mat-option [value]="null" />
+              @for (currency of currencies; track currency.id) {
+                <mat-option [value]="currency.id">{{
+                  currency.label
+                }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div class="d-flex w-100">
           <button
             i18n

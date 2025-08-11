@@ -208,6 +208,8 @@ export class HeaderComponent implements OnChanges {
         userSetting['filters.accounts'] = filter.id ? [filter.id] : null;
       } else if (filter.type === 'ASSET_CLASS') {
         userSetting['filters.assetClasses'] = filter.id ? [filter.id] : null;
+      } else if (filter.type === 'BASE_CURRENCY') {
+        userSetting['baseCurrency'] = filter.id ? filter.id : null;
       } else if (filter.type === 'DATA_SOURCE') {
         userSetting['filters.dataSource'] = filter.id ? filter.id : null;
       } else if (filter.type === 'SYMBOL') {

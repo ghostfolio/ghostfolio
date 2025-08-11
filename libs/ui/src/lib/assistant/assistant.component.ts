@@ -2,7 +2,12 @@ import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import {
+  Filter,
+  InfoItem,
+  PortfolioPosition,
+  User
+} from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
@@ -127,6 +132,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   @Input() hasPermissionToAccessAdminControl: boolean;
   @Input() hasPermissionToChangeDateRange: boolean;
   @Input() hasPermissionToChangeFilters: boolean;
+  @Input() info: InfoItem;
   @Input() user: User;
 
   @Output() closed = new EventEmitter<void>();
@@ -143,11 +149,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public accounts: Account[] = [];
   public assetClasses: Filter[] = [];
+  public currencies: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
   public dateRangeOptions: IDateRangeOption[] = [];
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
     assetClass: new FormControl<string>(undefined),
+    baseCurrency: new FormControl<string>(undefined),
     holding: new FormControl<PortfolioPosition>(undefined),
     tag: new FormControl<string>(undefined)
   });
@@ -170,6 +178,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private filterTypes: Filter['type'][] = [
     'ACCOUNT',
     'ASSET_CLASS',
+    'BASE_CURRENCY',
     'DATA_SOURCE',
     'SYMBOL',
     'TAG'
@@ -343,6 +352,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnChanges() {
     this.accounts = this.user?.accounts ?? [];
 
+    this.currencies = this.info.currencies.map((currency) => {
+      return {
+        id: currency.id,
+        label: currency.id,
+        type: 'BASE_CURRENCY'
+      };
+    });
+
     this.dateRangeOptions = [
       {
         label: $localize`Today`,
@@ -508,6 +525,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       {
         id: this.filterForm.get('assetClass').value,
         type: 'ASSET_CLASS'
+      },
+      {
+        id: this.filterForm.get('baseCurrency').value,
+        type: 'BASE_CURRENCY'
       },
       {
         id: this.filterForm.get('holding').value?.dataSource,
@@ -682,6 +703,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       {
         account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
         assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
+        baseCurrency: this.user?.settings?.baseCurrency ?? null,
         holding: selectedHolding ?? null,
         tag: this.user?.settings?.['filters.tags']?.[0] ?? null
       },
