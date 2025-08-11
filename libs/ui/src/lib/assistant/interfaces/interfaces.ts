@@ -1,5 +1,5 @@
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 
 import { SearchMode } from '../enums/search-mode';
 
@@ -21,12 +21,19 @@ export interface IQuickLinkSearchResultItem {
   routerLink: string[];
 }
 
+export interface IAccountSearchResultItem
+  extends Pick<AccountWithValue, 'id' | 'name' | 'platform'> {
+  mode: SearchMode.ACCOUNT;
+}
+
 export type ISearchResultItem =
   | IAssetSearchResultItem
+  | IAccountSearchResultItem
   | IQuickLinkSearchResultItem;
 
 export interface ISearchResults {
   assetProfiles: ISearchResultItem[];
+  accounts: ISearchResultItem[];
   holdings: ISearchResultItem[];
   quickLinks: ISearchResultItem[];
 }

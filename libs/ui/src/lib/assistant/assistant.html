@@ -40,9 +40,11 @@
       <div class="overflow-auto py-2 result-container">
         @if (
           !isLoading.assetProfiles &&
+          !isLoading.accounts &&
           !isLoading.holdings &&
           !isLoading.quickLinks &&
           searchResults.assetProfiles?.length === 0 &&
+          searchResults.accounts?.length === 0 &&
           searchResults.holdings?.length === 0 &&
           searchResults.quickLinks?.length === 0
         ) {
@@ -65,6 +67,32 @@
                 />
               }
               @if (isLoading.quickLinks) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
+          @if (isLoading.accounts || searchResults?.accounts?.length !== 0) {
+            <div>
+              <div class="font-weight-bold px-3 text-muted title" i18n>
+                Accounts
+              </div>
+              @for (
+                searchResultItem of searchResults.accounts;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.accounts) {
                 <ngx-skeleton-loader
                   animation="pulse"
                   class="mx-3"
