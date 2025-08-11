@@ -354,8 +354,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.currencies = this.info.currencies.map((currency) => {
       return {
-        id: currency.id,
-        label: currency.id,
+        id: currency,
         type: 'BASE_CURRENCY'
       };
     });

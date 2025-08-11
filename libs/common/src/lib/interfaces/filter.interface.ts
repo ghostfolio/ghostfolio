@@ -10,5 +10,6 @@ export interface Filter {
     | 'PRESET_ID'
     | 'SEARCH_QUERY'
     | 'SYMBOL'
+    | 'BASE_CURRENCY'
     | 'TAG';
 }
