@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the dynamic numerical precision for various values in the account detail dialog
-- Extended the accounts endpoint by dividend and interest
 - Extended the accounts endpoint by allocations
+- Extended the accounts endpoint by dividend and interest
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
 
