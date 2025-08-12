@@ -61,6 +61,30 @@
         >
       </div>
       <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [precision]="interestInBaseCurrencyPrecision"
+          [unit]="user?.settings?.baseCurrency"
+          [value]="interestInBaseCurrency"
+          >Interest</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [precision]="dividendInBaseCurrencyPrecision"
+          [unit]="user?.settings?.baseCurrency"
+          [value]="dividendInBaseCurrency"
+          >Dividend</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
         <gf-value i18n size="medium" [value]="transactionCount"
           >Activities</gf-value
         >
