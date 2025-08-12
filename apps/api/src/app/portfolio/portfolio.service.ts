@@ -300,7 +300,11 @@ export class PortfolioService {
 
     for (const account of accounts) {
       account.allocationInPercentage =
-        account.valueInBaseCurrency / totalValueInBaseCurrency.toNumber();
+        totalValueInBaseCurrency.toNumber() > Number.EPSILON
+          ? Big(account.valueInBaseCurrency)
+              .div(totalValueInBaseCurrency)
+              .toNumber()
+          : 0;
     }
 
     return {
