@@ -50,7 +50,14 @@ export class GfAssistantListItemComponent
   public constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnChanges() {
-    if (this.item?.mode === SearchMode.ASSET_PROFILE) {
+    if (this.item?.mode === SearchMode.ACCOUNT) {
+      this.queryParams = {
+        accountDetailDialog: true,
+        accountId: this.item.id
+      };
+
+      this.routerLink = internalRoutes.accounts.routerLink;
+    } else if (this.item?.mode === SearchMode.ASSET_PROFILE) {
       this.queryParams = {
         assetProfileDialog: true,
         dataSource: this.item?.dataSource,
@@ -67,13 +74,6 @@ export class GfAssistantListItemComponent
       };
 
       this.routerLink = [];
-    } else if (this.item?.mode === SearchMode.ACCOUNT) {
-      this.queryParams = {
-        accountDetailDialog: true,
-        accountId: (this.item as any).id
-      };
-
-      this.routerLink = internalRoutes.accounts.routerLink;
     } else if (this.item?.mode === SearchMode.QUICK_LINK) {
       this.queryParams = {};
       this.routerLink = this.item.routerLink;

@@ -39,12 +39,12 @@
     @if (searchFormControl.value) {
       <div class="overflow-auto py-2 result-container">
         @if (
-          !isLoading.assetProfiles &&
           !isLoading.accounts &&
+          !isLoading.assetProfiles &&
           !isLoading.holdings &&
           !isLoading.quickLinks &&
-          searchResults.assetProfiles?.length === 0 &&
           searchResults.accounts?.length === 0 &&
+          searchResults.assetProfiles?.length === 0 &&
           searchResults.holdings?.length === 0 &&
           searchResults.quickLinks?.length === 0
         ) {
