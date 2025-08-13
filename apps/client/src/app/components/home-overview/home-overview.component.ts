@@ -1,4 +1,4 @@
-import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
+import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -32,7 +32,7 @@ import { takeUntil } from 'rxjs/operators';
   imports: [
     CommonModule,
     GfLineChartComponent,
-    GfPortfolioPerformanceModule,
+    GfPortfolioPerformanceComponent,
     MatButtonModule,
     RouterModule
   ],
