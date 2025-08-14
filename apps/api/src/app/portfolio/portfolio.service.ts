@@ -227,7 +227,7 @@ export class PortfolioService {
           interestInBaseCurrency,
           transactionCount,
           valueInBaseCurrency,
-          allocationInPercentage: null, // TODO
+          allocationInPercentage: 0,
           balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
             account.balance,
             account.currency,
@@ -297,6 +297,15 @@ export class PortfolioService {
         account.valueInBaseCurrency
       );
       transactionCount += account.transactionCount;
+    }
+
+    for (const account of accounts) {
+      account.allocationInPercentage =
+        totalValueInBaseCurrency.toNumber() > Number.EPSILON
+          ? Big(account.valueInBaseCurrency)
+              .div(totalValueInBaseCurrency)
+              .toNumber()
+          : 0;
     }
 
     return {
