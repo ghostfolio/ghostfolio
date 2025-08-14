@@ -7873,7 +7873,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidity.category" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">Liquidität</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">70</context>
@@ -7881,7 +7881,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower" datatype="html">
         <source>Buying Power</source>
-        <target state="new">Buying Power</target>
+        <target state="translated">Kaufkraft</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">71</context>
@@ -7889,7 +7889,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false" datatype="html">
         <source> Your buying power is below ${thresholdMin} ${baseCurrency} </source>
-        <target state="new"> Your buying power is below ${thresholdMin} ${baseCurrency} </target>
+        <target state="translated"> Deine Kaufkraft liegt unter ${thresholdMin} ${baseCurrency} </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">73</context>
@@ -7897,7 +7897,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.true" datatype="html">
         <source> Your buying power exceeds ${thresholdMin} ${baseCurrency} </source>
-        <target state="new"> Your buying power exceeds ${thresholdMin} ${baseCurrency} </target>
+        <target state="translated"> Deine Kaufkraft übersteigt ${thresholdMin} ${baseCurrency} </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">77</context>
