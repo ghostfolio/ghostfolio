@@ -46,6 +46,7 @@ export class GfXRayPageComponent {
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
+  public liquidityRules: PortfolioReportRule[];
   public regionalMarketClusterRiskRules: PortfolioReportRule[];
   public statistics: PortfolioReportResponse['xRay']['statistics'];
   public user: User;
@@ -146,6 +147,11 @@ export class GfXRayPageComponent {
 
         this.feeRules =
           rules['fees']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.liquidityRules =
+          rules['liquidity']?.filter(({ isActive }) => {
             return isActive;
           }) ?? null;
 
