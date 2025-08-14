@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the interest and dividend values to the account detail dialog
+
 ### Changed
 
+- Moved the chart of the account detail dialog from experimental to general availability
 - Improved the dynamic numerical precision for various values in the account detail dialog
+- Improved the usability of the _Cancel_ / _Close_ and _Save_ buttons in various dialogs
 - Extended the accounts endpoint by allocations
 - Extended the accounts endpoint by dividend and interest
+- Refactored the portfolio performance component to standalone
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
 

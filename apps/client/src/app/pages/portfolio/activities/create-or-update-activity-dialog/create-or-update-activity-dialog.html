@@ -335,12 +335,18 @@
       [value]="total"
     />
     <div>
-      <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-button type="button" (click)="onCancel()">
+        @if (activityForm.dirty) {
+          <ng-container i18n>Cancel</ng-container>
+        } @else {
+          <ng-container i18n>Close</ng-container>
+        }
+      </button>
       <button
         color="primary"
         mat-flat-button
         type="submit"
-        [disabled]="!activityForm.valid"
+        [disabled]="!(activityForm.dirty && activityForm.valid)"
       >
         <ng-container i18n>Save</ng-container>
       </button>

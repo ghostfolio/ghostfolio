@@ -549,7 +549,13 @@
         <ng-container i18n>Data Gathering</ng-container>
       </mat-checkbox>
     </div>
-    <button i18n mat-button type="button" (click)="onClose()">Cancel</button>
+    <button mat-button type="button" (click)="onClose()">
+      @if (assetProfileForm.dirty) {
+        <ng-container i18n>Cancel</ng-container>
+      } @else {
+        <ng-container i18n>Close</ng-container>
+      }
+    </button>
     <button
       color="primary"
       mat-flat-button
