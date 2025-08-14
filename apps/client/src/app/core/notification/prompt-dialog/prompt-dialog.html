@@ -18,7 +18,7 @@
   <button
     color="primary"
     mat-flat-button
-    [disabled]="!formControl.dirty"
+    [disabled]="!(formControl.dirty && formControl.valid)"
     (click)="dialogRef.close(formControl.value)"
   >
     {{ confirmLabel }}
