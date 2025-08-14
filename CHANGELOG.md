@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the accounts endpoint by allocations
 - Extended the accounts endpoint by dividend and interest
 - Refactored the portfolio performance component to standalone
+- Improved the language localization for German (`de`)
 - Improved the language localization for Portuguese (`pt`)
 - Improved the language localization for Spanish (`es`)
 
