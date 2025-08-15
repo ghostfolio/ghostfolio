@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Included accounts in the search results of the assistant
+
 ### Changed
 
 - Migrated the prompt dialog component from `ngModel` to form control
