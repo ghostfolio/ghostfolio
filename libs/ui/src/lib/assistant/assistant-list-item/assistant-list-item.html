@@ -12,6 +12,9 @@
       @if (item?.assetSubClassString) {
         · {{ item.assetSubClassString }}
       }
+      @if (item?.mode === 'assetProfile') {
+        · {{ item.dataSource }}
+      }
     </small>
   }
 </a>
