@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Included accounts in the search results of the assistant
+- Included the data source in the asset profile search results of the assistant
 
 ### Changed
 
