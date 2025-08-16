@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the prompt dialog component from `ngModel` to form control
+- Refreshed the cryptocurrencies list
 
 ## 2.191.1 - 2025-08-14
 
