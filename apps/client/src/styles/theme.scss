@@ -254,6 +254,23 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     )
   );
 
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        filled-container-color: var(--gf-theme-secondary-500)
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        filled-container-color: #f44336,
+        filled-label-text-color: white
+      )
+    );
+  }
+
   .page.has-tabs {
     @include mat.tabs-overrides(
       (
