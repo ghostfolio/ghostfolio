@@ -78,6 +78,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     }
 
     this.displayedColumns.push('allocationInPercentage');
+    this.displayedColumns.push('marketPrice');
 
     if (this.hasPermissionToShowValues) {
       this.displayedColumns.push('performance');
