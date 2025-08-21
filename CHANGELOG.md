@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the prompt dialog component from `ngModel` to form control
 - Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
 
 ## 2.191.1 - 2025-08-14
 
