@@ -6418,7 +6418,7 @@
       </trans-unit>
       <trans-unit id="6574710269679413520" datatype="html">
         <source> Accounts </source>
-        <target state="new"> Accounts </target>
+        <target state="translated"> Konten </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">84</context>
@@ -7184,7 +7184,7 @@
       </trans-unit>
       <trans-unit id="6752851341939241310" datatype="html">
         <source>Find account, holding or page...</source>
-        <target state="new">Find account, holding or page...</target>
+        <target state="translated">Konto, Position oder Seite finden...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">162</context>
