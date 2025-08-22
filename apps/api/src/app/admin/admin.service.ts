@@ -214,12 +214,12 @@ export class AdminService {
       return type === 'SEARCH_QUERY';
     })?.id;
 
-    const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
-      filters,
-      ({ type }) => {
-        return type;
-      }
-    );
+    const {
+      ASSET_SUB_CLASS: filtersByAssetSubClass,
+      DATA_SOURCE: filtersByDataSource
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
 
     const marketDataItems = await this.prismaService.marketData.groupBy({
       _count: true,
@@ -228,6 +228,10 @@ export class AdminService {
 
     if (filtersByAssetSubClass) {
       where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
+    }
+
+    if (filtersByDataSource) {
+      where.dataSource = DataSource[filtersByDataSource[0].id];
     }
 
     if (searchQuery) {
