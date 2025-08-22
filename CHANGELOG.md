@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the data providers management of the admin control panel by every data provider in use
+
 ### Changed
 
 - Migrated the login with access token dialog from `ngModel` to form control
