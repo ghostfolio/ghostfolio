@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the data providers management of the admin control panel by every data provider in use
 
+### Changed
+
+- Improved the error handling in data providers
+
 ## 2.192.0 - 2025-08-21
 
 ### Added
