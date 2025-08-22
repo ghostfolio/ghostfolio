@@ -103,39 +103,46 @@ export class GfAdminMarketDataComponent
   @ViewChild(MatSort) sort: MatSort;
 
   public activeFilters: Filter[] = [];
-  public allFilters: Filter[] = Object.keys(AssetSubClass)
-    .filter((assetSubClass) => {
-      return assetSubClass !== 'CASH';
-    })
-    .map((assetSubClass) => {
+  public allFilters: Filter[] = [
+    ...Object.keys(AssetSubClass)
+      .filter((assetSubClass) => {
+        return assetSubClass !== 'CASH';
+      })
+      .map((assetSubClass) => {
+        return {
+          id: assetSubClass.toString(),
+          label: translate(assetSubClass),
+          type: 'ASSET_SUB_CLASS' as Filter['type']
+        };
+      }),
+    ...Object.keys(DataSource).map((dataSource) => {
       return {
-        id: assetSubClass.toString(),
-        label: translate(assetSubClass),
-        type: 'ASSET_SUB_CLASS' as Filter['type']
+        id: dataSource.toString(),
+        label: dataSource,
+        type: 'DATA_SOURCE' as Filter['type']
       };
-    })
-    .concat([
-      {
-        id: 'BENCHMARKS',
-        label: $localize`Benchmarks`,
-        type: 'PRESET_ID' as Filter['type']
-      },
-      {
-        id: 'CURRENCIES',
-        label: $localize`Currencies`,
-        type: 'PRESET_ID' as Filter['type']
-      },
-      {
-        id: 'ETF_WITHOUT_COUNTRIES',
-        label: $localize`ETFs without Countries`,
-        type: 'PRESET_ID' as Filter['type']
-      },
-      {
-        id: 'ETF_WITHOUT_SECTORS',
-        label: $localize`ETFs without Sectors`,
-        type: 'PRESET_ID' as Filter['type']
-      }
-    ]);
+    }),
+    {
+      id: 'BENCHMARKS',
+      label: $localize`Benchmarks`,
+      type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'CURRENCIES',
+      label: $localize`Currencies`,
+      type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'ETF_WITHOUT_COUNTRIES',
+      label: $localize`ETFs without Countries`,
+      type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'ETF_WITHOUT_SECTORS',
+      label: $localize`ETFs without Sectors`,
+      type: 'PRESET_ID' as Filter['type']
+    }
+  ];
   public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a filter by data source for the asset profiles in the admin control panel
 - Extended the data providers management of the admin control panel by every data provider in use
 
 ### Changed
