@@ -29,7 +29,7 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
-import { MarketDataPreset, UserWithSettings } from '@ghostfolio/common/types';
+import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
@@ -133,11 +133,8 @@ export class AdminService {
     }
   }
 
-  public async get({ user }: { user: UserWithSettings }): Promise<AdminData> {
-    const dataSources = await this.dataProviderService.getDataSources({
-      user,
-      includeGhostfolio: true
-    });
+  public async get(): Promise<AdminData> {
+    const dataSources = Object.values(DataSource);
 
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
@@ -145,24 +142,31 @@ export class AdminService {
       this.countUsersWithAnalytics()
     ]);
 
-    const dataProviders = await Promise.all(
-      dataSources.map(async (dataSource) => {
-        const dataProviderInfo = this.dataProviderService
-          .getDataProvider(dataSource)
-          .getDataProviderInfo();
+    const dataProviders = (
+      await Promise.all(
+        dataSources.map(async (dataSource) => {
+          const assetProfileCount =
+            await this.prismaService.symbolProfile.count({
+              where: {
+                dataSource
+              }
+            });
 
-        const assetProfileCount = await this.prismaService.symbolProfile.count({
-          where: {
-            dataSource
+          if (assetProfileCount > 0 || dataSource === 'GHOSTFOLIO') {
+            const dataProviderInfo = this.dataProviderService
+              .getDataProvider(dataSource)
+              .getDataProviderInfo();
+
+            return {
+              ...dataProviderInfo,
+              assetProfileCount
+            };
           }
-        });
 
-        return {
-          ...dataProviderInfo,
-          assetProfileCount
-        };
-      })
-    );
+          return null;
+        })
+      )
+    ).filter(Boolean);
 
     return {
       dataProviders,
