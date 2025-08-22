@@ -78,7 +78,7 @@ export class CoinGeckoService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
         message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
@@ -196,8 +196,10 @@ export class CoinGeckoService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
-        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to get the quotes for ${symbols.join(
+          ', '
+        )} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
       }
@@ -237,7 +239,7 @@ export class CoinGeckoService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;

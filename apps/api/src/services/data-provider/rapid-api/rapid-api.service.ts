@@ -165,7 +165,7 @@ export class RapidApiService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
         message = `RequestError: The operation was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
