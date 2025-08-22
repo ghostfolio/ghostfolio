@@ -44,45 +44,51 @@ export function redactAttributes({
     return object;
   }
 
-  // Create deep clone
-  const redactedObject = isFirstRun
-    ? JSON.parse(JSON.stringify(object))
-    : object;
+  // Use efficient deep clone from lodash only on first run
+  const redactedObject = isFirstRun ? cloneDeep(object) : object;
 
-  for (const option of options) {
-    if (redactedObject.hasOwnProperty(option.attribute)) {
-      if (option.valueMap['*'] || option.valueMap['*'] === null) {
-        redactedObject[option.attribute] = option.valueMap['*'];
-      } else if (option.valueMap[redactedObject[option.attribute]]) {
-        redactedObject[option.attribute] =
-          option.valueMap[redactedObject[option.attribute]];
+  // Create a Map for faster attribute lookup
+  const attributeMap = new Map(
+    options.map((opt) => [opt.attribute, opt.valueMap])
+  );
+
+  // Process current level attributes first
+  for (const [attribute, valueMap] of attributeMap) {
+    if (attribute in redactedObject) {
+      const currentValue = redactedObject[attribute];
+
+      // Check for wildcard first, then specific value
+      if ('*' in valueMap) {
+        redactedObject[attribute] = valueMap['*'];
+      } else if (currentValue in valueMap) {
+        redactedObject[attribute] = valueMap[currentValue];
       }
-    } else {
-      // If the attribute is not present on the current object,
-      // check if it exists on any nested objects
-      for (const property in redactedObject) {
-        if (isArray(redactedObject[property])) {
-          redactedObject[property] = redactedObject[property].map(
-            (currentObject) => {
-              return redactAttributes({
-                options,
-                isFirstRun: false,
-                object: currentObject
-              });
-            }
-          );
-        } else if (
-          isObject(redactedObject[property]) &&
-          !(redactedObject[property] instanceof Big)
-        ) {
-          // Recursively call the function on the nested object
-          redactedObject[property] = redactAttributes({
+    }
+  }
+
+  // Process nested objects and arrays efficiently
+  const propertyNames = Object.keys(redactedObject);
+  for (const property of propertyNames) {
+    const redactedField = redactedObject[property];
+
+    if (isArray(redactedField)) {
+      // Process arrays in-place to avoid creating new arrays
+      for (let innerField of redactedField) {
+        if (isObject(innerField)) {
+          innerField = redactAttributes({
             options,
             isFirstRun: false,
-            object: redactedObject[property]
+            object: innerField
           });
         }
       }
+    } else if (isObject(redactedField) && !(redactedField instanceof Big)) {
+      // Recursively process nested objects
+      redactedObject[property] = redactAttributes({
+        options,
+        isFirstRun: false,
+        object: redactedField
+      });
     }
   }
 
