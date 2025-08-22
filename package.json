@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.192.0",
+  "version": "2.193.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -139,7 +139,7 @@
     "svgmap": "2.12.2",
     "twitter-api-v2": "1.23.0",
     "uuid": "11.1.0",
-    "yahoo-finance2": "3.4.1",
+    "yahoo-finance2": "3.6.4",
     "zone.js": "0.15.1"
   },
   "devDependencies": {

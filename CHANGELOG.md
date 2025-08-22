@@ -7,13 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Migrated the login with access token dialog from `ngModel` to form control
+
+## 2.193.0 - 2025-08-22
+
 ### Added
 
+- Added a filter by data source for the asset profiles in the admin control panel
 - Extended the data providers management of the admin control panel by every data provider in use
 
 ### Changed
 
-- Migrated the login with access token dialog from `ngModel` to form control
+- Improved the error handling in data providers
+- Upgraded `yahoo-finance2` from version `3.4.1` to `3.6.4`
 
 ## 2.192.0 - 2025-08-21
 

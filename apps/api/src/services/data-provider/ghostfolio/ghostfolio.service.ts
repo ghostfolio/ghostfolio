@@ -68,14 +68,16 @@ export class GhostfolioService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error.name === 'AbortError') {
-        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${(
           requestTimeout / 1000
         ).toFixed(3)} seconds`;
-      } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+      } else if (
+        error?.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS
+      ) {
         message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+      } else if (error?.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        if (!error?.request?.options?.headers?.authorization?.includes('-')) {
           message =
             'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
         } else {
@@ -229,14 +231,18 @@ export class GhostfolioService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error.name === 'AbortError') {
-        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to get the quotes for ${symbols.join(
+          ', '
+        )} was aborted because the request to the data provider took more than ${(
           requestTimeout / 1000
         ).toFixed(3)} seconds`;
-      } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+      } else if (
+        error?.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS
+      ) {
         message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+      } else if (error?.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        if (!error?.request?.options?.headers?.authorization?.includes('-')) {
           message =
             'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
         } else {
@@ -272,14 +278,16 @@ export class GhostfolioService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error.name === 'AbortError') {
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           requestTimeout / 1000
         ).toFixed(3)} seconds`;
-      } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+      } else if (
+        error?.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS
+      ) {
         message = 'RequestError: The daily request limit has been exceeded';
       } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+        if (!error?.request?.options?.headers?.authorization?.includes('-')) {
           message =
             'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
         } else {
