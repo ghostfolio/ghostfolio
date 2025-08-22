@@ -11,9 +11,8 @@
         <mat-label i18n>Security Token</mat-label>
         <input
           matInput
-          name="password"
+          [formControl]="accessTokenControl"
           [type]="isAccessTokenHidden ? 'password' : 'text'"
-          [(ngModel)]="data.accessToken"
         />
         <button
           mat-button
@@ -65,8 +64,8 @@
     <button
       color="primary"
       mat-flat-button
-      [disabled]="!data.accessToken"
-      [mat-dialog-close]="data"
+      [disabled]="accessTokenControl.invalid || accessTokenControl.pristine"
+      (click)="onLoginWithAccessToken()"
     >
       <ng-container i18n>Sign in</ng-container>
     </button>

@@ -1,7 +1,7 @@
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -16,7 +16,6 @@ import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.com
   declarations: [LoginWithAccessTokenDialog],
   imports: [
     CommonModule,
-    FormsModule,
     GfDialogHeaderModule,
     IonIcon,
     MatButtonModule,
