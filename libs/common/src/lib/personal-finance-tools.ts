@@ -447,6 +447,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Advanced portfolio tracking and stock market information'
   },
   {
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    key: 'invmon',
+    name: 'InvMon',
+    origin: 'Switzerland',
+    pricingPerYear: '$156',
+    slogan: 'Track all your assets, investments and portfolios in one place',
+    useAnonymously: true
+  },
+  {
     founded: 2011,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
