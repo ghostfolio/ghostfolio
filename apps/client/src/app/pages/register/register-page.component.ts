@@ -35,7 +35,7 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
   styleUrls: ['./register-page.scss'],
   templateUrl: './register-page.html'
 })
-export class RegisterPageComponent implements OnDestroy, OnInit {
+export class GfRegisterPageComponent implements OnDestroy, OnInit {
   public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;

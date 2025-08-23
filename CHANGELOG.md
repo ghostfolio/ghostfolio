@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored the Register page to standalone
+- Refactored the register page to standalone
 
 ## 2.193.0 - 2025-08-22
 

@@ -3,12 +3,12 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { RegisterPageComponent } from './register-page.component';
+import { GfRegisterPageComponent } from './register-page.component';
 
 export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: RegisterPageComponent,
+    component: GfRegisterPageComponent,
     path: '',
     title: publicRoutes.register.title
   }
