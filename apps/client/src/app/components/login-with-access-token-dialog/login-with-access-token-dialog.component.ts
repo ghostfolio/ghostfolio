@@ -21,7 +21,7 @@ import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
   standalone: false
 })
 export class LoginWithAccessTokenDialog {
-  public accessTokenControl = new FormControl(
+  public accessTokenFormControl = new FormControl(
     this.data.accessToken,
     Validators.required
   );
@@ -50,9 +50,9 @@ export class LoginWithAccessTokenDialog {
   }
 
   public onLoginWithAccessToken() {
-    if (this.accessTokenControl.valid) {
+    if (this.accessTokenFormControl.valid) {
       this.dialogRef.close({
-        accessToken: this.accessTokenControl.value
+        accessToken: this.accessTokenFormControl.value
       });
     }
   }
