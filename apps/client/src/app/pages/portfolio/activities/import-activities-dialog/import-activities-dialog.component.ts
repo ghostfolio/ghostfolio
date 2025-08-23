@@ -2,7 +2,7 @@ import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto'
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
+import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
@@ -58,7 +58,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfActivitiesTableComponent,
-    GfDialogFooterModule,
+    GfDialogFooterComponent,
     GfDialogHeaderComponent,
     GfFileDropModule,
     GfSymbolModule,
