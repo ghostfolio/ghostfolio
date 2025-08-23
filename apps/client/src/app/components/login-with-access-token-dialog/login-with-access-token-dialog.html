@@ -65,7 +65,7 @@
       color="primary"
       mat-flat-button
       [disabled]="
-        accessTokenFormControl.invalid || accessTokenFormControl.pristine
+        !(accessTokenFormControl.dirty && accessTokenFormControl.valid)
       "
       (click)="onLoginWithAccessToken()"
     >
