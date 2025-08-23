@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the register page to standalone
 - Migrated the login with access token dialog from `ngModel` to form control
 
 ## 2.193.0 - 2025-08-22
