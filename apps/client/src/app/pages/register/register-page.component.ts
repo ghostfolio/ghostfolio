@@ -36,7 +36,6 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
   templateUrl: './register-page.html'
 })
 export class GfRegisterPageComponent implements OnDestroy, OnInit {
-  public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
@@ -60,18 +59,20 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
+    const { globalPermissions } = this.dataService.fetchInfo();
 
-    this.demoAuthToken = demoAuthToken;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.hasPermissionForSocialLogin = hasPermission(
       globalPermissions,
       permissions.enableSocialLogin
     );
+
     this.hasPermissionForSubscription = hasPermission(
       globalPermissions,
       permissions.enableSubscription
     );
+
     this.hasPermissionToCreateUser = hasPermission(
       globalPermissions,
       permissions.createUserAccount
