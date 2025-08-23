@@ -6,6 +6,7 @@ import {
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -20,6 +21,10 @@ import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
   standalone: false
 })
 export class LoginWithAccessTokenDialog {
+  public accessTokenFormControl = new FormControl(
+    this.data.accessToken,
+    Validators.required
+  );
   public isAccessTokenHidden = true;
 
   public constructor(
@@ -45,8 +50,10 @@ export class LoginWithAccessTokenDialog {
   }
 
   public onLoginWithAccessToken() {
-    if (this.data.accessToken) {
-      this.dialogRef.close(this.data);
+    if (this.accessTokenFormControl.valid) {
+      this.dialogRef.close({
+        accessToken: this.accessTokenFormControl.value
+      });
     }
   }
 
