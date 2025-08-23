@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the register page to standalone
 - Migrated the login with access token dialog from `ngModel` to form control
 - Upgraded `chart.js` from version `4.4.9` to `4.5.0`
+- Upgraded `prisma` from version `6.12.0` to `6.14.0`
 
 ## 2.193.0 - 2025-08-22
 
