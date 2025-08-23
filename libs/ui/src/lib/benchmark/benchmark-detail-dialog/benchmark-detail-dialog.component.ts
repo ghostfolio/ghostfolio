@@ -1,5 +1,5 @@
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
-import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -34,7 +34,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   host: { class: 'd-flex flex-column h-100' },
   imports: [
     GfDialogFooterModule,
-    GfDialogHeaderModule,
+    GfDialogHeaderComponent,
     GfLineChartComponent,
     GfValueComponent,
     MatDialogModule
