@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the login with access token dialog from `ngModel` to form control
+- Upgraded `prisma` from version `6.12.0` to `6.14.0`
 
 ## 2.193.0 - 2025-08-22
 
