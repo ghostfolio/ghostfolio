@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the landing page to standalone
 - Refactored the register page to standalone
 - Migrated the login with access token dialog from `ngModel` to form control
 - Upgraded `prisma` from version `6.12.0` to `6.14.0`
