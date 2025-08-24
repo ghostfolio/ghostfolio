@@ -21,7 +21,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, checkmarkOutline } from 'ionicons/icons';
+import {
+  checkmarkCircleOutline,
+  checkmarkOutline,
+  informationCircleOutline
+} from 'ionicons/icons';
 import { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { Subject } from 'rxjs';
@@ -78,7 +82,11 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     private stripeService: StripeService,
     private userService: UserService
   ) {
-    addIcons({ checkmarkCircleOutline, checkmarkOutline });
+    addIcons({
+      checkmarkCircleOutline,
+      checkmarkOutline,
+      informationCircleOutline
+    });
   }
 
   public ngOnInit() {
