@@ -1,6 +1,6 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
-import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -78,8 +78,8 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfAccountsTableComponent,
     GfActivitiesTableComponent,
     GfDataProviderCreditsComponent,
-    GfDialogFooterModule,
-    GfDialogHeaderModule,
+    GfDialogFooterComponent,
+    GfDialogHeaderComponent,
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,

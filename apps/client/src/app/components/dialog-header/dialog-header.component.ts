@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,18 +6,20 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'justify-content-center' },
-  selector: 'gf-dialog-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './dialog-header.component.html',
+  host: { class: 'justify-content-center' },
+  imports: [CommonModule, IonIcon, MatButtonModule],
+  selector: 'gf-dialog-header',
   styleUrls: ['./dialog-header.component.scss'],
-  standalone: false
+  templateUrl: './dialog-header.component.html'
 })
-export class DialogHeaderComponent {
+export class GfDialogHeaderComponent {
   @Input() deviceType: string;
   @Input() position: 'center' | 'left' = 'left';
   @Input() title: string;

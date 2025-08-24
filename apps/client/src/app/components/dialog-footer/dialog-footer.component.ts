@@ -5,18 +5,20 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'justify-content-center' },
-  selector: 'gf-dialog-footer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './dialog-footer.component.html',
+  host: { class: 'justify-content-center' },
+  imports: [IonIcon, MatButtonModule],
+  selector: 'gf-dialog-footer',
   styleUrls: ['./dialog-footer.component.scss'],
-  standalone: false
+  templateUrl: './dialog-footer.component.html'
 })
-export class DialogFooterComponent {
+export class GfDialogFooterComponent {
   @Input() deviceType: string;
 
   @Output() closeButtonClicked = new EventEmitter<void>();

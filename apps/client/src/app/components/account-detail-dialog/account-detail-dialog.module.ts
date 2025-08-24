@@ -1,5 +1,5 @@
-import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
-import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
@@ -22,8 +22,8 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     CommonModule,
     GfAccountBalancesComponent,
     GfActivitiesTableComponent,
-    GfDialogFooterModule,
-    GfDialogHeaderModule,
+    GfDialogFooterComponent,
+    GfDialogHeaderComponent,
     GfHoldingsTableComponent,
     GfInvestmentChartModule,
     GfValueComponent,

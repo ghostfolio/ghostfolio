@@ -1,21 +1,46 @@
+import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { GfCarouselComponent } from '@ghostfolio/ui/carousel';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { format } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  cloudDownloadOutline,
+  peopleOutline,
+  starOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [
+    CommonModule,
+    GfCarouselComponent,
+    GfLogoComponent,
+    GfValueComponent,
+    GfWorldMapChartModule,
+    IonIcon,
+    MatButtonModule,
+    MatCardModule,
+    RouterModule
+  ],
   selector: 'gf-landing-page',
   styleUrls: ['./landing-page.scss'],
-  templateUrl: './landing-page.html',
-  standalone: false
+  templateUrl: './landing-page.html'
 })
-export class LandingPageComponent implements OnDestroy, OnInit {
+export class GfLandingPageComponent implements OnDestroy, OnInit {
   public countriesOfSubscribersMap: {
     [code: string]: { value: number };
   } = {};
@@ -118,6 +143,12 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     );
 
     this.statistics = statistics;
+
+    addIcons({
+      cloudDownloadOutline,
+      peopleOutline,
+      starOutline
+    });
   }
 
   public ngOnInit() {
