@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the watchlist by 50-day and 200-day trends
+
 ### Changed
 
 - Refactored the dialog footer component to standalone
