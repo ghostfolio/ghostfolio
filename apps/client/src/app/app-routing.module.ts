@@ -106,9 +106,7 @@ const routes: Routes = [
   {
     path: publicRoutes.pricing.path,
     loadChildren: () =>
-      import('./pages/pricing/pricing-page.module').then(
-        (m) => m.PricingPageModule
-      )
+      import('./pages/pricing/pricing-page.routes').then((m) => m.routes)
   },
   {
     path: publicRoutes.public.path,
