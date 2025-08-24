@@ -8,6 +8,7 @@ import type {
   AdminMarketDataItem
 } from './admin-market-data.interface';
 import type { AdminUsers } from './admin-users.interface';
+import { AssetClassSelectorOption } from './asset-class-selector-option.interface';
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
@@ -86,6 +87,7 @@ export {
   AdminUsers,
   AiPromptResponse,
   ApiKeyResponse,
+  AssetClassSelectorOption,
   AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
