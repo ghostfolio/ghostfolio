@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the register page to standalone
 - Migrated the login with access token dialog from `ngModel` to form control
 - Upgraded `@ionic/angular` from version `8.6.3` to `8.7.3`
+- Upgraded `chart.js` from version `4.4.9` to `4.5.0`
 - Upgraded `ionicons` from version `8.0.10` to `8.0.13`
 - Upgraded `prisma` from version `6.12.0` to `6.14.0`
 
