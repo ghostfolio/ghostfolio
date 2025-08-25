@@ -13,6 +13,7 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
+  AssetClassSelectorOption,
   AssetProfileIdentifier,
   LineChartItem,
   ScraperConfiguration,
@@ -82,10 +83,7 @@ import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import {
-  AssetClassSelectorOption,
-  AssetProfileDialogParams
-} from './interfaces/interfaces';
+import { AssetProfileDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
