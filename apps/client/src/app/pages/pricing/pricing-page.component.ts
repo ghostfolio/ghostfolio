@@ -5,10 +5,27 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline, checkmarkOutline } from 'ionicons/icons';
+import {
+  checkmarkCircleOutline,
+  checkmarkOutline,
+  informationCircleOutline
+} from 'ionicons/icons';
 import { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { Subject } from 'rxjs';
@@ -16,12 +33,21 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
+  imports: [
+    CommonModule,
+    GfPremiumIndicatorComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCardModule,
+    MatTooltipModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-pricing-page',
   styleUrls: ['./pricing-page.scss'],
-  templateUrl: './pricing-page.html',
-  standalone: false
+  templateUrl: './pricing-page.html'
 })
-export class PricingPageComponent implements OnDestroy, OnInit {
+export class GfPricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
@@ -56,7 +82,11 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     private stripeService: StripeService,
     private userService: UserService
   ) {
-    addIcons({ checkmarkCircleOutline, checkmarkOutline });
+    addIcons({
+      checkmarkCircleOutline,
+      checkmarkOutline,
+      informationCircleOutline
+    });
   }
 
   public ngOnInit() {
