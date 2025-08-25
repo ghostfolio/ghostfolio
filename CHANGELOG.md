@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Randomized the minutes of the hourly data gathering cron job
 - Refactored the dialog footer component to standalone
 - Refactored the dialog header component to standalone
 - Refactored the landing page to standalone
