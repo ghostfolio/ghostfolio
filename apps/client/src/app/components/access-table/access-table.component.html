@@ -67,12 +67,18 @@
         <mat-menu #transactionMenu="matMenu" xPosition="before">
           @if (element.type === 'PUBLIC') {
             <button mat-menu-item (click)="onCopyUrlToClipboard(element.id)">
-              <ng-container i18n>Copy link to clipboard</ng-container>
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="copy-outline" />
+                <span i18n>Copy link to clipboard</span>
+              </span>
             </button>
             <hr class="my-0" />
           }
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
-            <ng-container i18n>Revoke</ng-container>
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="remove-circle-outline" />
+              <span i18n>Revoke</span>
+            </span>
           </button>
         </mat-menu>
       </td>
