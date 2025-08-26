@@ -77,6 +77,7 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 })
 export class GfCreateOrUpdateActivityDialog implements OnDestroy {
   public activityForm: FormGroup;
+
   public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
     .map((id) => {
       return { id, label: translate(id) } as AssetClassSelectorOption;
@@ -84,6 +85,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     .sort((a, b) => {
       return a.label.localeCompare(b.label);
     });
+
   public assetSubClassOptions: AssetClassSelectorOption[] = [];
   public currencies: string[] = [];
   public currencyOfAssetProfile: string;
