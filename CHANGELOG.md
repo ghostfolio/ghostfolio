@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the create or update activity dialog’s asset sub class selector of the portfolio menu activities panel to update the options dynamically based on the selected asset class
+- Randomized the minutes of the hourly data gathering cron job
 - Refactored the dialog footer component to standalone
 - Refactored the dialog header component to standalone
 - Refactored the landing page to standalone
+- Refactored the pricing page to standalone
 - Refactored the register page to standalone
 - Migrated the login with access token dialog from `ngModel` to form control
 - Upgraded `@ionic/angular` from version `8.6.3` to `8.7.3`
