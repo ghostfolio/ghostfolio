@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the watchlist endpoint by 50-Day and 200-Day trends (experimental)
+
 ### Changed
 
 - Randomized the minutes of the hourly data gathering cron job
