@@ -142,8 +142,8 @@ export class WatchlistService {
               date: allTimeHigh?.date
             }
           },
-          trend200d: trends.trend200d,
-          trend50d: trends.trend50d
+          trend50d: trends.trend50d,
+          trend200d: trends.trend200d
         };
       })
     );
