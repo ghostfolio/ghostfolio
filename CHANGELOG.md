@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the watchlist by 50-day and 200-day trends
+- Extended the watchlist endpoint by 50-Day and 200-Day trends (experimental)
 
 ### Changed
 
