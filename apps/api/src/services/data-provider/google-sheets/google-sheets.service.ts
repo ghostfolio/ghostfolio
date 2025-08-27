@@ -36,13 +36,10 @@ export class GoogleSheetsService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile({
-    symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    return {
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({}: GetAssetProfileParams): Promise<
+    Partial<SymbolProfile>
+  > {
+    return undefined;
   }
 
   public getDataProviderInfo(): DataProviderInfo {

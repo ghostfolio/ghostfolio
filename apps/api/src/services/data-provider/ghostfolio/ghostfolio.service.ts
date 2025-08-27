@@ -51,19 +51,26 @@ export class GhostfolioService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
   }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    let response: DataProviderGhostfolioAssetProfileResponse = {};
+    let response: DataProviderGhostfolioAssetProfileResponse;
 
     try {
-      const assetProfile = (await fetch(
+      const res = await fetch(
         `${this.URL}/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) =>
-        res.json()
-      )) as DataProviderGhostfolioAssetProfileResponse;
+      );
 
+      if (!res.ok) {
+        throw new Response(await res.text(), {
+          status: res.status,
+          statusText: res.statusText
+        });
+      }
+
+      const assetProfile =
+        (await res.json()) as DataProviderGhostfolioAssetProfileResponse;
       response = assetProfile;
     } catch (error) {
       let message = error;
@@ -72,18 +79,15 @@ export class GhostfolioService implements DataProviderInterface {
         message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${(
           requestTimeout / 1000
         ).toFixed(3)} seconds`;
-      } else if (
-        error?.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS
-      ) {
+      } else if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error?.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error?.request?.options?.headers?.authorization?.includes('-')) {
-          message =
-            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
-        } else {
-          message =
-            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
-        }
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -115,7 +119,7 @@ export class GhostfolioService implements DataProviderInterface {
     } = {};
 
     try {
-      const { dividends } = (await fetch(
+      const res = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
@@ -124,22 +128,29 @@ export class GhostfolioService implements DataProviderInterface {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json())) as DividendsResponse;
+      );
 
+      if (!res.ok) {
+        throw new Response(await res.text(), {
+          status: res.status,
+          statusText: res.statusText
+        });
+      }
+
+      const { dividends } = (await res.json()) as DividendsResponse;
       response = dividends;
     } catch (error) {
       let message = error;
 
-      if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+      if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error.request?.options?.headers?.authorization?.includes('-')) {
-          message =
-            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
-        } else {
-          message =
-            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
-        }
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -158,7 +169,7 @@ export class GhostfolioService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const { historicalData } = (await fetch(
+      const res = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
@@ -167,27 +178,36 @@ export class GhostfolioService implements DataProviderInterface {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json())) as HistoricalResponse;
+      );
+
+      if (!res.ok) {
+        throw new Response(await res.text(), {
+          status: res.status,
+          statusText: res.statusText
+        });
+      }
+
+      const { historicalData } = (await res.json()) as HistoricalResponse;
 
       return {
         [symbol]: historicalData
       };
     } catch (error) {
-      let message = error;
-
-      if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
-        message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error.request?.options?.headers?.authorization?.includes('-')) {
-          message =
-            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
-        } else {
-          message =
-            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
-        }
+      if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
+        error.name = 'RequestError';
+        error.message =
+          'RequestError: The daily request limit has been exceeded';
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        error.name = 'RequestError';
+        error.message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      Logger.error(error.message, 'GhostfolioService');
 
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
@@ -219,14 +239,22 @@ export class GhostfolioService implements DataProviderInterface {
     }
 
     try {
-      const { quotes } = (await fetch(
+      const res = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json())) as QuotesResponse;
+      );
 
+      if (!res.ok) {
+        throw new Response(await res.text(), {
+          status: res.status,
+          statusText: res.statusText
+        });
+      }
+
+      const { quotes } = (await res.json()) as QuotesResponse;
       response = quotes;
     } catch (error) {
       let message = error;
@@ -237,18 +265,15 @@ export class GhostfolioService implements DataProviderInterface {
         )} was aborted because the request to the data provider took more than ${(
           requestTimeout / 1000
         ).toFixed(3)} seconds`;
-      } else if (
-        error?.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS
-      ) {
+      } else if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error?.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error?.request?.options?.headers?.authorization?.includes('-')) {
-          message =
-            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
-        } else {
-          message =
-            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
-        }
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -268,13 +293,22 @@ export class GhostfolioService implements DataProviderInterface {
     let searchResult: LookupResponse = { items: [] };
 
     try {
-      searchResult = (await fetch(
+      const res = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json())) as LookupResponse;
+      );
+
+      if (!res.ok) {
+        throw new Response(await res.text(), {
+          status: res.status,
+          statusText: res.statusText
+        });
+      }
+
+      searchResult = (await res.json()) as LookupResponse;
     } catch (error) {
       let message = error;
 
@@ -282,18 +316,15 @@ export class GhostfolioService implements DataProviderInterface {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           requestTimeout / 1000
         ).toFixed(3)} seconds`;
-      } else if (
-        error?.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS
-      ) {
+      } else if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
-      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        if (!error?.request?.options?.headers?.authorization?.includes('-')) {
-          message =
-            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
-        } else {
-          message =
-            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
-        }
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
       Logger.error(message, 'GhostfolioService');
