@@ -428,6 +428,15 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    founded: 2022,
+    key: 'income-reign',
+    languages: ['English'],
+    name: 'Income Reign',
+    note: 'Income Reign was discontinued in 2025',
+    origin: 'United States',
+    pricingPerYear: '$120'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     isArchived: true,
