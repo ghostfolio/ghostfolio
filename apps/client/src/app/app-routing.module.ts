@@ -141,7 +141,7 @@ const routes: Routes = [
   {
     path: internalRoutes.zen.path,
     loadChildren: () =>
-      import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)
+      import('./pages/zen/zen-page.routes').then((m) => m.routes)
   },
   {
     // wildcard, if requested url doesn't match any paths for routes defined
