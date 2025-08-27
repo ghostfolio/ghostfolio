@@ -926,13 +926,21 @@ export abstract class PortfolioCalculator {
           .mul(factor)
           .plus(oldAccumulatedSymbol.quantity);
 
-        if (type === 'BUY') {
+        if (type === 'BUY' && oldAccumulatedSymbol.investment.gte(0)) {
           investment = oldAccumulatedSymbol.investment.plus(
             quantity.mul(unitPrice)
           );
-        } else if (type === 'SELL') {
+        } else if (type === 'BUY' && oldAccumulatedSymbol.investment.lt(0)) {
+          investment = oldAccumulatedSymbol.investment.plus(
+            quantity.mul(oldAccumulatedSymbol.averagePrice)
+          );
+        } else if (type === 'SELL' && oldAccumulatedSymbol.investment.gt(0)) {
           investment = oldAccumulatedSymbol.investment.minus(
             quantity.mul(oldAccumulatedSymbol.averagePrice)
+          );
+        } else if (type === 'SELL' && oldAccumulatedSymbol.investment.lte(0)) {
+          investment = oldAccumulatedSymbol.investment.minus(
+            quantity.mul(unitPrice)
           );
         }
 
@@ -942,8 +950,8 @@ export abstract class PortfolioCalculator {
           investment,
           skipErrors,
           symbol,
-          averagePrice: newQuantity.gt(0)
-            ? investment.div(newQuantity)
+          averagePrice: !newQuantity.eq(0)
+            ? investment.div(newQuantity).abs()
             : new Big(0),
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
