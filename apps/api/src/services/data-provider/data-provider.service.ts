@@ -107,7 +107,9 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then((symbolProfile) => {
-            response[symbol] = symbolProfile;
+            if (symbolProfile) {
+              response[symbol] = symbolProfile;
+            }
           })
         );
       }

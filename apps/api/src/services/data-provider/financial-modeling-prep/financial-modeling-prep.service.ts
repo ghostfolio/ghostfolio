@@ -64,7 +64,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
   }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    const response: Partial<SymbolProfile> = {
+    let response: Partial<SymbolProfile> = {
       symbol,
       dataSource: this.getName()
     };
@@ -201,6 +201,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       }
     } catch (error) {
       let message = error;
+      response = undefined;
 
       if (['AbortError', 'TimeoutError'].includes(error?.name)) {
         message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${(

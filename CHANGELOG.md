@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the support to customize rules in the _X-ray_ section from experimental to general availability
 - Improved the create or update activity dialog’s asset sub class selector for valuables to update the options dynamically based on the selected asset class
+- Improved the error handling in data providers
 - Randomized the minutes of the hourly data gathering cron job
 - Refactored the dialog footer component to standalone
 - Refactored the dialog header component to standalone

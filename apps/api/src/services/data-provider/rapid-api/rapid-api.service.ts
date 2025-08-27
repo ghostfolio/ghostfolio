@@ -35,13 +35,10 @@ export class RapidApiService implements DataProviderInterface {
     return !!this.configurationService.get('API_KEY_RAPID_API');
   }
 
-  public async getAssetProfile({
-    symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    return {
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({}: GetAssetProfileParams): Promise<
+    Partial<SymbolProfile>
+  > {
+    return undefined;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
