@@ -51,10 +51,10 @@ export class GhostfolioService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
   }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    let response: DataProviderGhostfolioAssetProfileResponse;
+    let assetProfile: DataProviderGhostfolioAssetProfileResponse;
 
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${this.URL}/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         {
           headers: await this.getRequestHeaders(),
@@ -62,16 +62,15 @@ export class GhostfolioService implements DataProviderInterface {
         }
       );
 
-      if (!res.ok) {
-        throw new Response(await res.text(), {
-          status: res.status,
-          statusText: res.statusText
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
         });
       }
 
-      const assetProfile =
-        (await res.json()) as DataProviderGhostfolioAssetProfileResponse;
-      response = assetProfile;
+      assetProfile =
+        (await response.json()) as DataProviderGhostfolioAssetProfileResponse;
     } catch (error) {
       let message = error;
 
@@ -93,7 +92,7 @@ export class GhostfolioService implements DataProviderInterface {
       Logger.error(message, 'GhostfolioService');
     }
 
-    return response;
+    return assetProfile;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
@@ -114,12 +113,12 @@ export class GhostfolioService implements DataProviderInterface {
   }: GetDividendsParams): Promise<{
     [date: string]: IDataProviderHistoricalResponse;
   }> {
-    let response: {
+    let dividends: {
       [date: string]: IDataProviderHistoricalResponse;
     } = {};
 
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
@@ -130,15 +129,14 @@ export class GhostfolioService implements DataProviderInterface {
         }
       );
 
-      if (!res.ok) {
-        throw new Response(await res.text(), {
-          status: res.status,
-          statusText: res.statusText
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
         });
       }
 
-      const { dividends } = (await res.json()) as DividendsResponse;
-      response = dividends;
+      dividends = ((await response.json()) as DividendsResponse).dividends;
     } catch (error) {
       let message = error;
 
@@ -156,7 +154,7 @@ export class GhostfolioService implements DataProviderInterface {
       Logger.error(message, 'GhostfolioService');
     }
 
-    return response;
+    return dividends;
   }
 
   public async getHistorical({
@@ -169,7 +167,7 @@ export class GhostfolioService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
@@ -180,14 +178,14 @@ export class GhostfolioService implements DataProviderInterface {
         }
       );
 
-      if (!res.ok) {
-        throw new Response(await res.text(), {
-          status: res.status,
-          statusText: res.statusText
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
         });
       }
 
-      const { historicalData } = (await res.json()) as HistoricalResponse;
+      const { historicalData } = (await response.json()) as HistoricalResponse;
 
       return {
         [symbol]: historicalData
@@ -232,14 +230,14 @@ export class GhostfolioService implements DataProviderInterface {
   }: GetQuotesParams): Promise<{
     [symbol: string]: IDataProviderResponse;
   }> {
-    let response: { [symbol: string]: IDataProviderResponse } = {};
+    let quotes: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
-      return response;
+      return quotes;
     }
 
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
           headers: await this.getRequestHeaders(),
@@ -247,15 +245,14 @@ export class GhostfolioService implements DataProviderInterface {
         }
       );
 
-      if (!res.ok) {
-        throw new Response(await res.text(), {
-          status: res.status,
-          statusText: res.statusText
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
         });
       }
 
-      const { quotes } = (await res.json()) as QuotesResponse;
-      response = quotes;
+      quotes = ((await response.json()) as QuotesResponse).quotes;
     } catch (error) {
       let message = error;
 
@@ -279,7 +276,7 @@ export class GhostfolioService implements DataProviderInterface {
       Logger.error(message, 'GhostfolioService');
     }
 
-    return response;
+    return quotes;
   }
 
   public getTestSymbol() {
@@ -293,7 +290,7 @@ export class GhostfolioService implements DataProviderInterface {
     let searchResult: LookupResponse = { items: [] };
 
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
         {
           headers: await this.getRequestHeaders(),
@@ -301,14 +298,14 @@ export class GhostfolioService implements DataProviderInterface {
         }
       );
 
-      if (!res.ok) {
-        throw new Response(await res.text(), {
-          status: res.status,
-          statusText: res.statusText
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
         });
       }
 
-      searchResult = (await res.json()) as LookupResponse;
+      searchResult = (await response.json()) as LookupResponse;
     } catch (error) {
       let message = error;
 
