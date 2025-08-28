@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Refactored the _ZEN_ page to standalone
+
 ## 2.194.0 - 2025-08-27
 
 ### Added
@@ -22,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the landing page to standalone
 - Refactored the pricing page to standalone
 - Refactored the register page to standalone
-- Refactored the ZEN page to standalone
 - Migrated the login with access token dialog from `ngModel` to form control
 - Upgraded `@ionic/angular` from version `8.6.3` to `8.7.3`
 - Upgraded `ionicons` from version `8.0.10` to `8.0.13`
