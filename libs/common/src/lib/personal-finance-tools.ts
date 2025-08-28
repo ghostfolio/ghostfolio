@@ -428,6 +428,15 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    founded: 2022,
+    key: 'income-reign',
+    languages: ['English'],
+    name: 'Income Reign',
+    note: 'Income Reign was discontinued in 2025',
+    origin: 'United States',
+    pricingPerYear: '$120'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     isArchived: true,
@@ -452,6 +461,7 @@ export const personalFinanceTools: Product[] = [
     hasSelfHostingAbility: true,
     key: 'invmon',
     name: 'InvMon',
+    note: 'Originally named as A2PB',
     origin: 'Switzerland',
     pricingPerYear: '$156',
     slogan: 'Track all your assets, investments and portfolios in one place',
@@ -985,6 +995,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2024,
     hasSelfHostingAbility: true,
     isArchived: true,
+    isOpenSource: true,
     key: 'wealthfolio',
     languages: ['English'],
     name: 'Wealthfolio',
