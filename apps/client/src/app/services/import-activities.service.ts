@@ -146,7 +146,7 @@ export class ImportActivitiesService {
     fee,
     quantity,
     SymbolProfile,
-    tags,
+    tagIds,
     type,
     unitPrice,
     updateAccountBalance
@@ -156,16 +156,14 @@ export class ImportActivitiesService {
       comment,
       fee,
       quantity,
+      tagIds,
       type,
       unitPrice,
       updateAccountBalance,
       currency: currency ?? SymbolProfile.currency,
       dataSource: SymbolProfile.dataSource,
       date: date.toString(),
-      symbol: SymbolProfile.symbol,
-      tags: tags?.map(({ id }) => {
-        return id;
-      })
+      symbol: SymbolProfile.symbol
     };
   }
 

@@ -64,7 +64,7 @@ export class CreateOrderDto {
 
   @IsArray()
   @IsOptional()
-  tags?: string[];
+  tagIds?: string[];
 
   @IsEnum(Type, { each: true })
   type: Type;

@@ -237,7 +237,7 @@ export class ExportService {
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
             symbol: SymbolProfile.symbol,
-            tags: currentTags.map(({ id: tagId }) => {
+            tagId: currentTags.map(({ id: tagId }) => {
               return tagId;
             })
           };
