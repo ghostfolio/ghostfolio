@@ -158,6 +158,7 @@ export class ImportService {
     isDryRun = false,
     maxActivitiesToImport,
     tagsDto,
+    platformsDto,
     user
   }: {
     accountsWithBalancesDto: ImportDataDto['accounts'];
@@ -166,6 +167,7 @@ export class ImportService {
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     tagsDto: ImportDataDto['tags'];
+    platformsDto: ImportDataDto['platforms'];
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
@@ -296,6 +298,29 @@ export class ImportService {
         );
 
         await this.marketDataService.updateMany({ data: marketDataObjects });
+      }
+    }
+
+    if (platformsDto?.length) {
+      const canCreatePlatform = hasPermission(
+        user.permissions,
+        permissions.createPlatform
+      );
+
+      for (const platform of platformsDto) {
+        const existingPlatform = await this.platformService.getPlatform({
+          id: platform.id
+        });
+
+        if (!existingPlatform) {
+          continue;
+        }
+
+        if (!canCreatePlatform) {
+          throw new Error(
+            `Insufficient permissions to create platform ("${platform.name}")`
+          );
+        }
       }
     }
 

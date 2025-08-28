@@ -4,7 +4,7 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -47,26 +47,6 @@ export class ImportController {
   ): Promise<ImportResponse> {
     const isDryRun = isDryRunParam === 'true';
 
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createAccount)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    if (
-      importData.platforms &&
-      importData.platforms.length > 0 &&
-      !hasPermission(this.request.user.permissions, permissions.createPlatform)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     let maxActivitiesToImport = this.configurationService.get(
       'MAX_ACTIVITIES_TO_IMPORT'
     );
@@ -86,6 +66,7 @@ export class ImportController {
         activitiesDto: importData.activities,
         assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
         tagsDto: importData.tags ?? [],
+        platformsDto: importData.platforms ?? [],
         user: this.request.user
       });
 
