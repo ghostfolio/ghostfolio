@@ -18,10 +18,9 @@ import { takeUntil } from 'rxjs/operators';
   selector: 'gf-zen-page',
   styleUrls: ['./zen-page.scss'],
   templateUrl: './zen-page.html',
-  standalone: true,
-  imports: [CommonModule, MatTabsModule, RouterModule, IonIcon]
+  imports: [CommonModule, IonIcon, MatTabsModule, RouterModule]
 })
-export class ZenPageComponent implements OnDestroy, OnInit {
+export class GfZenPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
   public user: User;

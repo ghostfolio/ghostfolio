@@ -5,7 +5,7 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
-import { ZenPageComponent } from './zen-page.component';
+import { GfZenPageComponent } from './zen-page.component';
 
 export const routes: Routes = [
   {
@@ -21,7 +21,7 @@ export const routes: Routes = [
         title: internalRoutes.home.subRoutes.holdings.title
       }
     ],
-    component: ZenPageComponent,
+    component: GfZenPageComponent,
     path: '',
     title: internalRoutes.zen.title
   }
