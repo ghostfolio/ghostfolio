@@ -926,22 +926,26 @@ export abstract class PortfolioCalculator {
           .mul(factor)
           .plus(oldAccumulatedSymbol.quantity);
 
-        if (type === 'BUY' && oldAccumulatedSymbol.investment.gte(0)) {
-          investment = oldAccumulatedSymbol.investment.plus(
-            quantity.mul(unitPrice)
-          );
-        } else if (type === 'BUY' && oldAccumulatedSymbol.investment.lt(0)) {
-          investment = oldAccumulatedSymbol.investment.plus(
-            quantity.mul(oldAccumulatedSymbol.averagePrice)
-          );
-        } else if (type === 'SELL' && oldAccumulatedSymbol.investment.gt(0)) {
-          investment = oldAccumulatedSymbol.investment.minus(
-            quantity.mul(oldAccumulatedSymbol.averagePrice)
-          );
-        } else if (type === 'SELL' && oldAccumulatedSymbol.investment.lte(0)) {
-          investment = oldAccumulatedSymbol.investment.minus(
-            quantity.mul(unitPrice)
-          );
+        if (type === 'BUY') {
+          if (oldAccumulatedSymbol.investment.gte(0)) {
+            investment = oldAccumulatedSymbol.investment.plus(
+              quantity.mul(unitPrice)
+            );
+          } else {
+            investment = oldAccumulatedSymbol.investment.plus(
+              quantity.mul(oldAccumulatedSymbol.averagePrice)
+            );
+          }
+        } else if (type === 'SELL') {
+          if (oldAccumulatedSymbol.investment.gt(0)) {
+            investment = oldAccumulatedSymbol.investment.minus(
+              quantity.mul(oldAccumulatedSymbol.averagePrice)
+            );
+          } else {
+            investment = oldAccumulatedSymbol.investment.minus(
+              quantity.mul(unitPrice)
+            );
+          }
         }
 
         currentTransactionPointItem = {
