@@ -15,10 +15,10 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [CommonModule, IonIcon, MatTabsModule, RouterModule],
   selector: 'gf-zen-page',
   styleUrls: ['./zen-page.scss'],
-  templateUrl: './zen-page.html',
-  imports: [CommonModule, IonIcon, MatTabsModule, RouterModule]
+  templateUrl: './zen-page.html'
 })
 export class GfZenPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
