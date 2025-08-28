@@ -56,6 +56,17 @@ export class ImportController {
       );
     }
 
+    if (
+      importData.platforms &&
+      importData.platforms.length > 0 &&
+      !hasPermission(this.request.user.permissions, permissions.createPlatform)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     let maxActivitiesToImport = this.configurationService.get(
       'MAX_ACTIVITIES_TO_IMPORT'
     );
