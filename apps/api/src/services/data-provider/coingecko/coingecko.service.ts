@@ -214,15 +214,16 @@ export class CoinGeckoService implements DataProviderInterface {
     return 'bitcoin';
   }
 
-  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
+  public async search({
+    query,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  }: GetSearchParams): Promise<LookupResponse> {
     let items: LookupItem[] = [];
 
     try {
       const { coins } = await fetch(`${this.apiUrl}/search?query=${query}`, {
         headers: this.headers,
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
+        signal: AbortSignal.timeout(requestTimeout)
       }).then((res) => res.json());
 
       items = coins.map(({ id: symbol, name }) => {

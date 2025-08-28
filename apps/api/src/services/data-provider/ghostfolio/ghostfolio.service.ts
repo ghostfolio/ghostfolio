@@ -284,8 +284,8 @@ export class GhostfolioService implements DataProviderInterface {
   }
 
   public async search({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
-    query
+    query,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
   }: GetSearchParams): Promise<LookupResponse> {
     let searchResult: LookupResponse = { items: [] };
 
