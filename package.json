@@ -99,7 +99,7 @@
     "big.js": "7.0.1",
     "bootstrap": "4.6.2",
     "bull": "4.16.5",
-    "chart.js": "4.4.9",
+    "chart.js": "4.5.0",
     "chartjs-adapter-date-fns": "3.0.0",
     "chartjs-chart-treemap": "3.1.0",
     "chartjs-plugin-annotation": "3.1.0",

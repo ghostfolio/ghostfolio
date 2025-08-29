@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the _ZEN_ page to standalone
+- Upgraded `chart.js` from version `4.4.9` to `4.5.0`
 
 ## 2.194.0 - 2025-08-27
 
