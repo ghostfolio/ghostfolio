@@ -365,7 +365,7 @@ export class ImportService {
         }
 
         // If a new tag is created, then update the tag ID in all activities
-        activity.tags = (activity.tags ?? []).map((tagId) => {
+        activity.tagIds = (activity.tagIds ?? []).map((tagId) => {
           return tagIdMapping[tagId] ?? tagId;
         });
       }
@@ -630,7 +630,7 @@ export class ImportService {
         fee,
         quantity,
         symbol,
-        tags,
+        tagIds,
         type,
         unitPrice
       }) => {
@@ -663,6 +663,7 @@ export class ImportService {
           error,
           fee,
           quantity,
+          tagIds,
           type,
           unitPrice,
           SymbolProfile: {
@@ -679,8 +680,7 @@ export class ImportService {
             isActive: true,
             sectors: undefined,
             updatedAt: undefined
-          },
-          tagIds: tags
+          }
         };
       }
     );
@@ -745,7 +745,8 @@ export class ImportService {
         }
       }
 
-      if (!assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]) {
+      if (assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]) {
+      } else {
         const assetProfile = {
           currency,
           ...(

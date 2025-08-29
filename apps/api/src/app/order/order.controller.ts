@@ -217,7 +217,7 @@ export class OrderController {
           }
         }
       },
-      tags: data.tags?.map((id) => {
+      tags: data.tagIds?.map((id) => {
         return { id };
       }),
       user: { connect: { id: this.request.user.id } },

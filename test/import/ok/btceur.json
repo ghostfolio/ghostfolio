@@ -5,7 +5,7 @@
   },
   "accounts": [],
   "platforms": [],
-  "tags": [],
+  "tagIds": [],
   "activities": [
     {
       "accountId": null,
@@ -18,7 +18,7 @@
       "dataSource": "YAHOO",
       "date": "2021-12-12T00:00:00.000Z",
       "symbol": "BTCUSD",
-      "tags": []
+      "tagIds": []
     }
   ],
   "user": {

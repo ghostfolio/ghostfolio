@@ -1,7 +1,8 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+
 import {
   Account,
   DataSource,
-  Order,
   Platform,
   SymbolProfile,
   Tag
@@ -15,14 +16,20 @@ export interface Export {
     balances: AccountBalance[];
   })[];
   activities: (Omit<
-    Order,
+    Activity,
     | 'accountUserId'
     | 'createdAt'
     | 'date'
+    | 'feeInAssetProfileCurrency'
+    | 'feeInBaseCurrency'
     | 'isDraft'
     | 'symbolProfileId'
+    | 'tags'
+    | 'unitPriceInAssetProfileCurrency'
     | 'updatedAt'
     | 'userId'
+    | 'value'
+    | 'valueInBaseCurrency'
   > & { dataSource: DataSource; date: string; symbol: string })[];
   assetProfiles: (Omit<
     SymbolProfile,

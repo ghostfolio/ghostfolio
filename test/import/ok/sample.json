@@ -77,7 +77,12 @@
       "url": "https://interactivebrokers.com"
     }
   ],
-  "tags": [],
+  "tagIds": [
+    {
+      "id": "7314654b-46a7-48a4-b6b9-4895b45ea107",
+      "name": "CORE"
+    }
+  ],
   "activities": [
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
@@ -90,7 +95,7 @@
       "dataSource": "MANUAL",
       "date": "2021-09-01T00:00:00.000Z",
       "symbol": "14a69cb9-1e31-43fa-b320-83703d8ed74b",
-      "tags": []
+      "tagIds": []
     },
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
@@ -103,7 +108,7 @@
       "dataSource": "YAHOO",
       "date": "2021-09-16T00:00:00.000Z",
       "symbol": "MSFT",
-      "tags": []
+      "tagIds": ["7314654b-46a7-48a4-b6b9-4895b45ea107"]
     },
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
@@ -116,7 +121,7 @@
       "dataSource": "YAHOO",
       "date": "2021-11-17T00:00:00.000Z",
       "symbol": "MSFT",
-      "tags": []
+      "tagIds": ["7314654b-46a7-48a4-b6b9-4895b45ea107"]
     },
     {
       "accountId": null,
@@ -129,7 +134,7 @@
       "dataSource": "MANUAL",
       "date": "2022-01-01T00:00:00.000Z",
       "symbol": "7e91b7d4-1430-4212-8380-289a06c9bbc1",
-      "tags": []
+      "tagIds": []
     },
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
@@ -142,7 +147,7 @@
       "dataSource": "YAHOO",
       "date": "2050-06-06T00:00:00.000Z",
       "symbol": "MSFT",
-      "tags": []
+      "tagIds": ["7314654b-46a7-48a4-b6b9-4895b45ea107"]
     }
   ],
   "user": {

@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the activities import documentation by the tags
+
 ### Changed
 
+- Changed `tags` to `tagIds` in the activities import and export
 - Refactored the _ZEN_ page to standalone
 
 ## 2.194.0 - 2025-08-27
