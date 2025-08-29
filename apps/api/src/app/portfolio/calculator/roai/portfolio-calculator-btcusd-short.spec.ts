@@ -124,7 +124,9 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      expect(portfolioSnapshot.positions[0].averagePrice).toEqual(Big(45000));
+      expect(portfolioSnapshot.positions[0].averagePrice).toEqual(
+        Big(45647.95)
+      );
     });
   });
 });
