@@ -65,8 +65,8 @@ export class ImportController {
         accountsWithBalancesDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
-        tagsDto: importData.tags ?? [],
         platformsDto: importData.platforms ?? [],
+        tagsDto: importData.tags ?? [],
         user: this.request.user
       });
 

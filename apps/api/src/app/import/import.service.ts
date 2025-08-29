@@ -157,8 +157,8 @@ export class ImportService {
     assetProfilesWithMarketDataDto,
     isDryRun = false,
     maxActivitiesToImport,
-    tagsDto,
     platformsDto,
+    tagsDto,
     user
   }: {
     accountsWithBalancesDto: ImportDataDto['accounts'];
@@ -166,8 +166,8 @@ export class ImportService {
     assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
-    tagsDto: ImportDataDto['tags'];
     platformsDto: ImportDataDto['platforms'];
+    tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};

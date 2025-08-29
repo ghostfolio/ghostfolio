@@ -28,13 +28,13 @@ export class ImportDataDto {
 
   @IsArray()
   @IsOptional()
-  @Type(() => CreateTagDto)
-  @ValidateNested({ each: true })
-  tags?: CreateTagDto[];
-
-  @IsArray()
-  @IsOptional()
   @Type(() => CreatePlatformDto)
   @ValidateNested({ each: true })
   platforms?: CreatePlatformDto[];
+
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreateTagDto)
+  @ValidateNested({ each: true })
+  tags?: CreateTagDto[];
 }
