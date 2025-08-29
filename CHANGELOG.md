@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `envalid` from version `8.0.0` to `8.1.0`
+
 ### Fixed
 
 - Fixed an issue related to the error handling in the data provider status component
