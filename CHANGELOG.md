@@ -9,8 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Reused the request timeout in various functions of the data providers
 - Refactored the _ZEN_ page to standalone
 - Upgraded `chart.js` from version `4.4.9` to `4.5.0`
+
+### Fixed
+
+- Handled an exception in the get quotes functionality of the _Financial Modeling Prep_ service
 
 ## 2.194.0 - 2025-08-27
 
