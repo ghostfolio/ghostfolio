@@ -165,6 +165,25 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       title-text-line-height: 1.2
     )
   );
+
+  @include mat.dialog-overrides(
+    (
+      container-color: var(--light-background)
+    )
+  );
+
+  @include mat.menu-overrides(
+    (
+      container-color: var(--light-background)
+    )
+  );
+
+  @include mat.select-overrides(
+    (
+      panel-background-color: var(--light-background)
+    )
+  );
+
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--dark-dividers))
@@ -196,6 +215,7 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       title-text-line-height: 1.2
     )
   );
+
   @include mat.table-overrides(
     (
       row-item-outline-color: rgba(var(--light-dividers))
