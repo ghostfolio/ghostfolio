@@ -158,6 +158,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-default);
 
+  @include mat.button-overrides(
+    (
+      outlined-label-text-color: var(--dark-primary-text),
+      text-label-text-color: var(--dark-primary-text)
+    )
+  );
+
   @include mat.card-overrides(
     (
       outlined-container-color: var(--light-background),
@@ -208,6 +215,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-dark);
 
+  @include mat.button-overrides(
+    (
+      outlined-label-text-color: var(--light-primary-text),
+      text-label-text-color: var(--light-primary-text)
+    )
+  );
+
   @include mat.card-overrides(
     (
       outlined-container-color: var(--dark-background),
@@ -251,6 +265,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     }
   }
 
+  @include mat.button-overrides(
+    (
+      filled-container-color: var(--gf-theme-primary-500)
+    )
+  );
+
   @include mat.dialog-overrides(
     (
       container-max-width: 80vw,
@@ -277,7 +297,8 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   .mat-accent {
     @include mat.button-overrides(
       (
-        filled-container-color: var(--gf-theme-secondary-500)
+        filled-container-color: var(--gf-theme-secondary-500),
+        outlined-label-text-color: var(--gf-theme-secondary-500)
       )
     );
   }
@@ -286,7 +307,8 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     @include mat.button-overrides(
       (
         filled-container-color: #f44336,
-        filled-label-text-color: white
+        filled-label-text-color: white,
+        outlined-label-text-color: #f44336
       )
     );
   }
