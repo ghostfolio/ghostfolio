@@ -117,7 +117,11 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(() => {
-          this.dialogRef.close();
+          this.dialogRef.close({
+            dataSource: 'MANUAL',
+            symbol: `${currency}USD`,
+            isCurrency: true
+          });
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({

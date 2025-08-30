@@ -63,7 +63,7 @@ import {
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
@@ -480,11 +480,21 @@ export class GfAdminMarketDataComponent
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(({ dataSource, symbol } = {}) => {
+          .subscribe(({ dataSource, symbol, isCurrency } = {}) => {
             if (dataSource && symbol) {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })
                 .pipe(
+                  switchMap(() => {
+                    // Call gatherSymbol for currencies to collect historical data
+                    if (isCurrency) {
+                      return this.adminService.gatherSymbol({
+                        dataSource,
+                        symbol
+                      });
+                    }
+                    return of(null);
+                  }),
                   switchMap(() => {
                     this.isLoading = true;
                     this.changeDetectorRef.markForCheck();
