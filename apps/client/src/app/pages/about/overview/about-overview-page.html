@@ -36,7 +36,11 @@
           }
           <ng-container>. </ng-container>
           <ng-container i18n>The project has been initiated by</ng-container>
-          <a href="https://dotsilver.ch" title="Website of Thomas Kaul">
+          <a
+            href="https://dotsilver.ch"
+            i18n-title
+            title="Website of Thomas Kaul"
+          >
             Thomas Kaul
           </a>
           <ng-container i18n
@@ -50,14 +54,17 @@
           @if (hasPermissionForSubscription) {
             <ng-container i18n>Check the system status at</ng-container>
             <ng-container>&nbsp;</ng-container>
-            <a href="https://status.ghostfol.io" title="Ghostfolio Status"
+            <a
+              href="https://status.ghostfol.io"
+              i18n-title
+              title="Ghostfolio Status"
               >status.ghostfol.io</a
             >.
           }
         </p>
         <p>
           <ng-container i18n>
-            If you encounter a bug or would like to suggest an improvement or a
+            If you encounter a bug, would like to suggest an improvement or a
             new
             <a [routerLink]="routerLinkFeatures">feature</a>, please join the
             Ghostfolio
@@ -74,23 +81,22 @@
             ></ng-container
           >
           @if (user?.subscription?.type === 'Premium') {
-            ,
-            <ng-container i18n
-              >send an e-mail to
-              <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
-                >hi&#64;ghostfol.io</a
-              ></ng-container
+            <ng-container>, </ng-container>
+            <ng-container i18n>send an e-mail to</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <a href="mailto:hi@ghostfol.io" i18n-title title="Send an e-mail"
+              >hi&#64;ghostfol.io</a
             >
           }
-          <ng-container i18n>
-            or start a discussion at
-            <a
-              href="https://github.com/ghostfolio/ghostfolio"
-              i18n-title
-              title="Find Ghostfolio on GitHub"
-              >GitHub</a
-            >.</ng-container
-          >
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>or start a discussion at</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            i18n-title
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
+          >.
         </p>
         <p class="align-items-center d-flex justify-content-center">
           <a
