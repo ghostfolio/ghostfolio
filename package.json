@@ -123,7 +123,7 @@
     "marked": "15.0.4",
     "ms": "3.0.0-canary.1",
     "ng-extract-i18n-merge": "3.0.0",
-    "ngx-device-detector": "10.0.2",
+    "ngx-device-detector": "10.1.0",
     "ngx-markdown": "20.0.0",
     "ngx-skeleton-loader": "11.2.1",
     "ngx-stripe": "20.7.0",
