@@ -158,6 +158,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.all-component-themes($gf-theme-default);
 
+  @include mat.autocomplete-overrides(
+    (
+      background-color: var(--light-background)
+    )
+  );
+
   @include mat.button-overrides(
     (
       outlined-label-text-color: var(--dark-primary-text),
@@ -170,6 +176,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
       outlined-container-color: var(--light-background),
       outlined-outline-color: rgba(var(--dark-dividers)),
       title-text-line-height: 1.2
+    )
+  );
+
+  @include mat.datepicker-overrides(
+    (
+      calendar-container-background-color: var(--light-background)
     )
   );
 
@@ -268,6 +280,18 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   @include mat.button-overrides(
     (
       filled-container-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.datepicker-overrides(
+    (
+      calendar-container-elevation-shadow: var(
+          --mat-select-container-elevation-shadow
+        ),
+      calendar-date-selected-state-background-color: var(--gf-theme-primary-500),
+      calendar-date-today-selected-state-outline-color: var(
+          --gf-theme-primary-500
+        )
     )
   );
 
