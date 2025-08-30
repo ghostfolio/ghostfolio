@@ -22,10 +22,12 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  copyOutline,
   ellipsisHorizontal,
   linkOutline,
   lockClosedOutline,
-  lockOpenOutline
+  lockOpenOutline,
+  removeCircleOutline
 } from 'ionicons/icons';
 import ms from 'ms';
 
@@ -62,10 +64,12 @@ export class GfAccessTableComponent implements OnChanges {
     private snackBar: MatSnackBar
   ) {
     addIcons({
+      copyOutline,
       ellipsisHorizontal,
       linkOutline,
       lockClosedOutline,
-      lockOpenOutline
+      lockOpenOutline,
+      removeCircleOutline
     });
   }
 

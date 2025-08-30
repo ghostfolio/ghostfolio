@@ -54,6 +54,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The Intelligent Family Office Suite'
   },
   {
+    founded: 2016,
+    key: 'atominvest',
+    name: 'Atominvest',
+    origin: 'United Kingdom',
+    slogan: 'Portfolio Management'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -107,7 +114,7 @@ export const personalFinanceTools: Product[] = [
     key: 'capitally',
     name: 'Capitally',
     origin: 'Poland',
-    pricingPerYear: '€50',
+    pricingPerYear: '€80',
     slogan: 'Optimize your investments performance'
   },
   {
@@ -127,6 +134,13 @@ export const personalFinanceTools: Product[] = [
     languages: ['Español'],
     name: 'CleverBilling',
     slogan: 'Toma el control total de tus finanzas.'
+  },
+  {
+    founded: 2011,
+    key: 'cobalt',
+    name: 'Cobalt',
+    origin: 'United States',
+    slogan: 'Next-Level Portfolio Monitoring'
   },
   {
     founded: 2017,
@@ -163,7 +177,7 @@ export const personalFinanceTools: Product[] = [
     key: 'copilot-money',
     name: 'Copilot Money',
     origin: 'United States',
-    pricingPerYear: '$70',
+    pricingPerYear: '$95',
     slogan: 'Do money better with Copilot'
   },
   {
@@ -365,6 +379,24 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Take control over your investments'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'gasti',
+    languages: [
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Português'
+    ],
+    name: 'Gasti',
+    origin: 'Argentina',
+    pricingPerYear: '$60',
+    regions: ['Global'],
+    slogan: 'Take control of your finances from WhatsApp'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -396,6 +428,15 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    founded: 2022,
+    key: 'income-reign',
+    languages: ['English'],
+    name: 'Income Reign',
+    note: 'Income Reign was discontinued in 2025',
+    origin: 'United States',
+    pricingPerYear: '$120'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     isArchived: true,
@@ -413,6 +454,18 @@ export const personalFinanceTools: Product[] = [
     name: 'Investify',
     origin: 'Pakistan',
     slogan: 'Advanced portfolio tracking and stock market information'
+  },
+  {
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    key: 'invmon',
+    name: 'InvMon',
+    note: 'Originally named as A2PB',
+    origin: 'Switzerland',
+    pricingPerYear: '$156',
+    slogan: 'Track all your assets, investments and portfolios in one place',
+    useAnonymously: true
   },
   {
     founded: 2011,
@@ -450,7 +503,7 @@ export const personalFinanceTools: Product[] = [
     key: 'kubera',
     name: 'Kubera®',
     origin: 'United States',
-    pricingPerYear: '$150',
+    pricingPerYear: '$249',
     slogan: 'The Time Machine for your Net Worth'
   },
   {
@@ -493,7 +546,10 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2021,
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
     isArchived: true,
+    isOpenSource: true,
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
@@ -609,7 +665,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Parqet',
     note: 'Originally named as Tresor One',
     origin: 'Germany',
-    pricingPerYear: '€88',
+    pricingPerYear: '€99.99',
     regions: ['Austria', 'Germany', 'Switzerland'],
     slogan: 'Dein Vermögen immer im Blick'
   },
@@ -648,6 +704,16 @@ export const personalFinanceTools: Product[] = [
     name: 'Plannix',
     origin: 'Italy',
     slogan: 'Your Personal Finance Hub'
+  },
+  {
+    founded: 2015,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'pocketguard',
+    name: 'PocketGuard',
+    origin: 'United States',
+    pricingPerYear: '$74.99',
+    slogan: 'Budgeting App & Finance Planner'
   },
   {
     founded: 2008,
@@ -929,6 +995,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2024,
     hasSelfHostingAbility: true,
     isArchived: true,
+    isOpenSource: true,
     key: 'wealthfolio',
     languages: ['English'],
     name: 'Wealthfolio',
@@ -989,7 +1056,7 @@ export const personalFinanceTools: Product[] = [
     key: 'ynab',
     name: 'YNAB (You Need a Budget)',
     origin: 'United States',
-    pricingPerYear: '$99',
+    pricingPerYear: '$109',
     slogan: 'Change Your Relationship With Money'
   },
   {
@@ -999,7 +1066,7 @@ export const personalFinanceTools: Product[] = [
     key: 'ziggma',
     name: 'Ziggma',
     origin: 'United States',
-    pricingPerYear: '$90',
+    pricingPerYear: '$84',
     slogan: 'Your solution for investing success'
   }
 ];

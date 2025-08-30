@@ -13,6 +13,8 @@
       "platformId": null
     }
   ],
+  "platforms": [],
+  "tags": [],
   "activities": [
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
@@ -26,5 +28,10 @@
       "date": "2024-06-28T00:00:00.000Z",
       "symbol": "JSE.JO"
     }
-  ]
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD"
+    }
+  }
 }

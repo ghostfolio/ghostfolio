@@ -171,7 +171,12 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          {{ element.date | date: defaultDateFormat }}
+          <gf-value
+            [deviceType]="deviceType"
+            [isDate]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.date"
+          />
         </div>
       </td>
     </ng-container>

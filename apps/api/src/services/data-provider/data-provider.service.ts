@@ -26,13 +26,12 @@ import {
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-import { hasRole } from '@ghostfolio/common/permissions';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import { eachDayOfInterval, format, isBefore, isValid } from 'date-fns';
+import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
@@ -108,7 +107,9 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then((symbolProfile) => {
-            response[symbol] = symbolProfile;
+            if (symbolProfile) {
+              response[symbol] = symbolProfile;
+            }
           })
         );
       }
@@ -160,25 +161,9 @@ export class DataProviderService implements OnModuleInit {
     return DataSource[this.configurationService.get('DATA_SOURCE_IMPORT')];
   }
 
-  public async getDataSources({
-    includeGhostfolio = false,
-    user
-  }: {
-    includeGhostfolio?: boolean;
-    user: UserWithSettings;
-  }): Promise<DataSource[]> {
-    let dataSourcesKey: 'DATA_SOURCES' | 'DATA_SOURCES_LEGACY' = 'DATA_SOURCES';
-
-    if (
-      !hasRole(user, 'ADMIN') &&
-      isBefore(user.createdAt, new Date('2025-03-23')) &&
-      this.configurationService.get('DATA_SOURCES_LEGACY')?.length > 0
-    ) {
-      dataSourcesKey = 'DATA_SOURCES_LEGACY';
-    }
-
+  public async getDataSources(): Promise<DataSource[]> {
     const dataSources: DataSource[] = this.configurationService
-      .get(dataSourcesKey)
+      .get('DATA_SOURCES')
       .map((dataSource) => {
         return DataSource[dataSource];
       });
@@ -187,7 +172,7 @@ export class DataProviderService implements OnModuleInit {
       PROPERTY_API_KEY_GHOSTFOLIO
     );
 
-    if (includeGhostfolio || ghostfolioApiKey) {
+    if (ghostfolioApiKey) {
       dataSources.push('GHOSTFOLIO');
     }
 
@@ -634,7 +619,7 @@ export class DataProviderService implements OnModuleInit {
       return { items: lookupItems };
     }
 
-    const dataSources = await this.getDataSources({ user });
+    const dataSources = await this.getDataSources();
 
     const dataProviderServices = dataSources.map((dataSource) => {
       return this.getDataProvider(DataSource[dataSource]);

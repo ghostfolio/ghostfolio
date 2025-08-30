@@ -1,5 +1,5 @@
-import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
-import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -33,8 +33,8 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    GfDialogFooterModule,
-    GfDialogHeaderModule,
+    GfDialogFooterComponent,
+    GfDialogHeaderComponent,
     GfLineChartComponent,
     GfValueComponent,
     MatDialogModule

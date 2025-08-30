@@ -4,39 +4,32 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
-export class FeeRatioInitialInvestment extends Rule<Settings> {
-  private fees: number;
-  private totalInvestment: number;
+export class BuyingPower extends Rule<Settings> {
+  private buyingPower: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
-    languageCode: string,
-    totalInvestment: number,
-    fees: number
+    buyingPower: number,
+    languageCode: string
   ) {
     super(exchangeRateDataService, {
       languageCode,
-      key: FeeRatioInitialInvestment.name
+      key: BuyingPower.name
     });
 
-    this.fees = fees;
-    this.totalInvestment = totalInvestment;
+    this.buyingPower = buyingPower;
   }
 
   public evaluate(ruleSettings: Settings) {
-    const feeRatio = this.totalInvestment
-      ? this.fees / this.totalInvestment
-      : 0;
-
-    if (feeRatio > ruleSettings.thresholdMax) {
+    if (this.buyingPower < ruleSettings.thresholdMin) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.feeRatioInitialInvestment.false',
+          id: 'rule.liquidityBuyingPower.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
-            feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
-            thresholdMax: (feeRatio * 100).toPrecision(3)
+            baseCurrency: ruleSettings.baseCurrency,
+            thresholdMin: ruleSettings.thresholdMin
           }
         }),
         value: false
@@ -45,11 +38,11 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.feeRatioInitialInvestment.true',
+        id: 'rule.liquidityBuyingPower.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
-          feeRatio: (feeRatio * 100).toPrecision(3),
-          thresholdMax: (ruleSettings.thresholdMax * 100).toFixed(2)
+          baseCurrency: ruleSettings.baseCurrency,
+          thresholdMin: ruleSettings.thresholdMin
         }
       }),
       value: true
@@ -58,7 +51,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
   public getCategoryName() {
     return this.i18nService.getTranslation({
-      id: 'rule.fees.category',
+      id: 'rule.liquidity.category',
       languageCode: this.getLanguageCode()
     });
   }
@@ -66,18 +59,18 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
   public getConfiguration() {
     return {
       threshold: {
-        max: 0.1,
+        max: 200000,
         min: 0,
-        step: 0.0025,
-        unit: '%'
+        step: 1000,
+        unit: ''
       },
-      thresholdMax: true
+      thresholdMin: true
     };
   }
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.feeRatioInitialInvestment',
+      id: 'rule.liquidityBuyingPower',
       languageCode: this.getLanguageCode()
     });
   }
@@ -86,12 +79,12 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     return {
       baseCurrency,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
-      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.01
+      thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  thresholdMax: number;
+  thresholdMin: number;
 }

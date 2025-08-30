@@ -1,9 +1,9 @@
-import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
+import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   LineChartItem,
@@ -32,7 +32,7 @@ import { takeUntil } from 'rxjs/operators';
   imports: [
     CommonModule,
     GfLineChartComponent,
-    GfPortfolioPerformanceModule,
+    GfPortfolioPerformanceComponent,
     MatButtonModule,
     RouterModule
   ],
@@ -143,7 +143,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
         if (
           this.deviceType === 'mobile' &&
           this.performance.currentValueInBaseCurrency >=
-            NUMERICAL_PRECISION_THRESHOLD
+            NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
           this.precision = 0;
         }

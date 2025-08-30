@@ -35,13 +35,10 @@ export class RapidApiService implements DataProviderInterface {
     return !!this.configurationService.get('API_KEY_RAPID_API');
   }
 
-  public async getAssetProfile({
-    symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    return {
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({}: GetAssetProfileParams): Promise<
+    Partial<SymbolProfile>
+  > {
+    return undefined;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
@@ -165,7 +162,7 @@ export class RapidApiService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
         message = `RequestError: The operation was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;

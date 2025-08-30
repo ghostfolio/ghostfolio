@@ -13,6 +13,8 @@
       "platformId": null
     }
   ],
+  "platforms": [],
+  "tags": [],
   "activities": [
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
@@ -6014,5 +6016,10 @@
       "date": "2022-05-06T03:16:21.371059Z",
       "symbol": "AAPL"
     }
-  ]
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD"
+    }
+  }
 }

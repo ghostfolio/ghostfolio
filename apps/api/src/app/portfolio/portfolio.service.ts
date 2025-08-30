@@ -15,6 +15,7 @@ import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/model
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { BuyingPower } from '@ghostfolio/api/models/rules/liquidity/buying-power';
 import { RegionalMarketClusterRiskAsiaPacific } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/asia-pacific';
 import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/emerging-markets';
 import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
@@ -161,7 +162,7 @@ export class PortfolioService {
       this.accountService.accounts({
         where,
         include: {
-          activities: true,
+          activities: { include: { SymbolProfile: true } },
           platform: true
         },
         orderBy: { name: 'asc' }
@@ -176,39 +177,74 @@ export class PortfolioService {
 
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    return accounts.map((account) => {
-      let transactionCount = 0;
+    return Promise.all(
+      accounts.map(async (account) => {
+        let dividendInBaseCurrency = 0;
+        let interestInBaseCurrency = 0;
+        let transactionCount = 0;
 
-      for (const { isDraft } of account.activities) {
-        if (!isDraft) {
-          transactionCount += 1;
+        for (const {
+          currency,
+          date,
+          isDraft,
+          quantity,
+          SymbolProfile,
+          type,
+          unitPrice
+        } of account.activities) {
+          switch (type) {
+            case ActivityType.DIVIDEND:
+              dividendInBaseCurrency +=
+                await this.exchangeRateDataService.toCurrencyAtDate(
+                  new Big(quantity).mul(unitPrice).toNumber(),
+                  currency ?? SymbolProfile.currency,
+                  userCurrency,
+                  date
+                );
+              break;
+            case ActivityType.INTEREST:
+              interestInBaseCurrency +=
+                await this.exchangeRateDataService.toCurrencyAtDate(
+                  unitPrice,
+                  currency ?? SymbolProfile.currency,
+                  userCurrency,
+                  date
+                );
+              break;
+          }
+
+          if (!isDraft) {
+            transactionCount += 1;
+          }
         }
-      }
 
-      const valueInBaseCurrency =
-        details.accounts[account.id]?.valueInBaseCurrency ?? 0;
+        const valueInBaseCurrency =
+          details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
-      const result = {
-        ...account,
-        transactionCount,
-        valueInBaseCurrency,
-        allocationInPercentage: null, // TODO
-        balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          account.balance,
-          account.currency,
-          userCurrency
-        ),
-        value: this.exchangeRateDataService.toCurrency(
+        const result = {
+          ...account,
+          dividendInBaseCurrency,
+          interestInBaseCurrency,
+          transactionCount,
           valueInBaseCurrency,
-          userCurrency,
-          account.currency
-        )
-      };
+          allocationInPercentage: 0,
+          balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            account.balance,
+            account.currency,
+            userCurrency
+          ),
+          value: this.exchangeRateDataService.toCurrency(
+            valueInBaseCurrency,
+            userCurrency,
+            account.currency
+          )
+        };
 
-      delete result.activities;
+        delete result.activities;
 
-      return result;
-    });
+        return result;
+      })
+    );
   }
 
   public async getAccountsWithAggregations({
@@ -220,12 +256,30 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<AccountsResponse> {
-    const accounts = await this.getAccounts({
+    let accounts = await this.getAccounts({
       filters,
       userId,
       withExcludedAccounts
     });
+
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
+
+    if (searchQuery) {
+      const fuse = new Fuse(accounts, {
+        keys: ['name', 'platform.name'],
+        threshold: 0.3
+      });
+
+      accounts = fuse.search(searchQuery).map(({ item }) => {
+        return item;
+      });
+    }
+
     let totalBalanceInBaseCurrency = new Big(0);
+    let totalDividendInBaseCurrency = new Big(0);
+    let totalInterestInBaseCurrency = new Big(0);
     let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
 
@@ -233,16 +287,33 @@ export class PortfolioService {
       totalBalanceInBaseCurrency = totalBalanceInBaseCurrency.plus(
         account.balanceInBaseCurrency
       );
+      totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+        account.dividendInBaseCurrency
+      );
+      totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+        account.interestInBaseCurrency
+      );
       totalValueInBaseCurrency = totalValueInBaseCurrency.plus(
         account.valueInBaseCurrency
       );
       transactionCount += account.transactionCount;
     }
 
+    for (const account of accounts) {
+      account.allocationInPercentage =
+        totalValueInBaseCurrency.toNumber() > Number.EPSILON
+          ? Big(account.valueInBaseCurrency)
+              .div(totalValueInBaseCurrency)
+              .toNumber()
+          : 0;
+    }
+
     return {
       accounts,
       transactionCount,
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
+      totalDividendInBaseCurrency: totalDividendInBaseCurrency.toNumber(),
+      totalInterestInBaseCurrency: totalInterestInBaseCurrency.toNumber(),
       totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
     };
   }
@@ -276,13 +347,11 @@ export class PortfolioService {
     dateRange,
     filters,
     impersonationId,
-    query,
     userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     impersonationId: string;
-    query?: string;
     userId: string;
   }) {
     userId = await this.getUserId(impersonationId, userId);
@@ -295,13 +364,17 @@ export class PortfolioService {
 
     let holdings = Object.values(holdingsMap);
 
-    if (query) {
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
+
+    if (searchQuery) {
       const fuse = new Fuse(holdings, {
         keys: ['isin', 'name', 'symbol'],
         threshold: 0.3
       });
 
-      holdings = fuse.search(query).map(({ item }) => {
+      holdings = fuse.search(searchQuery).map(({ item }) => {
         return item;
       });
     }
@@ -1264,6 +1337,17 @@ export class PortfolioService {
             userSettings.language,
             summary.committedFunds,
             summary.fees
+          )
+        ],
+        userSettings
+      ),
+      liquidity: await this.rulesService.evaluate(
+        [
+          new BuyingPower(
+            this.exchangeRateDataService,
+            this.i18nService,
+            summary.cash,
+            userSettings.language
           )
         ],
         userSettings

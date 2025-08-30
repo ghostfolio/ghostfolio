@@ -18,6 +18,7 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
+import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { join } from 'path';
 
@@ -108,6 +109,9 @@ describe('PortfolioCalculator', () => {
           name: 'Bitcoin',
           symbol: activity.symbol
         },
+        tags: activity.tags?.map((id) => {
+          return { id } as Tag;
+        }),
         unitPriceInAssetProfileCurrency: 44558.42
       }));
 

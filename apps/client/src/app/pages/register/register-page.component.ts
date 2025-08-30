@@ -3,26 +3,39 @@ import { InternetIdentityService } from '@ghostfolio/client/services/internet-id
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ShowAccessTokenDialogParams } from './show-access-token-dialog/interfaces/interfaces';
 import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
+import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-access-token-dialog.module';
 
 @Component({
   host: { class: 'page' },
+  imports: [
+    GfLogoComponent,
+    MatButtonModule,
+    RouterModule,
+    ShowAccessTokenDialogModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
-  templateUrl: './register-page.html',
-  standalone: false
+  templateUrl: './register-page.html'
 })
-export class RegisterPageComponent implements OnDestroy, OnInit {
-  public demoAuthToken: string;
+export class GfRegisterPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
@@ -46,18 +59,20 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
+    const { globalPermissions } = this.dataService.fetchInfo();
 
-    this.demoAuthToken = demoAuthToken;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.hasPermissionForSocialLogin = hasPermission(
       globalPermissions,
       permissions.enableSocialLogin
     );
+
     this.hasPermissionForSubscription = hasPermission(
       globalPermissions,
       permissions.enableSubscription
     );
+
     this.hasPermissionToCreateUser = hasPermission(
       globalPermissions,
       permissions.createUserAccount

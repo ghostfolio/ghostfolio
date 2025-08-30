@@ -66,7 +66,7 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAdminData(): Promise<AdminData> {
-    return this.adminService.get({ user: this.request.user });
+    return this.adminService.get();
   }
 
   @Get('demo-user/sync')
@@ -197,6 +197,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
     @Query('presetId') presetId?: MarketDataPreset,
     @Query('query') filterBySearchQuery?: string,
     @Query('skip') skip?: number,
@@ -206,6 +207,7 @@ export class AdminController {
   ): Promise<AdminMarketData> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetSubClasses,
+      filterByDataSource,
       filterBySearchQuery
     });
 

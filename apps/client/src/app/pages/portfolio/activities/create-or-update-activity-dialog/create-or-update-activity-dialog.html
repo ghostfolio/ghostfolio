@@ -290,9 +290,12 @@
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null" />
-          @for (assetClass of assetClasses; track assetClass) {
-            <mat-option [value]="assetClass.id">{{
-              assetClass.label
+          @for (
+            assetClassOption of assetClassOptions;
+            track assetClassOption.id
+          ) {
+            <mat-option [value]="assetClassOption.id">{{
+              assetClassOption.label
             }}</mat-option>
           }
         </mat-select>
@@ -306,9 +309,12 @@
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
           <mat-option [value]="null" />
-          @for (assetSubClass of assetSubClasses; track assetSubClass) {
-            <mat-option [value]="assetSubClass.id">{{
-              assetSubClass.label
+          @for (
+            assetSubClassOption of assetSubClassOptions;
+            track assetSubClassOption.id
+          ) {
+            <mat-option [value]="assetSubClassOption.id">{{
+              assetSubClassOption.label
             }}</mat-option>
           }
         </mat-select>
@@ -335,12 +341,18 @@
       [value]="total"
     />
     <div>
-      <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-button type="button" (click)="onCancel()">
+        @if (activityForm.dirty) {
+          <ng-container i18n>Cancel</ng-container>
+        } @else {
+          <ng-container i18n>Close</ng-container>
+        }
+      </button>
       <button
         color="primary"
         mat-flat-button
         type="submit"
-        [disabled]="!activityForm.valid"
+        [disabled]="!(activityForm.dirty && activityForm.valid)"
       >
         <ng-container i18n>Save</ng-container>
       </button>

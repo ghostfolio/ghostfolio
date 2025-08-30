@@ -7,7 +7,7 @@
     @if (valueLabel) {
       <mat-label>{{ valueLabel }}</mat-label>
     }
-    <input matInput [(ngModel)]="value" />
+    <input matInput [formControl]="formControl" />
   </mat-form-field>
 </div>
 
@@ -15,7 +15,12 @@
   <button mat-button (click)="dialogRef.close('discard')">
     {{ discardLabel }}
   </button>
-  <button color="primary" mat-flat-button (click)="dialogRef.close(value)">
+  <button
+    color="primary"
+    mat-flat-button
+    [disabled]="!(formControl.dirty && formControl.valid)"
+    (click)="dialogRef.close(formControl.value)"
+  >
     {{ confirmLabel }}
   </button>
 </div>

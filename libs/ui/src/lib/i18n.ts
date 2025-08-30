@@ -12,6 +12,7 @@ const locales = {
   DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC: $localize`Switch to Ghostfolio Premium or Ghostfolio Open Source easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS: $localize`Switch to Ghostfolio Premium easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM: $localize`Switch to Ghostfolio Open Source or Ghostfolio Basic easily`,
+  DATA_SOURCE: $localize`Data Source`,
   EMERGENCY_FUND: $localize`Emergency Fund`,
   EXCLUDE_FROM_ANALYSIS: $localize`Exclude from Analysis`,
   Global: $localize`Global`,
@@ -74,6 +75,7 @@ const locales = {
 
   // Countries
   Armenia: $localize`Armenia`,
+  Argentina: $localize`Argentina`,
   Australia: $localize`Australia`,
   Austria: $localize`Austria`,
   Belgium: $localize`Belgium`,

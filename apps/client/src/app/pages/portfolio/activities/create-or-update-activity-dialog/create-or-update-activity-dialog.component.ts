@@ -1,8 +1,12 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { ASSET_CLASS_MAPPING } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import { LookupItem } from '@ghostfolio/common/interfaces';
+import {
+  AssetClassSelectorOption,
+  LookupItem
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -37,7 +41,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
+import { AssetClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
@@ -73,12 +77,16 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 })
 export class GfCreateOrUpdateActivityDialog implements OnDestroy {
   public activityForm: FormGroup;
-  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
-    return { id: assetClass, label: translate(assetClass) };
-  });
-  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
-    return { id: assetSubClass, label: translate(assetSubClass) };
-  });
+
+  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
+    .map((id) => {
+      return { id, label: translate(id) } as AssetClassSelectorOption;
+    })
+    .sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
+
+  public assetSubClassOptions: AssetClassSelectorOption[] = [];
   public currencies: string[] = [];
   public currencyOfAssetProfile: string;
   public currentMarketPrice = null;
@@ -272,6 +280,26 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
         }
       }
     });
+
+    this.activityForm
+      .get('assetClass')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((assetClass) => {
+        const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
+
+        this.assetSubClassOptions = assetSubClasses
+          .map((assetSubClass) => {
+            return {
+              id: assetSubClass,
+              label: translate(assetSubClass)
+            };
+          })
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        this.activityForm.get('assetSubClass').setValue(null);
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.activityForm.get('date').valueChanges.subscribe(() => {
       if (isToday(this.activityForm.get('date').value)) {
@@ -495,7 +523,9 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
           ? undefined
           : this.activityForm.get('searchSymbol')?.value?.symbol) ??
         this.activityForm.get('name')?.value,
-      tags: this.activityForm.get('tags').value,
+      tags: this.activityForm.get('tags').value?.map(({ id }) => {
+        return id;
+      }),
       type: this.activityForm.get('type').value,
       unitPrice: this.activityForm.get('unitPrice').value
     };

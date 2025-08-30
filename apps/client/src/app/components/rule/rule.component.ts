@@ -16,8 +16,10 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { addIcons } from 'ionicons';
 import {
+  addCircleOutline,
   checkmarkCircleOutline,
   ellipsisHorizontal,
+  optionsOutline,
   removeCircleOutline,
   warningOutline
 } from 'ionicons/icons';
@@ -50,8 +52,10 @@ export class RuleComponent implements OnInit {
     private dialog: MatDialog
   ) {
     addIcons({
+      addCircleOutline,
       checkmarkCircleOutline,
       ellipsisHorizontal,
+      optionsOutline,
       removeCircleOutline,
       warningOutline
     });

@@ -116,10 +116,13 @@ export class WatchlistService {
           return profile.dataSource === dataSource && profile.symbol === symbol;
         });
 
-        const allTimeHigh = await this.marketDataService.getMax({
-          dataSource,
-          symbol
-        });
+        const [allTimeHigh, trends] = await Promise.all([
+          this.marketDataService.getMax({
+            dataSource,
+            symbol
+          }),
+          this.benchmarkService.getBenchmarkTrends({ dataSource, symbol })
+        ]);
 
         const performancePercent =
           this.benchmarkService.calculateChangeInPercentage(
@@ -138,7 +141,9 @@ export class WatchlistService {
               performancePercent,
               date: allTimeHigh?.date
             }
-          }
+          },
+          trend50d: trends.trend50d,
+          trend200d: trends.trend200d
         };
       })
     );

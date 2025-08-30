@@ -2,6 +2,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
@@ -51,12 +52,18 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public accountBalances: AccountBalancesResponse['balances'];
   public activities: OrderWithAccount[];
   public balance: number;
+  public balancePrecision = 2;
   public currency: string;
   public dataSource: MatTableDataSource<Activity>;
+  public dividendInBaseCurrency: number;
+  public dividendInBaseCurrencyPrecision = 2;
   public equity: number;
+  public equityPrecision = 2;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
   public holdings: PortfolioPosition[];
+  public interestInBaseCurrency: number;
+  public interestInBaseCurrencyPrecision = 2;
   public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
   public name: string;
@@ -181,6 +188,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         ({
           balance,
           currency,
+          dividendInBaseCurrency,
+          interestInBaseCurrency,
           name,
           platform,
           transactionCount,
@@ -188,12 +197,46 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           valueInBaseCurrency
         }) => {
           this.balance = balance;
+
+          if (
+            this.balance >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES &&
+            this.data.deviceType === 'mobile'
+          ) {
+            this.balancePrecision = 0;
+          }
+
           this.currency = currency;
+          this.dividendInBaseCurrency = dividendInBaseCurrency;
+
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.dividendInBaseCurrency >=
+              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+          ) {
+            this.dividendInBaseCurrencyPrecision = 0;
+          }
 
           if (isNumber(balance) && isNumber(value)) {
             this.equity = new Big(value).minus(balance).toNumber();
+
+            if (
+              this.data.deviceType === 'mobile' &&
+              this.equity >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+            ) {
+              this.equityPrecision = 0;
+            }
           } else {
             this.equity = null;
+          }
+
+          this.interestInBaseCurrency = interestInBaseCurrency;
+
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.interestInBaseCurrency >=
+              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+          ) {
+            this.interestInBaseCurrencyPrecision = 0;
           }
 
           this.name = name;

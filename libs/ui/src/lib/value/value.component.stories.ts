@@ -11,7 +11,13 @@ export default {
     moduleMetadata({
       imports: [NgxSkeletonLoaderModule]
     })
-  ]
+  ],
+  argTypes: {
+    deviceType: {
+      control: 'select',
+      options: ['desktop', 'mobile']
+    }
+  }
 } as Meta<GfValueComponent>;
 
 type Story = StoryObj<GfValueComponent>;
@@ -29,6 +35,16 @@ export const Currency: Story = {
     unit: 'USD',
     value: 7
   }
+};
+
+export const DateValue: Story = {
+  args: {
+    deviceType: 'desktop',
+    isDate: true,
+    locale: 'en-US',
+    value: new Date().toISOString()
+  },
+  name: 'Date'
 };
 
 export const Label: Story = {

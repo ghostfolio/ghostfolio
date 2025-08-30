@@ -51,18 +51,26 @@ export class EodHistoricalDataService implements DataProviderInterface {
   }
 
   public async getAssetProfile({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
   }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    const [searchResult] = await this.getSearchResult(symbol);
+    const [searchResult] = await this.getSearchResult({
+      requestTimeout,
+      query: symbol
+    });
+
+    if (!searchResult) {
+      return undefined;
+    }
 
     return {
       symbol,
-      assetClass: searchResult?.assetClass,
-      assetSubClass: searchResult?.assetSubClass,
-      currency: this.convertCurrency(searchResult?.currency),
+      assetClass: searchResult.assetClass,
+      assetSubClass: searchResult.assetSubClass,
+      currency: this.convertCurrency(searchResult.currency),
       dataSource: this.getName(),
-      isin: searchResult?.isin,
-      name: searchResult?.name
+      isin: searchResult.isin,
+      name: searchResult.name
     };
   }
 
@@ -282,8 +290,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
-        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to get the quotes for ${symbols.join(
+          ', '
+        )} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
       }
@@ -298,8 +308,11 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return 'AAPL.US';
   }
 
-  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
-    const searchResult = await this.getSearchResult(query);
+  public async search({
+    query,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  }: GetSearchParams): Promise<LookupResponse> {
+    const searchResult = await this.getSearchResult({ query, requestTimeout });
 
     return {
       items: searchResult
@@ -388,7 +401,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return name;
   }
 
-  private async getSearchResult(aQuery: string) {
+  private async getSearchResult({
+    query,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  }: {
+    query: string;
+    requestTimeout?: number;
+  }) {
     let searchResult: (LookupItem & {
       assetClass: AssetClass;
       assetSubClass: AssetSubClass;
@@ -397,11 +416,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
     try {
       const response = await fetch(
-        `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
+        `${this.URL}/search/${query}?api_token=${this.apiKey}`,
         {
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).then((res) => res.json());
 
@@ -426,8 +443,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.name === 'AbortError') {
-        message = `RequestError: The operation to search for ${aQuery} was aborted because the request to the data provider took more than ${(
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
       }

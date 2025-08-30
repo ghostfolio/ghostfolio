@@ -11,6 +11,100 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
 
+## 2.195.0 - 2025-08-29
+
+### Changed
+
+- Reused the request timeout in various functions of the data providers
+- Refactored the _ZEN_ page to standalone
+- Upgraded `chart.js` from version `4.4.9` to `4.5.0`
+
+### Fixed
+
+- Handled an exception in the get quotes functionality of the _Financial Modeling Prep_ service
+
+## 2.194.0 - 2025-08-27
+
+### Added
+
+- Extended the watchlist endpoint by 50-Day and 200-Day trends (experimental)
+
+### Changed
+
+- Moved the support to customize rules in the _X-ray_ section from experimental to general availability
+- Improved the create or update activity dialog’s asset sub class selector for valuables to update the options dynamically based on the selected asset class
+- Improved the error handling in data providers
+- Randomized the minutes of the hourly data gathering cron job
+- Refactored the dialog footer component to standalone
+- Refactored the dialog header component to standalone
+- Refactored the landing page to standalone
+- Refactored the pricing page to standalone
+- Refactored the register page to standalone
+- Migrated the login with access token dialog from `ngModel` to form control
+- Upgraded `@ionic/angular` from version `8.6.3` to `8.7.3`
+- Upgraded `ionicons` from version `8.0.10` to `8.0.13`
+- Upgraded `prisma` from version `6.12.0` to `6.14.0`
+
+## 2.193.0 - 2025-08-22
+
+### Added
+
+- Added a filter by data source for the asset profiles in the admin control panel
+- Extended the data providers management of the admin control panel by every data provider in use
+
+### Changed
+
+- Improved the error handling in data providers
+- Upgraded `yahoo-finance2` from version `3.4.1` to `3.6.4`
+
+## 2.192.0 - 2025-08-21
+
+### Added
+
+- Included accounts in the search results of the assistant
+- Included the data source in the asset profile search results of the assistant
+- Added the quantity column to the holdings table of the account detail dialog
+
+### Changed
+
+- Migrated the prompt dialog component from `ngModel` to form control
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+
+## 2.191.1 - 2025-08-14
+
+### Added
+
+- Added a new static portfolio analysis rule: _Liquidity_ (Buying Power)
+- Added the interest and dividend values to the account detail dialog
+
+### Changed
+
+- Moved the chart of the account detail dialog from experimental to general availability
+- Improved the dynamic numerical precision for various values in the account detail dialog
+- Improved the usability of the _Cancel_ / _Close_ and _Save_ buttons in various dialogs
+- Extended the accounts endpoint by allocations
+- Extended the accounts endpoint by dividend and interest
+- Refactored the portfolio performance component to standalone
+- Improved the language localization for German (`de`)
+- Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Spanish (`es`)
+
+## 2.190.0 - 2025-08-09
+
+### Changed
+
+- Extended the import functionality by tags
+- Improved the dynamic numerical precision for various values in the holding detail dialog
+- Shortened the date in the activities table on mobile
+- Introduced the fuzzy search for the accounts endpoint
+- Refactored the fuzzy search for the holdings of the assistant
+- Eliminated the warnings of the database seeding process
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
+- Removed the unused `codelyzer` dependency
+
 ## 2.189.0 - 2025-08-05
 
 ### Changed
