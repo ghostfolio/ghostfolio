@@ -18,7 +18,6 @@ import { DataProviderStatus } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-data-provider-status',
-  standalone: true,
   templateUrl: './data-provider-status.component.html'
 })
 export class GfDataProviderStatusComponent implements OnDestroy, OnInit {
