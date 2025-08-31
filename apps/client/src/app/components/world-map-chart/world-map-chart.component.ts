@@ -8,16 +8,17 @@ import {
   OnChanges,
   OnDestroy
 } from '@angular/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import svgMap from 'svgmap';
 
 @Component({
-  selector: 'gf-world-map-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './world-map-chart.component.html',
+  imports: [NgxSkeletonLoaderModule],
+  selector: 'gf-world-map-chart',
   styleUrls: ['./world-map-chart.component.scss'],
-  standalone: false
+  templateUrl: './world-map-chart.component.html'
 })
-export class WorldMapChartComponent implements OnChanges, OnDestroy {
+export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
   @Input() countries: { [code: string]: { name?: string; value: number } };
   @Input() format: string;
   @Input() isInPercent = false;

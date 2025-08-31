@@ -1,4 +1,4 @@
-import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
+import { GfWorldMapChartComponent } from '@ghostfolio/client/components/world-map-chart/world-map-chart.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -18,7 +18,7 @@ import { PublicPageComponent } from './public-page.component';
     GfHoldingsTableComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,
-    GfWorldMapChartModule,
+    GfWorldMapChartComponent,
     MatButtonModule,
     MatCardModule,
     PublicPageRoutingModule
