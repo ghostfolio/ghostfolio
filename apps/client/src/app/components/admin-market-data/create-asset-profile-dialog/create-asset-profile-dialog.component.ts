@@ -1,6 +1,7 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
+  DEFAULT_CURRENCY,
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
@@ -29,8 +30,9 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { DataSource } from '@prisma/client';
 import { isISO4217CurrencyCode } from 'class-validator';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, switchMap, takeUntil } from 'rxjs';
 
 import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 
@@ -56,6 +58,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   public mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
+  private exchangeRateDataSource: DataSource;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -68,6 +71,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.initializeCustomCurrencies();
+    this.initializeExchangeRateDataSource();
 
     this.createAssetProfileForm = this.formBuilder.group(
       {
@@ -115,13 +119,25 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         .putAdminSetting(PROPERTY_CURRENCIES, {
           value: JSON.stringify(currencies)
         })
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(
+          switchMap(() => {
+            // Add the currency asset profile first
+            return this.adminService.addAssetProfile({
+              dataSource: this.exchangeRateDataSource,
+              symbol: `${currency}${DEFAULT_CURRENCY}`
+            });
+          }),
+          switchMap(() => {
+            // Then gather historical data for the currency
+            return this.adminService.gatherSymbol({
+              dataSource: this.exchangeRateDataSource,
+              symbol: `${currency}${DEFAULT_CURRENCY}`
+            });
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
         .subscribe(() => {
-          this.dialogRef.close({
-            dataSource: 'MANUAL',
-            symbol: `${currency}USD`,
-            isCurrency: true
-          });
+          this.dialogRef.close();
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
@@ -180,6 +196,22 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private initializeExchangeRateDataSource() {
+    this.adminService
+      .fetchAdminData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ dataProviders }) => {
+        const exchangeRateProvider = dataProviders.find(
+          (provider) => provider.useForExchangeRates
+        );
+
+        this.exchangeRateDataSource =
+          exchangeRateProvider?.dataSource || DataSource.MANUAL;
 
         this.changeDetectorRef.markForCheck();
       });

@@ -159,7 +159,10 @@ export class AdminService {
 
             return {
               ...dataProviderInfo,
-              assetProfileCount
+              assetProfileCount,
+              useForExchangeRates:
+                dataSource ===
+                this.dataProviderService.getDataSourceForExchangeRates()
             };
           }
 
