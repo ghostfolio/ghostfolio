@@ -283,6 +283,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     )
   );
 
+  @include mat.checkbox-overrides(
+    (
+      selected-icon-color: var(--gf-theme-primary-500)
+    )
+  );
+
   @include mat.datepicker-overrides(
     (
       calendar-container-elevation-shadow: var(
@@ -305,6 +311,27 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   @include mat.fab-overrides(
     (
       container-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-focus-label-text-color: var(--gf-theme-primary-500),
+      outlined-focus-outline-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.slider-overrides(
+    (
+      active-track-color: var(--gf-theme-primary-500),
+      focus-handle-color: var(--gf-theme-primary-500),
+      handle-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.stepper-overrides(
+    (
+      header-selected-state-icon-background-color: var(--gf-theme-primary-500)
     )
   );
 
