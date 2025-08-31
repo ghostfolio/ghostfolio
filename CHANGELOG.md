@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Localized the content of the about page
 - Refactored the world map chart component to standalone
+- Upgraded the _Stripe_ dependencies
+- Upgraded `ngx-device-detector` from version `10.0.2` to `10.1.0`
+- Upgraded `ngx-skeleton-loader` from version `11.2.1` to `11.3.0`
+- Upgraded `yahoo-finance2` from version `3.6.4` to `3.8.0`
 
 ## 2.195.0 - 2025-08-29
 

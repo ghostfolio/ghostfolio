@@ -6,68 +6,91 @@
       </h1>
       <div class="about-container">
         <p>
-          Ghostfolio is a lightweight wealth management application for
-          individuals to keep track of stocks, ETFs or cryptocurrencies and make
-          solid, data-driven investment decisions. The source code is fully
-          available as
-          <a
-            href="https://github.com/ghostfolio/ghostfolio"
-            title="Find Ghostfolio on GitHub"
-            >open source software</a
+          <ng-container i18n
+            >Ghostfolio is a lightweight wealth management application for
+            individuals to keep track of stocks, ETFs or cryptocurrencies and
+            make solid, data-driven investment decisions.</ng-container
           >
-          (OSS) under the
-          <a
-            href="https://www.gnu.org/licenses/agpl-3.0.html"
-            title="GNU Affero General Public License"
-            >AGPL-3.0 license</a
+          <ng-container i18n>
+            The source code is fully available as
+            <a
+              href="https://github.com/ghostfolio/ghostfolio"
+              title="Find Ghostfolio on GitHub"
+              >open source software</a
+            >
+            (OSS) under the
+            <a
+              href="https://www.gnu.org/licenses/agpl-3.0.html"
+              title="GNU Affero General Public License"
+              >AGPL-3.0 license</a
+            ></ng-container
           >
           @if (hasPermissionForStatistics) {
-            and we share aggregated
-            <a title="Open Startup" [routerLink]="routerLinkOpenStartup"
-              >key metrics</a
+            <ng-container i18n>
+              and we share aggregated
+              <a title="Open Startup" [routerLink]="routerLinkOpenStartup"
+                >key metrics</a
+              >
+              of the platform’s performance</ng-container
             >
-            of the platform’s performance
           }
-          . The project has been initiated by
-          <a href="https://dotsilver.ch" title="Website of Thomas Kaul"
-            >Thomas Kaul</a
-          >
-          and is driven by the efforts of its
+          <ng-container>. </ng-container>
+          <ng-container i18n>The project has been initiated by</ng-container>
           <a
-            href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
-            title="Contributors to Ghostfolio"
-            >contributors</a
+            href="https://dotsilver.ch"
+            i18n-title
+            title="Website of Thomas Kaul"
+          >
+            Thomas Kaul
+          </a>
+          <ng-container i18n
+            >and is driven by the efforts of its
+            <a
+              href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
+              title="Contributors to Ghostfolio"
+              >contributors</a
+            ></ng-container
           >.
           @if (hasPermissionForSubscription) {
-            Check the system status at
-            <a href="https://status.ghostfol.io" title="Ghostfolio Status"
+            <ng-container i18n>Check the system status at</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <a
+              href="https://status.ghostfol.io"
+              i18n-title
+              title="Ghostfolio Status"
               >status.ghostfol.io</a
             >.
           }
         </p>
         <p>
-          If you encounter a bug or would like to suggest an improvement or a
-          new
-          <a [routerLink]="routerLinkFeatures">feature</a>, please join the
-          Ghostfolio
-          <a
-            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
-            title="Join the Ghostfolio Slack community"
-            >Slack</a
-          >
-          community, post to
-          <a
-            href="https://x.com/ghostfolio_"
-            title="Post to Ghostfolio on X (formerly Twitter)"
-            >&#64;ghostfolio_</a
+          <ng-container i18n>
+            If you encounter a bug, would like to suggest an improvement or a
+            new
+            <a [routerLink]="routerLinkFeatures">feature</a>, please join the
+            Ghostfolio
+            <a
+              href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+              title="Join the Ghostfolio Slack community"
+              >Slack</a
+            >
+            community, post to
+            <a
+              href="https://x.com/ghostfolio_"
+              title="Post to Ghostfolio on X (formerly Twitter)"
+              >&#64;ghostfolio_</a
+            ></ng-container
           >
           @if (user?.subscription?.type === 'Premium') {
-            , send an e-mail to
-            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+            <ng-container>, </ng-container>
+            <ng-container i18n>send an e-mail to</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <a href="mailto:hi@ghostfol.io" i18n-title title="Send an e-mail"
               >hi&#64;ghostfol.io</a
             >
           }
-          or start a discussion at
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>or start a discussion at</ng-container>
+          <ng-container>&nbsp;</ng-container>
           <a
             href="https://github.com/ghostfolio/ghostfolio"
             i18n-title
