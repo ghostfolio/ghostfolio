@@ -1,5 +1,4 @@
 <gf-dialog-header
-  mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
   [title]="assetProfile?.name ?? assetProfile?.symbol"
@@ -35,7 +34,6 @@
 </div>
 
 <gf-dialog-footer
-  mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onClose()"
 />

@@ -56,6 +56,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'd-flex flex-column h-100' },
   imports: [
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
