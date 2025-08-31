@@ -1,4 +1,4 @@
-import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
+import { GfWorldMapChartComponent } from '@ghostfolio/client/components/world-map-chart/world-map-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -30,7 +30,7 @@ import { Subject } from 'rxjs';
     GfCarouselComponent,
     GfLogoComponent,
     GfValueComponent,
-    GfWorldMapChartModule,
+    GfWorldMapChartComponent,
     IonIcon,
     MatButtonModule,
     MatCardModule,
