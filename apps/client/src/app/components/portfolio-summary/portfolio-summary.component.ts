@@ -14,6 +14,7 @@ import {
   Output
 } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { IonIcon } from '@ionic/angular/standalone';
 import { formatDistanceToNow } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
@@ -23,7 +24,7 @@ import {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfValueComponent, MatTooltipModule],
+  imports: [CommonModule, GfValueComponent, IonIcon, MatTooltipModule],
   selector: 'gf-portfolio-summary',
   styleUrls: ['./portfolio-summary.component.scss'],
   templateUrl: './portfolio-summary.component.html'
