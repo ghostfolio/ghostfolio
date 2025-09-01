@@ -30,7 +30,7 @@
                   [ngClass]="{
                     'text-line-through': element.role === 'INACTIVE'
                   }"
-                  >{{ (element.id | slice: 0 : 5) + '...' }}</span
+                  >{{ `${element.id | slice: 0 : 5}...` }}</span
                 >
                 @if (element.subscription?.expiresAt) {
                   <gf-premium-indicator

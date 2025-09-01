@@ -32,11 +32,11 @@
                     personalFinanceTool.name
                   }} - {{ personalFinanceTool.slogan }}"
                   [routerLink]="[
-                    '/' + pathResources,
+                    `/${pathResources}`,
                     pathPersonalFinanceTools,
-                    pathAlternativeTo +
-                      (personalFinanceTool.alias ?? personalFinanceTool.key)
+                    `${pathAlternativeTo}${personalFinanceTool.alias ?? personalFinanceTool.key}`
                   ]"
+
                 >
                   <div class="flex-grow-1 overflow-hidden">
                     <div class="h6 m-0 text-truncate" i18n>
