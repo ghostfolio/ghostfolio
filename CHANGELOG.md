@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Localized the content of the about page
 - Refactored the benchmark comparator component to standalone
+- Refactored the portfolio summary component to standalone
 - Refactored the world map chart component to standalone
 - Improved the language localization for German (`de`)
 - Upgraded the _Stripe_ dependencies
