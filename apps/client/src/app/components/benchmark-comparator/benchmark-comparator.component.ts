@@ -63,7 +63,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     RouterModule
   ],
   selector: 'gf-benchmark-comparator',
-  standalone: true,
   styleUrls: ['./benchmark-comparator.component.scss'],
   templateUrl: './benchmark-comparator.component.html'
 })
