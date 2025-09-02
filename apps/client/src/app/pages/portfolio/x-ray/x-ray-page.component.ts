@@ -169,15 +169,9 @@ export class GfXRayPageComponent {
   private mergeInactiveRules(
     categories: PortfolioReportResponse['xRay']['categories']
   ): PortfolioReportRule[] {
-    let inactiveRules: PortfolioReportRule[] = [];
-
-    for (const category of categories) {
-      inactiveRules = inactiveRules.concat(
-        category.rules.filter(({ isActive }) => {
-          return !isActive;
-        })
-      );
-    }
+    const inactiveRules = categories.flatMap(
+      (category) => category.rules?.filter(({ isActive }) => !isActive) ?? []
+    );
 
     return inactiveRules;
   }
