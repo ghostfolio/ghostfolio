@@ -1,4 +1,4 @@
-import { GfPortfolioSummaryModule } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.module';
+import { GfPortfolioSummaryComponent } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -22,7 +22,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  imports: [GfPortfolioSummaryModule, MatCardModule],
+  imports: [GfPortfolioSummaryComponent, MatCardModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-summary',
   styleUrls: ['./home-summary.scss'],
