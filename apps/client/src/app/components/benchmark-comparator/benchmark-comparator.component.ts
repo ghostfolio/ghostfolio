@@ -211,7 +211,12 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 type: 'time',
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
-                  unit: 'year'
+                  unit: 'year',
+                  displayFormats: {
+                    day: 'MMM d',
+                    month: 'MMM yyyy',
+                    year: 'yyyy'
+                  }
                 }
               },
               y: {
