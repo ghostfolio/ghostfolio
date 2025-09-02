@@ -1,9 +1,3 @@
 :host {
-  display: flex;
-  flex: 0 0 auto;
-  min-height: 0;
-
-  @media (min-width: 576px) {
-    padding: 0 !important;
-  }
+  display: block;
 }
