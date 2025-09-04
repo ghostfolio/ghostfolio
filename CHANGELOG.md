@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the average price calculation for buy and sell activities of short positions
 - Fixed the number of attempts in the queue jobs view of the admin control panel
 
 ## 2.195.0 - 2025-08-29
@@ -59,10 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `@ionic/angular` from version `8.6.3` to `8.7.3`
 - Upgraded `ionicons` from version `8.0.10` to `8.0.13`
 - Upgraded `prisma` from version `6.12.0` to `6.14.0`
-
-### Fixed
-
-- Fixed an issue in the average price calculation for buy and sell activities of short positions
 
 ## 2.193.0 - 2025-08-22
 
