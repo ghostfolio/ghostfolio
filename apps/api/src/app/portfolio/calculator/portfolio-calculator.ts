@@ -954,9 +954,9 @@ export abstract class PortfolioCalculator {
           investment,
           skipErrors,
           symbol,
-          averagePrice: !newQuantity.eq(0)
-            ? investment.div(newQuantity).abs()
-            : new Big(0),
+          averagePrice: newQuantity.eq(0)
+            ? new Big(0)
+            : investment.div(newQuantity).abs(),
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
