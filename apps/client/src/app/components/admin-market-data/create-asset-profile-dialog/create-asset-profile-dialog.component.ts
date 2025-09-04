@@ -70,8 +70,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.initializeCustomCurrencies();
-    this.initializeExchangeRateDataSource();
+    this.initialize();
 
     this.createAssetProfileForm = this.formBuilder.group(
       {
@@ -121,14 +120,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         })
         .pipe(
           switchMap(() => {
-            // Add the currency asset profile first
-            return this.adminService.addAssetProfile({
-              dataSource: this.exchangeRateDataSource,
-              symbol: `${currency}${DEFAULT_CURRENCY}`
-            });
-          }),
-          switchMap(() => {
-            // Then gather historical data for the currency
+            // Gather historical data for the currency
             return this.adminService.gatherSymbol({
               dataSource: this.exchangeRateDataSource,
               symbol: `${currency}${DEFAULT_CURRENCY}`
@@ -190,28 +182,18 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
     return { atLeastOneValid: true };
   }
 
-  private initializeCustomCurrencies() {
+  private initialize() {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ settings }) => {
+      .subscribe(({ settings, dataProviders }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
 
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  private initializeExchangeRateDataSource() {
-    this.adminService
-      .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ dataProviders }) => {
         const exchangeRateProvider = dataProviders.find(
           (provider) => provider.useForExchangeRates
         );
 
-        this.exchangeRateDataSource =
-          exchangeRateProvider?.dataSource || DataSource.MANUAL;
+        this.exchangeRateDataSource = exchangeRateProvider?.dataSource;
 
         this.changeDetectorRef.markForCheck();
       });
