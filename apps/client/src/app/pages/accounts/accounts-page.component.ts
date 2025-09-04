@@ -1,8 +1,7 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
-import { GfAccountDetailDialogModule } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.module';
+import { GfAccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -29,7 +28,7 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
 @Component({
   host: { class: 'has-fab page' },
   imports: [
-    GfAccountDetailDialogModule,
+    GfAccountDetailDialog,
     GfAccountsTableComponent,
     MatButtonModule,
     RouterModule
@@ -233,7 +232,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openAccountDetailDialog(aAccountId: string) {
-    const dialogRef = this.dialog.open(AccountDetailDialog, {
+    const dialogRef = this.dialog.open(GfAccountDetailDialog, {
       autoFocus: false,
       data: {
         accountId: aAccountId,
