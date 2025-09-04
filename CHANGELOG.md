@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Localized the content of the about page
+- Refactored the public page to standalone
 - Refactored the dialog footer component
 - Refactored the dialog header component
 - Refactored the account detail dialog component to standalone
