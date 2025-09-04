@@ -60,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `ionicons` from version `8.0.10` to `8.0.13`
 - Upgraded `prisma` from version `6.12.0` to `6.14.0`
 
+### Fixed
+
+- Fixed an issue in the average price calculation for buy and sell activities of short positions
+
 ## 2.193.0 - 2025-08-22
 
 ### Added
