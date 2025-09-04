@@ -111,9 +111,7 @@ const routes: Routes = [
   {
     path: publicRoutes.public.path,
     loadChildren: () =>
-      import('./pages/public/public-page.module').then(
-        (m) => m.PublicPageModule
-      )
+      import('./pages/public/public-page.routes').then((m) => m.routes)
   },
   {
     path: publicRoutes.register.path,
