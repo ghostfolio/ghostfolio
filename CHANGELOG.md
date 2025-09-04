@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the average price calculation for buy and sell activities of short positions
 - Fixed the number of attempts in the queue jobs view of the admin control panel
 
 ## 2.195.0 - 2025-08-29
