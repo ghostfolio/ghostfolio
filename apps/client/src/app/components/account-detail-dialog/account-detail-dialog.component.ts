@@ -55,11 +55,8 @@ import { takeUntil } from 'rxjs/operators';
 import { AccountDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
-  host: { class: 'd-flex flex-column h-100' },
-  selector: 'gf-account-detail-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'account-detail-dialog.html',
-  styleUrls: ['./account-detail-dialog.component.scss'],
+  host: { class: 'd-flex flex-column h-100' },
   imports: [
     CommonModule,
     GfAccountBalancesComponent,
@@ -75,9 +72,12 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
     MatTabsModule,
     NgxSkeletonLoaderModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-account-detail-dialog',
+  styleUrls: ['./account-detail-dialog.component.scss'],
+  templateUrl: 'account-detail-dialog.html'
 })
-export class GfAccountDetailDialog implements OnDestroy, OnInit {
+export class GfAccountDetailDialogComponent implements OnDestroy, OnInit {
   public accountBalances: AccountBalancesResponse['balances'];
   public activities: OrderWithAccount[];
   public balance: number;
@@ -110,7 +110,7 @@ export class GfAccountDetailDialog implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<GfAccountDetailDialog>,
+    public dialogRef: MatDialogRef<GfAccountDetailDialogComponent>,
     private router: Router,
     private userService: UserService
   ) {

@@ -1,4 +1,4 @@
-import { GfAccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
+import { GfAccountDetailDialogComponent } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { GfWorldMapChartComponent } from '@ghostfolio/client/components/world-map-chart/world-map-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -558,7 +558,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
   }
 
   private openAccountDetailDialog(aAccountId: string) {
-    const dialogRef = this.dialog.open(GfAccountDetailDialog, {
+    const dialogRef = this.dialog.open(GfAccountDetailDialogComponent, {
       autoFocus: false,
       data: {
         accountId: aAccountId,
