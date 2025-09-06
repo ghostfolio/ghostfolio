@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restructured the response of the portfolio report endpoint (_X-ray_)
 - Refactored the create or update access dialog component to standalone
 - Upgraded `envalid` from version `8.0.0` to `8.1.0`
 - Upgraded `prisma` from version `6.14.0` to `6.15.0`

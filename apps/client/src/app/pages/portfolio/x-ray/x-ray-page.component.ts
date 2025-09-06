@@ -36,18 +36,15 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './x-ray-page.component.html'
 })
 export class GfXRayPageComponent {
-  public accountClusterRiskRules: PortfolioReportRule[];
-  public assetClassClusterRiskRules: PortfolioReportRule[];
-  public currencyClusterRiskRules: PortfolioReportRule[];
-  public economicMarketClusterRiskRules: PortfolioReportRule[];
-  public emergencyFundRules: PortfolioReportRule[];
-  public feeRules: PortfolioReportRule[];
+  public categories: {
+    key: string;
+    name: string;
+    rules: PortfolioReportRule[];
+  }[];
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
-  public liquidityRules: PortfolioReportRule[];
-  public regionalMarketClusterRiskRules: PortfolioReportRule[];
   public statistics: PortfolioReportResponse['xRay']['statistics'];
   public user: User;
 
@@ -116,49 +113,10 @@ export class GfXRayPageComponent {
     this.dataService
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ xRay: { rules, statistics } }) => {
-        this.inactiveRules = this.mergeInactiveRules(rules);
+      .subscribe(({ xRay: { categories, statistics } }) => {
+        this.categories = categories;
+        this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
-
-        this.accountClusterRiskRules =
-          rules['accountClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.assetClassClusterRiskRules =
-          rules['assetClassClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.currencyClusterRiskRules =
-          rules['currencyClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.economicMarketClusterRiskRules =
-          rules['economicMarketClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.emergencyFundRules =
-          rules['emergencyFund']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.feeRules =
-          rules['fees']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.liquidityRules =
-          rules['liquidity']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.regionalMarketClusterRiskRules =
-          rules['regionalMarketClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
 
         this.isLoading = false;
 
@@ -167,20 +125,14 @@ export class GfXRayPageComponent {
   }
 
   private mergeInactiveRules(
-    rules: PortfolioReportResponse['xRay']['rules']
+    categories: PortfolioReportResponse['xRay']['categories']
   ): PortfolioReportRule[] {
-    let inactiveRules: PortfolioReportRule[] = [];
-
-    for (const category in rules) {
-      const rulesArray = rules[category] || [];
-
-      inactiveRules = inactiveRules.concat(
-        rulesArray.filter(({ isActive }) => {
+    return categories.flatMap(({ rules }) => {
+      return (
+        rules?.filter(({ isActive }) => {
           return !isActive;
-        })
+        }) ?? []
       );
-    }
-
-    return inactiveRules;
+    });
   }
 }
