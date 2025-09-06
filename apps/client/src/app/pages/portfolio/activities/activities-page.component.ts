@@ -250,6 +250,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
         deviceType: this.deviceType,
         user: this.user
       } as ImportActivitiesDialogParams,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -273,6 +274,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
         deviceType: this.deviceType,
         user: this.user
       } as ImportActivitiesDialogParams,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

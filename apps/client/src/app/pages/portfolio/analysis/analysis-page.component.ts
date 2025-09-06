@@ -1,4 +1,4 @@
-import { GfBenchmarkComparatorModule } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.module';
+import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -46,7 +46,7 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
-    GfBenchmarkComparatorModule,
+    GfBenchmarkComparatorComponent,
     GfInvestmentChartModule,
     GfPremiumIndicatorComponent,
     GfToggleComponent,
