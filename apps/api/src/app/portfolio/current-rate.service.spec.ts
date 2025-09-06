@@ -21,7 +21,8 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
             dataSource: DataSource.YAHOO,
             id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
             marketPrice: 1847.839966,
-            state: 'CLOSE'
+            state: 'CLOSE',
+            symbolProfileId: '6a504639-5b07-4a85-88ac-2805d6608288'
           });
         },
         getRange: ({
@@ -41,7 +42,8 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
               state: 'CLOSE',
-              symbol: assetProfileIdentifiers[0].symbol
+              symbol: assetProfileIdentifiers[0].symbol,
+              symbolProfileId: '4a0888cf-43b1-4cf9-abc2-2397b0ff1188'
             },
             {
               createdAt: dateQuery.lt,
@@ -50,7 +52,8 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,
               state: 'CLOSE',
-              symbol: assetProfileIdentifiers[0].symbol
+              symbol: assetProfileIdentifiers[0].symbol,
+              symbolProfileId: '4a0888cf-43b1-4cf9-abc2-2397b0ff1188'
             }
           ]);
         },
