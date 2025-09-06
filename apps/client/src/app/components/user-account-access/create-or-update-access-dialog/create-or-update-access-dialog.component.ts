@@ -10,8 +10,22 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
@@ -20,12 +34,20 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-or-update-access-dialog',
   styleUrls: ['./create-or-update-access-dialog.scss'],
-  templateUrl: 'create-or-update-access-dialog.html',
-  standalone: false
+  templateUrl: 'create-or-update-access-dialog.html'
 })
-export class CreateOrUpdateAccessDialog implements OnDestroy {
+export class GfCreateOrUpdateAccessDialog implements OnDestroy {
   public accessForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
@@ -33,7 +55,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialog>,
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
