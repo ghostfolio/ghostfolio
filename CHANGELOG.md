@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated to the _Prisma Configuration File_ approach (`prisma.config.ts`)
 - Refactored the login with access token dialog component to standalone
 - Prefixed the `crypto`, `fs` and `path` imports with `node:`
+- Upgraded `yahoo-finance2` from version `3.8.0` to `3.10.0`
 
 ### Fixed
 
