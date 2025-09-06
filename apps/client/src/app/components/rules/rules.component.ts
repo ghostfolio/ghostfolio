@@ -20,6 +20,7 @@ import {
   standalone: false
 })
 export class RulesComponent {
+  @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rules: PortfolioReportRule[];

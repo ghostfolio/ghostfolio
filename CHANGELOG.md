@@ -7,17 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Enabled automatic data gathering for custom currencies added via the currency management in the admin control panel
+
+### Changed
+
+- Restructured the response of the portfolio report endpoint (_X-ray_)
+- Modernized the templates with untagged template literals
+- Refactored the create or update access dialog component to standalone
+- Improved the language localization for German (`de`)
+- Upgraded `envalid` from version `8.0.0` to `8.1.0`
+- Upgraded `prisma` from version `6.14.0` to `6.15.0`
+
+### Fixed
+
+- Improved the handling of `0` buying power in the static portfolio analysis rule: _Liquidity_ (Buying Power)
+- Fixed an issue related to the error handling in the data provider status component
+
+## 2.196.0 - 2025-09-04
+
 ### Changed
 
 - Localized the content of the about page
-- Modernized the templates with untagged template literals
+- Refactored the public page to standalone
+- Refactored the dialog footer component
+- Refactored the dialog header component
+- Refactored the account detail dialog component to standalone
 - Refactored the benchmark comparator component to standalone
+- Refactored the portfolio summary component to standalone
 - Refactored the world map chart component to standalone
+- Enabled the trim option in the `extract-i18n` configuration
 - Improved the language localization for German (`de`)
 - Upgraded the _Stripe_ dependencies
 - Upgraded `ngx-device-detector` from version `10.0.2` to `10.1.0`
 - Upgraded `ngx-skeleton-loader` from version `11.2.1` to `11.3.0`
 - Upgraded `yahoo-finance2` from version `3.6.4` to `3.8.0`
+
+### Fixed
+
+- Fixed an issue in the average price calculation for buy and sell activities of short positions
+- Fixed the number of attempts in the queue jobs view of the admin control panel
 
 ## 2.195.0 - 2025-08-29
 

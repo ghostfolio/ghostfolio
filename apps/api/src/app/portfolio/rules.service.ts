@@ -22,7 +22,6 @@ export class RulesService {
         return {
           evaluation,
           value,
-          categoryName: rule.getCategoryName(),
           configuration: rule.getConfiguration(),
           isActive: true,
           key: rule.getKey(),
@@ -30,7 +29,6 @@ export class RulesService {
         };
       } else {
         return {
-          categoryName: rule.getCategoryName(),
           isActive: false,
           key: rule.getKey(),
           name: rule.getName()

@@ -67,6 +67,7 @@ export class AssetClassClusterRiskEquity extends Rule<Settings> {
         value: false
       };
     }
+
     return {
       evaluation: this.i18nService.getTranslation({
         id: 'rule.assetClassClusterRiskEquity.true',

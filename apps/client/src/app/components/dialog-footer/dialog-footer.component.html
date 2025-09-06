@@ -1,5 +1,7 @@
 @if (deviceType === 'mobile') {
-  <button mat-button (click)="onClickCloseButton()">
-    <ion-icon name="close" size="large" />
-  </button>
+  <div class="d-flex justify-content-center" mat-dialog-actions>
+    <button mat-button (click)="onClickCloseButton()">
+      <ion-icon name="close" size="large" />
+    </button>
+  </div>
 }

@@ -50,6 +50,7 @@ import {
   PortfolioPerformanceResponse,
   PortfolioPosition,
   PortfolioReportResponse,
+  PortfolioReportRule,
   PortfolioSummary,
   UserSettings
 } from '@ghostfolio/common/interfaces';
@@ -1231,176 +1232,236 @@ export class PortfolioService {
       })
     ).toNumber();
 
-    const rules: PortfolioReportResponse['xRay']['rules'] = {
-      accountClusterRisk:
-        summary.activityCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new AccountClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  accounts
-                ),
-                new AccountClusterRiskSingleAccount(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  accounts
-                )
-              ],
-              userSettings
+    const categories: PortfolioReportResponse['xRay']['categories'] = [
+      {
+        key: 'liquidity',
+        name: this.i18nService.getTranslation({
+          id: 'rule.liquidity.category',
+          languageCode: userSettings.language
+        }),
+        rules: await this.rulesService.evaluate(
+          [
+            new BuyingPower(
+              this.exchangeRateDataService,
+              this.i18nService,
+              summary.cash,
+              userSettings.language
             )
-          : undefined,
-      assetClassClusterRisk:
-        summary.activityCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new AssetClassClusterRiskEquity(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  Object.values(holdings)
-                ),
-                new AssetClassClusterRiskFixedIncome(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  Object.values(holdings)
-                )
-              ],
-              userSettings
+          ],
+          userSettings
+        )
+      },
+      {
+        key: 'emergencyFund',
+        name: this.i18nService.getTranslation({
+          id: 'rule.emergencyFund.category',
+          languageCode: userSettings.language
+        }),
+        rules: await this.rulesService.evaluate(
+          [
+            new EmergencyFundSetup(
+              this.exchangeRateDataService,
+              this.i18nService,
+              userSettings.language,
+              this.getTotalEmergencyFund({
+                userSettings,
+                emergencyFundHoldingsValueInBaseCurrency:
+                  this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
+              }).toNumber()
             )
-          : undefined,
-      currencyClusterRisk:
-        summary.activityCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  Object.values(holdings),
-                  userSettings.language
-                ),
-                new CurrencyClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  Object.values(holdings),
-                  userSettings.language
-                )
-              ],
-              userSettings
+          ],
+          userSettings
+        )
+      },
+      {
+        key: 'currencyClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.currencyClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    Object.values(holdings),
+                    userSettings.language
+                  ),
+                  new CurrencyClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    Object.values(holdings),
+                    userSettings.language
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
+        key: 'assetClassClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new AssetClassClusterRiskEquity(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    Object.values(holdings)
+                  ),
+                  new AssetClassClusterRiskFixedIncome(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    Object.values(holdings)
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
+        key: 'accountClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new AccountClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    accounts
+                  ),
+                  new AccountClusterRiskSingleAccount(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    accounts
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
+        key: 'economicMarketClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.economicMarketClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new EconomicMarketClusterRiskDevelopedMarkets(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    marketsTotalInBaseCurrency,
+                    markets.developedMarkets.valueInBaseCurrency,
+                    userSettings.language
+                  ),
+                  new EconomicMarketClusterRiskEmergingMarkets(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    marketsTotalInBaseCurrency,
+                    markets.emergingMarkets.valueInBaseCurrency,
+                    userSettings.language
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
+        key: 'regionalMarketClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.regionalMarketClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new RegionalMarketClusterRiskAsiaPacific(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    marketsAdvancedTotalInBaseCurrency,
+                    marketsAdvanced.asiaPacific.valueInBaseCurrency
+                  ),
+                  new RegionalMarketClusterRiskEmergingMarkets(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    marketsAdvancedTotalInBaseCurrency,
+                    marketsAdvanced.emergingMarkets.valueInBaseCurrency
+                  ),
+                  new RegionalMarketClusterRiskEurope(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    marketsAdvancedTotalInBaseCurrency,
+                    marketsAdvanced.europe.valueInBaseCurrency
+                  ),
+                  new RegionalMarketClusterRiskJapan(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    marketsAdvancedTotalInBaseCurrency,
+                    marketsAdvanced.japan.valueInBaseCurrency
+                  ),
+                  new RegionalMarketClusterRiskNorthAmerica(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    marketsAdvancedTotalInBaseCurrency,
+                    marketsAdvanced.northAmerica.valueInBaseCurrency
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
+        key: 'fees',
+        name: this.i18nService.getTranslation({
+          id: 'rule.fees.category',
+          languageCode: userSettings.language
+        }),
+        rules: await this.rulesService.evaluate(
+          [
+            new FeeRatioInitialInvestment(
+              this.exchangeRateDataService,
+              this.i18nService,
+              userSettings.language,
+              summary.committedFunds,
+              summary.fees
             )
-          : undefined,
-      economicMarketClusterRisk:
-        summary.activityCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new EconomicMarketClusterRiskDevelopedMarkets(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  marketsTotalInBaseCurrency,
-                  markets.developedMarkets.valueInBaseCurrency,
-                  userSettings.language
-                ),
-                new EconomicMarketClusterRiskEmergingMarkets(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  marketsTotalInBaseCurrency,
-                  markets.emergingMarkets.valueInBaseCurrency,
-                  userSettings.language
-                )
-              ],
-              userSettings
-            )
-          : undefined,
-      emergencyFund: await this.rulesService.evaluate(
-        [
-          new EmergencyFundSetup(
-            this.exchangeRateDataService,
-            this.i18nService,
-            userSettings.language,
-            this.getTotalEmergencyFund({
-              userSettings,
-              emergencyFundHoldingsValueInBaseCurrency:
-                this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
-            }).toNumber()
-          )
-        ],
-        userSettings
-      ),
-      fees: await this.rulesService.evaluate(
-        [
-          new FeeRatioInitialInvestment(
-            this.exchangeRateDataService,
-            this.i18nService,
-            userSettings.language,
-            summary.committedFunds,
-            summary.fees
-          )
-        ],
-        userSettings
-      ),
-      liquidity: await this.rulesService.evaluate(
-        [
-          new BuyingPower(
-            this.exchangeRateDataService,
-            this.i18nService,
-            summary.cash,
-            userSettings.language
-          )
-        ],
-        userSettings
-      ),
-      regionalMarketClusterRisk:
-        summary.activityCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new RegionalMarketClusterRiskAsiaPacific(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.asiaPacific.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskEmergingMarkets(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.emergingMarkets.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskEurope(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.europe.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskJapan(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.japan.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskNorthAmerica(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  userSettings.language,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.northAmerica.valueInBaseCurrency
-                )
-              ],
-              userSettings
-            )
-          : undefined
-    };
+          ],
+          userSettings
+        )
+      }
+    ];
 
     return {
       xRay: {
-        rules,
-        statistics: this.getReportStatistics(rules)
+        categories,
+        statistics: this.getReportStatistics(
+          categories.flatMap(({ rules }) => {
+            return rules ?? [];
+          })
+        )
       }
     };
   }
@@ -1822,7 +1883,7 @@ export class PortfolioService {
   }
 
   private getReportStatistics(
-    evaluatedRules: PortfolioReportResponse['xRay']['rules']
+    evaluatedRules: PortfolioReportRule[]
   ): PortfolioReportResponse['xRay']['statistics'] {
     const rulesActiveCount = Object.values(evaluatedRules)
       .flat()

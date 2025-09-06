@@ -271,7 +271,8 @@
           "messages.tr.xlf",
           "messages.uk.xlf",
           "messages.zh.xlf"
-        ]
+        ],
+        "trim": true
       }
     },
     "lint": {

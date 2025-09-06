@@ -7,6 +7,7 @@ import {
   Output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
@@ -14,7 +15,7 @@ import { close } from 'ionicons/icons';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'justify-content-center' },
-  imports: [CommonModule, IonIcon, MatButtonModule],
+  imports: [CommonModule, IonIcon, MatButtonModule, MatDialogModule],
   selector: 'gf-dialog-header',
   styleUrls: ['./dialog-header.component.scss'],
   templateUrl: './dialog-header.component.html'

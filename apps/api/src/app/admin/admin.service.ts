@@ -136,11 +136,13 @@ export class AdminService {
   public async get(): Promise<AdminData> {
     const dataSources = Object.values(DataSource);
 
-    const [settings, transactionCount, userCount] = await Promise.all([
-      this.propertyService.get(),
-      this.prismaService.order.count(),
-      this.countUsersWithAnalytics()
-    ]);
+    const [enabledDataSources, settings, transactionCount, userCount] =
+      await Promise.all([
+        this.dataProviderService.getDataSources(),
+        this.propertyService.get(),
+        this.prismaService.order.count(),
+        this.countUsersWithAnalytics()
+      ]);
 
     const dataProviders = (
       await Promise.all(
@@ -152,14 +154,23 @@ export class AdminService {
               }
             });
 
-          if (assetProfileCount > 0 || dataSource === 'GHOSTFOLIO') {
+          const isEnabled = enabledDataSources.includes(dataSource);
+
+          if (
+            assetProfileCount > 0 ||
+            dataSource === 'GHOSTFOLIO' ||
+            isEnabled
+          ) {
             const dataProviderInfo = this.dataProviderService
               .getDataProvider(dataSource)
               .getDataProviderInfo();
 
             return {
               ...dataProviderInfo,
-              assetProfileCount
+              assetProfileCount,
+              useForExchangeRates:
+                dataSource ===
+                this.dataProviderService.getDataSourceForExchangeRates()
             };
           }
 
