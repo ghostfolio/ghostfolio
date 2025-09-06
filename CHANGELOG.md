@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the create or update access dialog component to standalone
 - Upgraded `envalid` from version `8.0.0` to `8.1.0`
+- Upgraded `yahoo-finance2` from version `3.8.0` to `3.10.0`
 
 ### Fixed
 
