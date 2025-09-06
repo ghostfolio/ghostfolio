@@ -114,9 +114,9 @@ export class GfXRayPageComponent {
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ xRay: { categories, statistics } }) => {
+        this.categories = categories;
         this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
-        this.categories = categories;
 
         this.isLoading = false;
 
@@ -127,10 +127,12 @@ export class GfXRayPageComponent {
   private mergeInactiveRules(
     categories: PortfolioReportResponse['xRay']['categories']
   ): PortfolioReportRule[] {
-    const inactiveRules = categories.flatMap(
-      (category) => category.rules?.filter(({ isActive }) => !isActive) ?? []
-    );
-
-    return inactiveRules;
+    return categories.flatMap(({ rules }) => {
+      return (
+        rules?.filter(({ isActive }) => {
+          return !isActive;
+        }) ?? []
+      );
+    });
   }
 }

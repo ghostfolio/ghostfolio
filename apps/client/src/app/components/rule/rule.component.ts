@@ -69,8 +69,8 @@ export class RuleComponent implements OnInit {
   public onCustomizeRule(rule: PortfolioReportRule) {
     const dialogRef = this.dialog.open(GfRuleSettingsDialogComponent, {
       data: {
-        categoryName: this.categoryName,
         rule,
+        categoryName: this.categoryName,
         settings: this.settings
       } as IRuleSettingsDialogParams,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

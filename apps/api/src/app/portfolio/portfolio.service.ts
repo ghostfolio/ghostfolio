@@ -33,7 +33,6 @@ import {
 } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_LANGUAGE_CODE,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
@@ -1235,64 +1234,50 @@ export class PortfolioService {
 
     const categories: PortfolioReportResponse['xRay']['categories'] = [
       {
-        key: 'accountClusterRisk',
+        key: 'liquidity',
         name: this.i18nService.getTranslation({
-          id: 'rule.accountClusterRisk.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+          id: 'rule.liquidity.category',
+          languageCode: userSettings.language
         }),
-        rules:
-          summary.activityCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new AccountClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    accounts
-                  ),
-                  new AccountClusterRiskSingleAccount(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    accounts
-                  )
-                ],
-                userSettings
-              )
-            : undefined
+        rules: await this.rulesService.evaluate(
+          [
+            new BuyingPower(
+              this.exchangeRateDataService,
+              this.i18nService,
+              summary.cash,
+              userSettings.language
+            )
+          ],
+          userSettings
+        )
       },
       {
-        key: 'assetClassClusterRisk',
+        key: 'emergencyFund',
         name: this.i18nService.getTranslation({
-          id: 'rule.assetClassClusterRisk.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+          id: 'rule.emergencyFund.category',
+          languageCode: userSettings.language
         }),
-        rules:
-          summary.activityCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new AssetClassClusterRiskEquity(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    Object.values(holdings)
-                  ),
-                  new AssetClassClusterRiskFixedIncome(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    Object.values(holdings)
-                  )
-                ],
-                userSettings
-              )
-            : undefined
+        rules: await this.rulesService.evaluate(
+          [
+            new EmergencyFundSetup(
+              this.exchangeRateDataService,
+              this.i18nService,
+              userSettings.language,
+              this.getTotalEmergencyFund({
+                userSettings,
+                emergencyFundHoldingsValueInBaseCurrency:
+                  this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
+              }).toNumber()
+            )
+          ],
+          userSettings
+        )
       },
       {
         key: 'currencyClusterRisk',
         name: this.i18nService.getTranslation({
           id: 'rule.currencyClusterRisk.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+          languageCode: userSettings.language
         }),
         rules:
           summary.activityCount > 0
@@ -1316,10 +1301,64 @@ export class PortfolioService {
             : undefined
       },
       {
+        key: 'assetClassClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new AssetClassClusterRiskEquity(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    Object.values(holdings)
+                  ),
+                  new AssetClassClusterRiskFixedIncome(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    Object.values(holdings)
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
+        key: 'accountClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRisk.category',
+          languageCode: userSettings.language
+        }),
+        rules:
+          summary.activityCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new AccountClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    accounts
+                  ),
+                  new AccountClusterRiskSingleAccount(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    accounts
+                  )
+                ],
+                userSettings
+              )
+            : undefined
+      },
+      {
         key: 'economicMarketClusterRisk',
         name: this.i18nService.getTranslation({
           id: 'rule.economicMarketClusterRisk.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+          languageCode: userSettings.language
         }),
         rules:
           summary.activityCount > 0
@@ -1345,69 +1384,10 @@ export class PortfolioService {
             : undefined
       },
       {
-        key: 'emergencyFund',
-        name: this.i18nService.getTranslation({
-          id: 'rule.emergencyFund.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
-        }),
-        rules: await this.rulesService.evaluate(
-          [
-            new EmergencyFundSetup(
-              this.exchangeRateDataService,
-              this.i18nService,
-              userSettings.language,
-              this.getTotalEmergencyFund({
-                userSettings,
-                emergencyFundHoldingsValueInBaseCurrency:
-                  this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
-              }).toNumber()
-            )
-          ],
-          userSettings
-        )
-      },
-      {
-        key: 'fees',
-        name: this.i18nService.getTranslation({
-          id: 'rule.fees.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
-        }),
-        rules: await this.rulesService.evaluate(
-          [
-            new FeeRatioInitialInvestment(
-              this.exchangeRateDataService,
-              this.i18nService,
-              userSettings.language,
-              summary.committedFunds,
-              summary.fees
-            )
-          ],
-          userSettings
-        )
-      },
-      {
-        key: 'liquidity',
-        name: this.i18nService.getTranslation({
-          id: 'rule.liquidity.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
-        }),
-        rules: await this.rulesService.evaluate(
-          [
-            new BuyingPower(
-              this.exchangeRateDataService,
-              this.i18nService,
-              summary.cash,
-              userSettings.language
-            )
-          ],
-          userSettings
-        )
-      },
-      {
         key: 'regionalMarketClusterRisk',
         name: this.i18nService.getTranslation({
           id: 'rule.regionalMarketClusterRisk.category',
-          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+          languageCode: userSettings.language
         }),
         rules:
           summary.activityCount > 0
@@ -1452,6 +1432,25 @@ export class PortfolioService {
                 userSettings
               )
             : undefined
+      },
+      {
+        key: 'fees',
+        name: this.i18nService.getTranslation({
+          id: 'rule.fees.category',
+          languageCode: userSettings.language
+        }),
+        rules: await this.rulesService.evaluate(
+          [
+            new FeeRatioInitialInvestment(
+              this.exchangeRateDataService,
+              this.i18nService,
+              userSettings.language,
+              summary.committedFunds,
+              summary.fees
+            )
+          ],
+          userSettings
+        )
       }
     ];
 
