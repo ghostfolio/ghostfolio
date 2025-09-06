@@ -22,10 +22,21 @@ export class BuyingPower extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings: Settings) {
-    if (this.buyingPower < ruleSettings.thresholdMin) {
+    if (this.buyingPower === 0) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.liquidityBuyingPower.false',
+          id: 'rule.liquidityBuyingPower.false.zero',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            baseCurrency: ruleSettings.baseCurrency
+          }
+        }),
+        value: false
+      };
+    } else if (this.buyingPower < ruleSettings.thresholdMin) {
+      return {
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.liquidityBuyingPower.false.min',
           languageCode: this.getLanguageCode(),
           placeholders: {
             baseCurrency: ruleSettings.baseCurrency,
