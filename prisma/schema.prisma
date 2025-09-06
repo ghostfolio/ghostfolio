@@ -102,13 +102,15 @@ model AuthDevice {
 }
 
 model MarketData {
-  createdAt   DateTime        @default(now())
-  dataSource  DataSource
-  date        DateTime
-  id          String          @id @default(uuid())
-  marketPrice Float
-  state       MarketDataState @default(CLOSE)
-  symbol      String
+  createdAt       DateTime        @default(now())
+  dataSource      DataSource
+  date            DateTime
+  id              String          @id @default(uuid())
+  marketPrice     Float
+  state           MarketDataState @default(CLOSE)
+  symbol          String
+  SymbolProfile   SymbolProfile?  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String?
 
   @@unique([dataSource, date, symbol])
   @@index([dataSource])
@@ -117,6 +119,7 @@ model MarketData {
   @@index([marketPrice])
   @@index([state])
   @@index([symbol])
+  @@index([symbolProfileId])
 }
 
 model Order {
@@ -184,6 +187,7 @@ model SymbolProfile {
   id                     String                  @id @default(uuid())
   isActive               Boolean                 @default(true)
   isin                   String?
+  marketData             MarketData[]
   name                   String?
   updatedAt              DateTime                @updatedAt
   scraperConfiguration   Json?
