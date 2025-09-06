@@ -1,13 +1,14 @@
 import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { GfDialogFooterComponent } from '../../../../components/dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '../../../../components/dialog-header/dialog-header.component';
+import { GfFileDropModule } from '../../../../directives/file-drop/file-drop.module';
+import { GfSymbolModule } from '../../../../pipes/symbol/symbol.module';
+import { DataService } from '../../../../services/data.service';
+import { ImportActivitiesService } from '../../../../services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
@@ -209,7 +210,13 @@ export class GfImportActivitiesDialog implements OnDestroy {
       return;
     }
 
-    this.handleFile({ stepper, file: files[0] });
+    if (files.length === 1) {
+      // Single file import (original behavior)
+      this.handleFile({ stepper, file: files[0] });
+    } else {
+      // Multiple files import (bulk import)
+      this.handleMultipleFiles({ stepper, files });
+    }
   }
 
   public onImportStepChange(event: StepperSelectionEvent) {
@@ -257,11 +264,19 @@ export class GfImportActivitiesDialog implements OnDestroy {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
+    input.multiple = true; // Allow multiple file selection
 
     input.onchange = (event) => {
-      // Getting the file reference
-      const file = (event.target as HTMLInputElement).files[0];
-      this.handleFile({ file, stepper });
+      const files = (event.target as HTMLInputElement).files;
+      if (files && files.length > 0) {
+        if (files.length === 1) {
+          // Single file import (original behavior)
+          this.handleFile({ file: files[0], stepper });
+        } else {
+          // Multiple files import (bulk import)
+          this.handleMultipleFiles({ stepper, files });
+        }
+      }
     };
 
     input.click();
@@ -276,6 +291,127 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private async handleMultipleFiles({
+    files,
+    stepper
+  }: {
+    files: FileList;
+    stepper: MatStepper;
+  }): Promise<void> {
+    this.snackBar.open(`⏳ Processing ${files.length} files...`);
+
+    const allActivities: CreateOrderDto[] = [];
+    const allAccounts: CreateAccountWithBalancesDto[] = [];
+    const allAssetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+    const allTags: CreateTagDto[] = [];
+    let filesProcessed = 0;
+    let hasErrors = false;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+      if (fileExtension !== 'json') {
+        continue;
+      }
+
+      try {
+        const fileContent = await this.readFileContent(file);
+        const content = JSON.parse(fileContent);
+
+        // Merge accounts, avoiding duplicates
+        if (content.accounts) {
+          content.accounts.forEach((account: CreateAccountWithBalancesDto) => {
+            if (!allAccounts.find(a => a.id === account.id)) {
+              allAccounts.push(account);
+            }
+          });
+        }
+
+        // Merge asset profiles, avoiding duplicates
+        if (content.assetProfiles) {
+          content.assetProfiles.forEach((profile: CreateAssetProfileWithMarketDataDto) => {
+            if (!allAssetProfiles.find(p => p.symbol === profile.symbol)) {
+              allAssetProfiles.push(profile);
+            }
+          });
+        }
+
+        // Merge tags, avoiding duplicates
+        if (content.tags) {
+          content.tags.forEach((tag: CreateTagDto) => {
+            if (!allTags.find(t => t.id === tag.id)) {
+              allTags.push(tag);
+            }
+          });
+        }
+
+        // Add activities
+        if (isArray(content.activities)) {
+          const cleanedActivities = content.activities.map((activity: any) => {
+            if (activity.id) {
+              delete activity.id;
+            }
+            return activity as CreateOrderDto;
+          });
+          allActivities.push(...cleanedActivities);
+        }
+
+        filesProcessed++;
+        this.snackBar.open(`⏳ Processed ${filesProcessed}/${files.length} files...`);
+
+      } catch (error) {
+        hasErrors = true;
+      }
+    }
+
+    if (hasErrors) {
+      this.snackBar.open(`⚠️ Some files could not be processed`);
+    }
+
+    // Store merged data
+    this.accounts = allAccounts;
+    this.assetProfiles = allAssetProfiles;
+    this.tags = allTags;
+
+    try {
+      // Validate all activities at once
+      const { activities } = await this.importActivitiesService.importJson({
+        accounts: allAccounts,
+        activities: allActivities,
+        assetProfiles: allAssetProfiles,
+        isDryRun: true,
+        tags: allTags
+      });
+
+      this.activities = activities;
+      this.dataSource = new MatTableDataSource(activities.reverse());
+      this.totalItems = activities.length;
+
+      this.snackBar.open(`✅ Successfully processed ${filesProcessed} files with ${activities.length} activities`);
+      
+    } catch (error) {
+      this.handleImportError({ error, activities: allActivities as any });
+      this.snackBar.open(`❌ Validation failed for bulk import`);
+    } finally {
+      this.importStep = ImportStep.SELECT_ACTIVITIES;
+      this.snackBar.dismiss();
+      this.updateSelection(this.activities);
+
+      stepper.next();
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
+  private readFileContent(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => resolve(event.target?.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(file, 'UTF-8');
+    });
   }
 
   private async handleFile({
