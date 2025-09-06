@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Refactored the create or update access dialog component to standalone
+
 ### Fixed
 
 - Fixed an issue related to the error handling in the data provider status component
