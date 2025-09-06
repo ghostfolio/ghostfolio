@@ -26,9 +26,9 @@
           <mat-progress-bar
             mode="determinate"
             [title]="
-              (
+              `${(
                 portfolioDetails?.summary?.filteredValueInPercentage * 100
-              ).toFixed(2) + '%'
+              ).toFixed(2)}%`
             "
             [value]="portfolioDetails?.summary?.filteredValueInPercentage * 100"
           />

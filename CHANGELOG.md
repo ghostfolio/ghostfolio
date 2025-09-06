@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restructured the response of the portfolio report endpoint (_X-ray_)
+- Modernized the templates with untagged template literals
 - Refactored the create or update access dialog component to standalone
 - Improved the language localization for German (`de`)
 - Upgraded `envalid` from version `8.0.0` to `8.1.0`
