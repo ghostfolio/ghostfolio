@@ -37,6 +37,7 @@ import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-setti
   standalone: false
 })
 export class RuleComponent implements OnInit {
+  @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rule: PortfolioReportRule;
@@ -68,6 +69,7 @@ export class RuleComponent implements OnInit {
   public onCustomizeRule(rule: PortfolioReportRule) {
     const dialogRef = this.dialog.open(GfRuleSettingsDialogComponent, {
       data: {
+        categoryName: this.categoryName,
         rule,
         settings: this.settings
       } as IRuleSettingsDialogParams,

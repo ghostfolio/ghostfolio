@@ -36,18 +36,15 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './x-ray-page.component.html'
 })
 export class GfXRayPageComponent {
-  public accountClusterRiskRules: PortfolioReportRule[];
-  public assetClassClusterRiskRules: PortfolioReportRule[];
-  public currencyClusterRiskRules: PortfolioReportRule[];
-  public economicMarketClusterRiskRules: PortfolioReportRule[];
-  public emergencyFundRules: PortfolioReportRule[];
-  public feeRules: PortfolioReportRule[];
+  public categories: {
+    key: string;
+    name: string;
+    rules: PortfolioReportRule[];
+  }[];
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
-  public liquidityRules: PortfolioReportRule[];
-  public regionalMarketClusterRiskRules: PortfolioReportRule[];
   public statistics: PortfolioReportResponse['xRay']['statistics'];
   public user: User;
 
@@ -119,46 +116,7 @@ export class GfXRayPageComponent {
       .subscribe(({ xRay: { categories, statistics } }) => {
         this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
-
-        this.accountClusterRiskRules =
-          categories
-            .find(({ key }) => key === 'accountClusterRisk')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.assetClassClusterRiskRules =
-          categories
-            .find(({ key }) => key === 'assetClassClusterRisk')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.currencyClusterRiskRules =
-          categories
-            .find(({ key }) => key === 'currencyClusterRisk')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.economicMarketClusterRiskRules =
-          categories
-            .find(({ key }) => key === 'economicMarketClusterRisk')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.emergencyFundRules =
-          categories
-            .find(({ key }) => key === 'emergencyFund')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.feeRules =
-          categories
-            .find(({ key }) => key === 'fees')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.liquidityRules =
-          categories
-            .find(({ key }) => key === 'liquidity')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
-
-        this.regionalMarketClusterRiskRules =
-          categories
-            .find(({ key }) => key === 'regionalMarketClusterRisk')
-            ?.rules?.filter(({ isActive }) => isActive) ?? null;
+        this.categories = categories;
 
         this.isLoading = false;
 

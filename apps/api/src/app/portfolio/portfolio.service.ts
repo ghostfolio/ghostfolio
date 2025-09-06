@@ -33,6 +33,7 @@ import {
 } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LANGUAGE_CODE,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
@@ -1235,7 +1236,10 @@ export class PortfolioService {
     const categories: PortfolioReportResponse['xRay']['categories'] = [
       {
         key: 'accountClusterRisk',
-        name: 'accountClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRisk.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules:
           summary.activityCount > 0
             ? await this.rulesService.evaluate(
@@ -1259,7 +1263,10 @@ export class PortfolioService {
       },
       {
         key: 'assetClassClusterRisk',
-        name: 'assetClassClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRisk.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules:
           summary.activityCount > 0
             ? await this.rulesService.evaluate(
@@ -1283,7 +1290,10 @@ export class PortfolioService {
       },
       {
         key: 'currencyClusterRisk',
-        name: 'currencyClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.currencyClusterRisk.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules:
           summary.activityCount > 0
             ? await this.rulesService.evaluate(
@@ -1307,7 +1317,10 @@ export class PortfolioService {
       },
       {
         key: 'economicMarketClusterRisk',
-        name: 'economicMarketClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.economicMarketClusterRisk.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules:
           summary.activityCount > 0
             ? await this.rulesService.evaluate(
@@ -1333,7 +1346,10 @@ export class PortfolioService {
       },
       {
         key: 'emergencyFund',
-        name: 'emergencyFund',
+        name: this.i18nService.getTranslation({
+          id: 'rule.emergencyFund.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules: await this.rulesService.evaluate(
           [
             new EmergencyFundSetup(
@@ -1352,7 +1368,10 @@ export class PortfolioService {
       },
       {
         key: 'fees',
-        name: 'fees',
+        name: this.i18nService.getTranslation({
+          id: 'rule.fees.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules: await this.rulesService.evaluate(
           [
             new FeeRatioInitialInvestment(
@@ -1368,7 +1387,10 @@ export class PortfolioService {
       },
       {
         key: 'liquidity',
-        name: 'liquidity',
+        name: this.i18nService.getTranslation({
+          id: 'rule.liquidity.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules: await this.rulesService.evaluate(
           [
             new BuyingPower(
@@ -1383,7 +1405,10 @@ export class PortfolioService {
       },
       {
         key: 'regionalMarketClusterRisk',
-        name: 'regionalMarketClusterRisk',
+        name: this.i18nService.getTranslation({
+          id: 'rule.regionalMarketClusterRisk.category',
+          languageCode: userSettings.language || DEFAULT_LANGUAGE_CODE
+        }),
         rules:
           summary.activityCount > 0
             ? await this.rulesService.evaluate(
@@ -1434,7 +1459,9 @@ export class PortfolioService {
       xRay: {
         categories,
         statistics: this.getReportStatistics(
-          categories.flatMap(({ rules }) => rules ?? [])
+          categories.flatMap(({ rules }) => {
+            return rules ?? [];
+          })
         )
       }
     };
