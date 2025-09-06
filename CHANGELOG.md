@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the benchmark comparator component to standalone
 - Refactored the portfolio summary component to standalone
 - Refactored the world map chart component to standalone
+- Restructured the response of the portfolio report endpoint (_X-ray_)
 - Improved the language localization for German (`de`)
 - Upgraded the _Stripe_ dependencies
 - Upgraded `ngx-device-detector` from version `10.0.2` to `10.1.0`
