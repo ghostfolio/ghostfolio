@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Enabled automatic data gathering for custom currencies added via the currency management in the admin control panel
+
 ### Changed
 
 - Refactored the _ZEN_ page to standalone
