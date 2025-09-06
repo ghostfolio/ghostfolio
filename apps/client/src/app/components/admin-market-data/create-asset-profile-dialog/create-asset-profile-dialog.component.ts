@@ -120,10 +120,9 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         })
         .pipe(
           switchMap(() => {
-            // Gather historical data for the currency
             return this.adminService.gatherSymbol({
               dataSource: this.exchangeRateDataSource,
-              symbol: `${currency}${DEFAULT_CURRENCY}`
+              symbol: `${DEFAULT_CURRENCY}${currency}`
             });
           }),
           takeUntil(this.unsubscribeSubject)
@@ -186,14 +185,14 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ settings, dataProviders }) => {
+      .subscribe(({ dataProviders, settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
 
-        const exchangeRateProvider = dataProviders.find(
-          (provider) => provider.useForExchangeRates
-        );
+        const { dataSource } = dataProviders.find(({ useForExchangeRates }) => {
+          return useForExchangeRates;
+        });
 
-        this.exchangeRateDataSource = exchangeRateProvider?.dataSource;
+        this.exchangeRateDataSource = dataSource;
 
         this.changeDetectorRef.markForCheck();
       });
