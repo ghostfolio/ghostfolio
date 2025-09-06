@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Improved the handling of `0` buying power in the static portfolio analysis rule: _Liquidity_ (Buying Power)
 - Fixed an issue related to the error handling in the data provider status component
 
 ## 2.196.0 - 2025-09-04
