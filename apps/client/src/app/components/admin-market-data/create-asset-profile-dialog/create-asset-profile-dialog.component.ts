@@ -58,7 +58,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   public mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
-  private exchangeRateDataSource: DataSource;
+  private dataSourceForExchangeRates: DataSource;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -121,7 +121,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         .pipe(
           switchMap(() => {
             return this.adminService.gatherSymbol({
-              dataSource: this.exchangeRateDataSource,
+              dataSource: this.dataSourceForExchangeRates,
               symbol: `${DEFAULT_CURRENCY}${currency}`
             });
           }),
@@ -192,7 +192,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
           return useForExchangeRates;
         });
 
-        this.exchangeRateDataSource = dataSource;
+        this.dataSourceForExchangeRates = dataSource;
 
         this.changeDetectorRef.markForCheck();
       });
