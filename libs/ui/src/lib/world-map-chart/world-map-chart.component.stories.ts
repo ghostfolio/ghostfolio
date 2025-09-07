@@ -1,3 +1,5 @@
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -34,34 +36,22 @@ export default {
 
 type Story = StoryObj<GfWorldMapChartComponent>;
 
-export const Loading: Story = {
-  args: {
-    countries: VWRL_COUNTRY_ALLOCATION,
-    format: '{0}%',
-    isInPercent: false
-  }
-};
-
 export const Default: Story = {
   args: {
-    countries: VWRL_COUNTRY_ALLOCATION,
-    format: '{0}%',
+    countries: Object.fromEntries(
+      Object.entries(VWRL_COUNTRY_ALLOCATION).map(([countryCode, country]) => {
+        return [countryCode, { ...country, value: 150 * country.value }];
+      })
+    ),
+    format: `{0} ${DEFAULT_CURRENCY}`,
     isInPercent: false
   }
 };
 
-export const AsPercentage: Story = {
+export const InPercentage: Story = {
   args: {
     countries: VWRL_COUNTRY_ALLOCATION,
     format: '{0}%',
     isInPercent: true
-  }
-};
-
-export const WithCustomFormat: Story = {
-  args: {
-    countries: VWRL_COUNTRY_ALLOCATION,
-    format: '{0}',
-    isInPercent: false
   }
 };
