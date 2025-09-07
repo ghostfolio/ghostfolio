@@ -1,4 +1,4 @@
-import { GfFearAndGreedIndexModule } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.module';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -30,7 +30,7 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComponent,
-    GfFearAndGreedIndexModule,
+    GfFearAndGreedIndexComponent,
     GfLineChartComponent,
     GfToggleComponent
   ],
