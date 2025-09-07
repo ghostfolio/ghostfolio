@@ -174,7 +174,6 @@ export class ActivitiesService {
       accountId?: string;
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
-      currency?: string;
       symbol?: string;
       tags?: { id: string }[];
       updateAccountBalance?: boolean;
@@ -284,6 +283,10 @@ export class ActivitiesService {
 
     if (!data.comment) {
       delete data.comment;
+    }
+
+    if (data.currency === data.SymbolProfile.connectOrCreate.create.currency) {
+      delete data.currency;
     }
 
     delete data.symbol;
@@ -975,6 +978,9 @@ export class ActivitiesService {
 
     delete data.assetClass;
     delete data.assetSubClass;
+
+    // TODO: Remove currency?
+
     delete data.symbol;
     delete data.tags;
 
