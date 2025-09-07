@@ -1,5 +1,6 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LoginWithAccessTokenDialogModule } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.module';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -15,10 +16,14 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
   HostListener,
   Input,
@@ -26,9 +31,13 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   closeOutline,
@@ -43,13 +52,26 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'gf-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfAssistantComponent,
+    GfLogoComponent,
+    GfPremiumIndicatorComponent,
+    IonIcon,
+    LoginWithAccessTokenDialogModule,
+    MatBadgeModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatToolbarModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  standalone: false
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnChanges {
+export class GfHeaderComponent implements OnChanges {
   @HostListener('window:keydown', ['$event'])
   openAssistantWithHotKey(event: KeyboardEvent) {
     if (
