@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Enabled automatic data gathering for custom currencies added via the currency management in the admin control panel
+- Moved the world map chart component to `@ghostfolio/ui`
 
 ### Changed
 
