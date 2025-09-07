@@ -1,4 +1,3 @@
-import { GfWorldMapChartComponent } from '@ghostfolio/client/components/world-map-chart/world-map-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -6,6 +5,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfCarouselComponent } from '@ghostfolio/ui/carousel';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { GfValueComponent } from '@ghostfolio/ui/value';
+import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';

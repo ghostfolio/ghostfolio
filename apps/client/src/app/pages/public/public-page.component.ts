@@ -1,4 +1,3 @@
-import { GfWorldMapChartComponent } from '@ghostfolio/client/components/world-map-chart/world-map-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
@@ -10,6 +9,7 @@ import { Market } from '@ghostfolio/common/types';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
 import { GfValueComponent } from '@ghostfolio/ui/value';
+import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { CommonModule } from '@angular/common';
 import {
