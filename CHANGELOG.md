@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the header component to standalone
 - Extended the variations of the interstitials for the subscription
 
 ## 2.197.0 - 2025-09-07
