@@ -26,7 +26,7 @@ import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
 })
 export class SubscriptionInterstitialDialog implements OnInit {
   private static readonly SKIP_BUTTON_DELAY_IN_SECONDS = 5;
-  private static readonly VARIANTS_COUNT = 2;
+  private static readonly VARIANTS_COUNT = 4;
 
   public remainingSkipButtonDelay =
     SubscriptionInterstitialDialog.SKIP_BUTTON_DELAY_IN_SECONDS;
