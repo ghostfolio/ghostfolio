@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the header component to standalone
-- Refactored the rule and rules components to standalone
+- Refactored the rule component to standalone
+- Refactored the rules component to standalone
 
 ## 2.197.0 - 2025-09-07
 
