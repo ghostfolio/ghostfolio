@@ -1,3 +1,5 @@
+import { CommonModule } from '@angular/common';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -46,7 +48,8 @@ import { isAfter } from 'date-fns';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './investment-chart.component.html',
   styleUrls: ['./investment-chart.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, NgxSkeletonLoaderModule]
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
@@ -306,3 +309,5 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       : undefined;
   }
 }
+
+export class GfInvestmentChartComponent {}
