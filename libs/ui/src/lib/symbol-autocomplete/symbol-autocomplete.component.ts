@@ -35,11 +35,12 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isString } from 'lodash';
-import { Subject, tap } from 'rxjs';
+import { combineLatest, Subject, tap } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  startWith,
   switchMap,
   takeUntil
 } from 'rxjs/operators';
@@ -80,7 +81,8 @@ export class GfSymbolAutocompleteComponent
   implements DoCheck, OnChanges, OnDestroy, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
-  @Input() public isLoading = false;
+  @Input() public isLoadingLocal = false;
+  @Input() public isLoadingRemote = false;
 
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
@@ -89,8 +91,8 @@ export class GfSymbolAutocompleteComponent
   @ViewChild(MatInput) private input: MatInput;
 
   public control = new FormControl();
-  public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
-
+  public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
+    [];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -130,29 +132,53 @@ export class GfSymbolAutocompleteComponent
           return isString(query);
         }),
         tap(() => {
-          this.isLoading = true;
+          this.isLoadingRemote = true;
+          this.isLoadingLocal = true;
 
           this.changeDetectorRef.markForCheck();
         }),
         debounceTime(400),
         distinctUntilChanged(),
         takeUntil(this.unsubscribeSubject),
-        switchMap((query: string) => {
-          return this.dataService.fetchSymbols({
-            query,
-            includeIndices: this.includeIndices
-          });
-        })
+        switchMap((query: string) =>
+          combineLatest([
+            this.dataService
+              .fetchPortfolioLookup({
+                query
+              })
+              .pipe(startWith(undefined)),
+            this.dataService
+              .fetchSymbols({
+                query,
+                includeIndices: this.includeIndices
+              })
+              .pipe(startWith(undefined))
+          ])
+        )
       )
       .subscribe((filteredLookupItems) => {
-        this.lookupItems = filteredLookupItems.map((lookupItem) => {
+        const [localItems, remoteItems]: [LookupItem[], LookupItem[]] =
+          filteredLookupItems;
+        const uniqueItems = [
+          ...new Map(
+            (localItems ?? [])
+              .concat(remoteItems ?? [])
+              .map((item) => [item.symbol, item])
+          ).values()
+        ];
+        this.filteredLookupItems = uniqueItems.map((lookupItem) => {
           return {
             ...lookupItem,
             assetSubClassString: translate(lookupItem.assetSubClass)
           };
         });
 
-        this.isLoading = false;
+        if (localItems !== undefined) {
+          this.isLoadingLocal = false;
+        }
+        if (remoteItems !== undefined) {
+          this.isLoadingRemote = false;
+        }
 
         this.changeDetectorRef.markForCheck();
       });
@@ -177,7 +203,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public isValueInOptions(value: string) {
-    return this.lookupItems.some((item) => {
+    return this.filteredLookupItems.some((item) => {
       return item.symbol === value;
     });
   }
@@ -210,7 +236,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   private showDefaultOptions() {
-    this.lookupItems = this.defaultLookupItems.map((lookupItem) => {
+    this.filteredLookupItems = this.defaultLookupItems.map((lookupItem) => {
       return {
         ...lookupItem,
         assetSubClassString: translate(lookupItem.assetSubClass)
