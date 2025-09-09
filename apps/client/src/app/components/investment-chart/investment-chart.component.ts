@@ -1,5 +1,3 @@
-import { CommonModule } from '@angular/common';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -26,6 +24,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   BarController,
   BarElement,
@@ -42,6 +41,7 @@ import {
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'gf-investment-chart',
