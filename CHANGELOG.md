@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the header component to standalone
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
+- Refactored the markets page component to standalone
 
 ## 2.197.0 - 2025-09-07
 
