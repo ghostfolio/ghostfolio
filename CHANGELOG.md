@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- Refactored the investment chart component to standalone
 
 ### Changed
 
@@ -45,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the benchmark comparator component to standalone
 - Refactored the portfolio summary component to standalone
 - Refactored the world map chart component to standalone
-- Refactored the investment chart component to standalone
 - Enabled the trim option in the `extract-i18n` configuration
 - Improved the language localization for German (`de`)
 - Upgraded the _Stripe_ dependencies
