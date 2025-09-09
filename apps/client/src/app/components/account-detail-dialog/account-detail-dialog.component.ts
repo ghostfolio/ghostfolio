@@ -2,7 +2,6 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
@@ -64,7 +63,6 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
     GfHoldingsTableComponent,
-    GfInvestmentChartComponent,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
