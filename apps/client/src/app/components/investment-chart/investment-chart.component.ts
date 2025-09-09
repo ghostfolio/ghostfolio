@@ -48,7 +48,6 @@ import { isAfter } from 'date-fns';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './investment-chart.component.html',
   styleUrls: ['./investment-chart.component.scss'],
-  standalone: true,
   imports: [CommonModule, NgxSkeletonLoaderModule]
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
