@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the variations of the interstitials for the subscription
+- Refactored the markets page to standalone
 - Refactored the header component to standalone
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
