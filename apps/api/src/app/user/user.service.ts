@@ -184,6 +184,7 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
     const {
+      _count,
       accessesGet,
       accessToken,
       accounts,
@@ -199,6 +200,11 @@ export class UserService {
       updatedAt
     } = await this.prismaService.user.findUnique({
       include: {
+        _count: {
+          select: {
+            activities: true
+          }
+        },
         accessesGet: true,
         accounts: {
           include: { platform: true }
@@ -209,6 +215,8 @@ export class UserService {
       },
       where: userWhereUniqueInput
     });
+
+    const activitiesCount = _count?.activities ?? 0;
 
     const user: UserWithSettings = {
       accessesGet,
@@ -404,13 +412,13 @@ export class UserService {
         );
         let frequency = 7;
 
-        if (daysSinceRegistration > 720) {
+        if (activitiesCount > 1000 || daysSinceRegistration > 720) {
           frequency = 1;
-        } else if (daysSinceRegistration > 360) {
+        } else if (activitiesCount > 750 || daysSinceRegistration > 360) {
           frequency = 2;
-        } else if (daysSinceRegistration > 180) {
+        } else if (activitiesCount > 500 || daysSinceRegistration > 180) {
           frequency = 3;
-        } else if (daysSinceRegistration > 60) {
+        } else if (activitiesCount > 250 || daysSinceRegistration > 60) {
           frequency = 4;
         } else if (daysSinceRegistration > 30) {
           frequency = 5;
