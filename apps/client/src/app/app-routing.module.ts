@@ -1,11 +1,11 @@
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 import { publicRoutes, internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
+import { AuthGuard } from './core/auth.guard';
 import { ModulePreloadService } from './core/module-preload.service';
+import { PageTitleStrategy } from './services/page-title.strategy';
 
 const routes: Routes = [
   {
@@ -89,9 +89,7 @@ const routes: Routes = [
   {
     path: publicRoutes.markets.path,
     loadChildren: () =>
-      import('./pages/markets/markets-page.module').then(
-        (m) => m.MarketsPageModule
-      )
+      import('./pages/markets/markets-page.routes').then((m) => m.routes)
   },
   {
     path: publicRoutes.openStartup.path,
