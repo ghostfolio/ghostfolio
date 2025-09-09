@@ -19,7 +19,7 @@
       <table class="gf-table w-100" mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="index">
           <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
-            #
+            <ng-container i18n>Job ID</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
             {{ element.id }}
