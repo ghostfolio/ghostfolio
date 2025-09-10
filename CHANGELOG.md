@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the markets page to standalone
 - Refactored the fear and greed index component to standalone
 - Refactored the header component to standalone
+- Refactored the investment chart component to standalone
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
 - Refactored the subscription interstitial dialog component to standalone
