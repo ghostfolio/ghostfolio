@@ -73,6 +73,89 @@
     </div>
   }
   @case (1) {
+    <div class="flex-grow-1 pt-0" mat-dialog-content>
+      <div class="intro-container">
+        <div class="intro-inner-container mx-auto">
+          <div class="h-100 intro w-100"></div>
+        </div>
+      </div>
+      <div>
+        <div class="font-weight-normal h5 text-center" i18n>
+          Get access to 80’000+ tickers from over 50 exchanges
+        </div>
+        <p class="my-2 text-center" i18n>with</p>
+        <h5 class="align-items-center d-flex justify-content-center">
+          <span>Ghostfolio Premium</span>
+          <gf-premium-indicator class="ml-1" [enableLink]="false" />
+        </h5>
+      </div>
+    </div>
+    <div class="justify-content-end" mat-dialog-actions>
+      <button
+        mat-button
+        [disabled]="remainingSkipButtonDelay > 0"
+        (click)="closeDialog()"
+      >
+        <ng-container i18n>Skip</ng-container>
+        @if (remainingSkipButtonDelay > 0) {
+          ({{ remainingSkipButtonDelay }})
+        }
+      </button>
+      <a
+        color="primary"
+        mat-flat-button
+        [routerLink]="routerLinkPricing"
+        (click)="closeDialog()"
+      >
+        <span i18n>Upgrade Plan</span>
+        <ion-icon class="ml-1" name="arrow-forward-outline" />
+      </a>
+    </div>
+  }
+  @case (2) {
+    <div class="flex-grow-1 pt-0" mat-dialog-content>
+      <div class="intro-container">
+        <div class="intro-inner-container mx-auto">
+          <div class="h-100 intro w-100"></div>
+        </div>
+      </div>
+      <div>
+        <h5 class="align-items-center d-flex justify-content-center">
+          <span>Ghostfolio Premium</span>
+          <gf-premium-indicator class="ml-1" [enableLink]="false" />
+        </h5>
+        <p class="my-2 text-center" i18n>for</p>
+        <div class="font-weight-normal h5 text-center">
+          <ng-container i18n>less than</ng-container> $1
+          <ng-container i18n>per week</ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="flex-column" mat-dialog-actions>
+      <button
+        class="mb-2 py-4 w-100"
+        mat-button
+        [disabled]="remainingSkipButtonDelay > 0"
+        (click)="closeDialog()"
+      >
+        <ng-container i18n>Skip</ng-container>
+        @if (remainingSkipButtonDelay > 0) {
+          ({{ remainingSkipButtonDelay }})
+        }
+      </button>
+      <a
+        class="m-0 py-4 w-100"
+        color="primary"
+        mat-flat-button
+        [routerLink]="routerLinkPricing"
+        (click)="closeDialog()"
+      >
+        <span i18n>Upgrade Plan</span>
+        <ion-icon class="ml-1" name="arrow-forward-outline" />
+      </a>
+    </div>
+  }
+  @case (3) {
     <h1
       class="align-items-center d-flex justify-content-center"
       mat-dialog-title

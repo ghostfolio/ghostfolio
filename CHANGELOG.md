@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the variations of the interstitials for the subscription
+- Renamed the job identifier column in the jobs queue view of the admin control panel
+- Refactored the markets page to standalone
 - Refactored the header component to standalone
 - Refactored the investment chart component to standalone
+- Refactored the rule component to standalone
+- Refactored the rules component to standalone
+- Refactored the subscription interstitial dialog component to standalone
 
 ## 2.197.0 - 2025-09-07
 
