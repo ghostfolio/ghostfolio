@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
 - Refactored the subscription interstitial dialog component to standalone
+- Upgraded `angular` from version `20.1.3` to `20.2.4`
+- Upgraded `Nx` from version `21.3.9` to `21.5.1`
 
 ## 2.197.0 - 2025-09-07
 
