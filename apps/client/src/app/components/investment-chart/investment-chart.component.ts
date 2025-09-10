@@ -308,4 +308,3 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       : undefined;
   }
 }
-
