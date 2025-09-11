@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the login with access token dialog component to standalone
 - Extended the variations of the interstitials for the subscription
 - Renamed the job identifier column in the jobs queue view of the admin control panel
 - Refactored the markets page to standalone
