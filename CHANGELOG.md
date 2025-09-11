@@ -14,13 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the markets page to standalone
 - Refactored the fear and greed index component to standalone
 - Refactored the header component to standalone
+- Refactored the investment chart component to standalone
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
 - Refactored the subscription interstitial dialog component to standalone
+- Removed the `IonIcon` import from the landing page
 - Upgraded `angular` from version `20.1.3` to `20.2.4`
 - Upgraded `eslint` dependencies
 - Upgraded `Nx` from version `21.3.9` to `21.5.1`
 - Upgraded `storybook` from version `9.0.17` to `9.1.5`
+
+### Fixed
+
+- Fixed the holdings table on the public page
 
 ## 2.197.0 - 2025-09-07
 
