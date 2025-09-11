@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the rules component to standalone
 - Refactored the subscription interstitial dialog component to standalone
 - Removed the `IonIcon` import from the landing page
+- Improved the language localization for German (`de`)
 - Upgraded `angular` from version `20.1.3` to `20.2.4`
 - Upgraded `eslint` dependencies
 - Upgraded `Nx` from version `21.3.9` to `21.5.1`
