@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
 - Refactored the subscription interstitial dialog component to standalone
+- Removed the `IonIcon` import from the landing page
 
 ### Fixed
 
