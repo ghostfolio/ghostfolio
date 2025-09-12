@@ -12,7 +12,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 import { format } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
@@ -31,7 +30,6 @@ import { Subject } from 'rxjs';
     GfLogoComponent,
     GfValueComponent,
     GfWorldMapChartComponent,
-    IonIcon,
     MatButtonModule,
     MatCardModule,
     RouterModule
