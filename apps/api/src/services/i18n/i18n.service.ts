@@ -3,7 +3,7 @@ import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Injectable, Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'path';
+import { join } from 'node:path';
 
 @Injectable()
 export class I18nService {

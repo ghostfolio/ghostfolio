@@ -11,7 +11,7 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 import { readFileSync } from 'node:fs';
-import { join } from 'path';
+import { join } from 'node:path';
 
 const title = 'Ghostfolio';
 

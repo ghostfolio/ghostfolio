@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { readFileSync } from 'node:fs';
-import { join } from 'path';
+import { join } from 'node:path';
 
 @Controller('assets')
 export class AssetsController {
