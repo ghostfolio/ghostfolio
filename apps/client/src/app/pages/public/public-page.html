@@ -77,6 +77,14 @@
             [keys]="['symbol']"
             [showLabels]="deviceType !== 'mobile'"
           />
+          <gf-holdings-table
+            [deviceType]="deviceType"
+            [hasPermissionToOpenDetails]="false"
+            [hasPermissionToShowQuantities]="false"
+            [hasPermissionToShowValues]="false"
+            [holdings]="holdings"
+            [pageSize]="7"
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -195,18 +203,6 @@
       </div>
     </div>
   }
-  <div class="row">
-    <div class="col-lg">
-      <gf-holdings-table
-        [deviceType]="deviceType"
-        [hasPermissionToOpenDetails]="false"
-        [hasPermissionToShowQuantities]="false"
-        [hasPermissionToShowValues]="false"
-        [holdings]="holdings"
-        [pageSize]="7"
-      />
-    </div>
-  </div>
   <div class="row my-5">
     <div class="col-md-10 offset-md-1">
       <h2 class="h4 mb-1 text-center" i18n>
