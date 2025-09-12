@@ -49,7 +49,7 @@ import {
 } from '../../services/settings-storage.service';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { UserService } from '../../services/user/user.service';
-import { GfLoginWithAccessTokenDialog } from '../login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { GfLoginWithAccessTokenDialogComponent } from '../login-with-access-token-dialog/login-with-access-token-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +59,6 @@ import { GfLoginWithAccessTokenDialog } from '../login-with-access-token-dialog/
     GfLogoComponent,
     GfPremiumIndicatorComponent,
     IonIcon,
-    GfLoginWithAccessTokenDialog,
     MatBadgeModule,
     MatButtonModule,
     MatMenuModule,
@@ -273,7 +272,7 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   public openLoginDialog() {
-    const dialogRef = this.dialog.open(GfLoginWithAccessTokenDialog, {
+    const dialogRef = this.dialog.open(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
         accessToken: '',

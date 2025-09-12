@@ -43,7 +43,7 @@ import { GfDialogHeaderComponent } from '../dialog-header/dialog-header.componen
   styleUrls: ['./login-with-access-token-dialog.scss'],
   templateUrl: './login-with-access-token-dialog.html'
 })
-export class GfLoginWithAccessTokenDialog {
+export class GfLoginWithAccessTokenDialogComponent {
   public accessTokenFormControl = new FormControl(
     this.data.accessToken,
     Validators.required
@@ -52,7 +52,7 @@ export class GfLoginWithAccessTokenDialog {
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<GfLoginWithAccessTokenDialog>,
+    public dialogRef: MatDialogRef<GfLoginWithAccessTokenDialogComponent>,
     private internetIdentityService: InternetIdentityService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
