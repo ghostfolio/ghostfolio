@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Refactored the login with access token dialog component to standalone
+
 ## 2.198.0 - 2025-09-11
 
 ### Changed
@@ -15,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the fear and greed index component to standalone
 - Refactored the header component to standalone
 - Refactored the investment chart component to standalone
-- Refactored the login with access token dialog component to standalone
 - Refactored the rule component to standalone
 - Refactored the rules component to standalone
 - Refactored the subscription interstitial dialog component to standalone
