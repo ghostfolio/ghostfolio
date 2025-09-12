@@ -284,7 +284,8 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/client/jest.config.ts"
+        "jestConfig": "apps/client/jest.config.ts",
+        "tsConfig": "apps/client/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
