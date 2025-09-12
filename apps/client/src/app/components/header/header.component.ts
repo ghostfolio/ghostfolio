@@ -1,4 +1,15 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import {
+  KEY_STAY_SIGNED_IN,
+  SettingsStorageService
+} from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -38,18 +49,6 @@ import {
 } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
-
-import { LayoutService } from '../../core/layout.service';
-import { NotificationService } from '../../core/notification/notification.service';
-import { DataService } from '../../services/data.service';
-import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
-import {
-  KEY_STAY_SIGNED_IN,
-  SettingsStorageService
-} from '../../services/settings-storage.service';
-import { TokenStorageService } from '../../services/token-storage.service';
-import { UserService } from '../../services/user/user.service';
-import { GfLoginWithAccessTokenDialogComponent } from '../login-with-access-token-dialog/login-with-access-token-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
