@@ -3,7 +3,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { ApiKeyResponse } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
-import { pbkdf2Sync } from 'crypto';
+import { pbkdf2Sync } from 'node:crypto';
 
 @Injectable()
 export class ApiKeyService {
