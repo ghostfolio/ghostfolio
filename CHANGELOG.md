@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the holdings table into the holdings section on the public page
+- Migrated to the _Prisma Configuration File_ approach (`prisma.config.ts`)
 - Refactored the login with access token dialog component to standalone
 
 ## 2.198.0 - 2025-09-11

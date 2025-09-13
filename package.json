@@ -209,8 +209,5 @@
   },
   "engines": {
     "node": ">=22.18.0"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.mts"
   }
 }
