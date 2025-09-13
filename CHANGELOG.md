@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Storybook_ story for the entity logo image component
+
 ### Changed
 
 - Improved the search in the _Yahoo Finance_ service
