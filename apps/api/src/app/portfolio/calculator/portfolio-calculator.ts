@@ -937,11 +937,19 @@ export abstract class PortfolioCalculator {
             );
           }
         } else if (type === 'SELL') {
-          if (oldAccumulatedSymbol.investment.gt(0)) {
+          if (
+            oldAccumulatedSymbol.quantity.gt(0) &&
+            oldAccumulatedSymbol.quantity.eq(quantity)
+          ) {
+            // Selling all units, so investment should be 0
+            investment = new Big(0);
+          } else if (oldAccumulatedSymbol.investment.gt(0)) {
+            // Selling part of a positive investment
             investment = oldAccumulatedSymbol.investment.minus(
               quantity.mul(oldAccumulatedSymbol.averagePrice)
             );
           } else {
+            // Selling part of a negative investment (short sell)
             investment = oldAccumulatedSymbol.investment.minus(
               quantity.mul(unitPrice)
             );

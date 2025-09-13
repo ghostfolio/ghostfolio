@@ -36,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the holdings table on the public page
 
+### Fixed
+
+- Fixed an issue in the investment calculation when selling all units of a holding
+
 ## 2.197.0 - 2025-09-07
 
 ### Added
