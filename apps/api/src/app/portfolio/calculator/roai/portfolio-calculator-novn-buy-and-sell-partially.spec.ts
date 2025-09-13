@@ -20,7 +20,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
-import { join } from 'path';
+import { join } from 'node:path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
