@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the login with access token dialog component to standalone
 - Prefixed the `crypto`, `fs` and `path` imports with `node:`
 
+### Fixed
+
+- Fixed a pagination issue in the market data endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
+- Fixed a pagination issue in the user endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
+
 ## 2.198.0 - 2025-09-11
 
 ### Changed
