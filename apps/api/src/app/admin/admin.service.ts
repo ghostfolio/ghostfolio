@@ -204,7 +204,7 @@ export class AdminService {
     take?: number;
   }): Promise<AdminMarketData> {
     let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
-      [{ symbol: 'asc' }];
+      [{ symbol: 'asc' }, { id: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
 
     if (presetId === 'BENCHMARKS') {
@@ -259,14 +259,17 @@ export class AdminService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
 
       if (sortColumn === 'activitiesCount') {
-        orderBy = {
-          activities: {
-            _count: sortDirection
-          }
-        };
+        orderBy = [
+          {
+            activities: {
+              _count: sortDirection
+            }
+          },
+          { id: sortDirection }
+        ];
       }
     }
 
@@ -817,17 +820,21 @@ export class AdminService {
     skip?: number;
     take?: number;
   }): Promise<AdminUsers['users']> {
-    let orderBy: Prisma.UserOrderByWithRelationInput = {
-      createdAt: 'desc'
-    };
+    let orderBy: Prisma.Enumerable<Prisma.UserOrderByWithRelationInput> = [
+      { createdAt: 'desc' },
+      { id: 'desc' }
+    ];
     let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      orderBy = {
-        analytics: {
-          lastRequestAt: 'desc'
-        }
-      };
+      orderBy = [
+        {
+          analytics: {
+            lastRequestAt: 'desc'
+          }
+        },
+        { id: 'desc' }
+      ];
       where = {
         NOT: {
           analytics: null
