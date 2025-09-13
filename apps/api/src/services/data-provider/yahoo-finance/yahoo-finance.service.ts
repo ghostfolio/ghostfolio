@@ -368,7 +368,7 @@ export class YahooFinanceService implements DataProviderInterface {
         (result): result is PromiseFulfilledResult<QuoteSummaryResult> => {
           if (result.status === 'rejected') {
             Logger.error(
-              `Could not get quote summary for symbol: ${result.reason}`,
+              `Could not get quote summary: ${result.reason}`,
               'YahooFinanceService'
             );
 
