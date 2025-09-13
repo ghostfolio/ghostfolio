@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the holdings table into the holdings section on the public page
 - Refactored the login with access token dialog component to standalone
 - Prefixed the `crypto`, `fs` and `path` imports with `node:`
+- Upgraded `yahoo-finance2` from version `3.8.0` to `3.10.0`
 
 ## 2.198.0 - 2025-09-11
 
