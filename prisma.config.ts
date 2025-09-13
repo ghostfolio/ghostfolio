@@ -3,9 +3,9 @@ import { join } from 'node:path';
 import { defineConfig } from 'prisma/config';
 
 export default defineConfig({
-  schema: join('prisma', 'schema.prisma'),
   migrations: {
     path: join('prisma', 'migrations'),
-    seed: 'node prisma/seed.mts'
-  }
+    seed: `node ${join('prisma', 'seed.mts')}`
+  },
+  schema: join('prisma', 'schema.prisma')
 });
