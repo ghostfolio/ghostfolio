@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataSource } from '@prisma/client';
 
 @Injectable({
+  // Required to allow mocking in Storybook
   providedIn: 'root'
 })
 export class EntityLogoImageSourceService {
