@@ -33,10 +33,10 @@ export class GfEntityLogoComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.dataSource && this.symbol) {
-      this.src = this.imageSourceService.getLogoUrlByDataSourceAndSymbol(
-        this.dataSource,
-        this.symbol
-      );
+      this.src = this.imageSourceService.getLogoUrlByAssetProfileIdentifier({
+        dataSource: this.dataSource,
+        symbol: this.symbol
+      });
     } else if (this.url) {
       this.src = this.imageSourceService.getLogoUrlByUrl(this.url);
     }

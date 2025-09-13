@@ -26,7 +26,7 @@ export default {
 
 type Story = StoryObj<GfEntityLogoComponent>;
 
-export const LogoByDataSourceAndSymbol: Story = {
+export const LogoByAssetProfileIdentifier: Story = {
   args: {
     dataSource: 'YAHOO',
     size: 'large',
