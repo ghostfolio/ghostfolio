@@ -20,7 +20,6 @@ import { takeUntil } from 'rxjs/operators';
 
 import { ShowAccessTokenDialogParams } from './show-access-token-dialog/interfaces/interfaces';
 import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
-import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-access-token-dialog.module';
 
 @Component({
   host: { class: 'page' },
@@ -28,7 +27,7 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
     GfLogoComponent,
     MatButtonModule,
     RouterModule,
-    ShowAccessTokenDialogModule
+    ShowAccessTokenDialog
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-register-page',
