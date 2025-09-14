@@ -108,6 +108,12 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
+    key: 'budgetpulse',
+    name: 'BudgetPulse',
+    origin: 'United States',
+    slogan: 'Giving life to your finance!'
+  },
+  {
     founded: 2007,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
