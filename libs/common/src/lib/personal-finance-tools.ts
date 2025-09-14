@@ -884,6 +884,12 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simple and powerful portfolio tracker'
   },
   {
+    key: 'splashmoney',
+    name: 'SplashMoney',
+    origin: 'United States',
+    slogan: 'Manage your money anytime, anywhere.'
+  },
+  {
     founded: 2019,
     hasSelfHostingAbility: false,
     key: 'stock-events',
