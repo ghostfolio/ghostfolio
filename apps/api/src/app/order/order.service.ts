@@ -325,7 +325,7 @@ export class OrderService {
     includeDrafts = false,
     skip,
     sortColumn,
-    sortDirection,
+    sortDirection = 'asc',
     startDate,
     take = Number.MAX_SAFE_INTEGER,
     types,
@@ -347,9 +347,9 @@ export class OrderService {
     withExcludedAccountsAndActivities?: boolean;
   }): Promise<Activities> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
-      { date: 'asc' },
-      { id: 'asc' }
+      { date: 'asc' }
     ];
+
     const where: Prisma.OrderWhereInput = { userId };
 
     if (endDate || startDate) {
@@ -483,7 +483,7 @@ export class OrderService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }];
     }
 
     if (types) {
@@ -506,7 +506,6 @@ export class OrderService {
 
     const [orders, count] = await Promise.all([
       this.orders({
-        orderBy,
         skip,
         take,
         where,
@@ -519,7 +518,8 @@ export class OrderService {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           SymbolProfile: true,
           tags: true
-        }
+        },
+        orderBy: [...orderBy, { id: sortDirection }]
       }),
       this.prismaService.order.count({ where })
     ]);
