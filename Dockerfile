@@ -18,7 +18,7 @@ COPY ./LICENSE LICENSE
 COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 COPY ./prisma.config.ts prisma.config.ts
-COPY ./prisma/schema.prisma prisma/schema.prisma
+COPY ./prisma/schema.prisma prisma/
 
 RUN npm install
 
