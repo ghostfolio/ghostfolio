@@ -197,6 +197,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Do money better with Copilot'
   },
   {
+    founded: 2014,
+    hasFreePlan: false,
+    key: 'countabout',
+    name: 'CountAbout',
+    origin: 'United States',
+    pricingPerYear: '$9.99',
+    slogan: 'Customizable and Secure Personal Finance App'
+  },
+  {
     founded: 2023,
     hasFreePlan: false,
     key: 'danti',
