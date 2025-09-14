@@ -34,6 +34,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    founded: 2023,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'amsflow',
+    name: 'Amsflow Portfolio',
+    origin: 'Singapore',
+    pricingPerYear: '$228',
+    slogan: 'Portfolio Visualizer'
+  },
+  {
     founded: 2018,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
