@@ -633,6 +633,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Dein smarter Finance Assistant'
   },
   {
+    key: 'moneywiz',
+    name: 'MoneyWiz',
+    origin: 'United States',
+    pricingPerYear: '$29.99',
+    slogan: 'Get money management superpowers'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'monse',
