@@ -17,8 +17,8 @@ COPY ./CHANGELOG.md CHANGELOG.md
 COPY ./LICENSE LICENSE
 COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
-COPY ./prisma/schema.prisma prisma/schema.prisma
 COPY ./prisma.config.ts prisma.config.ts
+COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN npm install
 
@@ -44,8 +44,8 @@ WORKDIR /ghostfolio/dist/apps/api
 COPY ./package-lock.json /ghostfolio/dist/apps/api/package-lock.json
 
 RUN npm install
-COPY prisma /ghostfolio/dist/apps/api/prisma
 COPY prisma.config.ts /ghostfolio/dist/apps/api
+COPY prisma /ghostfolio/dist/apps/api/prisma
 
 # Overwrite the generated package.json with the original one to ensure having
 # all the scripts
