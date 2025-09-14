@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the content of the performance calculation method by dividends on the Frequently Asked Questions (FAQ) page
 - Added a _Storybook_ story for the entity logo image component
 
 ### Changed
