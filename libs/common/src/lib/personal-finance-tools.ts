@@ -438,6 +438,14 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    founded: 2017,
+    hasSelfHostingAbility: false,
+    key: 'honeydue',
+    name: 'Honeydue',
+    origin: 'United States',
+    slogan: 'Finance App for Couples'
+  },
+  {
     founded: 2022,
     key: 'income-reign',
     languages: ['English'],
