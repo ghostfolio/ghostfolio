@@ -48,9 +48,9 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
-import { createHmac } from 'crypto';
 import { differenceInDays, subDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
+import { createHmac } from 'node:crypto';
 
 @Injectable()
 export class UserService {

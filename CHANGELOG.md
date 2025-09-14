@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Storybook_ story for the entity logo image component
+
 ### Changed
 
+- Improved the search in the _Yahoo Finance_ service
 - Moved the holdings table into the holdings section on the public page
 - Migrated to the _Prisma Configuration File_ approach (`prisma.config.ts`)
 - Refactored the login with access token dialog component to standalone
+- Prefixed the `crypto`, `fs` and `path` imports with `node:`
 
 ## 2.198.0 - 2025-09-11
 
