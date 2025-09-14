@@ -192,7 +192,7 @@ export class AdminService {
     filters,
     presetId,
     sortColumn,
-    sortDirection,
+    sortDirection = 'asc',
     skip,
     take = Number.MAX_SAFE_INTEGER
   }: {
@@ -204,7 +204,7 @@ export class AdminService {
     take?: number;
   }): Promise<AdminMarketData> {
     let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
-      [{ symbol: 'asc' }, { id: 'asc' }];
+      [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
 
     if (presetId === 'BENCHMARKS') {
@@ -259,7 +259,7 @@ export class AdminService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }];
 
       if (sortColumn === 'activitiesCount') {
         orderBy = [
@@ -267,8 +267,7 @@ export class AdminService {
             activities: {
               _count: sortDirection
             }
-          },
-          { id: sortDirection }
+          }
         ];
       }
     }
@@ -278,10 +277,10 @@ export class AdminService {
     try {
       const symbolProfileResult = await Promise.all([
         extendedPrismaClient.symbolProfile.findMany({
-          orderBy,
           skip,
           take,
           where,
+          orderBy: [...orderBy, { id: sortDirection }],
           select: {
             _count: {
               select: {
@@ -821,9 +820,9 @@ export class AdminService {
     take?: number;
   }): Promise<AdminUsers['users']> {
     let orderBy: Prisma.Enumerable<Prisma.UserOrderByWithRelationInput> = [
-      { createdAt: 'desc' },
-      { id: 'desc' }
+      { createdAt: 'desc' }
     ];
+
     let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -832,9 +831,9 @@ export class AdminService {
           analytics: {
             lastRequestAt: 'desc'
           }
-        },
-        { id: 'desc' }
+        }
       ];
+
       where = {
         NOT: {
           analytics: null
@@ -843,10 +842,10 @@ export class AdminService {
     }
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
-      orderBy,
       skip,
       take,
       where,
+      orderBy: [...orderBy, { id: 'desc' }],
       select: {
         _count: {
           select: { accounts: true, activities: true }
