@@ -201,6 +201,27 @@ export class GhostfolioService {
               for (const [symbol, dataProviderResponse] of Object.entries(
                 result
               )) {
+                await this.prismaService.dataProviderGhostfolioResolvedAssetProfile.upsert(
+                  {
+                    create: {
+                      symbol,
+                      currency: dataProviderResponse.currency,
+                      dataSource: dataProviderResponse.dataSource
+                    },
+                    update: {
+                      requestCount: {
+                        increment: 1
+                      }
+                    },
+                    where: {
+                      dataSource_symbol: {
+                        symbol,
+                        dataSource: dataProviderResponse.dataSource
+                      }
+                    }
+                  }
+                );
+
                 dataProviderResponse.dataSource = 'GHOSTFOLIO';
 
                 if (
