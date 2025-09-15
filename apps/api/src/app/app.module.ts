@@ -21,7 +21,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
-import { join } from 'path';
+import { join } from 'node:path';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';

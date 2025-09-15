@@ -10,8 +10,8 @@ import {
   VERSION_NEUTRAL
 } from '@nestjs/common';
 import { Response } from 'express';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 @Controller('assets')
 export class AssetsController {

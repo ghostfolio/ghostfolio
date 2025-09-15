@@ -34,6 +34,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    founded: 2023,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'amsflow',
+    name: 'Amsflow Portfolio',
+    origin: 'Singapore',
+    pricingPerYear: '$228',
+    slogan: 'Portfolio Visualizer'
+  },
+  {
     founded: 2018,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -96,6 +106,12 @@ export const personalFinanceTools: Product[] = [
     origin: 'France',
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors'
+  },
+  {
+    key: 'budgetpulse',
+    name: 'BudgetPulse',
+    origin: 'United States',
+    slogan: 'Giving life to your finance!'
   },
   {
     founded: 2007,
@@ -179,6 +195,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$95',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    founded: 2014,
+    hasFreePlan: false,
+    key: 'countabout',
+    name: 'CountAbout',
+    origin: 'United States',
+    pricingPerYear: '$9.99',
+    slogan: 'Customizable and Secure Personal Finance App'
   },
   {
     founded: 2023,
@@ -428,6 +453,14 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    founded: 2017,
+    hasSelfHostingAbility: false,
+    key: 'honeydue',
+    name: 'Honeydue',
+    origin: 'United States',
+    slogan: 'Finance App for Couples'
+  },
+  {
     founded: 2022,
     key: 'income-reign',
     languages: ['English'],
@@ -607,6 +640,13 @@ export const personalFinanceTools: Product[] = [
     note: 'Originally named as goSPATZ',
     origin: 'Germany',
     slogan: 'Dein smarter Finance Assistant'
+  },
+  {
+    key: 'moneywiz',
+    name: 'MoneyWiz',
+    origin: 'United States',
+    pricingPerYear: '$29.99',
+    slogan: 'Get money management superpowers'
   },
   {
     hasFreePlan: false,
@@ -858,6 +898,12 @@ export const personalFinanceTools: Product[] = [
     origin: 'France',
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker'
+  },
+  {
+    key: 'splashmoney',
+    name: 'SplashMoney',
+    origin: 'United States',
+    slogan: 'Manage your money anytime, anywhere.'
   },
   {
     founded: 2019,

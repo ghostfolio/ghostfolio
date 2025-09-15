@@ -5,11 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.199.0 - 2025-09-14
+
+### Added
+
+- Extended the content of the performance calculation method by dividends on the Frequently Asked Questions (FAQ) page
+- Added a _Storybook_ story for the entity logo image component
 
 ### Changed
 
+- Improved the search in the _Yahoo Finance_ service
+- Moved the holdings table into the holdings section on the public page
+- Migrated to the _Prisma Configuration File_ approach (`prisma.config.ts`)
 - Refactored the login with access token dialog component to standalone
+- Prefixed the `crypto`, `fs` and `path` imports with `node:`
+- Upgraded `yahoo-finance2` from version `3.8.0` to `3.10.0`
+
+### Fixed
+
+- Fixed a pagination issue in the market data endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
+- Fixed a pagination issue in the user endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
 
 ## 2.198.0 - 2025-09-11
 
