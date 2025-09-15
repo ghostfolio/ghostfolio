@@ -19,15 +19,15 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ShowAccessTokenDialogParams } from './show-access-token-dialog/interfaces/interfaces';
-import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
+import { GfShowAccessTokenDialogComponent } from './show-access-token-dialog/show-access-token-dialog.component';
 
 @Component({
   host: { class: 'page' },
   imports: [
     GfLogoComponent,
+    GfShowAccessTokenDialogComponent,
     MatButtonModule,
-    RouterModule,
-    ShowAccessTokenDialog
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-register-page',
@@ -89,7 +89,7 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public openShowAccessTokenDialog() {
-    const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
+    const dialogRef = this.dialog.open(GfShowAccessTokenDialogComponent, {
       data: {
         deviceType: this.deviceType,
         needsToAcceptTermsOfService: this.hasPermissionForSubscription

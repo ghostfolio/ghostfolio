@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowForwardOutline,
@@ -37,6 +38,7 @@ import { ShowAccessTokenDialogParams } from './interfaces/interfaces';
     ClipboardModule,
     CommonModule,
     FormsModule,
+    IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
@@ -52,7 +54,7 @@ import { ShowAccessTokenDialogParams } from './interfaces/interfaces';
   styleUrls: ['./show-access-token-dialog.scss'],
   templateUrl: 'show-access-token-dialog.html'
 })
-export class ShowAccessTokenDialog {
+export class GfShowAccessTokenDialogComponent {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
   public accessToken: string;
