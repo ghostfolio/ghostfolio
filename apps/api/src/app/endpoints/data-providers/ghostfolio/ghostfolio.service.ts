@@ -56,7 +56,28 @@ export class GhostfolioService {
               requestTimeout,
               symbol
             })
-            .then((assetProfile) => {
+            .then(async (assetProfile) => {
+              await this.prismaService.dataProviderGhostfolioResolvedAssetProfile.upsert(
+                {
+                  create: {
+                    symbol,
+                    currency: assetProfile.currency ?? '',
+                    dataSource: assetProfile.dataSource
+                  },
+                  update: {
+                    requestCount: {
+                      increment: 1
+                    }
+                  },
+                  where: {
+                    dataSource_symbol: {
+                      symbol,
+                      dataSource: assetProfile.dataSource
+                    }
+                  }
+                }
+              );
+
               result = {
                 ...result,
                 ...assetProfile,
@@ -201,27 +222,6 @@ export class GhostfolioService {
               for (const [symbol, dataProviderResponse] of Object.entries(
                 result
               )) {
-                await this.prismaService.dataProviderGhostfolioResolvedAssetProfile.upsert(
-                  {
-                    create: {
-                      symbol,
-                      currency: dataProviderResponse.currency,
-                      dataSource: dataProviderResponse.dataSource
-                    },
-                    update: {
-                      requestCount: {
-                        increment: 1
-                      }
-                    },
-                    where: {
-                      dataSource_symbol: {
-                        symbol,
-                        dataSource: dataProviderResponse.dataSource
-                      }
-                    }
-                  }
-                );
-
                 dataProviderResponse.dataSource = 'GHOSTFOLIO';
 
                 if (
