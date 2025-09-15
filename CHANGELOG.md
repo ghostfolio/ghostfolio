@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `countup.js` from version `2.8.2` to `2.9.0`
 - Upgraded `prisma` from version `6.15.0` to `6.16.1`
 
 ## 2.199.0 - 2025-09-14
