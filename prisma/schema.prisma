@@ -101,6 +101,18 @@ model AuthDevice {
   @@index([userId])
 }
 
+model DataProviderGhostfolioResolvedAssetProfile {
+  createdAt    DateTime   @default(now())
+  currency     String
+  dataSource   DataSource
+  id           String     @id @default(uuid())
+  requestCount Int        @default(1)
+  symbol       String
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([dataSource, symbol])
+}
+
 model MarketData {
   createdAt   DateTime        @default(now())
   dataSource  DataSource
