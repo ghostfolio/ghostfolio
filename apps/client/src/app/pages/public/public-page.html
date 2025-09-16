@@ -231,7 +231,7 @@
         </mat-card-header>
         <mat-card-content>
           <gf-activities-table
-            [dataSource]="{ data: publicPortfolioDetails.latestActivities } as any"
+            [dataSource]="latestActivitiesDataSource"
             [deviceType]="deviceType"
             [hasPermissionToCreateActivity]="false"
             [hasPermissionToDeleteActivity]="false"

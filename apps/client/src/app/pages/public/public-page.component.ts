@@ -20,6 +20,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
@@ -66,6 +67,7 @@ export class GfPublicPageComponent implements OnInit {
     };
   };
   public publicPortfolioDetails: PublicPortfolioResponse;
+  public latestActivitiesDataSource: MatTableDataSource<any>;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -107,6 +109,23 @@ export class GfPublicPageComponent implements OnInit {
       )
       .subscribe((portfolioPublicDetails) => {
         this.publicPortfolioDetails = portfolioPublicDetails;
+
+        const latestActivitiesRows = (
+          this.publicPortfolioDetails.latestActivities || []
+        ).map((a) => {
+          return {
+            ...a,
+            SymbolProfile: {
+              name: a.name,
+              symbol: a.symbol,
+              dataSource: a.dataSource
+            }
+          };
+        });
+
+        this.latestActivitiesDataSource = new MatTableDataSource(
+          latestActivitiesRows
+        );
 
         this.initializeAnalysisData();
 
