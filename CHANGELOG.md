@@ -7,10 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Refactored the ShowAccessTokenDialog to standalone
-
 ### Changed
 
+- Refactored the show access token dialog component to standalone
 - Upgraded `prisma` from version `6.15.0` to `6.16.1`
 
 ## 2.199.0 - 2025-09-14
