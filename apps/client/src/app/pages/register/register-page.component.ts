@@ -23,12 +23,7 @@ import { GfShowAccessTokenDialogComponent } from './show-access-token-dialog/sho
 
 @Component({
   host: { class: 'page' },
-  imports: [
-    GfLogoComponent,
-    GfShowAccessTokenDialogComponent,
-    MatButtonModule,
-    RouterModule
-  ],
+  imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
