@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the ShowAccessTokenDialog to standalone
 
+### Changed
+
+- Upgraded `prisma` from version `6.15.0` to `6.16.1`
+
+## 2.199.0 - 2025-09-14
+
 ### Added
 
+- Extended the content of the performance calculation method by dividends on the Frequently Asked Questions (FAQ) page
 - Added a _Storybook_ story for the entity logo image component
 
 ### Changed
