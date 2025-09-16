@@ -60,7 +60,7 @@ export class GhostfolioService {
               const dataSourceOrigin = DataSource.GHOSTFOLIO;
 
               if (assetProfile) {
-                await this.prismaService.resolvedAssetProfile.upsert({
+                await this.prismaService.assetProfileResolution.upsert({
                   create: {
                     dataSourceOrigin,
                     symbol,
