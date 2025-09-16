@@ -30,7 +30,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ShowAccessTokenDialogParams } from './interfaces/interfaces';
+import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,11 +50,11 @@ import { ShowAccessTokenDialogParams } from './interfaces/interfaces';
     TextFieldModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  selector: 'gf-show-access-token-dialog',
-  styleUrls: ['./show-access-token-dialog.scss'],
-  templateUrl: 'show-access-token-dialog.html'
+  selector: 'gf-user-account-registration-dialog',
+  styleUrls: ['./user-account-registration-dialog.scss'],
+  templateUrl: 'user-account-registration-dialog.html'
 })
-export class GfShowAccessTokenDialogComponent {
+export class GfUserAccountRegistrationDialogComponent {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
   public accessToken: string;
@@ -69,7 +69,7 @@ export class GfShowAccessTokenDialogComponent {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: ShowAccessTokenDialogParams,
+    @Inject(MAT_DIALOG_DATA) public data: UserAccountRegistrationDialogParams,
     private dataService: DataService
   ) {
     addIcons({ arrowForwardOutline, checkmarkOutline, copyOutline });
