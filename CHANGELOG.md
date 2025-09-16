@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Refactored the ShowAccessTokenDialog to standalone
+
 ### Added
 
 - Added a _Storybook_ story for the entity logo image component
