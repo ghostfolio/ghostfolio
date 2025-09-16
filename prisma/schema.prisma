@@ -101,16 +101,17 @@ model AuthDevice {
   @@index([userId])
 }
 
-model DataProviderGhostfolioResolvedAssetProfile {
-  createdAt    DateTime   @default(now())
-  currency     String
-  dataSource   DataSource
-  id           String     @id @default(uuid())
-  requestCount Int        @default(1)
-  symbol       String
-  updatedAt    DateTime   @updatedAt
+model ResolvedAssetProfile {
+  createdAt        DateTime   @default(now())
+  currency         String
+  dataSourceOrigin DataSource
+  dataSourceTarget DataSource
+  id               String     @id @default(uuid())
+  requestCount     Int        @default(1)
+  symbol           String
+  updatedAt        DateTime   @updatedAt
 
-  @@unique([dataSource, symbol])
+  @@unique([dataSourceOrigin, symbol])
 }
 
 model MarketData {
