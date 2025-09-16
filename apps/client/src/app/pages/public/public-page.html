@@ -220,3 +220,30 @@
     </div>
   </div>
 </div>
+@if (publicPortfolioDetails?.latestActivities?.length > 0) {
+  <div class="row">
+    <div class="col-md-12">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n
+            >Latest activities</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <gf-activities-table
+            [dataSource]="{ data: publicPortfolioDetails.latestActivities } as any"
+            [deviceType]="deviceType"
+            [hasPermissionToCreateActivity]="false"
+            [hasPermissionToDeleteActivity]="false"
+            [hasPermissionToExportActivities]="false"
+            [hasPermissionToOpenDetails]="false"
+            [pageSize]="10"
+            [showActions]="false"
+            [showCheckbox]="false"
+            [showNameColumn]="true"
+          />
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+}

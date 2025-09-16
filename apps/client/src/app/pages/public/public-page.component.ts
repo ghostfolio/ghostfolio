@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -6,6 +5,7 @@ import {
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -28,10 +28,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../services/data.service';
+
 @Component({
   host: { class: 'page' },
   imports: [
     CommonModule,
+    GfActivitiesTableComponent,
     GfHoldingsTableComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,

@@ -1,5 +1,7 @@
+import { DataSource } from '@prisma/client';
+
 import { PortfolioDetails, PortfolioPosition } from '..';
-import { Market } from '../../types';
+import { AccountWithPlatform, Market } from '../../types';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
@@ -23,6 +25,16 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
       | 'valueInPercentage'
     >;
   };
+  latestActivities?: {
+    account?: Pick<AccountWithPlatform, 'name' | 'currency'>;
+    date: Date;
+    name: string;
+    quantity: number;
+    symbol: string;
+    type: string;
+    unitPrice: number;
+    dataSource: DataSource;
+  }[];
   markets: {
     [key in Market]: Pick<
       PortfolioDetails['markets'][key],
