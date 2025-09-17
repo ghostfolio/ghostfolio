@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DividendsResponse,
   HistoricalResponse,
@@ -25,6 +26,7 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
   templateUrl: './api-page.html'
 })
 export class GfApiPageComponent implements OnInit {
+  public assetProfile$: Observable<DataProviderGhostfolioAssetProfileResponse>;
   public dividends$: Observable<DividendsResponse['dividends']>;
   public historicalData$: Observable<HistoricalResponse['historicalData']>;
   public isinLookupItems$: Observable<LookupResponse['items']>;
@@ -40,6 +42,7 @@ export class GfApiPageComponent implements OnInit {
   public ngOnInit() {
     this.apiKey = prompt($localize`Please enter your Ghostfolio API key:`);
 
+    this.assetProfile$ = this.fetchAssetProfile({ symbol: 'AAPL' });
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
     this.isinLookupItems$ = this.fetchLookupItems({ query: 'US0378331005' });
@@ -51,6 +54,15 @@ export class GfApiPageComponent implements OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchAssetProfile({ symbol }: { symbol: string }) {
+    return this.http
+      .get<DataProviderGhostfolioAssetProfileResponse>(
+        `/api/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
+        { headers: this.getHeaders() }
+      )
+      .pipe(takeUntil(this.unsubscribeSubject));
   }
 
   private fetchDividends({ symbol }: { symbol: string }) {

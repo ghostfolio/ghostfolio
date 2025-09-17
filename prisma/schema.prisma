@@ -88,6 +88,20 @@ model ApiKey {
   @@index([userId])
 }
 
+model AssetProfileResolution {
+  createdAt        DateTime   @default(now())
+  currency         String
+  dataSourceOrigin DataSource
+  dataSourceTarget DataSource
+  id               String     @id @default(uuid())
+  requestCount     Int        @default(1)
+  symbolOrigin     String
+  symbolTarget     String
+  updatedAt        DateTime   @updatedAt
+
+  @@unique([dataSourceOrigin, symbolOrigin])
+}
+
 model AuthDevice {
   createdAt           DateTime @default(now())
   credentialId        Bytes
