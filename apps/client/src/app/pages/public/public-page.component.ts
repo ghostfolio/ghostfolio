@@ -57,6 +57,7 @@ export class GfPublicPageComponent implements OnInit {
   };
   public defaultAlias = $localize`someone`;
   public deviceType: string;
+  public latestActivitiesDataSource: MatTableDataSource<any>;
   public holdings: PublicPortfolioResponse['holdings'][string][];
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
@@ -67,7 +68,6 @@ export class GfPublicPageComponent implements OnInit {
     };
   };
   public publicPortfolioDetails: PublicPortfolioResponse;
-  public latestActivitiesDataSource: MatTableDataSource<any>;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -110,21 +110,8 @@ export class GfPublicPageComponent implements OnInit {
       .subscribe((portfolioPublicDetails) => {
         this.publicPortfolioDetails = portfolioPublicDetails;
 
-        const latestActivitiesRows = (
-          this.publicPortfolioDetails.latestActivities || []
-        ).map((a) => {
-          return {
-            ...a,
-            SymbolProfile: {
-              name: a.name,
-              symbol: a.symbol,
-              dataSource: a.dataSource
-            }
-          };
-        });
-
         this.latestActivitiesDataSource = new MatTableDataSource(
-          latestActivitiesRows
+          this.publicPortfolioDetails.latestActivities || []
         );
 
         this.initializeAnalysisData();

@@ -30,7 +30,7 @@ export class PublicController {
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly _orderService: OrderService,
+    private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
@@ -61,68 +61,48 @@ export class PublicController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
-    const detailsPromise = this.portfolioService.getDetails({
-      impersonationId: access.userId,
-      userId: user.id,
-      withMarkets: true
-    });
-
-    const performance1dPromise = this.portfolioService.getPerformance({
-      dateRange: '1d',
-      impersonationId: undefined,
-      userId: user.id
-    });
-
-    const performanceMaxPromise = this.portfolioService.getPerformance({
-      dateRange: 'max',
-      impersonationId: undefined,
-      userId: user.id
-    });
-
-    const performanceYtdPromise = this.portfolioService.getPerformance({
-      dateRange: 'ytd',
-      impersonationId: undefined,
-      userId: user.id
-    });
-
-    const latestActivitiesPromise = this._orderService.getOrders({
-      includeDrafts: false,
-      take: 10,
-      sortColumn: 'date',
-      sortDirection: 'desc',
-      userCurrency:
-        this.request.user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
-      userId: user.id,
-      withExcludedAccountsAndActivities: false
-    });
-
     const [
       { createdAt, holdings, markets },
       { performance: performance1d },
       { performance: performanceMax },
       { performance: performanceYtd }
     ] = await Promise.all([
-      detailsPromise,
-      performance1dPromise,
-      performanceMaxPromise,
-      performanceYtdPromise
+      this.portfolioService.getDetails({
+        impersonationId: access.userId,
+        userId: user.id,
+        withMarkets: true
+      }),
+      ...['1d', 'max', 'ytd'].map((dateRange) => {
+        return this.portfolioService.getPerformance({
+          dateRange,
+          impersonationId: undefined,
+          userId: user.id
+        });
+      })
     ]);
 
-    const { activities } = await latestActivitiesPromise;
-    const latestActivities = activities.map((a) => {
-      return {
-        account: a.account
-          ? { name: a.account.name, currency: a.account.currency }
-          : undefined,
-        dataSource: a.SymbolProfile?.dataSource,
-        date: a.date,
-        name: a.SymbolProfile?.name ?? '',
-        quantity: a.quantity,
-        symbol: a.SymbolProfile?.symbol ?? '',
-        type: a.type,
-        unitPrice: a.unitPrice
-      };
+    const latestActivitiesPromise = this.orderService.getOrders({
+      includeDrafts: false,
+      sortColumn: 'date',
+      sortDirection: 'desc',
+      take: 10,
+      userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
+      userId: user.id,
+      withExcludedAccountsAndActivities: false
     });
+
+    const { activities } = await latestActivitiesPromise;
+    const latestActivities = activities.map((a) => ({
+      date: a.date,
+      quantity: a.quantity,
+      SymbolProfile: {
+        dataSource: a.SymbolProfile?.dataSource,
+        name: a.SymbolProfile?.name ?? '',
+        symbol: a.SymbolProfile?.symbol ?? ''
+      },
+      type: a.type,
+      unitPrice: a.unitPrice
+    }));
 
     Object.values(markets ?? {}).forEach((market) => {
       delete market.valueInBaseCurrency;
