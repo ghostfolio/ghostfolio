@@ -95,10 +95,11 @@ model AssetProfileResolution {
   dataSourceTarget DataSource
   id               String     @id @default(uuid())
   requestCount     Int        @default(1)
-  symbol           String
+  symbolOrigin     String
+  symbolTarget     String
   updatedAt        DateTime   @updatedAt
 
-  @@unique([dataSourceOrigin, symbol])
+  @@unique([dataSourceOrigin, symbolOrigin])
 }
 
 model AuthDevice {

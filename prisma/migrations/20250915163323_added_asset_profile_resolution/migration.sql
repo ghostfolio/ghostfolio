@@ -6,11 +6,12 @@ CREATE TABLE "public"."AssetProfileResolution" (
   "dataSourceTarget" "public"."DataSource" NOT NULL,
   "id" TEXT NOT NULL,
   "requestCount" INTEGER NOT NULL DEFAULT 1,
-  "symbol" TEXT NOT NULL,
+  "symbolOrigin" TEXT NOT NULL,
+  "symbolTarget" TEXT NOT NULL,
   "updatedAt" TIMESTAMP(3) NOT NULL,
 
   CONSTRAINT "AssetProfileResolution_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AssetProfileResolution_dataSourceOrigin_symbol_key" ON "public"."AssetProfileResolution"("dataSourceOrigin", "symbol");
+CREATE UNIQUE INDEX "AssetProfileResolution_dataSourceOrigin_symbolOrigin_key" ON "public"."AssetProfileResolution"("dataSourceOrigin", "symbolOrigin");

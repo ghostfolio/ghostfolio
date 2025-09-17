@@ -63,9 +63,10 @@ export class GhostfolioService {
                 await this.prismaService.assetProfileResolution.upsert({
                   create: {
                     dataSourceOrigin,
-                    symbol,
                     currency: assetProfile.currency,
-                    dataSourceTarget: assetProfile.dataSource
+                    dataSourceTarget: assetProfile.dataSource,
+                    symbolOrigin: symbol,
+                    symbolTarget: assetProfile.symbol
                   },
                   update: {
                     requestCount: {
@@ -73,9 +74,9 @@ export class GhostfolioService {
                     }
                   },
                   where: {
-                    dataSourceOrigin_symbol: {
+                    dataSourceOrigin_symbolOrigin: {
                       dataSourceOrigin,
-                      symbol
+                      symbolOrigin: symbol
                     }
                   }
                 });
