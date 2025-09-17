@@ -1,3 +1,4 @@
+import type { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -57,7 +58,8 @@ export class GfPublicPageComponent implements OnInit {
   };
   public defaultAlias = $localize`someone`;
   public deviceType: string;
-  public latestActivitiesDataSource: MatTableDataSource<any>;
+  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
+  public latestActivitiesDataSource: MatTableDataSource<Activity>;
   public holdings: PublicPortfolioResponse['holdings'][string][];
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
@@ -111,7 +113,8 @@ export class GfPublicPageComponent implements OnInit {
         this.publicPortfolioDetails = portfolioPublicDetails;
 
         this.latestActivitiesDataSource = new MatTableDataSource(
-          this.publicPortfolioDetails.latestActivities || []
+          (this.publicPortfolioDetails.latestActivities ||
+            []) as unknown as Activity[]
         );
 
         this.initializeAnalysisData();
