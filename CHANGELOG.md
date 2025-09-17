@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- added paging to ImportAcitivitiesDialog
+### Added
+
+- Added paging of activities to import acitivities dialog
 
 ### Changed
 

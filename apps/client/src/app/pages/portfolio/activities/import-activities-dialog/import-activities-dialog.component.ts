@@ -238,8 +238,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
       .subscribe(({ activities }) => {
         this.activities = activities;
         this.dataSource = new MatTableDataSource(activities.reverse());
-        this.totalItems = activities.length;
         this.pageIndex = 0;
+        this.totalItems = activities.length;
 
         aStepper.next();
 
@@ -247,9 +247,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
       });
   }
 
-  public onPageChanged(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    // Client-side pagination - no need to refetch data as all activities are in memory
+  public onPageChanged({ pageIndex }: PageEvent) {
+    this.pageIndex = pageIndex;
   }
 
   public onReset(aStepper: MatStepper) {
@@ -347,8 +346,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
               });
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
-            this.totalItems = activities.length;
             this.pageIndex = 0;
+            this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({ error, activities: content.activities });
@@ -366,8 +365,8 @@ export class GfImportActivitiesDialog implements OnDestroy {
             });
             this.activities = data.activities;
             this.dataSource = new MatTableDataSource(data.activities.reverse());
-            this.totalItems = data.activities.length;
             this.pageIndex = 0;
+            this.totalItems = data.activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({
