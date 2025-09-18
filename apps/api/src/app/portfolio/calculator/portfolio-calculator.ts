@@ -948,6 +948,11 @@ export abstract class PortfolioCalculator {
           }
         }
 
+        // Reset to zero if quantity is (almost) zero to avoid rounding issues
+        if (newQuantity.abs().lt(Number.EPSILON)) {
+          investment = new Big(0);
+        }
+
         currentTransactionPointItem = {
           currency,
           dataSource,
