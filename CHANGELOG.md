@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refreshed the cryptocurrencies list
+- Upgraded `countup.js` from version `2.8.2` to `2.9.0`
 
 ## 2.200.0 - 2025-09-17
 
