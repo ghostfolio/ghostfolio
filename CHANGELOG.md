@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refreshed the cryptocurrencies list
 
+### Fixed
+
+- Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
+
 ## 2.200.0 - 2025-09-17
 
 ### Changed
