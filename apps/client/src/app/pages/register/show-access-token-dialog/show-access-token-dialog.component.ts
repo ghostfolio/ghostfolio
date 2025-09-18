@@ -1,15 +1,26 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   Inject,
   ViewChild
 } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatStepper } from '@angular/material/stepper';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowForwardOutline,
@@ -23,12 +34,27 @@ import { ShowAccessTokenDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ClipboardModule,
+    CommonModule,
+    FormsModule,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatStepperModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TextFieldModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-show-access-token-dialog',
-  standalone: false,
   styleUrls: ['./show-access-token-dialog.scss'],
   templateUrl: 'show-access-token-dialog.html'
 })
-export class ShowAccessTokenDialog {
+export class GfShowAccessTokenDialogComponent {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
   public accessToken: string;
