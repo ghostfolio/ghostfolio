@@ -1,9 +1,3 @@
-import { AccessService } from '@ghostfolio/api/app/access/access.service';
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { getSum } from '@ghostfolio/common/helper';
 import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
@@ -21,18 +15,29 @@ import { REQUEST } from '@nestjs/core';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { RedactValuesInResponseInterceptor } from '../../../interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '../../../interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { ConfigurationService } from '../../../services/configuration/configuration.service';
+import { ExchangeRateDataService } from '../../../services/exchange-rate-data/exchange-rate-data.service';
+import { AccessService } from '../../access/access.service';
+import { OrderService } from '../../order/order.service';
+import { PortfolioService } from '../../portfolio/portfolio.service';
+import { UserService } from '../../user/user.service';
+
 @Controller('public')
 export class PublicController {
   public constructor(
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
 
   @Get(':accessId/portfolio')
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPublicPortfolio(
     @Param('accessId') accessId
@@ -76,6 +81,35 @@ export class PublicController {
       })
     ]);
 
+    const latestActivitiesPromise = this.orderService.getOrders({
+      includeDrafts: false,
+      sortColumn: 'date',
+      sortDirection: 'desc',
+      take: 10,
+      userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
+      userId: user.id,
+      withExcludedAccountsAndActivities: false
+    });
+
+    const { activities } = await latestActivitiesPromise;
+    const latestActivities = activities.map((a) => ({
+      account: a.account
+        ? {
+            currency: a.account.currency,
+            name: a.account.name,
+            platform: a.account.platform
+          }
+        : undefined,
+      currency: a.currency,
+      date: a.date,
+      quantity: a.quantity,
+      SymbolProfile: a.SymbolProfile,
+      type: a.type,
+      unitPrice: a.unitPrice,
+      value: a.value,
+      valueInBaseCurrency: a.valueInBaseCurrency
+    }));
+
     Object.values(markets ?? {}).forEach((market) => {
       delete market.valueInBaseCurrency;
     });
@@ -83,6 +117,7 @@ export class PublicController {
     const publicPortfolioResponse: PublicPortfolioResponse = {
       createdAt,
       hasDetails,
+      latestActivities,
       markets,
       alias: access.alias,
       holdings: {},

@@ -1,4 +1,4 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
+import type { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -6,6 +6,7 @@ import {
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -20,6 +21,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
@@ -28,10 +30,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../services/data.service';
+
 @Component({
   host: { class: 'page' },
   imports: [
     CommonModule,
+    GfActivitiesTableComponent,
     GfHoldingsTableComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,
@@ -54,9 +59,11 @@ export class GfPublicPageComponent implements OnInit {
   public defaultAlias = $localize`someone`;
   public deviceType: string;
   public holdings: PublicPortfolioResponse['holdings'][string][];
+  public latestActivitiesDataSource: MatTableDataSource<Activity>;
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
+  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
@@ -104,6 +111,11 @@ export class GfPublicPageComponent implements OnInit {
       )
       .subscribe((portfolioPublicDetails) => {
         this.publicPortfolioDetails = portfolioPublicDetails;
+
+        this.latestActivitiesDataSource = new MatTableDataSource(
+          (this.publicPortfolioDetails.latestActivities ||
+            []) as unknown as Activity[]
+        );
 
         this.initializeAnalysisData();
 
