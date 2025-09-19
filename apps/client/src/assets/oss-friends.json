@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-07-28T00:00:00.000Z",
+  "createdAt": "2025-09-17T00:00:00.000Z",
   "data": [
     {
       "name": "Activepieces",
@@ -20,6 +20,11 @@
       "name": "Cal.com",
       "description": "Cal.com is a scheduling tool that helps you schedule meetings without the back-and-forth emails.",
       "href": "https://cal.com"
+    },
+    {
+      "name": "Cap",
+      "description": "Cap is the open source alternative to Loom. Lightweight, powerful, and cross-platform. Record and share securely in seconds.",
+      "href": "https://cap.so"
     },
     {
       "name": "ClassroomIO.com",
