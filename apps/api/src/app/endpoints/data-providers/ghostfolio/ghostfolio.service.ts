@@ -56,11 +56,36 @@ export class GhostfolioService {
               requestTimeout,
               symbol
             })
-            .then((assetProfile) => {
+            .then(async (assetProfile) => {
+              const dataSourceOrigin = DataSource.GHOSTFOLIO;
+
+              if (assetProfile) {
+                await this.prismaService.assetProfileResolution.upsert({
+                  create: {
+                    dataSourceOrigin,
+                    currency: assetProfile.currency,
+                    dataSourceTarget: assetProfile.dataSource,
+                    symbolOrigin: symbol,
+                    symbolTarget: assetProfile.symbol
+                  },
+                  update: {
+                    requestCount: {
+                      increment: 1
+                    }
+                  },
+                  where: {
+                    dataSourceOrigin_symbolOrigin: {
+                      dataSourceOrigin,
+                      symbolOrigin: symbol
+                    }
+                  }
+                });
+              }
+
               result = {
                 ...result,
                 ...assetProfile,
-                dataSource: DataSource.GHOSTFOLIO
+                dataSource: dataSourceOrigin
               };
 
               return assetProfile;
