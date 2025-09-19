@@ -93,15 +93,21 @@ export class PublicController {
 
     const { activities } = await latestActivitiesPromise;
     const latestActivities = activities.map((a) => ({
+      account: a.account
+        ? {
+            currency: a.account.currency,
+            name: a.account.name,
+            platform: a.account.platform
+          }
+        : undefined,
+      currency: a.currency,
       date: a.date,
       quantity: a.quantity,
-      SymbolProfile: {
-        dataSource: a.SymbolProfile?.dataSource,
-        name: a.SymbolProfile?.name ?? '',
-        symbol: a.SymbolProfile?.symbol ?? ''
-      },
+      SymbolProfile: a.SymbolProfile,
       type: a.type,
-      unitPrice: a.unitPrice
+      unitPrice: a.unitPrice,
+      value: a.value,
+      valueInBaseCurrency: a.valueInBaseCurrency
     }));
 
     Object.values(markets ?? {}).forEach((market) => {

@@ -58,12 +58,12 @@ export class GfPublicPageComponent implements OnInit {
   };
   public defaultAlias = $localize`someone`;
   public deviceType: string;
-  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
-  public latestActivitiesDataSource: MatTableDataSource<Activity>;
   public holdings: PublicPortfolioResponse['holdings'][string][];
+  public latestActivitiesDataSource: MatTableDataSource<Activity>;
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
+  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
