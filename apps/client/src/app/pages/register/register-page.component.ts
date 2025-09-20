@@ -18,8 +18,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ShowAccessTokenDialogParams } from './show-access-token-dialog/interfaces/interfaces';
-import { GfShowAccessTokenDialogComponent } from './show-access-token-dialog/show-access-token-dialog.component';
+import { UserAccountRegistrationDialogParams } from './user-account-registration-dialog/interfaces/interfaces';
+import { GfUserAccountRegistrationDialogComponent } from './user-account-registration-dialog/user-account-registration-dialog.component';
 
 @Component({
   host: { class: 'page' },
@@ -84,15 +84,18 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public openShowAccessTokenDialog() {
-    const dialogRef = this.dialog.open(GfShowAccessTokenDialogComponent, {
-      data: {
-        deviceType: this.deviceType,
-        needsToAcceptTermsOfService: this.hasPermissionForSubscription
-      } as ShowAccessTokenDialogParams,
-      disableClose: true,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '30rem'
-    });
+    const dialogRef = this.dialog.open(
+      GfUserAccountRegistrationDialogComponent,
+      {
+        data: {
+          deviceType: this.deviceType,
+          needsToAcceptTermsOfService: this.hasPermissionForSubscription
+        } as UserAccountRegistrationDialogParams,
+        disableClose: true,
+        height: this.deviceType === 'mobile' ? '98vh' : undefined,
+        width: this.deviceType === 'mobile' ? '100vw' : '30rem'
+      }
+    );
 
     dialogRef
       .afterClosed()
