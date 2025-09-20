@@ -127,7 +127,8 @@
               [hasPermissionToFilter]="false"
               [hasPermissionToOpenDetails]="false"
               [locale]="data?.user?.settings?.locale"
-              [pageSize]="maxSafeInteger"
+              [pageIndex]="pageIndex"
+              [pageSize]="pageSize"
               [showActions]="false"
               [showCheckbox]="true"
               [showSymbolColumn]="false"
@@ -135,6 +136,7 @@
               [sortDirection]="sortDirection"
               [sortDisabled]="true"
               [totalItems]="totalItems"
+              (pageChanged)="onPageChanged($event)"
               (selectedActivities)="updateSelection($event)"
             />
           }
