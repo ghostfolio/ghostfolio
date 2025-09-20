@@ -13,9 +13,9 @@
       </th>
       <td *matCellDef="let element" class="px-2 text-nowrap" mat-cell>
         <div class="text-truncate">
-          {{ element?.name }}
+          {{ element.name }}
         </div>
-        <div>
+        <div *ngIf="showSymbol">
           <small class="text-muted">{{ element?.symbol }}</small>
         </div>
       </td>
