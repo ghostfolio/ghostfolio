@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an option to configure the account column of the activities table component
+
 ### Changed
 
 - Added the symbol to the benchmark component
+- Renamed the show access token dialog component to user account registration dialog component
 - Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
 
 ## 2.200.0 - 2025-09-17
 
