@@ -105,6 +105,7 @@ export class GfActivitiesTableComponent
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions = true;
+  @Input() showAccountColumn = true;
   @Input() showCheckbox = false;
   @Input() showNameColumn = true;
   @Input() sortColumn: string;
@@ -191,13 +192,19 @@ export class GfActivitiesTableComponent
       'comment',
       'actions'
     ];
+    
+    if (!this.showAccountColumn) {
+      this.displayedColumns = this.displayedColumns.filter((column) => {
+        return column !== 'account';
+      });
+    }
 
     if (!this.showCheckbox) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
         return column !== 'importStatus' && column !== 'select';
       });
     }
-
+   
     if (!this.showNameColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
         return column !== 'nameWithSymbol';
