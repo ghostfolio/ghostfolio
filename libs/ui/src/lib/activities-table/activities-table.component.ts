@@ -104,8 +104,8 @@ export class GfActivitiesTableComponent
   @Input() locale = getLocale();
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
-  @Input() showActions = true;
   @Input() showAccountColumn = true;
+  @Input() showActions = true;
   @Input() showCheckbox = false;
   @Input() showNameColumn = true;
   @Input() sortColumn: string;
