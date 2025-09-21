@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Hid the account column from the activities table of the account detail dialog to avoid redundant information
 - Renamed the show access token dialog component to user account registration dialog component
 - Refreshed the cryptocurrencies list
 - Upgraded `countup.js` from version `2.8.2` to `2.9.0`
