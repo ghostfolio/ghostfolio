@@ -6,19 +6,19 @@
 version: 2
 updates:
   # Keep npm dependencies up to date
-  - package-ecosystem: "npm"
-    directory: "/" # root package.json
+  - package-ecosystem: 'npm'
+    directory: '/' # root package.json
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 
   # Keep GitHub Actions up to date
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
 
   # Keep Docker images up to date
-  - package-ecosystem: "docker"
-    directory: "/docker"
+  - package-ecosystem: 'docker'
+    directory: '/docker'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
