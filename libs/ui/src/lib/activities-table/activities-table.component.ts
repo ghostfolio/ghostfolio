@@ -192,7 +192,7 @@ export class GfActivitiesTableComponent
       'comment',
       'actions'
     ];
-    
+
     if (!this.showAccountColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
         return column !== 'account';
@@ -204,7 +204,7 @@ export class GfActivitiesTableComponent
         return column !== 'importStatus' && column !== 'select';
       });
     }
-   
+
     if (!this.showNameColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
         return column !== 'nameWithSymbol';
