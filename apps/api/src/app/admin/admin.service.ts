@@ -192,7 +192,7 @@ export class AdminService {
     filters,
     presetId,
     sortColumn,
-    sortDirection,
+    sortDirection = 'asc',
     skip,
     take = Number.MAX_SAFE_INTEGER
   }: {
@@ -262,11 +262,13 @@ export class AdminService {
       orderBy = [{ [sortColumn]: sortDirection }];
 
       if (sortColumn === 'activitiesCount') {
-        orderBy = {
-          activities: {
-            _count: sortDirection
+        orderBy = [
+          {
+            activities: {
+              _count: sortDirection
+            }
           }
-        };
+        ];
       }
     }
 
@@ -275,10 +277,10 @@ export class AdminService {
     try {
       const symbolProfileResult = await Promise.all([
         extendedPrismaClient.symbolProfile.findMany({
-          orderBy,
           skip,
           take,
           where,
+          orderBy: [...orderBy, { id: sortDirection }],
           select: {
             _count: {
               select: {
@@ -817,17 +819,21 @@ export class AdminService {
     skip?: number;
     take?: number;
   }): Promise<AdminUsers['users']> {
-    let orderBy: Prisma.UserOrderByWithRelationInput = {
-      createdAt: 'desc'
-    };
+    let orderBy: Prisma.Enumerable<Prisma.UserOrderByWithRelationInput> = [
+      { createdAt: 'desc' }
+    ];
+
     let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      orderBy = {
-        analytics: {
-          lastRequestAt: 'desc'
+      orderBy = [
+        {
+          analytics: {
+            lastRequestAt: 'desc'
+          }
         }
-      };
+      ];
+
       where = {
         NOT: {
           analytics: null
@@ -836,10 +842,10 @@ export class AdminService {
     }
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
-      orderBy,
       skip,
       take,
       where,
+      orderBy: [...orderBy, { id: 'desc' }],
       select: {
         _count: {
           select: { accounts: true, activities: true }

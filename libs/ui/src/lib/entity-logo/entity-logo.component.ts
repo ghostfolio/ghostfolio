@@ -1,3 +1,5 @@
+import { EntityLogoImageSourceService } from '@ghostfolio/ui/entity-logo/entity-logo-image-source.service';
+
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -25,11 +27,18 @@ export class GfEntityLogoComponent implements OnChanges {
 
   public src: string;
 
+  public constructor(
+    private readonly imageSourceService: EntityLogoImageSourceService
+  ) {}
+
   public ngOnChanges() {
     if (this.dataSource && this.symbol) {
-      this.src = `../api/v1/logo/${this.dataSource}/${this.symbol}`;
+      this.src = this.imageSourceService.getLogoUrlByAssetProfileIdentifier({
+        dataSource: this.dataSource,
+        symbol: this.symbol
+      });
     } else if (this.url) {
-      this.src = `../api/v1/logo?url=${this.url}`;
+      this.src = this.imageSourceService.getLogoUrlByUrl(this.url);
     }
   }
 }

@@ -24,6 +24,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
+import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
 import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
 import {
@@ -34,6 +35,10 @@ import {
   Quote,
   QuoteResponseArray
 } from 'yahoo-finance2/esm/src/modules/quote';
+import {
+  Price,
+  QuoteSummaryResult
+} from 'yahoo-finance2/esm/src/modules/quoteSummary';
 import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
@@ -190,10 +195,7 @@ export class YahooFinanceService implements DataProviderInterface {
     );
 
     try {
-      let quotes: Pick<
-        Quote,
-        'currency' | 'marketState' | 'regularMarketPrice' | 'symbol'
-      >[] = [];
+      let quotes: Price[] | Quote[] = [];
 
       try {
         quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
@@ -290,7 +292,9 @@ export class YahooFinanceService implements DataProviderInterface {
 
       try {
         marketData = await this.yahooFinance.quote(
-          quotes.map(({ symbol }) => {
+          uniqBy(quotes, ({ symbol }) => {
+            return symbol;
+          }).map(({ symbol }) => {
             return symbol;
           })
         );
@@ -300,35 +304,35 @@ export class YahooFinanceService implements DataProviderInterface {
         }
       }
 
-      for (const marketDataItem of marketData) {
-        const quote = quotes.find((currentQuote) => {
-          return currentQuote.symbol === marketDataItem.symbol;
-        });
-
-        const symbol =
-          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-            marketDataItem.symbol
-          );
-
+      for (const {
+        currency,
+        longName,
+        quoteType,
+        shortName,
+        symbol
+      } of marketData) {
         const { assetClass, assetSubClass } =
           this.yahooFinanceDataEnhancerService.parseAssetClass({
-            quoteType: quote.quoteType,
-            shortName: quote.shortname
+            quoteType,
+            shortName
           });
 
         items.push({
           assetClass,
           assetSubClass,
-          symbol,
-          currency: marketDataItem.currency,
+          currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName(),
           name: this.yahooFinanceDataEnhancerService.formatName({
-            longName: quote.longname,
-            quoteType: quote.quoteType,
-            shortName: quote.shortname,
-            symbol: quote.symbol
-          })
+            longName,
+            quoteType,
+            shortName,
+            symbol
+          }),
+          symbol:
+            this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+              symbol
+            )
         });
       }
     } catch (error) {
@@ -354,23 +358,28 @@ export class YahooFinanceService implements DataProviderInterface {
 
   private async getQuotesWithQuoteSummary(aYahooFinanceSymbols: string[]) {
     const quoteSummaryPromises = aYahooFinanceSymbols.map((symbol) => {
-      return this.yahooFinance.quoteSummary(symbol).catch(() => {
-        Logger.error(
-          `Could not get quote summary for ${symbol}`,
-          'YahooFinanceService'
-        );
-        return null;
-      });
+      return this.yahooFinance.quoteSummary(symbol);
     });
 
-    const quoteSummaryItems = await Promise.all(quoteSummaryPromises);
+    const settledResults = await Promise.allSettled(quoteSummaryPromises);
 
-    return quoteSummaryItems
-      .filter((item) => {
-        return item !== null;
-      })
-      .map(({ price }) => {
-        return price;
+    return settledResults
+      .filter(
+        (result): result is PromiseFulfilledResult<QuoteSummaryResult> => {
+          if (result.status === 'rejected') {
+            Logger.error(
+              `Could not get quote summary: ${result.reason}`,
+              'YahooFinanceService'
+            );
+
+            return false;
+          }
+
+          return true;
+        }
+      )
+      .map(({ value }) => {
+        return value.price;
       });
   }
 }

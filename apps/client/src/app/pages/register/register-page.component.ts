@@ -18,18 +18,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ShowAccessTokenDialogParams } from './show-access-token-dialog/interfaces/interfaces';
-import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
-import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-access-token-dialog.module';
+import { UserAccountRegistrationDialogParams } from './user-account-registration-dialog/interfaces/interfaces';
+import { GfUserAccountRegistrationDialogComponent } from './user-account-registration-dialog/user-account-registration-dialog.component';
 
 @Component({
   host: { class: 'page' },
-  imports: [
-    GfLogoComponent,
-    MatButtonModule,
-    RouterModule,
-    ShowAccessTokenDialogModule
-  ],
+  imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
@@ -90,15 +84,18 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public openShowAccessTokenDialog() {
-    const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
-      data: {
-        deviceType: this.deviceType,
-        needsToAcceptTermsOfService: this.hasPermissionForSubscription
-      } as ShowAccessTokenDialogParams,
-      disableClose: true,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '30rem'
-    });
+    const dialogRef = this.dialog.open(
+      GfUserAccountRegistrationDialogComponent,
+      {
+        data: {
+          deviceType: this.deviceType,
+          needsToAcceptTermsOfService: this.hasPermissionForSubscription
+        } as UserAccountRegistrationDialogParams,
+        disableClose: true,
+        height: this.deviceType === 'mobile' ? '98vh' : undefined,
+        width: this.deviceType === 'mobile' ? '100vw' : '30rem'
+      }
+    );
 
     dialogRef
       .afterClosed()

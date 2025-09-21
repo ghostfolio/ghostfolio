@@ -1,4 +1,4 @@
-export interface ShowAccessTokenDialogParams {
+export interface UserAccountRegistrationDialogParams {
   deviceType: string;
   needsToAcceptTermsOfService: boolean;
 }
