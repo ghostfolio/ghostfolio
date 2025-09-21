@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the symbol to the benchmark component
 - Added an option to configure the account column of the activities table component
 
 ### Changed
 
-- Added the symbol to the benchmark component
 - Renamed the show access token dialog component to user account registration dialog component
 - Refreshed the cryptocurrencies list
 
