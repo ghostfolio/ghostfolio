@@ -15,9 +15,11 @@
         <div class="text-truncate">
           {{ element?.name }}
         </div>
-        <div *ngIf="showSymbol">
-          <small class="text-muted">{{ element?.symbol }}</small>
-        </div>
+        @if (showSymbol) {
+          <div>
+            <small class="text-muted">{{ element?.symbol }}</small>
+          </div>
+        }
       </td>
     </ng-container>
 

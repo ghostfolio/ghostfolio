@@ -62,8 +62,8 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() deviceType: string;
   @Input() hasPermissionToDeleteItem: boolean;
   @Input() locale = getLocale();
-  @Input() user: User;
   @Input() showSymbol = true;
+  @Input() user: User;
 
   @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
 
