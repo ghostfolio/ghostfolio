@@ -27,6 +27,7 @@ import {
   linkOutline,
   lockClosedOutline,
   lockOpenOutline,
+  pencilOutline,
   removeCircleOutline
 } from 'ionicons/icons';
 import ms from 'ms';
@@ -53,6 +54,7 @@ export class GfAccessTableComponent implements OnChanges {
   @Input() user: User;
 
   @Output() accessDeleted = new EventEmitter<string>();
+  @Output() accessEdited = new EventEmitter<string>();
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
@@ -69,6 +71,7 @@ export class GfAccessTableComponent implements OnChanges {
       linkOutline,
       lockClosedOutline,
       lockOpenOutline,
+      pencilOutline,
       removeCircleOutline
     });
   }
@@ -111,5 +114,9 @@ export class GfAccessTableComponent implements OnChanges {
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to revoke this granted access?`
     });
+  }
+
+  public onEditAccess(aId: string) {
+    this.accessEdited.emit(aId);
   }
 }

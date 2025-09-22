@@ -14,6 +14,7 @@ import {
   Inject,
   Param,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -23,6 +24,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
+import { UpdateAccessDto } from './update-access.dto';
 
 @Controller('access')
 export class AccessController {
@@ -66,6 +68,21 @@ export class AccessController {
     );
   }
 
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getAccess(@Param('id') id: string): Promise<AccessModel> {
+    const access = await this.accessService.access({ id });
+
+    if (!access || access.userId !== this.request.user.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return access;
+  }
+
   @HasPermission(permissions.createAccess)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -91,6 +108,50 @@ export class AccessController {
         permissions: data.permissions,
         user: { connect: { id: this.request.user.id } }
       });
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+  }
+
+  @Put(':id')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateAccess(
+    @Param('id') id: string,
+    @Body() data: UpdateAccessDto
+  ): Promise<AccessModel> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const access = await this.accessService.access({ id });
+
+    if (!access || access.userId !== this.request.user.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    try {
+      return this.accessService.updateAccess(
+        { id },
+        {
+          alias: data.alias,
+          granteeUser: data.granteeUserId
+            ? { connect: { id: data.granteeUserId } }
+            : { disconnect: true },
+          permissions: data.permissions
+        }
+      );
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),

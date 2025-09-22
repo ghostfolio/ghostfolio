@@ -4,7 +4,13 @@
   (keyup.enter)="accessForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 i18n mat-dialog-title>Grant access</h1>
+  <h1 mat-dialog-title>
+    @if (isEditMode) {
+      <span i18n>Edit access</span>
+    } @else {
+      <span i18n>Grant access</span>
+    }
+  </h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
@@ -66,9 +72,13 @@
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="!(accessForm.dirty && accessForm.valid)"
+      [disabled]="isEditMode ? !accessForm.valid : !(accessForm.dirty && accessForm.valid)"
     >
-      <ng-container i18n>Save</ng-container>
+      @if (isEditMode) {
+        <ng-container i18n>Update</ng-container>
+      } @else {
+        <ng-container i18n>Save</ng-container>
+      }
     </button>
   </div>
 </form>

@@ -1,4 +1,5 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -53,6 +54,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
+  AccessWithGranteeUser,
   AccountWithValue,
   AiPromptMode,
   DateRange,
@@ -332,6 +334,10 @@ export class DataService {
 
   public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<any>(`/api/v1/watchlist/${dataSource}/${symbol}`);
+  }
+
+  public fetchAccess(id: string) {
+    return this.http.get<AccessWithGranteeUser>(`/api/v1/access/${id}`);
   }
 
   public fetchAccesses() {
@@ -741,6 +747,13 @@ export class DataService {
 
   public postAccess(aAccess: CreateAccessDto) {
     return this.http.post<OrderModel>('/api/v1/access', aAccess);
+  }
+
+  public putAccess(id: string, aAccess: UpdateAccessDto) {
+    return this.http.put<AccessWithGranteeUser>(
+      `/api/v1/access/${id}`,
+      aAccess
+    );
   }
 
   public postAccount(aAccount: CreateAccountDto) {

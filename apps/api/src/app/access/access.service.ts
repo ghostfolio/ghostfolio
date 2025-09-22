@@ -52,4 +52,14 @@ export class AccessService {
       where
     });
   }
+
+  public async updateAccess(
+    where: Prisma.AccessWhereUniqueInput,
+    data: Prisma.AccessUpdateInput
+  ): Promise<Access> {
+    return this.prismaService.access.update({
+      where,
+      data
+    });
+  }
 }
