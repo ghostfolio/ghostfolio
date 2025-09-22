@@ -93,7 +93,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public isLoading = false;
   public mode: 'DIVIDEND';
   public pageIndex = 0;
-  public pageSize = 10;
+  public pageSize = 8;
   public selectedActivities: Activity[] = [];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';

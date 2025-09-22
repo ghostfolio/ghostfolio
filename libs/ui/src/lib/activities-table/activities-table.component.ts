@@ -169,7 +169,9 @@ export class GfActivitiesTableComponent
   }
 
   public ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+    }
 
     this.sort.sortChange.subscribe((value: Sort) => {
       this.sortChanged.emit(value);
