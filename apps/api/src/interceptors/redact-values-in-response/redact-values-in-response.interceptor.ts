@@ -61,6 +61,7 @@ export class RedactValuesInResponseInterceptor<T>
               'totalInterestInBaseCurrency',
               'totalValueInBaseCurrency',
               'unitPrice',
+              'unitPriceInAssetProfileCurrency',
               'value',
               'valueInBaseCurrency'
             ].map((attribute) => {

@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.199.0",
+  "version": "2.200.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -110,7 +110,7 @@
     "color": "5.0.0",
     "countries-and-timezones": "3.8.0",
     "countries-list": "3.1.1",
-    "countup.js": "2.8.2",
+    "countup.js": "2.9.0",
     "date-fns": "4.1.0",
     "envalid": "8.1.0",
     "fuse.js": "7.1.0",
