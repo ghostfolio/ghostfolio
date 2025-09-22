@@ -72,7 +72,9 @@
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="isEditMode ? !accessForm.valid : !(accessForm.dirty && accessForm.valid)"
+      [disabled]="
+        isEditMode ? !accessForm.valid : !(accessForm.dirty && accessForm.valid)
+      "
     >
       @if (isEditMode) {
         <ng-container i18n>Update</ng-container>

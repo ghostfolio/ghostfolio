@@ -69,7 +69,7 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
   public ngOnInit() {
     console.log('Dialog init - Edit mode:', this.isEditMode);
     console.log('Dialog data:', this.data);
-    
+
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       permissions: [this.data.access.permissions[0], Validators.required],
