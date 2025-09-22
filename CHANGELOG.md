@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Add sorting to job queue table
+
 ### Added
 
 - Added the symbol to the benchmark component

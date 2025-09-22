@@ -16,7 +16,8 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {
   FormBuilder,
@@ -27,6 +28,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { IonIcon } from '@ionic/angular/standalone';
 import { JobStatus } from 'bull';
@@ -58,6 +60,7 @@ import { takeUntil } from 'rxjs/operators';
     MatMenuModule,
     MatSelectModule,
     MatTableModule,
+    MatSortModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule
   ],
@@ -66,6 +69,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-jobs.html'
 })
 export class GfAdminJobsComponent implements OnDestroy, OnInit {
+  @ViewChild(MatSort) sort: MatSort;
+
   public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
   public DATA_GATHERING_QUEUE_PRIORITY_HIGH =
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;
@@ -196,6 +201,12 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
+        this.dataSource.sort = this.sort;
+
+        if (this.sort) {
+          this.sort.active = 'created';
+          this.sort.direction = 'desc';
+        }
 
         this.isLoading = false;
 
