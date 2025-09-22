@@ -12,7 +12,14 @@
         Name
       </th>
       <td *matCellDef="let element" class="px-2 text-nowrap" mat-cell>
-        {{ element?.name }}
+        <div class="text-truncate">
+          {{ element?.name }}
+        </div>
+        @if (showSymbol) {
+          <div>
+            <small class="text-muted">{{ element?.symbol }}</small>
+          </div>
+        }
       </td>
     </ng-container>
 
