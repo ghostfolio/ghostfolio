@@ -23,11 +23,11 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   copyOutline,
+  createOutline,
   ellipsisHorizontal,
   linkOutline,
   lockClosedOutline,
   lockOpenOutline,
-  pencilOutline,
   removeCircleOutline
 } from 'ionicons/icons';
 import ms from 'ms';
@@ -67,11 +67,11 @@ export class GfAccessTableComponent implements OnChanges {
   ) {
     addIcons({
       copyOutline,
+      createOutline,
       ellipsisHorizontal,
       linkOutline,
       lockClosedOutline,
       lockOpenOutline,
-      pencilOutline,
       removeCircleOutline
     });
   }
