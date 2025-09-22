@@ -575,6 +575,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
 
   public onTagsChanged(tags: Tag[]) {
     this.activityForm.get('tags').setValue(tags);
+    this.activityForm.get('tags').markAsDirty();
   }
 
   public ngOnDestroy() {

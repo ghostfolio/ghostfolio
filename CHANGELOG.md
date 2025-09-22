@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
+- Fixed an issue where the save button was not enabled when editing tags in the activity dialog
 
 ## 2.200.0 - 2025-09-17
 
