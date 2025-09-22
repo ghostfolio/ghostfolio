@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the symbol to the benchmark component
+- Added pagination to the activities table of the activities import dialog
 - Added an option to configure the account column of the activities table component
 
 ### Changed
