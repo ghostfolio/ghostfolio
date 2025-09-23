@@ -10,10 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the latest activities to the public page
+- Added the symbol to the benchmark component
+- Added pagination to the activities table of the activities import dialog
+- Added an option to configure the account column of the activities table component
 
 ### Changed
 
+- Hid the account column from the activities table of the account detail dialog to avoid redundant information
+- Renamed the show access token dialog component to user account registration dialog component
 - Refreshed the cryptocurrencies list
+- Upgraded `countup.js` from version `2.8.2` to `2.9.0`
+
+### Fixed
+
+- Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
 
 ## 2.200.0 - 2025-09-17
 

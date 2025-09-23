@@ -36,6 +36,7 @@ import {
 } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -90,8 +91,9 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public holdings: PortfolioPosition[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
   public isLoading = false;
-  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
+  public pageIndex = 0;
+  public pageSize = 8;
   public selectedActivities: Activity[] = [];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
@@ -236,6 +238,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
       .subscribe(({ activities }) => {
         this.activities = activities;
         this.dataSource = new MatTableDataSource(activities.reverse());
+        this.pageIndex = 0;
         this.totalItems = activities.length;
 
         aStepper.next();
@@ -244,10 +247,15 @@ export class GfImportActivitiesDialog implements OnDestroy {
       });
   }
 
+  public onPageChanged({ pageIndex }: PageEvent) {
+    this.pageIndex = pageIndex;
+  }
+
   public onReset(aStepper: MatStepper) {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
+    this.pageIndex = 0;
     this.assetProfileForm.get('assetProfileIdentifier').enable();
 
     aStepper.reset();
@@ -338,6 +346,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
               });
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
+            this.pageIndex = 0;
             this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
@@ -356,6 +365,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
             });
             this.activities = data.activities;
             this.dataSource = new MatTableDataSource(data.activities.reverse());
+            this.pageIndex = 0;
             this.totalItems = data.activities.length;
           } catch (error) {
             console.error(error);
