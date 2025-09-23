@@ -66,18 +66,57 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
     this.isEditMode = !!data.accessId;
   }
 
-  public ngOnInit() {
-    console.log('Dialog init - Edit mode:', this.isEditMode);
-    console.log('Dialog data:', this.data);
+  private async createAccess() {
+    console.log('Creating access...');
+    const access: CreateAccessDto = {
+      alias: this.accessForm.get('alias').value,
+      granteeUserId: this.accessForm.get('granteeUserId').value,
+      permissions: [this.accessForm.get('permissions').value]
+    };
 
+    try {
+      await validateObjectForForm({
+        classDto: CreateAccessDto,
+        form: this.accessForm,
+        object: access
+      });
+
+      this.dataService
+        .postAccess(access)
+        .pipe(
+          catchError((error) => {
+            if (error.status === StatusCodes.BAD_REQUEST) {
+              this.notificationService.alert({
+                title: $localize`Oops! Could not grant access.`
+              });
+            }
+
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.dialogRef.close(access);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  public ngOnInit() {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
+      granteeUserId: [this.data.access.grantee, Validators.required],
       permissions: [this.data.access.permissions[0], Validators.required],
       type: [
         { value: this.data.access.type, disabled: this.isEditMode },
         Validators.required
-      ],
-      granteeUserId: [this.data.access.grantee, Validators.required]
+      ]
     });
 
     this.accessForm.get('type').valueChanges.subscribe((accessType) => {
@@ -123,45 +162,6 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
     }
   }
 
-  private async createAccess() {
-    console.log('Creating access...');
-    const access: CreateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
-      permissions: [this.accessForm.get('permissions').value]
-    };
-
-    console.log('Access data:', access);
-
-    try {
-      await validateObjectForForm({
-        classDto: CreateAccessDto,
-        form: this.accessForm,
-        object: access
-      });
-
-      this.dataService
-        .postAccess(access)
-        .pipe(
-          catchError((error) => {
-            if (error.status === StatusCodes.BAD_REQUEST) {
-              this.notificationService.alert({
-                title: $localize`Oops! Could not grant access.`
-              });
-            }
-
-            return EMPTY;
-          }),
-          takeUntil(this.unsubscribeSubject)
-        )
-        .subscribe(() => {
-          this.dialogRef.close(access);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   private async updateAccess() {
     console.log('Updating access...');
     const access: UpdateAccessDto = {
@@ -200,10 +200,5 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

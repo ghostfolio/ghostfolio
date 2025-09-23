@@ -34,6 +34,21 @@ export class AccessController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getAccess(@Param('id') id: string): Promise<AccessModel> {
+    const access = await this.accessService.access({ id });
+
+    if (!access || access.userId !== this.request.user.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return access;
+  }
+
   @Get()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAllAccesses(): Promise<Access[]> {
@@ -68,21 +83,6 @@ export class AccessController {
     );
   }
 
-  @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getAccess(@Param('id') id: string): Promise<AccessModel> {
-    const access = await this.accessService.access({ id });
-
-    if (!access || access.userId !== this.request.user.id) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return access;
-  }
-
   @HasPermission(permissions.createAccess)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -114,6 +114,24 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  @Delete(':id')
+  @HasPermission(permissions.deleteAccess)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
+    const access = await this.accessService.access({ id });
+
+    if (!access || access.userId !== this.request.user.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accessService.deleteAccess({
+      id
+    });
   }
 
   @Put(':id')
@@ -158,23 +176,5 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
-  }
-
-  @Delete(':id')
-  @HasPermission(permissions.deleteAccess)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
-    const access = await this.accessService.access({ id });
-
-    if (!access || access.userId !== this.request.user.id) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return this.accessService.deleteAccess({
-      id
-    });
   }
 }

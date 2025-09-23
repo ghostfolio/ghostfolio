@@ -749,13 +749,6 @@ export class DataService {
     return this.http.post<OrderModel>('/api/v1/access', aAccess);
   }
 
-  public putAccess(id: string, aAccess: UpdateAccessDto) {
-    return this.http.put<AccessWithGranteeUser>(
-      `/api/v1/access/${id}`,
-      aAccess
-    );
-  }
-
   public postAccount(aAccount: CreateAccountDto) {
     return this.http.post<OrderModel>('/api/v1/account', aAccount);
   }
@@ -803,6 +796,13 @@ export class DataService {
 
   public postWatchlistItem(watchlistItem: CreateWatchlistItemDto) {
     return this.http.post('/api/v1/watchlist', watchlistItem);
+  }
+
+  public putAccess(id: string, aAccess: UpdateAccessDto) {
+    return this.http.put<AccessWithGranteeUser>(
+      `/api/v1/access/${id}`,
+      aAccess
+    );
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
