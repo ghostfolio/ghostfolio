@@ -48,9 +48,9 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   ],
   providers: [
     {
+      multi: true,
       provide: NG_VALUE_ACCESSOR,
-      useExisting: GfTagsSelectorComponent,
-      multi: true
+      useExisting: GfTagsSelectorComponent
     }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -59,7 +59,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent
-  implements OnInit, OnChanges, OnDestroy, ControlValueAccessor
+  implements ControlValueAccessor, OnChanges, OnDestroy, OnInit
 {
   @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
@@ -75,7 +75,19 @@ export class GfTagsSelectorComponent
   public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
 
-  private unsubscribeSubject = new Subject<void>();
+  private filterTags(query: string = ''): Tag[] {
+    const tags = this.tagsSelected() ?? [];
+    const tagIds = tags.map(({ id }) => {
+      return id;
+    });
+
+    return this.tagsAvailable.filter(({ id, name }) => {
+      return (
+        !tagIds.includes(id) && name.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange = (_value: Tag[]): void => {
     // ControlValueAccessor onChange callback
@@ -148,21 +160,15 @@ export class GfTagsSelectorComponent
     this.unsubscribeSubject.complete();
   }
 
-  // ControlValueAccessor implementation
-  writeValue(value: Tag[]): void {
-    this.tagsSelected.set(value || []);
-    this.updateFilters();
-  }
-
-  registerOnChange(fn: (value: Tag[]) => void): void {
+  public registerOnChange(fn: (value: Tag[]) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: () => void): void {
+  public registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setDisabledState?(isDisabled: boolean): void {
+  public setDisabledState(isDisabled: boolean): void {
     if (isDisabled) {
       this.tagInputControl.disable();
     } else {
@@ -170,20 +176,14 @@ export class GfTagsSelectorComponent
     }
   }
 
-  private filterTags(query: string = ''): Tag[] {
-    const tags = this.tagsSelected() ?? [];
-    const tagIds = tags.map(({ id }) => {
-      return id;
-    });
-
-    return this.tagsAvailable.filter(({ id, name }) => {
-      return (
-        !tagIds.includes(id) && name.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-  }
-
   private updateFilters() {
     this.filteredOptions.next(this.filterTags());
+  }
+
+  private unsubscribeSubject = new Subject<void>();
+  // ControlValueAccessor implementation
+  public writeValue(value: Tag[]): void {
+    this.tagsSelected.set(value || []);
+    this.updateFilters();
   }
 }
