@@ -73,7 +73,10 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       permissions: [this.data.access.permissions[0], Validators.required],
-      type: [this.data.access.type, Validators.required],
+      type: [
+        { value: this.data.access.type, disabled: this.isEditMode },
+        Validators.required
+      ],
       granteeUserId: [this.data.access.grantee, Validators.required]
     });
 
