@@ -2,7 +2,6 @@ import type { Order } from '@prisma/client';
 
 import { EnhancedSymbolProfile, PortfolioDetails, PortfolioPosition } from '..';
 import { Market } from '../../types';
-import type { AccountWithPlatform } from '../../types';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
@@ -28,9 +27,8 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   };
   latestActivities: (Pick<
     Order,
-    'currency' | 'date' | 'quantity' | 'type' | 'unitPrice'
+    'currency' | 'date' | 'fee' | 'quantity' | 'type' | 'unitPrice'
   > & {
-    account?: Pick<AccountWithPlatform, 'currency' | 'name' | 'platform'>;
     SymbolProfile?: EnhancedSymbolProfile;
     value: number;
     valueInBaseCurrency: number;

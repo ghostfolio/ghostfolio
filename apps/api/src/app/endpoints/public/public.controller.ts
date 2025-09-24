@@ -12,6 +12,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
+import { Type as ActivityType } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -81,27 +82,20 @@ export class PublicController {
       })
     ]);
 
-    const latestActivitiesPromise = this.orderService.getOrders({
+    const { activities } = await this.orderService.getOrders({
       includeDrafts: false,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,
       userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: user.id,
+      types: [ActivityType.BUY, ActivityType.SELL],
       withExcludedAccountsAndActivities: false
     });
-
-    const { activities } = await latestActivitiesPromise;
     const latestActivities = activities.map((a) => ({
-      account: a.account
-        ? {
-            currency: a.account.currency,
-            name: a.account.name,
-            platform: a.account.platform
-          }
-        : undefined,
       currency: a.currency,
       date: a.date,
+      fee: a.fee,
       quantity: a.quantity,
       SymbolProfile: a.SymbolProfile,
       type: a.type,
