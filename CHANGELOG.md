@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added pagination to the activities table of the activities import dialog
 - Added an option to configure the account column of the activities table component
 
+- Added dependabot for version update
+
 ### Changed
 
 - Hid the account column from the activities table of the account detail dialog to avoid redundant information
