@@ -61,7 +61,8 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public showDetails = false;
   public unit: string;
   public user: User;
-  private choice: string = 'netPerformanceInPercentageWithCurrencyEffect';
+  private graph_type: string = 'netPerformanceInPercentageWithCurrencyEffect';
+  public graph_unit: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -132,15 +133,19 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
         this.errors = errors;
         this.performance = performance;
 
-        const multiplier =
-          this.choice === 'netPerformanceInPercentageWithCurrencyEffect'
+        const graph_multiplier =
+          this.graph_type === 'netPerformanceInPercentageWithCurrencyEffect'
             ? 100
             : 1;
+        this.graph_unit =
+          this.graph_type === 'netPerformanceInPercentageWithCurrencyEffect'
+            ? '%'
+            : this.unit;
 
         this.historicalDataItems = chart.map((item) => {
           return {
             date: item.date,
-            value: item[this.choice] * multiplier
+            value: item[this.graph_type] * graph_multiplier
           };
         });
 
@@ -160,8 +165,8 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
     this.changeDetectorRef.markForCheck();
   }
 
-  public onMetricClick(selectedChoice: string): void {
-    this.choice = selectedChoice; // update metric choice
+  public onMetricClick(selectedgraph_type: string): void {
+    this.graph_type = selectedgraph_type; // update metric graph_type
     this.update(); // rebuild historicalDataItems
   }
 }
