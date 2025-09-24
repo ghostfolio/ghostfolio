@@ -67,7 +67,7 @@ export class GfPublicPageComponent implements OnInit {
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
-  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
+  public pageSize = Number.MAX_SAFE_INTEGER;
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
