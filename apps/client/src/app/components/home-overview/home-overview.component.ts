@@ -61,6 +61,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public showDetails = false;
   public unit: string;
   public user: User;
+  private choice: string = 'netPerformanceInPercentageWithCurrencyEffect';
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -131,14 +132,17 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
         this.errors = errors;
         this.performance = performance;
 
-        this.historicalDataItems = chart.map(
-          ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
-            return {
-              date,
-              value: netPerformanceInPercentageWithCurrencyEffect * 100
-            };
-          }
-        );
+        const multiplier =
+          this.choice === 'netPerformanceInPercentageWithCurrencyEffect'
+            ? 100
+            : 1;
+
+        this.historicalDataItems = chart.map((item) => {
+          return {
+            date: item.date,
+            value: item[this.choice] * multiplier
+          };
+        });
 
         if (
           this.deviceType === 'mobile' &&
@@ -154,5 +158,10 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  public onMetricClick(selectedChoice: string): void {
+    this.choice = selectedChoice; // update metric choice
+    this.update(); // rebuild historicalDataItems
   }
 }

@@ -30,7 +30,12 @@
         'text-success': isAllTimeHigh
       }"
     >
-      <span #value id="value"></span>
+      @if (!showDetails) {
+        <span #value id="value"></span>
+      }
+      @if (showDetails) {
+        <span #value id="value" (click)="onMetricClick('value')"></span>
+      }
     </div>
     <div class="currency-container flex-grow-1 px-1">
       {{ unit }}
@@ -38,7 +43,10 @@
   </div>
   @if (showDetails) {
     <div class="row">
-      <div class="d-flex col justify-content-end">
+      <div
+        class="d-flex col justify-content-end"
+        (click)="onMetricClick('netPerformanceWithCurrencyEffect')"
+      >
         <gf-value
           [colorizeSign]="true"
           [isCurrency]="true"
@@ -50,7 +58,10 @@
           "
         />
       </div>
-      <div class="col">
+      <div
+        class="col"
+        (click)="onMetricClick('netPerformanceInPercentageWithCurrencyEffect')"
+      >
         <gf-value
           [colorizeSign]="true"
           [isPercent]="true"
