@@ -69,7 +69,6 @@
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
-            unit="%"
             [colorScheme]="user?.settings?.colorScheme"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
@@ -81,6 +80,7 @@
             [showLoader]="false"
             [showXAxis]="false"
             [showYAxis]="false"
+            [unit]="graph_unit"
           />
         </div>
       </div>
