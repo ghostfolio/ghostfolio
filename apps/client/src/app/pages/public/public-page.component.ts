@@ -1,9 +1,12 @@
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  InfoItem,
   PortfolioPosition,
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
@@ -28,8 +31,6 @@ import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
-
-import { DataService } from '../../services/data.service';
 
 @Component({
   host: { class: 'page' },
@@ -57,7 +58,9 @@ export class GfPublicPageComponent implements OnInit {
   };
   public defaultAlias = $localize`someone`;
   public deviceType: string;
+  public hasPermissionForSubscription: boolean;
   public holdings: PublicPortfolioResponse['holdings'][string][];
+  public info: InfoItem;
   public latestActivitiesDataSource: MatTableDataSource<
     PublicPortfolioResponse['latestActivities'][0]
   >;
@@ -92,6 +95,13 @@ export class GfPublicPageComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       this.accessId = params['id'];
     });
+
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
   }
 
   public ngOnInit() {
@@ -113,11 +123,11 @@ export class GfPublicPageComponent implements OnInit {
       .subscribe((portfolioPublicDetails) => {
         this.publicPortfolioDetails = portfolioPublicDetails;
 
+        this.initializeAnalysisData();
+
         this.latestActivitiesDataSource = new MatTableDataSource(
           this.publicPortfolioDetails.latestActivities
         );
-
-        this.initializeAnalysisData();
 
         this.changeDetectorRef.markForCheck();
       });

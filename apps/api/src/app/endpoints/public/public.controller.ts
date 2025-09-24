@@ -1,3 +1,11 @@
+import { AccessService } from '@ghostfolio/api/app/access/access.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { getSum } from '@ghostfolio/common/helper';
 import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
@@ -15,15 +23,6 @@ import { REQUEST } from '@nestjs/core';
 import { Type as ActivityType } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-
-import { RedactValuesInResponseInterceptor } from '../../../interceptors/redact-values-in-response/redact-values-in-response.interceptor';
-import { TransformDataSourceInResponseInterceptor } from '../../../interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { ConfigurationService } from '../../../services/configuration/configuration.service';
-import { ExchangeRateDataService } from '../../../services/exchange-rate-data/exchange-rate-data.service';
-import { AccessService } from '../../access/access.service';
-import { OrderService } from '../../order/order.service';
-import { PortfolioService } from '../../portfolio/portfolio.service';
-import { UserService } from '../../user/user.service';
 
 @Controller('public')
 export class PublicController {
@@ -87,22 +86,42 @@ export class PublicController {
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,
+      types: [ActivityType.BUY, ActivityType.SELL],
       userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: user.id,
-      types: [ActivityType.BUY, ActivityType.SELL],
       withExcludedAccountsAndActivities: false
     });
-    const latestActivities = activities.map((a) => ({
-      currency: a.currency,
-      date: a.date,
-      fee: a.fee,
-      quantity: a.quantity,
-      SymbolProfile: a.SymbolProfile,
-      type: a.type,
-      unitPrice: a.unitPrice,
-      value: a.value,
-      valueInBaseCurrency: a.valueInBaseCurrency
-    }));
+
+    // Experimental
+    const latestActivities = this.configurationService.get(
+      'ENABLE_FEATURE_SUBSCRIPTION'
+    )
+      ? []
+      : activities.map(
+          ({
+            currency,
+            date,
+            fee,
+            quantity,
+            SymbolProfile,
+            type,
+            unitPrice,
+            value,
+            valueInBaseCurrency
+          }) => {
+            return {
+              currency,
+              date,
+              fee,
+              quantity,
+              SymbolProfile,
+              type,
+              unitPrice,
+              value,
+              valueInBaseCurrency
+            };
+          }
+        );
 
     Object.values(markets ?? {}).forEach((market) => {
       delete market.valueInBaseCurrency;

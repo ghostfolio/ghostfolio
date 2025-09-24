@@ -203,9 +203,9 @@
       </div>
     </div>
   }
-  <div class="row">
+  <div class="row" [ngClass]="{ 'd-none': hasPermissionForSubscription }">
     <div class="col-md-12">
-      <mat-card appearance="outlined" class="mb-3">
+      <mat-card appearance="outlined">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n
             >Latest activities</mat-card-title
