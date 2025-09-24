@@ -7,7 +7,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import {
   ASSET_CLASS_MAPPING,
-  ghostfolioScraperApiSymbolPrefix,
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
@@ -184,7 +183,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   };
 
   public currencies: string[] = [];
-  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
   public isDataGatheringEnabled: boolean;
