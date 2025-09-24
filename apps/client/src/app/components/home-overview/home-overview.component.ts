@@ -166,7 +166,9 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onMetricClick(selectedgraph_type: string): void {
-    this.graph_type = selectedgraph_type; // update metric graph_type
-    this.update(); // rebuild historicalDataItems
+    if (this.graph_type !== selectedgraph_type) {
+      this.graph_type = selectedgraph_type;
+      this.update();
+    }
   }
 }
