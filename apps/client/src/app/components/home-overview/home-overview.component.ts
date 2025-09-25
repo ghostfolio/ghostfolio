@@ -61,7 +61,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public showDetails = false;
   public unit: string;
   public user: User;
-  private graph_type: string = 'netPerformanceInPercentageWithCurrencyEffect';
+  private graph_type: string;
   public graph_unit: string;
 
   private unsubscribeSubject = new Subject<void>();
@@ -98,6 +98,11 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
       this.user.settings.viewMode !== 'ZEN';
 
     this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
+
+    this.graph_type = !this.showDetails
+      ? 'netPerformanceInPercentageWithCurrencyEffect'
+      : (localStorage.getItem('home_overview_graph_type') ??
+        'netPerformanceInPercentageWithCurrencyEffect');
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -168,6 +173,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public onMetricClick(selectedgraph_type: string): void {
     if (this.graph_type !== selectedgraph_type) {
       this.graph_type = selectedgraph_type;
+      localStorage.setItem('home_overview_graph_type', this.graph_type);
       this.update();
     }
   }
