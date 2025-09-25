@@ -2,10 +2,13 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  InfoItem,
   PortfolioPosition,
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -20,6 +23,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
@@ -32,6 +36,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   host: { class: 'page' },
   imports: [
     CommonModule,
+    GfActivitiesTableComponent,
     GfHoldingsTableComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,
@@ -53,10 +58,16 @@ export class GfPublicPageComponent implements OnInit {
   };
   public defaultAlias = $localize`someone`;
   public deviceType: string;
+  public hasPermissionForSubscription: boolean;
   public holdings: PublicPortfolioResponse['holdings'][string][];
+  public info: InfoItem;
+  public latestActivitiesDataSource: MatTableDataSource<
+    PublicPortfolioResponse['latestActivities'][0]
+  >;
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
+  public pageSize = Number.MAX_SAFE_INTEGER;
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
@@ -84,6 +95,13 @@ export class GfPublicPageComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       this.accessId = params['id'];
     });
+
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
   }
 
   public ngOnInit() {
@@ -106,6 +124,10 @@ export class GfPublicPageComponent implements OnInit {
         this.publicPortfolioDetails = portfolioPublicDetails;
 
         this.initializeAnalysisData();
+
+        this.latestActivitiesDataSource = new MatTableDataSource(
+          this.publicPortfolioDetails.latestActivities
+        );
 
         this.changeDetectorRef.markForCheck();
       });

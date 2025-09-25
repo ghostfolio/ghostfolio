@@ -16,6 +16,7 @@ model Access {
   granteeUserId String?
   id            String             @id @default(uuid())
   permissions   AccessPermission[] @default([READ_RESTRICTED])
+  settings      Json               @default("{}")
   updatedAt     DateTime           @updatedAt
   userId        String
   user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
