@@ -74,7 +74,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get transaction point', () => {
-    it('with MSFT buy and sell with multiple of 3', async () => {
+    it('with MSFT buy and sell with fractional quantities (multiples of 1/3)', () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-04-01').getTime());
 
       const activities: Activity[] = [
@@ -82,7 +82,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2024-03-08'),
           feeInAssetProfileCurrency: 0,
-          quantity: 1,
+          quantity: 0.3333333333333333,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
@@ -96,7 +96,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2024-03-13'),
-          quantity: 2,
+          quantity: 0.6666666666666666,
           feeInAssetProfileCurrency: 0,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -111,7 +111,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2024-03-14'),
-          quantity: 3,
+          quantity: 1,
           feeInAssetProfileCurrency: 0,
           SymbolProfile: {
             ...symbolProfileDummyData,
