@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `settings` to the `Access` model
 
+### Fixed
+
+- Fixed an issue in the investment calculation when selling all units of a holding
+
 ## 2.201.0 - 2025-09-24
 
 ### Added
@@ -31,10 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
-
-### Fixed
-
-- Fixed an issue in the investment calculation when selling all units of a holding
 
 ## 2.200.0 - 2025-09-17
 
