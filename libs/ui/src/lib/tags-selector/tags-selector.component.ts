@@ -75,26 +75,7 @@ export class GfTagsSelectorComponent
   public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
 
-  private filterTags(query: string = ''): Tag[] {
-    const tags = this.tagsSelected() ?? [];
-    const tagIds = tags.map(({ id }) => {
-      return id;
-    });
-
-    return this.tagsAvailable.filter(({ id, name }) => {
-      return (
-        !tagIds.includes(id) && name.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onChange = (_value: Tag[]): void => {
-    // ControlValueAccessor onChange callback
-  };
-  private onTouched = (): void => {
-    // ControlValueAccessor onTouched callback
-  };
+  private unsubscribeSubject = new Subject<void>();
 
   public constructor() {
     this.tagInputControl.valueChanges
@@ -155,11 +136,6 @@ export class GfTagsSelectorComponent
     this.updateFilters();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   public registerOnChange(fn: (value: Tag[]) => void): void {
     this.onChange = fn;
   }
@@ -176,14 +152,39 @@ export class GfTagsSelectorComponent
     }
   }
 
-  private updateFilters() {
-    this.filteredOptions.next(this.filterTags());
-  }
-
-  private unsubscribeSubject = new Subject<void>();
-  // ControlValueAccessor implementation
   public writeValue(value: Tag[]): void {
     this.tagsSelected.set(value || []);
     this.updateFilters();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private filterTags(query: string = ''): Tag[] {
+    const tags = this.tagsSelected() ?? [];
+    const tagIds = tags.map(({ id }) => {
+      return id;
+    });
+
+    return this.tagsAvailable.filter(({ id, name }) => {
+      return (
+        !tagIds.includes(id) && name.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange = (_value: Tag[]): void => {
+    // ControlValueAccessor onChange callback
+  };
+
+  private onTouched = (): void => {
+    // ControlValueAccessor onTouched callback
+  };
+
+  private updateFilters() {
+    this.filteredOptions.next(this.filterTags());
   }
 }
