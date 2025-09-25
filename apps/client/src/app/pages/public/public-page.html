@@ -203,6 +203,31 @@
       </div>
     </div>
   }
+  <div class="row" [ngClass]="{ 'd-none': hasPermissionForSubscription }">
+    <div class="col-md-12">
+      <mat-card appearance="outlined">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n
+            >Latest activities</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <gf-activities-table
+            [dataSource]="latestActivitiesDataSource"
+            [deviceType]="deviceType"
+            [hasPermissionToCreateActivity]="false"
+            [hasPermissionToDeleteActivity]="false"
+            [hasPermissionToExportActivities]="false"
+            [hasPermissionToOpenDetails]="false"
+            [pageSize]="pageSize"
+            [showAccountColumn]="false"
+            [showActions]="false"
+            [sortDisabled]="true"
+          />
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
   <div class="row my-5">
     <div class="col-md-10 offset-md-1">
       <h2 class="h4 mb-1 text-center" i18n>

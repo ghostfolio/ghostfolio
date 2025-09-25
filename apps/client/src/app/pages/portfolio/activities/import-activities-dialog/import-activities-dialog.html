@@ -21,9 +21,10 @@
           <ng-container i18n>Select File</ng-container>
         }
       </ng-template>
-      <div class="pt-3">
+      <div>
         @if (mode === 'DIVIDEND') {
           <form
+            class="pt-3"
             [formGroup]="assetProfileForm"
             (ngSubmit)="onLoadDividends(stepper)"
           >
@@ -114,7 +115,7 @@
           <ng-container i18n>Select Activities</ng-container>
         }
       </ng-template>
-      <div class="pt-3">
+      <div>
         @if (errorMessages?.length === 0) {
           @if (importStep === 1) {
             <gf-activities-table
@@ -127,7 +128,8 @@
               [hasPermissionToFilter]="false"
               [hasPermissionToOpenDetails]="false"
               [locale]="data?.user?.settings?.locale"
-              [pageSize]="maxSafeInteger"
+              [pageIndex]="pageIndex"
+              [pageSize]="pageSize"
               [showActions]="false"
               [showCheckbox]="true"
               [showSymbolColumn]="false"
@@ -135,6 +137,7 @@
               [sortDirection]="sortDirection"
               [sortDisabled]="true"
               [totalItems]="totalItems"
+              (pageChanged)="onPageChanged($event)"
               (selectedActivities)="updateSelection($event)"
             />
           }
@@ -153,25 +156,27 @@
             </button>
           </div>
         } @else {
-          <mat-accordion displayMode="flat">
-            @for (message of errorMessages; track message; let i = $index) {
-              <mat-expansion-panel [disabled]="!details[i]">
-                <mat-expansion-panel-header class="pl-1">
-                  <mat-panel-title>
-                    <div class="d-flex">
-                      <div class="align-items-center d-flex mr-2">
-                        <ion-icon name="warning-outline" />
+          <div class="pt-3">
+            <mat-accordion displayMode="flat">
+              @for (message of errorMessages; track message; let i = $index) {
+                <mat-expansion-panel [disabled]="!details[i]">
+                  <mat-expansion-panel-header class="pl-1">
+                    <mat-panel-title>
+                      <div class="d-flex">
+                        <div class="align-items-center d-flex mr-2">
+                          <ion-icon name="warning-outline" />
+                        </div>
+                        <div>{{ message }}</div>
                       </div>
-                      <div>{{ message }}</div>
-                    </div>
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                @if (details[i]) {
-                  <pre class="m-0"><code>{{ details[i] | json }}</code></pre>
-                }
-              </mat-expansion-panel>
-            }
-          </mat-accordion>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  @if (details[i]) {
+                    <pre class="m-0"><code>{{ details[i] | json }}</code></pre>
+                  }
+                </mat-expansion-panel>
+              }
+            </mat-accordion>
+          </div>
           <div class="d-flex justify-content-end mt-3">
             <button mat-button (click)="onReset(stepper)">
               <ng-container i18n>Back</ng-container>
