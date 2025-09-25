@@ -1,6 +1,10 @@
-import { IsString, IsUrl } from 'class-validator';
+import { IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreatePlatformDto {
+  @IsOptional()
+  @IsString()
+  id?: string;
+
   @IsString()
   name: string;
 
