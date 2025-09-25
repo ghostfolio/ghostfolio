@@ -136,15 +136,15 @@ export class GfTagsSelectorComponent
     this.updateFilters();
   }
 
-  public registerOnChange(fn: (value: Tag[]) => void): void {
+  public registerOnChange(fn: (value: Tag[]) => void) {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: () => void): void {
+  public registerOnTouched(fn: () => void) {
     this.onTouched = fn;
   }
 
-  public setDisabledState(isDisabled: boolean): void {
+  public setDisabledState(isDisabled: boolean) {
     if (isDisabled) {
       this.tagInputControl.disable();
     } else {
@@ -152,7 +152,7 @@ export class GfTagsSelectorComponent
     }
   }
 
-  public writeValue(value: Tag[]): void {
+  public writeValue(value: Tag[]) {
     this.tagsSelected.set(value || []);
     this.updateFilters();
   }
