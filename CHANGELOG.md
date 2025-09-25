@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `settings` to the `Access` model
 
+### Changed
+
+- Changed the deprecated `ITEM` activity type to `VALUABLE` in the create or update activity dialog
+
 ## 2.201.0 - 2025-09-24
 
 ### Added
@@ -27,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refreshed the cryptocurrencies list
 - Improved the language localization for German (`de`)
 - Upgraded `countup.js` from version `2.8.2` to `2.9.0`
-- Deprecated _ITEM_ activity type removed from the create or update activity dialog
 
 ### Fixed
 

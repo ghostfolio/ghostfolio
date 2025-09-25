@@ -51,18 +51,7 @@ import { catchError, delay, takeUntil } from 'rxjs/operators';
 import { DataService } from '../../../../services/data.service';
 import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
-
-const DisplayedActivityType = {
-  BUY: Type.BUY,
-  DIVIDEND: Type.DIVIDEND,
-  FEE: Type.FEE,
-  INTEREST: Type.INTEREST,
-  LIABILITY: Type.LIABILITY,
-  SELL: Type.SELL,
-  VALUABLE: 'VALUABLE' as const
-};
-type DisplayedActivityType =
-  (typeof DisplayedActivityType)[keyof typeof DisplayedActivityType];
+import { ActivityType } from './types/activity-type.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -190,9 +179,9 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
         };
       }) ?? [];
 
-    Object.keys(DisplayedActivityType).forEach((type) => {
-      this.typesTranslationMap[DisplayedActivityType[type]] = translate(
-        DisplayedActivityType[type]
+    Object.keys(ActivityType).forEach((type) => {
+      this.typesTranslationMap[ActivityType[type]] = translate(
+        ActivityType[type]
       );
     });
 
@@ -277,7 +266,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm.get('accountId').valueChanges.subscribe((accountId) => {
       const type = this.activityForm.get('type').value;
 
-      if (['FEE', 'INTEREST', 'VALUABLE', 'LIABILITY'].includes(type)) {
+      if (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(type)) {
         const currency =
           this.data.accounts.find(({ id }) => {
             return id === accountId;
@@ -373,7 +362,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((type: DisplayedActivityType) => {
+      .subscribe((type: ActivityType) => {
         if (
           type === 'VALUABLE' ||
           (this.activityForm.get('dataSource').value === 'MANUAL' &&
@@ -536,7 +525,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
-        (['FEE', 'INTEREST', 'VALUABLE', 'LIABILITY'].includes(
+        (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
           this.activityForm.get('type').value
         )
           ? undefined
