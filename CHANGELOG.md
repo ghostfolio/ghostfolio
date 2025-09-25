@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `settings` to the `Access` model
 
+### Fixed
+
+- Fixed an issue where the save button was not enabled after editing tags in the create or update activity dialog
+
 ## 2.201.0 - 2025-09-24
 
 ### Added
@@ -31,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
-- Fixed an issue where the save button was not enabled when editing tags in the activity dialog
 
 ## 2.200.0 - 2025-09-17
 
