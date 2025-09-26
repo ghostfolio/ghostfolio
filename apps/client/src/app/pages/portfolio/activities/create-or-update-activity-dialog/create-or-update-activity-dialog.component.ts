@@ -51,6 +51,7 @@ import { catchError, delay, takeUntil } from 'rxjs/operators';
 import { DataService } from '../../../../services/data.service';
 import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
+import { ActivityType } from './types/activity-type.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -178,9 +179,11 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
         };
       }) ?? [];
 
-    Object.keys(Type).forEach((type) => {
-      this.typesTranslationMap[Type[type]] = translate(Type[type]);
-    });
+    for (const type of Object.keys(ActivityType)) {
+      this.typesTranslationMap[ActivityType[type]] = translate(
+        ActivityType[type]
+      );
+    }
 
     this.activityForm = this.formBuilder.group({
       accountId: [
@@ -242,7 +245,9 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
       )
       .subscribe(async () => {
         if (
-          ['BUY', 'FEE', 'ITEM'].includes(this.activityForm.get('type').value)
+          ['BUY', 'FEE', 'VALUABLE'].includes(
+            this.activityForm.get('type').value
+          )
         ) {
           this.total =
             this.activityForm.get('quantity').value *
@@ -261,7 +266,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm.get('accountId').valueChanges.subscribe((accountId) => {
       const type = this.activityForm.get('type').value;
 
-      if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)) {
+      if (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(type)) {
         const currency =
           this.data.accounts.find(({ id }) => {
             return id === accountId;
@@ -357,9 +362,9 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((type: Type) => {
+      .subscribe((type: ActivityType) => {
         if (
-          type === 'ITEM' ||
+          type === 'VALUABLE' ||
           (this.activityForm.get('dataSource').value === 'MANUAL' &&
             type === 'BUY')
         ) {
@@ -384,7 +389,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
 
-          if (type === 'ITEM') {
+          if (type === 'VALUABLE') {
             this.activityForm.get('quantity').setValue(1);
           }
 
@@ -513,11 +518,14 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
       currency: this.activityForm.get('currency').value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
       date: this.activityForm.get('date').value,
-      dataSource: this.activityForm.get('dataSource').value,
+      dataSource:
+        this.activityForm.get('type').value === 'VALUABLE'
+          ? 'MANUAL'
+          : this.activityForm.get('dataSource').value,
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
-        (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(
+        (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
           this.activityForm.get('type').value
         )
           ? undefined
@@ -526,7 +534,10 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
       tags: this.activityForm.get('tags').value?.map(({ id }) => {
         return id;
       }),
-      type: this.activityForm.get('type').value,
+      type:
+        this.activityForm.get('type').value === 'VALUABLE'
+          ? 'BUY'
+          : this.activityForm.get('type').value,
       unitPrice: this.activityForm.get('unitPrice').value
     };
 
@@ -543,12 +554,6 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
           object: activity
         });
 
-        if (activity.type === 'ITEM') {
-          // Transform deprecated type ITEM
-          activity.dataSource = 'MANUAL';
-          activity.type = 'BUY';
-        }
-
         this.dialogRef.close(activity);
       } else {
         (activity as UpdateOrderDto).id = this.data.activity?.id;
@@ -559,12 +564,6 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
           ignoreFields: ['dataSource', 'date'],
           object: activity as UpdateOrderDto
         });
-
-        if (activity.type === 'ITEM') {
-          // Transform deprecated type ITEM
-          activity.dataSource = 'MANUAL';
-          activity.type = 'BUY';
-        }
 
         this.dialogRef.close(activity as UpdateOrderDto);
       }
