@@ -179,11 +179,11 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
         };
       }) ?? [];
 
-    Object.keys(ActivityType).forEach((type) => {
+    for (const type of Object.keys(ActivityType)) {
       this.typesTranslationMap[ActivityType[type]] = translate(
         ActivityType[type]
       );
-    });
+    }
 
     this.activityForm = this.formBuilder.group({
       accountId: [
