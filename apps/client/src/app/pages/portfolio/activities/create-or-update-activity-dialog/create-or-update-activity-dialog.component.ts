@@ -573,10 +573,6 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     }
   }
 
-  public onTagsChanged(tags: Tag[]) {
-    this.activityForm.get('tags').setValue(tags);
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

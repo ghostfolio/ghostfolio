@@ -322,10 +322,9 @@
     </div>
     <div class="mb-3">
       <gf-tags-selector
+        formControlName="tags"
         [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-        [tags]="activityForm.get('tags')?.value"
         [tagsAvailable]="tagsAvailable"
-        (tagsChanged)="onTagsChanged($event)"
       />
     </div>
   </div>
