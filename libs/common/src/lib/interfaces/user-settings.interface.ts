@@ -7,6 +7,8 @@ import {
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
+import { AssetClass } from '@prisma/client';
+
 export interface UserSettings {
   annualInterestRate?: number;
   baseCurrency?: string;
@@ -15,6 +17,7 @@ export interface UserSettings {
   dateRange?: DateRange;
   emergencyFund?: number;
   'filters.accounts'?: string[];
+  'filters.assetClasses'?: AssetClass[];
   'filters.dataSource'?: string;
   'filters.symbol'?: string;
   'filters.tags'?: string[];

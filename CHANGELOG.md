@@ -7,9 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Removed the deprecated `ITEM` activity type
+
+## 2.202.0 - 2025-09-26
+
+### Added
+
+- Added `settings` to the `Access` model
+
+### Changed
+
+- Extended the tags selector component to support form control
+- Changed the deprecated `ITEM` activity type to `VALUABLE` in the create or update activity dialog
+
+### Fixed
+
+- Fixed an issue where the save button was not enabled after editing tags in the create or update activity dialog
+- Fixed an issue in the investment calculation when selling all units of a holding
+
+## 2.201.0 - 2025-09-24
+
 ### Added
 
 - Added the symbol to the benchmark component
+- Added the latest activities to the public page (experimental)
+- Added pagination to the activities table of the activities import dialog
 - Added an option to configure the account column of the activities table component
 - Added support to edit existing access grants in the access management dialog
 
@@ -18,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hid the account column from the activities table of the account detail dialog to avoid redundant information
 - Renamed the show access token dialog component to user account registration dialog component
 - Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
 - Upgraded `countup.js` from version `2.8.2` to `2.9.0`
 
 ### Fixed
