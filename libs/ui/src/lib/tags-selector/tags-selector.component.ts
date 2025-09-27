@@ -14,7 +14,13 @@ import {
   signal,
   ViewChild
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent
@@ -40,12 +46,21 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
     MatInputModule,
     ReactiveFormsModule
   ],
+  providers: [
+    {
+      multi: true,
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: GfTagsSelectorComponent
+    }
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-tags-selector',
   styleUrls: ['./tags-selector.component.scss'],
   templateUrl: 'tags-selector.component.html'
 })
-export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
+export class GfTagsSelectorComponent
+  implements ControlValueAccessor, OnChanges, OnDestroy, OnInit
+{
   @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
   @Input() tags: Tag[];
@@ -99,7 +114,10 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
       return [...(tags ?? []), tag];
     });
 
-    this.tagsChanged.emit(this.tagsSelected());
+    const newTags = this.tagsSelected();
+    this.tagsChanged.emit(newTags);
+    this.onChange(newTags);
+    this.onTouched();
     this.tagInput.nativeElement.value = '';
     this.tagInputControl.setValue(undefined);
   }
@@ -111,7 +129,31 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
       });
     });
 
-    this.tagsChanged.emit(this.tagsSelected());
+    const newTags = this.tagsSelected();
+    this.tagsChanged.emit(newTags);
+    this.onChange(newTags);
+    this.onTouched();
+    this.updateFilters();
+  }
+
+  public registerOnChange(fn: (value: Tag[]) => void) {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: () => void) {
+    this.onTouched = fn;
+  }
+
+  public setDisabledState(isDisabled: boolean) {
+    if (isDisabled) {
+      this.tagInputControl.disable();
+    } else {
+      this.tagInputControl.enable();
+    }
+  }
+
+  public writeValue(value: Tag[]) {
+    this.tagsSelected.set(value || []);
     this.updateFilters();
   }
 
@@ -132,6 +174,15 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
       );
     });
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange = (_value: Tag[]): void => {
+    // ControlValueAccessor onChange callback
+  };
+
+  private onTouched = (): void => {
+    // ControlValueAccessor onTouched callback
+  };
 
   private updateFilters() {
     this.filteredOptions.next(this.filterTags());

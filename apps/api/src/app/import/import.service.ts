@@ -718,12 +718,6 @@ export class ImportService {
       index,
       { currency, dataSource, symbol, type }
     ] of activitiesDto.entries()) {
-      if (type === 'ITEM') {
-        throw new Error(
-          `activities.${index}.type ("${type}") is deprecated, please use "BUY" instead`
-        );
-      }
-
       if (!dataSources.includes(dataSource)) {
         throw new Error(
           `activities.${index}.dataSource ("${dataSource}") is not valid`
