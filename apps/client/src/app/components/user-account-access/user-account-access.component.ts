@@ -138,6 +138,10 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onEditAccess(aId: string) {
+    this.openEditAccessDialog(aId);
+  }
+
   public onGenerateAccessToken() {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -198,6 +202,41 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
 
       this.router.navigate(['.'], { relativeTo: this.route });
     });
+  }
+
+  private openEditAccessDialog(accessId: string) {
+    // Fetch the access details first
+    this.dataService
+      .fetchAccess(accessId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: (accessDetails) => {
+          const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialog, {
+            data: {
+              access: {
+                alias: accessDetails.alias,
+                permissions: accessDetails.permissions,
+                type: accessDetails.granteeUser ? 'PRIVATE' : 'PUBLIC',
+                grantee: accessDetails.granteeUser?.id || null
+              },
+              accessId: accessId
+            },
+            height: this.deviceType === 'mobile' ? '98vh' : undefined,
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          });
+
+          dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+              this.update();
+            }
+          });
+        },
+        error: () => {
+          this.notificationService.alert({
+            title: $localize`Oops! Could not load access details.`
+          });
+        }
+      });
   }
 
   private update() {
