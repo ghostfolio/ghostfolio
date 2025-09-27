@@ -46,6 +46,7 @@ import {
   removeCircleOutline,
   timeOutline
 } from 'ionicons/icons';
+import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -59,8 +60,8 @@ import { takeUntil } from 'rxjs/operators';
     MatButtonModule,
     MatMenuModule,
     MatSelectModule,
-    MatTableModule,
     MatSortModule,
+    MatTableModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule
   ],
@@ -202,12 +203,8 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
         this.dataSource.sort = this.sort;
-
-        if (this.sort) {
-          this.sort.active = 'created';
-          this.sort.direction = 'desc';
-        }
-
+        this.dataSource.sortingDataAccessor = get;
+       
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();

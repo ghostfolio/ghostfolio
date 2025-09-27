@@ -7,10 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Add sorting to job queue table
-
 ### Added
 
+- Added support for column sorting to the queue jobs table in the admin control panel
 - Added the symbol to the benchmark component
 - Added an option to configure the account column of the activities table component
 
