@@ -50,6 +50,7 @@
           [deviceType]="deviceType"
           [hasPermissionToShowQuantities]="false"
           [holdings]="holdings"
+          [isClosedHoldings]="holdingType === 'CLOSED'"
           [locale]="user?.settings?.locale"
           (holdingClicked)="onHoldingClicked($event)"
         />
