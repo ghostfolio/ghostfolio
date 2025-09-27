@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add Average Buy Price in holdings table
+- Added a blog post: _Hacktoberfest 2025_
 
 ### Changed
 
