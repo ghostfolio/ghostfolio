@@ -204,7 +204,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
         this.dataSource = new MatTableDataSource(jobs);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = get;
-       
+
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();

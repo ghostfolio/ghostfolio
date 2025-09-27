@@ -16,7 +16,14 @@
           </mat-select>
         </mat-form-field>
       </form>
-      <table class="gf-table w-100" mat-table matSort matSortActive="created" matSortDirection="desc" [dataSource]="dataSource">
+      <table
+        class="gf-table w-100"
+        mat-table
+        matSort
+        matSortActive="created"
+        matSortDirection="desc"
+        [dataSource]="dataSource"
+      >
         <ng-container matColumnDef="index">
           <th
             *matHeaderCellDef
