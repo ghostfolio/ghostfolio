@@ -305,10 +305,10 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateActivityDialog(activity: Activity) {
+  public openUpdateActivityDialog(aActivity: Activity) {
     const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
       data: {
-        activity,
+        activity: aActivity,
         accounts: this.user?.accounts,
         user: this.user
       },
@@ -319,10 +319,10 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((transaction: UpdateOrderDto | null) => {
-        if (transaction) {
+      .subscribe((activity: UpdateOrderDto) => {
+        if (activity) {
           this.dataService
-            .putOrder(transaction)
+            .putOrder(activity)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
