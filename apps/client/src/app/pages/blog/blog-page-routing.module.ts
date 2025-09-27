@@ -201,6 +201,15 @@ const routes: Routes = [
         (c) => c.BlackWeeks2024PageComponent
       ),
     title: 'Black Weeks 2024'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2025/09/hacktoberfest-2025',
+    loadComponent: () =>
+      import(
+        './2025/09/hacktoberfest-2025/hacktoberfest-2025-page.component'
+      ).then((c) => c.Hacktoberfest2025PageComponent),
+    title: 'Hacktoberfest 2025'
   }
 ];
 

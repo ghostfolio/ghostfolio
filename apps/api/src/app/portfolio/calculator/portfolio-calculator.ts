@@ -922,7 +922,7 @@ export abstract class PortfolioCalculator {
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
 
-        const newQuantity = quantity
+        let newQuantity = quantity
           .mul(factor)
           .plus(oldAccumulatedSymbol.quantity);
 
@@ -946,6 +946,12 @@ export abstract class PortfolioCalculator {
               quantity.mul(unitPrice)
             );
           }
+        }
+
+        if (newQuantity.abs().lt(Number.EPSILON)) {
+          // Reset to zero if quantity is (almost) zero to avoid rounding issues
+          investment = new Big(0);
+          newQuantity = new Big(0);
         }
 
         currentTransactionPointItem = {

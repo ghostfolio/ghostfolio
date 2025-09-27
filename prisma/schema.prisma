@@ -349,7 +349,6 @@ enum Type {
   DIVIDEND
   FEE
   INTEREST
-  ITEM
   LIABILITY
   SELL
 }
