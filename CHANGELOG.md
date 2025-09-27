@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added a dedicated Slack community link
+
 ### Added
 
 - Added a blog post: _Hacktoberfest 2025_
