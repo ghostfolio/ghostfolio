@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a blog post: _Hacktoberfest 2025_
 
+### Changed
+
+- Removed the deprecated `ITEM` activity type
+
 ## 2.202.0 - 2025-09-26
 
 ### Added
