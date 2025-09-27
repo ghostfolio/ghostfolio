@@ -512,48 +512,6 @@ export class DataService {
     );
   }
 
-  public fetchSymbolItem({
-    dataSource,
-    includeHistoricalData,
-    symbol
-  }: {
-    dataSource: DataSource | string;
-    includeHistoricalData?: number;
-    symbol: string;
-  }) {
-    let params = new HttpParams();
-
-    if (includeHistoricalData) {
-      params = params.append('includeHistoricalData', includeHistoricalData);
-    }
-
-    return this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`, {
-      params
-    });
-  }
-
-  public fetchSymbols({
-    includeIndices = false,
-    query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }) {
-    let params = new HttpParams().set('query', query);
-
-    if (includeIndices) {
-      params = params.append('includeIndices', includeIndices);
-    }
-
-    return this.http
-      .get<LookupResponse>('/api/v1/symbol/lookup', { params })
-      .pipe(
-        map(({ items }) => {
-          return items;
-        })
-      );
-  }
-
   public fetchPortfolioDetails({
     filters,
     withMarkets = false
@@ -721,6 +679,48 @@ export class DataService {
           }
 
           return response;
+        })
+      );
+  }
+
+  public fetchSymbolItem({
+    dataSource,
+    includeHistoricalData,
+    symbol
+  }: {
+    dataSource: DataSource | string;
+    includeHistoricalData?: number;
+    symbol: string;
+  }) {
+    let params = new HttpParams();
+
+    if (includeHistoricalData) {
+      params = params.append('includeHistoricalData', includeHistoricalData);
+    }
+
+    return this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`, {
+      params
+    });
+  }
+
+  public fetchSymbols({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }) {
+    let params = new HttpParams().set('query', query);
+
+    if (includeIndices) {
+      params = params.append('includeIndices', includeIndices);
+    }
+
+    return this.http
+      .get<LookupResponse>('/api/v1/symbol/lookup', { params })
+      .pipe(
+        map(({ items }) => {
+          return items;
         })
       );
   }
