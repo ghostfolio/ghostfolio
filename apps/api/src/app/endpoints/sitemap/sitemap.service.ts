@@ -124,7 +124,7 @@ export class SitemapService {
           languageCode,
           rootUrl,
           route: {
-            routerLink: ['blog', ...routerLink],
+            routerLink: [publicRoutes.blog.path, ...routerLink],
             path: undefined
           }
         });
