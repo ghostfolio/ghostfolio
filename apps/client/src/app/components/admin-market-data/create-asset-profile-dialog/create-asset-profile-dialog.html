@@ -38,6 +38,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Symbol</mat-label>
           <input formControlName="addSymbol" matInput />
+          <span matTextPrefix>{{ ghostfolioPrefix }}</span>
         </mat-form-field>
       </div>
     } @else if (mode === 'currency') {
