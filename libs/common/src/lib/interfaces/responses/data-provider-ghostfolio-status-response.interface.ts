@@ -1,4 +1,4 @@
-import { UserWithSettings } from '@ghostfolio/common/types';
+import { UserWithSettings } from '../../types/index';
 
 export interface DataProviderGhostfolioStatusResponse {
   dailyRequests: number;

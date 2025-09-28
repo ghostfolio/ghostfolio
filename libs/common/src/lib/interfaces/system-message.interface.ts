@@ -1,4 +1,4 @@
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
+import { SubscriptionType } from '../types/subscription-type.type';
 
 export interface SystemMessage {
   message: string;

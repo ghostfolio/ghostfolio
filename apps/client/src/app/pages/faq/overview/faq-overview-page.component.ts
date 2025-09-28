@@ -1,4 +1,3 @@
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -12,6 +11,8 @@ import {
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   host: { class: 'page' },

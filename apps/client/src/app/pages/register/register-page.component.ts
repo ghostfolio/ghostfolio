@@ -1,6 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
@@ -18,6 +15,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../services/data.service';
+import { InternetIdentityService } from '../../services/internet-identity.service';
+import { TokenStorageService } from '../../services/token-storage.service';
 import { UserAccountRegistrationDialogParams } from './user-account-registration-dialog/interfaces/interfaces';
 import { GfUserAccountRegistrationDialogComponent } from './user-account-registration-dialog/user-account-registration-dialog.component';
 

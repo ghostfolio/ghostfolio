@@ -1,14 +1,3 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import {
-  KEY_STAY_SIGNED_IN,
-  KEY_TOKEN,
-  SettingsStorageService
-} from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -45,6 +34,18 @@ import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import ms from 'ms';
 import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
+
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
+import { DataService } from '../../services/data.service';
+import {
+  KEY_STAY_SIGNED_IN,
+  KEY_TOKEN,
+  SettingsStorageService
+} from '../../services/settings-storage.service';
+import { TokenStorageService } from '../../services/token-storage.service';
+import { UserService } from '../../services/user/user.service';
+import { WebAuthnService } from '../../services/web-authn.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

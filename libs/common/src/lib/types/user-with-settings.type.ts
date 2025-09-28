@@ -1,7 +1,7 @@
-import { SubscriptionOffer, UserSettings } from '@ghostfolio/common/interfaces';
-import { SubscriptionType } from '@ghostfolio/common/types';
-
 import { Access, Account, Settings, User } from '@prisma/client';
+
+import { SubscriptionOffer, UserSettings } from '../interfaces/index';
+import { SubscriptionType } from './index';
 
 // TODO: Compare with User interface
 export type UserWithSettings = User & {

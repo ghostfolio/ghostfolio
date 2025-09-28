@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -16,6 +15,8 @@ import { addIcons } from 'ionicons';
 import { cloudyOutline, readerOutline, serverOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
+
+import { DataService } from '../../services/data.service';
 
 @Component({
   host: { class: 'page has-tabs' },

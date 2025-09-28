@@ -1,10 +1,5 @@
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {
@@ -33,6 +28,11 @@ import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
+import { AdminService } from '../../services/admin.service';
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
 import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
 
 @Component({

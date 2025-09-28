@@ -1,6 +1,3 @@
-import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
@@ -25,6 +22,10 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
+import { GfFearAndGreedIndexComponent } from '../fear-and-greed-index/fear-and-greed-index.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

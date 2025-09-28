@@ -1,4 +1,4 @@
-import { User } from '@ghostfolio/common/interfaces';
+import { User } from '../../interfaces/index';
 
 export interface InternalRoute {
   excludeFromAssistant?: boolean | ((aUser: User) => boolean);

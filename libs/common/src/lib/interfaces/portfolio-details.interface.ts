@@ -1,8 +1,5 @@
-import {
-  PortfolioPosition,
-  PortfolioSummary
-} from '@ghostfolio/common/interfaces';
-import { Market, MarketAdvanced } from '@ghostfolio/common/types';
+import { Market, MarketAdvanced } from '../types/index';
+import { PortfolioPosition, PortfolioSummary } from './index';
 
 export interface PortfolioDetails {
   accounts: {

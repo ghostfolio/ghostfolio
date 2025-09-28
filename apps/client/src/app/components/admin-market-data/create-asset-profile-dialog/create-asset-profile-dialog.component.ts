@@ -1,5 +1,3 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   DEFAULT_CURRENCY,
   ghostfolioPrefix,
@@ -34,6 +32,8 @@ import { DataSource } from '@prisma/client';
 import { isISO4217CurrencyCode } from 'class-validator';
 import { Subject, switchMap, takeUntil } from 'rxjs';
 
+import { AdminService } from '../../../services/admin.service';
+import { DataService } from '../../../services/data.service';
 import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 
 @Component({

@@ -1,5 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -12,6 +10,7 @@ import type { DataSource } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { catchError, map, type Observable, of, Subject, takeUntil } from 'rxjs';
 
+import { DataService } from '../../services/data.service';
 import { DataProviderStatus } from './interfaces/interfaces';
 
 @Component({

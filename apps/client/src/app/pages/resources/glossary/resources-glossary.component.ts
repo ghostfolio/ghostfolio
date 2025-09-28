@@ -1,10 +1,11 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
+import { DataService } from '../../../services/data.service';
 
 @Component({
   imports: [RouterModule],

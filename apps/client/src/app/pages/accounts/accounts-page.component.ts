@@ -1,12 +1,6 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { GfAccountDetailDialogComponent } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
-import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
@@ -22,6 +16,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
+import { GfAccountDetailDialogComponent } from '../../components/account-detail-dialog/account-detail-dialog.component';
+import { AccountDetailDialogParams } from '../../components/account-detail-dialog/interfaces/interfaces';
+import { NotificationService } from '../../core/notification/notification.service';
+import { DataService } from '../../services/data.service';
+import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { UserService } from '../../services/user/user.service';
 import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
 import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 

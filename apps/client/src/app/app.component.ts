@@ -1,5 +1,3 @@
-import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
-import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -31,6 +29,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
+import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogParams } from './components/holding-detail-dialog/interfaces/interfaces';
 import { NotificationService } from './core/notification/notification.service';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';

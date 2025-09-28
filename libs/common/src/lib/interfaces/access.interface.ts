@@ -1,6 +1,6 @@
-import { AccessType } from '@ghostfolio/common/types';
-
 import { AccessPermission } from '@prisma/client';
+
+import { AccessType } from '../types/index';
 
 export interface Access {
   alias?: string;

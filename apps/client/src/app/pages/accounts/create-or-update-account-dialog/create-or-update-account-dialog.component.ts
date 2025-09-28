@@ -1,7 +1,5 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
@@ -34,6 +32,8 @@ import { Platform } from '@prisma/client';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+import { DataService } from '../../../services/data.service';
+import { validateObjectForForm } from '../../../util/form.util';
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 
 @Component({

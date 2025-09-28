@@ -1,5 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -10,6 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   host: { class: 'page' },

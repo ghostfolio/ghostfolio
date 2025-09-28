@@ -1,8 +1,3 @@
-import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
-import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -43,6 +38,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { GfBenchmarkComparatorComponent } from '../../../components/benchmark-comparator/benchmark-comparator.component';
+import { GfInvestmentChartComponent } from '../../../components/investment-chart/investment-chart.component';
+import { DataService } from '../../../services/data.service';
+import { ImpersonationStorageService } from '../../../services/impersonation-storage.service';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   imports: [

@@ -1,4 +1,4 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '../index';
 
 export interface PortfolioHoldingsResponse {
   holdings: PortfolioPosition[];

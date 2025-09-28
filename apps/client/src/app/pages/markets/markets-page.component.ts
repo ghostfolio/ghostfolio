@@ -1,8 +1,8 @@
-import { HomeMarketComponent } from '@ghostfolio/client/components/home-market/home-market.component';
-
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
+
+import { HomeMarketComponent } from '../../components/home-market/home-market.component';
 
 @Component({
   host: { class: 'page' },

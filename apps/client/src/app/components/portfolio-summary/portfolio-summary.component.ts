@@ -1,4 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
 import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -21,6 +20,8 @@ import {
   ellipsisHorizontalCircleOutline,
   informationCircleOutline
 } from 'ionicons/icons';
+
+import { NotificationService } from '../../core/notification/notification.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

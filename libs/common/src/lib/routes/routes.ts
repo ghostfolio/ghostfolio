@@ -1,6 +1,5 @@
-import { User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-
+import { User } from '../interfaces/index';
+import { hasPermission, permissions } from '../permissions';
 import { InternalRoute } from './interfaces/internal-route.interface';
 import { PublicRoute } from './interfaces/public-route.interface';
 

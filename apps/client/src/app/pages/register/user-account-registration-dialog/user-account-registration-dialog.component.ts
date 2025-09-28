@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
@@ -30,6 +29,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../../services/data.service';
 import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
 
 @Component({

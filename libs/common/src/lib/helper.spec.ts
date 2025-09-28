@@ -1,7 +1,4 @@
-import {
-  extractNumberFromString,
-  getNumberFormatGroup
-} from '@ghostfolio/common/helper';
+import { extractNumberFromString, getNumberFormatGroup } from './helper';
 
 describe('Helper', () => {
   describe('Extract number from string', () => {

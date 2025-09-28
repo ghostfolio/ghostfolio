@@ -1,6 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
@@ -50,6 +47,10 @@ import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { NotificationService } from '../../core/notification/notification.service';
+import { AdminService } from '../../services/admin.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

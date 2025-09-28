@@ -2,12 +2,6 @@ import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto'
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
@@ -52,6 +46,12 @@ import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
+import { GfDialogFooterComponent } from '../../../../components/dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '../../../../components/dialog-header/dialog-header.component';
+import { GfFileDropModule } from '../../../../directives/file-drop/file-drop.module';
+import { GfSymbolModule } from '../../../../pipes/symbol/symbol.module';
+import { DataService } from '../../../../services/data.service';
+import { ImportActivitiesService } from '../../../../services/import-activities.service';
 import { ImportStep } from './enums/import-step';
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 

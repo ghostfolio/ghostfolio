@@ -1,7 +1,4 @@
-import {
-  AssetProfileIdentifier,
-  Benchmark
-} from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier, Benchmark } from '../index';
 
 export interface WatchlistResponse {
   watchlist: (AssetProfileIdentifier & {

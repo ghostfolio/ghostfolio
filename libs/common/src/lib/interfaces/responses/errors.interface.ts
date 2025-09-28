@@ -1,4 +1,4 @@
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '../index';
 
 export interface ResponseError {
   errors?: AssetProfileIdentifier[];

@@ -1,6 +1,5 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
@@ -49,6 +48,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
 import { DataService } from '../../../../services/data.service';
+import { UserService } from '../../../../services/user/user.service';
 import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
@@ -76,7 +76,7 @@ import { ActivityType } from './types/activity-type.type';
   styleUrls: ['./create-or-update-activity-dialog.scss'],
   templateUrl: 'create-or-update-activity-dialog.html'
 })
-export class GfCreateOrUpdateActivityDialog implements OnDestroy {
+export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public activityForm: FormGroup;
 
   public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
@@ -110,7 +110,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string,
     private userService: UserService

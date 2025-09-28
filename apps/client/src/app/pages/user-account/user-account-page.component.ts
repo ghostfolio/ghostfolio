@@ -1,4 +1,3 @@
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
@@ -16,6 +15,8 @@ import { addIcons } from 'ionicons';
 import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
+
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   host: { class: 'page has-tabs' },

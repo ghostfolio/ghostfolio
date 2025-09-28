@@ -1,11 +1,12 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+
+import { NotificationService } from '../../core/notification/notification.service';
+import { DataService } from '../../services/data.service';
+import { TokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   host: { class: 'page' },

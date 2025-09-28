@@ -1,13 +1,13 @@
-import { XRayRulesSettings } from '@ghostfolio/common/interfaces/x-ray-rules-settings.interface';
+import { AssetClass } from '@prisma/client';
+
 import {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
   ViewMode
-} from '@ghostfolio/common/types';
-import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
-
-import { AssetClass } from '@prisma/client';
+} from '../types/index';
+import { PerformanceCalculationType } from '../types/performance-calculation-type.type';
+import { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export interface UserSettings {
   annualInterestRate?: number;

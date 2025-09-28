@@ -1,11 +1,11 @@
+import { Order } from '@prisma/client';
+
+import { Market } from '../../types/index';
 import {
   EnhancedSymbolProfile,
   PortfolioDetails,
   PortfolioPosition
-} from '@ghostfolio/common/interfaces';
-import { Market } from '@ghostfolio/common/types';
-
-import { Order } from '@prisma/client';
+} from '../index';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;

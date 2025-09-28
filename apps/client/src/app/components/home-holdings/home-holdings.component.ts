@@ -1,6 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
@@ -32,6 +29,10 @@ import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { DataService } from '../../services/data.service';
+import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   imports: [

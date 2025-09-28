@@ -1,4 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import {
   getLocale,
   getNumberFormatDecimal,
@@ -25,6 +24,8 @@ import { addIcons } from 'ionicons';
 import { timeOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { NotificationService } from '../../core/notification/notification.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

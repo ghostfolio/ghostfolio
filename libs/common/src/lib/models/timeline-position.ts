@@ -1,12 +1,9 @@
-import {
-  transformToBig,
-  transformToMapOfBig
-} from '@ghostfolio/common/class-transformer';
-import { DateRange } from '@ghostfolio/common/types';
-
 import { DataSource, Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
+
+import { transformToBig, transformToMapOfBig } from '../class-transformer';
+import { DateRange } from '../types/index';
 
 export class TimelinePosition {
   @Transform(transformToBig, { toClassOnly: true })

@@ -3,7 +3,6 @@ import {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON
 } from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
-import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -13,6 +12,8 @@ import {
 } from '@simplewebauthn/browser';
 import { of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
+
+import { SettingsStorageService } from './settings-storage.service';
 
 @Injectable({
   providedIn: 'root'

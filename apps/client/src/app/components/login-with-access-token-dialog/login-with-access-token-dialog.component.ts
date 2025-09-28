@@ -1,11 +1,3 @@
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
-import {
-  KEY_STAY_SIGNED_IN,
-  SettingsStorageService
-} from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +17,14 @@ import { Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
+
+import { InternetIdentityService } from '../../services/internet-identity.service';
+import {
+  KEY_STAY_SIGNED_IN,
+  SettingsStorageService
+} from '../../services/settings-storage.service';
+import { TokenStorageService } from '../../services/token-storage.service';
+import { GfDialogHeaderComponent } from '../dialog-header/dialog-header.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

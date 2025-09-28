@@ -1,11 +1,11 @@
-import { GfUserAccountAccessComponent } from '@ghostfolio/client/components/user-account-access/user-account-access.component';
-import { GfUserAccountMembershipComponent } from '@ghostfolio/client/components/user-account-membership/user-account-membership.component';
-import { GfUserAccountSettingsComponent } from '@ghostfolio/client/components/user-account-settings/user-account-settings.component';
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
+import { GfUserAccountAccessComponent } from '../../components/user-account-access/user-account-access.component';
+import { GfUserAccountMembershipComponent } from '../../components/user-account-membership/user-account-membership.component';
+import { GfUserAccountSettingsComponent } from '../../components/user-account-settings/user-account-settings.component';
+import { AuthGuard } from '../../core/auth.guard';
 import { GfUserAccountPageComponent } from './user-account-page.component';
 
 export const routes: Routes = [

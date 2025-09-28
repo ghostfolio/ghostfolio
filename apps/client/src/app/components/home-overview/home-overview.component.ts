@@ -1,8 +1,3 @@
-import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
-import { LayoutService } from '@ghostfolio/client/core/layout.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
@@ -27,6 +22,12 @@ import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { LayoutService } from '../../core/layout.service';
+import { DataService } from '../../services/data.service';
+import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { UserService } from '../../services/user/user.service';
+import { GfPortfolioPerformanceComponent } from '../portfolio-performance/portfolio-performance.component';
 
 @Component({
   imports: [

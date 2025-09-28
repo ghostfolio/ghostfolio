@@ -1,7 +1,4 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {
   ChangeDetectionStrategy,
@@ -29,6 +26,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
+import { NotificationService } from '../../../core/notification/notification.service';
+import { DataService } from '../../../services/data.service';
+import { validateObjectForForm } from '../../../util/form.util';
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
 @Component({

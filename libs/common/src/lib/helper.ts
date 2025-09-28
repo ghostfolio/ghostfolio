@@ -325,7 +325,7 @@ export function groupBy<T, K extends keyof T>(
     if (!map.has(t[key])) {
       map.set(t[key], []);
     }
-    map.get(t[key])!.push(t);
+    map.get(t[key]).push(t);
   });
   return map;
 }
@@ -371,7 +371,7 @@ export function parseDate(date: string): Date {
 
   // Transform 'yyyyMMdd' format to supported format by parse function
   if (date?.length === 8) {
-    const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
+    const match = /^(\d{4})(\d{2})(\d{2})$/.exec(date);
 
     if (match) {
       const [, year, month, day] = match;

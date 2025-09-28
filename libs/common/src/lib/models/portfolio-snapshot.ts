@@ -1,12 +1,12 @@
-import { transformToBig } from '@ghostfolio/common/class-transformer';
+import { Big } from 'big.js';
+import { Transform, Type } from 'class-transformer';
+
+import { transformToBig } from '../class-transformer';
 import {
   AssetProfileIdentifier,
   HistoricalDataItem
-} from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
-
-import { Big } from 'big.js';
-import { Transform, Type } from 'class-transformer';
+} from '../interfaces/index';
+import { TimelinePosition } from './index';
 
 export class PortfolioSnapshot {
   activitiesCount: number;

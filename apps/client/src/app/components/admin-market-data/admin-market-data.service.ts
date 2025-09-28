@@ -1,6 +1,3 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import {
   getCurrencyFromSymbol,
@@ -14,6 +11,10 @@ import {
 
 import { Injectable } from '@angular/core';
 import { EMPTY, catchError, finalize, forkJoin } from 'rxjs';
+
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
+import { AdminService } from '../../services/admin.service';
 
 @Injectable()
 export class AdminMarketDataService {

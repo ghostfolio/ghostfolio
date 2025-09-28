@@ -1,5 +1,4 @@
-import { BenchmarkTrend } from '@ghostfolio/common/types/';
-
+import { BenchmarkTrend } from '../types/index';
 import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 
 export interface Benchmark {

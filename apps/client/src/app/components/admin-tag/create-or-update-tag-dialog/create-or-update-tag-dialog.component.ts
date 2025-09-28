@@ -1,6 +1,5 @@
 import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {
   ChangeDetectionStrategy,
@@ -24,6 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 
+import { validateObjectForForm } from '../../../util/form.util';
 import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
 
 @Component({

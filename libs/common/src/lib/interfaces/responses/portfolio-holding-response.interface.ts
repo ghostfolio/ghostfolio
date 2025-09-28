@@ -1,12 +1,13 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+
+import { Tag } from '@prisma/client';
+
 import {
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
   HistoricalDataItem
-} from '@ghostfolio/common/interfaces';
-
-import { Tag } from '@prisma/client';
+} from '../index';
 
 export interface PortfolioHoldingResponse {
   activities: Activity[];

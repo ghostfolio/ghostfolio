@@ -1,13 +1,13 @@
-import { GfAdminJobsComponent } from '@ghostfolio/client/components/admin-jobs/admin-jobs.component';
-import { GfAdminMarketDataComponent } from '@ghostfolio/client/components/admin-market-data/admin-market-data.component';
-import { GfAdminOverviewComponent } from '@ghostfolio/client/components/admin-overview/admin-overview.component';
-import { GfAdminSettingsComponent } from '@ghostfolio/client/components/admin-settings/admin-settings.component';
-import { GfAdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
+import { GfAdminJobsComponent } from '../../components/admin-jobs/admin-jobs.component';
+import { GfAdminMarketDataComponent } from '../../components/admin-market-data/admin-market-data.component';
+import { GfAdminOverviewComponent } from '../../components/admin-overview/admin-overview.component';
+import { GfAdminSettingsComponent } from '../../components/admin-settings/admin-settings.component';
+import { GfAdminUsersComponent } from '../../components/admin-users/admin-users.component';
+import { AuthGuard } from '../../core/auth.guard';
 import { AdminPageComponent } from './admin-page.component';
 
 export const routes: Routes = [

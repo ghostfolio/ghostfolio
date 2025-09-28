@@ -1,8 +1,8 @@
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
+import { AuthGuard } from '../../core/auth.guard';
 import { PortfolioPageComponent } from './portfolio-page.component';
 
 export const routes: Routes = [

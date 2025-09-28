@@ -1,7 +1,6 @@
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
-
 import { Access, Account, Tag } from '@prisma/client';
 
+import { SubscriptionType } from '../types/subscription-type.type';
 import { SubscriptionOffer } from './subscription-offer.interface';
 import { SystemMessage } from './system-message.interface';
 import { UserSettings } from './user-settings.interface';

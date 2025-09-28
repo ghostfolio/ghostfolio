@@ -1,4 +1,3 @@
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import {
   getDateFnsLocale,
@@ -48,6 +47,7 @@ import { NotificationService } from '../../core/notification/notification.servic
 import { AdminService } from '../../services/admin.service';
 import { DataService } from '../../services/data.service';
 import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { TokenStorageService } from '../../services/token-storage.service';
 import { UserService } from '../../services/user/user.service';
 
 @Component({

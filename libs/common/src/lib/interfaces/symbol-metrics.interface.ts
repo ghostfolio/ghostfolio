@@ -1,6 +1,6 @@
-import { DateRange } from '@ghostfolio/common/types';
-
 import { Big } from 'big.js';
+
+import { DateRange } from '../types/index';
 
 export interface SymbolMetrics {
   currentValues: {

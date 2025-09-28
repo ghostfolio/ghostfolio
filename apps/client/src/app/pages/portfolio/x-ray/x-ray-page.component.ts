@@ -1,8 +1,4 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioReportResponse,
   PortfolioReportRule
@@ -22,6 +18,11 @@ import {
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
+
+import { GfRulesComponent } from '../../../components/rules/rules.component';
+import { DataService } from '../../../services/data.service';
+import { ImpersonationStorageService } from '../../../services/impersonation-storage.service';
+import { UserService } from '../../../services/user/user.service';
 
 @Component({
   imports: [

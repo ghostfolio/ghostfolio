@@ -1,5 +1,4 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { GfRuleComponent } from '@ghostfolio/client/components/rule/rule.component';
 import {
   PortfolioReportRule,
   XRayRulesSettings
@@ -14,6 +13,8 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+
+import { GfRuleComponent } from '../rule/rule.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

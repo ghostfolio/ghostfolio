@@ -1,8 +1,6 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { getLocale } from '@ghostfolio/common/helper';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -34,6 +32,9 @@ import {
 import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
+
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { GfValueComponent } from '../value/value.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

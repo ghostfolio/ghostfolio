@@ -1,5 +1,3 @@
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import {
   HEADER_KEY_IMPERSONATION,
   HEADER_KEY_SKIP_INTERCEPTOR,
@@ -15,6 +13,9 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { ImpersonationStorageService } from '../services/impersonation-storage.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

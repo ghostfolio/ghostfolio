@@ -1,6 +1,5 @@
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {
@@ -26,6 +25,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 
+import { validateObjectForForm } from '../../../util/form.util';
 import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
 
 @Component({

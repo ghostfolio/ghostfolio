@@ -1,7 +1,3 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -24,6 +20,11 @@ import ms, { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

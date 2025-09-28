@@ -1,4 +1,4 @@
-import { AccountWithValue } from '@ghostfolio/common/types';
+import { AccountWithValue } from '../../types/index';
 
 export interface AccountsResponse {
   accounts: AccountWithValue[];

@@ -1,7 +1,6 @@
-import { Market, MarketAdvanced } from '@ghostfolio/common/types';
-
 import { AssetClass, AssetSubClass, DataSource, Tag } from '@prisma/client';
 
+import { Market, MarketAdvanced } from '../types/index';
 import { Country } from './country.interface';
 import { Holding } from './holding.interface';
 import { Sector } from './sector.interface';

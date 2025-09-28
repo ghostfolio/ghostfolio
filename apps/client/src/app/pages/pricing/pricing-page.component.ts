@@ -1,6 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -30,6 +27,10 @@ import { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+
+import { NotificationService } from '../../core/notification/notification.service';
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   host: { class: 'page' },

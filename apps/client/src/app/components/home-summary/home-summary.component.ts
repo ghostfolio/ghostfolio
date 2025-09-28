@@ -1,7 +1,3 @@
-import { GfPortfolioSummaryComponent } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   InfoItem,
   PortfolioSummary,
@@ -20,6 +16,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { DataService } from '../../services/data.service';
+import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { UserService } from '../../services/user/user.service';
+import { GfPortfolioSummaryComponent } from '../portfolio-summary/portfolio-summary.component';
 
 @Component({
   imports: [GfPortfolioSummaryComponent, MatCardModule],

@@ -1,8 +1,4 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_5_FIGURES,
@@ -68,6 +64,10 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
+import { GfDialogFooterComponent } from '../dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '../dialog-header/dialog-header.component';
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
 @Component({

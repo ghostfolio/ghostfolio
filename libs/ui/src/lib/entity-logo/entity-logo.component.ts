@@ -1,5 +1,3 @@
-import { EntityLogoImageSourceService } from '@ghostfolio/ui/entity-logo/entity-logo-image-source.service';
-
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -9,6 +7,8 @@ import {
   OnChanges
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
+
+import { EntityLogoImageSourceService } from './entity-logo-image-source.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

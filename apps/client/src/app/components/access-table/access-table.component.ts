@@ -1,5 +1,3 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
@@ -30,6 +28,9 @@ import {
   removeCircleOutline
 } from 'ionicons/icons';
 import ms from 'ms';
+
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

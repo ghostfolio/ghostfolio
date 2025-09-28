@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -7,6 +6,8 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+
+import { DataService } from '../../../services/data.service';
 
 @Component({
   host: { class: 'page' },

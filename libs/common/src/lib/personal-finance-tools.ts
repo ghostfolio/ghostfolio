@@ -1,4 +1,4 @@
-import { Product } from '@ghostfolio/common/interfaces';
+import { Product } from './interfaces/index';
 
 export const personalFinanceTools: Product[] = [
   {

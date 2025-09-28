@@ -1,9 +1,3 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { CacheService } from '@ghostfolio/client/services/cache.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PROPERTY_COUPONS,
   PROPERTY_IS_DATA_GATHERING_ENABLED,
@@ -53,6 +47,13 @@ import {
 import ms, { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
+import { AdminService } from '../../services/admin.service';
+import { CacheService } from '../../services/cache.service';
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   imports: [

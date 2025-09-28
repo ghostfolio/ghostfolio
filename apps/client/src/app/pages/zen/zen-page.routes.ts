@@ -1,10 +1,10 @@
-import { GfHomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
-import { GfHomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
+import { GfHomeHoldingsComponent } from '../../components/home-holdings/home-holdings.component';
+import { GfHomeOverviewComponent } from '../../components/home-overview/home-overview.component';
+import { AuthGuard } from '../../core/auth.guard';
 import { GfZenPageComponent } from './zen-page.component';
 
 export const routes: Routes = [
