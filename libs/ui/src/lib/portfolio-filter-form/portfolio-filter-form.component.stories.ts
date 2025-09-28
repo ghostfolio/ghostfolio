@@ -1,0 +1,70 @@
+import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
+
+import { GfPortfolioFilterFormComponent } from './portfolio-filter-form.component';
+
+const meta: Meta<GfPortfolioFilterFormComponent> = {
+  title: 'Portfolio Filter Form',
+  component: GfPortfolioFilterFormComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [GfPortfolioFilterFormComponent]
+    })
+  ]
+};
+
+export default meta;
+type Story = StoryObj<GfPortfolioFilterFormComponent>;
+
+export const Default: Story = {
+  args: {
+    accounts: [
+      {
+        id: '1',
+        name: 'Trading Account',
+        platform: {
+          name: 'Interactive Brokers',
+          url: 'https://interactivebrokers.com'
+        }
+      },
+      {
+        id: '2',
+        name: 'Investment Account',
+        platform: {
+          name: 'Fidelity',
+          url: 'https://fidelity.com'
+        }
+      }
+    ] as any,
+    assetClasses: [
+      { id: 'EQUITY', label: 'Equity', type: 'ASSET_CLASS' },
+      { id: 'FIXED_INCOME', label: 'Fixed Income', type: 'ASSET_CLASS' },
+      { id: 'COMMODITY', label: 'Commodity', type: 'ASSET_CLASS' }
+    ] as any,
+    holdings: [
+      {
+        name: 'Apple Inc.',
+        symbol: 'AAPL',
+        currency: 'USD',
+        dataSource: 'YAHOO'
+      },
+      {
+        name: 'Microsoft Corporation',
+        symbol: 'MSFT',
+        currency: 'USD',
+        dataSource: 'YAHOO'
+      }
+    ] as any,
+    tags: [
+      { id: 'tech', label: 'Technology', type: 'TAG' },
+      { id: 'dividend', label: 'Dividend', type: 'TAG' }
+    ] as any,
+    disabled: false
+  }
+};
+
+export const Disabled: Story = {
+  args: {
+    ...Default.args,
+    disabled: true
+  }
+};

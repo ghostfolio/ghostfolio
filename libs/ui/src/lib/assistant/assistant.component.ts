@@ -5,7 +5,7 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
@@ -25,19 +25,14 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Account, AssetClass, DataSource } from '@prisma/client';
+import { AssetClass, DataSource } from '@prisma/client';
 import { differenceInYears } from 'date-fns';
 import Fuse from 'fuse.js';
 import { addIcons } from 'ionicons';
@@ -60,8 +55,11 @@ import {
   tap
 } from 'rxjs/operators';
 
-import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { translate } from '../i18n';
+import {
+  GfPortfolioFilterFormComponent,
+  PortfolioFilterFormValue
+} from '../portfolio-filter-form';
 import { GfAssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
 import { SearchMode } from './enums/search-mode';
 import {
@@ -75,7 +73,7 @@ import {
   imports: [
     FormsModule,
     GfAssistantListItemComponent,
-    GfEntityLogoComponent,
+    GfPortfolioFilterFormComponent,
     GfSymbolModule,
     IonIcon,
     MatButtonModule,
@@ -128,6 +126,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   @Input() hasPermissionToChangeDateRange: boolean;
   @Input() hasPermissionToChangeFilters: boolean;
   @Input() user: User;
+  @Input() accountsWithValue: AccountWithValue[] = [];
 
   @Output() closed = new EventEmitter<void>();
   @Output() dateRangeChanged = new EventEmitter<DateRange>();
@@ -141,16 +140,18 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
-  public accounts: Account[] = [];
+  public accounts: AccountWithValue[] = [];
   public assetClasses: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
   public dateRangeOptions: IDateRangeOption[] = [];
-  public filterForm = this.formBuilder.group({
-    account: new FormControl<string>(undefined),
-    assetClass: new FormControl<string>(undefined),
-    holding: new FormControl<PortfolioPosition>(undefined),
-    tag: new FormControl<string>(undefined)
-  });
+  public portfolioFilterFormControl = new FormControl<PortfolioFilterFormValue>(
+    {
+      account: null,
+      assetClass: null,
+      holding: null,
+      tag: null
+    }
+  );
   public holdings: PortfolioPosition[] = [];
   public isLoading = {
     accounts: false,
@@ -182,8 +183,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private formBuilder: FormBuilder
+    private dataService: DataService
   ) {
     addIcons({ closeCircleOutline, closeOutline, searchOutline });
   }
@@ -369,7 +369,29 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
-    this.accounts = this.user?.accounts ?? [];
+    // Use accountsWithValue if provided, otherwise transform user.accounts as fallback
+    if (this.accountsWithValue?.length > 0) {
+      this.accounts = this.accountsWithValue;
+    } else {
+      // Transform basic accounts to AccountWithValue format for compatibility
+      this.accounts = (this.user?.accounts ?? []).map((account) => ({
+        ...account,
+        allocationInPercentage: 0,
+        balanceInBaseCurrency: account.balance || 0,
+        dividendInBaseCurrency: 0,
+        interestInBaseCurrency: 0,
+        platform: account.platformId
+          ? {
+              id: account.platformId,
+              name: account.platformId, // Fallback, ideally should be resolved
+              url: ''
+            }
+          : undefined,
+        transactionCount: 0,
+        value: account.balance || 0,
+        valueInBaseCurrency: account.balance || 0
+      })) as AccountWithValue[];
+    }
 
     this.dateRangeOptions = [
       {
@@ -438,8 +460,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
 
-    this.filterForm.disable({ emitEvent: false });
-
     this.tags =
       this.user?.tags
         ?.filter(({ isUsed }) => {
@@ -452,29 +472,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             type: 'TAG'
           };
         }) ?? [];
-
-    if (this.tags.length === 0) {
-      this.filterForm.get('tag').disable({ emitEvent: false });
-    }
   }
 
   public hasFilter(aFormValue: { [key: string]: string }) {
     return Object.values(aFormValue).some((value) => {
       return !!value;
     });
-  }
-
-  public holdingComparisonFunction(
-    option: PortfolioPosition,
-    value: PortfolioPosition
-  ): boolean {
-    if (value === null) {
-      return false;
-    }
-
-    return (
-      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
-    );
   }
 
   public initialize() {
@@ -520,36 +523,33 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           .sort((a, b) => {
             return a.name?.localeCompare(b.name);
           });
-        this.setFilterFormValues();
-
-        if (this.hasPermissionToChangeFilters) {
-          this.filterForm.enable({ emitEvent: false });
-        }
+        this.setPortfolioFilterFormValues();
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
   public onApplyFilters() {
+    const filterValue = this.portfolioFilterFormControl.value;
     this.filtersChanged.emit([
       {
-        id: this.filterForm.get('account').value,
+        id: filterValue?.account,
         type: 'ACCOUNT'
       },
       {
-        id: this.filterForm.get('assetClass').value,
+        id: filterValue?.assetClass,
         type: 'ASSET_CLASS'
       },
       {
-        id: this.filterForm.get('holding').value?.dataSource,
+        id: filterValue?.holding?.dataSource,
         type: 'DATA_SOURCE'
       },
       {
-        id: this.filterForm.get('holding').value?.symbol,
+        id: filterValue?.holding?.symbol,
         type: 'SYMBOL'
       },
       {
-        id: this.filterForm.get('tag').value,
+        id: filterValue?.tag,
         type: 'TAG'
       }
     ]);
@@ -568,6 +568,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onResetFilters() {
+    this.portfolioFilterFormControl.setValue({
+      account: null,
+      assetClass: null,
+      holding: null,
+      tag: null
+    });
+
     this.filtersChanged.emit(
       this.filterTypes.map((type) => {
         return {
@@ -723,7 +730,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     });
   }
 
-  private setFilterFormValues() {
+  private setPortfolioFilterFormValues() {
     const dataSource = this.user?.settings?.[
       'filters.dataSource'
     ] as DataSource;
@@ -737,16 +744,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       );
     });
 
-    this.filterForm.setValue(
-      {
-        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
-        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
-        holding: selectedHolding ?? null,
-        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
-      },
-      {
-        emitEvent: false
-      }
-    );
+    this.portfolioFilterFormControl.setValue({
+      account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
+      assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
+      holding: selectedHolding ?? null,
+      tag: this.user?.settings?.['filters.tags']?.[0] ?? null
+    });
   }
 }
