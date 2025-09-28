@@ -54,7 +54,7 @@ export class GfAccessTableComponent implements OnChanges {
   @Input() user: User;
 
   @Output() accessDeleted = new EventEmitter<string>();
-  @Output() accessEdited = new EventEmitter<string>();
+  @Output() accessToUpdate = new EventEmitter<string>();
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
@@ -116,7 +116,7 @@ export class GfAccessTableComponent implements OnChanges {
     });
   }
 
-  public onEditAccess(aId: string) {
-    this.accessEdited.emit(aId);
+  public onUpdateAccess(aId: string) {
+    this.accessToUpdate.emit(aId);
   }
 }

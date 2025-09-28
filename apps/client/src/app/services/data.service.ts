@@ -54,7 +54,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
-  AccessWithGranteeUser,
   AccountWithValue,
   AiPromptMode,
   DateRange,
@@ -334,10 +333,6 @@ export class DataService {
 
   public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<any>(`/api/v1/watchlist/${dataSource}/${symbol}`);
-  }
-
-  public fetchAccess(id: string) {
-    return this.http.get<AccessWithGranteeUser>(`/api/v1/access/${id}`);
   }
 
   public fetchAccesses() {
@@ -798,11 +793,8 @@ export class DataService {
     return this.http.post('/api/v1/watchlist', watchlistItem);
   }
 
-  public putAccess(id: string, aAccess: UpdateAccessDto) {
-    return this.http.put<AccessWithGranteeUser>(
-      `/api/v1/access/${id}`,
-      aAccess
-    );
+  public putAccess(aAccess: UpdateAccessDto) {
+    return this.http.put<Access>(`/api/v1/access/${aAccess.id}`, aAccess);
   }
 
   public putAccount(aAccount: UpdateAccountDto) {

@@ -34,21 +34,6 @@ export class AccessController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getAccess(@Param('id') id: string): Promise<AccessModel> {
-    const access = await this.accessService.access({ id });
-
-    if (!access || access.userId !== this.request.user.id) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return access;
-  }
-
   @Get()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAllAccesses(): Promise<Access[]> {
@@ -56,7 +41,10 @@ export class AccessController {
       include: {
         granteeUser: true
       },
-      orderBy: { granteeUserId: 'asc' },
+      orderBy: [
+        { granteeUserId: 'desc' }, // NULL values first (public access), then user IDs
+        { createdAt: 'asc' } // Within each group, order by creation time
+      ],
       where: { userId: this.request.user.id }
     });
 
@@ -120,9 +108,12 @@ export class AccessController {
   @HasPermission(permissions.deleteAccess)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
-    const access = await this.accessService.access({ id });
+    const originalAccess = await this.accessService.access({
+      id,
+      userId: this.request.user.id
+    });
 
-    if (!access || access.userId !== this.request.user.id) {
+    if (!originalAccess) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -134,6 +125,7 @@ export class AccessController {
     });
   }
 
+  @HasPermission(permissions.updateAccess)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateAccess(
@@ -150,9 +142,12 @@ export class AccessController {
       );
     }
 
-    const access = await this.accessService.access({ id });
+    const originalAccess = await this.accessService.access({
+      id,
+      userId: this.request.user.id
+    });
 
-    if (!access || access.userId !== this.request.user.id) {
+    if (!originalAccess) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -160,16 +155,16 @@ export class AccessController {
     }
 
     try {
-      return this.accessService.updateAccess(
-        { id },
-        {
+      return this.accessService.updateAccess({
+        data: {
           alias: data.alias,
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
           permissions: data.permissions
-        }
-      );
+        },
+        where: { id }
+      });
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),

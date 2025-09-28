@@ -65,12 +65,14 @@
           <ion-icon name="ellipsis-horizontal" />
         </button>
         <mat-menu #transactionMenu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="onEditAccess(element.id)">
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="create-outline" />
-              <span i18n>Edit</span>
-            </span>
-          </button>
+          @if (user?.settings?.isExperimentalFeatures) {
+            <button mat-menu-item (click)="onUpdateAccess(element.id)">
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="create-outline" />
+                <span i18n>Edit</span>
+              </span>
+            </button>
+          }
           @if (element.type === 'PUBLIC') {
             <button mat-menu-item (click)="onCopyUrlToClipboard(element.id)">
               <span class="align-items-center d-flex">
@@ -79,7 +81,6 @@
               </span>
             </button>
           }
-          <hr class="my-0" />
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="remove-circle-outline" />

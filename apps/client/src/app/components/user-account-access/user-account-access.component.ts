@@ -115,6 +115,8 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       .subscribe((params) => {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
+        } else if (params['editDialog']) {
+          this.openUpdateAccessDialog(params['editDialog']);
         }
       });
 
@@ -138,8 +140,8 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onEditAccess(aId: string) {
-    this.openEditAccessDialog(aId);
+  public onUpdateAccess(aId: string) {
+    this.openUpdateAccessDialog(aId);
   }
 
   public onGenerateAccessToken() {
@@ -204,39 +206,39 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     });
   }
 
-  private openEditAccessDialog(accessId: string) {
-    // Fetch the access details first
-    this.dataService
-      .fetchAccess(accessId)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: (accessDetails) => {
-          const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialog, {
-            data: {
-              access: {
-                alias: accessDetails.alias,
-                permissions: accessDetails.permissions,
-                type: accessDetails.granteeUser ? 'PRIVATE' : 'PUBLIC',
-                grantee: accessDetails.granteeUser?.id || null
-              },
-              accessId: accessId
-            },
-            height: this.deviceType === 'mobile' ? '98vh' : undefined,
-            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-          });
+  private openUpdateAccessDialog(accessId: string) {
+    // Find the access details in the already loaded data
+    const accessDetails = this.accessesGive.find(
+      (access) => access.id === accessId
+    );
 
-          dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-              this.update();
-            }
-          });
-        },
-        error: () => {
-          this.notificationService.alert({
-            title: $localize`Oops! Could not load access details.`
-          });
-        }
+    if (!accessDetails) {
+      this.notificationService.alert({
+        title: $localize`Oops! Could not find access details.`
       });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialog, {
+      data: {
+        access: {
+          id: accessDetails.id,
+          alias: accessDetails.alias,
+          permissions: accessDetails.permissions,
+          type: accessDetails.type,
+          grantee:
+            accessDetails.grantee === 'Public' ? null : accessDetails.grantee
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.update();
+      }
+    });
   }
 
   private update() {

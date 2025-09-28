@@ -49,9 +49,9 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
 })
-export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
+export class GfCreateOrUpdateAccessDialog implements OnDestroy, OnInit {
   public accessForm: FormGroup;
-  public isEditMode: boolean;
+  public mode: 'create' | 'update';
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -63,11 +63,64 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
   ) {
-    this.isEditMode = !!data.accessId;
+    this.mode = this.data.access?.id ? 'update' : 'create';
+  }
+
+  public onCancel() {
+    this.dialogRef.close();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  public ngOnInit() {
+    this.accessForm = this.formBuilder.group({
+      alias: [this.data.access.alias],
+      granteeUserId: [this.data.access.grantee, Validators.required],
+      permissions: [this.data.access.permissions[0], Validators.required],
+      type: [
+        { value: this.data.access.type, disabled: this.mode === 'update' },
+        Validators.required
+      ]
+    });
+
+    this.accessForm.get('type').valueChanges.subscribe((accessType) => {
+      const granteeUserIdControl = this.accessForm.get('granteeUserId');
+      const permissionsControl = this.accessForm.get('permissions');
+
+      if (accessType === 'PRIVATE') {
+        granteeUserIdControl.setValidators(Validators.required);
+      } else {
+        granteeUserIdControl.clearValidators();
+        granteeUserIdControl.setValue(null);
+        permissionsControl.setValue(this.data.access.permissions[0]);
+      }
+
+      granteeUserIdControl.updateValueAndValidity();
+
+      this.changeDetectorRef.markForCheck();
+    });
+
+    // Initial validation setup based on current type
+    if (this.accessForm.get('type').value === 'PUBLIC') {
+      const granteeUserIdControl = this.accessForm.get('granteeUserId');
+      granteeUserIdControl.clearValidators();
+      granteeUserIdControl.setValue(null);
+      granteeUserIdControl.updateValueAndValidity();
+    }
+  }
+
+  public async onSubmit() {
+    if (this.mode === 'update') {
+      await this.updateAccess();
+    } else {
+      await this.createAccess();
+    }
   }
 
   private async createAccess() {
-    console.log('Creating access...');
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias').value,
       granteeUserId: this.accessForm.get('granteeUserId').value,
@@ -103,75 +156,13 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
     }
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  public ngOnInit() {
-    this.accessForm = this.formBuilder.group({
-      alias: [this.data.access.alias],
-      granteeUserId: [this.data.access.grantee, Validators.required],
-      permissions: [this.data.access.permissions[0], Validators.required],
-      type: [
-        { value: this.data.access.type, disabled: this.isEditMode },
-        Validators.required
-      ]
-    });
-
-    this.accessForm.get('type').valueChanges.subscribe((accessType) => {
-      const granteeUserIdControl = this.accessForm.get('granteeUserId');
-      const permissionsControl = this.accessForm.get('permissions');
-
-      if (accessType === 'PRIVATE') {
-        granteeUserIdControl.setValidators(Validators.required);
-      } else {
-        granteeUserIdControl.clearValidators();
-        granteeUserIdControl.setValue(null);
-        permissionsControl.setValue(this.data.access.permissions[0]);
-      }
-
-      granteeUserIdControl.updateValueAndValidity();
-
-      this.changeDetectorRef.markForCheck();
-    });
-
-    // Initial validation setup based on current type
-    if (this.accessForm.get('type').value === 'PUBLIC') {
-      const granteeUserIdControl = this.accessForm.get('granteeUserId');
-      granteeUserIdControl.clearValidators();
-      granteeUserIdControl.setValue(null);
-      granteeUserIdControl.updateValueAndValidity();
-    }
-  }
-
-  public onCancel() {
-    this.dialogRef.close();
-  }
-
-  public async onSubmit() {
-    if (!this.accessForm.valid) {
-      console.error('Form is invalid:', this.accessForm.errors);
-      return;
-    }
-
-    if (this.isEditMode) {
-      await this.updateAccess();
-    } else {
-      await this.createAccess();
-    }
-  }
-
   private async updateAccess() {
-    console.log('Updating access...');
     const access: UpdateAccessDto = {
+      id: this.data.access.id,
       alias: this.accessForm.get('alias').value,
       granteeUserId: this.accessForm.get('granteeUserId').value,
       permissions: [this.accessForm.get('permissions').value]
     };
-
-    console.log('Access data:', access);
-    console.log('Access ID:', this.data.accessId);
 
     try {
       await validateObjectForForm({
@@ -181,7 +172,7 @@ export class GfCreateOrUpdateAccessDialog implements OnInit, OnDestroy {
       });
 
       this.dataService
-        .putAccess(this.data.accessId, access)
+        .putAccess(access)
         .pipe(
           catchError((error) => {
             if (error.status === StatusCodes.BAD_REQUEST) {

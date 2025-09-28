@@ -64,7 +64,7 @@
     [showActions]="hasPermissionToDeleteAccess"
     [user]="user"
     (accessDeleted)="onDeleteAccess($event)"
-    (accessEdited)="onEditAccess($event)"
+    (accessToUpdate)="onUpdateAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {
     <div class="fab-container">

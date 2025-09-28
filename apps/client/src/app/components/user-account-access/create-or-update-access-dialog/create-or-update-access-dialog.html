@@ -5,7 +5,7 @@
   (ngSubmit)="onSubmit()"
 >
   <h1 mat-dialog-title>
-    @if (isEditMode) {
+    @if (mode === 'update') {
       <span i18n>Edit access</span>
     } @else {
       <span i18n>Grant access</span>
@@ -73,10 +73,12 @@
       mat-flat-button
       type="submit"
       [disabled]="
-        isEditMode ? !accessForm.valid : !(accessForm.dirty && accessForm.valid)
+        mode === 'update'
+          ? !accessForm.valid
+          : !(accessForm.dirty && accessForm.valid)
       "
     >
-      @if (isEditMode) {
+      @if (mode === 'update') {
         <ng-container i18n>Update</ng-container>
       } @else {
         <ng-container i18n>Save</ng-container>
