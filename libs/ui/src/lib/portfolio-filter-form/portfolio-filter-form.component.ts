@@ -20,6 +20,7 @@ import {
   ControlValueAccessor,
   FormBuilder,
   FormControl,
+  FormGroup,
   FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule
@@ -67,12 +68,7 @@ export class GfPortfolioFilterFormComponent
   @Output() applyFilters = new EventEmitter<void>();
   @Output() resetFilters = new EventEmitter<void>();
 
-  public filterForm = this.formBuilder.group({
-    account: new FormControl<string>(null),
-    assetClass: new FormControl<string>(null),
-    holding: new FormControl<PortfolioPosition>(null),
-    tag: new FormControl<string>(null)
-  });
+  public filterForm: FormGroup;
 
   private onChange: (value: PortfolioFilterFormValue) => void = () => {
     // ControlValueAccessor callback - implemented by parent
@@ -85,7 +81,15 @@ export class GfPortfolioFilterFormComponent
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    // Create form with initial state (will be updated in ngOnChanges)
+    this.filterForm = this.formBuilder.group({
+      account: new FormControl<string>(null),
+      assetClass: new FormControl<string>(null),
+      holding: new FormControl<PortfolioPosition>(null),
+      tag: new FormControl<string>(null)
+    });
+  }
 
   public ngOnInit() {
     // Subscribe to form changes to notify parent component
@@ -145,7 +149,15 @@ export class GfPortfolioFilterFormComponent
 
   public setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-    this.ngOnChanges();
+
+    // Update form disabled state manually since this is called by ControlValueAccessor
+    if (this.disabled) {
+      this.filterForm.disable({ emitEvent: false });
+    } else {
+      this.filterForm.enable({ emitEvent: false });
+    }
+
+    this.changeDetectorRef.markForCheck();
   }
 
   // Helper methods

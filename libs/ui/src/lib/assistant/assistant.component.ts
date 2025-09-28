@@ -393,6 +393,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       })) as AccountWithValue[];
     }
 
+    // Handle portfolio filter form disabled state
+    if (this.hasPermissionToChangeFilters) {
+      this.portfolioFilterFormControl.enable({ emitEvent: false });
+    } else {
+      this.portfolioFilterFormControl.disable({ emitEvent: false });
+    }
+
     this.dateRangeOptions = [
       {
         label: $localize`Today`,
