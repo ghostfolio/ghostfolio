@@ -30,7 +30,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { GfCreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
+import { GfCreateOrUpdateAccessDialogComponent } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -179,7 +179,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   }
 
   private openCreateAccessDialog() {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
       data: {
         access: {
           alias: '',
