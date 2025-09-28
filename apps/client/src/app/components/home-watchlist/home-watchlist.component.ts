@@ -149,14 +149,17 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(GfCreateWatchlistItemDialogComponent, {
-          autoFocus: false,
-          data: {
-            deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          } as CreateWatchlistItemDialogParams,
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
+        const dialogRef = this.dialog.open(
+          GfCreateWatchlistItemDialogComponent,
+          {
+            autoFocus: false,
+            data: {
+              deviceType: this.deviceType,
+              locale: this.user?.settings?.locale
+            } as CreateWatchlistItemDialogParams,
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          }
+        );
 
         dialogRef
           .afterClosed()
