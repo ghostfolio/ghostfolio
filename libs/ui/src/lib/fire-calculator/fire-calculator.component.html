@@ -50,6 +50,7 @@
             #datepicker
             startView="multi-year"
             [disabled]="hasPermissionToUpdateUserSettings !== true"
+            [min]="minDate"
             (monthSelected)="setMonthAndYear($event, datepicker)"
           >
           </mat-datepicker>
