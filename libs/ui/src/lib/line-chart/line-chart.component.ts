@@ -261,7 +261,10 @@ export class GfLineChartComponent
                       }
 
                       if (typeof tickValue === 'number') {
-                        return tickValue.toFixed(2);
+                        return Number(tickValue).toLocaleString(this.locale, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        });
                       }
 
                       return tickValue;
