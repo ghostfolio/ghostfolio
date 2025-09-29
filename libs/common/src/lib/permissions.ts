@@ -184,7 +184,7 @@ export function hasReadRestrictedAccessPermission({
   impersonationId: string;
   user: UserWithSettings;
 }) {
-  if (!impersonationId) {
+  if (!impersonationId || !user) {
     return false;
   }
 
