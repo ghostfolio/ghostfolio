@@ -27,7 +27,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { GfCreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
+import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { GfImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
@@ -306,15 +306,18 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public openUpdateActivityDialog(aActivity: Activity) {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
-      data: {
-        activity: aActivity,
-        accounts: this.user?.accounts,
-        user: this.user
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
+    const dialogRef = this.dialog.open(
+      GfCreateOrUpdateActivityDialogComponent,
+      {
+        data: {
+          activity: aActivity,
+          accounts: this.user?.accounts,
+          user: this.user
+        },
+        height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      }
+    );
 
     dialogRef
       .afterClosed()
@@ -347,23 +350,26 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
-          data: {
-            accounts: this.user?.accounts,
-            activity: {
-              ...aActivity,
-              accountId: aActivity?.accountId,
-              date: new Date(),
-              id: null,
-              fee: 0,
-              type: aActivity?.type ?? 'BUY',
-              unitPrice: null
+        const dialogRef = this.dialog.open(
+          GfCreateOrUpdateActivityDialogComponent,
+          {
+            data: {
+              accounts: this.user?.accounts,
+              activity: {
+                ...aActivity,
+                accountId: aActivity?.accountId,
+                date: new Date(),
+                id: null,
+                fee: 0,
+                type: aActivity?.type ?? 'BUY',
+                unitPrice: null
+              },
+              user: this.user
             },
-            user: this.user
-          },
-          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
+            height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          }
+        );
 
         dialogRef
           .afterClosed()
