@@ -104,7 +104,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   public chart: Chart<'bar'>;
   public isLoading = true;
   public periodsToRetire = 0;
-  public minDate = addDays(new Date(), 1); // Tomorrow's date
+
+  public get minDate(): Date {
+    return addDays(new Date(), 1); // Tomorrow's date
+  }
 
   private readonly CONTRIBUTION_PERIOD = 12;
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
