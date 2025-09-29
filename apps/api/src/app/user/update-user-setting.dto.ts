@@ -106,6 +106,10 @@ export class UpdateUserSettingDto {
 
   @IsNumber()
   @IsOptional()
+  safeWithdrawalRate?: number;
+
+  @IsNumber()
+  @IsOptional()
   savingsRate?: number;
 
   @IsIn(['DEFAULT', 'ZEN'] as ViewMode[])

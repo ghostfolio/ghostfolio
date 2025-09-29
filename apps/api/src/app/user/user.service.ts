@@ -265,6 +265,11 @@ export class UserService {
         PerformanceCalculationType.ROAI;
     }
 
+    // Set default value for safe withdrawal rate
+    if (!(user.settings.settings as UserSettings)?.safeWithdrawalRate) {
+      (user.settings.settings as UserSettings).safeWithdrawalRate = 0.04;
+    }
+
     // Set default value for view mode
     if (!(user.settings.settings as UserSettings).viewMode) {
       (user.settings.settings as UserSettings).viewMode = 'DEFAULT';
