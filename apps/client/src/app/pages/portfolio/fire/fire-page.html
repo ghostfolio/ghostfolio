@@ -96,7 +96,15 @@
             [value]="fireWealth?.toNumber()"
           />
         </span>
-        and a safe withdrawal rate (SWR) of 4%.
+        and a safe withdrawal rate (SWR) of
+        <span class="font-weight-bold"
+          ><gf-value
+            class="d-inline-block"
+            [isPercent]="true"
+            [locale]="user?.settings?.locale"
+            [precision]="1"
+            [value]="user?.settings?.safeWithdrawalRate" /></span
+        >.
       </div>
     }
   </div>
