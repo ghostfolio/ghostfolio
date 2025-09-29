@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.203.0 - 2025-09-27
+
+### Added
+
+- Added support for column sorting to the queue jobs table in the admin control panel
+- Added a blog post: _Hacktoberfest 2025_
+
+### Changed
+
+- Removed the deprecated `ITEM` activity type
+
+## 2.202.0 - 2025-09-26
 
 ### Added
 
@@ -14,10 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the tags selector component to support form control
+- Changed the deprecated `ITEM` activity type to `VALUABLE` in the create or update activity dialog
 
 ### Fixed
 
 - Fixed an issue where the save button was not enabled after editing tags in the create or update activity dialog
+- Fixed an issue in the investment calculation when selling all units of a holding
 
 ## 2.201.0 - 2025-09-24
 
