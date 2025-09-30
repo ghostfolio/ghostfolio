@@ -2911,7 +2911,7 @@
       </trans-unit>
       <trans-unit id="3227075298129844075" datatype="html">
         <source>If you retire today, you would be able to withdraw</source>
-        <target state="new">If you retire today, you would be able to withdraw</target>
+        <target state="translated">Wenn du heute in den Ruhestand gehen würdest, könntest du</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">66</context>
@@ -5185,7 +5185,7 @@
       </trans-unit>
       <trans-unit id="70768492340592330" datatype="html">
         <source>and a safe withdrawal rate (SWR) of</source>
-        <target state="new">and a safe withdrawal rate (SWR) of</target>
+        <target state="translated">und einer sicheren Entnahmerate (SWR) von</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">107</context>
@@ -5393,7 +5393,7 @@
       </trans-unit>
       <trans-unit id="3302046820145091217" datatype="html">
         <source>,</source>
-        <target state="new">,</target>
+        <target state="translated">entnehmen,</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">93</context>
@@ -5417,7 +5417,7 @@
       </trans-unit>
       <trans-unit id="4905798562247431262" datatype="html">
         <source>per month</source>
-        <target state="new">per month</target>
+        <target state="translated">pro Monat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">92</context>
@@ -6442,7 +6442,7 @@
       </trans-unit>
       <trans-unit id="184247710717595241" datatype="html">
         <source>based on your total assets of</source>
-        <target state="new">based on your total assets of</target>
+        <target state="translated">bezogen auf dein Gesamtanlagevermögen von</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">95</context>
