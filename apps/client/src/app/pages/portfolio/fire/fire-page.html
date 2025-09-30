@@ -37,7 +37,7 @@
   </div>
   <div>
     <h4 class="align-items-center d-flex">
-      <span i18n>4% Rule</span>
+      <span i18n>Sustainable retirement income</span>
       @if (user?.subscription?.type === 'Basic') {
         <gf-premium-indicator class="ml-1" />
       }
@@ -96,7 +96,15 @@
             [value]="fireWealth?.toNumber()"
           />
         </span>
-        and a withdrawal rate of 4%.
+        and a safe withdrawal rate (SWR) of
+        <span class="font-weight-bold"
+          ><gf-value
+            class="d-inline-block"
+            [isPercent]="true"
+            [locale]="user?.settings?.locale"
+            [precision]="1"
+            [value]="user?.settings?.safeWithdrawalRate" /></span
+        >.
       </div>
     }
   </div>
