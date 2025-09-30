@@ -1,17 +1,17 @@
 @mixin gf-table($darkTheme: false) {
   --mat-table-background-color: var(--light-background);
 
+  th {
+    .mat-sort-header-container {
+      justify-content: inherit;
+    }
+  }
+
   .mat-footer-row,
   .mat-row {
     .mat-cell,
     .mat-footer-cell {
       border-bottom: 0;
-    }
-  }
-
-  th {
-    .mat-sort-header-container {
-      justify-content: inherit;
     }
   }
 
