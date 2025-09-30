@@ -63,7 +63,10 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
           this.fireWealth = new Big(10000);
         }
 
-        this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
+        this.withdrawalRatePerYear = this.fireWealth.mul(
+          this.user.settings.safeWithdrawalRate
+        );
+
         this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 
         this.isLoading = false;
