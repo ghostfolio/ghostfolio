@@ -1,7 +1,3 @@
-@import '../mixins/table-mixins';
-
 :host {
   display: block;
-
-  @include gf-table-header-alignment();
 }

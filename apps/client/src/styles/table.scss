@@ -9,6 +9,12 @@
     }
   }
 
+  th {
+    .mat-sort-header-container {
+      justify-content: inherit;
+    }
+  }
+
   .mat-mdc-footer-row {
     .mat-mdc-footer-cell {
       border-top: 1px solid
