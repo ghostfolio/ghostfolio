@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of the create asset profile dialog in the market data section of the admin control panel
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Improved the table headers’ alignment of the activities table
+
 ## 2.203.0 - 2025-09-27
 
 ### Added
