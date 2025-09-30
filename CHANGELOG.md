@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Fixed
-
-- Make table headers to inherit alignment of column content
-
 ### Added
 
 - Added the safe withdrawal rate to the user settings (experimental)
@@ -19,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the wording of the 4% rule in the _FIRE_ section
 - Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the table headers’ alignment of the activities table
 
 ## 2.203.0 - 2025-09-27
 
