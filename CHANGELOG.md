@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Localized the number formatting of the y-axis labels in the line chart component
 - Improved the wording of the 4% rule in the _FIRE_ section
 - Improved the language localization for German (`de`)
+- Refactored the open page to standalone
 
 ## 2.203.0 - 2025-09-27
 

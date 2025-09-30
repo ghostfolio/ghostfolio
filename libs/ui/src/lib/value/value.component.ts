@@ -18,6 +18,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
   styleUrls: ['./value.component.scss'],
+  standalone: true,
   templateUrl: './value.component.html'
 })
 export class GfValueComponent implements OnChanges {
