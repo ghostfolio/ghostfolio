@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the number formatting of the y-axis labels in the investment chart component
 - Improved the wording of the 4% rule in the _FIRE_ section
 - Improved the language localization for German (`de`)
 
