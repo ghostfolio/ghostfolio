@@ -106,7 +106,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         response.assetClass = assetClass;
         response.assetSubClass = assetSubClass;
 
-        if (assetSubClass === AssetSubClass.ETF) {
+        if (
+          assetSubClass === AssetSubClass.ETF ||
+          assetSubClass === AssetSubClass.MUTUALFUND
+        ) {
           const etfCountryWeightings = await fetch(
             `${this.getUrl({ version: 'stable' })}/etf/country-weightings?symbol=${symbol}&apikey=${this.apiKey}`,
             {
