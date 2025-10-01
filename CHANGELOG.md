@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.204.0 - 2025-09-30
 
+- Added a dedicated Slack community link
+
 ### Added
 
 - Added the safe withdrawal rate to the user settings (experimental)
