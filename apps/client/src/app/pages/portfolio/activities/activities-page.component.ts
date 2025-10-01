@@ -28,7 +28,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
-import { GfImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
+import { GfImportActivitiesDialogComponent } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
@@ -245,7 +245,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    const dialogRef = this.dialog.open(GfImportActivitiesDialog, {
+    const dialogRef = this.dialog.open(GfImportActivitiesDialogComponent, {
       data: {
         deviceType: this.deviceType,
         user: this.user
@@ -268,7 +268,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImportDividends() {
-    const dialogRef = this.dialog.open(GfImportActivitiesDialog, {
+    const dialogRef = this.dialog.open(GfImportActivitiesDialogComponent, {
       data: {
         activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
