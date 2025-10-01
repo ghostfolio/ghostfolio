@@ -2,9 +2,9 @@ import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
   selector: '[gfFileDrop]',
-  standalone: false
+  standalone: true
 })
-export class FileDropDirective {
+export class GfFileDropDirective {
   @Output() filesDropped = new EventEmitter<FileList>();
 
   @HostListener('dragenter', ['$event']) onDragEnter(event: DragEvent) {
