@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Set minimum selectable date to tomorrow for the retirement date picker in the FIRE calculator
+- Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
+- Improved the language localization for German (`de`)
 
 ## 2.204.0 - 2025-09-30
 
