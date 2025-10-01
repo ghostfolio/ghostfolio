@@ -55,6 +55,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToShowQuantities = true;
   @Input() hasPermissionToShowValues = true;
   @Input() holdings: PortfolioPosition[];
+  @Input() isClosedHoldings = false;
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
@@ -74,15 +75,17 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 
-    if (this.hasPermissionToShowQuantities) {
+    if (this.hasPermissionToShowQuantities && !this.isClosedHoldings) {
       this.displayedColumns.push('quantity');
     }
 
-    if (this.hasPermissionToShowValues) {
+    if (this.hasPermissionToShowValues && !this.isClosedHoldings) {
       this.displayedColumns.push('valueInBaseCurrency');
     }
 
-    this.displayedColumns.push('allocationInPercentage');
+    if (!this.isClosedHoldings) {
+      this.displayedColumns.push('allocationInPercentage');
+    }
 
     if (this.hasPermissionToShowValues) {
       this.displayedColumns.push('performance');
