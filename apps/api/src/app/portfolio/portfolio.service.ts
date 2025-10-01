@@ -662,9 +662,26 @@ export class PortfolioService {
       };
     }
 
+    const { endDate, startDate } = getIntervalFromDateRange(
+      dateRange,
+      portfolioCalculator.getStartDate()
+    );
+
+    // Gather historical exchange rate data for all currencies in cash positions
+    const exchangeRatesByCurrency =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        currencies: [
+          ...new Set(cashDetails.accounts.map(({ currency }) => currency))
+        ],
+        endDate,
+        startDate,
+        targetCurrency: userCurrency
+      });
+
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = this.getCashPositions({
         cashDetails,
+        exchangeRatesByCurrency,
         userCurrency,
         value: filteredValueInBaseCurrency
       });
@@ -690,6 +707,7 @@ export class PortfolioService {
     ) {
       const emergencyFundCashPositions = this.getCashPositions({
         cashDetails,
+        exchangeRatesByCurrency,
         userCurrency,
         value: filteredValueInBaseCurrency
       });
@@ -1625,10 +1643,14 @@ export class PortfolioService {
 
   private getCashPositions({
     cashDetails,
+    exchangeRatesByCurrency,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
+    exchangeRatesByCurrency: Awaited<
+      ReturnType<ExchangeRateDataService['getExchangeRatesByCurrency']>
+    >;
     userCurrency: string;
     value: Big;
   }) {
@@ -1650,24 +1672,48 @@ export class PortfolioService {
         continue;
       }
 
+      const exchangeRates =
+        exchangeRatesByCurrency[`${account.currency}${userCurrency}`];
+
+      // Calculate the performance of the cash position including currency effects
+      const netPerformanceWithCurrencyEffect = new Big(account.balance)
+        .mul(exchangeRates?.[format(new Date(), DATE_FORMAT)] ?? 1)
+        .minus(
+          new Big(account.balance).mul(
+            exchangeRates?.[format(account.createdAt, DATE_FORMAT)] ?? 1
+          )
+        )
+        .toNumber();
+
       if (cashPositions[account.currency]) {
         cashPositions[account.currency].investment += convertedBalance;
+        cashPositions[account.currency].netPerformanceWithCurrencyEffect +=
+          netPerformanceWithCurrencyEffect;
         cashPositions[account.currency].valueInBaseCurrency += convertedBalance;
       } else {
         cashPositions[account.currency] = this.getInitialCashPosition({
           balance: convertedBalance,
           currency: account.currency
         });
+
+        cashPositions[account.currency].netPerformanceWithCurrencyEffect =
+          netPerformanceWithCurrencyEffect;
       }
     }
 
     for (const symbol of Object.keys(cashPositions)) {
-      // Calculate allocations for each currency
+      // Calculate allocations and net performances for each currency
       cashPositions[symbol].allocationInPercentage = value.gt(0)
         ? new Big(cashPositions[symbol].valueInBaseCurrency)
             .div(value)
             .toNumber()
         : 0;
+      cashPositions[symbol].netPerformancePercentWithCurrencyEffect =
+        cashPositions[symbol].investment > 0
+          ? new Big(cashPositions[symbol].netPerformanceWithCurrencyEffect)
+              .div(cashPositions[symbol].investment)
+              .toNumber()
+          : 0;
     }
 
     return cashPositions;
