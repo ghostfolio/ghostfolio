@@ -4,7 +4,6 @@ import {
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
-import { FireWealth } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { CommonModule } from '@angular/common';
@@ -80,7 +79,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() deviceType: string;
-  @Input() fireWealth: FireWealth;
+  @Input() fireWealth: number;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() locale = getLocale();
   @Input() projectedTotalAmount: number;
@@ -157,15 +156,12 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    if (
-      isNumber(this.fireWealth.today.valueInBaseCurrency) &&
-      this.fireWealth.today.valueInBaseCurrency >= 0
-    ) {
+    if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(
         {
           annualInterestRate: this.annualInterestRate ?? 5,
           paymentPerPeriod: this.savingsRate ?? 0,
-          principalInvestmentAmount: this.fireWealth.today.valueInBaseCurrency,
+          principalInvestmentAmount: this.fireWealth,
           projectedTotalAmount: this.projectedTotalAmount ?? 0,
           retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
         },
@@ -397,11 +393,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
           r
         });
 
-      datasetDeposit.data.push(this.fireWealth.today.valueInBaseCurrency);
+      datasetDeposit.data.push(this.fireWealth);
       datasetInterest.data.push(interest.toNumber());
-      datasetSavings.data.push(
-        principal.minus(this.fireWealth.today.valueInBaseCurrency)
-      );
+      datasetSavings.data.push(principal.minus(this.fireWealth).toNumber());
     }
 
     return {
@@ -411,7 +405,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   private getP() {
-    return this.fireWealth.today.valueInBaseCurrency || 0;
+    return this.fireWealth || 0;
   }
 
   private getPeriodsToRetire(): number {
