@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.204.0 - 2025-09-30
+
+### Added
+
+- Added the safe withdrawal rate to the user settings (experimental)
+
+### Changed
+
+- Improved the number formatting of the y-axis labels in the investment chart component
+- Localized the number formatting of the y-axis labels in the line chart component
+- Improved the wording of the 4% rule in the _FIRE_ section
+- Improved the usability of the create asset profile dialog in the market data section of the admin control panel
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the table headers’ alignment of the activities table
+
 ## 2.203.0 - 2025-09-27
 
 ### Added
