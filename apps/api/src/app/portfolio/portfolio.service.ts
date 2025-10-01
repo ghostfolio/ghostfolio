@@ -1702,7 +1702,7 @@ export class PortfolioService {
     }
 
     for (const symbol of Object.keys(cashPositions)) {
-      // Calculate allocations and net performances for each currency
+      // Calculate allocations and net performance percentages for each currency
       cashPositions[symbol].allocationInPercentage = value.gt(0)
         ? new Big(cashPositions[symbol].valueInBaseCurrency)
             .div(value)
