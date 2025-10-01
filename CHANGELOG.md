@@ -33,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the wording of the 4% rule in the _FIRE_ section
 - Improved the usability of the create asset profile dialog in the market data section of the admin control panel
 - Improved the language localization for German (`de`)
-- Refactored the symbol pipe to standalone
 
 ### Fixed
 
