@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended holdings endpoint by performance with currency effect for cash
+
 ### Changed
 
 - Improved the language localization for German (`de`)
