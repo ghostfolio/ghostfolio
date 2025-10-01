@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
 - Improved the language localization for German (`de`)
 
 ## 2.204.0 - 2025-09-30
