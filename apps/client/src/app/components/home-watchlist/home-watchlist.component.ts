@@ -45,7 +45,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   styleUrls: ['./home-watchlist.scss'],
   templateUrl: './home-watchlist.html'
 })
-export class HomeWatchlistComponent implements OnDestroy, OnInit {
+export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateWatchlistItem: boolean;
