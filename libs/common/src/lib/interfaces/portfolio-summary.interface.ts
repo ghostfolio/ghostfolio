@@ -16,7 +16,11 @@ export interface PortfolioSummary extends PortfolioPerformance {
   fees: number;
   filteredValueInBaseCurrency?: number;
   filteredValueInPercentage?: number;
-  fireWealth: number;
+  fireWealth: {
+    today: {
+      valueInBaseCurrency: number;
+    };
+  };
   grossPerformance: number;
   grossPerformanceWithCurrencyEffect: number;
   interest: number;
