@@ -5,7 +5,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
@@ -63,7 +63,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
     GfFileDropDirective,
-    GfSymbolModule,
+    GfSymbolPipe,
     IonIcon,
     MatButtonModule,
     MatDialogModule,
