@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
+
 ### Fixed
 
 - Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
