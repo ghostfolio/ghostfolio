@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the file drop directive to standalone
 - Improved the language localization for German (`de`)
 
 ## 2.204.0 - 2025-09-30
