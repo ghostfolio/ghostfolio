@@ -195,7 +195,6 @@ export class PortfolioController {
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
-        'fireWealth',
         'grossPerformance',
         'grossPerformanceWithCurrencyEffect',
         'interest',

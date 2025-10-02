@@ -161,7 +161,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             }
           ).then((res) => res.json());
 
-          if (etfInformation.website) {
+          if (etfInformation?.website) {
             response.url = etfInformation.website;
           }
 
