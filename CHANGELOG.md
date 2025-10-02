@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
 - Refactored the symbol pipe to standalone
+- Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
 
 ### Fixed
 
@@ -38,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the wording of the 4% rule in the _FIRE_ section
 - Improved the usability of the create asset profile dialog in the market data section of the admin control panel
 - Improved the language localization for German (`de`)
-- Changed `fireWealth` from a single `number` to a structured interface
 
 ### Fixed
 
