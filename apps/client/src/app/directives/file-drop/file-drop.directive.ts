@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
-  selector: '[gfFileDrop]',
+  selector: '[gfFileDrop]'
 })
 export class GfFileDropDirective {
   @Output() filesDropped = new EventEmitter<FileList>();
