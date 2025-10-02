@@ -3,10 +3,9 @@ import { prettifySymbol } from '@ghostfolio/common/helper';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'gfSymbol',
-  standalone: false
+  name: 'gfSymbol'
 })
-export class SymbolPipe implements PipeTransform {
+export class GfSymbolPipe implements PipeTransform {
   public transform(aSymbol: string) {
     return prettifySymbol(aSymbol);
   }

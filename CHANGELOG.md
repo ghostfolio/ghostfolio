@@ -10,7 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the file drop directive to standalone
+- Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
+- Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
+- Refactored the symbol pipe to standalone
+
+### Fixed
+
+- Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
+
+## 2.205.0 - 2025-10-01
+
+### Changed
+
+- Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
+- Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
 - Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
 
 ## 2.204.0 - 2025-09-30
 
