@@ -1,4 +1,4 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AccountWithValue } from '@ghostfolio/common/types';
@@ -38,7 +38,7 @@ import { PortfolioFilterFormValue } from './interfaces';
   imports: [
     FormsModule,
     GfEntityLogoComponent,
-    GfSymbolModule,
+    GfSymbolPipe,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
