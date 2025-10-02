@@ -16,9 +16,21 @@
           </mat-select>
         </mat-form-field>
       </form>
-      <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+      <table
+        class="gf-table w-100"
+        mat-table
+        matSort
+        matSortActive="created"
+        matSortDirection="desc"
+        [dataSource]="dataSource"
+      >
         <ng-container matColumnDef="index">
-          <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2 text-right"
+            mat-header-cell
+            mat-sort-header="id"
+          >
             <ng-container i18n>Job ID</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
@@ -27,7 +39,12 @@
         </ng-container>
 
         <ng-container matColumnDef="type">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2"
+            mat-header-cell
+            mat-sort-header="name"
+          >
             <ng-container i18n>Type</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
@@ -42,7 +59,12 @@
         </ng-container>
 
         <ng-container matColumnDef="symbol">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2"
+            mat-header-cell
+            mat-sort-header="data.symbol"
+          >
             <ng-container i18n>Symbol</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
@@ -51,7 +73,12 @@
         </ng-container>
 
         <ng-container matColumnDef="dataSource">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2"
+            mat-header-cell
+            mat-sort-header="data.dataSource"
+          >
             <ng-container i18n>Data Source</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
@@ -60,7 +87,12 @@
         </ng-container>
 
         <ng-container matColumnDef="priority">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2"
+            mat-header-cell
+            mat-sort-header="opts.priority"
+          >
             <ng-container i18n>Priority</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
@@ -79,7 +111,12 @@
         </ng-container>
 
         <ng-container matColumnDef="attempts">
-          <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2 text-right"
+            mat-header-cell
+            mat-sort-header="attemptsMade"
+          >
             <ng-container i18n>Attempts</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
@@ -88,7 +125,12 @@
         </ng-container>
 
         <ng-container matColumnDef="created">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 py-2"
+            mat-header-cell
+            mat-sort-header="timestamp"
+          >
             <ng-container i18n>Created</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
