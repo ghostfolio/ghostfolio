@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Handled an exception in the asset profiles functionality of the _Financial Modeling Prep_ service
+- Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
 
 ## 2.205.0 - 2025-10-01
 
