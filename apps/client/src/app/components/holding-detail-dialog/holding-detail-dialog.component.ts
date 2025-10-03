@@ -100,7 +100,6 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
-  public holdingForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
   public assetSubClass: string;
@@ -155,6 +154,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public transactionCount: number;
   public user: User;
   public value: number;
+  public holdingForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
