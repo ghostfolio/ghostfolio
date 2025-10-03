@@ -63,7 +63,6 @@ export class GfTagsSelectorComponent
 {
   @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
-  @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
 
   @Output() tagsChanged = new EventEmitter<Tag[]>();
@@ -88,12 +87,10 @@ export class GfTagsSelectorComponent
   }
 
   public ngOnInit() {
-    this.tagsSelected.set(this.tags);
     this.updateFilters();
   }
 
   public ngOnChanges() {
-    this.tagsSelected.set(this.tags);
     this.updateFilters();
   }
 
