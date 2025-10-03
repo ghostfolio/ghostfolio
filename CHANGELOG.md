@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the tags selector component of the holding detail dialog to form control
 - Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
 - Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
 - Refactored the _Open Startup_ (`/open`) page to standalone
