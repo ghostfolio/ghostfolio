@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { GfLogoCarouselComponent } from './logo-carousel.component';
 
 const meta: Meta<GfLogoCarouselComponent> = {
-  title: 'Components/Logo Carousel',
+  title: 'Logo Carousel',
   component: GfLogoCarouselComponent
 };
 

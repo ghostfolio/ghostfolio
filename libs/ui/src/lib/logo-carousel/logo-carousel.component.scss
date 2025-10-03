@@ -3,171 +3,192 @@
   width: 100%;
   overflow: hidden;
   position: relative;
-}
 
-.logo-carousel-container {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+  .logo-carousel-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
 
-  // Fade gradient mask for smooth edges
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 100px;
-    height: 100%;
-    z-index: 2;
-    pointer-events: none;
+    // Fade gradient mask for smooth edges
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    &::before {
+      left: 0;
+      background: linear-gradient(
+        to right,
+        rgba(var(--palette-background-background), 1) 0%,
+        rgba(var(--palette-background-background), 0) 100%
+      );
+    }
+
+    &::after {
+      right: 0;
+      background: linear-gradient(
+        to left,
+        rgba(var(--palette-background-background), 1) 0%,
+        rgba(var(--palette-background-background), 0) 100%
+      );
+    }
+
+    // Responsive adjustments for mobile
+    @media (max-width: 768px) {
+      &::before,
+      &::after {
+        width: 50px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      &::before,
+      &::after {
+        width: 30px;
+      }
+    }
   }
 
-  &::before {
-    left: 0;
-    background: linear-gradient(
-      to right,
-      rgba(var(--palette-background-background), 1) 0%,
-      rgba(var(--palette-background-background), 0) 100%
-    );
+  .logo-carousel-track {
+    align-items: center;
+    animation: scroll 40s linear infinite;
+    width: fit-content;
+
+    // Pause animation on hover for accessibility
+    &:hover {
+      animation-play-state: paused;
+    }
   }
 
-  &::after {
-    right: 0;
-    background: linear-gradient(
-      to left,
-      rgba(var(--palette-background-background), 1) 0%,
-      rgba(var(--palette-background-background), 0) 100%
-    );
-  }
-}
+  .logo-carousel-item {
+    flex-shrink: 0;
+    padding: 1rem 2rem;
+    min-width: 200px;
 
-.logo-carousel-track {
-  display: flex;
-  align-items: center;
-  animation: scroll 40s linear infinite;
-  width: fit-content;
+    @media (max-width: 768px) {
+      min-width: 150px;
+      padding: 0.75rem 1.5rem;
+    }
 
-  // Pause animation on hover for accessibility
-  &:hover {
-    animation-play-state: paused;
-  }
-}
-
-.logo-carousel-item {
-  flex-shrink: 0;
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 200px;
-}
-
-.logo {
-  height: 3rem;
-  width: 7.5rem;
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-
-  &:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
+    @media (max-width: 576px) {
+      min-width: 120px;
+      padding: 0.5rem 1rem;
+    }
   }
 
-  &.mask {
-    background-color: rgba(var(--dark-secondary-text));
-    -webkit-mask-position: center;
-    mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: contain;
-    mask-size: contain;
-  }
+  .logo {
+    height: 3rem;
+    width: 7.5rem;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
 
-  // Logo-specific styles (copied from landing-page.scss)
-  &.logo-alternative-to {
-    -webkit-mask-image: url('/assets/images/logo-alternative-to.svg');
-    mask-image: url('/assets/images/logo-alternative-to.svg');
-  }
+    &:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
 
-  &.logo-awesome {
-    background-image: url('/assets/images/logo-awesome.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    filter: grayscale(1);
-  }
+    &.mask {
+      background-color: rgba(var(--dark-secondary-text));
+      -webkit-mask-position: center;
+      mask-position: center;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: contain;
+      mask-size: contain;
+    }
 
-  &.logo-dev-community {
-    -webkit-mask-image: url('/assets/images/logo-dev-community.svg');
-    mask-image: url('/assets/images/logo-dev-community.svg');
-  }
+    // Logo-specific styles (copied from landing-page.scss)
+    &.logo-alternative-to {
+      -webkit-mask-image: url('/assets/images/logo-alternative-to.svg');
+      mask-image: url('/assets/images/logo-alternative-to.svg');
+    }
 
-  &.logo-hacker-news {
-    -webkit-mask-image: url('/assets/images/logo-hacker-news.svg');
-    mask-image: url('/assets/images/logo-hacker-news.svg');
-  }
+    &.logo-awesome {
+      background-image: url('/assets/images/logo-awesome.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
 
-  &.logo-openalternative {
-    -webkit-mask-image: url('/assets/images/logo-openalternative.svg');
-    mask-image: url('/assets/images/logo-openalternative.svg');
-  }
+    &.logo-dev-community {
+      -webkit-mask-image: url('/assets/images/logo-dev-community.svg');
+      mask-image: url('/assets/images/logo-dev-community.svg');
+    }
 
-  &.logo-privacy-tools {
-    -webkit-mask-image: url('/assets/images/logo-privacy-tools.svg');
-    mask-image: url('/assets/images/logo-privacy-tools.svg');
-  }
+    &.logo-hacker-news {
+      -webkit-mask-image: url('/assets/images/logo-hacker-news.svg');
+      mask-image: url('/assets/images/logo-hacker-news.svg');
+    }
 
-  &.logo-product-hunt {
-    background-image: url('/assets/images/logo-product-hunt.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    filter: grayscale(1);
-  }
+    &.logo-openalternative {
+      -webkit-mask-image: url('/assets/images/logo-openalternative.svg');
+      mask-image: url('/assets/images/logo-openalternative.svg');
+    }
 
-  &.logo-reddit {
-    -webkit-mask-image: url('/assets/images/logo-reddit.svg');
-    mask-image: url('/assets/images/logo-reddit.svg');
-    max-height: 1rem;
-  }
+    &.logo-privacy-tools {
+      -webkit-mask-image: url('/assets/images/logo-privacy-tools.svg');
+      mask-image: url('/assets/images/logo-privacy-tools.svg');
+    }
 
-  &.logo-sackgeld {
-    -webkit-mask-image: url('/assets/images/logo-sackgeld.png');
-    mask-image: url('/assets/images/logo-sackgeld.png');
-  }
+    &.logo-product-hunt {
+      background-image: url('/assets/images/logo-product-hunt.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
 
-  &.logo-selfh-st {
-    -webkit-mask-image: url('/assets/images/logo-selfh-st.svg');
-    mask-image: url('/assets/images/logo-selfh-st.svg');
-    max-height: 1.25rem;
-  }
+    &.logo-reddit {
+      -webkit-mask-image: url('/assets/images/logo-reddit.svg');
+      mask-image: url('/assets/images/logo-reddit.svg');
+      max-height: 1rem;
+    }
 
-  &.logo-sourceforge {
-    -webkit-mask-image: url('/assets/images/logo-sourceforge.svg');
-    mask-image: url('/assets/images/logo-sourceforge.svg');
-  }
+    &.logo-sackgeld {
+      -webkit-mask-image: url('/assets/images/logo-sackgeld.png');
+      mask-image: url('/assets/images/logo-sackgeld.png');
+    }
 
-  &.logo-umbrel {
-    -webkit-mask-image: url('/assets/images/logo-umbrel.svg');
-    mask-image: url('/assets/images/logo-umbrel.svg');
-    max-height: 1.5rem;
-  }
+    &.logo-selfh-st {
+      -webkit-mask-image: url('/assets/images/logo-selfh-st.svg');
+      mask-image: url('/assets/images/logo-selfh-st.svg');
+      max-height: 1.25rem;
+    }
 
-  &.logo-unraid {
-    -webkit-mask-image: url('/assets/images/logo-unraid.svg');
-    mask-image: url('/assets/images/logo-unraid.svg');
-  }
-}
+    &.logo-sourceforge {
+      -webkit-mask-image: url('/assets/images/logo-sourceforge.svg');
+      mask-image: url('/assets/images/logo-sourceforge.svg');
+    }
 
-// Animation keyframes for infinite horizontal scroll
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    // Move by exactly half the width (since we duplicated the logos)
-    transform: translateX(-50%);
+    &.logo-umbrel {
+      -webkit-mask-image: url('/assets/images/logo-umbrel.svg');
+      mask-image: url('/assets/images/logo-umbrel.svg');
+      max-height: 1.5rem;
+    }
+
+    &.logo-unraid {
+      -webkit-mask-image: url('/assets/images/logo-unraid.svg');
+      mask-image: url('/assets/images/logo-unraid.svg');
+    }
+
+    // Responsive logo sizes
+    @media (max-width: 768px) {
+      height: 2.5rem;
+      width: 6rem;
+    }
+
+    @media (max-width: 576px) {
+      height: 2rem;
+      width: 5rem;
+    }
   }
 }
 
@@ -208,41 +229,13 @@
   }
 }
 
-// Responsive adjustments
-@media (max-width: 768px) {
-  .logo-carousel-item {
-    min-width: 150px;
-    padding: 0.75rem 1.5rem;
+// Animation keyframes for infinite horizontal scroll
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
   }
-
-  .logo {
-    height: 2.5rem;
-    width: 6rem;
-  }
-
-  .logo-carousel-container {
-    &::before,
-    &::after {
-      width: 50px;
-    }
-  }
-}
-
-@media (max-width: 576px) {
-  .logo-carousel-item {
-    min-width: 120px;
-    padding: 0.5rem 1rem;
-  }
-
-  .logo {
-    height: 2rem;
-    width: 5rem;
-  }
-
-  .logo-carousel-container {
-    &::before,
-    &::after {
-      width: 30px;
-    }
+  100% {
+    // Move by exactly half the width (since we duplicated the logos)
+    transform: translateX(-50%);
   }
 }
