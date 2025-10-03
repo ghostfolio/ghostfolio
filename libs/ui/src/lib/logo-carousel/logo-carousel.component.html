@@ -1,0 +1,16 @@
+<div class="logo-carousel-container">
+  <div class="logo-carousel-track">
+    @for (logo of duplicatedLogos; track $index) {
+      <div class="logo-carousel-item">
+        <a
+          class="d-block logo"
+          target="_blank"
+          [attr.aria-label]="logo.name"
+          [class]="logo.className + (logo.isMask ? ' mask' : '')"
+          [href]="logo.url"
+          [title]="logo.title"
+        ></a>
+      </div>
+    }
+  </div>
+</div>
