@@ -15,6 +15,7 @@ import {
   StepperOrientation,
   StepperSelectionEvent
 } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -59,6 +60,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
+    CommonModule,
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
