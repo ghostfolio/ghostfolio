@@ -100,7 +100,6 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
-  public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
   public assetSubClass: string;
@@ -155,6 +154,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public transactionCount: number;
   public user: User;
   public value: number;
+  public holdingForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -178,7 +178,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.activityForm = this.formBuilder.group({
+    this.holdingForm = this.formBuilder.group({
       tags: [] as string[]
     });
 
@@ -187,7 +187,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
 
-    this.activityForm
+    this.holdingForm
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags: Tag[]) => {
@@ -427,7 +427,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             };
           });
 
-          this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
+          this.holdingForm.setValue({ tags: this.tags }, { emitEvent: false });
 
           this.transactionCount = transactionCount;
           this.totalItems = transactionCount;
@@ -583,10 +583,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  public onTagsChanged(tags: Tag[]) {
-    this.activityForm.get('tags').setValue(tags);
   }
 
   public onUpdateActivity(aActivity: Activity) {
