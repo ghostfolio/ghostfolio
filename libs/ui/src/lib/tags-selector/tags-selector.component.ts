@@ -5,12 +5,10 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   signal,
   ViewChild
 } from '@angular/core';
@@ -65,8 +63,6 @@ export class GfTagsSelectorComponent
   @Input() readonly = false;
   @Input() tagsAvailable: Tag[];
 
-  @Output() tagsChanged = new EventEmitter<Tag[]>();
-
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   public filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
@@ -112,7 +108,6 @@ export class GfTagsSelectorComponent
     });
 
     const newTags = this.tagsSelected();
-    this.tagsChanged.emit(newTags);
     this.onChange(newTags);
     this.onTouched();
     this.tagInput.nativeElement.value = '';
@@ -127,7 +122,6 @@ export class GfTagsSelectorComponent
     });
 
     const newTags = this.tagsSelected();
-    this.tagsChanged.emit(newTags);
     this.onChange(newTags);
     this.onTouched();
     this.updateFilters();
