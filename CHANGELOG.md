@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
+
 ## 2.205.0 - 2025-10-01
 
 ### Changed
@@ -13,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `6.16.1` to `6.16.3`
-- Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
 
 ## 2.204.0 - 2025-09-30
 
