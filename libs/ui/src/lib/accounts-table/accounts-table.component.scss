@@ -1,13 +1,3 @@
 :host {
   display: block;
-
-  .gf-table {
-    th {
-      ::ng-deep {
-        .mat-sort-header-container {
-          justify-content: inherit;
-        }
-      }
-    }
-  }
 }

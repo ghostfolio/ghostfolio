@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
+- Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
+- Refactored the _Open Startup_ (`/open`) page to standalone
+- Refactored the file drop directive to standalone
+- Refactored the symbol pipe to standalone
+
+### Fixed
+
+- Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
+
+## 2.205.0 - 2025-10-01
+
+### Changed
+
+- Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
+- Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+
+## 2.204.0 - 2025-09-30
+
+### Added
+
+- Added the safe withdrawal rate to the user settings (experimental)
+
+### Changed
+
+- Improved the number formatting of the y-axis labels in the investment chart component
+- Localized the number formatting of the y-axis labels in the line chart component
+- Improved the wording of the 4% rule in the _FIRE_ section
+- Improved the usability of the create asset profile dialog in the market data section of the admin control panel
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the table headers’ alignment of the activities table
+
 ## 2.203.0 - 2025-09-27
 
 ### Added

@@ -55,6 +55,7 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 })
 export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
+  public ghostfolioPrefix = `${ghostfolioPrefix}_`;
   public mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
@@ -77,9 +78,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         addCurrency: new FormControl(null, [
           this.iso4217CurrencyCodeValidator()
         ]),
-        addSymbol: new FormControl(`${ghostfolioPrefix}_`, [
-          Validators.required
-        ]),
+        addSymbol: new FormControl(null, [Validators.required]),
         searchSymbol: new FormControl(null, [Validators.required])
       },
       {
@@ -95,6 +94,8 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
   }
 
   public onRadioChange(mode: CreateAssetProfileDialogMode) {
+    this.createAssetProfileForm.reset();
+
     this.mode = mode;
   }
 
@@ -133,7 +134,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
         dataSource: 'MANUAL',
-        symbol: this.createAssetProfileForm.get('addSymbol').value
+        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`
       });
     }
   }

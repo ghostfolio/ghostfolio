@@ -49,7 +49,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
 })
-export class GfCreateOrUpdateAccessDialog implements OnDestroy, OnInit {
+export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy, OnInit {
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
 
@@ -58,7 +58,7 @@ export class GfCreateOrUpdateAccessDialog implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService

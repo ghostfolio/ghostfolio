@@ -4,8 +4,8 @@ import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
@@ -62,8 +62,8 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
-    GfFileDropModule,
-    GfSymbolModule,
+    GfFileDropDirective,
+    GfSymbolPipe,
     IonIcon,
     MatButtonModule,
     MatDialogModule,
@@ -78,7 +78,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   styleUrls: ['./import-activities-dialog.scss'],
   templateUrl: 'import-activities-dialog.html'
 })
-export class GfImportActivitiesDialog implements OnDestroy {
+export class GfImportActivitiesDialogComponent implements OnDestroy {
   public accounts: CreateAccountWithBalancesDto[] = [];
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
@@ -109,7 +109,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<GfImportActivitiesDialog>,
+    public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
   ) {
