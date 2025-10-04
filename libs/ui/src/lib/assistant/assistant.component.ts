@@ -171,8 +171,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   private readonly PRESELECTION_DELAY = 100;
 
-  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
-
   private filterTypes: Filter['type'][] = [
     'ACCOUNT',
     'ASSET_CLASS',
@@ -181,6 +179,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     'TAG'
   ];
 
+  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
   private preselectionTimeout: ReturnType<typeof setTimeout>;
   private unsubscribeSubject = new Subject<void>();
 
