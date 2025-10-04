@@ -8,15 +8,14 @@
       <h6 class="d-flex mb-0">
         <ng-container i18n>Threshold range</ng-container>:
         <gf-value
-          class="mx-1"
+          class="ml-1"
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
           [locale]="data.locale"
           [precision]="2"
           [value]="data.settings.thresholdMin"
         />
-        -
+        <span class="mx-1">-</span>
         <gf-value
-          class="mx-1"
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
           [locale]="data.locale"
           [precision]="2"
