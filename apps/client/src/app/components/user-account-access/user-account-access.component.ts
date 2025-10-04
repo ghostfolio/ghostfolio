@@ -219,7 +219,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
       data: {
         access: {
           id: accessDetails.id,

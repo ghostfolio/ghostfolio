@@ -49,7 +49,9 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
 })
-export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy, OnInit {
+export class GfCreateOrUpdateAccessDialogComponent
+  implements OnDestroy, OnInit
+{
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
 
