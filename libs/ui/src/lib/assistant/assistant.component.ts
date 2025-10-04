@@ -169,11 +169,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   };
   public tags: Filter[] = [];
 
+  private readonly PRESELECTION_DELAY = 100;
+
   private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
   private preselectionTimeout: ReturnType<typeof setTimeout>;
   private unsubscribeSubject = new Subject<void>();
-
-  private readonly PRESELECTION_DELAY = 100;
 
   private filterTypes: Filter['type'][] = [
     'ACCOUNT',
@@ -349,6 +349,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         next: (searchResults) => {
           this.searchResults = searchResults;
           this.preselectFirstItem();
+
           this.changeDetectorRef.markForCheck();
         },
         error: (error) => {
