@@ -14,7 +14,7 @@
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
-          [fireWealth]="fireWealth?.toNumber()"
+          [fireWealth]="fireWealth?.today.valueInBaseCurrency"
           [hasPermissionToUpdateUserSettings]="
             !hasImpersonationId && hasPermissionToUpdateUserSettings
           "
@@ -100,7 +100,7 @@
             [isCurrency]="true"
             [locale]="user?.settings?.locale"
             [unit]="user?.settings?.baseCurrency"
-            [value]="fireWealth?.toNumber()"
+            [value]="fireWealth?.today.valueInBaseCurrency"
           />
         </span>
         <ng-container>&nbsp;</ng-container>

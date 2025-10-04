@@ -19,6 +19,7 @@ import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface'
 import type { Export } from './export.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
+import type { FireWealth } from './fire-wealth.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
 import type { HoldingWithParents } from './holding-with-parents.interface';
 import type { Holding } from './holding.interface';
@@ -104,6 +105,7 @@ export {
   Export,
   Filter,
   FilterGroup,
+  FireWealth,
   HistoricalDataItem,
   HistoricalResponse,
   Holding,
