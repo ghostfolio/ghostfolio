@@ -1,3 +1,21 @@
 :host {
   display: block;
 }
+
+.swr-select {
+  background-color: transparent;
+  border: 0;
+
+  color: white;
+
+  &:focus {
+    box-shadow: none;
+    outline: 0;
+  }
+
+  option {
+    background: #1c1c1e;
+    color: white;
+    border: 0;
+  }
+}
