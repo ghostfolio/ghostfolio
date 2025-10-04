@@ -94,7 +94,7 @@ const routes: Routes = [
   {
     path: publicRoutes.openStartup.path,
     loadChildren: () =>
-      import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
+      import('./pages/open/open-page.routes').then((m) => m.routes)
   },
   {
     path: internalRoutes.portfolio.path,
