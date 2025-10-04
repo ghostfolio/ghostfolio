@@ -169,6 +169,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   };
   public tags: Filter[] = [];
 
+  private readonly PRESELECTION_DELAY = 100;
+
+  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
+  private preselectionTimeout: ReturnType<typeof setTimeout>;
+  private unsubscribeSubject = new Subject<void>();
+
   private filterTypes: Filter['type'][] = [
     'ACCOUNT',
     'ASSET_CLASS',
@@ -176,8 +182,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     'SYMBOL',
     'TAG'
   ];
-  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
@@ -344,6 +348,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       .subscribe({
         next: (searchResults) => {
           this.searchResults = searchResults;
+          this.preselectFirstItem();
+
           this.changeDetectorRef.markForCheck();
         },
         error: (error) => {
@@ -366,6 +372,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+  }
+
+  public ngOnDestroy() {
+    if (this.preselectionTimeout) {
+      clearTimeout(this.preselectionTimeout);
+    }
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 
   public ngOnChanges() {
@@ -584,15 +598,73 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.isOpen = aIsOpen;
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private getCurrentAssistantListItem() {
     return this.assistantListItems.find(({ getHasFocus }) => {
       return getHasFocus;
     });
+  }
+
+  /**
+   * Gets the first search result item based on priority order:
+   * Quick Links → Accounts → Holdings → Asset Profiles
+   */
+  private getFirstSearchResultItem() {
+    // Priority order: Quick Links → Accounts → Holdings → Asset Profiles
+    if (this.searchResults.quickLinks?.length > 0) {
+      return this.searchResults.quickLinks[0];
+    }
+    if (this.searchResults.accounts?.length > 0) {
+      return this.searchResults.accounts[0];
+    }
+    if (this.searchResults.holdings?.length > 0) {
+      return this.searchResults.holdings[0];
+    }
+    if (this.searchResults.assetProfiles?.length > 0) {
+      return this.searchResults.assetProfiles[0];
+    }
+
+    return null;
+  }
+
+  /**
+   * Preselects the first search result item with debouncing
+   */
+  private preselectFirstItem() {
+    // Clear any existing timeout
+    if (this.preselectionTimeout) {
+      clearTimeout(this.preselectionTimeout);
+    }
+
+    // Debounce preselection to handle rapid search changes
+    this.preselectionTimeout = setTimeout(() => {
+      // Check if we have search results and the assistant is open
+      if (!this.isOpen || !this.searchFormControl.value) {
+        return;
+      }
+
+      const firstItem = this.getFirstSearchResultItem();
+
+      if (!firstItem) {
+        return;
+      }
+
+      // Clear any existing focus
+      for (const item of this.assistantListItems) {
+        item.removeFocus();
+      }
+
+      // Set the first item as active in the key manager
+      this.keyManager.setFirstItemActive();
+
+      // Get the currently focused item and apply focus styling
+      const currentFocusedItem = this.getCurrentAssistantListItem();
+
+      if (currentFocusedItem) {
+        currentFocusedItem.focus();
+      }
+
+      this.changeDetectorRef.markForCheck();
+    }, this.PRESELECTION_DELAY);
   }
 
   private searchAccounts(aSearchTerm: string): Observable<ISearchResultItem[]> {
