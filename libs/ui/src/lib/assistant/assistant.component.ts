@@ -169,6 +169,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   };
   public tags: Filter[] = [];
 
+  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
+  private preselectionTimeout: ReturnType<typeof setTimeout>;
+  private unsubscribeSubject = new Subject<void>();
+
+  private readonly PRESELECTION_DELAY = 100;
+
   private filterTypes: Filter['type'][] = [
     'ACCOUNT',
     'ASSET_CLASS',
@@ -176,11 +182,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     'SYMBOL',
     'TAG'
   ];
-  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
-  private preselectionTimeout: any;
-  private unsubscribeSubject = new Subject<void>();
-
-  private readonly PRESELECTION_DELAY = 100;
 
   public constructor(
     private adminService: AdminService,
@@ -347,10 +348,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       .subscribe({
         next: (searchResults) => {
           this.searchResults = searchResults;
-          this.changeDetectorRef.markForCheck();
-
-          // Trigger preselection of first item
           this.preselectFirstItem();
+          this.changeDetectorRef.markForCheck();
         },
         error: (error) => {
           console.error('Assistant search stream error:', error);
@@ -591,11 +590,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnDestroy() {
-    // Clear preselection timeout
     if (this.preselectionTimeout) {
       clearTimeout(this.preselectionTimeout);
     }
-
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
@@ -610,7 +607,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
    * Gets the first search result item based on priority order:
    * Quick Links → Accounts → Holdings → Asset Profiles
    */
-  private getFirstSearchResultItem(): ISearchResultItem | null {
+  private getFirstSearchResultItem() {
     // Priority order: Quick Links → Accounts → Holdings → Asset Profiles
     if (this.searchResults.quickLinks?.length > 0) {
       return this.searchResults.quickLinks[0];
@@ -624,13 +621,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     if (this.searchResults.assetProfiles?.length > 0) {
       return this.searchResults.assetProfiles[0];
     }
+
     return null;
   }
 
   /**
    * Preselects the first search result item with debouncing
    */
-  private preselectFirstItem(): void {
+  private preselectFirstItem() {
     // Clear any existing timeout
     if (this.preselectionTimeout) {
       clearTimeout(this.preselectionTimeout);
@@ -644,6 +642,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       }
 
       const firstItem = this.getFirstSearchResultItem();
+
       if (!firstItem) {
         return;
       }
@@ -658,6 +657,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
       // Get the currently focused item and apply focus styling
       const currentFocusedItem = this.getCurrentAssistantListItem();
+
       if (currentFocusedItem) {
         currentFocusedItem.focus();
       }
