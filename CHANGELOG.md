@@ -7,13 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
-
 ### Changed
 
-- Auto-preselect first search result in assistant for improved keyboard navigation
-
 - Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
+- Improved the usability of the assistant by preselecting the first search result
 - Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
 - Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
 - Refactored the _Open Startup_ (`/open`) page to standalone
