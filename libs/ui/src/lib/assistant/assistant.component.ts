@@ -373,6 +373,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       });
   }
 
+  public ngOnDestroy() {
+    if (this.preselectionTimeout) {
+      clearTimeout(this.preselectionTimeout);
+    }
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   public ngOnChanges() {
     this.accounts = this.user?.accounts ?? [];
 
@@ -587,14 +595,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public setIsOpen(aIsOpen: boolean) {
     this.isOpen = aIsOpen;
-  }
-
-  public ngOnDestroy() {
-    if (this.preselectionTimeout) {
-      clearTimeout(this.preselectionTimeout);
-    }
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private getCurrentAssistantListItem() {
