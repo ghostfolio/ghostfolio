@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added dependabot for version update
+
 ### Changed
 
 - Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
