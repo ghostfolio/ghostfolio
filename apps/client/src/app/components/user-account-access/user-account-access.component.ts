@@ -115,6 +115,8 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       .subscribe((params) => {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
+        } else if (params['editDialog']) {
+          this.openUpdateAccessDialog(params['editDialog']);
         }
       });
 
@@ -136,6 +138,10 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
           this.update();
         }
       });
+  }
+
+  public onUpdateAccess(aId: string) {
+    this.openUpdateAccessDialog(aId);
   }
 
   public onGenerateAccessToken() {
@@ -197,6 +203,41 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       }
 
       this.router.navigate(['.'], { relativeTo: this.route });
+    });
+  }
+
+  private openUpdateAccessDialog(accessId: string) {
+    // Find the access details in the already loaded data
+    const accessDetails = this.accessesGive.find(
+      (access) => access.id === accessId
+    );
+
+    if (!accessDetails) {
+      this.notificationService.alert({
+        title: $localize`Oops! Could not find access details.`
+      });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
+      data: {
+        access: {
+          id: accessDetails.id,
+          alias: accessDetails.alias,
+          permissions: accessDetails.permissions,
+          type: accessDetails.type,
+          grantee:
+            accessDetails.grantee === 'Public' ? null : accessDetails.grantee
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.update();
+      }
     });
   }
 
