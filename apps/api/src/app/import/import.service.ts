@@ -755,7 +755,9 @@ export class ImportService {
         if (!assetProfile?.name) {
           const assetProfileInImport = assetProfileWithMarketDataDto?.find(
             (profile) => {
-              return profile.dataSource === dataSource && profile.symbol === symbol;
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
             }
           );
 
