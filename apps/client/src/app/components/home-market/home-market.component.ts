@@ -35,7 +35,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-market.scss'],
   templateUrl: './home-market.html'
 })
-export class HomeMarketComponent implements OnDestroy, OnInit {
+export class GfHomeMarketComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;
