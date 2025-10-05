@@ -76,7 +76,7 @@ import { ActivityType } from './types/activity-type.type';
   styleUrls: ['./create-or-update-activity-dialog.scss'],
   templateUrl: 'create-or-update-activity-dialog.html'
 })
-export class GfCreateOrUpdateActivityDialog implements OnDestroy {
+export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public activityForm: FormGroup;
 
   public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
@@ -110,7 +110,7 @@ export class GfCreateOrUpdateActivityDialog implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string,
     private userService: UserService

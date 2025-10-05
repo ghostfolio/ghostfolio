@@ -2094,9 +2094,13 @@ export class PortfolioService {
       filteredValueInPercentage: netWorth
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()
         : undefined,
-      fireWealth: new Big(currentValueInBaseCurrency)
-        .minus(emergencyFundHoldingsValueInBaseCurrency)
-        .toNumber(),
+      fireWealth: {
+        today: {
+          valueInBaseCurrency: new Big(currentValueInBaseCurrency)
+            .minus(emergencyFundHoldingsValueInBaseCurrency)
+            .toNumber()
+        }
+      },
       grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
       grossPerformanceWithCurrencyEffect: new Big(
         netPerformanceWithCurrencyEffect

@@ -1,4 +1,5 @@
 import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
@@ -17,6 +18,7 @@ import { IRuleSettingsDialogParams } from './interfaces/interfaces';
   imports: [
     CommonModule,
     FormsModule,
+    GfValueComponent,
     MatButtonModule,
     MatDialogModule,
     MatSliderModule
