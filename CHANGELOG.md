@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the spacing around the buttons in the holding detail dialog
 - Refactored the auth page to standalone
+- Refactored asset profile dialog to use tabbed interface
 
 ## 2.206.0 - 2025-10-04
 
