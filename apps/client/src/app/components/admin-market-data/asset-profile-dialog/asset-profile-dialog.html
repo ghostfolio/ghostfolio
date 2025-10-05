@@ -12,7 +12,11 @@
     >
       <ion-icon name="ellipsis-vertical" />
     </button>
-    <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
+    <mat-menu
+      #assetProfileActionsMenu="matMenu"
+      class="no-max-width"
+      xPosition="before"
+    >
       <button mat-menu-item type="button" (click)="initialize()">
         <ng-container i18n>Refresh</ng-container>
       </button>
