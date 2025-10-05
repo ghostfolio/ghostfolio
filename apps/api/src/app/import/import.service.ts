@@ -373,7 +373,7 @@ export class ImportService {
 
     const assetProfiles = await this.validateActivities({
       activitiesDto,
-      assetProfilesWithMarketDataDto,
+      assetProfileWithMarketDataDto: assetProfilesWithMarketDataDto,
       maxActivitiesToImport,
       user
     });
@@ -699,12 +699,12 @@ export class ImportService {
 
   private async validateActivities({
     activitiesDto,
-    assetProfilesWithMarketDataDto,
+    assetProfileWithMarketDataDto,
     maxActivitiesToImport,
     user
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
-    assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
+    assetProfileWithMarketDataDto: ImportDataDto['assetProfiles'];
     maxActivitiesToImport: number;
     user: UserWithSettings;
   }) {
@@ -753,18 +753,20 @@ export class ImportService {
         };
 
         if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) =>
-              profile.dataSource === dataSource && profile.symbol === symbol
+          const assetProfileInImport = assetProfileWithMarketDataDto?.find(
+            (profile) => {
+              return profile.dataSource === dataSource && profile.symbol === symbol;
+            }
           );
 
           if (assetProfileInImport) {
+            // Merge all fields of custom asset profiles into the validation object
             Object.assign(assetProfile, {
               assetClass: assetProfileInImport.assetClass,
               assetSubClass: assetProfileInImport.assetSubClass,
               comment: assetProfileInImport.comment,
               countries: assetProfileInImport.countries,
-              currency: assetProfileInImport.currency ?? assetProfile.currency,
+              currency: assetProfileInImport.currency,
               cusip: assetProfileInImport.cusip,
               dataSource: assetProfileInImport.dataSource,
               figi: assetProfileInImport.figi,

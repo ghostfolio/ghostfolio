@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue where importing custom asset profiles failed due to validation errors
 - Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
 - Added the missing `CommonModule` import in the import activities dialog
 
