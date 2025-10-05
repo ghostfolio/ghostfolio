@@ -2,9 +2,6 @@ import { AccessPermission } from '@prisma/client';
 import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UpdateAccessDto {
-  @IsString()
-  id: string;
-
   @IsOptional()
   @IsString()
   alias?: string;
@@ -12,6 +9,9 @@ export class UpdateAccessDto {
   @IsOptional()
   @IsUUID()
   granteeUserId?: string;
+
+  @IsString()
+  id: string;
 
   @IsEnum(AccessPermission, { each: true })
   @IsOptional()

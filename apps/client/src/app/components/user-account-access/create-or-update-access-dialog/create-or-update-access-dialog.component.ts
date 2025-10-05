@@ -68,22 +68,18 @@ export class GfCreateOrUpdateAccessDialogComponent
     this.mode = this.data.access?.id ? 'update' : 'create';
   }
 
-  public onCancel() {
-    this.dialogRef.close();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   public ngOnInit() {
+    const isPublic = this.data.access.type === 'PUBLIC';
+
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
-      granteeUserId: [this.data.access.grantee, Validators.required],
+      granteeUserId: [
+        this.data.access.grantee,
+        isPublic ? null : Validators.required
+      ],
       permissions: [this.data.access.permissions[0], Validators.required],
       type: [
-        { value: this.data.access.type, disabled: this.mode === 'update' },
+        { disabled: this.mode === 'update', value: this.data.access.type },
         Validators.required
       ]
     });
@@ -104,14 +100,10 @@ export class GfCreateOrUpdateAccessDialogComponent
 
       this.changeDetectorRef.markForCheck();
     });
+  }
 
-    // Initial validation setup based on current type
-    if (this.accessForm.get('type').value === 'PUBLIC') {
-      const granteeUserIdControl = this.accessForm.get('granteeUserId');
-      granteeUserIdControl.clearValidators();
-      granteeUserIdControl.setValue(null);
-      granteeUserIdControl.updateValueAndValidity();
-    }
+  public onCancel() {
+    this.dialogRef.close();
   }
 
   public async onSubmit() {
@@ -120,6 +112,11 @@ export class GfCreateOrUpdateAccessDialogComponent
     } else {
       await this.createAccess();
     }
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 
   private async createAccess() {
@@ -160,9 +157,9 @@ export class GfCreateOrUpdateAccessDialogComponent
 
   private async updateAccess() {
     const access: UpdateAccessDto = {
-      id: this.data.access.id,
       alias: this.accessForm.get('alias').value,
       granteeUserId: this.accessForm.get('granteeUserId').value,
+      id: this.data.access.id,
       permissions: [this.accessForm.get('permissions').value]
     };
 
@@ -176,8 +173,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .putAccess(access)
         .pipe(
-          catchError((error) => {
-            if (error.status === StatusCodes.BAD_REQUEST) {
+          catchError(({ status }) => {
+            if (status.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });
