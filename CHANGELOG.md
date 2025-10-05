@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for a date range query parameter in the data gathering endpoint
+- Added a _Storybook_ story for the activities table component
 
 ## 2.206.0 - 2025-10-04
 
