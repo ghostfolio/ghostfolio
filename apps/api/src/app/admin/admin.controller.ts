@@ -6,6 +6,7 @@ import { ManualService } from '@ghostfolio/api/services/data-provider/manual/man
 import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
@@ -22,6 +23,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type {
+  DateRange,
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
@@ -161,9 +163,21 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   public async gatherSymbol(
     @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
+    @Param('symbol') symbol: string,
+    @Query('range') dateRange: DateRange
   ): Promise<void> {
-    this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    let date: Date;
+
+    if (dateRange) {
+      const { startDate } = getIntervalFromDateRange(dateRange, new Date());
+      date = startDate;
+    }
+
+    this.dataGatheringService.gatherSymbol({
+      dataSource,
+      date,
+      symbol
+    });
 
     return;
   }
