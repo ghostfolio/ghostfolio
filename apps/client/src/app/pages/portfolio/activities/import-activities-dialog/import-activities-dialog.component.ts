@@ -4,7 +4,7 @@ import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
+import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
@@ -15,6 +15,7 @@ import {
   StepperOrientation,
   StepperSelectionEvent
 } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -59,10 +60,11 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
+    CommonModule,
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
-    GfFileDropModule,
+    GfFileDropDirective,
     GfSymbolPipe,
     IonIcon,
     MatButtonModule,
