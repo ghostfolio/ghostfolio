@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.205.0 - 2025-10-01
 
+### Unreleased
+
+- Extend Storybook stories of accounts table component by loading state story
+
 ### Changed
 
 - Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
