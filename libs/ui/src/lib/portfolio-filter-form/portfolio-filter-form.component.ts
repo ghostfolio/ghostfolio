@@ -46,9 +46,9 @@ import { PortfolioFilterFormValue } from './interfaces';
   ],
   providers: [
     {
+      multi: true,
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GfPortfolioFilterFormComponent),
-      multi: true
+      useExisting: forwardRef(() => GfPortfolioFilterFormComponent)
     }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -70,19 +70,17 @@ export class GfPortfolioFilterFormComponent
 
   public filterForm: FormGroup;
 
-  private onChange: (value: PortfolioFilterFormValue) => void = () => {
-    // ControlValueAccessor callback - implemented by parent
-  };
-  private onTouched: () => void = () => {
-    // ControlValueAccessor callback - implemented by parent
-  };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private onChange: (value: PortfolioFilterFormValue) => void = () => {};
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private onTouched: () => void = () => {};
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder
   ) {
-    // Create form with initial state (will be updated in ngOnChanges)
     this.filterForm = this.formBuilder.group({
       account: new FormControl<string>(null),
       assetClass: new FormControl<string>(null),
@@ -92,7 +90,6 @@ export class GfPortfolioFilterFormComponent
   }
 
   public ngOnInit() {
-    // Subscribe to form changes to notify parent component
     this.filterForm.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((value) => {
@@ -101,15 +98,34 @@ export class GfPortfolioFilterFormComponent
       });
   }
 
+  public hasFilters(): boolean {
+    const formValue = this.filterForm.value;
+
+    return Object.values(formValue).some((value) => {
+      return !!value;
+    });
+  }
+
+  public holdingComparisonFunction(
+    option: PortfolioPosition,
+    value: PortfolioPosition
+  ): boolean {
+    if (value === null) {
+      return false;
+    }
+
+    return (
+      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
+    );
+  }
+
   public ngOnChanges() {
-    // Update form disabled state
     if (this.disabled) {
       this.filterForm.disable({ emitEvent: false });
     } else {
       this.filterForm.enable({ emitEvent: false });
     }
 
-    // Disable tag field if no tags available
     if (this.tags.length === 0) {
       this.filterForm.get('tag')?.disable({ emitEvent: false });
     }
@@ -117,12 +133,37 @@ export class GfPortfolioFilterFormComponent
     this.changeDetectorRef.markForCheck();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+  public onApplyFilters(): void {
+    this.filterForm.markAsPristine();
+    this.onChange(this.filterForm.value as PortfolioFilterFormValue);
+    this.applyFilters.emit();
   }
 
-  // ControlValueAccessor implementation
+  public onResetFilters(): void {
+    this.filterForm.reset({}, { emitEvent: true });
+    this.resetFilters.emit();
+  }
+
+  public registerOnChange(fn: (value: PortfolioFilterFormValue) => void): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  public setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+
+    if (this.disabled) {
+      this.filterForm.disable({ emitEvent: false });
+    } else {
+      this.filterForm.enable({ emitEvent: false });
+    }
+
+    this.changeDetectorRef.markForCheck();
+  }
+
   public writeValue(value: PortfolioFilterFormValue | null): void {
     if (value) {
       this.filterForm.setValue(
@@ -139,54 +180,8 @@ export class GfPortfolioFilterFormComponent
     }
   }
 
-  public registerOnChange(fn: (value: PortfolioFilterFormValue) => void): void {
-    this.onChange = fn;
-  }
-
-  public registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  public setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-
-    // Update form disabled state manually since this is called by ControlValueAccessor
-    if (this.disabled) {
-      this.filterForm.disable({ emitEvent: false });
-    } else {
-      this.filterForm.enable({ emitEvent: false });
-    }
-
-    this.changeDetectorRef.markForCheck();
-  }
-
-  // Helper methods
-  public hasFilters(): boolean {
-    const formValue = this.filterForm.value;
-    return Object.values(formValue).some((value) => !!value);
-  }
-
-  public holdingComparisonFunction(
-    option: PortfolioPosition,
-    value: PortfolioPosition
-  ): boolean {
-    if (value === null) {
-      return false;
-    }
-
-    return (
-      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
-    );
-  }
-
-  public onApplyFilters(): void {
-    this.filterForm.markAsPristine();
-    this.onChange(this.filterForm.value as PortfolioFilterFormValue);
-    this.applyFilters.emit();
-  }
-
-  public onResetFilters(): void {
-    this.filterForm.reset({}, { emitEvent: true });
-    this.resetFilters.emit();
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
