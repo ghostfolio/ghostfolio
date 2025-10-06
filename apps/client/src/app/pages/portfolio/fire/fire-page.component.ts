@@ -223,8 +223,9 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
 
   private calculateWithdrawalRates() {
     if (this.fireWealth && this.user?.settings?.safeWithdrawalRate) {
-      this.withdrawalRatePerYear = this.fireWealth.mul(
-        this.user.settings.safeWithdrawalRate
+      this.withdrawalRatePerYear = new Big(
+        this.fireWealth.today.valueInBaseCurrency *
+          this.user.settings.safeWithdrawalRate
       );
 
       this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
