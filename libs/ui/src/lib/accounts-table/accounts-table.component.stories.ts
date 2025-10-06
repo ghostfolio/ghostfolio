@@ -126,6 +126,25 @@ export const Default: Story = {
   }
 };
 
+export const Loading: Story = {
+  args: {
+    accounts: undefined,
+    baseCurrency: 'USD',
+    deviceType: 'desktop',
+    locale: 'en-US',
+    showActions: false,
+    showAllocationInPercentage: false,
+    showBalance: true,
+    showFooter: true,
+    showTransactions: true,
+    showValue: true,
+    showValueInBaseCurrency: true,
+    totalBalanceInBaseCurrency: 12428.2,
+    totalValueInBaseCurrency: 107971.70321466809,
+    transactionCount: 12
+  }
+};
+
 export const WithoutFooter: Story = {
   args: {
     accounts,
