@@ -41,10 +41,7 @@ export class AccessController {
       include: {
         granteeUser: true
       },
-      orderBy: [
-        { granteeUserId: 'desc' }, // NULL values first (public access), then user IDs
-        { createdAt: 'asc' } // Within each group, order by creation time
-      ],
+      orderBy: [{ granteeUserId: 'desc' }, { createdAt: 'asc' }],
       where: { userId: this.request.user.id }
     });
 

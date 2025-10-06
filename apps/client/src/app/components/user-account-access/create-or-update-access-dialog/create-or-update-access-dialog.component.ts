@@ -107,10 +107,10 @@ export class GfCreateOrUpdateAccessDialogComponent
   }
 
   public async onSubmit() {
-    if (this.mode === 'update') {
-      await this.updateAccess();
-    } else {
+    if (this.mode === 'create') {
       await this.createAccess();
+    } else {
+      await this.updateAccess();
     }
   }
 

@@ -72,7 +72,6 @@
                 <span i18n>Edit</span>
               </span>
             </button>
-            <hr class="my-0" />
           }
           @if (element.type === 'PUBLIC') {
             <button mat-menu-item (click)="onCopyUrlToClipboard(element.id)">
@@ -81,6 +80,11 @@
                 <span i18n>Copy link to clipboard</span>
               </span>
             </button>
+          }
+          @if (
+            user?.settings?.isExperimentalFeatures || element.type === 'PUBLIC'
+          ) {
+            <hr class="my-0" />
           }
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
             <span class="align-items-center d-flex">

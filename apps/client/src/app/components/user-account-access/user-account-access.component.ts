@@ -209,27 +209,24 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   }
 
   private openUpdateAccessDialog(accessId: string) {
-    // Find the access details in the already loaded data
-    const accessDetails = this.accessesGive.find(({ id }) => {
+    const access = this.accessesGive?.find(({ id }) => {
       return id === accessId;
     });
 
-    if (!accessDetails) {
-      this.notificationService.alert({
-        title: $localize`Oops! Could not find access details.`
-      });
+    if (!access) {
+      console.log('Could not find access.');
+
       return;
     }
 
     const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
       data: {
         access: {
-          alias: accessDetails.alias,
-          id: accessDetails.id,
-          grantee:
-            accessDetails.grantee === 'Public' ? null : accessDetails.grantee,
-          permissions: accessDetails.permissions,
-          type: accessDetails.type
+          alias: access.alias,
+          id: access.id,
+          grantee: access.grantee === 'Public' ? null : access.grantee,
+          permissions: access.permissions,
+          type: access.type
         }
       },
       height: this.deviceType === 'mobile' ? '98vh' : undefined,

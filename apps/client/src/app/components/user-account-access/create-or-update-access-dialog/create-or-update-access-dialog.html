@@ -5,10 +5,10 @@
   (ngSubmit)="onSubmit()"
 >
   <h1 mat-dialog-title>
-    @if (mode === 'update') {
-      <span i18n>Edit access</span>
-    } @else {
+    @if (mode === 'create') {
       <span i18n>Grant access</span>
+    } @else {
+      <span i18n>Edit access</span>
     }
   </h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
@@ -73,15 +73,15 @@
       mat-flat-button
       type="submit"
       [disabled]="
-        mode === 'update'
-          ? !accessForm.valid
-          : !(accessForm.dirty && accessForm.valid)
+        mode === 'create'
+          ? !(accessForm.dirty && accessForm.valid)
+          : !accessForm.valid
       "
     >
-      @if (mode === 'update') {
-        <ng-container i18n>Update</ng-container>
-      } @else {
+      @if (mode === 'create') {
         <ng-container i18n>Save</ng-container>
+      } @else {
+        <ng-container i18n>Update</ng-container>
       }
     </button>
   </div>
