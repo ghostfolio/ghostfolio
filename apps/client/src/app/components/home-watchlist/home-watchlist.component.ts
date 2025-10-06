@@ -28,7 +28,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CreateWatchlistItemDialogComponent } from './create-watchlist-item-dialog/create-watchlist-item-dialog.component';
+import { GfCreateWatchlistItemDialogComponent } from './create-watchlist-item-dialog/create-watchlist-item-dialog.component';
 import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/interfaces/interfaces';
 
 @Component({
@@ -45,7 +45,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   styleUrls: ['./home-watchlist.scss'],
   templateUrl: './home-watchlist.html'
 })
-export class HomeWatchlistComponent implements OnDestroy, OnInit {
+export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateWatchlistItem: boolean;
@@ -149,14 +149,17 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(CreateWatchlistItemDialogComponent, {
-          autoFocus: false,
-          data: {
-            deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          } as CreateWatchlistItemDialogParams,
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
+        const dialogRef = this.dialog.open(
+          GfCreateWatchlistItemDialogComponent,
+          {
+            autoFocus: false,
+            data: {
+              deviceType: this.deviceType,
+              locale: this.user?.settings?.locale
+            } as CreateWatchlistItemDialogParams,
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          }
+        );
 
         dialogRef
           .afterClosed()

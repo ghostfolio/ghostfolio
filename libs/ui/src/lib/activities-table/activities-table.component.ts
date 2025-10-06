@@ -1,7 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import {
   DEFAULT_PAGE_SIZE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
@@ -73,7 +73,7 @@ import { GfValueComponent } from '../value/value.component';
     GfActivityTypeComponent,
     GfEntityLogoComponent,
     GfNoTransactionsInfoComponent,
-    GfSymbolModule,
+    GfSymbolPipe,
     GfValueComponent,
     IonIcon,
     MatButtonModule,

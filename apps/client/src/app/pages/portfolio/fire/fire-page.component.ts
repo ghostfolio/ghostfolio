@@ -1,7 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { FireWealth, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -34,7 +34,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class GfFirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
-  public fireWealth: Big;
+  public fireWealth: FireWealth;
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
@@ -65,12 +65,19 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
-        this.fireWealth = summary.fireWealth
-          ? new Big(summary.fireWealth)
-          : new Big(0);
-
+        this.fireWealth = {
+          today: {
+            valueInBaseCurrency: summary.fireWealth
+              ? summary.fireWealth.today.valueInBaseCurrency
+              : 0
+          }
+        };
         if (this.user.subscription?.type === 'Basic') {
-          this.fireWealth = new Big(10000);
+          this.fireWealth = {
+            today: {
+              valueInBaseCurrency: 10000
+            }
+          };
         }
 
         this.calculateWithdrawalRates();
