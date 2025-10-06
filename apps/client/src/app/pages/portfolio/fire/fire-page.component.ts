@@ -6,9 +6,11 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
-import { FormsModule } from '@angular/forms';
+
 import { CommonModule, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Big } from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -19,6 +21,7 @@ import { takeUntil } from 'rxjs/operators';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
@@ -40,6 +43,8 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
 
+  public safeWithdrawalRateControl: FormControl;
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -54,6 +59,8 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
     this.isLoading = true;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
+    this.safeWithdrawalRateControl = new FormControl(0.025);
+
     this.dataService
       .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -66,7 +73,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
           this.fireWealth = new Big(10000);
         }
 
-        this._calculateWithdrawalRates();
+        this.calculateWithdrawalRates();
 
         this.isLoading = false;
 
@@ -86,6 +93,14 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          const newSWR = this.user?.settings?.safeWithdrawalRate ?? 0.025;
+
+          if (this.safeWithdrawalRateControl.value !== newSWR) {
+            this.safeWithdrawalRateControl.setValue(newSWR, {
+              emitEvent: false
+            });
+          }
+
           this.hasPermissionToUpdateUserSettings =
             this.user.subscription?.type === 'Basic'
               ? false
@@ -94,10 +109,16 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
                   permissions.updateUserSettings
                 );
 
-          this._calculateWithdrawalRates();
+          this.calculateWithdrawalRates();
+
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.safeWithdrawalRateControl.valueChanges.subscribe((value: number) => {
+      console.log('New SWR selected:', value);
+      this.onSafeWithdrawalRateChange(Number(value));
+    });
   }
 
   public onAnnualInterestRateChange(annualInterestRate: number) {
@@ -137,7 +158,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
 
   public onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
     this.dataService
-      .putUserSetting({ safeWithdrawalRate }) // No need for Number() conversion
+      .putUserSetting({ safeWithdrawalRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService
@@ -145,11 +166,14 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
-            this._calculateWithdrawalRates();
+
+            this.calculateWithdrawalRates();
+
             this.changeDetectorRef.markForCheck();
           });
       });
   }
+
   public onSavingsRateChange(savingsRate: number) {
     this.dataService
       .putUserSetting({ savingsRate })
@@ -190,7 +214,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private _calculateWithdrawalRates() {
+  private calculateWithdrawalRates() {
     if (this.fireWealth && this.user?.settings?.safeWithdrawalRate) {
       this.withdrawalRatePerYear = this.fireWealth.mul(
         this.user.settings.safeWithdrawalRate
