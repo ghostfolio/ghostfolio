@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored the auth page component to standalone
+- Refactored the auth page to standalone
 
 ## 2.206.0 - 2025-10-04
 
