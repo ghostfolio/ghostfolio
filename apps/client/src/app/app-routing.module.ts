@@ -42,7 +42,7 @@ const routes: Routes = [
   {
     path: internalRoutes.auth.path,
     loadChildren: () =>
-      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule),
+      import('./pages/auth/auth-page.routes').then((m) => m.routes),
     title: internalRoutes.auth.title
   },
   {
