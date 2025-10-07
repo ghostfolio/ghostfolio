@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to edit a granted access (experimental)
+- Introduced tabs to the asset profile details dialog in the admin control panel
 - Added support for a date range query parameter in the data gathering endpoint
 - Added a _Storybook_ story for the activities table component
 
@@ -17,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the spacing around the buttons in the holding detail dialog
 - Refactored the auth page to standalone
-- Refactored asset profile dialog to use tabbed interface
 
 ## 2.206.0 - 2025-10-04
 
