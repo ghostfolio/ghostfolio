@@ -107,9 +107,9 @@ export default {
 
 type Story = StoryObj<GfAccountsTableComponent>;
 
-export const Default: Story = {
+export const Loading: Story = {
   args: {
-    accounts,
+    accounts: undefined,
     baseCurrency: 'USD',
     deviceType: 'desktop',
     locale: 'en-US',
@@ -120,15 +120,15 @@ export const Default: Story = {
     showTransactions: true,
     showValue: true,
     showValueInBaseCurrency: true,
-    totalBalanceInBaseCurrency: 12428.2,
-    totalValueInBaseCurrency: 107971.70321466809,
-    transactionCount: 12
+    totalBalanceInBaseCurrency: 0,
+    totalValueInBaseCurrency: 0,
+    transactionCount: 0
   }
 };
 
-export const Loading: Story = {
+export const Default: Story = {
   args: {
-    accounts: undefined,
+    accounts,
     baseCurrency: 'USD',
     deviceType: 'desktop',
     locale: 'en-US',
