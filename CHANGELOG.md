@@ -20,8 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the word wrap in the menu of the access table component
 - Fixed the word wrap in the menu of the activities table component
-- Fixed the word wrap in the menu of the of the asset profile details dialog in the admin control panel
+- Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
 
 ## 2.206.0 - 2025-10-04
 
