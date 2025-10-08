@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the spacing around the buttons in the holding detail dialog
+- Refactored various components to use self-closing tags
 - Refactored the auth page to standalone
 
 ## 2.206.0 - 2025-10-04
