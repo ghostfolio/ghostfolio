@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the spacing around the buttons in the holding detail dialog
+- Extended the _Storybook_ stories of the accounts table component by a loading state story
 - Refactored the auth page to standalone
 
 ## 2.206.0 - 2025-10-04
@@ -37,15 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.205.0 - 2025-10-01
 
-### Unreleased
-
 ### Changed
 
 - Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
 - Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `6.16.1` to `6.16.3`
-- Extended the Storybook stories of accounts table component by loading state story
 
 ## 2.204.0 - 2025-09-30
 
