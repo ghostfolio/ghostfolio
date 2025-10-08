@@ -1,5 +1,3 @@
-import { GfLogoComponent } from '@ghostfolio/ui/logo';
-
 import { Platform } from '@angular/cdk/platform';
 import {
   provideHttpClient,
@@ -30,6 +28,7 @@ import { CustomDateAdapter } from './adapter/custom-date-adapter';
 import { DateFormats } from './adapter/date-formats';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
@@ -47,8 +46,8 @@ export function NgxStripeFactory(): string {
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    GfFooterComponent,
     GfHeaderComponent,
-    GfLogoComponent,
     GfNotificationModule,
     IonIcon,
     MatAutocompleteModule,
