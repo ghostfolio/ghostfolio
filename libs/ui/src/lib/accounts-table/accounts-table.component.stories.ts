@@ -119,10 +119,7 @@ export const Loading: Story = {
     showFooter: true,
     showTransactions: true,
     showValue: true,
-    showValueInBaseCurrency: true,
-    totalBalanceInBaseCurrency: 0,
-    totalValueInBaseCurrency: 0,
-    transactionCount: 0
+    showValueInBaseCurrency: true
   }
 };
 
