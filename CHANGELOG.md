@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the _Storybook_ stories of the accounts table component by a loading state story
 - Refactored the auth page to standalone
 
+### Fixed
+
+- Fixed the word wrap in the menu of the access table component
+- Fixed the word wrap in the menu of the activities table component
+- Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
+
 ## 2.206.0 - 2025-10-04
 
 ### Changed
