@@ -1,5 +1,3 @@
-import { GfLogoComponent } from '@ghostfolio/ui/logo';
-
 import { Platform } from '@angular/cdk/platform';
 import {
   provideHttpClient,
@@ -50,7 +48,6 @@ export function NgxStripeFactory(): string {
     BrowserModule,
     GfFooterComponent,
     GfHeaderComponent,
-    GfLogoComponent,
     GfNotificationModule,
     IonIcon,
     MatAutocompleteModule,

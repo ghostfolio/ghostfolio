@@ -52,7 +52,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentSubRoute: string;
-  public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;

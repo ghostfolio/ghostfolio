@@ -13,18 +13,20 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { openOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfLogoComponent, IonIcon, RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: ['./footer.component.scss'],
+  imports: [CommonModule, GfLogoComponent, IonIcon, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfFooterComponent implements OnChanges {
-  @Input() info: InfoItem;
-  @Input() user: User;
+  @Input() public info: InfoItem;
+  @Input() public user: User;
 
   public currentYear = new Date().getFullYear();
   public hasPermissionForStatistics: boolean;
@@ -46,6 +48,12 @@ export class GfFooterComponent implements OnChanges {
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
   public routerLinkResources = publicRoutes.resources.routerLink;
+
+  public constructor() {
+    addIcons({
+      openOutline
+    });
+  }
 
   public ngOnChanges() {
     this.hasPermissionForStatistics = hasPermission(
