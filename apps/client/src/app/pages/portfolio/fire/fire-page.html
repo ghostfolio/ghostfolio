@@ -107,15 +107,14 @@
         <ng-container i18n>and a safe withdrawal rate (SWR) of</ng-container>
         <ng-container>&nbsp;</ng-container>
         <select
-          class="d-inline-block font-weight-bold w-auto swr-select"
-          [disabled]="
-            user?.subscription?.type === 'Basic' || hasImpersonationId
-          "
+          class="cursor-pointer d-inline-block font-weight-bold swr-select w-auto"
           [formControl]="safeWithdrawalRateControl"
         >
-          <option *ngFor="let rate of safeWithdrawalRateOptions" [value]="rate">
-            {{ rate | percent: '1.1-1' }}
-          </option>
+          @for (rate of safeWithdrawalRateOptions; track rate) {
+            <option [value]="rate">
+              {{ rate | percent: '1.1-1' }}
+            </option>
+          }
         </select>
       </div>
     }

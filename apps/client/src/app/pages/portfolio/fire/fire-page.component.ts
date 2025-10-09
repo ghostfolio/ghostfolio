@@ -19,14 +19,14 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
     NgStyle,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
@@ -38,12 +38,11 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
+  public safeWithdrawalRateControl = new FormControl(0.025);
   public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
-
-  public safeWithdrawalRateControl: FormControl;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -100,12 +99,19 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          const newSWR = this.user?.settings?.safeWithdrawalRate ?? 0.025;
+          const isWithdrawalRateDisabled =
+            this.user?.subscription?.type === 'Basic' ||
+            this.hasImpersonationId;
 
-          if (this.safeWithdrawalRateControl.value !== newSWR) {
-            this.safeWithdrawalRateControl.setValue(newSWR, {
-              emitEvent: false
-            });
+          this.safeWithdrawalRateControl.setValue(
+            this.user.settings.safeWithdrawalRate,
+            { emitEvent: false }
+          );
+
+          if (isWithdrawalRateDisabled) {
+            this.safeWithdrawalRateControl.disable({ emitEvent: false });
+          } else {
+            this.safeWithdrawalRateControl.enable({ emitEvent: false });
           }
 
           this.hasPermissionToUpdateUserSettings =
@@ -122,10 +128,13 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
         }
       });
 
-    this.safeWithdrawalRateControl.valueChanges.subscribe((value: number) => {
-      console.log('New SWR selected:', value);
-      this.onSafeWithdrawalRateChange(Number(value));
-    });
+    this.safeWithdrawalRateControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((value: number) => {
+        if (!this.safeWithdrawalRateControl.disabled) {
+          this.onSafeWithdrawalRateChange(Number(value));
+        }
+      });
   }
 
   public onAnnualInterestRateChange(annualInterestRate: number) {
