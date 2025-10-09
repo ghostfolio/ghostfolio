@@ -18,7 +18,7 @@
         <ion-icon name="ellipsis-vertical" />
       </button>
     }
-    <mat-menu #activitiesMenu="matMenu" xPosition="before">
+    <mat-menu #activitiesMenu="matMenu" class="no-max-width" xPosition="before">
       <button
         mat-menu-item
         [disabled]="dataSource?.data.length === 0"
@@ -105,9 +105,7 @@
     </ng-container>
 
     <ng-container matColumnDef="importStatus">
-      <th *matHeaderCellDef class="px-1" mat-header-cell>
-        <ng-container i18n></ng-container>
-      </th>
+      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         @if (element.error) {
           <div
