@@ -360,27 +360,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
-    if (this.accountsWithValue?.length > 0) {
-      this.accounts = this.accountsWithValue;
-    } else {
-      this.accounts = (this.user?.accounts ?? []).map((account) => ({
-        ...account,
-        allocationInPercentage: 0,
-        balanceInBaseCurrency: account.balance || 0,
-        dividendInBaseCurrency: 0,
-        interestInBaseCurrency: 0,
-        platform: account.platformId
-          ? {
-              id: account.platformId,
-              name: account.platformId,
-              url: ''
-            }
-          : undefined,
-        transactionCount: 0,
-        value: account.balance || 0,
-        valueInBaseCurrency: account.balance || 0
-      })) as AccountWithValue[];
-    }
+    this.accounts = (this.user?.accounts ?? []).map((account) => ({
+      id: account.id,
+      name: account.name
+    })) as AccountWithValue[];
 
     if (this.hasPermissionToChangeFilters) {
       this.portfolioFilterFormControl.enable({ emitEvent: false });
