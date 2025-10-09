@@ -5,8 +5,6 @@
   position: relative;
 
   .logo-carousel-container {
-    width: 100%;
-    overflow: hidden;
     position: relative;
 
     // Fade gradient mask for smooth edges
@@ -25,7 +23,7 @@
       left: 0;
       background: linear-gradient(
         to right,
-        rgba(var(--palette-background-background), 1) 0%,
+        var(--light-background) 0%,
         rgba(var(--palette-background-background), 0) 100%
       );
     }
@@ -34,7 +32,7 @@
       right: 0;
       background: linear-gradient(
         to left,
-        rgba(var(--palette-background-background), 1) 0%,
+        var(--light-background) 0%,
         rgba(var(--palette-background-background), 0) 100%
       );
     }
@@ -96,17 +94,13 @@
 
     &.mask {
       background-color: rgba(var(--dark-secondary-text));
-      -webkit-mask-position: center;
       mask-position: center;
-      -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
-      -webkit-mask-size: contain;
       mask-size: contain;
     }
 
     // Logo-specific styles (copied from landing-page.scss)
     &.logo-alternative-to {
-      -webkit-mask-image: url('/assets/images/logo-alternative-to.svg');
       mask-image: url('/assets/images/logo-alternative-to.svg');
     }
 
@@ -119,22 +113,18 @@
     }
 
     &.logo-dev-community {
-      -webkit-mask-image: url('/assets/images/logo-dev-community.svg');
       mask-image: url('/assets/images/logo-dev-community.svg');
     }
 
     &.logo-hacker-news {
-      -webkit-mask-image: url('/assets/images/logo-hacker-news.svg');
       mask-image: url('/assets/images/logo-hacker-news.svg');
     }
 
     &.logo-openalternative {
-      -webkit-mask-image: url('/assets/images/logo-openalternative.svg');
       mask-image: url('/assets/images/logo-openalternative.svg');
     }
 
     &.logo-privacy-tools {
-      -webkit-mask-image: url('/assets/images/logo-privacy-tools.svg');
       mask-image: url('/assets/images/logo-privacy-tools.svg');
     }
 
@@ -147,35 +137,29 @@
     }
 
     &.logo-reddit {
-      -webkit-mask-image: url('/assets/images/logo-reddit.svg');
       mask-image: url('/assets/images/logo-reddit.svg');
       max-height: 1rem;
     }
 
     &.logo-sackgeld {
-      -webkit-mask-image: url('/assets/images/logo-sackgeld.png');
       mask-image: url('/assets/images/logo-sackgeld.png');
     }
 
     &.logo-selfh-st {
-      -webkit-mask-image: url('/assets/images/logo-selfh-st.svg');
       mask-image: url('/assets/images/logo-selfh-st.svg');
       max-height: 1.25rem;
     }
 
     &.logo-sourceforge {
-      -webkit-mask-image: url('/assets/images/logo-sourceforge.svg');
       mask-image: url('/assets/images/logo-sourceforge.svg');
     }
 
     &.logo-umbrel {
-      -webkit-mask-image: url('/assets/images/logo-umbrel.svg');
       mask-image: url('/assets/images/logo-umbrel.svg');
       max-height: 1.5rem;
     }
 
     &.logo-unraid {
-      -webkit-mask-image: url('/assets/images/logo-unraid.svg');
       mask-image: url('/assets/images/logo-unraid.svg');
     }
 
@@ -198,7 +182,7 @@
     &::before {
       background: linear-gradient(
         to right,
-        rgba(var(--palette-background-background-dark), 1) 0%,
+        var(--dark-background) 0%,
         rgba(var(--palette-background-background-dark), 0) 100%
       );
     }
@@ -206,7 +190,7 @@
     &::after {
       background: linear-gradient(
         to left,
-        rgba(var(--palette-background-background-dark), 1) 0%,
+        var(--dark-background) 0%,
         rgba(var(--palette-background-background-dark), 0) 100%
       );
     }
