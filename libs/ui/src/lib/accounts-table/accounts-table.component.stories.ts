@@ -107,6 +107,22 @@ export default {
 
 type Story = StoryObj<GfAccountsTableComponent>;
 
+export const Loading: Story = {
+  args: {
+    accounts: undefined,
+    baseCurrency: 'USD',
+    deviceType: 'desktop',
+    locale: 'en-US',
+    showActions: false,
+    showAllocationInPercentage: false,
+    showBalance: true,
+    showFooter: true,
+    showTransactions: true,
+    showValue: true,
+    showValueInBaseCurrency: true
+  }
+};
+
 export const Default: Story = {
   args: {
     accounts,

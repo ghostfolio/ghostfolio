@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Refactored various components to use self-closing tags
+
+## 2.207.0 - 2025-10-08
+
 ### Added
 
 - Added support to edit a granted access (experimental)
@@ -17,8 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the spacing around the buttons in the holding detail dialog
-- Refactored various components to use self-closing tags
+- Extended the _Storybook_ stories of the accounts table component by a loading state story
 - Refactored the auth page to standalone
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the word wrap in the menu of the access table component
+- Fixed the word wrap in the menu of the activities table component
+- Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
 
 ## 2.206.0 - 2025-10-04
 
