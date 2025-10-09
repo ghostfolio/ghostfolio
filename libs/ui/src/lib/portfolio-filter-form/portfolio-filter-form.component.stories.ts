@@ -36,9 +36,9 @@ export const Default: Story = {
       }
     ] as any,
     assetClasses: [
+      { id: 'COMMODITY', label: 'Commodity', type: 'ASSET_CLASS' },
       { id: 'EQUITY', label: 'Equity', type: 'ASSET_CLASS' },
-      { id: 'FIXED_INCOME', label: 'Fixed Income', type: 'ASSET_CLASS' },
-      { id: 'COMMODITY', label: 'Commodity', type: 'ASSET_CLASS' }
+      { id: 'FIXED_INCOME', label: 'Fixed Income', type: 'ASSET_CLASS' }
     ] as any,
     holdings: [
       {

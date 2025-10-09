@@ -242,7 +242,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             );
           }
 
-          // Accounts
           const accounts$: Observable<Partial<ISearchResults>> =
             this.searchAccounts(searchTerm).pipe(
               map((accounts) => ({
@@ -261,7 +260,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })
             );
 
-          // Asset profiles
           const assetProfiles$: Observable<Partial<ISearchResults>> = this
             .hasPermissionToAccessAdminControl
             ? this.searchAssetProfiles(searchTerm).pipe(
@@ -290,7 +288,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 })
               );
 
-          // Holdings
           const holdings$: Observable<Partial<ISearchResults>> =
             this.searchHoldings(searchTerm).pipe(
               map((holdings) => ({
@@ -309,7 +306,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })
             );
 
-          // Quick links
           const quickLinks$: Observable<Partial<ISearchResults>> = of(
             this.searchQuickLinks(searchTerm)
           ).pipe(
@@ -325,7 +321,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             })
           );
 
-          // Merge all results
           return merge(accounts$, assetProfiles$, holdings$, quickLinks$).pipe(
             scan(
               (acc: ISearchResults, curr: Partial<ISearchResults>) => ({
@@ -365,11 +360,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
-    // Use accountsWithValue if provided, otherwise transform user.accounts as fallback
     if (this.accountsWithValue?.length > 0) {
       this.accounts = this.accountsWithValue;
     } else {
-      // Transform basic accounts to AccountWithValue format for compatibility
       this.accounts = (this.user?.accounts ?? []).map((account) => ({
         ...account,
         allocationInPercentage: 0,
@@ -379,7 +372,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         platform: account.platformId
           ? {
               id: account.platformId,
-              name: account.platformId, // Fallback, ideally should be resolved
+              name: account.platformId,
               url: ''
             }
           : undefined,
@@ -566,12 +559,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onResetFilters() {
-    this.portfolioFilterFormControl.setValue({
-      account: null,
-      assetClass: null,
-      holding: null,
-      tag: null
-    });
+    this.portfolioFilterFormControl.reset();
 
     this.filtersChanged.emit(
       this.filterTypes.map((type) => {

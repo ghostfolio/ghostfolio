@@ -72,24 +72,5 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="d-flex w-100">
-    <button
-      i18n
-      mat-button
-      [disabled]="!hasFilters() || disabled"
-      (click)="onResetFilters()"
-    >
-      Reset Filters
-    </button>
-    <span class="gf-spacer"></span>
-    <button
-      color="primary"
-      i18n
-      mat-flat-button
-      [disabled]="!filterForm.dirty || disabled"
-      (click)="onApplyFilters()"
-    >
-      Apply Filters
-    </button>
-  </div>
+  <ng-content select="[gfPortfolioFilterActions]"></ng-content>
 </form>
