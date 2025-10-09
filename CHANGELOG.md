@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add Average Buy Price in holdings table
 
+### Changed
+
+- Refactored various components to use self-closing tags
+
 ## 2.207.0 - 2025-10-08
 
 ### Added
