@@ -183,7 +183,7 @@
     <div class="p-3">
       <gf-portfolio-filter-form
         #portfolioFilterForm
-        [accounts]="accounts"
+        [accounts]="user?.accounts"
         [assetClasses]="assetClasses"
         [disabled]="!hasPermissionToChangeFilters"
         [formControl]="portfolioFilterFormControl"

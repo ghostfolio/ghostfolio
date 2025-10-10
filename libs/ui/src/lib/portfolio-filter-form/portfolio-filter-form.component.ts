@@ -1,7 +1,7 @@
 import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
-import { AccountWithValue } from '@ghostfolio/common/types';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -57,7 +57,7 @@ import { PortfolioFilterFormValue } from './interfaces';
 export class GfPortfolioFilterFormComponent
   implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
-  @Input() accounts: AccountWithValue[] = [];
+  @Input() accounts: AccountWithPlatform[] = [];
   @Input() assetClasses: Filter[] = [];
   @Input() holdings: PortfolioPosition[] = [];
   @Input() tags: Filter[] = [];

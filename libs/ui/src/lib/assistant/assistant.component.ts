@@ -4,7 +4,7 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
+import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
@@ -119,7 +119,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  @Input() accountsWithValue: AccountWithValue[] = [];
   @Input() deviceType: string;
   @Input() hasPermissionToAccessAdminControl: boolean;
   @Input() hasPermissionToChangeDateRange: boolean;
@@ -138,7 +137,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
-  public accounts: AccountWithValue[] = [];
+  public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
   public dateRangeOptions: IDateRangeOption[] = [];
@@ -360,11 +359,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
-    this.accounts = (this.user?.accounts ?? []).map(({ id, name }) => ({
-      id,
-      name
-    })) as AccountWithValue[];
-
     this.dateRangeOptions = [
       {
         label: $localize`Today`,
