@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored various components to use self-closing tags
 
+### Fixed
+
+- Fixed the server startup message to properly display IPv6 addresses
+
 ## 2.207.0 - 2025-10-08
 
 ### Added
