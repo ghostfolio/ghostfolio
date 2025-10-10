@@ -19,7 +19,7 @@ export const Default: Story = {
   args: {
     accounts: [
       {
-        id: '1',
+        id: '733110b6-7c55-44eb-8cc5-c4c3e9d48a79',
         name: 'Trading Account',
         platform: {
           name: 'Interactive Brokers',
@@ -27,7 +27,7 @@ export const Default: Story = {
         }
       },
       {
-        id: '2',
+        id: '24ba27d6-e04b-4fb4-b856-b24c2ef0422a',
         name: 'Investment Account',
         platform: {
           name: 'Fidelity',

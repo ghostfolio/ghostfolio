@@ -172,8 +172,10 @@
           [formControl]="dateRangeFormControl"
           (selectionChange)="onChangeDateRange($event.value)"
         >
-          @for (range of dateRangeOptions; track range) {
-            <mat-option [value]="range.value">{{ range.label }}</mat-option>
+          @for (dateRangeOption of dateRangeOptions; track dateRangeOption) {
+            <mat-option [value]="dateRangeOption.value">{{
+              dateRangeOption.label
+            }}</mat-option>
           }
         </mat-select>
       </mat-form-field>

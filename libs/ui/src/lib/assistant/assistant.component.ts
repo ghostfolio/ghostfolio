@@ -360,16 +360,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
-    this.accounts = (this.user?.accounts ?? []).map((account) => ({
-      id: account.id,
-      name: account.name
+    this.accounts = (this.user?.accounts ?? []).map(({ id, name }) => ({
+      id,
+      name
     })) as AccountWithValue[];
-
-    if (this.hasPermissionToChangeFilters) {
-      this.portfolioFilterFormControl.enable({ emitEvent: false });
-    } else {
-      this.portfolioFilterFormControl.disable({ emitEvent: false });
-    }
 
     this.dateRangeOptions = [
       {
@@ -438,6 +432,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
 
+    if (this.hasPermissionToChangeFilters) {
+      this.portfolioFilterFormControl.enable({ emitEvent: false });
+    } else {
+      this.portfolioFilterFormControl.disable({ emitEvent: false });
+    }
+
     this.tags =
       this.user?.tags
         ?.filter(({ isUsed }) => {
@@ -504,6 +504,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public onApplyFilters() {
     const filterValue = this.portfolioFilterFormControl.value;
+
     this.filtersChanged.emit([
       {
         id: filterValue?.account,
