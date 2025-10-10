@@ -124,8 +124,11 @@ export class GfPortfolioFilterFormComponent
       this.filterForm.enable({ emitEvent: false });
     }
 
+    const tagControl = this.filterForm.get('tag');
     if (this.tags.length === 0) {
-      this.filterForm.get('tag')?.disable({ emitEvent: false });
+      tagControl?.disable({ emitEvent: false });
+    } else if (!this.disabled) {
+      tagControl?.enable({ emitEvent: false });
     }
 
     this.changeDetectorRef.markForCheck();
