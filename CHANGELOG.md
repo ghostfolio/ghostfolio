@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Extracted the portfolio filter form to a reusable component used in the assistant
+
 ## 2.207.0 - 2025-10-08
 
 ### Added
@@ -16,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Extracted Portfolio Fliter Form as a reusable component
 - Improved the spacing around the buttons in the holding detail dialog
 - Extended the _Storybook_ stories of the accounts table component by a loading state story
 - Refactored the auth page to standalone
