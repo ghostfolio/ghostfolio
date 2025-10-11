@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the _As seen in_ section on the landing page to an animated carousel
 - Refactored various components to use self-closing tags
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
 
 ### Fixed
 
