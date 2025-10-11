@@ -34,15 +34,15 @@
     {
       "accountId": null,
       "comment": null,
-      "fee": 0,
-      "quantity": 1,
-      "type": "BUY",
-      "unitPrice": 500000,
       "currency": "USD",
       "dataSource": "MANUAL",
       "date": "2022-01-01T00:00:00.000Z",
+      "fee": 0,
+      "quantity": 1,
       "symbol": "7e91b7d4-1430-4212-8380-289a06c9bbc1",
-      "tags": []
+      "tags": [],
+      "type": "BUY",
+      "unitPrice": 500000,
     }
   ],
   "user": {
