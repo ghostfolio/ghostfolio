@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the server startup message to properly display IPv6 addresses
+- Fixed an issue where importing custom asset profiles failed due to validation errors
 
 ## 2.207.0 - 2025-10-08
 
@@ -56,7 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue where importing custom asset profiles failed due to validation errors
 - Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
 - Added the missing `CommonModule` import in the import activities dialog
 
