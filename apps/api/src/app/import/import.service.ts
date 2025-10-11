@@ -373,6 +373,7 @@ export class ImportService {
 
     const assetProfiles = await this.validateActivities({
       activitiesDto,
+      assetProfilesWithMarketDataDto,
       maxActivitiesToImport,
       user
     });
@@ -698,10 +699,12 @@ export class ImportService {
 
   private async validateActivities({
     activitiesDto,
+    assetProfilesWithMarketDataDto,
     maxActivitiesToImport,
     user
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
+    assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     maxActivitiesToImport: number;
     user: UserWithSettings;
   }) {
@@ -748,6 +751,41 @@ export class ImportService {
             ])
           )?.[symbol]
         };
+
+        if (!assetProfile?.name) {
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
+          if (assetProfileInImport) {
+            // Merge all fields of custom asset profiles into the validation object
+            Object.assign(assetProfile, {
+              assetClass: assetProfileInImport.assetClass,
+              assetSubClass: assetProfileInImport.assetSubClass,
+              comment: assetProfileInImport.comment,
+              countries: assetProfileInImport.countries,
+              currency: assetProfileInImport.currency,
+              cusip: assetProfileInImport.cusip,
+              dataSource: assetProfileInImport.dataSource,
+              figi: assetProfileInImport.figi,
+              figiComposite: assetProfileInImport.figiComposite,
+              figiShareClass: assetProfileInImport.figiShareClass,
+              holdings: assetProfileInImport.holdings,
+              isActive: assetProfileInImport.isActive,
+              isin: assetProfileInImport.isin,
+              name: assetProfileInImport.name,
+              scraperConfiguration: assetProfileInImport.scraperConfiguration,
+              sectors: assetProfileInImport.sectors,
+              symbol: assetProfileInImport.symbol,
+              symbolMapping: assetProfileInImport.symbolMapping,
+              url: assetProfileInImport.url
+            });
+          }
+        }
 
         if (
           (dataSource !== 'MANUAL' && type === 'BUY') ||
