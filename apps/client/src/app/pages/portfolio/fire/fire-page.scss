@@ -1,32 +1,19 @@
 :host {
   display: block;
 
-  .swr-select {
+  .safe-withdrawal-rate-select {
     background-color: transparent;
-    border: 0;
-
     color: rgb(var(--dark-primary-text));
 
     &:focus {
       box-shadow: none;
       outline: 0;
     }
-
-    option {
-      background: rgb(var(--light-background));
-      color: rgb(var(--dark-primary-text));
-      border: 0;
-    }
   }
 }
 
 :host-context(.theme-dark) {
-  .swr-select {
+  .safe-withdrawal-rate-select {
     color: rgb(var(--light-primary-text));
-
-    option {
-      background: rgb(var(--dark-background));
-      color: rgb(var(--light-primary-text));
-    }
   }
 }

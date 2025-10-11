@@ -105,17 +105,28 @@
         </span>
         <ng-container>&nbsp;</ng-container>
         <ng-container i18n>and a safe withdrawal rate (SWR) of</ng-container>
-        <ng-container>&nbsp;</ng-container>
-        <select
-          class="cursor-pointer d-inline-block font-weight-bold swr-select w-auto"
-          [formControl]="safeWithdrawalRateControl"
-        >
-          @for (rate of safeWithdrawalRateOptions; track rate) {
-            <option [value]="rate">
-              {{ rate | percent: '1.1-1' }}
-            </option>
-          }
-        </select>
+        @if (!hasImpersonationId && hasPermissionToUpdateUserSettings) {
+          <select
+            class="border-0 cursor-pointer d-inline-block font-weight-bold safe-withdrawal-rate-select w-auto"
+            [formControl]="safeWithdrawalRateControl"
+          >
+            @for (rate of safeWithdrawalRateOptions; track rate) {
+              <option [value]="rate">
+                {{ rate | percent: '1.1-1' }}
+              </option>
+            }</select
+          >.
+        } @else {
+          <ng-container>&nbsp;</ng-container>
+          <span class="font-weight-bold"
+            ><gf-value
+              class="d-inline-block"
+              [isPercent]="true"
+              [locale]="user?.settings?.locale"
+              [precision]="1"
+              [value]="user?.settings?.safeWithdrawalRate" /></span
+          >.
+        }
       </div>
     }
   </div>

@@ -19,13 +19,13 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
+    CommonModule,
+    FormsModule,
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
     NgStyle,
     NgxSkeletonLoaderModule,
-    CommonModule,
-    FormsModule,
     ReactiveFormsModule
   ],
   selector: 'gf-fire-page',
@@ -38,7 +38,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
-  public safeWithdrawalRateControl = new FormControl(0.025);
+  public safeWithdrawalRateControl = new FormControl<number>(undefined);
   public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
@@ -57,8 +57,6 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.isLoading = true;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
-    this.safeWithdrawalRateControl = new FormControl(0.025);
 
     this.dataService
       .fetchPortfolioDetails()
@@ -99,21 +97,6 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          const isWithdrawalRateDisabled =
-            this.user?.subscription?.type === 'Basic' ||
-            this.hasImpersonationId;
-
-          this.safeWithdrawalRateControl.setValue(
-            this.user.settings.safeWithdrawalRate,
-            { emitEvent: false }
-          );
-
-          if (isWithdrawalRateDisabled) {
-            this.safeWithdrawalRateControl.disable({ emitEvent: false });
-          } else {
-            this.safeWithdrawalRateControl.enable({ emitEvent: false });
-          }
-
           this.hasPermissionToUpdateUserSettings =
             this.user.subscription?.type === 'Basic'
               ? false
@@ -121,6 +104,11 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
                   this.user.permissions,
                   permissions.updateUserSettings
                 );
+
+          this.safeWithdrawalRateControl.setValue(
+            this.user.settings.safeWithdrawalRate,
+            { emitEvent: false }
+          );
 
           this.calculateWithdrawalRates();
 
@@ -233,9 +221,8 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   private calculateWithdrawalRates() {
     if (this.fireWealth && this.user?.settings?.safeWithdrawalRate) {
       this.withdrawalRatePerYear = new Big(
-        this.fireWealth.today.valueInBaseCurrency *
-          this.user.settings.safeWithdrawalRate
-      );
+        this.fireWealth.today.valueInBaseCurrency
+      ).mul(this.user.settings.safeWithdrawalRate);
 
       this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
     }
