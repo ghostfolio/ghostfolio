@@ -412,11 +412,10 @@
     </mat-tab-group>
 
     <gf-tags-selector
+      [formControl]="holdingForm.get('tags')"
       [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
       [readonly]="!data.hasPermissionToUpdateOrder"
-      [tags]="activityForm.get('tags')?.value"
       [tagsAvailable]="tagsAvailable"
-      (tagsChanged)="onTagsChanged($event)"
     />
 
     @if (
