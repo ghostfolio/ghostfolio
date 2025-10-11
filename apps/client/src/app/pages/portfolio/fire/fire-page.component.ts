@@ -43,6 +43,10 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
+  public projectedWithdrawalRatePerMonth: Big;
+  public projectedWithdrawalRatePerYear: Big;
+  public projectedRetirementDate: Date;
+  public projectedAnnualInterestRate: number;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -211,6 +215,21 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onCalculationComplete(event: {
+    projectedTotalAmount: number;
+    retirementDate?: Date;
+    annualInterestRate: number;
+  }) {
+    if (event) {
+      this.projectedRetirementDate = event.retirementDate;
+      this.projectedAnnualInterestRate = event.annualInterestRate;
+
+      this.calculateProjectedWithdrawalRates(event.projectedTotalAmount);
+
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -223,6 +242,20 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       ).mul(this.user.settings.safeWithdrawalRate);
 
       this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
+    }
+  }
+
+  private calculateProjectedWithdrawalRates(projectedTotalAmount: number) {
+    if (
+      projectedTotalAmount !== undefined &&
+      projectedTotalAmount !== null &&
+      this.user?.settings?.safeWithdrawalRate
+    ) {
+      this.projectedWithdrawalRatePerYear = new Big(projectedTotalAmount).mul(
+        this.user.settings.safeWithdrawalRate
+      );
+      this.projectedWithdrawalRatePerMonth =
+        this.projectedWithdrawalRatePerYear.div(12);
     }
   }
 }
