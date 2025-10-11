@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the _As seen in_ section on the landing page to an animated carousel
 - Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
 - Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
 - Refactored the _Open Startup_ (`/open`) page to standalone
