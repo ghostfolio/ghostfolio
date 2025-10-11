@@ -354,6 +354,8 @@
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentChart"
           [locale]="user?.settings?.locale"
+          [xMax]="portfolioEvolutionXMax"
+          [xMin]="portfolioEvolutionXMin"
         />
       </div>
     </div>
@@ -411,6 +413,8 @@
           [isLoading]="isLoadingInvestmentTimelineChart"
           [locale]="user?.settings?.locale"
           [savingsRate]="savingsRate"
+          [xMax]="investmentTimelineXMax"
+          [xMin]="investmentTimelineXMin"
         />
       </div>
     </div>
@@ -445,6 +449,8 @@
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingDividendTimelineChart"
           [locale]="user?.settings?.locale"
+          [xMax]="dividendTimelineXMax"
+          [xMin]="dividendTimelineXMin"
         />
       </div>
     </div>
