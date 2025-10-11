@@ -73,11 +73,15 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
+  public dividendTimelineXMax: Date;
+  public dividendTimelineXMin: Date;
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public hasPermissionToReadAiPrompt: boolean;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
+  public investmentTimelineXMax: Date;
+  public investmentTimelineXMin: Date;
   public investmentsByGroup: InvestmentItem[];
   public isLoadingAnalysisPrompt: boolean;
   public isLoadingBenchmarkComparator: boolean;
@@ -94,6 +98,8 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public portfolioEvolutionDataLabel = $localize`Investment`;
+  public portfolioEvolutionXMax: Date;
+  public portfolioEvolutionXMin: Date;
   public streaks: PortfolioInvestments['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
@@ -241,6 +247,8 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
 
         this.isLoadingDividendTimelineChart = false;
 
+        this.updateDateRanges();
+
         this.changeDetectorRef.markForCheck();
       });
 
@@ -272,6 +280,8 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
               : translate('MONTHS');
 
         this.isLoadingInvestmentTimelineChart = false;
+
+        this.updateDateRanges();
 
         this.changeDetectorRef.markForCheck();
       });
@@ -326,6 +336,8 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         this.isLoadingInvestmentChart = false;
 
         this.updateBenchmarkDataItems();
+
+        this.updateDateRanges();
 
         this.changeDetectorRef.markForCheck();
       });
@@ -400,6 +412,53 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
             this.changeDetectorRef.markForCheck();
           });
       }
+    }
+  }
+
+  private updateDateRanges() {
+    // Calculate min and max dates for chart scaling based on filtered data
+    // This ensures charts are scaled proportionally to the selected time period
+
+    if (this.performanceDataItems && this.performanceDataItems.length > 0) {
+      const dates = this.performanceDataItems.map(
+        (item) => new Date(item.date)
+      );
+      this.portfolioEvolutionXMin = new Date(
+        Math.min(...dates.map((d) => d.getTime()))
+      );
+      this.portfolioEvolutionXMax = new Date(
+        Math.max(...dates.map((d) => d.getTime()))
+      );
+    } else {
+      // Fallback to undefined if no data, allowing chart to use default scaling
+      this.portfolioEvolutionXMin = undefined;
+      this.portfolioEvolutionXMax = undefined;
+    }
+
+    if (this.investmentsByGroup && this.investmentsByGroup.length > 0) {
+      const dates = this.investmentsByGroup.map((item) => new Date(item.date));
+      this.investmentTimelineXMin = new Date(
+        Math.min(...dates.map((d) => d.getTime()))
+      );
+      this.investmentTimelineXMax = new Date(
+        Math.max(...dates.map((d) => d.getTime()))
+      );
+    } else {
+      this.investmentTimelineXMin = undefined;
+      this.investmentTimelineXMax = undefined;
+    }
+
+    if (this.dividendsByGroup && this.dividendsByGroup.length > 0) {
+      const dates = this.dividendsByGroup.map((item) => new Date(item.date));
+      this.dividendTimelineXMin = new Date(
+        Math.min(...dates.map((d) => d.getTime()))
+      );
+      this.dividendTimelineXMax = new Date(
+        Math.max(...dates.map((d) => d.getTime()))
+      );
+    } else {
+      this.dividendTimelineXMin = undefined;
+      this.dividendTimelineXMax = undefined;
     }
   }
 }
