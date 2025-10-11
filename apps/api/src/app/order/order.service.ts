@@ -95,7 +95,6 @@ export class OrderService {
       accountId?: string;
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
-      currency?: string;
       symbol?: string;
       tags?: { id: string }[];
       updateAccountBalance?: boolean;
@@ -182,6 +181,10 @@ export class OrderService {
 
     if (!data.comment) {
       delete data.comment;
+    }
+
+    if (data.currency === data.SymbolProfile.connectOrCreate.create.currency) {
+      delete data.currency;
     }
 
     delete data.symbol;
@@ -703,6 +706,9 @@ export class OrderService {
 
     delete data.assetClass;
     delete data.assetSubClass;
+
+    // TODO: Remove currency?
+
     delete data.symbol;
     delete data.tags;
 
