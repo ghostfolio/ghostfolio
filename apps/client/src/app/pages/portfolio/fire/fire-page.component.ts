@@ -91,6 +91,12 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!impersonationId;
       });
 
+    this.safeWithdrawalRateControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((value) => {
+        this.onSafeWithdrawalRateChange(Number(value));
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -113,14 +119,6 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
           this.calculateWithdrawalRates();
 
           this.changeDetectorRef.markForCheck();
-        }
-      });
-
-    this.safeWithdrawalRateControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((value: number) => {
-        if (!this.safeWithdrawalRateControl.disabled) {
-          this.onSafeWithdrawalRateChange(Number(value));
         }
       });
   }
