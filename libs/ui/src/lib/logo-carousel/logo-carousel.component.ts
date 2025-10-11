@@ -106,6 +106,5 @@ export class GfLogoCarouselComponent {
     }
   ];
 
-  // Duplicate logos for seamless infinite scroll
-  public readonly duplicatedLogos = [...this.logos, ...this.logos];
+  public readonly logosRepeated = [...this.logos, ...this.logos];
 }

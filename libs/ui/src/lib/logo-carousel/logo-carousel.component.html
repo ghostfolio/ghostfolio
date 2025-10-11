@@ -1,6 +1,6 @@
-<div class="logo-carousel-container w-100 overflow-hidden">
-  <div class="logo-carousel-track">
-    @for (logo of duplicatedLogos; track $index) {
+<div class="logo-carousel-container overflow-hidden position-relative w-100">
+  <div class="d-flex logo-carousel-track">
+    @for (logo of logosRepeated; track $index) {
       <div class="logo-carousel-item">
         <a
           class="d-block logo"

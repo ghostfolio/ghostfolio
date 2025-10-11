@@ -1,43 +1,39 @@
 :host {
   display: block;
-  width: 100%;
   overflow: hidden;
   position: relative;
+  width: 100%;
 
   .logo-carousel-container {
-    position: relative;
-
-    // Fade gradient mask for smooth edges
     &::before,
     &::after {
       content: '';
+      height: 100%;
+      pointer-events: none;
       position: absolute;
       top: 0;
       width: 100px;
-      height: 100%;
       z-index: 2;
-      pointer-events: none;
     }
 
     &::before {
-      left: 0;
       background: linear-gradient(
         to right,
         var(--light-background) 0%,
         rgba(var(--palette-background-background), 0) 100%
       );
+      left: 0;
     }
 
     &::after {
-      right: 0;
       background: linear-gradient(
         to left,
         var(--light-background) 0%,
         rgba(var(--palette-background-background), 0) 100%
       );
+      right: 0;
     }
 
-    // Responsive adjustments for mobile
     @media (max-width: 768px) {
       &::before,
       &::after {
@@ -55,10 +51,9 @@
 
   .logo-carousel-track {
     align-items: center;
-    animation: scroll 40s linear infinite;
+    animation: scroll 60s linear infinite;
     width: fit-content;
 
-    // Pause animation on hover for accessibility
     &:hover {
       animation-play-state: paused;
     }
@@ -66,8 +61,8 @@
 
   .logo-carousel-item {
     flex-shrink: 0;
-    padding: 1rem 2rem;
     min-width: 200px;
+    padding: 0 2rem;
 
     @media (max-width: 768px) {
       min-width: 150px;
@@ -82,14 +77,13 @@
 
   .logo {
     height: 3rem;
-    width: 7.5rem;
     transition:
       opacity 0.3s ease,
       transform 0.3s ease;
+    width: 7.5rem;
 
     &:hover {
       opacity: 0.8;
-      transform: scale(1.05);
     }
 
     &.mask {
@@ -99,7 +93,6 @@
       mask-size: contain;
     }
 
-    // Logo-specific styles (copied from landing-page.scss)
     &.logo-alternative-to {
       mask-image: url('/assets/images/logo-alternative-to.svg');
     }
@@ -163,7 +156,6 @@
       mask-image: url('/assets/images/logo-unraid.svg');
     }
 
-    // Responsive logo sizes
     @media (max-width: 768px) {
       height: 2.5rem;
       width: 6rem;
@@ -176,7 +168,6 @@
   }
 }
 
-// Dark theme support
 :host-context(.theme-dark) {
   .logo-carousel-container {
     &::before {
@@ -213,13 +204,11 @@
   }
 }
 
-// Animation keyframes for infinite horizontal scroll
 @keyframes scroll {
   0% {
     transform: translateX(0);
   }
   100% {
-    // Move by exactly half the width (since we duplicated the logos)
     transform: translateX(-50%);
   }
 }
