@@ -44,6 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.206.0 - 2025-10-04
 
+### Added
+
+- Extended holdings endpoint by performance with currency effect for cash
+
 ### Changed
 
 - Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
