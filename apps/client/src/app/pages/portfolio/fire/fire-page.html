@@ -105,7 +105,11 @@
         </span>
         <ng-container>&nbsp;</ng-container>
         <ng-container i18n>and a safe withdrawal rate (SWR) of</ng-container>
-        @if (!hasImpersonationId && hasPermissionToUpdateUserSettings) {
+        @if (
+          !hasImpersonationId &&
+          hasPermissionToUpdateUserSettings &&
+          user?.settings?.isExperimentalFeatures
+        ) {
           <select
             class="border-0 cursor-pointer d-inline-block font-weight-bold safe-withdrawal-rate-select w-auto"
             [formControl]="safeWithdrawalRateControl"
