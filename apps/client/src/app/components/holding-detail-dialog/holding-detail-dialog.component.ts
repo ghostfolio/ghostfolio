@@ -261,6 +261,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
+          activitiesCount,
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
@@ -279,7 +280,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           quantity,
           SymbolProfile,
           tags,
-          transactionCount,
           value
         }) => {
           this.averagePrice = averagePrice;
@@ -429,8 +429,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
 
-          this.transactionCount = transactionCount;
-          this.totalItems = transactionCount;
+          this.transactionCount = activitiesCount;
+          this.totalItems = activitiesCount;
           this.value = value;
 
           if (SymbolProfile?.assetClass) {
