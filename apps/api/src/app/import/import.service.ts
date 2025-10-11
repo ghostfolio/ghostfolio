@@ -373,7 +373,7 @@ export class ImportService {
 
     const assetProfiles = await this.validateActivities({
       activitiesDto,
-      assetProfileWithMarketDataDto: assetProfilesWithMarketDataDto,
+      assetProfilesWithMarketDataDto,
       maxActivitiesToImport,
       user
     });
@@ -699,12 +699,12 @@ export class ImportService {
 
   private async validateActivities({
     activitiesDto,
-    assetProfileWithMarketDataDto,
+    assetProfilesWithMarketDataDto,
     maxActivitiesToImport,
     user
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
-    assetProfileWithMarketDataDto: ImportDataDto['assetProfiles'];
+    assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     maxActivitiesToImport: number;
     user: UserWithSettings;
   }) {
@@ -753,7 +753,7 @@ export class ImportService {
         };
 
         if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfileWithMarketDataDto?.find(
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
             (profile) => {
               return (
                 profile.dataSource === dataSource && profile.symbol === symbol
