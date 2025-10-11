@@ -73,6 +73,7 @@ import { UserModule } from './user/user.module';
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
+        family: 0,
         password: process.env.REDIS_PASSWORD
       }
     }),
