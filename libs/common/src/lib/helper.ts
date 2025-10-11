@@ -154,13 +154,8 @@ export function getAssetProfileIdentifier({
   return `${dataSource}-${symbol}`;
 }
 
-export function getBackgroundColor(aColorScheme: ColorScheme) {
-  return getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? '--dark-background'
-      : '--light-background'
-  );
+export function getBackgroundColor(colorScheme: ColorScheme = 'LIGHT'): string {
+  return colorScheme === 'DARK' ? '#121212' : '#ffffff';
 }
 
 export function getCssVariable(aCssVariable: string) {

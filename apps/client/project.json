@@ -99,6 +99,7 @@
           "baseHref": "/en/",
           "localize": ["en"]
         },
+
         "development-es": {
           "baseHref": "/es/",
           "localize": ["es"]
@@ -134,6 +135,10 @@
         "development-zh": {
           "baseHref": "/zh/",
           "localize": ["zh"]
+        },
+        "mock": {
+          "baseHref": "/en/",
+          "localize": ["en"]
         },
         "production": {
           "fileReplacements": [
@@ -220,6 +225,7 @@
         "development-en": {
           "buildTarget": "client:build:development-en"
         },
+
         "development-es": {
           "buildTarget": "client:build:development-es"
         },
@@ -246,6 +252,10 @@
         },
         "development-zh": {
           "buildTarget": "client:build:development-zh"
+        },
+        "mock": {
+          "buildTarget": "client:build:development-en",
+          "main": "apps/client/src/main.mock.ts"
         },
         "production": {
           "buildTarget": "client:build:production"

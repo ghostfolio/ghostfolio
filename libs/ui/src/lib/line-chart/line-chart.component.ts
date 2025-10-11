@@ -1,7 +1,8 @@
+import { getStandardChartOptions } from '@ghostfolio/common/chart-config';
 import {
-  getTooltipOptions,
   getTooltipPositionerMapTop,
-  getVerticalHoverLinePlugin
+  getVerticalHoverLinePlugin,
+  getTooltipOptions
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
@@ -66,6 +67,8 @@ export class GfLineChartComponent
   @Input() yMaxLabel: string;
   @Input() yMin: number;
   @Input() yMinLabel: string;
+  @Input() startDate: Date; // Added for date range filtering
+  @Input() endDate: Date; // Added for date range filtering
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -117,12 +120,35 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
+
+    // Filter data based on date range if provided
+    let filteredHistoricalDataItems = this.historicalDataItems;
+    let filteredBenchmarkDataItems = this.benchmarkDataItems;
+
+    if (this.startDate || this.endDate) {
+      filteredHistoricalDataItems = this.historicalDataItems?.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          (!this.startDate || itemDate >= this.startDate) &&
+          (!this.endDate || itemDate <= this.endDate)
+        );
+      });
+
+      // Filter benchmark data to match the same date range
+      const filteredDates = filteredHistoricalDataItems?.map(
+        (item) => item.date
+      );
+      filteredBenchmarkDataItems = this.benchmarkDataItems?.filter((item) =>
+        filteredDates?.includes(item.date)
+      );
+    }
+
     const benchmarkPrices = [];
     const labels: string[] = [];
     const marketPrices = [];
 
-    this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
+    filteredHistoricalDataItems?.forEach((historicalDataItem, index) => {
+      benchmarkPrices.push(filteredBenchmarkDataItems?.[index]?.value);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
@@ -181,16 +207,22 @@ export class GfLineChartComponent
           } as unknown);
         this.chart.update();
       } else {
+        // Use standardized chart options
+        const standardOptions = getStandardChartOptions({
+          colorScheme: this.colorScheme,
+          showLegend: this.showLegend
+        });
+
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
+            ...standardOptions,
             animation:
               this.isAnimated &&
               ({
                 x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
                 y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
               } as unknown),
-            aspectRatio: 16 / 9,
             elements: {
               point: {
                 hoverBackgroundColor: getBackgroundColor(this.colorScheme),
@@ -199,7 +231,9 @@ export class GfLineChartComponent
             },
             interaction: { intersect: false, mode: 'index' },
             plugins: {
+              ...standardOptions.plugins,
               legend: {
+                ...standardOptions.plugins.legend,
                 align: 'start',
                 display: this.showLegend,
                 position: 'bottom'
@@ -211,13 +245,11 @@ export class GfLineChartComponent
             } as unknown,
             scales: {
               x: {
+                ...standardOptions.scales.x,
                 border: {
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
                 },
                 display: this.showXAxis,
-                grid: {
-                  display: false
-                },
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'
@@ -225,6 +257,7 @@ export class GfLineChartComponent
                 type: 'time'
               },
               y: {
+                ...standardOptions.scales.y,
                 border: {
                   width: 0
                 },

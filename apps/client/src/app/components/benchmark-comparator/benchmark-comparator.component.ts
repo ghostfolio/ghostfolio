@@ -75,6 +75,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
+  @Input() startDate: Date;
+  @Input() endDate: Date;
 
   @Output() benchmarkChanged = new EventEmitter<string>();
 
@@ -122,9 +124,37 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
+    // Filter data based on date range if provided
+    let filteredBenchmarkDataItems = this.benchmarkDataItems;
+    let filteredPerformanceDataItems = this.performanceDataItems;
+
+    if (this.startDate || this.endDate) {
+      if (this.benchmarkDataItems) {
+        filteredBenchmarkDataItems = this.benchmarkDataItems.filter((item) => {
+          const itemDate = parseDate(item.date);
+          return (
+            (!this.startDate || itemDate >= this.startDate) &&
+            (!this.endDate || itemDate <= this.endDate)
+          );
+        });
+      }
+
+      if (this.performanceDataItems) {
+        filteredPerformanceDataItems = this.performanceDataItems.filter(
+          (item) => {
+            const itemDate = parseDate(item.date);
+            return (
+              (!this.startDate || itemDate >= this.startDate) &&
+              (!this.endDate || itemDate <= this.endDate)
+            );
+          }
+        );
+      }
+    }
+
     const benchmarkDataValues: Record<string, number> = {};
 
-    for (const { date, value } of this.benchmarkDataItems) {
+    for (const { date, value } of filteredBenchmarkDataItems) {
       benchmarkDataValues[date] = value;
     }
 
@@ -134,7 +164,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.performanceDataItems.map(({ date, value }) => {
+          data: filteredPerformanceDataItems.map(({ date, value }) => {
             return { x: parseDate(date).getTime(), y: value * 100 };
           }),
           label: $localize`Portfolio`
@@ -143,7 +173,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.performanceDataItems.map(({ date }) => {
+          data: filteredPerformanceDataItems.map(({ date }) => {
             return {
               x: parseDate(date).getTime(),
               y: benchmarkDataValues[date]

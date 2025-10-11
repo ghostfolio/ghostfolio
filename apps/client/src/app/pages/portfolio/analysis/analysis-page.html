@@ -82,9 +82,11 @@
         [benchmarkDataItems]="benchmarkDataItems"
         [benchmarks]="benchmarks"
         [colorScheme]="user?.settings?.colorScheme"
+        [endDate]="endDate"
         [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
         [locale]="user?.settings?.locale"
         [performanceDataItems]="performanceDataItemsInPercentage"
+        [startDate]="startDate"
         [user]="user"
         (benchmarkChanged)="onChangeBenchmark($event)"
       />
@@ -350,10 +352,12 @@
           [benchmarkDataItems]="investments"
           [benchmarkDataLabel]="portfolioEvolutionDataLabel"
           [currency]="user?.settings?.baseCurrency"
+          [endDate]="endDate"
           [historicalDataItems]="performanceDataItems"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentChart"
           [locale]="user?.settings?.locale"
+          [startDate]="startDate"
         />
       </div>
     </div>
@@ -406,11 +410,13 @@
           [benchmarkDataItems]="investmentsByGroup"
           [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
+          [endDate]="endDate"
           [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentTimelineChart"
           [locale]="user?.settings?.locale"
           [savingsRate]="savingsRate"
+          [startDate]="startDate"
         />
       </div>
     </div>
@@ -441,10 +447,12 @@
           [benchmarkDataItems]="dividendsByGroup"
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
+          [endDate]="endDate"
           [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingDividendTimelineChart"
           [locale]="user?.settings?.locale"
+          [startDate]="startDate"
         />
       </div>
     </div>

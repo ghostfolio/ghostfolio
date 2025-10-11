@@ -61,6 +61,8 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() isLoading = false;
   @Input() locale = getLocale();
   @Input() savingsRate = 0;
+  @Input() startDate: Date;
+  @Input() endDate: Date;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -97,15 +99,43 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
 
   private initialize() {
     // Create a clone
-    this.investments = this.benchmarkDataItems.map((item) =>
+    let filteredBenchmarkDataItems = this.benchmarkDataItems;
+    let filteredHistoricalDataItems = this.historicalDataItems;
+
+    // Filter data based on date range if provided
+    if (this.startDate || this.endDate) {
+      if (this.benchmarkDataItems) {
+        filteredBenchmarkDataItems = this.benchmarkDataItems.filter((item) => {
+          const itemDate = parseDate(item.date);
+          return (
+            (!this.startDate || itemDate >= this.startDate) &&
+            (!this.endDate || itemDate <= this.endDate)
+          );
+        });
+      }
+
+      if (this.historicalDataItems) {
+        filteredHistoricalDataItems = this.historicalDataItems.filter(
+          (item) => {
+            const itemDate = parseDate(item.date);
+            return (
+              (!this.startDate || itemDate >= this.startDate) &&
+              (!this.endDate || itemDate <= this.endDate)
+            );
+          }
+        );
+      }
+    }
+
+    this.investments = filteredBenchmarkDataItems.map((item) =>
       Object.assign({}, item)
     );
-    this.values = this.historicalDataItems.map((item) =>
+    this.values = filteredHistoricalDataItems.map((item) =>
       Object.assign({}, item)
     );
 
     const chartData: ChartData<'bar' | 'line'> = {
-      labels: this.historicalDataItems.map(({ date }) => {
+      labels: filteredHistoricalDataItems.map(({ date }) => {
         return parseDate(date);
       }),
       datasets: [

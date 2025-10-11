@@ -3,6 +3,7 @@ import { GfInvestmentChartComponent } from '@ghostfolio/client/components/invest
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -99,6 +100,8 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
   public user: User;
+  public startDate: Date;
+  public endDate: Date;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -229,6 +232,18 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
     this.isLoadingDividendTimelineChart = true;
     this.isLoadingInvestmentTimelineChart = true;
 
+    // Update date range
+    if (this.user?.settings?.dateRange) {
+      const { startDate, endDate } = getIntervalFromDateRange(
+        this.user.settings.dateRange
+      );
+      this.startDate = startDate;
+      this.endDate = endDate;
+    } else {
+      this.startDate = undefined;
+      this.endDate = undefined;
+    }
+
     this.dataService
       .fetchDividends({
         filters: this.userService.getFilters(),
@@ -279,6 +294,18 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
 
   private update() {
     this.isLoadingInvestmentChart = true;
+
+    // Set date range for charts
+    if (this.user?.settings?.dateRange) {
+      const { startDate, endDate } = getIntervalFromDateRange(
+        this.user.settings.dateRange
+      );
+      this.startDate = startDate;
+      this.endDate = endDate;
+    } else {
+      this.startDate = undefined;
+      this.endDate = undefined;
+    }
 
     this.dataService
       .fetchPortfolioPerformance({

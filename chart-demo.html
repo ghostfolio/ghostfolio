@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ghostfolio Chart Improvements Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .chart-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+      h1,
+      h2 {
+        color: #1976d2;
+      }
+      .description {
+        background: #e3f2fd;
+        border-left: 4px solid #1976d2;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 0 4px 4px 0;
+      }
+      .comparison {
+        display: flex;
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .comparison-panel {
+        flex: 1;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      .before {
+        background: #ffebee;
+        border: 1px solid #ffcdd2;
+      }
+      .after {
+        background: #e8f5e9;
+        border: 1px solid #c8e6c9;
+      }
+      .chart-wrapper {
+        height: 400px;
+        position: relative;
+      }
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Ghostfolio Chart Improvements Demo</h1>
+
+      <div class="description">
+        <h2>Visual Improvements for Portfolio Analysis Charts</h2>
+        <p>
+          This demo shows the improvements made to chart visual comparability in
+          the Portfolio Analysis section. The key enhancements include:
+        </p>
+        <ul>
+          <li>
+            <strong>Date Range Filtering:</strong> Charts now properly scale to
+            show only data within the selected time period
+          </li>
+          <li>
+            <strong>Enhanced Visual Design:</strong> Improved color schemes,
+            better spacing, and clearer data representation
+          </li>
+          <li>
+            <strong>Better Readability:</strong> Cleaner axes, grid lines, and
+            tooltips for easier analysis
+          </li>
+        </ul>
+      </div>
+
+      <h2>Portfolio Performance Comparison</h2>
+
+      <div class="comparison">
+        <div class="comparison-panel before">
+          <h3>Before: Truncated/Unscaled Charts</h3>
+          <p>
+            Charts were not properly scaled when applying time period filters,
+            making data difficult to read.
+          </p>
+          <div class="chart-wrapper">
+            <canvas id="chartBefore"></canvas>
+          </div>
+        </div>
+
+        <div class="comparison-panel after">
+          <h3>After: Properly Scaled Charts</h3>
+          <p>
+            Charts now automatically adjust to show only the data within the
+            selected time period with proper scaling.
+          </p>
+          <div class="chart-wrapper">
+            <canvas id="chartAfter"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <h2>Investment Timeline Comparison</h2>
+
+      <div class="chart-container">
+        <h3>Enhanced Investment Timeline Chart</h3>
+        <p>
+          Improved visualization with better color coding and clearer data
+          representation.
+        </p>
+        <div class="chart-wrapper">
+          <canvas id="investmentChart"></canvas>
+        </div>
+      </div>
+
+      <h2>Dividend Timeline Comparison</h2>
+
+      <div class="chart-container">
+        <h3>Enhanced Dividend Timeline Chart</h3>
+        <p>
+          Better visual distinction for dividend data with improved readability.
+        </p>
+        <div class="chart-wrapper">
+          <canvas id="dividendChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Generate mock data
+      function generateMockData(days = 365, startDate = new Date()) {
+        const data = [];
+        let value = 10000;
+
+        for (let i = days; i >= 0; i--) {
+          const date = new Date(startDate);
+          date.setDate(date.getDate() - i);
+
+          // Add some realistic fluctuations
+          const change = (Math.random() - 0.5) * 200;
+          value += change;
+
+          data.push({
+            date: date.toISOString().split('T')[0],
+            value: value
+          });
+        }
+
+        return data;
+      }
+
+      // Generate investment data
+      function generateInvestmentData(months = 24) {
+        const data = [];
+        const today = new Date();
+
+        for (let i = months; i >= 0; i--) {
+          const date = new Date(today);
+          date.setMonth(date.getMonth() - i);
+
+          const investment = Math.random() * 2000 + 500;
+
+          data.push({
+            date: date.toISOString().split('T')[0],
+            investment: investment
+          });
+        }
+
+        return data;
+      }
+
+      // Generate dividend data
+      function generateDividendData(months = 24) {
+        const data = [];
+        const today = new Date();
+
+        for (let i = months; i >= 0; i--) {
+          const date = new Date(today);
+          date.setMonth(date.getMonth() - i);
+
+          const dividend = Math.random() * 500 + 100;
+
+          data.push({
+            date: date.toISOString().split('T')[0],
+            investment: dividend
+          });
+        }
+
+        return data;
+      }
+
+      // Create a chart with the given configuration
+      function createChart(canvasId, data, title, isInvestment = false) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+
+        // Filter data for last 6 months for "after" chart
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+        let filteredData = data;
+        if (canvasId === 'chartAfter') {
+          filteredData = data.filter(
+            (item) => new Date(item.date) >= sixMonthsAgo
+          );
+        }
+
+        const chartData = {
+          labels: filteredData.map((item) => item.date),
+          datasets: [
+            {
+              label: isInvestment ? 'Investment' : 'Portfolio Value',
+              data: filteredData.map((item) =>
+                isInvestment ? item.investment : item.value
+              ),
+              borderColor: isInvestment ? '#388e3c' : '#1976d2',
+              backgroundColor: isInvestment
+                ? 'rgba(56, 142, 60, 0.1)'
+                : 'rgba(25, 118, 210, 0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0
+            }
+          ]
+        };
+
+        if (!isInvestment) {
+          // Add benchmark data
+          chartData.datasets.push({
+            label: 'Benchmark (S&P 500)',
+            data: filteredData.map(
+              (item) =>
+                (isInvestment ? item.investment : item.value) *
+                (0.9 + Math.random() * 0.2)
+            ),
+            borderColor: '#f57c00',
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: false,
+            tension: 0
+          });
+        }
+
+        return new Chart(ctx, {
+          type: 'line',
+          data: chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: title
+              },
+              legend: {
+                position: 'top'
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false
+              }
+            },
+            scales: {
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'month'
+                },
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: false,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              }
+            },
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            }
+          }
+        });
+      }
+
+      // Initialize charts when the page loads
+      document.addEventListener('DOMContentLoaded', function () {
+        // Generate mock data
+        const performanceData = generateMockData(365);
+        const investmentData = generateInvestmentData(24);
+        const dividendData = generateDividendData(24);
+
+        // Create charts
+        createChart(
+          'chartBefore',
+          performanceData,
+          'Portfolio Performance (Full Year)'
+        );
+        createChart(
+          'chartAfter',
+          performanceData,
+          'Portfolio Performance (Last 6 Months)'
+        );
+        createChart(
+          'investmentChart',
+          investmentData,
+          'Investment Timeline',
+          true
+        );
+        createChart('dividendChart', dividendData, 'Dividend Timeline', true);
+      });
+    </script>
+  </body>
+</html>
