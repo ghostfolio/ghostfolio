@@ -847,7 +847,8 @@ export class PortfolioService {
         quantity,
         tags,
         timeWeightedInvestment,
-        timeWeightedInvestmentWithCurrencyEffect
+        timeWeightedInvestmentWithCurrencyEffect,
+        transactionCount
       } = holding;
 
       const activitiesOfHolding = activities.filter(({ SymbolProfile }) => {
@@ -966,7 +967,7 @@ export class PortfolioService {
         SymbolProfile,
         tags,
         activities: activitiesOfHolding,
-        activitiesCount: activitiesOfHolding.length,
+        activitiesCount: transactionCount,
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
