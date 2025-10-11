@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored various components to use self-closing tags
 - Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
 - Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
