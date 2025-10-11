@@ -136,10 +136,6 @@
           "baseHref": "/zh/",
           "localize": ["zh"]
         },
-        "mock": {
-          "baseHref": "/en/",
-          "localize": ["en"]
-        },
         "production": {
           "fileReplacements": [
             {
@@ -252,10 +248,6 @@
         },
         "development-zh": {
           "buildTarget": "client:build:development-zh"
-        },
-        "mock": {
-          "buildTarget": "client:build:development-en",
-          "main": "apps/client/src/main.mock.ts"
         },
         "production": {
           "buildTarget": "client:build:production"
