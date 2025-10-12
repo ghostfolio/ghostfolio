@@ -24,6 +24,7 @@ import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/ru
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { ExchangeRatesByCurrency } from '@ghostfolio/api/services/exchange-rate-data/interfaces/exchange-rate-data.interface';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -1648,9 +1649,7 @@ export class PortfolioService {
     value
   }: {
     cashDetails: CashDetails;
-    exchangeRatesByCurrency: Awaited<
-      ReturnType<ExchangeRateDataService['getExchangeRatesByCurrency']>
-    >;
+    exchangeRatesByCurrency: ExchangeRatesByCurrency;
     userCurrency: string;
     value: Big;
   }) {
