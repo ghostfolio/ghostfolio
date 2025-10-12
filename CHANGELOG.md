@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Disabled zoom in PWA
+- Disabled the zoom functionality in the _Progressive Web App_ (PWA)
 
 ## 2.208.0 - 2025-10-11
 
