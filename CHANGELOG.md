@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Disabled the zoom functionality in the _Progressive Web App_ (PWA)
+- Extracted the footer to a component
 
 ## 2.208.0 - 2025-10-11
 
@@ -51,7 +52,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the spacing around the buttons in the holding detail dialog
 - Extended the _Storybook_ stories of the accounts table component by a loading state story
 - Refactored the auth page to standalone
-- Refactored the footer into a standalone component
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the word wrap in the menu of the access table component
+- Fixed the word wrap in the menu of the activities table component
+- Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
 
 ## 2.206.0 - 2025-10-04
 
