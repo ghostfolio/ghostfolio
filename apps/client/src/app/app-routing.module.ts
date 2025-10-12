@@ -48,7 +48,7 @@ const routes: Routes = [
   {
     path: publicRoutes.blog.path,
     loadChildren: () =>
-      import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
+      import('./pages/blog/blog-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],

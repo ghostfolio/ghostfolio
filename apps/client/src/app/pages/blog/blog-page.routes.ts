@@ -1,15 +1,14 @@
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-import { BlogPageComponent } from './blog-page.component';
+import { AuthGuard } from '../../core/auth.guard';
+import { GfBlogPageComponent } from './blog-page.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: BlogPageComponent,
+    component: GfBlogPageComponent,
     path: '',
     title: publicRoutes.blog.title
   },
@@ -119,7 +118,7 @@ const routes: Routes = [
       import(
         './2023/03/1000-stars-on-github/1000-stars-on-github-page.component'
       ).then((c) => c.ThousandStarsOnGitHubPageComponent),
-    title: 'Ghostfolio reaches 1’000 Stars on GitHub'
+    title: "Ghostfolio reaches 1'000 Stars on GitHub"
   },
   {
     canActivate: [AuthGuard],
@@ -212,9 +211,3 @@ const routes: Routes = [
     title: 'Hacktoberfest 2025'
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class BlogPageRoutingModule {}
