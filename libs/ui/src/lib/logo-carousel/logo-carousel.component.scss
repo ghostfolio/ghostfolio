@@ -138,6 +138,10 @@
             mask-image: url('/assets/images/logo-selfh-st.svg');
             max-height: 1.25rem;
           }
+          &.logo-selfhostedhub {
+            mask-image: url('/assets/images/logo-selfhostedhub.png');
+            max-height: 1.25rem; 
+          }
 
           &.logo-sourceforge {
             mask-image: url('/assets/images/logo-sourceforge.svg');
@@ -205,7 +209,8 @@
       &.logo-selfh-st,
       &.logo-sourceforge,
       &.logo-umbrel,
-      &.logo-unraid {
+      &.logo-unraid,
+      &.logo-selfhostedhub{
         background-color: rgba(var(--light-primary-text));
       }
     }
