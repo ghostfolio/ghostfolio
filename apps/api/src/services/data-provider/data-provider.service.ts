@@ -35,6 +35,8 @@ import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
+import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
+
 @Injectable()
 export class DataProviderService implements OnModuleInit {
   private dataProviderMapping: { [dataProviderName: string]: string };
@@ -106,9 +108,9 @@ export class DataProviderService implements OnModuleInit {
         );
 
         promises.push(
-          promise.then((symbolProfile) => {
-            if (symbolProfile) {
-              response[symbol] = symbolProfile;
+          promise.then((assetProfile) => {
+            if (isCurrency(assetProfile?.currency)) {
+              response[symbol] = assetProfile;
             }
           })
         );
@@ -117,6 +119,12 @@ export class DataProviderService implements OnModuleInit {
 
     try {
       await Promise.all(promises);
+
+      if (isEmpty(response)) {
+        throw new AssetProfileInvalidError(
+          'No valid asset profiles have been found'
+        );
+      }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
 

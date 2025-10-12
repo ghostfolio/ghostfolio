@@ -102,6 +102,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
         ).then((res) => res.json());
 
+        if (!assetProfile) {
+          throw new Error(`${symbol} not found`);
+        }
+
         const { assetClass, assetSubClass } =
           this.parseAssetClass(assetProfile);
 
