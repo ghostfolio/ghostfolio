@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
 - Extracted the footer to a component
 
+### Fixed
+
+- Import of activity with MANUAL data source fails for CSV file
+
 ## 2.208.0 - 2025-10-11
 
 ### Added

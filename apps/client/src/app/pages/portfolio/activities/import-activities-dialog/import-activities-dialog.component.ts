@@ -366,6 +366,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
               userAccounts: this.data.user.accounts
             });
             this.activities = data.activities;
+            this.assetProfiles = data.assetProfiles;
             this.dataSource = new MatTableDataSource(data.activities.reverse());
             this.pageIndex = 0;
             this.totalItems = data.activities.length;
