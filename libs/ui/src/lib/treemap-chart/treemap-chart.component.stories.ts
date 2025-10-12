@@ -35,11 +35,11 @@ type Story = StoryObj<GfTreemapChartComponent>;
 
 export const Default: Story = {
   args: {
+    holdings,
     baseCurrency: 'USD',
     colorScheme: 'LIGHT',
     cursor: undefined,
     dateRange: 'mtd',
-    holdings,
     locale: 'en-US'
   }
 };

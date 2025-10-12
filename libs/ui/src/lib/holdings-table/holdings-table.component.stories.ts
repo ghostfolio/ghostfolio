@@ -53,35 +53,9 @@ export const Default: Story = {
     holdings,
     baseCurrency: 'USD',
     deviceType: 'desktop',
-    hasPermissionToOpenDetails: true,
+    hasPermissionToOpenDetails: false,
     hasPermissionToShowQuantities: true,
     hasPermissionToShowValues: true,
-    locale: 'en-US',
-    pageSize: Number.MAX_SAFE_INTEGER
-  }
-};
-
-export const WithoutQuantities: Story = {
-  args: {
-    holdings,
-    baseCurrency: 'USD',
-    deviceType: 'desktop',
-    hasPermissionToOpenDetails: true,
-    hasPermissionToShowQuantities: false,
-    hasPermissionToShowValues: true,
-    locale: 'en-US',
-    pageSize: Number.MAX_SAFE_INTEGER
-  }
-};
-
-export const WithoutValues: Story = {
-  args: {
-    holdings,
-    baseCurrency: 'USD',
-    deviceType: 'desktop',
-    hasPermissionToOpenDetails: true,
-    hasPermissionToShowQuantities: true,
-    hasPermissionToShowValues: false,
     locale: 'en-US',
     pageSize: Number.MAX_SAFE_INTEGER
   }
