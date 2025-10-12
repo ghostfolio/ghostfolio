@@ -15,8 +15,7 @@ import { Subject } from 'rxjs';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-blog-page',
   styleUrls: ['./blog-page.scss'],
-  templateUrl: './blog-page.html',
-  standalone: true
+  templateUrl: './blog-page.html'
 })
 export class GfBlogPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
