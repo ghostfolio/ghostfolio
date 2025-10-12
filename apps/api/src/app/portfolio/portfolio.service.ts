@@ -682,7 +682,9 @@ export class PortfolioService {
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = this.getCashPositions({
         cashDetails,
+        endDate,
         exchangeRatesByCurrency,
+        startDate,
         userCurrency,
         value: filteredValueInBaseCurrency
       });
@@ -708,7 +710,9 @@ export class PortfolioService {
     ) {
       const emergencyFundCashPositions = this.getCashPositions({
         cashDetails,
+        endDate,
         exchangeRatesByCurrency,
+        startDate,
         userCurrency,
         value: filteredValueInBaseCurrency
       });
@@ -1644,12 +1648,16 @@ export class PortfolioService {
 
   private getCashPositions({
     cashDetails,
+    endDate,
     exchangeRatesByCurrency,
+    startDate,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
+    endDate: Date;
     exchangeRatesByCurrency: ExchangeRatesByCurrency;
+    startDate: Date;
     userCurrency: string;
     value: Big;
   }) {
@@ -1676,10 +1684,10 @@ export class PortfolioService {
 
       // Calculate the performance of the cash position including currency effects
       const netPerformanceWithCurrencyEffect = new Big(account.balance)
-        .mul(exchangeRates?.[format(new Date(), DATE_FORMAT)] ?? 1)
+        .mul(exchangeRates?.[format(endDate, DATE_FORMAT)] ?? 1)
         .minus(
           new Big(account.balance).mul(
-            exchangeRates?.[format(account.createdAt, DATE_FORMAT)] ?? 1
+            exchangeRates?.[format(startDate, DATE_FORMAT)] ?? 1
           )
         )
         .toNumber();
