@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a _Storybook_ story for the holdings table component
+- Extended holdings endpoint by performance with currency effect for cash
 
 ### Changed
 
@@ -60,10 +61,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
 
 ## 2.206.0 - 2025-10-04
-
-### Added
-
-- Extended holdings endpoint by performance with currency effect for cash
 
 ### Changed
 
