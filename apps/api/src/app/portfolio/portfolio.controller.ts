@@ -610,36 +610,6 @@ export class PortfolioController {
     return performanceInformation;
   }
 
-  /**
-   * @deprecated
-   */
-  @Get('position/:dataSource/:symbol')
-  @UseInterceptors(RedactValuesInResponseInterceptor)
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getPosition(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<PortfolioHoldingResponse> {
-    const holding = await this.portfolioService.getHolding({
-      dataSource,
-      impersonationId,
-      symbol,
-      userId: this.request.user.id
-    });
-
-    if (!holding) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    return holding;
-  }
-
   @Get('report')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getReport(
@@ -672,42 +642,6 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateHoldingTags(
-    @Body() data: UpdateHoldingTagsDto,
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<void> {
-    const holding = await this.portfolioService.getHolding({
-      dataSource,
-      impersonationId,
-      symbol,
-      userId: this.request.user.id
-    });
-
-    if (!holding) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    await this.portfolioService.updateTags({
-      dataSource,
-      impersonationId,
-      symbol,
-      tags: data.tags,
-      userId: this.request.user.id
-    });
-  }
-
-  /**
-   * @deprecated
-   */
-  @HasPermission(permissions.updateOrder)
-  @Put('position/:dataSource/:symbol/tags')
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async updatePositionTags(
     @Body() data: UpdateHoldingTagsDto,
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource: DataSource,

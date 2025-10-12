@@ -9,13 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a _Storybook_ story for the holdings table component
+
+### Changed
+
+- Disabled the zoom functionality in the _Progressive Web App_ (PWA)
+
+## 2.208.0 - 2025-10-11
+
+### Added
+
+- Added support for configuring the safe withdrawal rate in the _FIRE_ section (experimental)
+
+### Changed
+
+- Changed the _As seen in_ section on the landing page to an animated carousel
+- Refactored `transactionCount` to `activitiesCount` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+- Refactored various components to use self-closing tags
+- Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
+- Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+
+### Fixed
+
+- Fixed the server startup message to properly display IPv6 addresses
+- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
+- Fixed an issue where importing custom asset profiles failed due to validation errors
+
+## 2.207.0 - 2025-10-08
+
+### Added
+
 - Added support to edit a granted access (experimental)
+- Introduced tabs to the asset profile details dialog in the admin control panel
 - Added support for a date range query parameter in the data gathering endpoint
 - Added a _Storybook_ story for the activities table component
 
 ### Changed
 
 - Improved the spacing around the buttons in the holding detail dialog
+- Extended the _Storybook_ stories of the accounts table component by a loading state story
 - Refactored the auth page to standalone
 - Refactored the footer into a standalone component
 
