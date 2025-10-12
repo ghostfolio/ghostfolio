@@ -18,7 +18,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
-import { IonIcon } from '@ionic/angular/standalone';
 import { provideMarkdown } from 'ngx-markdown';
 import { provideNgxSkeletonLoader } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
@@ -49,7 +48,6 @@ export function NgxStripeFactory(): string {
     GfFooterComponent,
     GfHeaderComponent,
     GfNotificationModule,
-    IonIcon,
     MatAutocompleteModule,
     MatChipsModule,
     MatNativeDateModule,

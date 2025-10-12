@@ -18,11 +18,11 @@ import { openOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'gf-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss'],
   imports: [CommonModule, GfLogoComponent, IonIcon, RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-footer',
+  styleUrls: ['./footer.component.scss'],
+  templateUrl: './footer.component.html'
 })
 export class GfFooterComponent implements OnChanges {
   @Input() public info: InfoItem;
