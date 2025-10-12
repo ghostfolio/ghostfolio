@@ -223,9 +223,9 @@
               <gf-value
                 size="medium"
                 [locale]="data.locale"
-                [value]="transactionCount"
+                [value]="activitiesCount"
               >
-                @if (transactionCount === 1) {
+                @if (activitiesCount === 1) {
                   <ng-container i18n>Activity</ng-container>
                 } @else {
                   <ng-container i18n>Activities</ng-container>
@@ -363,7 +363,7 @@
           [sortColumn]="sortColumn"
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
-          [totalItems]="totalItems"
+          [totalItems]="activitiesCount"
           (activityToClone)="onCloneActivity($event)"
           (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
