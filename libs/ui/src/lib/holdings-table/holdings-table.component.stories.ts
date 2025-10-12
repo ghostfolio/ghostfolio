@@ -40,7 +40,7 @@ export const Loading: Story = {
     holdings: undefined,
     baseCurrency: 'USD',
     deviceType: 'desktop',
-    hasPermissionToOpenDetails: true,
+    hasPermissionToOpenDetails: false,
     hasPermissionToShowQuantities: true,
     hasPermissionToShowValues: true,
     locale: 'en-US',
