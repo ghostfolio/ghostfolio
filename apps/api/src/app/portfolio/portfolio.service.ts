@@ -796,6 +796,7 @@ export class PortfolioService {
     if (activities.length === 0) {
       return {
         activities: [],
+        activitiesCount: 0,
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
@@ -820,7 +821,6 @@ export class PortfolioService {
         quantity: undefined,
         SymbolProfile: undefined,
         tags: [],
-        transactionCount: undefined,
         value: undefined
       };
     }
@@ -984,8 +984,8 @@ export class PortfolioService {
         marketPriceMin,
         SymbolProfile,
         tags,
-        transactionCount,
         activities: activitiesOfHolding,
+        activitiesCount: transactionCount,
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
@@ -1088,6 +1088,7 @@ export class PortfolioService {
         marketPriceMin,
         SymbolProfile,
         activities: [],
+        activitiesCount: 0,
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
@@ -1113,7 +1114,6 @@ export class PortfolioService {
         },
         quantity: 0,
         tags: [],
-        transactionCount: undefined,
         value: 0
       };
     }
@@ -2152,7 +2152,7 @@ export class PortfolioService {
         .plus(fees)
         .toNumber(),
       interest: interest.toNumber(),
-      liabilities: liabilities.toNumber(),
+      liabilitiesInBaseCurrency: liabilities.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
