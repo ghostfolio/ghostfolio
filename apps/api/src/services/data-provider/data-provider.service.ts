@@ -653,8 +653,11 @@ export class DataProviderService implements OnModuleInit {
 
     const filteredItems = lookupItems
       .filter(({ currency }) => {
-        // Only allow symbols with supported currency
-        return currency ? true : false;
+        if (includeIndices) {
+          return true;
+        }
+
+        return currency ? isCurrency(currency) : false;
       })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {

@@ -377,26 +377,42 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
-        ).then((res) => res.json())
+        ).then(
+          (res) => res.json() as unknown as { price: number; symbol: string }[]
+        )
       ]);
 
-      if (assetProfileResolutions.length === symbols.length) {
-        for (const { currency, symbolTarget } of assetProfileResolutions) {
-          currencyBySymbolMap[symbolTarget] = { currency };
+      for (const { currency, symbolTarget } of assetProfileResolutions) {
+        currencyBySymbolMap[symbolTarget] = { currency };
+      }
+
+      const resolvedSymbols = assetProfileResolutions.map(
+        ({ symbolTarget }) => {
+          return symbolTarget;
         }
-      } else {
+      );
+
+      const symbolsToFetch = quotes
+        .map(({ symbol }) => {
+          return symbol;
+        })
+        .filter((symbol) => {
+          return !resolvedSymbols.includes(symbol);
+        });
+
+      if (symbolsToFetch.length > 0) {
         await Promise.all(
-          quotes.map(({ symbol }) => {
-            return this.getAssetProfile({
+          symbolsToFetch.map(async (symbol) => {
+            const assetProfile = await this.getAssetProfile({
               requestTimeout,
               symbol
-            }).then((assetProfile) => {
-              if (assetProfile?.currency) {
-                currencyBySymbolMap[symbol] = {
-                  currency: assetProfile.currency
-                };
-              }
             });
+
+            if (assetProfile?.currency) {
+              currencyBySymbolMap[symbol] = {
+                currency: assetProfile.currency
+              };
+            }
           })
         );
       }
