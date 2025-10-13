@@ -671,11 +671,15 @@ export class PortfolioService {
     // Gather historical exchange rate data for all currencies in cash positions
     const exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
-        currencies: [
-          ...new Set(cashDetails.accounts.map(({ currency }) => currency))
-        ],
         endDate,
         startDate,
+        currencies: [
+          ...new Set(
+            cashDetails.accounts.map(({ currency }) => {
+              return currency;
+            })
+          )
+        ],
         targetCurrency: userCurrency
       });
 
@@ -1694,8 +1698,10 @@ export class PortfolioService {
 
       if (cashPositions[account.currency]) {
         cashPositions[account.currency].investment += convertedBalance;
+
         cashPositions[account.currency].netPerformanceWithCurrencyEffect +=
           netPerformanceWithCurrencyEffect;
+
         cashPositions[account.currency].valueInBaseCurrency += convertedBalance;
       } else {
         cashPositions[account.currency] = this.getInitialCashPosition({
@@ -1715,6 +1721,7 @@ export class PortfolioService {
             .div(value)
             .toNumber()
         : 0;
+
       cashPositions[symbol].netPerformancePercentWithCurrencyEffect =
         cashPositions[symbol].investment > 0
           ? new Big(cashPositions[symbol].netPerformanceWithCurrencyEffect)
