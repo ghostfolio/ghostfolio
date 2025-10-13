@@ -454,6 +454,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }
 
   public async search({
+    includeIndices = false,
     query,
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
   }: GetSearchParams): Promise<LookupResponse> {
@@ -500,17 +501,25 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
         ).then((res) => res.json());
 
-        items = result.map(({ currency, name, symbol }) => {
-          return {
-            currency,
-            symbol,
-            assetClass: undefined, // TODO
-            assetSubClass: undefined, // TODO
-            dataProviderInfo: this.getDataProviderInfo(),
-            dataSource: this.getName(),
-            name: this.formatName({ name })
-          };
-        });
+        items = result
+          .filter(({ symbol }) => {
+            if (includeIndices === false && symbol.startsWith('^')) {
+              return false;
+            }
+
+            return true;
+          })
+          .map(({ currency, name, symbol }) => {
+            return {
+              currency,
+              symbol,
+              assetClass: undefined, // TODO
+              assetSubClass: undefined, // TODO
+              dataProviderInfo: this.getDataProviderInfo(),
+              dataSource: this.getName(),
+              name: this.formatName({ name })
+            };
+          });
       }
     } catch (error) {
       let message = error;
