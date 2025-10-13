@@ -1,8 +1,6 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-# Run linting on affected files
+# Run linting and stop the commit process if any errors are found
+# --quiet suppresses warnings (temporary until all warnings are fixed)
 npm run affected:lint --base=main --head=HEAD --parallel=2 --quiet || exit 1
 
-# Check formatting only on staged files
-npx nx format:check --files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.ts\|\.tsx\|\.js\|\.jsx') || exit 1
+# Check formatting on modified and uncommitted files, stop the commit if issues are found
+npm run format:check --uncommitted || exit 1
