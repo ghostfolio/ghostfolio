@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the holdings endpoint to include the performance with currency effect for cash
 - Added a _Storybook_ story for the holdings table component
-- Extended holdings endpoint by performance with currency effect for cash
 
 ### Changed
 
