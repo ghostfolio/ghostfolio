@@ -1,5 +1,3 @@
-import { GfLogoComponent } from '@ghostfolio/ui/logo';
-
 import { Platform } from '@angular/cdk/platform';
 import {
   provideHttpClient,
@@ -20,7 +18,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
-import { IonIcon } from '@ionic/angular/standalone';
 import { provideMarkdown } from 'ngx-markdown';
 import { provideNgxSkeletonLoader } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
@@ -30,6 +27,7 @@ import { CustomDateAdapter } from './adapter/custom-date-adapter';
 import { DateFormats } from './adapter/date-formats';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
@@ -47,10 +45,9 @@ export function NgxStripeFactory(): string {
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
+    GfFooterComponent,
     GfHeaderComponent,
-    GfLogoComponent,
     GfNotificationModule,
-    IonIcon,
     MatAutocompleteModule,
     MatChipsModule,
     MatNativeDateModule,

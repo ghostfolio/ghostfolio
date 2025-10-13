@@ -12,6 +12,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
@@ -49,7 +50,8 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly cryptocurrencyService: CryptocurrencyService
+    private readonly cryptocurrencyService: CryptocurrencyService,
+    private readonly prismaService: PrismaService
   ) {
     this.apiKey = this.configurationService.get(
       'API_KEY_FINANCIAL_MODELING_PREP'
@@ -220,7 +222,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      dataSource: DataSource.FINANCIAL_MODELING_PREP,
+      dataSource: this.getName(),
       isPremium: true,
       name: 'Financial Modeling Prep',
       url: 'https://financialmodelingprep.com/developer/docs'
@@ -359,25 +361,41 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         [symbol: string]: Pick<SymbolProfile, 'currency'>;
       } = {};
 
-      const quotes = await fetch(
-        `${this.getUrl({ version: 'stable' })}/batch-quote-short?symbols=${symbols.join(',')}&apikey=${this.apiKey}`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+      const [assetProfileResolutions, quotes] = await Promise.all([
+        this.prismaService.assetProfileResolution.findMany({
+          where: {
+            dataSourceTarget: this.getDataProviderInfo().dataSource,
+            symbolTarget: { in: symbols }
+          }
+        }),
+        fetch(
+          `${this.getUrl({ version: 'stable' })}/batch-quote-short?symbols=${symbols.join(',')}&apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(requestTimeout)
+          }
+        ).then((res) => res.json())
+      ]);
 
-      await Promise.all(
-        quotes.map(({ symbol }) => {
-          return this.getAssetProfile({
-            requestTimeout,
-            symbol
-          }).then((assetProfile) => {
-            if (assetProfile?.currency) {
-              currencyBySymbolMap[symbol] = { currency: assetProfile.currency };
-            }
-          });
-        })
-      );
+      if (assetProfileResolutions.length === symbols.length) {
+        for (const { currency, symbolTarget } of assetProfileResolutions) {
+          currencyBySymbolMap[symbolTarget] = { currency };
+        }
+      } else {
+        await Promise.all(
+          quotes.map(({ symbol }) => {
+            return this.getAssetProfile({
+              requestTimeout,
+              symbol
+            }).then((assetProfile) => {
+              if (assetProfile?.currency) {
+                currencyBySymbolMap[symbol] = {
+                  currency: assetProfile.currency
+                };
+              }
+            });
+          })
+        );
+      }
 
       for (const { price, symbol } of quotes) {
         let marketState: MarketState = 'delayed';
@@ -394,7 +412,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           marketState,
           currency: currencyBySymbolMap[symbol]?.currency,
           dataProviderInfo: this.getDataProviderInfo(),
-          dataSource: DataSource.FINANCIAL_MODELING_PREP,
+          dataSource: this.getDataProviderInfo().dataSource,
           marketPrice: price
         };
       }
