@@ -143,11 +143,6 @@
             max-height: 1.25rem; 
           }
 
-          &.logo-selfhostedhub {
-            mask-image: url('/assets/images/logo-selfhostedhub.svg');
-            max-height: 1.25rem; 
-          }
-
           &.logo-sourceforge {
             mask-image: url('/assets/images/logo-sourceforge.svg');
           }
@@ -212,15 +207,10 @@
       &.logo-reddit,
       &.logo-sackgeld,
       &.logo-selfh-st,
-      &.logo-selfhostedhub,
       &.logo-sourceforge,
       &.logo-umbrel,
-<<<<<<< HEAD
       &.logo-unraid,
       &.logo-selfhostedhub{
-=======
-      &.logo-unraid{
->>>>>>> 658a894d (changes added after review)
         background-color: rgba(var(--light-primary-text));
       }
     }
