@@ -1,5 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
 # Run linting on affected files
 npm run affected:lint --base=main --head=HEAD --parallel=2 --quiet || exit 1
