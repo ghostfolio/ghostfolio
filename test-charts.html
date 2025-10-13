@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Chart UI Test - Ghostfolio #3998</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .chart-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px 0;
+      }
+      canvas {
+        max-height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mock Frontend: Chart Visual Comparability Test (#3998)</h1>
+    <p>
+      This is a simple test page to verify chart scaling with mocked data. No
+      server needed.
+    </p>
+
+    <!-- Portfolio Performance Chart (Line Chart) -->
+    <h2>Portfolio Performance Chart</h2>
+    <div class="chart-container">
+      <canvas id="portfolioChart"></canvas>
+    </div>
+
+    <!-- Investment Timeline Chart (Bar/Line Combo) -->
+    <h2>Investment Timeline Chart</h2>
+    <div class="chart-container">
+      <canvas id="investmentChart"></canvas>
+    </div>
+
+    <script>
+      // Mock data for Portfolio Performance (Line Chart)
+      const portfolioData = {
+        labels: [
+          '2023-01-01',
+          '2023-02-01',
+          '2023-03-01',
+          '2023-04-01',
+          '2023-05-01'
+        ],
+        datasets: [
+          {
+            label: 'Portfolio Value',
+            data: [
+              { x: new Date('2023-01-01').getTime(), y: 10000 },
+              { x: new Date('2023-02-01').getTime(), y: 11000 },
+              { x: new Date('2023-03-01').getTime(), y: 10500 },
+              { x: new Date('2023-04-01').getTime(), y: 12000 },
+              { x: new Date('2023-05-01').getTime(), y: 12500 }
+            ],
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+            tension: 0.1
+          }
+        ]
+      };
+
+      // Mock data for Investment Timeline (Combo Chart)
+      const investmentData = {
+        labels: ['2023-01-01', '2023-02-01', '2023-03-01'],
+        datasets: [
+          {
+            label: 'Investments',
+            type: 'bar',
+            data: [
+              { x: new Date('2023-01-01').getTime(), y: 5000 },
+              { x: new Date('2023-02-01').getTime(), y: 3000 },
+              { x: new Date('2023-03-01').getTime(), y: 7000 }
+            ],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Total Value',
+            type: 'line',
+            data: [
+              { x: new Date('2023-01-01').getTime(), y: 15000 },
+              { x: new Date('2023-02-01').getTime(), y: 16000 },
+              { x: new Date('2023-03-01').getTime(), y: 18000 }
+            ],
+            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: false,
+            tension: 0.1
+          }
+        ]
+      };
+
+      // Config for Portfolio Chart (Line Chart)
+      const portfolioConfig = {
+        type: 'line',
+        data: portfolioData,
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              type: 'time',
+              time: {
+                unit: 'month'
+              },
+              min: new Date('2023-01-01').getTime(), // Simulate xMin
+              max: new Date('2023-05-01').getTime() // Simulate xMax
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+
+      // Config for Investment Chart (Combo Chart)
+      const investmentConfig = {
+        data: investmentData,
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              type: 'time',
+              time: {
+                unit: 'month'
+              },
+              min: new Date('2023-01-01').getTime(), // Simulate xMin
+              max: new Date('2023-03-01').getTime() // Simulate xMax
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+
+      // Render Charts
+      const portfolioCtx = document
+        .getElementById('portfolioChart')
+        .getContext('2d');
+      new Chart(portfolioCtx, portfolioConfig);
+
+      const investmentCtx = document
+        .getElementById('investmentChart')
+        .getContext('2d');
+      new Chart(investmentCtx, investmentConfig);
+
+      console.log('Charts loaded successfully!');
+    </script>
+  </body>
+</html>

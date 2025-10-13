@@ -100,6 +100,8 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public portfolioEvolutionDataLabel = $localize`Investment`;
   public portfolioEvolutionXMax: Date;
   public portfolioEvolutionXMin: Date;
+  public globalXMax: Date;
+  public globalXMin: Date;
   public streaks: PortfolioInvestments['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
@@ -419,6 +421,35 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
     // Calculate min and max dates for chart scaling based on filtered data
     // This ensures charts are scaled proportionally to the selected time period
 
+    const allDates: Date[] = [];
+
+    if (this.performanceDataItems && this.performanceDataItems.length > 0) {
+      allDates.push(
+        ...this.performanceDataItems.map((item) => new Date(item.date))
+      );
+    }
+
+    if (this.investmentsByGroup && this.investmentsByGroup.length > 0) {
+      allDates.push(
+        ...this.investmentsByGroup.map((item) => new Date(item.date))
+      );
+    }
+
+    if (this.dividendsByGroup && this.dividendsByGroup.length > 0) {
+      allDates.push(
+        ...this.dividendsByGroup.map((item) => new Date(item.date))
+      );
+    }
+
+    if (allDates.length > 0) {
+      this.globalXMin = new Date(Math.min(...allDates.map((d) => d.getTime())));
+      this.globalXMax = new Date(Math.max(...allDates.map((d) => d.getTime())));
+    } else {
+      this.globalXMin = undefined;
+      this.globalXMax = undefined;
+    }
+
+    // Individual ranges for specific charts (fallback if needed)
     if (this.performanceDataItems && this.performanceDataItems.length > 0) {
       const dates = this.performanceDataItems.map(
         (item) => new Date(item.date)
@@ -430,7 +461,6 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         Math.max(...dates.map((d) => d.getTime()))
       );
     } else {
-      // Fallback to undefined if no data, allowing chart to use default scaling
       this.portfolioEvolutionXMin = undefined;
       this.portfolioEvolutionXMax = undefined;
     }
