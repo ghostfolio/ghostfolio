@@ -24,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue in the `csv` file import where custom asset profiles failed due to validation errors
 - Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
 
-
 ## 2.208.0 - 2025-10-11
 
 ### Added
