@@ -62,27 +62,28 @@ export class ImportActivitiesService {
       const currency = this.parseCurrency({ content, index, item });
 
       activities.push({
-        accountId: this.parseAccount({ item, userAccounts }),
-        comment: this.parseComment({ item }),
         currency,
         dataSource,
+        symbol,
+        accountId: this.parseAccount({ item, userAccounts }),
+        comment: this.parseComment({ item }),
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
-        symbol,
         type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
 
-      // Create synthetic asset profile for MANUAL data source
       if (dataSource === DataSource.MANUAL) {
+        // Create synthetic asset profile for MANUAL data source
         assetProfiles.push({
+          currency,
+          symbol,
           assetClass: null,
           assetSubClass: null,
           comment: null,
           countries: [],
-          currency,
           cusip: null,
           dataSource: DataSource.MANUAL,
           figi: null,
@@ -95,7 +96,6 @@ export class ImportActivitiesService {
           name: symbol,
           scraperConfiguration: null,
           sectors: [],
-          symbol,
           symbolMapping: {},
           url: null
         });

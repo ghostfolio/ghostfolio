@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Import of activity with MANUAL data source fails for CSV file
+- Fixed an issue in the `csv` file import where custom asset profiles failed due to validation errors
 
 ## 2.208.0 - 2025-10-11
 

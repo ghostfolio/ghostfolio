@@ -360,16 +360,17 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
           const content = fileContent.split('\n').slice(1);
 
           try {
-            const data = await this.importActivitiesService.importCsv({
-              fileContent,
-              isDryRun: true,
-              userAccounts: this.data.user.accounts
-            });
-            this.activities = data.activities;
-            this.assetProfiles = data.assetProfiles;
-            this.dataSource = new MatTableDataSource(data.activities.reverse());
+            const { activities, assetProfiles } =
+              await this.importActivitiesService.importCsv({
+                fileContent,
+                isDryRun: true,
+                userAccounts: this.data.user.accounts
+              });
+            this.activities = activities;
+            this.assetProfiles = assetProfiles;
+            this.dataSource = new MatTableDataSource(activities.reverse());
             this.pageIndex = 0;
-            this.totalItems = data.activities.length;
+            this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({
