@@ -14,12 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Disabled the zoom functionality in the _Progressive Web App_ (PWA)
+- Improved the currency validation in the get asset profiles functionality of the data provider service
+- Improved the currency validation in the search functionality of the data provider service
 - Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
 - Extracted the footer to a component
 
 ### Fixed
 
 - Fixed an issue in the `csv` file import where custom asset profiles failed due to validation errors
+- Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
+
 
 ## 2.208.0 - 2025-10-11
 
