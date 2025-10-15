@@ -154,10 +154,10 @@ const routes: Routes = [
       routes,
       // Preload all lazy loaded modules with the attribute preload === true
       {
-        scrollPositionRestoration: 'top',
         anchorScrolling: 'enabled',
-        preloadingStrategy: ModulePreloadService
-        // enableTracing: true // <-- debugging purposes only
+        // enableTracing: true, // <-- debugging purposes only
+        preloadingStrategy: ModulePreloadService,
+        scrollPositionRestoration: 'top'
       }
     )
   ],
