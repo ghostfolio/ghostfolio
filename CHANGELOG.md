@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added support to allow data gathering by date range
+
 ## 2.209.0 - 2025-10-18
 
 ### Added
 
+- Added support to allow data gathering by date range
 - Extended the glossary of the resources page by _Stealth Wealth_
 - Extended the content of the pricing page
 - Added a _Storybook_ story for the holdings table component
