@@ -74,7 +74,6 @@
     "@dfinity/candid": "0.15.7",
     "@dfinity/identity": "0.15.7",
     "@dfinity/principal": "0.15.7",
-    "@dinero.js/currencies": "2.0.0-alpha.8",
     "@internationalized/number": "3.6.3",
     "@ionic/angular": "8.7.3",
     "@keyv/redis": "4.4.0",
