@@ -23,32 +23,33 @@
         </button>
       </mat-form-field>
 
-    @if (data.hasPermissionToUseSocialLogin) {
-      <div class="my-3 text-center text-muted" i18n>or</div>
-      <div class="d-flex flex-column">
-        <button
-          class="mb-2 px-4 rounded-pill"
-          mat-stroked-button
-          (click)="onLoginWithInternetIdentity()"
-        >
-          <img
-            class="mr-2"
-            src="../assets/icons/internet-computer.svg"
-            style="height: 0.75rem"
-          /><span i18n>Sign in with Internet Identity</span>
-        </button>
-        <a
-          class="px-4 rounded-pill"
-          href="../api/v1/auth/google"
-          mat-stroked-button
-          ><img
-            class="mr-2"
-            src="../assets/icons/google.svg"
-            style="height: 1rem"
-          /><span i18n>Sign in with Google</span></a
-        >
-      </div>
-    }
+      @if (data.hasPermissionToUseSocialLogin) {
+        <div class="my-3 text-center text-muted" i18n>or</div>
+        <div class="d-flex flex-column">
+          <button
+            class="mb-2 px-4 rounded-pill"
+            mat-stroked-button
+            (click)="onLoginWithInternetIdentity()"
+          >
+            <img
+              class="mr-2"
+              src="../assets/icons/internet-computer.svg"
+              style="height: 0.75rem"
+            /><span i18n>Sign in with Internet Identity</span>
+          </button>
+          <a
+            class="px-4 rounded-pill"
+            href="../api/v1/auth/google"
+            mat-stroked-button
+            ><img
+              class="mr-2"
+              src="../assets/icons/google.svg"
+              style="height: 1rem"
+            /><span i18n>Sign in with Google</span></a
+          >
+        </div>
+      }
+    </form>
   </div>
 </div>
 

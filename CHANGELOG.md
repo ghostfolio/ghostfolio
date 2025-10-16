@@ -1,12 +1,189 @@
-## 2.198.0 - 2025-10-16
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Unreleased
 
 ### Fixed
 
-- Fixed the behavior of the 'Login with Access Token' dialog so that pressing 'Enter' performs the same action as clicking 'Sign In'
+- Make Enter key behave like Sign In in the access token login dialog (#5751)
+
+### Changed
+
+- Disabled zoom in PWA
+
+## 2.208.0 - 2025-10-11
 
 ### Added
 
-- Added (keydown.enter) handler in the login form template to trigger onLoginWithAccessToken() directly
+- Added support for configuring the safe withdrawal rate in the _FIRE_ section (experimental)
+
+### Changed
+
+- Changed the _As seen in_ section on the landing page to an animated carousel
+- Refactored `transactionCount` to `activitiesCount` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+- Refactored various components to use self-closing tags
+- Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
+- Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+
+### Fixed
+
+- Fixed the server startup message to properly display IPv6 addresses
+- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
+- Fixed an issue where importing custom asset profiles failed due to validation errors
+
+## 2.207.0 - 2025-10-08
+
+### Added
+
+- Added support to edit a granted access (experimental)
+- Introduced tabs to the asset profile details dialog in the admin control panel
+- Added support for a date range query parameter in the data gathering endpoint
+- Added a _Storybook_ story for the activities table component
+
+### Changed
+
+- Improved the spacing around the buttons in the holding detail dialog
+- Extended the _Storybook_ stories of the accounts table component by a loading state story
+- Refactored the auth page to standalone
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the word wrap in the menu of the access table component
+- Fixed the word wrap in the menu of the activities table component
+- Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
+
+## 2.206.0 - 2025-10-04
+
+### Changed
+
+- Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
+- Improved the usability of the assistant by preselecting the first search result
+- Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
+- Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
+- Refactored the _Open Startup_ (`/open`) page to standalone
+- Refactored the file drop directive to standalone
+- Refactored the symbol pipe to standalone
+
+### Fixed
+
+- Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
+- Added the missing `CommonModule` import in the import activities dialog
+
+## 2.205.0 - 2025-10-01
+
+### Changed
+
+- Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
+- Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+
+## 2.204.0 - 2025-09-30
+
+### Added
+
+- Added the safe withdrawal rate to the user settings (experimental)
+
+### Changed
+
+- Improved the number formatting of the y-axis labels in the investment chart component
+- Localized the number formatting of the y-axis labels in the line chart component
+- Improved the wording of the 4% rule in the _FIRE_ section
+- Improved the usability of the create asset profile dialog in the market data section of the admin control panel
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the table headers’ alignment of the activities table
+
+## 2.203.0 - 2025-09-27
+
+### Added
+
+- Added support for column sorting to the queue jobs table in the admin control panel
+- Added a blog post: _Hacktoberfest 2025_
+
+### Changed
+
+- Removed the deprecated `ITEM` activity type
+
+## 2.202.0 - 2025-09-26
+
+### Added
+
+- Added `settings` to the `Access` model
+
+### Changed
+
+- Extended the tags selector component to support form control
+- Changed the deprecated `ITEM` activity type to `VALUABLE` in the create or update activity dialog
+
+### Fixed
+
+- Fixed an issue where the save button was not enabled after editing tags in the create or update activity dialog
+- Fixed an issue in the investment calculation when selling all units of a holding
+
+## 2.201.0 - 2025-09-24
+
+### Added
+
+- Added the symbol to the benchmark component
+- Added the latest activities to the public page (experimental)
+- Added pagination to the activities table of the activities import dialog
+- Added an option to configure the account column of the activities table component
+
+### Changed
+
+- Hid the account column from the activities table of the account detail dialog to avoid redundant information
+- Renamed the show access token dialog component to user account registration dialog component
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+- Upgraded `countup.js` from version `2.8.2` to `2.9.0`
+
+### Fixed
+
+- Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
+
+## 2.200.0 - 2025-09-17
+
+### Changed
+
+- Refactored the show access token dialog component to standalone
+- Upgraded `prisma` from version `6.15.0` to `6.16.1`
+
+### Fixed
+
+- Removed a temporary element from the activities table component
+
+## 2.199.0 - 2025-09-14
+
+### Added
+
+- Extended the content of the performance calculation method by dividends on the Frequently Asked Questions (FAQ) page
+- Added a _Storybook_ story for the entity logo image component
+
+### Changed
+
+- Improved the search in the _Yahoo Finance_ service
+- Moved the holdings table into the holdings section on the public page
+- Migrated to the _Prisma Configuration File_ approach (`prisma.config.ts`)
+- Refactored the login with access token dialog component to standalone
+- Prefixed the `crypto`, `fs` and `path` imports with `node:`
+- Upgraded `yahoo-finance2` from version `3.8.0` to `3.10.0`
+
+### Fixed
+
+- Fixed a pagination issue in the market data endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
+- Fixed a pagination issue in the user endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
+
+## 2.198.0 - 2025-09-11
 
 ### Changed
 
