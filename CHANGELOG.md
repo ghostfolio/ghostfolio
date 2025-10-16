@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the glossary of the resources page by _Stealth Wealth_
+- Extended the content of the pricing page
 - Added a _Storybook_ story for the holdings table component
 
 ### Changed
