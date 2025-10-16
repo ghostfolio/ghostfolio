@@ -9,17 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the glossary of the resources page by _Stealth Wealth_
+- Added a _Storybook_ story for the holdings table component
+
+### Changed
+
+- Disabled the zoom functionality in the _Progressive Web App_ (PWA)
+- Improved the currency validation in the get asset profiles functionality of the data provider service
+- Improved the currency validation in the search functionality of the data provider service
+- Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
+- Extracted the footer to a component
+
+### Fixed
+
+- Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
+- Fixed an issue where the scroll position was not restored when changing pages
+- Fixed the dark mode in the _As seen in_ section on the landing page
+
+## 2.208.0 - 2025-10-11
+
+### Added
+
 - Added support for configuring the safe withdrawal rate in the _FIRE_ section (experimental)
 
 ### Changed
 
 - Extracted the portfolio filter form to a reusable component used in the assistant
 - Changed the _As seen in_ section on the landing page to an animated carousel
+- Refactored `transactionCount` to `activitiesCount` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Refactored various components to use self-closing tags
+- Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
+- Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
 
 ### Fixed
 
 - Fixed the server startup message to properly display IPv6 addresses
+- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
+- Fixed an issue where importing custom asset profiles failed due to validation errors
 
 ## 2.207.0 - 2025-10-08
 

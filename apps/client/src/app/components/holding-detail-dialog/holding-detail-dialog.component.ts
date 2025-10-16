@@ -100,6 +100,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
+  public activitiesCount: number;
   public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
@@ -151,8 +152,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
   public tagsAvailable: Tag[];
-  public totalItems: number;
-  public transactionCount: number;
   public user: User;
   public value: number;
 
@@ -261,6 +260,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
+          activitiesCount,
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
@@ -279,9 +279,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           quantity,
           SymbolProfile,
           tags,
-          transactionCount,
           value
         }) => {
+          this.activitiesCount = activitiesCount;
           this.averagePrice = averagePrice;
 
           if (
@@ -429,8 +429,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
 
-          this.transactionCount = transactionCount;
-          this.totalItems = transactionCount;
           this.value = value;
 
           if (SymbolProfile?.assetClass) {
