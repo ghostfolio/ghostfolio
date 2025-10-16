@@ -2,7 +2,7 @@
 
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
-    <form class="w-100" (ngSubmit)="onLoginWithAccessToken()">
+    <form class="w-100">
       <mat-form-field appearance="outline" class="without-hint w-100">
         <mat-label i18n>Security Token</mat-label>
         <input
@@ -22,10 +22,6 @@
           />
         </button>
       </mat-form-field>
-
-      <!-- Hidden submit button to enable form submission with Enter key -->
-      <button style="display: none" type="submit">Submit</button>
-    </form>
 
     @if (data.hasPermissionToUseSocialLogin) {
       <div class="my-3 text-center text-muted" i18n>or</div>
