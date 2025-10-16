@@ -326,9 +326,18 @@
     <div class="row">
       <div class="col mt-3">
         <p>
-          If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
-          <i>frankly</i>, <i>Interactive Brokers</i>, <i>Mintos</i>,
-          <i>Swissquote</i>, <i>VIAC</i>, or <i>Zak</i>, please
+          If you plan to open an account at
+          @for (broker of referralBrokers; track broker; let i = $index) {
+            @if (i > 0) {
+              @if (i === referralBrokers.length - 1) {
+                or
+              } @else {
+                ,
+              }
+            }
+            <i>{{ broker }}</i>
+          }
+          , please
           <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
             >contact us</a
           >
