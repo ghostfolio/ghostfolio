@@ -361,7 +361,11 @@
             <ion-icon name="ellipsis-vertical" />
           </button>
         }
-        <mat-menu #activitiesMenu="matMenu" xPosition="before">
+        <mat-menu
+          #activitiesMenu="matMenu"
+          class="no-max-width"
+          xPosition="before"
+        >
           @if (hasPermissionToCreateActivity) {
             <button
               class="align-items-center d-flex"
@@ -425,7 +429,11 @@
             <ion-icon name="ellipsis-horizontal" />
           </button>
         }
-        <mat-menu #activityMenu="matMenu" xPosition="before">
+        <mat-menu
+          #activityMenu="matMenu"
+          class="no-max-width"
+          xPosition="before"
+        >
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
