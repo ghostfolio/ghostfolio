@@ -60,23 +60,28 @@ export class ImportActivitiesService {
       const dataSource = this.parseDataSource({ item });
       const symbol = this.parseSymbol({ content, index, item });
       const currency = this.parseCurrency({ content, index, item });
+      const type = this.parseType({ content, index, item });
 
       activities.push({
         currency,
         dataSource,
         symbol,
+        type,
         accountId: this.parseAccount({ item, userAccounts }),
         comment: this.parseComment({ item }),
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
-        type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
 
-      if (dataSource === DataSource.MANUAL) {
+      if (
+        dataSource === DataSource.MANUAL &&
+        !['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+      ) {
         // Create synthetic asset profile for MANUAL data source
+        // (except for FEE, INTEREST, and LIABILITY which don't require asset profiles)
         assetProfiles.push({
           currency,
           symbol,

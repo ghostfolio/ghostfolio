@@ -743,6 +743,17 @@ export class ImportService {
       }
 
       if (!assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]) {
+        // Skip asset profile validation for FEE, INTEREST, and LIABILITY
+        // as these transaction types don't require asset profiles
+        if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+          assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] = {
+            currency,
+            dataSource,
+            symbol
+          };
+          continue;
+        }
+
         const assetProfile = {
           currency,
           ...(
