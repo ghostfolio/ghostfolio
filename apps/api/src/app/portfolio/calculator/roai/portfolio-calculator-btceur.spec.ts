@@ -1,8 +1,7 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
-  loadActivityExportFile,
+  loadExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -16,9 +15,9 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { Export } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { join } from 'node:path';
 
@@ -53,7 +52,7 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let activityDtos: CreateOrderDto[];
+  let exportResponse: Export;
 
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
@@ -63,7 +62,7 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeAll(() => {
-    activityDtos = loadActivityExportFile(
+    exportResponse = loadExportFile(
       join(__dirname, '../../../../../../../test/import/ok/btceur.json')
     );
   });
@@ -97,28 +96,27 @@ describe('PortfolioCalculator', () => {
     it.only('with BTCUSD buy (in EUR)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
 
-      const activities: Activity[] = activityDtos.map((activity) => ({
-        ...activityDummyData,
-        ...activity,
-        date: parseDate(activity.date),
-        feeInAssetProfileCurrency: 4.46,
-        SymbolProfile: {
-          ...symbolProfileDummyData,
-          currency: 'USD',
-          dataSource: activity.dataSource,
-          name: 'Bitcoin',
-          symbol: activity.symbol
-        },
-        tags: activity.tags?.map((id) => {
-          return { id } as Tag;
-        }),
-        unitPriceInAssetProfileCurrency: 44558.42
-      }));
+      const activities: Activity[] = exportResponse.activities.map(
+        (activity) => ({
+          ...activityDummyData,
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: 4.46,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: activity.dataSource,
+            name: 'Bitcoin',
+            symbol: activity.symbol
+          },
+          unitPriceInAssetProfileCurrency: 44558.42
+        })
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'USD',
+        currency: exportResponse.user.settings.currency,
         userId: userDummyData.id
       });
 
