@@ -20,7 +20,7 @@ export interface PortfolioSummary extends PortfolioPerformance {
   fireWealth: FireWealth;
   grossPerformance: number;
   grossPerformanceWithCurrencyEffect: number;
-  interest: number;
+  interestInBaseCurrency: number;
   liabilitiesInBaseCurrency: number;
   totalBuy: number;
   totalSell: number;
