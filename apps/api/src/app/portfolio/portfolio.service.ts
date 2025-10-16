@@ -2105,7 +2105,7 @@ export class PortfolioService {
       )
         .plus(fees)
         .toNumber(),
-      interest: interest.toNumber(),
+      interestInBaseCurrency: interest.toNumber(),
       liabilitiesInBaseCurrency: liabilities.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
       totalValueInBaseCurrency: netWorth
