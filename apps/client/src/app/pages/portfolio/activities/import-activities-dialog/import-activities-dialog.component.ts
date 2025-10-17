@@ -367,6 +367,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
                 isDryRun: true,
                 userAccounts: this.data.user.accounts
               });
+
             this.activities = activities;
             this.assetProfiles = assetProfiles;
             this.dataSource = new MatTableDataSource(activities.reverse());
