@@ -45,7 +45,7 @@ import {
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
-  PortfolioInvestments,
+  PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
@@ -463,7 +463,7 @@ export class DataService {
     params = params.append('groupBy', groupBy);
     params = params.append('range', range);
 
-    return this.http.get<PortfolioInvestments>(
+    return this.http.get<PortfolioInvestmentsResponse>(
       '/api/v1/portfolio/investments',
       { params }
     );
