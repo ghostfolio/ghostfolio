@@ -755,14 +755,15 @@ export class ImportService {
           continue;
         }
 
-        const assetProfile = {
-          currency,
-          ...(
+        let assetProfile: Partial<SymbolProfile> = { currency };
+
+        try {
+          assetProfile = (
             await this.dataProviderService.getAssetProfiles([
               { dataSource, symbol }
             ])
-          )?.[symbol]
-        };
+          )?.[symbol];
+        } catch {}
 
         if (!assetProfile?.name) {
           const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
@@ -799,11 +800,7 @@ export class ImportService {
           }
         }
 
-        if (
-          (dataSource !== 'MANUAL' && type === 'BUY') ||
-          type === 'DIVIDEND' ||
-          type === 'SELL'
-        ) {
+        if (!['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           if (!assetProfile?.name) {
             throw new Error(
               `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
