@@ -9,14 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the glossary of the resources page by _Stealth Wealth_
+- Extended the content of the pricing page
 - Added a _Storybook_ story for the holdings table component
 
 ### Changed
 
 - Refactored the blog page component to standalone
 - Disabled the zoom functionality in the _Progressive Web App_ (PWA)
+- Improved the currency validation in the get asset profiles functionality of the data provider service
+- Improved the currency validation in the search functionality of the data provider service
 - Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
 - Extracted the footer to a component
+- Improved the portfolio calculator unit tests to load the user currency from the exported file
+
+### Fixed
+
+- Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
+- Fixed an issue where the scroll position was not restored when changing pages
+- Fixed the word wrap in the menus of the activities table component
+- Fixed the dark mode in the _As seen in_ section on the landing page
 
 ## 2.208.0 - 2025-10-11
 

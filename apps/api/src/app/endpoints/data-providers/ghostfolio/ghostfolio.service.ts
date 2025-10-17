@@ -40,10 +40,7 @@ export class GhostfolioService {
     private readonly propertyService: PropertyService
   ) {}
 
-  public async getAssetProfile({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
-    symbol
-  }: GetAssetProfileParams) {
+  public async getAssetProfile({ symbol }: GetAssetProfileParams) {
     let result: DataProviderGhostfolioAssetProfileResponse = {};
 
     try {
@@ -51,12 +48,15 @@ export class GhostfolioService {
 
       for (const dataProviderService of this.getDataProviderServices()) {
         promises.push(
-          dataProviderService
-            .getAssetProfile({
-              requestTimeout,
-              symbol
-            })
-            .then(async (assetProfile) => {
+          this.dataProviderService
+            .getAssetProfiles([
+              {
+                symbol,
+                dataSource: dataProviderService.getName()
+              }
+            ])
+            .then(async (assetProfiles) => {
+              const assetProfile = assetProfiles[symbol];
               const dataSourceOrigin = DataSource.GHOSTFOLIO;
 
               if (assetProfile) {
