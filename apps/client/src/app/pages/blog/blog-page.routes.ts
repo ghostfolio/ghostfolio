@@ -118,7 +118,7 @@ export const routes: Routes = [
       import(
         './2023/03/1000-stars-on-github/1000-stars-on-github-page.component'
       ).then((c) => c.ThousandStarsOnGitHubPageComponent),
-    title: 'Ghostfolio reaches 1\'000 Stars on GitHub'
+    title: "Ghostfolio reaches 1'000 Stars on GitHub"
   },
   {
     canActivate: [AuthGuard],
