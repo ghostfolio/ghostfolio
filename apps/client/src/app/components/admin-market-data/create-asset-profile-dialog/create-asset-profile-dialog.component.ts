@@ -201,7 +201,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
 
   private iso4217CurrencyCodeValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!isISO4217CurrencyCode(control.value?.toUpperCase())) {
+      if (!isISO4217CurrencyCode(control.value?.toUpperCase()) && control.value?.toUpperCase() !== 'BTC') {
         return { invalidCurrency: true };
       }
 

@@ -23,6 +23,7 @@ import {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
+import Big = require('big.js');
 import { addDays, format, isSameDay } from 'date-fns';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
@@ -152,7 +153,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       for (const historicalItem of historicalResult) {
         response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice: historicalItem.close
+          marketPrice: symbol === "USDBTC" ? new Big(1).div(new Big(historicalItem.close)).toNumber() : historicalItem.close
         };
       }
 

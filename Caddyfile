@@ -1,0 +1,6 @@
+:4201 {
+    handle /api/* {
+        reverse_proxy http://localhost:3333
+    }
+    reverse_proxy http://localhost:4200
+}

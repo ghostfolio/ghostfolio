@@ -56,6 +56,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
    *                  DOGEUSD -> DOGE-USD
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
+    if(aSymbol === 'USDBTC') {
+      return 'BTC-USD';
+    }
+
     if (
       aSymbol.includes(DEFAULT_CURRENCY) &&
       aSymbol.length > DEFAULT_CURRENCY.length

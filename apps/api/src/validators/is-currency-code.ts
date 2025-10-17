@@ -33,6 +33,7 @@ export class IsExtendedCurrencyConstraint
     return (
       isDerivedCurrency(currency) ||
       (this.isUpperCase(currency) && isISO4217CurrencyCode(currency))
+      || currency?.toUpperCase() === 'BTC'
     );
   }
 
