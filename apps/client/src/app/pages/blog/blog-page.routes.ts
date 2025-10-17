@@ -1,15 +1,14 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
-import { BlogPageComponent } from './blog-page.component';
+import { GfBlogPageComponent } from './blog-page.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: BlogPageComponent,
+    component: GfBlogPageComponent,
     path: '',
     title: publicRoutes.blog.title
   },
@@ -212,9 +211,3 @@ const routes: Routes = [
     title: 'Hacktoberfest 2025'
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class BlogPageRoutingModule {}

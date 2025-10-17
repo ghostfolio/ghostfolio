@@ -1,19 +1,24 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { Component, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline } from 'ionicons/icons';
 import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [CommonModule, IonIcon, MatCardModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-blog-page',
   styleUrls: ['./blog-page.scss'],
-  templateUrl: './blog-page.html',
-  standalone: false
+  templateUrl: './blog-page.html'
 })
-export class BlogPageComponent implements OnDestroy {
+export class GfBlogPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
 
   private unsubscribeSubject = new Subject<void>();
