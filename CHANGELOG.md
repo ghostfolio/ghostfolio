@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the currency validation in the search functionality of the data provider service
 - Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
 - Extracted the footer to a component
+- Refactored the blog page component to standalone
 - Improved the portfolio calculator unit tests to load the user currency from the exported file
 
 ### Fixed
