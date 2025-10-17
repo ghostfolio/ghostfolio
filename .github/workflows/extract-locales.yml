@@ -24,8 +24,8 @@ jobs:
           node-version: '24'
           check-latest: true
           
-      - name: Update npm to v24
-        run: npm install -g npm@24
+      #- name: Update npm to v24
+      #  run: npm install -g npm@24
 
       - name: Install dependencies
         run: npm ci
