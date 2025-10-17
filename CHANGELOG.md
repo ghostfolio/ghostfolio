@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted the footer to a component
 - Refactored the blog page component to standalone
 - Improved the portfolio calculator unit tests to load the user currency from the exported file
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
