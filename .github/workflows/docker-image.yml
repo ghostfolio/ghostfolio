@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ vars.DOCKER_REPOSITORY || 'ghostfolio/ghostfolio' }}
+          images: ${{ vars.DOCKER_REPOSITORY || 'joarley/ghostfolio' }}
           tags: |
             type=semver,pattern={{major}}
             type=semver,pattern={{version}}
