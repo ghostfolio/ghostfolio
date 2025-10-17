@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the `csv` file import where custom asset profiles failed due to validation errors
 - Fixed an issue with the total buy and sell calculation in the summary related to activities in a custom currency
 - Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
 - Fixed an issue where the scroll position was not restored when changing pages
