@@ -46,7 +46,9 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: dev
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ghostfolio:latest
+            ghcr.io/${{ github.repository_owner }}/ghostfolio:${{ github.ref_name }}
           labels: ${{ steps.meta.output.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
