@@ -197,7 +197,7 @@ export class PortfolioController {
         'filteredValueInBaseCurrency',
         'grossPerformance',
         'grossPerformanceWithCurrencyEffect',
-        'interest',
+        'interestInBaseCurrency',
         'items',
         'liabilities',
         'netPerformance',
