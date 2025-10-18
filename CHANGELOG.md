@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.209.0 - 2025-10-18
 
+- Added a dedicated Slack community link
+
 ### Added
 
 - Extended the glossary of the resources page by _Stealth Wealth_
