@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the pricing page
 - Added a _Storybook_ story for the holdings table component
 
+- Added dependabot for version update
+
 ### Changed
 
 - Disabled the zoom functionality in the _Progressive Web App_ (PWA)
