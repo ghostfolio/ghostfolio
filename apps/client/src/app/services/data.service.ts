@@ -42,7 +42,7 @@ import {
   MarketDataOfMarketsResponse,
   OAuthResponse,
   PortfolioDetails,
-  PortfolioDividends,
+  PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
@@ -270,9 +270,12 @@ export class DataService {
     params = params.append('groupBy', groupBy);
     params = params.append('range', range);
 
-    return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
-      params
-    });
+    return this.http.get<PortfolioDividendsResponse>(
+      '/api/v1/portfolio/dividends',
+      {
+        params
+      }
+    );
   }
 
   public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {

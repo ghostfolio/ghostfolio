@@ -45,6 +45,7 @@ export class ImportActivitiesService {
     userAccounts: Account[];
   }): Promise<{
     activities: Activity[];
+    assetProfiles: CreateAssetProfileWithMarketDataDto[];
   }> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
@@ -53,23 +54,65 @@ export class ImportActivitiesService {
     }).data;
 
     const activities: CreateOrderDto[] = [];
+    const assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+
     for (const [index, item] of content.entries()) {
+      const currency = this.parseCurrency({ content, index, item });
+      const dataSource = this.parseDataSource({ item });
+      const symbol = this.parseSymbol({ content, index, item });
+      const type = this.parseType({ content, index, item });
+
       activities.push({
+        currency,
+        dataSource,
+        symbol,
+        type,
         accountId: this.parseAccount({ item, userAccounts }),
         comment: this.parseComment({ item }),
-        currency: this.parseCurrency({ content, index, item }),
-        dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
-        symbol: this.parseSymbol({ content, index, item }),
-        type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
+
+      if (
+        dataSource === DataSource.MANUAL &&
+        !['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+      ) {
+        // Create synthetic asset profile for MANUAL data source
+        // (except for FEE, INTEREST, and LIABILITY which don't require asset profiles)
+        assetProfiles.push({
+          currency,
+          symbol,
+          assetClass: null,
+          assetSubClass: null,
+          comment: null,
+          countries: [],
+          cusip: null,
+          dataSource: DataSource.MANUAL,
+          figi: null,
+          figiComposite: null,
+          figiShareClass: null,
+          holdings: [],
+          isActive: true,
+          isin: null,
+          marketData: [],
+          name: symbol,
+          scraperConfiguration: null,
+          sectors: [],
+          symbolMapping: {},
+          url: null
+        });
+      }
     }
 
-    return await this.importJson({ activities, isDryRun });
+    const result = await this.importJson({
+      activities,
+      assetProfiles,
+      isDryRun
+    });
+    return { ...result, assetProfiles };
   }
 
   public importJson({
