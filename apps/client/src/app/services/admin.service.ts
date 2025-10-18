@@ -17,6 +17,7 @@ import {
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -178,9 +179,22 @@ export class AdminService {
     );
   }
 
-  public gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
+  public gatherSymbol({
+    dataSource,
+    range,
+    symbol
+  }: {
+    range?: DateRange;
+  } & AssetProfileIdentifier) {
+    let params = new HttpParams();
+
+    if (range) {
+      params = params.append('range', range);
+    }
+
     const url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
-    return this.http.post<MarketData | void>(url, {});
+
+    return this.http.post<MarketData | void>(url, undefined, { params });
   }
 
   public fetchSymbolForDate({
