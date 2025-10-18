@@ -194,19 +194,13 @@
       );
     }
 
-    .logo {
-      &.logo-alternative-to,
-      &.logo-dev-community,
-      &.logo-hacker-news,
-      &.logo-openalternative,
-      &.logo-privacy-tools,
-      &.logo-reddit,
-      &.logo-sackgeld,
-      &.logo-selfh-st,
-      &.logo-sourceforge,
-      &.logo-umbrel,
-      &.logo-unraid {
-        background-color: rgba(var(--light-primary-text));
+    .logo-carousel-track {
+      .logo-carousel-item {
+        .logo {
+          &.mask {
+            background-color: rgba(var(--light-secondary-text));
+          }
+        }
       }
     }
   }

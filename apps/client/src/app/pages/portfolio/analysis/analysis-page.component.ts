@@ -6,7 +6,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HistoricalDataItem,
   InvestmentItem,
-  PortfolioInvestments,
+  PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPosition,
   ToggleOption,
@@ -102,7 +102,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public portfolioEvolutionXMin: Date;
   public globalXMax: Date;
   public globalXMin: Date;
-  public streaks: PortfolioInvestments['streaks'];
+  public streaks: PortfolioInvestmentsResponse['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
