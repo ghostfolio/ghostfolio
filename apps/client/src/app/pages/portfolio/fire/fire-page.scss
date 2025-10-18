@@ -2,12 +2,26 @@
   display: block;
 
   .safe-withdrawal-rate-select {
-    background-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: initial;
+
+    background-color: transparent !important;
+    border: none !important;
+
     color: rgb(var(--dark-primary-text));
+
+    font: inherit;
 
     &:focus {
       box-shadow: none;
-      outline: 0;
+      outline: none;
+    }
+
+    option {
+      background-color: rgb(var(--light-background));
+      color: rgb(var(--dark-primary-text));
+      border: none;
     }
   }
 }
@@ -15,5 +29,10 @@
 :host-context(.theme-dark) {
   .safe-withdrawal-rate-select {
     color: rgb(var(--light-primary-text));
+
+    option {
+      background-color: rgb(var(--dark-background));
+      color: rgb(var(--light-primary-text));
+    }
   }
 }
