@@ -19,7 +19,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
-  PortfolioDividends,
+  PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
@@ -197,7 +197,7 @@ export class PortfolioController {
         'filteredValueInBaseCurrency',
         'grossPerformance',
         'grossPerformanceWithCurrencyEffect',
-        'interest',
+        'interestInBaseCurrency',
         'items',
         'liabilities',
         'netPerformance',
@@ -305,7 +305,7 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
-  ): Promise<PortfolioDividends> {
+  ): Promise<PortfolioDividendsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
