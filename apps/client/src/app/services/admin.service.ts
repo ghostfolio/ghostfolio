@@ -184,7 +184,7 @@ export class AdminService {
     range,
     symbol
   }: {
-    range: DateRange;
+    range?: DateRange;
   } & AssetProfileIdentifier) {
     let params = new HttpParams();
 
@@ -193,7 +193,8 @@ export class AdminService {
     }
 
     const url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
-    return this.http.post<MarketData | void>(url, null, { params });
+
+    return this.http.post<MarketData | void>(url, undefined, { params });
   }
 
   public fetchSymbolForDate({

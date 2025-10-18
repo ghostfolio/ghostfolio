@@ -336,7 +336,7 @@ export class GfAdminMarketDataComponent
 
   public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
-      .gatherSymbol({ range: undefined, dataSource, symbol })
+      .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe();
   }

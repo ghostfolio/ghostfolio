@@ -204,12 +204,18 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       label: $localize`Current year` + ' (' + $localize`YTD` + ')',
       value: 'ytd'
     },
-    { label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')', value: '1y' },
+    {
+      label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
+      value: '1y'
+    },
     {
       label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
       value: '5y'
     },
-    { label: $localize`Max`, value: 'max' }
+    {
+      label: $localize`Max`,
+      value: 'max'
+    }
   ];
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
@@ -431,7 +437,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     range,
     symbol
   }: {
-    range: DateRange;
+    range?: DateRange;
   } & AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, range, symbol })

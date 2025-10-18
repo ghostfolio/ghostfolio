@@ -122,7 +122,6 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         .pipe(
           switchMap(() => {
             return this.adminService.gatherSymbol({
-              range: undefined,
               dataSource: this.dataSourceForExchangeRates,
               symbol: `${DEFAULT_CURRENCY}${currency}`
             });
