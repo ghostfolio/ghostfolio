@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - '*.*.*'
+  workflow_dispatch:
   pull_request:
     branches:
       - 'main'
@@ -19,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ vars.DOCKER_REPOSITORY || 'ghostfolio/ghostfolio' }}
+          images: ${{ vars.DOCKER_REPOSITORY || 'joarley/ghostfolio' }}
           tags: |
             type=semver,pattern={{major}}
             type=semver,pattern={{version}}
@@ -45,7 +46,9 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/ghostfolio:latest
+            ghcr.io/${{ github.repository_owner }}/ghostfolio:${{ github.ref_name }}
           labels: ${{ steps.meta.output.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

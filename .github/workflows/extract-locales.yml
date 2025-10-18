@@ -18,6 +18,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Use Node.js 24 or superior
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          check-latest: true
+          
+      #- name: Update npm to v24
+      #  run: npm install -g npm@24
+
       - name: Install dependencies
         run: npm ci
 
