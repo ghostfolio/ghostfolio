@@ -1,3 +1,5 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
@@ -8,9 +10,7 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
-
-import { PropertyService } from '../../../services/property/property.service';
-import { PortfolioService } from '../../portfolio/portfolio.service';
+import { tablemark } from 'tablemark';
 
 @Injectable()
 export class AiService {
@@ -59,9 +59,20 @@ export class AiService {
       userId
     });
 
+    const holdingsTableColumns = [
+      { name: 'Name' },
+      { name: 'Symbol' },
+      { name: 'Currency' },
+      { name: 'Asset Class' },
+      { name: 'Asset Sub Class' },
+      { name: 'Allocation in Percentage', align: 'right' as const }
+    ];
+
     // Build rows for tablemark
     const rows = Object.values(holdings)
-      .sort((a, b) => b.allocationInPercentage - a.allocationInPercentage)
+      .sort((a, b) => {
+        return b.allocationInPercentage - a.allocationInPercentage;
+      })
       .map(
         ({
           allocationInPercentage,
@@ -82,33 +93,10 @@ export class AiService {
         }
       );
 
-    // Render Markdown table using tablemark, with safe fallback
-    let holdingsTableString = '';
-    try {
-      const tablemarkModule: any = await import('tablemark');
-      const tablemark = tablemarkModule?.default ?? tablemarkModule;
-      holdingsTableString = tablemark(rows, {
-        columns: [
-          { name: 'Name' },
-          { name: 'Symbol' },
-          { name: 'Currency' },
-          { name: 'Asset Class' },
-          { name: 'Asset Sub Class' },
-          { name: 'Allocation in Percentage', align: 'right' }
-        ]
-      });
-    } catch {
-      // Fallback to manual rendering if tablemark is unavailable at runtime
-      const manual = [
-        '| Name | Symbol | Currency | Asset Class | Asset Sub Class | Allocation in Percentage |',
-        '| --- | --- | --- | --- | --- | --- |',
-        ...rows.map(
-          (r) =>
-            `| ${r['Name']} | ${r['Symbol']} | ${r['Currency']} | ${r['Asset Class']} | ${r['Asset Sub Class']} | ${r['Allocation in Percentage']} |`
-        )
-      ];
-      holdingsTableString = manual.join('\n');
-    }
+    // Render Markdown table using tablemark
+    const holdingsTableString = tablemark(rows, {
+      columns: holdingsTableColumns
+    });
 
     if (mode === 'portfolio') {
       return holdingsTableString;
