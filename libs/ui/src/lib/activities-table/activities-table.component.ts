@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
@@ -7,9 +6,8 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { ActivityResponse,AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import {
@@ -94,7 +92,7 @@ export class GfActivitiesTableComponent
   implements AfterViewInit, OnChanges, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
-  @Input() dataSource: MatTableDataSource<Activity>;
+  @Input() dataSource: MatTableDataSource<ActivityResponse>;
   @Input() deviceType: string;
   @Input() hasActivities: boolean;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -123,7 +121,7 @@ export class GfActivitiesTableComponent
   @Output() import = new EventEmitter<void>();
   @Output() importDividends = new EventEmitter<AssetProfileIdentifier>();
   @Output() pageChanged = new EventEmitter<PageEvent>();
-  @Output() selectedActivities = new EventEmitter<Activity[]>();
+  @Output() selectedActivities = new EventEmitter<ActivityResponse[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -137,7 +135,7 @@ export class GfActivitiesTableComponent
   public isLoading = true;
   public isUUID = isUUID;
   public routeQueryParams: Subscription;
-  public selectedRows = new SelectionModel<Activity>(true, []);
+  public selectedRows = new SelectionModel<ActivityResponse>(true, []);
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -226,7 +224,7 @@ export class GfActivitiesTableComponent
     return numSelectedRows === numTotalRows;
   }
 
-  public isExcludedFromAnalysis(activity: Activity) {
+  public isExcludedFromAnalysis(activity: ActivityResponse) {
     return (
       activity.account?.isExcluded ||
       activity.tags?.some(({ id }) => {
@@ -239,7 +237,7 @@ export class GfActivitiesTableComponent
     this.pageChanged.emit(page);
   }
 
-  public onClickActivity(activity: Activity) {
+  public onClickActivity(activity: ActivityResponse) {
     if (this.showCheckbox) {
       if (!activity.error) {
         this.selectedRows.toggle(activity);

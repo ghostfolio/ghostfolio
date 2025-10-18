@@ -8,10 +8,6 @@ import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto'
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import {
-  Activities,
-  Activity
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
@@ -26,6 +22,8 @@ import {
   AccessTokenResponse,
   AccountBalancesResponse,
   AccountsResponse,
+  ActivitiesResponse,
+  ActivityResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
@@ -211,7 +209,7 @@ export class DataService {
     sortColumn?: string;
     sortDirection?: SortDirection;
     take?: number;
-  }): Observable<Activities> {
+  }): Observable<ActivitiesResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     if (range) {
@@ -246,7 +244,7 @@ export class DataService {
   }
 
   public fetchActivity(aActivityId: string) {
-    return this.http.get<Activity>(`/api/v1/order/${aActivityId}`).pipe(
+    return this.http.get<ActivityResponse>(`/api/v1/order/${aActivityId}`).pipe(
       map((activity) => {
         activity.createdAt = parseISO(activity.createdAt as unknown as string);
         activity.date = parseISO(activity.date as unknown as string);

@@ -1,10 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import {
-  Activity,
-  ActivityError
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -19,7 +15,7 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { ActivityResponse,ActivityResponseError,AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   AccountWithPlatform,
@@ -56,7 +52,7 @@ export class ImportService {
     dataSource,
     symbol,
     userId
-  }: AssetProfileIdentifier & { userId: string }): Promise<Activity[]> {
+  }: AssetProfileIdentifier & { userId: string }): Promise<ActivityResponse[]> {
     try {
       const { activities, firstBuyDate, historicalData } =
         await this.portfolioService.getHolding({
@@ -115,7 +111,7 @@ export class ImportService {
             );
           });
 
-          const error: ActivityError = isDuplicate
+          const error: ActivityResponseError = isDuplicate
             ? { code: 'IS_DUPLICATE' }
             : undefined;
 
@@ -167,7 +163,7 @@ export class ImportService {
     maxActivitiesToImport: number;
     tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
-  }): Promise<Activity[]> {
+  }): Promise<ActivityResponse[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
     const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
@@ -413,7 +409,7 @@ export class ImportService {
         });
     }
 
-    const activities: Activity[] = [];
+    const activities: ActivityResponse[] = [];
 
     for (const activity of activitiesExtendedWithErrors) {
       const accountId = activity.accountId;
@@ -611,7 +607,7 @@ export class ImportService {
     activitiesDto: Partial<CreateOrderDto>[];
     userCurrency: string;
     userId: string;
-  }): Promise<Partial<Activity>[]> {
+  }): Promise<Partial<ActivityResponse>[]> {
     const { activities: existingActivities } =
       await this.orderService.getOrders({
         userCurrency,
@@ -651,7 +647,7 @@ export class ImportService {
           );
         });
 
-        const error: ActivityError = isDuplicate
+        const error: ActivityResponseError = isDuplicate
           ? { code: 'IS_DUPLICATE' }
           : undefined;
 

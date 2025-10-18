@@ -3,14 +3,14 @@ import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 import { Order, Tag } from '@prisma/client';
 
-export interface Activities {
-  activities: Activity[];
+export interface ActivitiesResponse {
+  activities: ActivityResponse[];
   count: number;
 }
 
-export interface Activity extends Order {
+export interface ActivityResponse extends Order {
   account?: AccountWithPlatform;
-  error?: ActivityError;
+  error?: ActivityResponseError;
   feeInAssetProfileCurrency: number;
   feeInBaseCurrency: number;
   SymbolProfile?: EnhancedSymbolProfile;
@@ -22,7 +22,7 @@ export interface Activity extends Order {
   valueInBaseCurrency: number;
 }
 
-export interface ActivityError {
+export interface ActivityResponseError {
   code: 'IS_DUPLICATE';
   message?: string;
 }

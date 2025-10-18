@@ -1,14 +1,13 @@
 import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { ActivityResponse, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import {
@@ -80,10 +79,10 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 })
 export class GfImportActivitiesDialogComponent implements OnDestroy {
   public accounts: CreateAccountWithBalancesDto[] = [];
-  public activities: Activity[] = [];
+  public activities: ActivityResponse[] = [];
   public assetProfileForm: FormGroup;
   public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
-  public dataSource: MatTableDataSource<Activity>;
+  public dataSource: MatTableDataSource<ActivityResponse>;
   public details: any[] = [];
   public deviceType: string;
   public dialogTitle = $localize`Import Activities`;
@@ -94,7 +93,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
   public mode: 'DIVIDEND';
   public pageIndex = 0;
   public pageSize = 8;
-  public selectedActivities: Activity[] = [];
+  public selectedActivities: ActivityResponse[] = [];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
   public stepperOrientation: StepperOrientation;
@@ -275,7 +274,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
     input.click();
   }
 
-  public updateSelection(activities: Activity[]) {
+  public updateSelection(activities: ActivityResponse[]) {
     this.selectedActivities = activities.filter(({ error }) => {
       return !error;
     });

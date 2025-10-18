@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
   symbolProfileDummyData,
@@ -16,6 +15,7 @@ import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfo
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
 
@@ -98,7 +98,7 @@ describe('PortfolioCalculator', () => {
     it.only('with GOOGL buy', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
-      const activities: Activity[] = [
+      const activities: ActivityResponse[] = [
         {
           ...activityDummyData,
           date: new Date('2023-01-03'),

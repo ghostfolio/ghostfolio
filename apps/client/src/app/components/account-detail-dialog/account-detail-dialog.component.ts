@@ -1,5 +1,4 @@
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
@@ -9,6 +8,7 @@ import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/conf
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
+  ActivityResponse,
   HistoricalDataItem,
   PortfolioPosition,
   User
@@ -83,7 +83,7 @@ export class GfAccountDetailDialogComponent implements OnDestroy, OnInit {
   public balance: number;
   public balancePrecision = 2;
   public currency: string;
-  public dataSource: MatTableDataSource<Activity>;
+  public dataSource: MatTableDataSource<ActivityResponse>;
   public dividendInBaseCurrency: number;
   public dividendInBaseCurrencyPrecision = 2;
   public equity: number;
@@ -136,7 +136,7 @@ export class GfAccountDetailDialogComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public onCloneActivity(aActivity: Activity) {
+  public onCloneActivity(aActivity: ActivityResponse) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
@@ -198,7 +198,7 @@ export class GfAccountDetailDialogComponent implements OnDestroy, OnInit {
     this.fetchActivities();
   }
 
-  public onUpdateActivity(aActivity: Activity) {
+  public onUpdateActivity(aActivity: ActivityResponse) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
