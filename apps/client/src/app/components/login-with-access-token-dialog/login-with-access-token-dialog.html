@@ -2,13 +2,14 @@
 
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
-    <form class="w-100" (ngSubmit)="onLoginWithAccessToken()">
+    <form class="w-100">
       <mat-form-field appearance="outline" class="without-hint w-100">
         <mat-label i18n>Security Token</mat-label>
         <input
           matInput
           [formControl]="accessTokenFormControl"
           [type]="isAccessTokenHidden ? 'password' : 'text'"
+          (keydown.enter)="onLoginWithAccessToken(); $event.preventDefault()"
         />
         <button
           mat-button
@@ -21,7 +22,7 @@
           />
         </button>
       </mat-form-field>
-    </form>
+
     @if (data.hasPermissionToUseSocialLogin) {
       <div class="my-3 text-center text-muted" i18n>or</div>
       <div class="d-flex flex-column">
@@ -50,6 +51,7 @@
     }
   </div>
 </div>
+
 <div mat-dialog-actions>
   <div class="flex-grow-1">
     <mat-checkbox color="primary" i18n (change)="onChangeStaySignedIn($event)"

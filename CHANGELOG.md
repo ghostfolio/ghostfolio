@@ -1,3 +1,4 @@
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -6,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## 2.209.0 - 2025-10-18
+
+### Fixed
+
+- Make Enter key behave like Sign In in the access token login dialog (#5751)
+
+### Added
+
+- Added (keydown.enter) handler in the login form template to trigger onLoginWithAccessToken() directly
 
 ### Added
 
@@ -167,41 +176,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue with `unitPriceInAssetProfileCurrency` in the value redaction interceptor for the impersonation mode
-
-## 2.200.0 - 2025-09-17
-
-### Changed
-
-- Refactored the show access token dialog component to standalone
-- Upgraded `prisma` from version `6.15.0` to `6.16.1`
-
-### Fixed
-
-- Removed a temporary element from the activities table component
-
-## 2.199.0 - 2025-09-14
+- Fixed the behavior of the 'Login with Access Token' dialog so that pressing 'Enter' performs the same action as clicking 'Sign In'
 
 ### Added
 
-- Extended the content of the performance calculation method by dividends on the Frequently Asked Questions (FAQ) page
-- Added a _Storybook_ story for the entity logo image component
-
-### Changed
-
-- Improved the search in the _Yahoo Finance_ service
-- Moved the holdings table into the holdings section on the public page
-- Migrated to the _Prisma Configuration File_ approach (`prisma.config.ts`)
-- Refactored the login with access token dialog component to standalone
-- Prefixed the `crypto`, `fs` and `path` imports with `node:`
-- Upgraded `yahoo-finance2` from version `3.8.0` to `3.10.0`
-
-### Fixed
-
-- Fixed a pagination issue in the market data endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
-- Fixed a pagination issue in the user endpoint by adding `id` as a secondary sort criterion to ensure consistent ordering in the admin control panel
-
-## 2.198.0 - 2025-09-11
+- Added (keydown.enter) handler in the login form template to trigger onLoginWithAccessToken() directly
 
 ### Changed
 
