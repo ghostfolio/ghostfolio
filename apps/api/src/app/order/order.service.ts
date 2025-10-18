@@ -38,7 +38,6 @@ import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Injectable()
 export class OrderService {
   public constructor(

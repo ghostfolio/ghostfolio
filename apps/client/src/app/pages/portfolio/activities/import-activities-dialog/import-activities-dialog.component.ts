@@ -7,7 +7,10 @@ import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/fil
 import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { ActivityResponse, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  ActivityResponse,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import {

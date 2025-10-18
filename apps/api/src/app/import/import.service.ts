@@ -15,7 +15,11 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { ActivityResponse,ActivityResponseError,AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  ActivityResponse,
+  ActivityResponseError,
+  AssetProfileIdentifier
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   AccountWithPlatform,

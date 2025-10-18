@@ -1,6 +1,7 @@
 import { ActivityResponse } from '@ghostfolio/common/interfaces';
 
-export interface PortfolioOrder extends Pick<ActivityResponse, 'tags' | 'type'> {
+export interface PortfolioOrder
+  extends Pick<ActivityResponse, 'tags' | 'type'> {
   date: string;
   fee: Big;
   quantity: Big;

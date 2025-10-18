@@ -15,6 +15,7 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 import { ActivityResponse } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+
 import { Big } from 'big.js';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {

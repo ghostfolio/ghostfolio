@@ -11,7 +11,10 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
-import { ActivitiesResponse, ActivityResponse } from '@ghostfolio/common/interfaces';
+import {
+  ActivitiesResponse,
+  ActivityResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 

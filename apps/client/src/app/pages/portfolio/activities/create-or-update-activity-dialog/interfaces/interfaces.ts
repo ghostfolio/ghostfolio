@@ -1,4 +1,4 @@
-import { ActivityResponse,User } from '@ghostfolio/common/interfaces';
+import { ActivityResponse, User } from '@ghostfolio/common/interfaces';
 
 import { Account } from '@prisma/client';
 

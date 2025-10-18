@@ -6,8 +6,12 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
-import { ActivityResponse,AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  ActivityResponse,
+  AssetProfileIdentifier
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
 import {
