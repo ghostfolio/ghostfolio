@@ -1851,7 +1851,7 @@
       </trans-unit>
       <trans-unit id="6004588582437169024" datatype="html">
         <source>Current week</source>
-        <target state="new">Current week</target>
+        <target state="translated">Aktuelle Woche</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">196</context>
@@ -3763,7 +3763,7 @@
       </trans-unit>
       <trans-unit id="4340477809050781416" datatype="html">
         <source>Current year</source>
-        <target state="new">Current year</target>
+        <target state="translated">Aktuelles Jahr</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">204</context>
@@ -7888,7 +7888,7 @@
       </trans-unit>
       <trans-unit id="7383756232563820625" datatype="html">
         <source>Current month</source>
-        <target state="new">Current month</target>
+        <target state="translated">Aktueller Monat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">200</context>
