@@ -4,7 +4,11 @@ import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.s
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  BenchmarkMarketDataDetailsResponse,
+  Filter
+} from '@ghostfolio/common/interfaces';
 import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -39,7 +43,7 @@ export class BenchmarksService {
     startDate: Date;
     user: UserWithSettings;
     withExcludedAccounts?: boolean;
-  } & AssetProfileIdentifier) {
+  } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetailsResponse> {
     const marketData: { date: string; value: number }[] = [];
     const userCurrency = user.settings.settings.baseCurrency;
     const userId = user.id;

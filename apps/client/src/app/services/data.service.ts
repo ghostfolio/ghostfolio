@@ -365,7 +365,7 @@ export class DataService {
     range: DateRange;
     startDate: Date;
     withExcludedAccounts?: boolean;
-  } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetailsResponse> {
+  } & AssetProfileIdentifier) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     params = params.append('range', range);
