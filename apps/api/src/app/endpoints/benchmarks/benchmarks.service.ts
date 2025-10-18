@@ -4,10 +4,7 @@ import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.s
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  Filter
-} from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
