@@ -407,7 +407,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
           } else if (SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
-            if (this.quantity < 1) {
+            if (SymbolProfile?.symbol === 'BTC' || SymbolProfile?.symbol === "bitcoin") {
+              this.quantityPrecision = 8;
+            } else if (this.quantity < 1) {
               this.quantityPrecision = 7;
             } else if (this.quantity < 1000) {
               this.quantityPrecision = 5;
