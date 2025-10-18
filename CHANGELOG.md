@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.209.0 - 2025-10-18
 
 ### Added
