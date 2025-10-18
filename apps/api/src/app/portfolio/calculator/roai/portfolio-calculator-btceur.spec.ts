@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+=======
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
 import {
   activityDummyData,
   loadExportFile,
@@ -15,7 +19,11 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+<<<<<<< HEAD
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
+=======
 import { Export } from '@ghostfolio/common/interfaces';
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
@@ -96,6 +104,25 @@ describe('PortfolioCalculator', () => {
     it.only('with BTCUSD buy (in EUR)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
 
+<<<<<<< HEAD
+      const activities: ActivityResponse[] = activityDtos.map((activity) => ({
+        ...activityDummyData,
+        ...activity,
+        date: parseDate(activity.date),
+        feeInAssetProfileCurrency: 4.46,
+        SymbolProfile: {
+          ...symbolProfileDummyData,
+          currency: 'USD',
+          dataSource: activity.dataSource,
+          name: 'Bitcoin',
+          symbol: activity.symbol
+        },
+        tags: activity.tags?.map((id) => {
+          return { id } as Tag;
+        }),
+        unitPriceInAssetProfileCurrency: 44558.42
+      }));
+=======
       const activities: Activity[] = exportResponse.activities.map(
         (activity) => ({
           ...activityDummyData,
@@ -112,6 +139,7 @@ describe('PortfolioCalculator', () => {
           unitPriceInAssetProfileCurrency: 44558.42
         })
       );
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,

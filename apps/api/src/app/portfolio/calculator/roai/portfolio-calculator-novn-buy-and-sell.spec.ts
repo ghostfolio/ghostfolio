@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+=======
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
 import {
   activityDummyData,
   loadExportFile,
@@ -15,7 +19,11 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+<<<<<<< HEAD
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
+=======
 import { Export } from '@ghostfolio/common/interfaces';
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
@@ -99,6 +107,25 @@ describe('PortfolioCalculator', () => {
     it.only('with NOVN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
+<<<<<<< HEAD
+      const activities: ActivityResponse[] = activityDtos.map((activity) => ({
+        ...activityDummyData,
+        ...activity,
+        date: parseDate(activity.date),
+        feeInAssetProfileCurrency: activity.fee,
+        SymbolProfile: {
+          ...symbolProfileDummyData,
+          currency: activity.currency,
+          dataSource: activity.dataSource,
+          name: 'Novartis AG',
+          symbol: activity.symbol
+        },
+        tags: activity.tags?.map((id) => {
+          return { id } as Tag;
+        }),
+        unitPriceInAssetProfileCurrency: activity.unitPrice
+      }));
+=======
       const activities: Activity[] = exportResponse.activities.map(
         (activity) => ({
           ...activityDummyData,
@@ -115,6 +142,7 @@ describe('PortfolioCalculator', () => {
           unitPriceInAssetProfileCurrency: activity.unitPrice
         })
       );
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,

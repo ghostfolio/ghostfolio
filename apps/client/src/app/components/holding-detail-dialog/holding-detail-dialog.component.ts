@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -10,6 +9,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  ActivityResponse,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,
@@ -113,7 +113,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public dataProviderInfo: DataProviderInfo;
-  public dataSource: MatTableDataSource<Activity>;
+  public dataSource: MatTableDataSource<ActivityResponse>;
   public dividendInBaseCurrency: number;
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
@@ -542,7 +542,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCloneActivity(aActivity: Activity) {
+  public onCloneActivity(aActivity: ActivityResponse) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
@@ -587,7 +587,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.activityForm.get('tags').setValue(tags);
   }
 
-  public onUpdateActivity(aActivity: Activity) {
+  public onUpdateActivity(aActivity: ActivityResponse) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {

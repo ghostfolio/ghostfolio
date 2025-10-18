@@ -2,8 +2,8 @@ import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto'
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -44,8 +44,12 @@ export class ImportActivitiesService {
     isDryRun?: boolean;
     userAccounts: Account[];
   }): Promise<{
+<<<<<<< HEAD
+    activities: ActivityResponse[];
+=======
     activities: Activity[];
     assetProfiles: CreateAssetProfileWithMarketDataDto[];
+>>>>>>> a9bcd4ee2eb627e2352c41d3800783e46b6af809
   }> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
@@ -128,7 +132,7 @@ export class ImportActivitiesService {
     isDryRun?: boolean;
     tags?: CreateTagDto[];
   }): Promise<{
-    activities: Activity[];
+    activities: ActivityResponse[];
   }> {
     return new Promise((resolve, reject) => {
       this.postImport(
@@ -161,11 +165,11 @@ export class ImportActivitiesService {
     tags
   }: {
     accounts?: CreateAccountWithBalancesDto[];
-    activities: Activity[];
+    activities: ActivityResponse[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
     tags?: CreateTagDto[];
   }): Promise<{
-    activities: Activity[];
+    activities: ActivityResponse[];
   }> {
     const importData: CreateOrderDto[] = [];
 
@@ -193,7 +197,7 @@ export class ImportActivitiesService {
     type,
     unitPrice,
     updateAccountBalance
-  }: Activity): CreateOrderDto {
+  }: ActivityResponse): CreateOrderDto {
     return {
       accountId,
       comment,
@@ -453,7 +457,7 @@ export class ImportActivitiesService {
     },
     aIsDryRun = false
   ) {
-    return this.http.post<{ activities: Activity[] }>(
+    return this.http.post<{ activities: ActivityResponse[] }>(
       `/api/v1/import?dryRun=${aIsDryRun}`,
       aImportData
     );
