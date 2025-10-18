@@ -448,11 +448,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
           <context context-type="linenumber">279</context>
-=======
-          <context context-type="linenumber">278</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
         </context-group>
       </trans-unit>
       <trans-unit id="6555318547274416232" datatype="html">
@@ -488,19 +484,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
           <context context-type="linenumber">260</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">296</context>
-=======
-          <context context-type="linenumber">259</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">295</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
@@ -540,11 +528,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">433</context>
-=======
-          <context context-type="linenumber">440</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">441</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7022070615528435141" datatype="html">
@@ -580,11 +564,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">460</context>
-=======
-          <context context-type="linenumber">467</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">468</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
@@ -3668,11 +3648,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
           <context context-type="linenumber">213</context>
-=======
-          <context context-type="linenumber">212</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
         </context-group>
       </trans-unit>
       <trans-unit id="1817902710689724227" datatype="html">
@@ -3688,11 +3664,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">374</context>
-=======
-          <context context-type="linenumber">377</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">378</context>
         </context-group>
       </trans-unit>
       <trans-unit id="72640258012696878" datatype="html">
@@ -3708,11 +3680,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">386</context>
-=======
-          <context context-type="linenumber">389</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">390</context>
         </context-group>
       </trans-unit>
       <trans-unit id="848497846891931418" datatype="html">
@@ -4861,11 +4829,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">399</context>
-=======
-          <context context-type="linenumber">402</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">403</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7023389552907218716" datatype="html">
@@ -4877,11 +4841,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">412</context>
-=======
-          <context context-type="linenumber">415</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">416</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4808589666930368915" datatype="html">
@@ -4897,11 +4857,7 @@
         <target state="translated">克隆</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">439</context>
-=======
-          <context context-type="linenumber">446</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">447</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4631493229601603593" datatype="html">
@@ -4909,11 +4865,7 @@
         <target state="translated">将汇票导出为 ICS</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">449</context>
-=======
-          <context context-type="linenumber">456</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
+          <context context-type="linenumber">457</context>
         </context-group>
       </trans-unit>
       <trans-unit id="670983159637074283" datatype="html">
@@ -5093,11 +5045,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
           <context context-type="linenumber">311</context>
-=======
-          <context context-type="linenumber">310</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
@@ -5393,11 +5341,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-<<<<<<< HEAD
           <context context-type="linenumber">237</context>
-=======
-          <context context-type="linenumber">236</context>
->>>>>>> 5bfcceb959b8f2d84747a204c9e67279f8e9475a
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
