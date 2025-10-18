@@ -10,7 +10,7 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
-import { tablemark } from 'tablemark';
+import tablemark, { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
 export class AiService {
@@ -59,16 +59,15 @@ export class AiService {
       userId
     });
 
-    const holdingsTableColumns = [
+    const holdingsTableColumns: ColumnDescriptor[] = [
       { name: 'Name' },
       { name: 'Symbol' },
       { name: 'Currency' },
       { name: 'Asset Class' },
       { name: 'Asset Sub Class' },
-      { name: 'Allocation in Percentage', align: 'right' as const }
+      { align: 'right', name: 'Allocation in Percentage' }
     ];
 
-    // Build rows for tablemark
     const rows = Object.values(holdings)
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
@@ -86,14 +85,13 @@ export class AiService {
             Name: name,
             Symbol: symbol,
             Currency: currency,
-            'Asset Class': assetClass,
-            'Asset Sub Class': assetSubClass,
+            'Asset Class': assetClass ?? '',
+            'Asset Sub Class': assetSubClass ?? '',
             'Allocation in Percentage': `${(allocationInPercentage * 100).toFixed(3)}%`
           };
         }
       );
 
-    // Render Markdown table using tablemark
     const holdingsTableString = tablemark(rows, {
       columns: holdingsTableColumns
     });
