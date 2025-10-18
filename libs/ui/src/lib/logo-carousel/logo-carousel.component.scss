@@ -1,0 +1,207 @@
+:host {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  .logo-carousel-container {
+    &::before,
+    &::after {
+      content: '';
+      height: 100%;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      width: 100px;
+      z-index: 2;
+    }
+
+    &::before {
+      background: linear-gradient(
+        to right,
+        var(--light-background) 0%,
+        rgba(var(--palette-background-background), 0) 100%
+      );
+      left: 0;
+    }
+
+    &::after {
+      background: linear-gradient(
+        to left,
+        var(--light-background) 0%,
+        rgba(var(--palette-background-background), 0) 100%
+      );
+      right: 0;
+    }
+
+    @media (max-width: 768px) {
+      &::before,
+      &::after {
+        width: 50px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      &::before,
+      &::after {
+        width: 30px;
+      }
+    }
+
+    .logo-carousel-track {
+      animation: scroll 60s linear infinite;
+      width: fit-content;
+
+      &:hover {
+        animation-play-state: paused;
+      }
+
+      .logo-carousel-item {
+        flex-shrink: 0;
+        min-width: 200px;
+        padding: 0 2rem;
+
+        @media (max-width: 768px) {
+          min-width: 150px;
+          padding: 0 1.5rem;
+        }
+
+        @media (max-width: 576px) {
+          min-width: 120px;
+          padding: 0 1rem;
+        }
+
+        .logo {
+          height: 3rem;
+          transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+          width: 7.5rem;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
+          &.mask {
+            background-color: rgba(var(--dark-secondary-text));
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+          }
+
+          &.logo-alternative-to {
+            mask-image: url('/assets/images/logo-alternative-to.svg');
+          }
+
+          &.logo-awesome {
+            background-image: url('/assets/images/logo-awesome.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            filter: grayscale(1);
+          }
+
+          &.logo-dev-community {
+            mask-image: url('/assets/images/logo-dev-community.svg');
+          }
+
+          &.logo-hacker-news {
+            mask-image: url('/assets/images/logo-hacker-news.svg');
+          }
+
+          &.logo-openalternative {
+            mask-image: url('/assets/images/logo-openalternative.svg');
+          }
+
+          &.logo-privacy-tools {
+            mask-image: url('/assets/images/logo-privacy-tools.svg');
+          }
+
+          &.logo-product-hunt {
+            background-image: url('/assets/images/logo-product-hunt.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            filter: grayscale(1);
+          }
+
+          &.logo-reddit {
+            mask-image: url('/assets/images/logo-reddit.svg');
+            max-height: 1rem;
+          }
+
+          &.logo-sackgeld {
+            mask-image: url('/assets/images/logo-sackgeld.png');
+          }
+
+          &.logo-selfh-st {
+            mask-image: url('/assets/images/logo-selfh-st.svg');
+            max-height: 1.25rem;
+          }
+
+          &.logo-sourceforge {
+            mask-image: url('/assets/images/logo-sourceforge.svg');
+          }
+
+          &.logo-umbrel {
+            mask-image: url('/assets/images/logo-umbrel.svg');
+            max-height: 1.5rem;
+          }
+
+          &.logo-unraid {
+            mask-image: url('/assets/images/logo-unraid.svg');
+          }
+
+          @media (max-width: 768px) {
+            height: 2.5rem;
+            width: 6rem;
+          }
+
+          @media (max-width: 576px) {
+            height: 2rem;
+            width: 5rem;
+          }
+        }
+      }
+
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  .logo-carousel-container {
+    &::before {
+      background: linear-gradient(
+        to right,
+        var(--dark-background) 0%,
+        rgba(var(--palette-background-background-dark), 0) 100%
+      );
+    }
+
+    &::after {
+      background: linear-gradient(
+        to left,
+        var(--dark-background) 0%,
+        rgba(var(--palette-background-background-dark), 0) 100%
+      );
+    }
+
+    .logo-carousel-track {
+      .logo-carousel-item {
+        .logo {
+          &.mask {
+            background-color: rgba(var(--light-secondary-text));
+          }
+        }
+      }
+    }
+  }
+}

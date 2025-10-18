@@ -40,7 +40,7 @@ export class PublicController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPublicPortfolio(
-    @Param('accessId') accessId
+    @Param('accessId') accessId: string
   ): Promise<PublicPortfolioResponse> {
     const access = await this.accessService.access({ id: accessId });
 

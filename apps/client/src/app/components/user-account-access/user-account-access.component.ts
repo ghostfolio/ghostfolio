@@ -115,6 +115,8 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       .subscribe((params) => {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
+        } else if (params['editDialog'] && params['accessId']) {
+          this.openUpdateAccessDialog(params['accessId']);
         }
       });
 
@@ -173,6 +175,12 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     });
   }
 
+  public onUpdateAccess(aId: string) {
+    this.router.navigate([], {
+      queryParams: { accessId: aId, editDialog: true }
+    });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -193,6 +201,40 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
 
     dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
       if (access) {
+        this.update();
+      }
+
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });
+  }
+
+  private openUpdateAccessDialog(accessId: string) {
+    const access = this.accessesGive?.find(({ id }) => {
+      return id === accessId;
+    });
+
+    if (!access) {
+      console.log('Could not find access.');
+
+      return;
+    }
+
+    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
+      data: {
+        access: {
+          alias: access.alias,
+          id: access.id,
+          grantee: access.grantee === 'Public' ? null : access.grantee,
+          permissions: access.permissions,
+          type: access.type
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
         this.update();
       }
 

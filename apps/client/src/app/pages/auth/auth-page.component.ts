@@ -11,11 +11,10 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-auth-page',
-  templateUrl: './auth-page.html',
   styleUrls: ['./auth-page.scss'],
-  standalone: false
+  templateUrl: './auth-page.html'
 })
-export class AuthPageComponent implements OnDestroy, OnInit {
+export class GfAuthPageComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(

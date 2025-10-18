@@ -1,4 +1,5 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -39,7 +40,7 @@ import {
   MarketDataOfMarketsResponse,
   OAuthResponse,
   PortfolioDetails,
-  PortfolioDividends,
+  PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
@@ -267,9 +268,12 @@ export class DataService {
     params = params.append('groupBy', groupBy);
     params = params.append('range', range);
 
-    return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
-      params
-    });
+    return this.http.get<PortfolioDividendsResponse>(
+      '/api/v1/portfolio/dividends',
+      {
+        params
+      }
+    );
   }
 
   public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -788,6 +792,10 @@ export class DataService {
 
   public postWatchlistItem(watchlistItem: CreateWatchlistItemDto) {
     return this.http.post('/api/v1/watchlist', watchlistItem);
+  }
+
+  public putAccess(aAccess: UpdateAccessDto) {
+    return this.http.put<Access>(`/api/v1/access/${aAccess.id}`, aAccess);
   }
 
   public putAccount(aAccount: UpdateAccountDto) {

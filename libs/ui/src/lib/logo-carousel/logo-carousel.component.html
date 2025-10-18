@@ -1,0 +1,16 @@
+<div class="logo-carousel-container overflow-hidden position-relative w-100">
+  <div class="align-items-center d-flex logo-carousel-track">
+    @for (logo of logosRepeated; track $index) {
+      <div class="logo-carousel-item">
+        <a
+          class="d-block logo"
+          target="_blank"
+          [attr.aria-label]="logo.name"
+          [class]="logo.className + (logo.isMask ? ' mask' : '')"
+          [href]="logo.url"
+          [title]="logo.title"
+        ></a>
+      </div>
+    }
+  </div>
+</div>

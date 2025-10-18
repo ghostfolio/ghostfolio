@@ -42,13 +42,13 @@ const routes: Routes = [
   {
     path: internalRoutes.auth.path,
     loadChildren: () =>
-      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule),
+      import('./pages/auth/auth-page.routes').then((m) => m.routes),
     title: internalRoutes.auth.title
   },
   {
     path: publicRoutes.blog.path,
     loadChildren: () =>
-      import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
+      import('./pages/blog/blog-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
@@ -94,7 +94,7 @@ const routes: Routes = [
   {
     path: publicRoutes.openStartup.path,
     loadChildren: () =>
-      import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
+      import('./pages/open/open-page.routes').then((m) => m.routes)
   },
   {
     path: internalRoutes.portfolio.path,
@@ -155,8 +155,9 @@ const routes: Routes = [
       // Preload all lazy loaded modules with the attribute preload === true
       {
         anchorScrolling: 'enabled',
-        preloadingStrategy: ModulePreloadService
-        // enableTracing: true // <-- debugging purposes only
+        // enableTracing: true, // <-- debugging purposes only
+        preloadingStrategy: ModulePreloadService,
+        scrollPositionRestoration: 'top'
       }
     )
   ],

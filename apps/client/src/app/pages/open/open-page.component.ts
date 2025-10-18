@@ -1,18 +1,28 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Statistics, User } from '@ghostfolio/common/interfaces';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [CommonModule, GfValueComponent, MatCardModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-open-page',
   styleUrls: ['./open-page.scss'],
-  templateUrl: './open-page.html',
-  standalone: false
+  templateUrl: './open-page.html'
 })
-export class OpenPageComponent implements OnDestroy, OnInit {
+export class GfOpenPageComponent implements OnDestroy, OnInit {
   public statistics: Statistics;
   public user: User;
 

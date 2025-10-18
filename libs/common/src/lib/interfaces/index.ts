@@ -19,6 +19,7 @@ import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface'
 import type { Export } from './export.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
+import type { FireWealth } from './fire-wealth.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
 import type { HoldingWithParents } from './holding-with-parents.interface';
 import type { Holding } from './holding.interface';
@@ -29,7 +30,6 @@ import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
-import type { PortfolioDividends } from './portfolio-dividends.interface';
 import type { PortfolioInvestments } from './portfolio-investments.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
@@ -60,6 +60,7 @@ import type { LookupResponse } from './responses/lookup-response.interface';
 import type { MarketDataDetailsResponse } from './responses/market-data-details-response.interface';
 import type { MarketDataOfMarketsResponse } from './responses/market-data-of-markets-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PortfolioDividendsResponse } from './responses/portfolio-dividends-response.interface';
 import { PortfolioHoldingResponse } from './responses/portfolio-holding-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
@@ -112,6 +113,7 @@ export {
   Export,
   Filter,
   FilterGroup,
+  FireWealth,
   HistoricalDataItem,
   HistoricalResponse,
   Holding,
@@ -128,7 +130,7 @@ export {
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,
-  PortfolioDividends,
+  PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,

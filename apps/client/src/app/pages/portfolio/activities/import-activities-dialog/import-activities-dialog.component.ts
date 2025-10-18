@@ -3,8 +3,8 @@ import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { ActivityResponse, PortfolioPosition } from '@ghostfolio/common/interfaces';
@@ -14,6 +14,7 @@ import {
   StepperOrientation,
   StepperSelectionEvent
 } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -58,11 +59,12 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
+    CommonModule,
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
-    GfFileDropModule,
-    GfSymbolModule,
+    GfFileDropDirective,
+    GfSymbolPipe,
     IonIcon,
     MatButtonModule,
     MatDialogModule,
@@ -343,6 +345,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
                 isDryRun: true,
                 tags: content.tags
               });
+
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
             this.pageIndex = 0;
@@ -357,15 +360,18 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
           const content = fileContent.split('\n').slice(1);
 
           try {
-            const data = await this.importActivitiesService.importCsv({
-              fileContent,
-              isDryRun: true,
-              userAccounts: this.data.user.accounts
-            });
-            this.activities = data.activities;
-            this.dataSource = new MatTableDataSource(data.activities.reverse());
+            const { activities, assetProfiles } =
+              await this.importActivitiesService.importCsv({
+                fileContent,
+                isDryRun: true,
+                userAccounts: this.data.user.accounts
+              });
+
+            this.activities = activities;
+            this.assetProfiles = assetProfiles;
+            this.dataSource = new MatTableDataSource(activities.reverse());
             this.pageIndex = 0;
-            this.totalItems = data.activities.length;
+            this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({

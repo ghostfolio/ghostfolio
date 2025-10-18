@@ -5,6 +5,96 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Extended the glossary of the resources page by _Stealth Wealth_
+- Extended the content of the pricing page
+- Added a _Storybook_ story for the holdings table component
+
+### Changed
+
+- Disabled the zoom functionality in the _Progressive Web App_ (PWA)
+- Improved the currency validation in the get asset profiles functionality of the data provider service
+- Improved the currency validation in the search functionality of the data provider service
+- Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
+- Extracted the footer to a component
+- Refactored the blog page component to standalone
+- Improved the portfolio calculator unit tests to load the user currency from the exported file
+- Improved the language localization for German (`de`)
+- Refactor Activities interface to ActivitiesResponse interface
+
+### Fixed
+
+- Fixed an issue in the `csv` file import where custom asset profiles failed due to validation errors
+- Fixed an issue with the total buy and sell calculation in the summary related to activities in a custom currency
+- Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
+- Fixed an issue where the scroll position was not restored when changing pages
+- Fixed the word wrap in the menus of the activities table component
+- Fixed the dark mode in the _As seen in_ section on the landing page
+
+## 2.208.0 - 2025-10-11
+
+### Added
+
+- Added support for configuring the safe withdrawal rate in the _FIRE_ section (experimental)
+
+### Changed
+
+- Changed the _As seen in_ section on the landing page to an animated carousel
+- Refactored `transactionCount` to `activitiesCount` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+- Refactored various components to use self-closing tags
+- Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
+- Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+
+### Fixed
+
+- Fixed the server startup message to properly display IPv6 addresses
+- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
+- Fixed an issue where importing custom asset profiles failed due to validation errors
+
+## 2.207.0 - 2025-10-08
+
+### Added
+
+- Added support to edit a granted access (experimental)
+- Introduced tabs to the asset profile details dialog in the admin control panel
+- Added support for a date range query parameter in the data gathering endpoint
+- Added a _Storybook_ story for the activities table component
+
+### Changed
+
+- Improved the spacing around the buttons in the holding detail dialog
+- Extended the _Storybook_ stories of the accounts table component by a loading state story
+- Refactored the auth page to standalone
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the word wrap in the menu of the access table component
+- Fixed the word wrap in the menu of the activities table component
+- Fixed the word wrap in the menu of the asset profile details dialog in the admin control panel
+
+## 2.206.0 - 2025-10-04
+
+### Changed
+
+- Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
+- Improved the usability of the assistant by preselecting the first search result
+- Improved the usability of the _Cancel_ / _Close_ buttons in the create watchlist item dialog
+- Refactored the `fireWealth` from `number` type to a structured object in the summary of the portfolio details endpoint
+- Refactored the _Open Startup_ (`/open`) page to standalone
+- Refactored the file drop directive to standalone
+- Refactored the symbol pipe to standalone
+
+### Fixed
+
+- Handled an exception in the get asset profile functionality of the _Financial Modeling Prep_ service
+- Added the missing `CommonModule` import in the import activities dialog
+
 ## 2.205.0 - 2025-10-01
 
 ### Changed

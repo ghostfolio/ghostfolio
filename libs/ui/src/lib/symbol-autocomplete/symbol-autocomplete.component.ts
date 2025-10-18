@@ -1,4 +1,4 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { LookupItem } from '@ghostfolio/common/interfaces';
 
@@ -57,7 +57,7 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   imports: [
     FormsModule,
     GfPremiumIndicatorComponent,
-    GfSymbolModule,
+    GfSymbolPipe,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,

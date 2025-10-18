@@ -94,17 +94,21 @@ export class DataGatheringService {
     });
   }
 
-  public async gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
+  public async gatherSymbol({ dataSource, date, symbol }: IDataGatheringItem) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
 
-    const dataGatheringItems = (await this.getSymbolsMax()).filter(
-      (dataGatheringItem) => {
+    const dataGatheringItems = (await this.getSymbolsMax())
+      .filter((dataGatheringItem) => {
         return (
           dataGatheringItem.dataSource === dataSource &&
           dataGatheringItem.symbol === symbol
         );
-      }
-    );
+      })
+      .map((item) => ({
+        ...item,
+        date: date ?? item.date
+      }));
+
     await this.gatherSymbols({
       dataGatheringItems,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH

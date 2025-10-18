@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "date": "2023-02-05T00:00:00.000Z",
+    "version": "dev"
+  },
+  "accounts": [],
+  "assetProfiles": [
+    {
+      "assetClass": null,
+      "assetSubClass": null,
+      "comment": null,
+      "countries": [],
+      "currency": "USD",
+      "cusip": null,
+      "dataSource": "MANUAL",
+      "figi": null,
+      "figiComposite": null,
+      "figiShareClass": null,
+      "holdings": [],
+      "isActive": true,
+      "isin": null,
+      "marketData": [],
+      "name": "Penthouse Apartment",
+      "scraperConfiguration": null,
+      "sectors": [],
+      "symbol": "7e91b7d4-1430-4212-8380-289a06c9bbc1",
+      "symbolMapping": {},
+      "url": null
+    }
+  ],
+  "platforms": [],
+  "tags": [],
+  "activities": [
+    {
+      "accountId": null,
+      "comment": null,
+      "currency": "USD",
+      "dataSource": "MANUAL",
+      "date": "2022-01-01T00:00:00.000Z",
+      "fee": 0,
+      "quantity": 1,
+      "symbol": "7e91b7d4-1430-4212-8380-289a06c9bbc1",
+      "tags": [],
+      "type": "BUY",
+      "unitPrice": 500000
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD"
+    }
+  }
+}

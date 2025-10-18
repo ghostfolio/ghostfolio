@@ -65,6 +65,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
@@ -77,7 +78,12 @@ import { isUUID } from 'class-validator';
 import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
-import { createOutline, ellipsisVertical } from 'ionicons/icons';
+import {
+  createOutline,
+  ellipsisVertical,
+  readerOutline,
+  serverOutline
+} from 'ionicons/icons';
 import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -106,6 +112,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
     MatMenuModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatTabsModule,
     ReactiveFormsModule,
     TextFieldModule
   ],
@@ -223,7 +230,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
-    addIcons({ createOutline, ellipsisVertical });
+    addIcons({ createOutline, ellipsisVertical, readerOutline, serverOutline });
   }
 
   public get canEditAssetProfileIdentifier() {

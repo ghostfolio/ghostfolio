@@ -1,4 +1,4 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -24,7 +24,7 @@ import {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfSymbolModule, RouterModule],
+  imports: [GfSymbolPipe, RouterModule],
   selector: 'gf-assistant-list-item',
   styleUrls: ['./assistant-list-item.scss'],
   templateUrl: './assistant-list-item.html'

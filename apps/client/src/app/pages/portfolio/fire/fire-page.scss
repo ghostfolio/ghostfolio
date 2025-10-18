@@ -1,3 +1,19 @@
 :host {
   display: block;
+
+  .safe-withdrawal-rate-select {
+    background-color: transparent;
+    color: rgb(var(--dark-primary-text));
+
+    &:focus {
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  .safe-withdrawal-rate-select {
+    color: rgb(var(--light-primary-text));
+  }
 }

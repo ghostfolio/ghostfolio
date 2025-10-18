@@ -4,7 +4,7 @@
   </div>
 }
 <div class="d-flex flex-column w-100">
-  <ng-template #label><ng-content></ng-content></ng-template>
+  <ng-template #label><ng-content /></ng-template>
   @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
@@ -87,16 +87,14 @@
 
   @if (size === 'large') {
     <div class="text-truncate">
-      <span class="h6"
-        ><ng-container *ngTemplateOutlet="label"></ng-container
-      ></span>
+      <span class="h6"><ng-container *ngTemplateOutlet="label" /></span>
       @if (subLabel) {
         <span class="text-muted"> {{ subLabel }}</span>
       }
     </div>
   } @else {
     <small class="d-block text-truncate">
-      <ng-container *ngTemplateOutlet="label"></ng-container>
+      <ng-container *ngTemplateOutlet="label" />
     </small>
   }
 </div>

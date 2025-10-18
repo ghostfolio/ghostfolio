@@ -1,4 +1,5 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
@@ -8,7 +9,8 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import {
   FormBuilder,
@@ -47,8 +49,11 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
 })
-export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy {
+export class GfCreateOrUpdateAccessDialogComponent
+  implements OnDestroy, OnInit
+{
   public accessForm: FormGroup;
+  public mode: 'create' | 'update';
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -59,14 +64,24 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy {
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
-  ) {}
+  ) {
+    this.mode = this.data.access?.id ? 'update' : 'create';
+  }
 
   public ngOnInit() {
+    const isPublic = this.data.access.type === 'PUBLIC';
+
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
+      granteeUserId: [
+        this.data.access.grantee,
+        isPublic ? null : Validators.required
+      ],
       permissions: [this.data.access.permissions[0], Validators.required],
-      type: [this.data.access.type, Validators.required],
-      granteeUserId: [this.data.access.grantee, Validators.required]
+      type: [
+        { disabled: this.mode === 'update', value: this.data.access.type },
+        Validators.required
+      ]
     });
 
     this.accessForm.get('type').valueChanges.subscribe((accessType) => {
@@ -77,6 +92,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy {
         granteeUserIdControl.setValidators(Validators.required);
       } else {
         granteeUserIdControl.clearValidators();
+        granteeUserIdControl.setValue(null);
         permissionsControl.setValue(this.data.access.permissions[0]);
       }
 
@@ -91,6 +107,19 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy {
   }
 
   public async onSubmit() {
+    if (this.mode === 'create') {
+      await this.createAccess();
+    } else {
+      await this.updateAccess();
+    }
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private async createAccess() {
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias').value,
       granteeUserId: this.accessForm.get('granteeUserId').value,
@@ -126,8 +155,40 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnDestroy {
     }
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+  private async updateAccess() {
+    const access: UpdateAccessDto = {
+      alias: this.accessForm.get('alias').value,
+      granteeUserId: this.accessForm.get('granteeUserId').value,
+      id: this.data.access.id,
+      permissions: [this.accessForm.get('permissions').value]
+    };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAccessDto,
+        form: this.accessForm,
+        object: access
+      });
+
+      this.dataService
+        .putAccess(access)
+        .pipe(
+          catchError(({ status }) => {
+            if (status.status === StatusCodes.BAD_REQUEST) {
+              this.notificationService.alert({
+                title: $localize`Oops! Could not update access.`
+              });
+            }
+
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.dialogRef.close(access);
+        });
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

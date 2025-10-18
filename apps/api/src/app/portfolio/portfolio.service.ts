@@ -778,6 +778,7 @@ export class PortfolioService {
     if (activities.length === 0) {
       return {
         activities: [],
+        activitiesCount: 0,
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
@@ -802,7 +803,6 @@ export class PortfolioService {
         quantity: undefined,
         SymbolProfile: undefined,
         tags: [],
-        transactionCount: undefined,
         value: undefined
       };
     }
@@ -966,8 +966,8 @@ export class PortfolioService {
         marketPriceMin,
         SymbolProfile,
         tags,
-        transactionCount,
         activities: activitiesOfHolding,
+        activitiesCount: transactionCount,
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
@@ -1070,6 +1070,7 @@ export class PortfolioService {
         marketPriceMin,
         SymbolProfile,
         activities: [],
+        activitiesCount: 0,
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
@@ -1095,7 +1096,6 @@ export class PortfolioService {
         },
         quantity: 0,
         tags: [],
-        transactionCount: undefined,
         value: 0
       };
     }
@@ -2092,17 +2092,21 @@ export class PortfolioService {
       filteredValueInPercentage: netWorth
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()
         : undefined,
-      fireWealth: new Big(currentValueInBaseCurrency)
-        .minus(emergencyFundHoldingsValueInBaseCurrency)
-        .toNumber(),
+      fireWealth: {
+        today: {
+          valueInBaseCurrency: new Big(currentValueInBaseCurrency)
+            .minus(emergencyFundHoldingsValueInBaseCurrency)
+            .toNumber()
+        }
+      },
       grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
       grossPerformanceWithCurrencyEffect: new Big(
         netPerformanceWithCurrencyEffect
       )
         .plus(fees)
         .toNumber(),
-      interest: interest.toNumber(),
-      liabilities: liabilities.toNumber(),
+      interestInBaseCurrency: interest.toNumber(),
+      liabilitiesInBaseCurrency: liabilities.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
@@ -2122,11 +2126,11 @@ export class PortfolioService {
         .filter(({ isDraft, type }) => {
           return isDraft === false && type === activityType;
         })
-        .map(({ quantity, SymbolProfile, unitPrice }) => {
+        .map(({ currency, quantity, SymbolProfile, unitPrice }) => {
           return new Big(
             this.exchangeRateDataService.toCurrency(
               new Big(quantity).mul(unitPrice).toNumber(),
-              SymbolProfile.currency,
+              currency ?? SymbolProfile.currency,
               userCurrency
             )
           );

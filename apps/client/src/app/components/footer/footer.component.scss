@@ -1,0 +1,16 @@
+:host {
+  background-color: rgba(var(--palette-foreground-text), 0.05);
+  display: block;
+  font-size: 90%;
+
+  .logotype {
+    font-size: 13vw;
+    letter-spacing: -0.03em;
+    margin-bottom: -5svw;
+    opacity: 0.05;
+  }
+}
+
+:host-context(.theme-dark) {
+  background-color: rgba(var(--palette-foreground-text-dark), 0.05);
+}

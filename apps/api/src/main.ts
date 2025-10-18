@@ -90,7 +90,21 @@ async function bootstrap() {
 
   await app.listen(PORT, HOST, () => {
     logLogo();
-    Logger.log(`Listening at http://${HOST}:${PORT}`);
+
+    let address = app.getHttpServer().address();
+
+    if (typeof address === 'object') {
+      const addressObject = address;
+      let host = addressObject.address;
+
+      if (addressObject.family === 'IPv6') {
+        host = `[${addressObject.address}]`;
+      }
+
+      address = `${host}:${addressObject.port}`;
+    }
+
+    Logger.log(`Listening at http://${address}`);
     Logger.log('');
   });
 }

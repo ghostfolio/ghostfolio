@@ -223,9 +223,9 @@
               <gf-value
                 size="medium"
                 [locale]="data.locale"
-                [value]="transactionCount"
+                [value]="activitiesCount"
               >
-                @if (transactionCount === 1) {
+                @if (activitiesCount === 1) {
                   <ng-container i18n>Activity</ng-container>
                 } @else {
                   <ng-container i18n>Activities</ng-container>
@@ -363,7 +363,7 @@
           [sortColumn]="sortColumn"
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
-          [totalItems]="totalItems"
+          [totalItems]="activitiesCount"
           (activityToClone)="onCloneActivity($event)"
           (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
@@ -424,33 +424,36 @@
       (dataSource?.data.length > 0 &&
         data.hasPermissionToReportDataGlitch === true)
     ) {
+      <hr />
       <div class="row">
         <div class="col">
-          <hr />
-          @if (data.hasPermissionToAccessAdminControl) {
-            <a
-              class="mr-2"
-              mat-stroked-button
-              [queryParams]="{
-                assetProfileDialog: true,
-                dataSource: SymbolProfile?.dataSource,
-                symbol: SymbolProfile?.symbol
-              }"
-              [routerLink]="routerLinkAdminControlMarketData"
-              (click)="onClose()"
-              ><ion-icon class="mr-1" name="create-outline"></ion-icon
-              ><span i18n>Manage Asset Profile</span>...</a
-            >
-          }
-          @if (
-            dataSource?.data.length > 0 &&
-            data.hasPermissionToReportDataGlitch === true
-          ) {
-            <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
-              ><ion-icon class="mr-1" name="flag-outline"></ion-icon
-              ><span i18n>Report Data Glitch</span>...</a
-            >
-          }
+          <div class="button-container d-flex flex-wrap">
+            @if (data.hasPermissionToAccessAdminControl) {
+              <a
+                mat-stroked-button
+                [queryParams]="{
+                  assetProfileDialog: true,
+                  dataSource: SymbolProfile?.dataSource,
+                  symbol: SymbolProfile?.symbol
+                }"
+                [routerLink]="routerLinkAdminControlMarketData"
+                (click)="onClose()"
+                ><ion-icon class="mr-1" name="create-outline" /><span i18n
+                  >Manage Asset Profile</span
+                >...</a
+              >
+            }
+            @if (
+              dataSource?.data.length > 0 &&
+              data.hasPermissionToReportDataGlitch === true
+            ) {
+              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+                ><ion-icon class="mr-1" name="flag-outline" /><span i18n
+                  >Report Data Glitch</span
+                >...</a
+              >
+            }
+          </div>
         </div>
       </div>
     }

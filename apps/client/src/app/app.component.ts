@@ -52,36 +52,16 @@ export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentSubRoute: string;
-  public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
-  public hasPermissionForStatistics: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = publicRoutes.about.routerLink;
-  public routerLinkAboutChangelog =
-    publicRoutes.about.subRoutes.changelog.routerLink;
-  public routerLinkAboutLicense =
-    publicRoutes.about.subRoutes.license.routerLink;
-  public routerLinkAboutPrivacyPolicy =
-    publicRoutes.about.subRoutes.privacyPolicy.routerLink;
-  public routerLinkAboutTermsOfService =
-    publicRoutes.about.subRoutes.termsOfService.routerLink;
-  public routerLinkBlog = publicRoutes.blog.routerLink;
-  public routerLinkFaq = publicRoutes.faq.routerLink;
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = publicRoutes.markets.routerLink;
-  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
-  public routerLinkResources = publicRoutes.resources.routerLink;
   public showFooter = false;
   public user: User;
 
@@ -125,21 +105,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
-
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
-
-    this.hasPermissionForStatistics = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableStatistics
-    );
-
-    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableFearAndGreedIndex
-    );
 
     this.hasPromotion =
       !!this.info?.subscriptionOffer?.coupon ||

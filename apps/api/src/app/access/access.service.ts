@@ -20,14 +20,14 @@ export class AccessService {
   }
 
   public async accesses(params: {
+    cursor?: Prisma.AccessWhereUniqueInput;
     include?: Prisma.AccessInclude;
+    orderBy?: Prisma.Enumerable<Prisma.AccessOrderByWithRelationInput>;
     skip?: number;
     take?: number;
-    cursor?: Prisma.AccessWhereUniqueInput;
     where?: Prisma.AccessWhereInput;
-    orderBy?: Prisma.AccessOrderByWithRelationInput;
   }): Promise<AccessWithGranteeUser[]> {
-    const { include, skip, take, cursor, where, orderBy } = params;
+    const { cursor, include, orderBy, skip, take, where } = params;
 
     return this.prismaService.access.findMany({
       cursor,
@@ -49,6 +49,19 @@ export class AccessService {
     where: Prisma.AccessWhereUniqueInput
   ): Promise<Access> {
     return this.prismaService.access.delete({
+      where
+    });
+  }
+
+  public async updateAccess({
+    data,
+    where
+  }: {
+    data: Prisma.AccessUpdateInput;
+    where: Prisma.AccessWhereUniqueInput;
+  }): Promise<Access> {
+    return this.prismaService.access.update({
+      data,
       where
     });
   }

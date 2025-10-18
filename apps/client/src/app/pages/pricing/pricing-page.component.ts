@@ -69,6 +69,16 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
+  public referralBrokers = [
+    'DEGIRO',
+    'finpension',
+    'frankly',
+    'Interactive Brokers',
+    'Mintos',
+    'Swissquote',
+    'VIAC',
+    'Zak'
+  ];
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;

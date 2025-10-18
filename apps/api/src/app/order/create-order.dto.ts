@@ -44,8 +44,7 @@ export class CreateOrderDto {
   customCurrency?: string;
 
   @IsEnum(DataSource)
-  @IsOptional()
-  dataSource?: DataSource;
+  dataSource: DataSource;
 
   @IsISO8601()
   @Validate(IsAfter1970Constraint)

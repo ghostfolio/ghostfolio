@@ -1,14 +1,16 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { FireWealth, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { NgStyle } from '@angular/common';
+import { CommonModule, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Big } from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -17,11 +19,14 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
+    CommonModule,
+    FormsModule,
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
     NgStyle,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
   ],
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
@@ -29,10 +34,12 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class GfFirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
-  public fireWealth: Big;
+  public fireWealth: FireWealth;
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
+  public safeWithdrawalRateControl = new FormControl<number>(undefined);
+  public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
@@ -55,19 +62,22 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
-        this.fireWealth = summary.fireWealth
-          ? new Big(summary.fireWealth)
-          : new Big(0);
-
+        this.fireWealth = {
+          today: {
+            valueInBaseCurrency: summary.fireWealth
+              ? summary.fireWealth.today.valueInBaseCurrency
+              : 0
+          }
+        };
         if (this.user.subscription?.type === 'Basic') {
-          this.fireWealth = new Big(10000);
+          this.fireWealth = {
+            today: {
+              valueInBaseCurrency: 10000
+            }
+          };
         }
 
-        this.withdrawalRatePerYear = this.fireWealth.mul(
-          this.user.settings.safeWithdrawalRate
-        );
-
-        this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
+        this.calculateWithdrawalRates();
 
         this.isLoading = false;
 
@@ -79,6 +89,12 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+      });
+
+    this.safeWithdrawalRateControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((value) => {
+        this.onSafeWithdrawalRateChange(Number(value));
       });
 
     this.userService.stateChanged
@@ -94,6 +110,13 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
                   this.user.permissions,
                   permissions.updateUserSettings
                 );
+
+          this.safeWithdrawalRateControl.setValue(
+            this.user.settings.safeWithdrawalRate,
+            { emitEvent: false }
+          );
+
+          this.calculateWithdrawalRates();
 
           this.changeDetectorRef.markForCheck();
         }
@@ -134,6 +157,25 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
           });
       });
   }
+
+  public onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
+    this.dataService
+      .putUserSetting({ safeWithdrawalRate })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.calculateWithdrawalRates();
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
   public onSavingsRateChange(savingsRate: number) {
     this.dataService
       .putUserSetting({ savingsRate })
@@ -172,5 +214,15 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private calculateWithdrawalRates() {
+    if (this.fireWealth && this.user?.settings?.safeWithdrawalRate) {
+      this.withdrawalRatePerYear = new Big(
+        this.fireWealth.today.valueInBaseCurrency
+      ).mul(this.user.settings.safeWithdrawalRate);
+
+      this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
+    }
   }
 }
