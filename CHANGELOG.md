@@ -9,13 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support to allow data gathering by date range
+- Added support for data gathering by date range in the asset profile details dialog of the admin control panel
 
 ## 2.209.0 - 2025-10-18
 
 ### Added
 
-- Added support to allow data gathering by date range
 - Extended the glossary of the resources page by _Stealth Wealth_
 - Extended the content of the pricing page
 - Added a _Storybook_ story for the holdings table component
