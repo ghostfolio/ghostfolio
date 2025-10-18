@@ -242,7 +242,10 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
-      @if (summary?.liabilities || summary?.liabilities === 0) {
+      @if (
+        summary?.liabilitiesInBaseCurrency ||
+        summary?.liabilitiesInBaseCurrency === 0
+      ) {
         <span class="mr-1">-</span>
       }
       <gf-value
@@ -250,7 +253,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.liabilities"
+        [value]="isLoading ? undefined : summary?.liabilitiesInBaseCurrency"
       />
     </div>
   </div>
@@ -299,7 +302,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.interest"
+        [value]="isLoading ? undefined : summary?.interestInBaseCurrency"
       />
     </div>
   </div>

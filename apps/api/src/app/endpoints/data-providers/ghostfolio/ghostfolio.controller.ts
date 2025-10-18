@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { AssetProfileInvalidError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-invalid.error';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioAssetProfileResponse,
@@ -66,7 +67,14 @@ export class GhostfolioController {
       });
 
       return assetProfile;
-    } catch {
+    } catch (error) {
+      if (error instanceof AssetProfileInvalidError) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.NOT_FOUND),
+          StatusCodes.NOT_FOUND
+        );
+      }
+
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
         StatusCodes.INTERNAL_SERVER_ERROR

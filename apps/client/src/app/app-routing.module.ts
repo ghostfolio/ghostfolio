@@ -48,7 +48,7 @@ const routes: Routes = [
   {
     path: publicRoutes.blog.path,
     loadChildren: () =>
-      import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
+      import('./pages/blog/blog-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
@@ -155,8 +155,9 @@ const routes: Routes = [
       // Preload all lazy loaded modules with the attribute preload === true
       {
         anchorScrolling: 'enabled',
-        preloadingStrategy: ModulePreloadService
-        // enableTracing: true // <-- debugging purposes only
+        // enableTracing: true, // <-- debugging purposes only
+        preloadingStrategy: ModulePreloadService,
+        scrollPositionRestoration: 'top'
       }
     )
   ],
