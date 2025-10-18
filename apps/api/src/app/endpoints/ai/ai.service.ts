@@ -68,7 +68,7 @@ export class AiService {
       { align: 'right', name: 'Allocation in Percentage' }
     ];
 
-    const rows = Object.values(holdings)
+    const holdingsTableRows = Object.values(holdings)
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })
@@ -92,7 +92,7 @@ export class AiService {
         }
       );
 
-    const holdingsTableString = tablemark(rows, {
+    const holdingsTableString = tablemark(holdingsTableRows, {
       columns: holdingsTableColumns
     });
 
