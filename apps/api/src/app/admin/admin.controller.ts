@@ -169,7 +169,7 @@ export class AdminController {
     let date: Date;
 
     if (dateRange) {
-      const { startDate } = getIntervalFromDateRange(dateRange, new Date());
+      const { startDate } = getIntervalFromDateRange(dateRange);
       date = startDate;
     }
 
