@@ -179,6 +179,7 @@
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
           [locale]="locale"
+          [precision]="element.currency === 'BTC' || element.currency === 'bitcoin' ? 8: undefined"
           [value]="element.value"
         />
       </td>
