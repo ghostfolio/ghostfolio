@@ -222,6 +222,17 @@ export class PortfolioService {
         const valueInBaseCurrency =
           details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
+        const value = account.currency === 'BTC' || account.currency === 'bitcoin' ? 
+          account.activities.reduce((acc, activity) => {
+            return activity.type === ActivityType.SELL ? acc.minus(activity.quantity) : acc.plus(activity.quantity);
+          }, new Big(0)).toNumber()
+        : 
+          this.exchangeRateDataService.toCurrency(
+              valueInBaseCurrency,
+              userCurrency,
+              account.currency
+            );
+
         const result = {
           ...account,
           dividendInBaseCurrency,
@@ -234,11 +245,12 @@ export class PortfolioService {
             account.currency,
             userCurrency
           ),
-          value: this.exchangeRateDataService.toCurrency(
-            valueInBaseCurrency,
-            userCurrency,
-            account.currency
-          )
+          // value: this.exchangeRateDataService.toCurrency(
+          //   valueInBaseCurrency,
+          //   userCurrency,
+          //   account.currency
+          // )
+          value
         };
 
         delete result.activities;
