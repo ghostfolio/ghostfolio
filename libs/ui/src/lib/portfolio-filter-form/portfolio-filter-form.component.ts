@@ -8,12 +8,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   forwardRef
 } from '@angular/core';
 import {
@@ -62,9 +60,6 @@ export class GfPortfolioFilterFormComponent
   @Input() holdings: PortfolioPosition[] = [];
   @Input() tags: Filter[] = [];
   @Input() disabled = false;
-
-  @Output() applyFilters = new EventEmitter<void>();
-  @Output() resetFilters = new EventEmitter<void>();
 
   public filterForm: FormGroup;
 
@@ -132,17 +127,6 @@ export class GfPortfolioFilterFormComponent
     }
 
     this.changeDetectorRef.markForCheck();
-  }
-
-  public onApplyFilters() {
-    this.filterForm.markAsPristine();
-    this.onChange(this.filterForm.value as PortfolioFilterFormValue);
-    this.applyFilters.emit();
-  }
-
-  public onResetFilters() {
-    this.filterForm.reset({}, { emitEvent: true });
-    this.resetFilters.emit();
   }
 
   public registerOnChange(fn: (value: PortfolioFilterFormValue) => void) {

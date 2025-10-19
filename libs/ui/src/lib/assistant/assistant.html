@@ -188,37 +188,34 @@
         [formControl]="portfolioFilterFormControl"
         [holdings]="holdings"
         [tags]="tags"
-        (applyFilters)="onApplyFilters()"
-        (resetFilters)="onResetFilters()"
-      >
-        <div class="d-flex w-100" gfPortfolioFilterActions>
-          <button
-            i18n
-            mat-button
-            type="button"
-            [disabled]="
-              !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled
-            "
-            (click)="portfolioFilterForm.onResetFilters()"
-          >
-            Reset Filters
-          </button>
-          <span class="gf-spacer"></span>
-          <button
-            color="primary"
-            i18n
-            mat-flat-button
-            type="button"
-            [disabled]="
-              !portfolioFilterForm.filterForm.dirty ||
-              portfolioFilterForm.disabled
-            "
-            (click)="portfolioFilterForm.onApplyFilters()"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </gf-portfolio-filter-form>
+      />
+      <div class="d-flex w-100">
+        <button
+          i18n
+          mat-button
+          type="button"
+          [disabled]="
+            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled
+          "
+          (click)="onResetFilters()"
+        >
+          Reset Filters
+        </button>
+        <span class="gf-spacer"></span>
+        <button
+          color="primary"
+          i18n
+          mat-flat-button
+          type="button"
+          [disabled]="
+            !portfolioFilterForm.filterForm.dirty ||
+            portfolioFilterForm.disabled
+          "
+          (click)="onApplyFilters()"
+        >
+          Apply Filters
+        </button>
+      </div>
     </div>
   }
 </div>
