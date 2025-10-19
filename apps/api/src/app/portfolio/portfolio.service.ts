@@ -47,7 +47,7 @@ import {
   InvestmentItem,
   PortfolioDetails,
   PortfolioHoldingResponse,
-  PortfolioInvestments,
+  PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioPosition,
   PortfolioReportResponse,
@@ -398,7 +398,7 @@ export class PortfolioService {
     impersonationId: string;
     savingsRate: number;
     userId: string;
-  }): Promise<PortfolioInvestments> {
+  }): Promise<PortfolioInvestmentsResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -449,7 +449,7 @@ export class PortfolioService {
       });
     }
 
-    let streaks: PortfolioInvestments['streaks'];
+    let streaks: PortfolioInvestmentsResponse['streaks'];
 
     if (savingsRate) {
       streaks = this.getStreaks({

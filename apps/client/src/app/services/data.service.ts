@@ -30,7 +30,7 @@ import {
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
-  BenchmarkMarketDataDetails,
+  BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
   DataProviderHealthResponse,
   Export,
@@ -45,7 +45,7 @@ import {
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
-  PortfolioInvestments,
+  PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
@@ -368,7 +368,7 @@ export class DataService {
     range: DateRange;
     startDate: Date;
     withExcludedAccounts?: boolean;
-  } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetails> {
+  } & AssetProfileIdentifier) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     params = params.append('range', range);
@@ -377,7 +377,7 @@ export class DataService {
       params = params.append('withExcludedAccounts', withExcludedAccounts);
     }
 
-    return this.http.get<BenchmarkMarketDataDetails>(
+    return this.http.get<BenchmarkMarketDataDetailsResponse>(
       `/api/v1/benchmarks/${dataSource}/${symbol}/${format(startDate, DATE_FORMAT, { in: utc })}`,
       { params }
     );
@@ -463,7 +463,7 @@ export class DataService {
     params = params.append('groupBy', groupBy);
     params = params.append('range', range);
 
-    return this.http.get<PortfolioInvestments>(
+    return this.http.get<PortfolioInvestmentsResponse>(
       '/api/v1/portfolio/investments',
       { params }
     );
