@@ -65,9 +65,9 @@ import { translate } from '../i18n';
 import { GfAssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
 import { SearchMode } from './enums/search-mode';
 import {
-  IDateRangeOption,
-  ISearchResultItem,
-  ISearchResults
+  DateRangeOption,
+  SearchResultItem,
+  SearchResults
 } from './interfaces/interfaces';
 
 @Component({
@@ -144,7 +144,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public accounts: Account[] = [];
   public assetClasses: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
-  public dateRangeOptions: IDateRangeOption[] = [];
+  public dateRangeOptions: DateRangeOption[] = [];
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
     assetClass: new FormControl<string>(undefined),
@@ -161,7 +161,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public isOpen = false;
   public placeholder = $localize`Find account, holding or page...`;
   public searchFormControl = new FormControl('');
-  public searchResults: ISearchResults = {
+  public searchResults: SearchResults = {
     accounts: [],
     assetProfiles: [],
     holdings: [],
@@ -229,7 +229,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             assetProfiles: [],
             holdings: [],
             quickLinks: []
-          } as ISearchResults;
+          } as SearchResults;
 
           if (!searchTerm) {
             return of(results).pipe(
@@ -245,7 +245,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           }
 
           // Accounts
-          const accounts$: Observable<Partial<ISearchResults>> =
+          const accounts$: Observable<Partial<SearchResults>> =
             this.searchAccounts(searchTerm).pipe(
               map((accounts) => ({
                 accounts: accounts.slice(
@@ -255,7 +255,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })),
               catchError((error) => {
                 console.error('Error fetching accounts for assistant:', error);
-                return of({ accounts: [] as ISearchResultItem[] });
+                return of({ accounts: [] as SearchResultItem[] });
               }),
               tap(() => {
                 this.isLoading.accounts = false;
@@ -264,7 +264,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             );
 
           // Asset profiles
-          const assetProfiles$: Observable<Partial<ISearchResults>> = this
+          const assetProfiles$: Observable<Partial<SearchResults>> = this
             .hasPermissionToAccessAdminControl
             ? this.searchAssetProfiles(searchTerm).pipe(
                 map((assetProfiles) => ({
@@ -278,14 +278,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                     'Error fetching asset profiles for assistant:',
                     error
                   );
-                  return of({ assetProfiles: [] as ISearchResultItem[] });
+                  return of({ assetProfiles: [] as SearchResultItem[] });
                 }),
                 tap(() => {
                   this.isLoading.assetProfiles = false;
                   this.changeDetectorRef.markForCheck();
                 })
               )
-            : of({ assetProfiles: [] as ISearchResultItem[] }).pipe(
+            : of({ assetProfiles: [] as SearchResultItem[] }).pipe(
                 tap(() => {
                   this.isLoading.assetProfiles = false;
                   this.changeDetectorRef.markForCheck();
@@ -293,7 +293,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               );
 
           // Holdings
-          const holdings$: Observable<Partial<ISearchResults>> =
+          const holdings$: Observable<Partial<SearchResults>> =
             this.searchHoldings(searchTerm).pipe(
               map((holdings) => ({
                 holdings: holdings.slice(
@@ -303,7 +303,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })),
               catchError((error) => {
                 console.error('Error fetching holdings for assistant:', error);
-                return of({ holdings: [] as ISearchResultItem[] });
+                return of({ holdings: [] as SearchResultItem[] });
               }),
               tap(() => {
                 this.isLoading.holdings = false;
@@ -312,7 +312,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             );
 
           // Quick links
-          const quickLinks$: Observable<Partial<ISearchResults>> = of(
+          const quickLinks$: Observable<Partial<SearchResults>> = of(
             this.searchQuickLinks(searchTerm)
           ).pipe(
             map((quickLinks) => ({
@@ -330,7 +330,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           // Merge all results
           return merge(accounts$, assetProfiles$, holdings$, quickLinks$).pipe(
             scan(
-              (acc: ISearchResults, curr: Partial<ISearchResults>) => ({
+              (acc: SearchResults, curr: Partial<SearchResults>) => ({
                 ...acc,
                 ...curr
               }),
@@ -339,7 +339,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 assetProfiles: [],
                 holdings: [],
                 quickLinks: []
-              } as ISearchResults
+              } as SearchResults
             )
           );
         }),
@@ -658,7 +658,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }, this.PRESELECTION_DELAY);
   }
 
-  private searchAccounts(aSearchTerm: string): Observable<ISearchResultItem[]> {
+  private searchAccounts(aSearchTerm: string): Observable<SearchResultItem[]> {
     return this.dataService
       .fetchAccounts({
         filters: [
@@ -688,7 +688,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   private searchAssetProfiles(
     aSearchTerm: string
-  ): Observable<ISearchResultItem[]> {
+  ): Observable<SearchResultItem[]> {
     return this.adminService
       .fetchAdminMarketData({
         filters: [
@@ -721,7 +721,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       );
   }
 
-  private searchHoldings(aSearchTerm: string): Observable<ISearchResultItem[]> {
+  private searchHoldings(aSearchTerm: string): Observable<SearchResultItem[]> {
     return this.dataService
       .fetchPortfolioHoldings({
         filters: [
@@ -753,7 +753,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       );
   }
 
-  private searchQuickLinks(aSearchTerm: string): ISearchResultItem[] {
+  private searchQuickLinks(aSearchTerm: string): SearchResultItem[] {
     const searchTerm = aSearchTerm.toLowerCase();
 
     const allRoutes = Object.values(internalRoutes)
