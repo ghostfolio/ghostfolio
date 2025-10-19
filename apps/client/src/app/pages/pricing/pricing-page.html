@@ -326,16 +326,43 @@
     <div class="row">
       <div class="col mt-3">
         <p>
-          If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
-          <i>frankly</i>, <i>Interactive Brokers</i>, <i>Swissquote</i>,
-          <i>VIAC</i>, or <i>Zak</i>, please
-          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
+          <ng-container i18n>If you plan to open an account at</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          @for (
+            broker of referralBrokers;
+            track broker;
+            let i = $index;
+            let last = $last
+          ) {
+            <i>{{ broker }}</i>
+            @if (last) {
+              <span>, </span>
+            } @else {
+              @if (i === referralBrokers.length - 2) {
+                <ng-container>&nbsp;</ng-container>
+                <ng-container i18n>or</ng-container>
+                <ng-container>&nbsp;</ng-container>
+              } @else {
+                <span>, </span>
+              }
+            }
+          }
+          <ng-container i18n>please</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..." i18n
             >contact us</a
           >
-          to use our referral link and get a Ghostfolio Premium membership for
-          one year. Looking for a student discount? Request it
-          <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a>
-          with your university e-mail address.
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n
+            >to use our referral link and get a Ghostfolio Premium membership
+            for one year</ng-container
+          >. <ng-container i18n>Looking for a student discount?</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>Request it</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <a href="mailto:hi@ghostfol.io?Subject=Student Discount" i18n>here</a>
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>with your university e-mail address</ng-container>.
         </p>
       </div>
     </div>

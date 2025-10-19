@@ -9,7 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for data gathering by date range in the asset profile details dialog of the admin control panel
+
+### Changed
+
+- Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
+- Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action of the analysis page (experimental)
+- Improved the language localization for German (`de`)
+
+## 2.209.0 - 2025-10-18
+
+### Added
+
 - Extended the glossary of the resources page by _Stealth Wealth_
+- Extended the content of the pricing page
 - Added a _Storybook_ story for the holdings table component
 
 ### Changed
@@ -19,11 +32,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the currency validation in the search functionality of the data provider service
 - Optimized the get quotes functionality by utilizing the asset profile resolutions in the _Financial Modeling Prep_ service
 - Extracted the footer to a component
+- Refactored the blog page component to standalone
+- Improved the portfolio calculator unit tests to load the user currency from the exported file
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
+- Fixed an issue in the `csv` file import where custom asset profiles failed due to validation errors
+- Fixed an issue with the total buy and sell calculation in the summary related to activities in a custom currency
 - Respected the include indices flag in the search functionality of the _Financial Modeling Prep_ service
 - Fixed an issue where the scroll position was not restored when changing pages
+- Fixed the word wrap in the menus of the activities table component
 - Fixed the dark mode in the _As seen in_ section on the landing page
 
 ## 2.208.0 - 2025-10-11
