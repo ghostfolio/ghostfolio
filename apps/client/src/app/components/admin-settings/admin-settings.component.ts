@@ -111,8 +111,8 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public isGhostfolioDataProvider(provider: DataProviderInfo): boolean {
-    return provider.dataSource === 'GHOSTFOLIO';
+  public isManualDataProvider(provider: DataProviderInfo): boolean {
+    return provider.dataSource === 'MANUAL';
   }
 
   public onRemoveGhostfolioApiKey() {

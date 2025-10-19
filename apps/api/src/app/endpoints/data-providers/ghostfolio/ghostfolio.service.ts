@@ -226,7 +226,7 @@ export class GhostfolioService {
               for (const [symbol, dataProviderResponse] of Object.entries(
                 result
               )) {
-                dataProviderResponse.dataSource = 'GHOSTFOLIO';
+                dataProviderResponse.dataSource = 'MANUAL';
 
                 if (
                   [
@@ -337,7 +337,7 @@ export class GhostfolioService {
         })
         .map((lookupItem) => {
           lookupItem.dataProviderInfo = this.getDataProviderInfo();
-          lookupItem.dataSource = 'GHOSTFOLIO';
+          lookupItem.dataSource = 'MANUAL';
 
           return lookupItem;
         });

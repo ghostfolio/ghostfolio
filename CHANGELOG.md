@@ -13,9 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed the `GHOSTFOLIO` data source to `MANUAL` in the GhostfolioService and related components
+- Updated database schema to remove `GHOSTFOLIO` from DataSource enum
 - Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action of the analysis page (experimental)
 - Improved the language localization for German (`de`)
+
+### Migration
+
+- Run the database migration to update the data source from `GHOSTFOLIO` to `MANUAL`
 
 ## 2.209.0 - 2025-10-18
 

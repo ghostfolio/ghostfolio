@@ -49,7 +49,7 @@
             <div class="d-flex align-items-center">
               <gf-entity-logo class="mr-1" [url]="element.url" />
               <div>
-                @if (isGhostfolioDataProvider(element)) {
+                @if (isManualDataProvider(element)) {
                   <a
                     class="align-items-center d-inline-flex"
                     target="_blank"
@@ -93,7 +93,7 @@
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
             @if (
-              !isGhostfolioDataProvider(element) ||
+              !isManualDataProvider(element) ||
               isGhostfolioApiKeyValid === true
             ) {
               <gf-data-provider-status [dataSource]="element.dataSource" />
@@ -118,7 +118,7 @@
           <th *matHeaderCellDef class="px-1" mat-header-cell></th>
           <td *matCellDef="let element" class="px-1" mat-cell>
             @if (
-              isGhostfolioDataProvider(element) &&
+              isManualDataProvider(element) &&
               isGhostfolioApiKeyValid === true
             ) {
               <mat-progress-bar
@@ -144,7 +144,7 @@
           <th *matHeaderCellDef class="px-1" mat-header-cell></th>
 
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            @if (isGhostfolioDataProvider(element)) {
+            @if (isManualDataProvider(element)) {
               @if (isGhostfolioApiKeyValid === true) {
                 <button
                   class="mx-1 no-min-width px-2"

@@ -181,7 +181,7 @@ export class DataProviderService implements OnModuleInit {
     );
 
     if (ghostfolioApiKey) {
-      dataSources.push('GHOSTFOLIO');
+      dataSources.push('MANUAL');
     }
 
     return dataSources.sort();

@@ -97,7 +97,7 @@ export class GhostfolioService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      dataSource: DataSource.GHOSTFOLIO,
+      dataSource: DataSource.MANUAL,
       isPremium: true,
       name: 'Ghostfolio',
       url: 'https://ghostfol.io'
@@ -221,7 +221,7 @@ export class GhostfolioService implements DataProviderInterface {
   }
 
   public getName(): DataSource {
-    return DataSource.GHOSTFOLIO;
+    return DataSource.MANUAL;
   }
 
   public async getQuotes({
