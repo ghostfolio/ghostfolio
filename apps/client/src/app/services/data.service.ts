@@ -32,6 +32,7 @@ import {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
+  CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
   Export,
   Filter,
@@ -169,17 +170,20 @@ export class DataService {
     return params;
   }
 
-  public createCheckoutSession({
+  public createStripeCheckoutSession({
     couponId,
     priceId
   }: {
     couponId?: string;
     priceId: string;
   }) {
-    return this.http.post('/api/v1/subscription/stripe/checkout-session', {
-      couponId,
-      priceId
-    });
+    return this.http.post<CreateStripeCheckoutSessionResponse>(
+      '/api/v1/subscription/stripe/checkout-session',
+      {
+        couponId,
+        priceId
+      }
+    );
   }
 
   public fetchAccount(aAccountId: string) {

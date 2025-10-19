@@ -5,7 +5,10 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_COUPONS
 } from '@ghostfolio/common/config';
-import { Coupon } from '@ghostfolio/common/interfaces';
+import {
+  Coupon,
+  CreateStripeCheckoutSessionResponse
+} from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -113,7 +116,7 @@ export class SubscriptionController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createCheckoutSession(
     @Body() { couponId, priceId }: { couponId?: string; priceId: string }
-  ) {
+  ): Promise<CreateStripeCheckoutSessionResponse> {
     try {
       return this.subscriptionService.createCheckoutSession({
         couponId,

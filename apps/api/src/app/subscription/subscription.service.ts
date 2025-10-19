@@ -6,7 +6,10 @@ import {
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
-import { SubscriptionOffer } from '@ghostfolio/common/interfaces';
+import {
+  CreateStripeCheckoutSessionResponse,
+  SubscriptionOffer
+} from '@ghostfolio/common/interfaces';
 import {
   SubscriptionOfferKey,
   UserWithSettings
@@ -46,7 +49,7 @@ export class SubscriptionService {
     couponId?: string;
     priceId: string;
     user: UserWithSettings;
-  }) {
+  }): Promise<CreateStripeCheckoutSessionResponse> {
     const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
