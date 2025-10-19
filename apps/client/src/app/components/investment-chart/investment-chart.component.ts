@@ -246,6 +246,10 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 max: this.xMax?.getTime(),
                 min: this.xMin?.getTime(),
                 type: 'time',
+                bounds: 'data',
+                ticks: {
+                  source: 'data'
+                },
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'

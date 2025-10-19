@@ -222,6 +222,10 @@ export class GfLineChartComponent
                 },
                 max: this.xMax?.getTime(),
                 min: this.xMin?.getTime(),
+                bounds: 'data',
+                ticks: {
+                  source: 'data'
+                },
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'
