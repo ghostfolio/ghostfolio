@@ -39,7 +39,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="user?.settings?.locale"
-          [precision]="balancePrecision"
+          [precision]="currency == 'BTC' || currency == 'bitcoin' ? 8 : balancePrecision"
           [unit]="currency"
           [value]="balance"
           >Cash Balance</gf-value
@@ -51,7 +51,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="user?.settings?.locale"
-          [precision]="equityPrecision"
+          [precision]="currency == 'BTC' || currency == 'bitcoin' ? 8 : equityPrecision"
           [unit]="currency"
           [value]="equity"
           >Equity</gf-value

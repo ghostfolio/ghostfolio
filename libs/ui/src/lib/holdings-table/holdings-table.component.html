@@ -82,6 +82,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
+            [precision]="element.symbol === 'BTC' || element.symbol === 'bitcoin' ? 8 : undefined"
             [value]="isLoading ? undefined : element.quantity"
           />
         </div>
