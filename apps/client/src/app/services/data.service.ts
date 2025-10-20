@@ -30,6 +30,7 @@ import {
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
+  AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
   DataProviderHealthResponse,
@@ -345,7 +346,7 @@ export class DataService {
   public fetchAsset({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
+  }: AssetProfileIdentifier): Observable<AssetResponse> {
     return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
       map((data) => {
         for (const item of data.marketData) {
