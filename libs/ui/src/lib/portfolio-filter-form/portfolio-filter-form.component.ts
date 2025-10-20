@@ -120,6 +120,7 @@ export class GfPortfolioFilterFormComponent
     }
 
     const tagControl = this.filterForm.get('tag');
+
     if (this.tags.length === 0) {
       tagControl?.disable({ emitEvent: false });
     } else if (!this.disabled) {

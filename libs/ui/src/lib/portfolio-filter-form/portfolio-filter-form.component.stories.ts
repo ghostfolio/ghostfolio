@@ -1,3 +1,4 @@
+import '@angular/localize/init';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { GfPortfolioFilterFormComponent } from './portfolio-filter-form.component';
@@ -55,8 +56,16 @@ export const Default: Story = {
       }
     ] as any,
     tags: [
-      { id: 'dividend', label: 'Dividend', type: 'TAG' },
-      { id: 'tech', label: 'Technology', type: 'TAG' }
+      {
+        id: 'EMERGENCY_FUND',
+        label: 'Emergency Fund',
+        type: 'TAG'
+      },
+      {
+        id: 'RETIREMENT_FUND',
+        label: 'Retirement Fund',
+        type: 'TAG'
+      }
     ] as any,
     disabled: false
   }
