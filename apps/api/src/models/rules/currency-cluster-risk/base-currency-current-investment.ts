@@ -97,7 +97,11 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     });
   }
 
-  public getSettings({ baseCurrency, locale, xRayRules }: UserSettings): Settings {
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
