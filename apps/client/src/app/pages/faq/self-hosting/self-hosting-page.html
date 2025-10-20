@@ -56,6 +56,12 @@
             <li>Click on the <i>+</i> button</li>
             <li>Switch to <i>Add Currency</i></li>
             <li>Insert e.g. <code>EUR</code> for Euro</li>
+            <li>Select <i>Filter by Currencies</i></li>
+            <li>Find the entry <i>USDEUR</i></li>
+            <li>
+              Click the menu item <i>Gather Historical Market Data</i> in the
+              dialog
+            </li>
           </ol>
         </mat-card-content>
       </mat-card>
@@ -83,7 +89,8 @@
             <li>Select <i>Filter by Currencies</i></li>
             <li>Find the entry <i>USDEUR</i></li>
             <li>
-              Click the menu item <i>Gather Historical Data</i> in the dialog
+              Click the menu item <i>Gather Historical Market Data</i> in the
+              dialog
             </li>
           </ol>
         </mat-card-content>
@@ -131,6 +138,36 @@
           ><code>COINGECKO</code>, <code>MANUAL</code> and
           <code>YAHOO</code> are officially supported while all other data
           providers are considered experimental.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Can I get access to a professional data provider?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >Yes, access to a professional data provider is included with a
+          <a
+            class="align-items-center d-inline-flex"
+            target="_blank"
+            [href]="pricingUrl"
+            >Ghostfolio Premium<gf-premium-indicator
+              class="d-inline-block ml-1"
+              [enableLink]="false"
+          /></a>
+          subscription via an API key.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Will you add data provider X?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >We are currently not planning to extend the core data providers.
+          However, you can usually integrate data from your desired website by
+          using the <code>MANUAL</code> data source along with a scraper
+          configuration.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">

@@ -1,12 +1,13 @@
-import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Filter, User } from '@ghostfolio/common/interfaces';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -35,19 +36,34 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
-import { Account, AssetClass } from '@prisma/client';
+import { IonIcon } from '@ionic/angular/standalone';
+import { Account, AssetClass, DataSource } from '@prisma/client';
+import { differenceInYears } from 'date-fns';
+import Fuse from 'fuse.js';
+import { addIcons } from 'ionicons';
+import {
+  closeCircleOutline,
+  closeOutline,
+  searchOutline
+} from 'ionicons/icons';
+import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
+import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
   distinctUntilChanged,
   map,
-  mergeMap,
-  takeUntil
+  scan,
+  switchMap,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { translate } from '../i18n';
 import { GfAssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
+import { SearchMode } from './enums/search-mode';
 import {
   IDateRangeOption,
   ISearchResultItem,
@@ -57,10 +73,11 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
-    GfAssetProfileIconComponent,
     GfAssistantListItemComponent,
+    GfEntityLogoComponent,
+    GfSymbolPipe,
+    IonIcon,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -70,7 +87,6 @@ import {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
-  standalone: true,
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
@@ -132,20 +148,39 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
     assetClass: new FormControl<string>(undefined),
+    holding: new FormControl<PortfolioPosition>(undefined),
     tag: new FormControl<string>(undefined)
   });
-  public isLoading = false;
+  public holdings: PortfolioPosition[] = [];
+  public isLoading = {
+    accounts: false,
+    assetProfiles: false,
+    holdings: false,
+    quickLinks: false
+  };
   public isOpen = false;
-  public placeholder = $localize`Find holding...`;
+  public placeholder = $localize`Find account, holding or page...`;
   public searchFormControl = new FormControl('');
   public searchResults: ISearchResults = {
+    accounts: [],
     assetProfiles: [],
-    holdings: []
+    holdings: [],
+    quickLinks: []
   };
   public tags: Filter[] = [];
 
-  private filterTypes: Filter['type'][] = ['ACCOUNT', 'ASSET_CLASS', 'TAG'];
+  private readonly PRESELECTION_DELAY = 100;
+
+  private filterTypes: Filter['type'][] = [
+    'ACCOUNT',
+    'ASSET_CLASS',
+    'DATA_SOURCE',
+    'SYMBOL',
+    'TAG'
+  ];
+
   private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
+  private preselectionTimeout: ReturnType<typeof setTimeout>;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -153,7 +188,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    addIcons({ closeCircleOutline, closeOutline, searchOutline });
+  }
 
   public ngOnInit() {
     this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
@@ -167,39 +204,174 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
-          this.isLoading = true;
+          this.isLoading = {
+            accounts: true,
+            assetProfiles: true,
+            holdings: true,
+            quickLinks: true
+          };
           this.searchResults = {
+            accounts: [],
             assetProfiles: [],
-            holdings: []
+            holdings: [],
+            quickLinks: []
           };
 
           this.changeDetectorRef.markForCheck();
 
-          return searchTerm;
+          return searchTerm?.trim();
         }),
         debounceTime(300),
         distinctUntilChanged(),
-        mergeMap(async (searchTerm) => {
-          const result = <ISearchResults>{
+        switchMap((searchTerm) => {
+          const results = {
+            accounts: [],
             assetProfiles: [],
-            holdings: []
-          };
+            holdings: [],
+            quickLinks: []
+          } as ISearchResults;
 
-          try {
-            if (searchTerm) {
-              return await this.getSearchResults(searchTerm);
-            }
-          } catch {}
+          if (!searchTerm) {
+            return of(results).pipe(
+              tap(() => {
+                this.isLoading = {
+                  accounts: false,
+                  assetProfiles: false,
+                  holdings: false,
+                  quickLinks: false
+                };
+              })
+            );
+          }
 
-          return result;
+          // Accounts
+          const accounts$: Observable<Partial<ISearchResults>> =
+            this.searchAccounts(searchTerm).pipe(
+              map((accounts) => ({
+                accounts: accounts.slice(
+                  0,
+                  GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+                )
+              })),
+              catchError((error) => {
+                console.error('Error fetching accounts for assistant:', error);
+                return of({ accounts: [] as ISearchResultItem[] });
+              }),
+              tap(() => {
+                this.isLoading.accounts = false;
+                this.changeDetectorRef.markForCheck();
+              })
+            );
+
+          // Asset profiles
+          const assetProfiles$: Observable<Partial<ISearchResults>> = this
+            .hasPermissionToAccessAdminControl
+            ? this.searchAssetProfiles(searchTerm).pipe(
+                map((assetProfiles) => ({
+                  assetProfiles: assetProfiles.slice(
+                    0,
+                    GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+                  )
+                })),
+                catchError((error) => {
+                  console.error(
+                    'Error fetching asset profiles for assistant:',
+                    error
+                  );
+                  return of({ assetProfiles: [] as ISearchResultItem[] });
+                }),
+                tap(() => {
+                  this.isLoading.assetProfiles = false;
+                  this.changeDetectorRef.markForCheck();
+                })
+              )
+            : of({ assetProfiles: [] as ISearchResultItem[] }).pipe(
+                tap(() => {
+                  this.isLoading.assetProfiles = false;
+                  this.changeDetectorRef.markForCheck();
+                })
+              );
+
+          // Holdings
+          const holdings$: Observable<Partial<ISearchResults>> =
+            this.searchHoldings(searchTerm).pipe(
+              map((holdings) => ({
+                holdings: holdings.slice(
+                  0,
+                  GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+                )
+              })),
+              catchError((error) => {
+                console.error('Error fetching holdings for assistant:', error);
+                return of({ holdings: [] as ISearchResultItem[] });
+              }),
+              tap(() => {
+                this.isLoading.holdings = false;
+                this.changeDetectorRef.markForCheck();
+              })
+            );
+
+          // Quick links
+          const quickLinks$: Observable<Partial<ISearchResults>> = of(
+            this.searchQuickLinks(searchTerm)
+          ).pipe(
+            map((quickLinks) => ({
+              quickLinks: quickLinks.slice(
+                0,
+                GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+              )
+            })),
+            tap(() => {
+              this.isLoading.quickLinks = false;
+              this.changeDetectorRef.markForCheck();
+            })
+          );
+
+          // Merge all results
+          return merge(accounts$, assetProfiles$, holdings$, quickLinks$).pipe(
+            scan(
+              (acc: ISearchResults, curr: Partial<ISearchResults>) => ({
+                ...acc,
+                ...curr
+              }),
+              {
+                accounts: [],
+                assetProfiles: [],
+                holdings: [],
+                quickLinks: []
+              } as ISearchResults
+            )
+          );
         }),
         takeUntil(this.unsubscribeSubject)
       )
-      .subscribe((searchResults) => {
-        this.searchResults = searchResults;
-        this.isLoading = false;
+      .subscribe({
+        next: (searchResults) => {
+          this.searchResults = searchResults;
 
-        this.changeDetectorRef.markForCheck();
+          this.preselectFirstItem();
+
+          this.changeDetectorRef.markForCheck();
+        },
+        error: (error) => {
+          console.error('Assistant search stream error:', error);
+          this.searchResults = {
+            accounts: [],
+            assetProfiles: [],
+            holdings: [],
+            quickLinks: []
+          };
+          this.changeDetectorRef.markForCheck();
+        },
+        complete: () => {
+          this.isLoading = {
+            accounts: false,
+            assetProfiles: false,
+            holdings: false,
+            quickLinks: false
+          };
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 
@@ -207,7 +379,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.accounts = this.user?.accounts ?? [];
 
     this.dateRangeOptions = [
-      { label: $localize`Today`, value: '1d' },
+      {
+        label: $localize`Today`,
+        value: '1d'
+      },
       {
         label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
         value: 'wtd'
@@ -219,12 +394,18 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       {
         label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
         value: 'ytd'
-      },
-      {
-        label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
-        value: '1y'
       }
     ];
+
+    if (
+      this.user?.dateOfFirstActivity &&
+      differenceInYears(new Date(), this.user.dateOfFirstActivity) >= 1
+    ) {
+      this.dateRangeOptions.push({
+        label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
+        value: '1y'
+      });
+    }
 
     // TODO
     // if (this.user?.settings?.isExperimentalFeatures) {
@@ -241,13 +422,20 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     //   );
     // }
 
-    this.dateRangeOptions = this.dateRangeOptions.concat([
-      {
+    if (
+      this.user?.dateOfFirstActivity &&
+      differenceInYears(new Date(), this.user.dateOfFirstActivity) >= 5
+    ) {
+      this.dateRangeOptions.push({
         label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
         value: '5y'
-      },
-      { label: $localize`Max`, value: 'max' }
-    ]);
+      });
+    }
+
+    this.dateRangeOptions.push({
+      label: $localize`Max`,
+      value: 'max'
+    });
 
     this.dateRangeFormControl.disable({ emitEvent: false });
 
@@ -258,21 +446,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
 
     this.filterForm.disable({ emitEvent: false });
-
-    if (this.hasPermissionToChangeFilters) {
-      this.filterForm.enable({ emitEvent: false });
-    }
-
-    this.filterForm.setValue(
-      {
-        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
-        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
-        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
-      },
-      {
-        emitEvent: false
-      }
-    );
 
     this.tags =
       this.user?.tags
@@ -298,12 +471,32 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     });
   }
 
-  public async initialize() {
-    this.isLoading = true;
+  public holdingComparisonFunction(
+    option: PortfolioPosition,
+    value: PortfolioPosition
+  ): boolean {
+    if (value === null) {
+      return false;
+    }
+
+    return (
+      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
+    );
+  }
+
+  public initialize() {
+    this.isLoading = {
+      accounts: true,
+      assetProfiles: true,
+      holdings: true,
+      quickLinks: true
+    };
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
     this.searchResults = {
+      accounts: [],
       assetProfiles: [],
-      holdings: []
+      holdings: [],
+      quickLinks: []
     };
 
     for (const item of this.assistantListItems) {
@@ -315,10 +508,33 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.searchElement?.nativeElement?.focus();
     });
 
-    this.isLoading = false;
+    this.isLoading = {
+      accounts: false,
+      assetProfiles: false,
+      holdings: false,
+      quickLinks: false
+    };
     this.setIsOpen(true);
 
-    this.changeDetectorRef.markForCheck();
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings
+          .filter(({ assetSubClass }) => {
+            return !['CASH'].includes(assetSubClass);
+          })
+          .sort((a, b) => {
+            return a.name?.localeCompare(b.name);
+          });
+        this.setFilterFormValues();
+
+        if (this.hasPermissionToChangeFilters) {
+          this.filterForm.enable({ emitEvent: false });
+        }
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onApplyFilters() {
@@ -332,6 +548,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         type: 'ASSET_CLASS'
       },
       {
+        id: this.filterForm.get('holding').value?.dataSource,
+        type: 'DATA_SOURCE'
+      },
+      {
+        id: this.filterForm.get('holding').value?.symbol,
+        type: 'SYMBOL'
+      },
+      {
         id: this.filterForm.get('tag').value,
         type: 'TAG'
       }
@@ -341,7 +565,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onChangeDateRange(dateRangeString: string) {
-    this.dateRangeChanged.emit(dateRangeString as DateRange);
+    this.dateRangeChanged.emit(dateRangeString);
   }
 
   public onCloseAssistant() {
@@ -368,6 +592,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnDestroy() {
+    if (this.preselectionTimeout) {
+      clearTimeout(this.preselectionTimeout);
+    }
+
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
@@ -378,34 +606,84 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     });
   }
 
-  private async getSearchResults(aSearchTerm: string) {
-    let assetProfiles: ISearchResultItem[] = [];
-    let holdings: ISearchResultItem[] = [];
-
-    if (this.hasPermissionToAccessAdminControl) {
-      try {
-        assetProfiles = await lastValueFrom(
-          this.searchAssetProfiles(aSearchTerm)
-        );
-        assetProfiles = assetProfiles.slice(
-          0,
-          GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
-        );
-      } catch {}
+  private getFirstSearchResultItem() {
+    if (this.searchResults.quickLinks?.length > 0) {
+      return this.searchResults.quickLinks[0];
     }
 
-    try {
-      holdings = await lastValueFrom(this.searchHoldings(aSearchTerm));
-      holdings = holdings.slice(
-        0,
-        GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
-      );
-    } catch {}
+    if (this.searchResults.accounts?.length > 0) {
+      return this.searchResults.accounts[0];
+    }
 
-    return {
-      assetProfiles,
-      holdings
-    };
+    if (this.searchResults.holdings?.length > 0) {
+      return this.searchResults.holdings[0];
+    }
+
+    if (this.searchResults.assetProfiles?.length > 0) {
+      return this.searchResults.assetProfiles[0];
+    }
+
+    return null;
+  }
+
+  private preselectFirstItem() {
+    if (this.preselectionTimeout) {
+      clearTimeout(this.preselectionTimeout);
+    }
+
+    this.preselectionTimeout = setTimeout(() => {
+      if (!this.isOpen || !this.searchFormControl.value) {
+        return;
+      }
+
+      const firstItem = this.getFirstSearchResultItem();
+
+      if (!firstItem) {
+        return;
+      }
+
+      for (const item of this.assistantListItems) {
+        item.removeFocus();
+      }
+
+      this.keyManager.setFirstItemActive();
+
+      const currentFocusedItem = this.getCurrentAssistantListItem();
+
+      if (currentFocusedItem) {
+        currentFocusedItem.focus();
+      }
+
+      this.changeDetectorRef.markForCheck();
+    }, this.PRESELECTION_DELAY);
+  }
+
+  private searchAccounts(aSearchTerm: string): Observable<ISearchResultItem[]> {
+    return this.dataService
+      .fetchAccounts({
+        filters: [
+          {
+            id: aSearchTerm,
+            type: 'SEARCH_QUERY'
+          }
+        ]
+      })
+      .pipe(
+        catchError(() => {
+          return EMPTY;
+        }),
+        map(({ accounts }) => {
+          return accounts.map(({ id, name }) => {
+            return {
+              id,
+              name,
+              routerLink: internalRoutes.accounts.routerLink,
+              mode: SearchMode.ACCOUNT as const
+            };
+          });
+        }),
+        takeUntil(this.unsubscribeSubject)
+      );
   }
 
   private searchAssetProfiles(
@@ -433,7 +711,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass)
+                assetSubClassString: translate(assetSubClass),
+                mode: SearchMode.ASSET_PROFILE as const
               };
             }
           );
@@ -450,8 +729,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             id: aSearchTerm,
             type: 'SEARCH_QUERY'
           }
-        ],
-        range: '1d'
+        ]
       })
       .pipe(
         catchError(() => {
@@ -465,12 +743,73 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass)
+                assetSubClassString: translate(assetSubClass),
+                mode: SearchMode.HOLDING as const
               };
             }
           );
         }),
         takeUntil(this.unsubscribeSubject)
       );
+  }
+
+  private searchQuickLinks(aSearchTerm: string): ISearchResultItem[] {
+    const searchTerm = aSearchTerm.toLowerCase();
+
+    const allRoutes = Object.values(internalRoutes)
+      .filter(({ excludeFromAssistant }) => {
+        if (isFunction(excludeFromAssistant)) {
+          return excludeFromAssistant(this.user);
+        }
+
+        return !excludeFromAssistant;
+      })
+      .reduce((acc, route) => {
+        acc.push(route);
+        if (route.subRoutes) {
+          acc.push(...Object.values(route.subRoutes));
+        }
+        return acc;
+      }, [] as InternalRoute[]);
+
+    const fuse = new Fuse(allRoutes, {
+      keys: ['title'],
+      threshold: 0.3
+    });
+
+    return fuse.search(searchTerm).map(({ item: { routerLink, title } }) => {
+      return {
+        routerLink,
+        mode: SearchMode.QUICK_LINK as const,
+        name: title
+      };
+    });
+  }
+
+  private setFilterFormValues() {
+    const dataSource = this.user?.settings?.[
+      'filters.dataSource'
+    ] as DataSource;
+    const symbol = this.user?.settings?.['filters.symbol'];
+    const selectedHolding = this.holdings.find((holding) => {
+      return (
+        getAssetProfileIdentifier({
+          dataSource: holding.dataSource,
+          symbol: holding.symbol
+        }) === getAssetProfileIdentifier({ dataSource, symbol })
+      );
+    });
+
+    this.filterForm.setValue(
+      {
+        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
+        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
+        holding: selectedHolding ?? null,
+        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
+      },
+      {
+        emitEvent: false
+      }
+    );
   }
 }

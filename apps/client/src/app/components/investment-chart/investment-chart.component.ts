@@ -16,6 +16,7 @@ import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -39,21 +40,21 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { isAfter, isValid, min, subDays } from 'date-fns';
-import { first } from 'lodash';
+import { isAfter } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-investment-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './investment-chart.component.html',
-  styleUrls: ['./investment-chart.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  selector: 'gf-investment-chart',
+  styleUrls: ['./investment-chart.component.scss'],
+  templateUrl: './investment-chart.component.html'
 })
-export class InvestmentChartComponent implements OnChanges, OnDestroy {
+export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
   @Input() benchmarkDataLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
-  @Input() daysInMarket: number;
   @Input() groupBy: GroupBy;
   @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
@@ -154,23 +155,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     };
 
     if (this.chartCanvas) {
-      let scaleXMin: string;
-
-      if (this.daysInMarket) {
-        const minDate = min([
-          parseDate(first(this.investments)?.date),
-          subDays(new Date().setHours(0, 0, 0, 0), this.daysInMarket)
-        ]);
-
-        scaleXMin = isValid(minDate) ? minDate.toISOString() : undefined;
-      }
-
       if (this.chart) {
         this.chart.data = chartData;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration()
-        );
-        this.chart.options.scales.x.min = scaleXMin;
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration() as unknown;
 
         if (
           this.savingsRate &&
@@ -200,7 +188,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             },
             interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
-            plugins: <unknown>{
+            plugins: {
               annotation: {
                 annotations: {
                   savingsRate: this.savingsRate
@@ -241,7 +229,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            },
+            } as unknown,
             responsive: true,
             scales: {
               x: {
@@ -253,7 +241,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 grid: {
                   display: false
                 },
-                min: scaleXMin,
                 type: 'time',
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
@@ -309,7 +296,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         unit: this.isInPercent ? '%' : undefined
       }),
       mode: 'index',
-      position: <unknown>'top',
+      position: 'top' as unknown,
       xAlign: 'center',
       yAlign: 'bottom'
     };

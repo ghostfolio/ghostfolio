@@ -2,21 +2,31 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Milliseconds } from 'cache-manager';
-import { RedisCache } from 'cache-manager-redis-yet';
-import { createHash } from 'crypto';
+import Keyv from 'keyv';
+import ms from 'ms';
+import { createHash } from 'node:crypto';
 
 @Injectable()
 export class RedisCacheService {
+  private client: Keyv;
+
   public constructor(
-    @Inject(CACHE_MANAGER) private readonly cache: RedisCache,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly configurationService: ConfigurationService
   ) {
-    const client = cache.store.client;
+    this.client = cache.stores[0];
 
-    client.on('error', (error) => {
+    this.client.deserialize = (value) => {
+      try {
+        return JSON.parse(value);
+      } catch {}
+
+      return value;
+    };
+
+    this.client.on('error', (error) => {
       Logger.error(error, 'RedisCacheService');
     });
   }
@@ -26,13 +36,18 @@ export class RedisCacheService {
   }
 
   public async getKeys(aPrefix?: string): Promise<string[]> {
-    let prefix = aPrefix;
+    const keys: string[] = [];
+    const prefix = aPrefix;
 
-    if (prefix) {
-      prefix = `${prefix}*`;
-    }
+    try {
+      for await (const [key] of this.client.iterator({})) {
+        if ((prefix && key.startsWith(prefix)) || !prefix) {
+          keys.push(key);
+        }
+      }
+    } catch {}
 
-    return this.cache.store.keys(prefix);
+    return keys;
   }
 
   public getPortfolioSnapshotKey({
@@ -59,6 +74,40 @@ export class RedisCacheService {
     return `quote-${getAssetProfileIdentifier({ dataSource, symbol })}`;
   }
 
+  public async isHealthy() {
+    const testKey = '__health_check__';
+    const testValue = Date.now().toString();
+
+    try {
+      await Promise.race([
+        (async () => {
+          await this.set(testKey, testValue, ms('1 second'));
+          const result = await this.get(testKey);
+
+          if (result !== testValue) {
+            throw new Error('Redis health check failed: value mismatch');
+          }
+        })(),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Redis health check failed: timeout')),
+            ms('2 seconds')
+          )
+        )
+      ]);
+
+      return true;
+    } catch (error) {
+      Logger.error(error?.message, 'RedisCacheService');
+
+      return false;
+    } finally {
+      try {
+        await this.remove(testKey);
+      } catch {}
+    }
+  }
+
   public async remove(key: string) {
     return this.cache.del(key);
   }
@@ -72,16 +121,14 @@ export class RedisCacheService {
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
 
-    for (const key of keys) {
-      await this.remove(key);
-    }
+    return this.cache.mdel(keys);
   }
 
   public async reset() {
-    return this.cache.reset();
+    return this.cache.clear();
   }
 
-  public async set(key: string, value: string, ttl?: Milliseconds) {
+  public async set(key: string, value: string, ttl?: number) {
     return this.cache.set(
       key,
       value,

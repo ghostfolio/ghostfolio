@@ -40,7 +40,7 @@ export function redactAttributes({
   object: any;
   options: { attribute: string; valueMap: { [key: string]: any } }[];
 }): any {
-  if (!object || !options || !options.length) {
+  if (!object || !options?.length) {
     return object;
   }
 

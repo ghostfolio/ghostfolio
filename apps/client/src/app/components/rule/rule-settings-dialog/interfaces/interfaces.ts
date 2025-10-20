@@ -1,7 +1,11 @@
-import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
-import { XRayRulesSettings } from '@ghostfolio/common/types';
+import {
+  PortfolioReportRule,
+  XRayRulesSettings
+} from '@ghostfolio/common/interfaces';
 
 export interface IRuleSettingsDialogParams {
+  categoryName: string;
+  locale: string;
   rule: PortfolioReportRule;
   settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 }

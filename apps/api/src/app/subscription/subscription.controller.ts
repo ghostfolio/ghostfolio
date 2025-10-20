@@ -49,8 +49,7 @@ export class SubscriptionController {
     }
 
     let coupons =
-      ((await this.propertyService.getByKey(PROPERTY_COUPONS)) as Coupon[]) ??
-      [];
+      (await this.propertyService.getByKey<Coupon[]>(PROPERTY_COUPONS)) ?? [];
 
     const coupon = coupons.find((currentCoupon) => {
       return currentCoupon.code === couponCode;
@@ -95,7 +94,7 @@ export class SubscriptionController {
     @Res() response: Response
   ) {
     const userId = await this.subscriptionService.createSubscriptionViaStripe(
-      <string>request.query.checkoutSessionId
+      request.query.checkoutSessionId as string
     );
 
     Logger.log(
@@ -113,7 +112,7 @@ export class SubscriptionController {
   @Post('stripe/checkout-session')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createCheckoutSession(
-    @Body() { couponId, priceId }: { couponId: string; priceId: string }
+    @Body() { couponId, priceId }: { couponId?: string; priceId: string }
   ) {
     try {
       return this.subscriptionService.createCheckoutSession({

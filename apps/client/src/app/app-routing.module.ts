@@ -1,46 +1,54 @@
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/client/core/paths';
-import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
+import { publicRoutes, internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
+import { AuthGuard } from './core/auth.guard';
 import { ModulePreloadService } from './core/module-preload.service';
+import { PageTitleStrategy } from './services/page-title.strategy';
 
 const routes: Routes = [
   {
-    path: paths.about,
+    path: publicRoutes.about.path,
     loadChildren: () =>
-      import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
+      import('./pages/about/about-page.routes').then((m) => m.routes)
   },
   {
-    path: 'account',
+    path: internalRoutes.account.path,
     loadChildren: () =>
-      import('./pages/user-account/user-account-page.module').then(
-        (m) => m.UserAccountPageModule
+      import('./pages/user-account/user-account-page.routes').then(
+        (m) => m.routes
       )
   },
   {
-    path: 'accounts',
+    path: internalRoutes.accounts.path,
     loadChildren: () =>
-      import('./pages/accounts/accounts-page.module').then(
-        (m) => m.AccountsPageModule
-      )
+      import('./pages/accounts/accounts-page.routes').then((m) => m.routes)
   },
   {
-    path: 'admin',
+    path: internalRoutes.adminControl.path,
     loadChildren: () =>
-      import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
+      import('./pages/admin/admin-page.routes').then((m) => m.routes)
   },
   {
-    path: 'auth',
-    loadChildren: () =>
-      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/api/api-page.component').then(
+        (c) => c.GfApiPageComponent
+      ),
+    path: internalRoutes.api.path,
+    title: internalRoutes.api.title
   },
   {
-    path: 'blog',
+    path: internalRoutes.auth.path,
     loadChildren: () =>
-      import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
+      import('./pages/auth/auth-page.routes').then((m) => m.routes),
+    title: internalRoutes.auth.title
+  },
+  {
+    path: publicRoutes.blog.path,
+    loadChildren: () =>
+      import('./pages/blog/blog-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
@@ -48,12 +56,12 @@ const routes: Routes = [
       import('./pages/demo/demo-page.component').then(
         (c) => c.GfDemoPageComponent
       ),
-    path: 'demo'
+    path: publicRoutes.demo.path
   },
   {
-    path: paths.faq,
+    path: publicRoutes.faq.path,
     loadChildren: () =>
-      import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
+      import('./pages/faq/faq-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
@@ -61,13 +69,13 @@ const routes: Routes = [
       import('./pages/features/features-page.component').then(
         (c) => c.GfFeaturesPageComponent
       ),
-    path: paths.features,
-    title: $localize`Features`
+    path: publicRoutes.features.path,
+    title: publicRoutes.features.title
   },
   {
-    path: 'home',
+    path: internalRoutes.home.path,
     loadChildren: () =>
-      import('./pages/home/home-page.module').then((m) => m.HomePageModule)
+      import('./pages/home/home-page.routes').then((m) => m.routes)
   },
   {
     canActivate: [AuthGuard],
@@ -75,75 +83,61 @@ const routes: Routes = [
       import('./pages/i18n/i18n-page.component').then(
         (c) => c.GfI18nPageComponent
       ),
-    path: 'i18n',
-    title: $localize`Internationalization`
+    path: internalRoutes.i18n.path,
+    title: internalRoutes.i18n.title
   },
   {
-    path: paths.markets,
+    path: publicRoutes.markets.path,
     loadChildren: () =>
-      import('./pages/markets/markets-page.module').then(
-        (m) => m.MarketsPageModule
-      )
+      import('./pages/markets/markets-page.routes').then((m) => m.routes)
   },
   {
-    path: 'open',
+    path: publicRoutes.openStartup.path,
     loadChildren: () =>
-      import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
+      import('./pages/open/open-page.routes').then((m) => m.routes)
   },
   {
-    path: 'p',
+    path: internalRoutes.portfolio.path,
     loadChildren: () =>
-      import('./pages/public/public-page.module').then(
-        (m) => m.PublicPageModule
-      )
+      import('./pages/portfolio/portfolio-page.routes').then((m) => m.routes)
   },
   {
-    path: 'portfolio',
+    path: publicRoutes.pricing.path,
     loadChildren: () =>
-      import('./pages/portfolio/portfolio-page.module').then(
-        (m) => m.PortfolioPageModule
-      )
+      import('./pages/pricing/pricing-page.routes').then((m) => m.routes)
   },
   {
-    path: paths.pricing,
+    path: publicRoutes.public.path,
     loadChildren: () =>
-      import('./pages/pricing/pricing-page.module').then(
-        (m) => m.PricingPageModule
-      )
+      import('./pages/public/public-page.routes').then((m) => m.routes)
   },
   {
-    path: paths.register,
+    path: publicRoutes.register.path,
     loadChildren: () =>
-      import('./pages/register/register-page.module').then(
-        (m) => m.RegisterPageModule
-      )
+      import('./pages/register/register-page.routes').then((m) => m.routes)
   },
   {
-    path: paths.resources,
+    path: publicRoutes.resources.path,
     loadChildren: () =>
-      import('./pages/resources/resources-page.module').then(
-        (m) => m.ResourcesPageModule
-      )
+      import('./pages/resources/resources-page.routes').then((m) => m.routes)
   },
   {
-    path: 'start',
+    path: publicRoutes.start.path,
     loadChildren: () =>
-      import('./pages/landing/landing-page.module').then(
-        (m) => m.LandingPageModule
-      )
+      import('./pages/landing/landing-page.routes').then((m) => m.routes)
   },
   {
     loadComponent: () =>
       import('./pages/webauthn/webauthn-page.component').then(
         (c) => c.GfWebauthnPageComponent
       ),
-    path: 'webauthn',
-    title: $localize`Sign in`
+    path: internalRoutes.webauthn.path,
+    title: internalRoutes.webauthn.title
   },
   {
-    path: 'zen',
+    path: internalRoutes.zen.path,
     loadChildren: () =>
-      import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)
+      import('./pages/zen/zen-page.routes').then((m) => m.routes)
   },
   {
     // wildcard, if requested url doesn't match any paths for routes defined
@@ -161,8 +155,9 @@ const routes: Routes = [
       // Preload all lazy loaded modules with the attribute preload === true
       {
         anchorScrolling: 'enabled',
-        preloadingStrategy: ModulePreloadService
-        // enableTracing: true // <-- debugging purposes only
+        // enableTracing: true, // <-- debugging purposes only
+        preloadingStrategy: ModulePreloadService,
+        scrollPositionRestoration: 'top'
       }
     )
   ],

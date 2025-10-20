@@ -1,6 +1,9 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
-import { XRayRulesSettings } from '@ghostfolio/common/types';
+import { GfRuleComponent } from '@ghostfolio/client/components/rule/rule.component';
+import {
+  PortfolioReportRule,
+  XRayRulesSettings
+} from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,
@@ -9,14 +12,18 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
-  selector: 'gf-rules',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss']
+  imports: [GfRuleComponent, MatButtonModule, MatCardModule],
+  selector: 'gf-rules',
+  styleUrls: ['./rules.component.scss'],
+  templateUrl: './rules.component.html'
 })
-export class RulesComponent {
+export class GfRulesComponent {
+  @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rules: PortfolioReportRule[];

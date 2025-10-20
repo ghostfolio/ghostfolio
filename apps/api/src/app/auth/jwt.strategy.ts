@@ -1,7 +1,11 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { HEADER_KEY_TIMEZONE } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_LANGUAGE_CODE,
+  HEADER_KEY_TIMEZONE
+} from '@ghostfolio/common/config';
 import { hasRole } from '@ghostfolio/common/permissions';
 
 import { HttpException, Injectable } from '@nestjs/common';
@@ -42,14 +46,22 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             countriesAndTimezones.getCountryForTimezone(timezone)?.id;
 
           await this.prismaService.analytics.upsert({
-            create: { country, User: { connect: { id: user.id } } },
+            create: { country, user: { connect: { id: user.id } } },
             update: {
               country,
               activityCount: { increment: 1 },
-              updatedAt: new Date()
+              lastRequestAt: new Date()
             },
             where: { userId: user.id }
           });
+        }
+
+        if (!user.settings.settings.baseCurrency) {
+          user.settings.settings.baseCurrency = DEFAULT_CURRENCY;
+        }
+
+        if (!user.settings.settings.language) {
+          user.settings.settings.language = DEFAULT_LANGUAGE_CODE;
         }
 
         return user;
@@ -60,7 +72,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         );
       }
     } catch (error) {
-      if (error?.getStatus() === StatusCodes.TOO_MANY_REQUESTS) {
+      if (error?.getStatus?.() === StatusCodes.TOO_MANY_REQUESTS) {
         throw error;
       } else {
         throw new HttpException(

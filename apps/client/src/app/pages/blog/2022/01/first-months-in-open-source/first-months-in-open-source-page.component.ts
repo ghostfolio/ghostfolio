@@ -1,3 +1,5 @@
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -6,9 +8,9 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-first-months-in-open-source-page',
-  standalone: true,
   templateUrl: './first-months-in-open-source-page.html'
 })
 export class FirstMonthsInOpenSourcePageComponent {
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

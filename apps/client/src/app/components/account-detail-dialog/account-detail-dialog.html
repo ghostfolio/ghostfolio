@@ -1,5 +1,4 @@
 <gf-dialog-header
-  mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
   [title]="name"
@@ -20,20 +19,18 @@
       </div>
     </div>
 
-    @if (user?.settings?.isExperimentalFeatures) {
-      <div class="chart-container mb-3">
-        <gf-investment-chart
-          class="h-100"
-          [currency]="user?.settings?.baseCurrency"
-          [historicalDataItems]="historicalDataItems"
-          [isInPercent]="
-            data.hasImpersonationId || user.settings.isRestrictedView
-          "
-          [isLoading]="isLoadingChart"
-          [locale]="user?.settings?.locale"
-        />
-      </div>
-    }
+    <div class="chart-container mb-3">
+      <gf-investment-chart
+        class="h-100"
+        [currency]="user?.settings?.baseCurrency"
+        [historicalDataItems]="historicalDataItems"
+        [isInPercent]="
+          data.hasImpersonationId || user.settings.isRestrictedView
+        "
+        [isLoading]="isLoadingChart"
+        [locale]="user?.settings?.locale"
+      />
+    </div>
 
     <div class="mb-3 row">
       <div class="col-6 mb-3">
@@ -42,6 +39,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [precision]="balancePrecision"
           [unit]="currency"
           [value]="balance"
           >Cash Balance</gf-value
@@ -53,9 +51,34 @@
           size="medium"
           [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [precision]="equityPrecision"
           [unit]="currency"
           [value]="equity"
           >Equity</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [precision]="interestInBaseCurrencyPrecision"
+          [unit]="user?.settings?.baseCurrency"
+          [value]="interestInBaseCurrency"
+          >Interest</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [precision]="dividendInBaseCurrencyPrecision"
+          [unit]="user?.settings?.baseCurrency"
+          [value]="dividendInBaseCurrency"
+          >Dividend</gf-value
         >
       </div>
       <div class="col-6 mb-3">
@@ -69,7 +92,7 @@
     </div>
 
     <mat-tab-group
-      animationDuration="0"
+      animationDuration="0ms"
       [mat-stretch-tabs]="false"
       [ngClass]="{ 'd-none': isLoadingActivities }"
     >
@@ -103,9 +126,10 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
+          [showAccountColumn]="false"
           [showActions]="
             !data.hasImpersonationId &&
-            data.hasPermissionToCreateOrder &&
+            data.hasPermissionToCreateActivity &&
             user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "
@@ -142,7 +166,6 @@
 </div>
 
 <gf-dialog-footer
-  mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onClose()"
 />

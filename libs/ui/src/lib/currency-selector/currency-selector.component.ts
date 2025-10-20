@@ -1,11 +1,10 @@
-import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
-
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DoCheck,
   ElementRef,
   Input,
   OnDestroy,
@@ -32,6 +31,8 @@ import { MatInput, MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 
+import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -53,13 +54,12 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-currency-selector',
-  standalone: true,
   styleUrls: ['./currency-selector.component.scss'],
   templateUrl: 'currency-selector.component.html'
 })
 export class GfCurrencySelectorComponent
   extends AbstractMatFormField<string>
-  implements OnInit, OnDestroy
+  implements DoCheck, OnDestroy, OnInit
 {
   @Input() private currencies: string[] = [];
   @Input() private formControlName: string;

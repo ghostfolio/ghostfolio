@@ -1,4 +1,5 @@
-import { XRayRulesSettings } from '@ghostfolio/common/types';
+import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
@@ -17,12 +18,12 @@ import { IRuleSettingsDialogParams } from './interfaces/interfaces';
   imports: [
     CommonModule,
     FormsModule,
+    GfValueComponent,
     MatButtonModule,
     MatDialogModule,
     MatSliderModule
   ],
   selector: 'gf-rule-settings-dialog',
-  standalone: true,
   styleUrls: ['./rule-settings-dialog.scss'],
   templateUrl: './rule-settings-dialog.html'
 })

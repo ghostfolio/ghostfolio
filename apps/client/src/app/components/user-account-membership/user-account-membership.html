@@ -4,7 +4,9 @@
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
           [name]="user?.subscription?.type"
+          (generateApiKeyClicked)="onGenerateApiKey()"
         />
         @if (user?.subscription?.type === 'Basic') {
           <div class="d-flex flex-column mt-5">
@@ -12,13 +14,10 @@
               hasPermissionForSubscription && hasPermissionToUpdateUserSettings
             ) {
               <button color="primary" mat-flat-button (click)="onCheckout()">
-                @if (user.subscription.offer === 'default') {
-                  <ng-container i18n>Upgrade Plan</ng-container>
-                } @else if (
-                  user.subscription.offer === 'renewal' ||
-                  user.subscription.offer === 'renewal-early-bird'
-                ) {
+                @if (user.subscription.offer.isRenewal) {
                   <ng-container i18n>Renew Plan</ng-container>
+                } @else {
+                  <ng-container i18n>Upgrade Plan</ng-container>
                 }
               </button>
               @if (price) {
@@ -31,6 +30,16 @@
                     {{ baseCurrency }}&nbsp;{{ price }}
                   }
                   &nbsp;<span i18n>per year</span>
+                </div>
+              }
+              @if (durationExtension) {
+                <div class="mt-1 text-center">
+                  <div
+                    class="badge badge-pill badge-warning font-weight-normal px-2 py-1"
+                  >
+                    <strong>Limited Offer!</strong> Get
+                    {{ durationExtension }} extra
+                  </div>
                 </div>
               }
             }

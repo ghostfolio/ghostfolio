@@ -26,7 +26,7 @@ Thank you for your understanding and cooperation!
 2.
 3.
 
-**Expected behavior**
+**Expected Behavior**
 
 <!-- A clear and concise description of what you expected to happen. -->
 
@@ -48,6 +48,6 @@ Thank you for your understanding and cooperation!
 - Browser
 - OS
 
-**Additional context**
+**Additional Context**
 
 <!-- Add any other context about the problem here. -->

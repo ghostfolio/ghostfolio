@@ -31,13 +31,16 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Retirement Date</mat-label>
           <div>
-            {{ calculatorForm.get('retirementDate').value | date: 'MMMM YYYY' }}
+            {{
+              calculatorForm.get('retirementDate')?.value | date: 'MMMM yyyy'
+            }}
           </div>
           <input
             class="d-none"
             formControlName="retirementDate"
             matInput
             [matDatepicker]="datepicker"
+            [min]="minDate"
           />
           <mat-datepicker-toggle
             matIconSuffix
@@ -49,8 +52,7 @@
             startView="multi-year"
             [disabled]="hasPermissionToUpdateUserSettings !== true"
             (monthSelected)="setMonthAndYear($event, datepicker)"
-          >
-          </mat-datepicker>
+          />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">

@@ -28,23 +28,29 @@
           matInput
           (keydown.enter)="$event.stopPropagation()"
         />
-        @if (data.platform.url) {
-          <gf-asset-profile-icon
+        @if (platformForm.get('url')?.value) {
+          <gf-entity-logo
             class="mr-3"
             matSuffix
-            [url]="data.platform.url"
+            [url]="platformForm.get('url').value"
           />
         }
       </mat-form-field>
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
-    <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-button type="button" (click)="onCancel()">
+      @if (platformForm.dirty) {
+        <ng-container i18n>Cancel</ng-container>
+      } @else {
+        <ng-container i18n>Close</ng-container>
+      }
+    </button>
     <button
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="!platformForm.valid"
+      [disabled]="!(platformForm.dirty && platformForm.valid)"
     >
       <ng-container i18n>Save</ng-container>
     </button>

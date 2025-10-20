@@ -19,15 +19,17 @@
             <ng-container i18n>Oops, authentication has failed.</ng-container>
           </h1>
           <button
-            class="mb-3 mt-4"
+            class="mt-4"
             color="primary"
             mat-flat-button
             (click)="signIn()"
           >
             <ng-container i18n>Try again</ng-container>
           </button>
-          <div class="text-muted"><ng-container i18n>or</ng-container></div>
-          <button class="mt-1" mat-flat-button (click)="deregisterDevice()">
+          <div class="my-2 text-muted">
+            <ng-container i18n>or</ng-container>
+          </div>
+          <button mat-stroked-button (click)="deregisterDevice()">
             <ng-container i18n>Go back to Home Page</ng-container>
           </button>
         </div>

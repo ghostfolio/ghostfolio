@@ -11,8 +11,6 @@ export class ImpersonationStorageService {
     this.getId()
   );
 
-  public constructor() {}
-
   public getId(): string {
     return window.localStorage.getItem(IMPERSONATION_KEY);
   }

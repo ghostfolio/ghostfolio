@@ -1,5 +1,3 @@
-import { SubscriptionInterstitialDialogParams } from '@ghostfolio/client/components/subscription-interstitial-dialog/interfaces/interfaces';
-import { SubscriptionInterstitialDialog } from '@ghostfolio/client/components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
@@ -13,6 +11,8 @@ import { Observable, Subject, of } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 
+import { SubscriptionInterstitialDialogParams } from '../../components/subscription-interstitial-dialog/interfaces/interfaces';
+import { GfSubscriptionInterstitialDialogComponent } from '../../components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { UserStoreActions } from './user-store.actions';
 import { UserStoreState } from './user-store.state';
 
@@ -65,6 +65,20 @@ export class UserService extends ObservableStore<UserStoreState> {
       });
     }
 
+    if (user?.settings['filters.dataSource']) {
+      filters.push({
+        id: user.settings['filters.dataSource'],
+        type: 'DATA_SOURCE'
+      });
+    }
+
+    if (user?.settings['filters.symbol']) {
+      filters.push({
+        id: user.settings['filters.symbol'],
+        type: 'SYMBOL'
+      });
+    }
+
     if (user?.settings['filters.tags']) {
       filters.push({
         id: user.settings['filters.tags'][0],
@@ -102,17 +116,23 @@ export class UserService extends ObservableStore<UserStoreState> {
             permissions.enableSubscriptionInterstitial
           )
         ) {
-          const dialogRef = this.dialog.open(SubscriptionInterstitialDialog, {
-            autoFocus: false,
-            data: <SubscriptionInterstitialDialogParams>{},
-            height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-          });
+          const dialogRef = this.dialog.open(
+            GfSubscriptionInterstitialDialogComponent,
+            {
+              autoFocus: false,
+              data: {
+                user
+              } as SubscriptionInterstitialDialogParams,
+              disableClose: true,
+              height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+              width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+            }
+          );
 
           dialogRef
             .afterClosed()
             .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(() => {});
+            .subscribe();
         }
 
         return user;

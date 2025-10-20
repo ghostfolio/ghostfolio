@@ -1,8 +1,4 @@
-<gf-dialog-header
-  mat-dialog-title
-  [title]="data.title"
-  (closeButtonClicked)="onClose()"
-/>
+<gf-dialog-header [title]="data.title" (closeButtonClicked)="onClose()" />
 
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
@@ -11,9 +7,8 @@
         <mat-label i18n>Security Token</mat-label>
         <input
           matInput
-          name="password"
+          [formControl]="accessTokenFormControl"
           [type]="isAccessTokenHidden ? 'password' : 'text'"
-          [(ngModel)]="data.accessToken"
         />
         <button
           mat-button
@@ -65,8 +60,10 @@
     <button
       color="primary"
       mat-flat-button
-      [disabled]="!data.accessToken"
-      [mat-dialog-close]="data"
+      [disabled]="
+        !(accessTokenFormControl.dirty && accessTokenFormControl.valid)
+      "
+      (click)="onLoginWithAccessToken()"
     >
       <ng-container i18n>Sign in</ng-container>
     </button>

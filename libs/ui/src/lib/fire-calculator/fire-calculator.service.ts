@@ -5,8 +5,6 @@ import { Big } from 'big.js';
 export class FireCalculatorService {
   private readonly COMPOUND_PERIOD = 12;
 
-  public constructor() {}
-
   public calculateCompoundInterest({
     P,
     periodInMonths,

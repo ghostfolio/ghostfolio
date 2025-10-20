@@ -1,7 +1,7 @@
-import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
-import { DataSource, MarketData, Type as ActivityType } from '@prisma/client';
+import { Type as ActivityType, DataSource, MarketData } from '@prisma/client';
 import { Big } from 'big.js';
+import { isISO4217CurrencyCode } from 'class-validator';
 import {
   getDate,
   getMonth,
@@ -11,7 +11,7 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { ca, de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
+import { ca, de, es, fr, it, nl, pl, pt, tr, uk, zhCN } from 'date-fns/locale';
 
 import {
   DEFAULT_CURRENCY,
@@ -108,7 +108,7 @@ export function downloadAsFile({
     content = JSON.stringify(content, undefined, '  ');
   }
 
-  const file = new Blob([<string>content], {
+  const file = new Blob([content as string], {
     type: contentType
   });
   a.href = URL.createObjectURL(file);
@@ -192,6 +192,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return pt;
   } else if (aLanguageCode === 'tr') {
     return tr;
+  } else if (aLanguageCode === 'uk') {
+    return uk;
   } else if (aLanguageCode === 'zh') {
     return zhCN;
   }
@@ -249,7 +251,9 @@ export function getNumberFormatDecimal(aLocale?: string) {
 }
 
 export function getNumberFormatGroup(aLocale = getLocale()) {
-  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+  const formatObject = new Intl.NumberFormat(aLocale, {
+    useGrouping: true
+  }).formatToParts(9999.99);
 
   return formatObject.find((object) => {
     return object.type === 'group';
@@ -336,8 +340,12 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isCurrency(aCurrency = '') {
-  return currencies[aCurrency] || isDerivedCurrency(aCurrency);
+export function isCurrency(aCurrency: string) {
+  if (!aCurrency) {
+    return false;
+  }
+
+  return isISO4217CurrencyCode(aCurrency) || isDerivedCurrency(aCurrency);
 }
 
 export function isDerivedCurrency(aCurrency: string) {
@@ -345,8 +353,18 @@ export function isDerivedCurrency(aCurrency: string) {
     return true;
   }
 
-  return DERIVED_CURRENCIES.find(({ currency }) => {
+  return DERIVED_CURRENCIES.some(({ currency }) => {
     return currency === aCurrency;
+  });
+}
+
+export function isRootCurrency(aCurrency: string) {
+  if (aCurrency === 'USD') {
+    return true;
+  }
+
+  return DERIVED_CURRENCIES.find(({ rootCurrency }) => {
+    return rootCurrency === aCurrency;
   });
 }
 

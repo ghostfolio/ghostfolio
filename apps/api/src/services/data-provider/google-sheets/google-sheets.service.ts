@@ -1,7 +1,7 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -14,7 +14,10 @@ import {
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -33,19 +36,15 @@ export class GoogleSheetsService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile({
-    symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
-    return {
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({}: GetAssetProfileParams): Promise<
+    Partial<SymbolProfile>
+  > {
+    return undefined;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.GOOGLE_SHEETS,
       isPremium: false,
       name: 'Google Sheets',
       url: 'https://docs.google.com/spreadsheets'
@@ -157,9 +156,7 @@ export class GoogleSheetsService implements DataProviderInterface {
     return 'INDEXSP:.INX';
   }
 
-  public async search({
-    query
-  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
+  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
     const items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,

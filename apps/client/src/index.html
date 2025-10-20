@@ -9,24 +9,22 @@
     <meta content="${keywords}" name="keywords" />
     <meta content="yes" name="mobile-web-app-capable" />
     <meta content="summary_large_image" name="twitter:card" />
-    <meta
-      content="Ghostfolio is a personal finance dashboard to keep track of your assets like stocks, ETFs or cryptocurrencies"
-      name="twitter:description"
-    />
+    <meta content="${description}" name="twitter:description" />
     <meta content="${rootUrl}/${featureGraphicPath}" name="twitter:image" />
     <meta content="${title}" name="twitter:title" />
     <meta
-      content="initial-scale=1, viewport-fit=cover, width=device-width"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, width=device-width"
       name="viewport"
     />
     <meta content="#FFFFFF" name="theme-color" />
-    <meta content="" property="og:description" />
+    <meta content="${description}" property="og:description" />
+    <meta content="${rootUrl}/${featureGraphicPath}" property="og:image" />
+    <meta content="${languageCode}" property="og:locale" />
+    <meta content="${title}" property="og:site_name" />
     <meta content="${title}" property="og:title" />
     <meta content="website" property="og:type" />
-    <meta content="${rootUrl}${path}" property="og:url" />
-    <meta content="${rootUrl}/${featureGraphicPath}" property="og:image" />
     <meta content="${currentDate}T00:00:00+00:00" property="og:updated_time" />
-    <meta content="${title}" property="og:site_name" />
+    <meta content="${rootUrl}${path}" property="og:url" />
 
     <link
       href="../assets/apple-touch-icon.png"
@@ -45,13 +43,13 @@
       sizes="16x16"
       type="image/png"
     />
-    <link href="../assets/site.webmanifest" rel="manifest" />
+    <link
+      href="../api/assets/${languageCode}/site.webmanifest"
+      rel="manifest"
+    />
   </head>
   <body>
     <gf-root></gf-root>
-
-    <script src="../ionicons/ionicons.esm.js" type="module"></script>
-    <script nomodule="" src="ionicons.js"></script>
 
     <noscript
       >Please enable JavaScript to continue using this application.</noscript

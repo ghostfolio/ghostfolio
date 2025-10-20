@@ -198,12 +198,12 @@ export interface AuthenticatorAssertionResponseJSON
 /**
  * A WebAuthn-compatible device and the information needed to verify assertions by it
  */
-export declare type AuthenticatorDevice = {
+export declare interface AuthenticatorDevice {
   credentialPublicKey: Buffer;
   credentialID: Buffer;
   counter: number;
   transports?: AuthenticatorTransport[];
-};
+}
 /**
  * An attempt to communicate that this isn't just any string, but a Base64URL-encoded string
  */

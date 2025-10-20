@@ -14,6 +14,7 @@ export interface EnhancedSymbolProfile {
   countries: Country[];
   createdAt: Date;
   currency?: string;
+  cusip?: string;
   dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   dateOfFirstActivity?: Date;
@@ -22,6 +23,7 @@ export interface EnhancedSymbolProfile {
   figiShareClass?: string;
   holdings: Holding[];
   id: string;
+  isActive: boolean;
   isin?: string;
   name?: string;
   scraperConfiguration?: ScraperConfiguration;
@@ -30,4 +32,5 @@ export interface EnhancedSymbolProfile {
   symbolMapping?: { [key: string]: string };
   updatedAt: Date;
   url?: string;
+  userId?: string;
 }

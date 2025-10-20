@@ -1,3 +1,5 @@
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+
 import { Injectable } from '@nestjs/common';
 
 const cryptocurrencies = require('../../assets/cryptocurrencies/cryptocurrencies.json');
@@ -7,11 +9,13 @@ const customCryptocurrencies = require('../../assets/cryptocurrencies/custom.jso
 export class CryptocurrencyService {
   private combinedCryptocurrencies: string[];
 
-  public constructor() {}
-
   public isCryptocurrency(aSymbol = '') {
     const cryptocurrencySymbol = aSymbol.substring(0, aSymbol.length - 3);
-    return this.getCryptocurrencies().includes(cryptocurrencySymbol);
+
+    return (
+      aSymbol.endsWith(DEFAULT_CURRENCY) &&
+      this.getCryptocurrencies().includes(cryptocurrencySymbol)
+    );
   }
 
   private getCryptocurrencies() {

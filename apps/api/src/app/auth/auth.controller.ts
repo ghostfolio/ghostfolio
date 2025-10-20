@@ -85,7 +85,7 @@ export class AuthController {
     @Res() response: Response
   ) {
     // Handles the Google OAuth2 callback
-    const jwt: string = (<any>request.user).jwt;
+    const jwt: string = (request.user as any).jwt;
 
     if (jwt) {
       response.redirect(
@@ -133,17 +133,19 @@ export class AuthController {
     return this.webAuthService.verifyAttestation(body.credential);
   }
 
-  @Post('webauthn/generate-assertion-options')
-  public async generateAssertionOptions(@Body() body: { deviceId: string }) {
-    return this.webAuthService.generateAssertionOptions(body.deviceId);
+  @Post('webauthn/generate-authentication-options')
+  public async generateAuthenticationOptions(
+    @Body() body: { deviceId: string }
+  ) {
+    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
-  @Post('webauthn/verify-assertion')
-  public async verifyAssertion(
+  @Post('webauthn/verify-authentication')
+  public async verifyAuthentication(
     @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
   ) {
     try {
-      const authToken = await this.webAuthService.verifyAssertion(
+      const authToken = await this.webAuthService.verifyAuthentication(
         body.deviceId,
         body.credential
       );

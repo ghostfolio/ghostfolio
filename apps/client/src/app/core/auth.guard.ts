@@ -1,6 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Injectable } from '@angular/core';
 import {
@@ -11,25 +12,9 @@ import {
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { paths } from './paths';
-
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
-  private static PUBLIC_PAGE_ROUTES = [
-    `/${paths.about}`,
-    '/blog',
-    '/demo',
-    `/${paths.faq}`,
-    `/${paths.features}`,
-    `/${paths.markets}`,
-    '/open',
-    '/p',
-    `/${paths.pricing}`,
-    `/${paths.register}`,
-    `/${paths.resources}`
-  ];
-
-  constructor(
+  public constructor(
     private dataService: DataService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
@@ -49,21 +34,25 @@ export class AuthGuard {
         .pipe(
           catchError(() => {
             if (utmSource === 'ios') {
-              this.router.navigate(['/demo']);
+              this.router.navigate(publicRoutes.demo.routerLink);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/' + $localize`register`]);
+              this.router.navigate(publicRoutes.register.routerLink);
               resolve(false);
             } else if (
-              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) => {
-                const [, url] = state.url.split('/');
-                return `/${url}` === publicPageRoute;
-              })?.length > 0
+              Object.values(publicRoutes)
+                .map(({ path }) => {
+                  return `/${path}`;
+                })
+                .some((publicPageRoute) => {
+                  const [, url] = decodeURIComponent(state.url).split('/');
+                  return `/${url}` === publicPageRoute;
+                })
             ) {
               resolve(true);
               return EMPTY;
             } else if (state.url !== '/start') {
-              this.router.navigate(['/start']);
+              this.router.navigate(publicRoutes.start.routerLink);
               resolve(false);
               return EMPTY;
             }
@@ -89,26 +78,26 @@ export class AuthGuard {
             resolve(true);
             return;
           } else if (
-            state.url.startsWith('/home') &&
+            state.url.startsWith(`/${internalRoutes.home.path}`) &&
             user.settings.viewMode === 'ZEN'
           ) {
-            this.router.navigate(['/zen']);
+            this.router.navigate(internalRoutes.zen.routerLink);
             resolve(false);
             return;
-          } else if (state.url.startsWith('/start')) {
+          } else if (state.url.startsWith(`/${publicRoutes.start.path}`)) {
             if (user.settings.viewMode === 'ZEN') {
-              this.router.navigate(['/zen']);
+              this.router.navigate(internalRoutes.zen.routerLink);
             } else {
-              this.router.navigate(['/home']);
+              this.router.navigate(internalRoutes.home.routerLink);
             }
 
             resolve(false);
             return;
           } else if (
-            state.url.startsWith('/zen') &&
+            state.url.startsWith(`/${internalRoutes.zen.path}`) &&
             user.settings.viewMode === 'DEFAULT'
           ) {
-            this.router.navigate(['/home']);
+            this.router.navigate(internalRoutes.home.routerLink);
             resolve(false);
             return;
           }

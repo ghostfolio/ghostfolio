@@ -1,4 +1,4 @@
-import { DERIVED_CURRENCIES } from '@ghostfolio/common/config';
+import { isDerivedCurrency } from '@ghostfolio/common/helper';
 
 import {
   registerDecorator,
@@ -25,19 +25,18 @@ export class IsExtendedCurrencyConstraint
   implements ValidatorConstraintInterface
 {
   public defaultMessage() {
-    return '$value must be a valid ISO4217 currency code';
+    return '$property must be a valid ISO4217 currency code';
   }
 
-  public validate(currency: any) {
-    // Return true if currency is a standard ISO 4217 code or a derived currency
+  public validate(currency: string) {
+    // Return true if currency is a derived currency or a standard ISO 4217 code
     return (
-      isISO4217CurrencyCode(currency) ||
-      [
-        ...DERIVED_CURRENCIES.map((derivedCurrency) => {
-          return derivedCurrency.currency;
-        }),
-        'USX'
-      ].includes(currency)
+      isDerivedCurrency(currency) ||
+      (this.isUpperCase(currency) && isISO4217CurrencyCode(currency))
     );
+  }
+
+  private isUpperCase(aString: string) {
+    return aString === aString?.toUpperCase();
   }
 }

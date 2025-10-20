@@ -13,8 +13,11 @@ import {
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,6 +28,10 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
@@ -39,19 +46,31 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { addIcons } from 'ionicons';
+import { arrowForwardOutline } from 'ionicons/icons';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-benchmark-comparator',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './benchmark-comparator.component.html',
-  styleUrls: ['./benchmark-comparator.component.scss']
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfPremiumIndicatorComponent,
+    IonIcon,
+    MatSelectModule,
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
+  selector: 'gf-benchmark-comparator',
+  styleUrls: ['./benchmark-comparator.component.scss'],
+  templateUrl: './benchmark-comparator.component.html'
 })
-export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
+export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmark: Partial<SymbolProfile>;
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarks: Partial<SymbolProfile>[];
   @Input() colorScheme: ColorScheme;
-  @Input() daysInMarket: number;
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];
@@ -63,6 +82,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public chart: Chart<'line'>;
   public hasPermissionToAccessAdminControl: boolean;
+  public routerLinkAdminControlMarketData =
+    internalRoutes.adminControl.subRoutes.marketData.routerLink;
 
   public constructor() {
     Chart.register(
@@ -77,6 +98,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
     Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
       getTooltipPositionerMapTop(this.chart, position);
+
+    addIcons({ arrowForwardOutline });
   }
 
   public ngOnChanges() {
@@ -99,7 +122,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    const benchmarkDataValues: { [date: string]: number } = {};
+    const benchmarkDataValues: Record<string, number> = {};
 
     for (const { date, value } of this.benchmarkDataItems) {
       benchmarkDataValues[date] = value;
@@ -134,9 +157,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration()
-        );
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration() as unknown;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -155,7 +177,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
             },
             interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
-            plugins: <unknown>{
+            plugins: {
               annotation: {
                 annotations: {
                   yAxis: {
@@ -174,7 +196,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            },
+            } as unknown,
             responsive: true,
             scales: {
               x: {
@@ -239,7 +261,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
         unit: '%'
       }),
       mode: 'index',
-      position: <unknown>'top',
+      position: 'top' as unknown,
       xAlign: 'center',
       yAlign: 'bottom'
     };

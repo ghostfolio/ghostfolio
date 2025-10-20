@@ -1,59 +1,103 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { ASSET_CLASS_MAPPING } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
+import {
+  AssetClassSelectorOption,
+  LookupItem
+} from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Inject,
-  OnDestroy,
-  ViewChild
+  OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
-import { isUUID } from 'class-validator';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { IonIcon } from '@ionic/angular/standalone';
+import { AssetClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
-import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
-import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, delay, takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../../../services/data.service';
+import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
+import { ActivityType } from './types/activity-type.type';
 
 @Component({
-  host: { class: 'h-100' },
-  selector: 'gf-create-or-update-activity-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'h-100' },
+  imports: [
+    GfEntityLogoComponent,
+    GfSymbolAutocompleteComponent,
+    GfTagsSelectorComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    NgClass,
+    ReactiveFormsModule
+  ],
+  selector: 'gf-create-or-update-activity-dialog',
   styleUrls: ['./create-or-update-activity-dialog.scss'],
   templateUrl: 'create-or-update-activity-dialog.html'
 })
-export class CreateOrUpdateActivityDialog implements OnDestroy {
-  @ViewChild('symbolAutocomplete') symbolAutocomplete;
-  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-
+export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public activityForm: FormGroup;
-  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
-    return { id: assetClass, label: translate(assetClass) };
-  });
-  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
-    return { id: assetSubClass, label: translate(assetSubClass) };
-  });
+
+  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
+    .map((id) => {
+      return { id, label: translate(id) } as AssetClassSelectorOption;
+    })
+    .sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
+
+  public assetSubClassOptions: AssetClassSelectorOption[] = [];
   public currencies: string[] = [];
+  public currencyOfAssetProfile: string;
   public currentMarketPrice = null;
   public defaultDateFormat: string;
-  public filteredTagsObservable: Observable<Tag[]> = of([]);
+  public defaultLookupItems: LookupItem[] = [];
+  public hasPermissionToCreateOwnTag: boolean;
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
   public platforms: { id: string; name: string }[];
-  public separatorKeysCodes: number[] = [COMMA, ENTER];
   public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
@@ -66,14 +110,22 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<CreateOrUpdateActivityDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
     private formBuilder: FormBuilder,
-    @Inject(MAT_DATE_LOCALE) private locale: string
-  ) {}
+    @Inject(MAT_DATE_LOCALE) private locale: string,
+    private userService: UserService
+  ) {
+    addIcons({ calendarClearOutline, refreshOutline });
+  }
 
   public ngOnInit() {
-    this.mode = this.data.activity.id ? 'update' : 'create';
+    this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
+    this.hasPermissionToCreateOwnTag =
+      this.data.user?.settings?.isExperimentalFeatures &&
+      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
     this.locale = this.data.user?.settings?.locale;
+    this.mode = this.data.activity?.id ? 'update' : 'create';
+
     this.dateAdapter.setLocale(this.locale);
 
     const { currencies, platforms } = this.dataService.fetchInfo();
@@ -81,6 +133,43 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
+
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.defaultLookupItems = holdings
+          .filter(({ assetSubClass }) => {
+            return !['CASH'].includes(assetSubClass);
+          })
+          .sort((a, b) => {
+            return a.name?.localeCompare(b.name);
+          })
+          .map(
+            ({
+              assetClass,
+              assetSubClass,
+              currency,
+              dataSource,
+              name,
+              symbol
+            }) => {
+              return {
+                assetClass,
+                assetSubClass,
+                currency,
+                dataSource,
+                name,
+                symbol,
+                dataProviderInfo: {
+                  isPremium: false
+                }
+              };
+            }
+          );
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.tagsAvailable =
       this.data.user?.tags?.map((tag) => {
@@ -90,9 +179,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         };
       }) ?? [];
 
-    Object.keys(Type).forEach((type) => {
-      this.typesTranslationMap[Type[type]] = translate(Type[type]);
-    });
+    for (const type of Object.keys(ActivityType)) {
+      this.typesTranslationMap[ActivityType[type]] = translate(
+        ActivityType[type]
+      );
+    }
 
     this.activityForm = this.formBuilder.group({
       accountId: [
@@ -111,7 +202,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         Validators.required
       ],
       currencyOfUnitPrice: [
-        this.data.activity?.SymbolProfile?.currency,
+        this.data.activity?.currency ??
+          this.data.activity?.SymbolProfile?.currency,
         Validators.required
       ],
       dataSource: [
@@ -120,11 +212,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       ],
       date: [this.data.activity?.date, Validators.required],
       fee: [this.data.activity?.fee, Validators.required],
-      feeInCustomCurrency: [this.data.activity?.fee, Validators.required],
       name: [this.data.activity?.SymbolProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
-        !!this.data.activity?.SymbolProfile
+        this.data.activity?.SymbolProfile
           ? {
               dataSource: this.data.activity?.SymbolProfile?.dataSource,
               symbol: this.data.activity?.SymbolProfile?.symbol
@@ -142,10 +233,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       ],
       type: [undefined, Validators.required], // Set after value changes subscription
       unitPrice: [this.data.activity?.unitPrice, Validators.required],
-      unitPriceInCustomCurrency: [
-        this.data.activity?.unitPrice,
-        Validators.required
-      ],
       updateAccountBalance: [false]
     });
 
@@ -157,71 +244,20 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(async () => {
-        let exchangeRateOfUnitPrice = 1;
-
-        this.activityForm.get('feeInCustomCurrency').setErrors(null);
-        this.activityForm.get('unitPriceInCustomCurrency').setErrors(null);
-
-        const currency = this.activityForm.get('currency').value;
-        const currencyOfUnitPrice = this.activityForm.get(
-          'currencyOfUnitPrice'
-        ).value;
-        const date = this.activityForm.get('date').value;
-
         if (
-          currency &&
-          currencyOfUnitPrice &&
-          currency !== currencyOfUnitPrice &&
-          date
-        ) {
-          try {
-            const { marketPrice } = await lastValueFrom(
-              this.dataService
-                .fetchExchangeRateForDate({
-                  date,
-                  symbol: `${currencyOfUnitPrice}-${currency}`
-                })
-                .pipe(takeUntil(this.unsubscribeSubject))
-            );
-
-            exchangeRateOfUnitPrice = marketPrice;
-          } catch {
-            this.activityForm.get('unitPriceInCustomCurrency').setErrors({
-              invalid: true
-            });
-          }
-        }
-
-        const feeInCustomCurrency =
-          this.activityForm.get('feeInCustomCurrency').value *
-          exchangeRateOfUnitPrice;
-
-        const unitPriceInCustomCurrency =
-          this.activityForm.get('unitPriceInCustomCurrency').value *
-          exchangeRateOfUnitPrice;
-
-        this.activityForm.get('fee').setValue(feeInCustomCurrency, {
-          emitEvent: false
-        });
-
-        this.activityForm.get('unitPrice').setValue(unitPriceInCustomCurrency, {
-          emitEvent: false
-        });
-
-        if (
-          this.activityForm.get('type').value === 'BUY' ||
-          this.activityForm.get('type').value === 'FEE' ||
-          this.activityForm.get('type').value === 'ITEM'
+          ['BUY', 'FEE', 'VALUABLE'].includes(
+            this.activityForm.get('type').value
+          )
         ) {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value +
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         } else {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value -
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         }
 
         this.changeDetectorRef.markForCheck();
@@ -230,12 +266,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm.get('accountId').valueChanges.subscribe((accountId) => {
       const type = this.activityForm.get('type').value;
 
-      if (
-        type === 'FEE' ||
-        type === 'INTEREST' ||
-        type === 'ITEM' ||
-        type === 'LIABILITY'
-      ) {
+      if (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(type)) {
         const currency =
           this.data.accounts.find(({ id }) => {
             return id === accountId;
@@ -254,6 +285,26 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         }
       }
     });
+
+    this.activityForm
+      .get('assetClass')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((assetClass) => {
+        const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
+
+        this.assetSubClassOptions = assetSubClasses
+          .map((assetSubClass) => {
+            return {
+              id: assetSubClass,
+              label: translate(assetSubClass)
+            };
+          })
+          .sort((a, b) => a.label.localeCompare(b.label));
+
+        this.activityForm.get('assetSubClass').setValue(null);
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.activityForm.get('date').valueChanges.subscribe(() => {
       if (isToday(this.activityForm.get('date').value)) {
@@ -274,61 +325,48 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('type').value
         )
       ) {
-        this.activityForm
-          .get('dataSource')
-          .setValue(this.activityForm.get('searchSymbol').value.dataSource);
-
-        this.updateSymbol();
+        this.updateAssetProfile();
       }
 
       this.changeDetectorRef.markForCheck();
     });
 
-    this.filteredTagsObservable = this.activityForm.controls[
-      'tags'
-    ].valueChanges.pipe(
-      startWith(this.activityForm.get('tags').value),
-      map((aTags: Tag[] | null) => {
-        return aTags ? this.filterTags(aTags) : this.tagsAvailable.slice();
-      })
-    );
+    this.activityForm.get('tags').valueChanges.subscribe((tags: Tag[]) => {
+      const newTag = tags.find(({ id }) => {
+        return id === undefined;
+      });
+
+      if (newTag && this.hasPermissionToCreateOwnTag) {
+        this.dataService
+          .postTag({ ...newTag, userId: this.data.user.id })
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((tag) => {
+            this.activityForm.get('tags').setValue(
+              tags.map((currentTag) => {
+                if (currentTag.id === undefined) {
+                  return tag;
+                }
+
+                return currentTag;
+              })
+            );
+
+            this.userService
+              .get(true)
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe();
+          });
+      }
+    });
 
     this.activityForm
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((type: Type) => {
-        if (type === 'ITEM') {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
-          const currency =
-            this.data.accounts.find(({ id }) => {
-              return id === this.activityForm.get('accountId').value;
-            })?.currency ?? this.data.user.settings.baseCurrency;
-
-          this.activityForm.get('currency').setValue(currency);
-          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
-
-          this.activityForm
-            .get('dataSource')
-            .removeValidators(Validators.required);
-          this.activityForm.get('dataSource').updateValueAndValidity();
-          this.activityForm.get('feeInCustomCurrency').reset();
-          this.activityForm.get('name').setValidators(Validators.required);
-          this.activityForm.get('name').updateValueAndValidity();
-          this.activityForm.get('quantity').setValue(1);
-          this.activityForm
-            .get('searchSymbol')
-            .removeValidators(Validators.required);
-          this.activityForm.get('searchSymbol').updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance').disable();
-          this.activityForm.get('updateAccountBalance').setValue(false);
-        } else if (
-          type === 'FEE' ||
-          type === 'INTEREST' ||
-          type === 'LIABILITY'
+      .subscribe((type: ActivityType) => {
+        if (
+          type === 'VALUABLE' ||
+          (this.activityForm.get('dataSource').value === 'MANUAL' &&
+            type === 'BUY')
         ) {
           this.activityForm
             .get('accountId')
@@ -347,14 +385,41 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .get('dataSource')
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
+          this.activityForm.get('fee').setValue(0);
+          this.activityForm.get('name').setValidators(Validators.required);
+          this.activityForm.get('name').updateValueAndValidity();
 
-          if (
-            (type === 'FEE' &&
-              this.activityForm.get('feeInCustomCurrency').value === 0) ||
-            type === 'INTEREST' ||
-            type === 'LIABILITY'
-          ) {
-            this.activityForm.get('feeInCustomCurrency').reset();
+          if (type === 'VALUABLE') {
+            this.activityForm.get('quantity').setValue(1);
+          }
+
+          this.activityForm
+            .get('searchSymbol')
+            .removeValidators(Validators.required);
+          this.activityForm.get('searchSymbol').updateValueAndValidity();
+          this.activityForm.get('updateAccountBalance').disable();
+          this.activityForm.get('updateAccountBalance').setValue(false);
+        } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+          this.activityForm
+            .get('accountId')
+            .removeValidators(Validators.required);
+          this.activityForm.get('accountId').updateValueAndValidity();
+
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === this.activityForm.get('accountId').value;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.get('currency').setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+
+          this.activityForm
+            .get('dataSource')
+            .removeValidators(Validators.required);
+          this.activityForm.get('dataSource').updateValueAndValidity();
+
+          if (['INTEREST', 'LIABILITY'].includes(type)) {
+            this.activityForm.get('fee').setValue(0);
           }
 
           this.activityForm.get('name').setValidators(Validators.required);
@@ -362,7 +427,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
           if (type === 'FEE') {
             this.activityForm.get('quantity').setValue(0);
-          } else if (type === 'INTEREST' || type === 'LIABILITY') {
+          } else if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('quantity').setValue(1);
           }
 
@@ -372,7 +437,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('searchSymbol').updateValueAndValidity();
 
           if (type === 'FEE') {
-            this.activityForm.get('unitPriceInCustomCurrency').setValue(0);
+            this.activityForm.get('unitPrice').setValue(0);
           }
 
           if (
@@ -428,7 +493,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public applyCurrentMarketPrice() {
     this.activityForm.patchValue({
       currencyOfUnitPrice: this.activityForm.get('currency').value,
-      unitPriceInCustomCurrency: this.currentMarketPrice
+      unitPrice: this.currentMarketPrice
     });
   }
 
@@ -440,27 +505,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return isAfter(aDate, new Date(0));
   }
 
-  public onAddTag(event: MatAutocompleteSelectedEvent) {
-    this.activityForm.get('tags').setValue([
-      ...(this.activityForm.get('tags').value ?? []),
-      this.tagsAvailable.find(({ id }) => {
-        return id === event.option.value;
-      })
-    ]);
-
-    this.tagInput.nativeElement.value = '';
-  }
-
   public onCancel() {
     this.dialogRef.close();
-  }
-
-  public onRemoveTag(aTag: Tag) {
-    this.activityForm.get('tags').setValue(
-      this.activityForm.get('tags').value.filter(({ id }) => {
-        return id !== aTag.id;
-      })
-    );
   }
 
   public async onSubmit() {
@@ -472,23 +518,34 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       currency: this.activityForm.get('currency').value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
       date: this.activityForm.get('date').value,
-      dataSource: this.activityForm.get('dataSource').value,
+      dataSource:
+        this.activityForm.get('type').value === 'VALUABLE'
+          ? 'MANUAL'
+          : this.activityForm.get('dataSource').value,
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
-        this.activityForm.get('searchSymbol').value?.symbol === undefined ||
-        isUUID(this.activityForm.get('searchSymbol').value?.symbol)
-          ? this.activityForm.get('name').value
-          : this.activityForm.get('searchSymbol').value.symbol,
-      tags: this.activityForm.get('tags').value,
-      type: this.activityForm.get('type').value,
+        (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
+          this.activityForm.get('type').value
+        )
+          ? undefined
+          : this.activityForm.get('searchSymbol')?.value?.symbol) ??
+        this.activityForm.get('name')?.value,
+      tags: this.activityForm.get('tags').value?.map(({ id }) => {
+        return id;
+      }),
+      type:
+        this.activityForm.get('type').value === 'VALUABLE'
+          ? 'BUY'
+          : this.activityForm.get('type').value,
       unitPrice: this.activityForm.get('unitPrice').value
     };
 
     try {
       if (this.mode === 'create') {
-        (activity as CreateOrderDto).updateAccountBalance =
-          this.activityForm.get('updateAccountBalance').value;
+        activity.updateAccountBalance = this.activityForm.get(
+          'updateAccountBalance'
+        ).value;
 
         await validateObjectForForm({
           classDto: CreateOrderDto,
@@ -497,9 +554,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           object: activity
         });
 
-        this.dialogRef.close(activity as CreateOrderDto);
+        this.dialogRef.close(activity);
       } else {
-        (activity as UpdateOrderDto).id = this.data.activity.id;
+        (activity as UpdateOrderDto).id = this.data.activity?.id;
 
         await validateObjectForForm({
           classDto: UpdateOrderDto,
@@ -520,23 +577,13 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
-  private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map(({ id }) => {
-      return id;
-    });
-
-    return this.tagsAvailable.filter(({ id }) => {
-      return !tagIds.includes(id);
-    });
-  }
-
-  private updateSymbol() {
+  private updateAssetProfile() {
     this.isLoading = true;
     this.changeDetectorRef.markForCheck();
 
     this.dataService
       .fetchSymbolItem({
-        dataSource: this.activityForm.get('dataSource').value,
+        dataSource: this.activityForm.get('searchSymbol').value.dataSource,
         symbol: this.activityForm.get('searchSymbol').value.symbol
       })
       .pipe(
@@ -552,10 +599,13 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
-        this.activityForm.get('currency').setValue(currency);
-        this.activityForm.get('currencyOfUnitPrice').setValue(currency);
-        this.activityForm.get('dataSource').setValue(dataSource);
+        if (this.mode === 'create') {
+          this.activityForm.get('currency').setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+          this.activityForm.get('dataSource').setValue(dataSource);
+        }
 
+        this.currencyOfAssetProfile = currency;
         this.currentMarketPrice = marketPrice;
 
         this.isLoading = false;

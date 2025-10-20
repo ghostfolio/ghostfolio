@@ -64,14 +64,24 @@
           <mat-menu #rulesMenu="matMenu" xPosition="before">
             @if (rule?.isActive && rule?.configuration) {
               <button mat-menu-item (click)="onCustomizeRule(rule)">
-                <ng-container i18n>Customize</ng-container>...
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="options-outline" />
+                  <span><ng-container i18n>Customize</ng-container>...</span>
+                </span>
               </button>
+              <hr class="my-0" />
             }
             <button mat-menu-item (click)="onUpdateRule(rule)">
               @if (rule?.isActive) {
-                <ng-container i18n>Deactivate</ng-container>
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="remove-circle-outline" />
+                  <span i18n>Deactivate</span>
+                </span>
               } @else {
-                <ng-container i18n>Activate</ng-container>
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="add-circle-outline" />
+                  <span i18n>Activate</span>
+                </span>
               }
             </button>
           </mat-menu>

@@ -8,7 +8,8 @@ export interface HoldingDetailDialogParams {
   dataSource: DataSource;
   deviceType: string;
   hasImpersonationId: boolean;
-  hasPermissionToCreateOrder: boolean;
+  hasPermissionToAccessAdminControl: boolean;
+  hasPermissionToCreateActivity: boolean;
   hasPermissionToReportDataGlitch: boolean;
   hasPermissionToUpdateOrder: boolean;
   locale: string;

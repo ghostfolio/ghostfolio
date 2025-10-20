@@ -1,3 +1,4 @@
+import { GfPortfolioSummaryComponent } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -8,17 +9,26 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [GfPortfolioSummaryComponent, MatCardModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-summary',
   styleUrls: ['./home-summary.scss'],
   templateUrl: './home-summary.html'
 })
-export class HomeSummaryComponent implements OnDestroy, OnInit {
+export class GfHomeSummaryComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;

@@ -1,5 +1,5 @@
-import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {
@@ -8,8 +8,20 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 
 import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
@@ -17,18 +29,26 @@ import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-or-update-tag-dialog',
   styleUrls: ['./create-or-update-tag-dialog.scss'],
   templateUrl: 'create-or-update-tag-dialog.html'
 })
-export class CreateOrUpdateTagDialog implements OnDestroy {
+export class GfCreateOrUpdateTagDialogComponent implements OnDestroy {
   public tagForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTagDialogParams,
-    public dialogRef: MatDialogRef<CreateOrUpdateTagDialog>,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateTagDialogComponent>,
     private formBuilder: FormBuilder
   ) {
     this.tagForm = this.formBuilder.group({

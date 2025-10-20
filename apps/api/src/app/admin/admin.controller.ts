@@ -3,25 +3,27 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
-  GATHER_ASSET_PROFILE_PROCESS,
-  GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+  GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
+  GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
-  AdminMarketDataDetails,
   AdminUsers,
-  EnhancedSymbolProfile
+  EnhancedSymbolProfile,
+  ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type {
+  DateRange,
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
@@ -50,8 +52,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
-import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
-import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -59,8 +59,8 @@ export class AdminController {
     private readonly adminService: AdminService,
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly demoService: DemoService,
     private readonly manualService: ManualService,
-    private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -69,6 +69,13 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAdminData(): Promise<AdminData> {
     return this.adminService.get();
+  }
+
+  @Get('demo-user/sync')
+  @HasPermission(permissions.syncDemoUserAccount)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async syncDemoUserAccount(): Promise<Prisma.BatchPayload> {
+    return this.demoService.syncDemoUserAccount();
   }
 
   @HasPermission(permissions.accessAdminControl)
@@ -83,7 +90,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMax(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
       assetProfileIdentifiers.map(({ dataSource, symbol }) => {
@@ -92,9 +99,9 @@ export class AdminController {
             dataSource,
             symbol
           },
-          name: GATHER_ASSET_PROFILE_PROCESS,
+          name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
           opts: {
-            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
             jobId: getAssetProfileIdentifier({ dataSource, symbol }),
             priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
@@ -110,7 +117,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
       assetProfileIdentifiers.map(({ dataSource, symbol }) => {
@@ -119,9 +126,9 @@ export class AdminController {
             dataSource,
             symbol
           },
-          name: GATHER_ASSET_PROFILE_PROCESS,
+          name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
           opts: {
-            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
             jobId: getAssetProfileIdentifier({ dataSource, symbol }),
             priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
@@ -142,9 +149,9 @@ export class AdminController {
         dataSource,
         symbol
       },
-      name: GATHER_ASSET_PROFILE_PROCESS,
+      name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
       opts: {
-        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+        ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
         jobId: getAssetProfileIdentifier({ dataSource, symbol }),
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       }
@@ -156,9 +163,21 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   public async gatherSymbol(
     @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
+    @Param('symbol') symbol: string,
+    @Query('range') dateRange: DateRange
   ): Promise<void> {
-    this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    let date: Date;
+
+    if (dateRange) {
+      const { startDate } = getIntervalFromDateRange(dateRange);
+      date = startDate;
+    }
+
+    this.dataGatheringService.gatherSymbol({
+      dataSource,
+      date,
+      symbol
+    });
 
     return;
   }
@@ -192,6 +211,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
     @Query('presetId') presetId?: MarketDataPreset,
     @Query('query') filterBySearchQuery?: string,
     @Query('skip') skip?: number,
@@ -201,6 +221,7 @@ export class AdminController {
   ): Promise<AdminMarketData> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetSubClasses,
+      filterByDataSource,
       filterBySearchQuery
     });
 
@@ -214,27 +235,16 @@ export class AdminController {
     });
   }
 
-  @Get('market-data/:dataSource/:symbol')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getMarketDataBySymbol(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<AdminMarketDataDetails> {
-    return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
-  }
-
   @HasPermission(permissions.accessAdminControl)
   @Post('market-data/:dataSource/:symbol/test')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async testMarketData(
-    @Body() data: { scraperConfiguration: string },
+    @Body() data: { scraperConfiguration: ScraperConfiguration },
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<{ price: number }> {
     try {
-      const scraperConfiguration = JSON.parse(data.scraperConfiguration);
-      const price = await this.manualService.test(scraperConfiguration);
+      const price = await this.manualService.test(data.scraperConfiguration);
 
       if (price) {
         return { price };
@@ -251,55 +261,6 @@ export class AdminController {
   }
 
   @HasPermission(permissions.accessAdminControl)
-  @Post('market-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async updateMarketData(
-    @Body() data: UpdateBulkMarketDataDto,
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ) {
-    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
-      ({ date, marketPrice }) => ({
-        dataSource,
-        marketPrice,
-        symbol,
-        date: parseISO(date),
-        state: 'CLOSE'
-      })
-    );
-
-    return this.marketDataService.updateMany({
-      data: dataBulkUpdate
-    });
-  }
-
-  /**
-   * @deprecated
-   */
-  @HasPermission(permissions.accessAdminControl)
-  @Put('market-data/:dataSource/:symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async update(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('dateString') dateString: string,
-    @Param('symbol') symbol: string,
-    @Body() data: UpdateMarketDataDto
-  ) {
-    const date = parseISO(dateString);
-
-    return this.marketDataService.updateMarketData({
-      data: { marketPrice: data.marketPrice, state: 'CLOSE' },
-      where: {
-        dataSource_date_symbol: {
-          dataSource,
-          date,
-          symbol
-        }
-      }
-    });
-  }
-
-  @HasPermission(permissions.accessAdminControl)
   @Post('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
@@ -310,7 +271,7 @@ export class AdminController {
     return this.adminService.addAssetProfile({
       dataSource,
       symbol,
-      currency: this.request.user.Settings.settings.baseCurrency
+      currency: this.request.user.settings.settings.baseCurrency
     });
   }
 
@@ -328,15 +289,14 @@ export class AdminController {
   @Patch('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async patchAssetProfileData(
-    @Body() assetProfileData: UpdateAssetProfileDto,
+    @Body() assetProfile: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<EnhancedSymbolProfile> {
-    return this.adminService.patchAssetProfileData({
-      ...assetProfileData,
-      dataSource,
-      symbol
-    });
+    return this.adminService.patchAssetProfileData(
+      { dataSource, symbol },
+      assetProfile
+    );
   }
 
   @HasPermission(permissions.accessAdminControl)
@@ -352,7 +312,13 @@ export class AdminController {
   @Get('user')
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getUsers(): Promise<AdminUsers> {
-    return this.adminService.getUsers();
+  public async getUsers(
+    @Query('skip') skip?: number,
+    @Query('take') take?: number
+  ): Promise<AdminUsers> {
+    return this.adminService.getUsers({
+      skip: isNaN(skip) ? undefined : skip,
+      take: isNaN(take) ? undefined : take
+    });
   }
 }

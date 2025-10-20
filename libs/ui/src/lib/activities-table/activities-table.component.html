@@ -18,7 +18,7 @@
         <ion-icon name="ellipsis-vertical" />
       </button>
     }
-    <mat-menu #activitiesMenu="matMenu" xPosition="before">
+    <mat-menu #activitiesMenu="matMenu" class="no-max-width" xPosition="before">
       <button
         mat-menu-item
         [disabled]="dataSource?.data.length === 0"
@@ -105,9 +105,7 @@
     </ng-container>
 
     <ng-container matColumnDef="importStatus">
-      <th *matHeaderCellDef class="px-1" mat-header-cell>
-        <ng-container i18n></ng-container>
-      </th>
+      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         @if (element.error) {
           <div
@@ -124,12 +122,11 @@
     <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <gf-asset-profile-icon
+        <gf-entity-logo
           [dataSource]="element.SymbolProfile?.dataSource"
           [symbol]="element.SymbolProfile?.symbol"
           [tooltip]="element.SymbolProfile?.name"
         />
-        <div>{{ element.dataSource }}</div>
       </td>
     </ng-container>
 
@@ -171,7 +168,12 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          {{ element.date | date: defaultDateFormat }}
+          <gf-value
+            [deviceType]="deviceType"
+            [isDate]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.date"
+          />
         </div>
       </td>
     </ng-container>
@@ -251,7 +253,7 @@
     <ng-container matColumnDef="value">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell justify-content-end px-1"
+        class="d-none d-lg-table-cell px-1 text-right"
         mat-header-cell
       >
         <ng-container i18n>Value</ng-container>
@@ -280,14 +282,14 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        {{ element.SymbolProfile?.currency }}
+        {{ element.currency ?? element.SymbolProfile?.currency }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
       <th
         *matHeaderCellDef
-        class="d-lg-none d-xl-none justify-content-end px-1"
+        class="d-lg-none d-xl-none px-1 text-right"
         mat-header-cell
       >
         <ng-container i18n>Value</ng-container>
@@ -309,14 +311,14 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          @if (element.Account?.Platform?.url) {
-            <gf-asset-profile-icon
+          @if (element.account?.platform?.url) {
+            <gf-entity-logo
               class="mr-1"
-              [tooltip]="element.Account?.Platform?.name"
-              [url]="element.Account?.Platform?.url"
+              [tooltip]="element.account?.platform?.name"
+              [url]="element.account?.platform?.url"
             />
           }
-          <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
+          <span class="d-none d-lg-block">{{ element.account?.name }}</span>
         </div>
       </td>
     </ng-container>
@@ -359,7 +361,11 @@
             <ion-icon name="ellipsis-vertical" />
           </button>
         }
-        <mat-menu #activitiesMenu="matMenu" xPosition="before">
+        <mat-menu
+          #activitiesMenu="matMenu"
+          class="no-max-width"
+          xPosition="before"
+        >
           @if (hasPermissionToCreateActivity) {
             <button
               class="align-items-center d-flex"
@@ -423,7 +429,11 @@
             <ion-icon name="ellipsis-horizontal" />
           </button>
         }
-        <mat-menu #activityMenu="matMenu" xPosition="before">
+        <mat-menu
+          #activityMenu="matMenu"
+          class="no-max-width"
+          xPosition="before"
+        >
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
@@ -468,7 +478,7 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToOpenDetails &&
-          row.Account?.isExcluded !== true &&
+          isExcludedFromAnalysis(row) === false &&
           row.isDraft === false &&
           ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"
@@ -500,7 +510,10 @@
 />
 
 @if (
-  dataSource?.data.length === 0 && hasPermissionToCreateActivity && !isLoading
+  !hasActivities &&
+  dataSource?.data.length === 0 &&
+  hasPermissionToCreateActivity &&
+  !isLoading
 ) {
   <div class="p-3 text-center">
     <gf-no-transactions-info-indicator [hasBorder]="false" />

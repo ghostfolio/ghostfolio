@@ -30,83 +30,6 @@
               }
             </div>
           </div>
-          <div class="align-items-start d-flex my-3">
-            <div class="w-50" i18n>Exchange Rates</div>
-            <div class="w-50">
-              <table>
-                @for (exchangeRate of exchangeRates; track exchangeRate) {
-                  <tr>
-                    <td>
-                      <gf-value [locale]="user?.settings?.locale" [value]="1" />
-                    </td>
-                    <td class="pl-1">{{ exchangeRate.label1 }}</td>
-                    <td class="px-1">=</td>
-                    <td align="right">
-                      <gf-value
-                        class="d-inline-block"
-                        [locale]="user?.settings?.locale"
-                        [precision]="4"
-                        [value]="exchangeRate.value"
-                      />
-                    </td>
-                    <td class="pl-1">{{ exchangeRate.label2 }}</td>
-                    <td>
-                      <button
-                        class="mx-1 no-min-width px-2"
-                        mat-button
-                        [matMenuTriggerFor]="exchangeRateActionsMenu"
-                        (click)="$event.stopPropagation()"
-                      >
-                        <ion-icon name="ellipsis-horizontal" />
-                      </button>
-                      <mat-menu
-                        #exchangeRateActionsMenu="matMenu"
-                        class="h-100 mx-1 no-min-width px-2"
-                        xPosition="before"
-                      >
-                        <a
-                          mat-menu-item
-                          [queryParams]="{
-                            assetProfileDialog: true,
-                            dataSource: exchangeRate.dataSource,
-                            symbol: exchangeRate.symbol
-                          }"
-                          [routerLink]="['/admin', 'market-data']"
-                        >
-                          <span class="align-items-center d-flex">
-                            <ion-icon class="mr-2" name="create-outline" />
-                            <span i18n>Edit</span>
-                          </span>
-                        </a>
-                        @if (customCurrencies.includes(exchangeRate.label2)) {
-                          <hr class="m-0" />
-                          <button
-                            mat-menu-item
-                            (click)="onDeleteCurrency(exchangeRate.label2)"
-                          >
-                            <span class="align-items-center d-flex">
-                              <ion-icon class="mr-2" name="trash-outline" />
-                              <span i18n>Delete</span>
-                            </span>
-                          </button>
-                        }
-                      </mat-menu>
-                    </td>
-                  </tr>
-                }
-              </table>
-              <div class="mt-2">
-                <button
-                  color="primary"
-                  mat-flat-button
-                  (click)="onAddCurrency()"
-                >
-                  <ion-icon class="mr-1" name="add-outline" />
-                  <span i18n>Add Currency</span>
-                </button>
-              </div>
-            </div>
-          </div>
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Signup</div>
             <div class="w-50">
@@ -182,7 +105,9 @@
                   @for (coupon of coupons; track coupon) {
                     <tr>
                       <td class="text-monospace">{{ coupon.code }}</td>
-                      <td class="pl-2 text-right">{{ coupon.duration }}</td>
+                      <td class="pl-2 text-right">
+                        {{ formatStringValue(coupon.duration) }}
+                      </td>
                       <td>
                         <button
                           class="mx-1 no-min-width px-2"
@@ -222,12 +147,24 @@
                         [value]="couponDuration"
                         (selectionChange)="onChangeCouponDuration($event.value)"
                       >
-                        <mat-option value="7 days">7 Days</mat-option>
-                        <mat-option value="14 days">14 Days</mat-option>
-                        <mat-option value="30 days">30 Days</mat-option>
-                        <mat-option value="90 days">90 Days</mat-option>
-                        <mat-option value="180 days">180 Days</mat-option>
-                        <mat-option value="1 year">1 Year</mat-option>
+                        <mat-option value="7 days">{{
+                          formatStringValue('7 days')
+                        }}</mat-option>
+                        <mat-option value="14 days">{{
+                          formatStringValue('14 days')
+                        }}</mat-option>
+                        <mat-option value="30 days">{{
+                          formatStringValue('30 days')
+                        }}</mat-option>
+                        <mat-option value="90 days">{{
+                          formatStringValue('90 days')
+                        }}</mat-option>
+                        <mat-option value="180 days">{{
+                          formatStringValue('180 days')
+                        }}</mat-option>
+                        <mat-option value="1 year">{{
+                          formatStringValue('1 year')
+                        }}</mat-option>
                       </mat-select>
                     </mat-form-field>
                     <button
@@ -246,10 +183,23 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>Housekeeping</div>
             <div class="w-50">
-              <button color="warn" mat-flat-button (click)="onFlushCache()">
-                <ion-icon class="mr-1" name="close-circle-outline" />
-                <span i18n>Flush Cache</span>
-              </button>
+              <div class="align-items-start d-flex flex-column">
+                @if (hasPermissionToSyncDemoUserAccount) {
+                  <button
+                    class="mb-2"
+                    color="accent"
+                    mat-flat-button
+                    (click)="onSyncDemoUserAccount()"
+                  >
+                    <ion-icon class="mr-1" name="sync-outline" />
+                    <span i18n>Sync Demo User Account</span>
+                  </button>
+                }
+                <button color="warn" mat-flat-button (click)="onFlushCache()">
+                  <ion-icon class="mr-1" name="close-circle-outline" />
+                  <span i18n>Flush Cache</span>
+                </button>
+              </div>
             </div>
           </div>
         </mat-card-content>

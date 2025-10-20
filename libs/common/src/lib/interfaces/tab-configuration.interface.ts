@@ -1,6 +1,6 @@
 export interface TabConfiguration {
   iconName: string;
   label: string;
-  path: string[];
+  routerLink: string[];
   showCondition?: boolean;
 }

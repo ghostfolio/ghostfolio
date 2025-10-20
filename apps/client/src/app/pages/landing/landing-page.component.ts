@@ -1,19 +1,46 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { GfCarouselComponent } from '@ghostfolio/ui/carousel';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { GfLogoCarouselComponent } from '@ghostfolio/ui/logo-carousel';
+import { GfValueComponent } from '@ghostfolio/ui/value';
+import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 import { format } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  cloudDownloadOutline,
+  peopleOutline,
+  starOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [
+    CommonModule,
+    GfCarouselComponent,
+    GfLogoCarouselComponent,
+    GfLogoComponent,
+    GfValueComponent,
+    GfWorldMapChartComponent,
+    MatButtonModule,
+    MatCardModule,
+    RouterModule
+  ],
   selector: 'gf-landing-page',
   styleUrls: ['./landing-page.scss'],
   templateUrl: './landing-page.html'
 })
-export class LandingPageComponent implements OnDestroy, OnInit {
+export class GfLandingPageComponent implements OnDestroy, OnInit {
   public countriesOfSubscribersMap: {
     [code: string]: { value: number };
   } = {};
@@ -23,8 +50,10 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkDemo = publicRoutes.demo.routerLink;
+  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
+  public routerLinkRegister = publicRoutes.register.routerLink;
   public statistics: Statistics;
   public testimonials = [
     {
@@ -114,6 +143,12 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     );
 
     this.statistics = statistics;
+
+    addIcons({
+      cloudDownloadOutline,
+      peopleOutline,
+      starOutline
+    });
   }
 
   public ngOnInit() {

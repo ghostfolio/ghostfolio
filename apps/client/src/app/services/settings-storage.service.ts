@@ -8,17 +8,15 @@ export const KEY_TOKEN = 'auth-token';
   providedIn: 'root'
 })
 export class SettingsStorageService {
-  public constructor() {}
-
   public getSetting(aKey: string): string {
     return window.localStorage.getItem(aKey);
   }
 
-  public setSetting(aKey: string, aValue: string) {
-    window.localStorage.setItem(aKey, aValue);
-  }
-
   public removeSetting(aKey: string) {
     return window.localStorage.removeItem(aKey);
+  }
+
+  public setSetting(aKey: string, aValue: string) {
+    window.localStorage.setItem(aKey, aValue);
   }
 }

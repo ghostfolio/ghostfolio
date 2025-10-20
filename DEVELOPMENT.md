@@ -5,14 +5,14 @@
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 20+)
+- [Node.js](https://nodejs.org/en/download) (version `>=22.18.0`)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
 ### Setup
 
 1. Run `npm install`
-1. Run `docker compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+1. Run `docker compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `npm run database:setup` to initialize the database schema
 1. Start the [server](#start-server) and the [client](#start-client)
 1. Open https://localhost:4200/en in your browser
@@ -30,7 +30,13 @@ Run `npm run start:server`
 
 ### Start Client
 
-Run `npm run start:client` and open https://localhost:4200/en in your browser
+#### English (Default)
+
+Run `npm run start:client` and open https://localhost:4200/en in your browser.
+
+#### Other Languages
+
+To start the client in a different language, such as German (`de`), adapt the `start:client` script in the `package.json` file by changing `--configuration=development-en` to `--configuration=development-de`. Then, run `npm run start:client` and open https://localhost:4200/de in your browser.
 
 ### Start _Storybook_
 
@@ -59,6 +65,10 @@ Remove permission in `UserService` using `without()`
 ### Frontend
 
 Use `@if (user?.settings?.isExperimentalFeatures) {}` in HTML template
+
+## Component Library (_Storybook_)
+
+https://ghostfol.io/development/storybook
 
 ## Git
 
@@ -101,3 +111,12 @@ https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
 Run `npm run prisma migrate dev --name added_job_title`
 
 https://www.prisma.io/docs/concepts/components/prisma-migrate#getting-started-with-prisma-migrate
+
+## SSL
+
+Generate `localhost.cert` and `localhost.pem` files.
+
+```
+openssl req -x509 -newkey rsa:2048 -nodes -keyout apps/client/localhost.pem -out apps/client/localhost.cert -days 365 \
+  -subj "/C=CH/ST=State/L=City/O=Organization/OU=Unit/CN=localhost"
+```

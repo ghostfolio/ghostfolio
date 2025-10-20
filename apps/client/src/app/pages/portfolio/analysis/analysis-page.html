@@ -1,5 +1,79 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
+  @if (user?.settings?.isExperimentalFeatures) {
+    <div class="mb-3 row">
+      <div class="col-lg">
+        <div class="d-flex justify-content-end">
+          <button
+            #actionsMenuButton
+            class="mx-1 no-min-width px-2"
+            mat-stroked-button
+            [matMenuTriggerFor]="actionsMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <ion-icon name="ellipsis-vertical" />
+          </button>
+          <mat-menu
+            #actionsMenu="matMenu"
+            class="no-max-width"
+            xPosition="before"
+          >
+            <div (click)="$event.stopPropagation()">
+              <button
+                mat-menu-item
+                [disabled]="!hasPermissionToReadAiPrompt"
+                (click)="onCopyPromptToClipboard('portfolio')"
+              >
+                <span class="align-items-center d-flex">
+                  @if (user?.subscription?.type === 'Basic') {
+                    <gf-premium-indicator class="mr-2" />
+                  } @else {
+                    @if (isLoadingPortfolioPrompt) {
+                      <mat-spinner
+                        class="mr-2"
+                        color="accent"
+                        [diameter]="16"
+                      />
+                    } @else {
+                      <ion-icon class="mr-2" name="copy-outline" />
+                    }
+                  }
+                  <ng-container i18n
+                    >Copy portfolio data to clipboard for AI
+                    prompt</ng-container
+                  >
+                </span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="!hasPermissionToReadAiPrompt"
+                (click)="onCopyPromptToClipboard('analysis')"
+              >
+                <span class="align-items-center d-flex">
+                  @if (user?.subscription?.type === 'Basic') {
+                    <gf-premium-indicator class="mr-2" />
+                  } @else {
+                    @if (isLoadingAnalysisPrompt) {
+                      <mat-spinner
+                        class="mr-2"
+                        color="accent"
+                        [diameter]="16"
+                      />
+                    } @else {
+                      <ion-icon class="mr-2" name="copy-outline" />
+                    }
+                  }
+                  <ng-container i18n
+                    >Copy AI prompt to clipboard for analysis</ng-container
+                  >
+                </span>
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+  }
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
@@ -8,7 +82,6 @@
         [benchmarkDataItems]="benchmarkDataItems"
         [benchmarks]="benchmarks"
         [colorScheme]="user?.settings?.colorScheme"
-        [daysInMarket]="daysInMarket"
         [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
         [locale]="user?.settings?.locale"
         [performanceDataItems]="performanceDataItemsInPercentage"
@@ -20,7 +93,7 @@
 
   <div class="mb-5 row">
     <div class="col">
-      <mat-card appearance="outlined" class="mb-3">
+      <mat-card appearance="outlined">
         <mat-card-content>
           <div class="d-flex py-1">
             <div
@@ -159,8 +232,8 @@
   </div>
 
   <div class="mb-5 row">
-    <div class="col-md-6">
-      <mat-card appearance="outlined" class="mb-3">
+    <div class="col-md-6 mb-3">
+      <mat-card appearance="outlined" class="h-100">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n
             >Top</mat-card-title
@@ -208,8 +281,8 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-6">
-      <mat-card appearance="outlined" class="mb-3">
+    <div class="col-md-6 mb-3">
+      <mat-card appearance="outlined" class="h-100">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n
             >Bottom</mat-card-title
@@ -277,7 +350,6 @@
           [benchmarkDataItems]="investments"
           [benchmarkDataLabel]="portfolioEvolutionDataLabel"
           [currency]="user?.settings?.baseCurrency"
-          [daysInMarket]="daysInMarket"
           [historicalDataItems]="performanceDataItems"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentChart"
@@ -303,7 +375,7 @@
           [defaultValue]="mode"
           [isLoading]="false"
           [options]="modeOptions"
-          (change)="onChangeGroupBy($event.value)"
+          (valueChange)="onChangeGroupBy($event.value)"
         />
       </div>
       @if (streaks) {
@@ -334,7 +406,6 @@
           [benchmarkDataItems]="investmentsByGroup"
           [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
-          [daysInMarket]="daysInMarket"
           [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentTimelineChart"
@@ -361,7 +432,7 @@
           [defaultValue]="mode"
           [isLoading]="false"
           [options]="modeOptions"
-          (change)="onChangeGroupBy($event.value)"
+          (valueChange)="onChangeGroupBy($event.value)"
         />
       </div>
       <div class="chart-container">
@@ -370,7 +441,6 @@
           [benchmarkDataItems]="dividendsByGroup"
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
-          [daysInMarket]="daysInMarket"
           [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingDividendTimelineChart"

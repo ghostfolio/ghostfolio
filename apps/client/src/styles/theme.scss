@@ -104,7 +104,8 @@ $gf-theme-dark: mat.m2-define-dark-theme(
 }
 
 @include mat.button-density(0);
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.table-density(-1);
 
 :root {
@@ -114,7 +115,8 @@ $gf-theme-dark: mat.m2-define-dark-theme(
   --gf-theme-secondary-500: #3686cf;
   --gf-theme-secondary-500-rgb: 78, 208, 94;
 
-  --mdc-filled-button-label-text-tracking: normal;
-  --mdc-outlined-button-label-text-tracking: normal;
-  --mdc-text-button-label-text-tracking: normal;
+  --mat-dialog-container-small-max-width: 96vw;
+  --mat-button-filled-label-text-tracking: normal;
+  --mat-button-outlined-label-text-tracking: normal;
+  --mat-button-text-label-text-tracking: normal;
 }

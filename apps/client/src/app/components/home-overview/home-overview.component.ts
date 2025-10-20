@@ -1,9 +1,9 @@
-import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
+import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   LineChartItem,
@@ -11,30 +11,53 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    CommonModule,
+    GfLineChartComponent,
+    GfPortfolioPerformanceComponent,
+    MatButtonModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-overview',
   styleUrls: ['./home-overview.scss'],
   templateUrl: './home-overview.html'
 })
-export class HomeOverviewComponent implements OnDestroy, OnInit {
-  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public errors: AssetProfileIdentifier[];
   public hasError: boolean;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
+  public hasPermissionToCreateActivity: boolean;
   public historicalDataItems: LineChartItem[];
   public isAllTimeHigh: boolean;
   public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
+  public performanceLabel = $localize`Performance`;
   public precision = 2;
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  public routerLinkPortfolioActivities =
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
   public showDetails = false;
   public unit: string;
   public user: User;
@@ -55,7 +78,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOrder = hasPermission(
+          this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
             permissions.createOrder
           );
@@ -120,7 +143,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         if (
           this.deviceType === 'mobile' &&
           this.performance.currentValueInBaseCurrency >=
-            NUMERICAL_PRECISION_THRESHOLD
+            NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
           this.precision = 0;
         }

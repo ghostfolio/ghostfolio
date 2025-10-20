@@ -1,6 +1,6 @@
 # Run linting and stop the commit process if any errors are found
 # --quiet suppresses warnings (temporary until all warnings are fixed)
-npm run lint --quiet || exit 1
+npm run affected:lint --base=main --head=HEAD --parallel=2 --quiet || exit 1
 
 # Check formatting on modified and uncommitted files, stop the commit if issues are found
 npm run format:check --uncommitted || exit 1

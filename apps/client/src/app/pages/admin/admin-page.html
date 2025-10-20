@@ -1,5 +1,5 @@
 <mat-tab-nav-panel #tabPanel class="flex-grow-1 overflow-auto">
-  <router-outlet></router-outlet>
+  <router-outlet />
 </mat-tab-nav-panel>
 
 <nav
@@ -16,14 +16,14 @@
         mat-tab-link
         routerLinkActive
         [active]="rla.isActive"
-        [routerLink]="tab.path"
+        [routerLink]="tab.routerLink"
         [routerLinkActiveOptions]="{ exact: true }"
       >
         <ion-icon
           [name]="tab.iconName"
           [size]="deviceType === 'mobile' ? 'large' : 'small'"
         />
-        <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
+        <div class="d-none d-sm-block ml-2" [innerHTML]="tab.label"></div>
       </a>
     }
   }

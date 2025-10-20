@@ -6,13 +6,13 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PROPERTY_COUPONS,
-  PROPERTY_CURRENCIES,
   PROPERTY_IS_DATA_GATHERING_ENABLED,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED,
   PROPERTY_SYSTEM_MESSAGE,
   ghostfolioPrefix
 } from '@ghostfolio/common/config';
+import { getDateFnsLocale } from '@ghostfolio/common/helper';
 import {
   Coupon,
   InfoItem,
@@ -20,31 +20,65 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import {
+  MatSlideToggleChange,
+  MatSlideToggleModule
+} from '@angular/material/slide-toggle';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import {
+  addMilliseconds,
   differenceInSeconds,
   formatDistanceToNowStrict,
   parseISO
 } from 'date-fns';
-import { uniq } from 'lodash';
-import { StringValue } from 'ms';
+import { addIcons } from 'ionicons';
+import {
+  closeCircleOutline,
+  ellipsisHorizontal,
+  informationCircleOutline,
+  syncOutline,
+  trashOutline
+} from 'ionicons/icons';
+import ms, { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatSlideToggleModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   selector: 'gf-admin-overview',
   styleUrls: ['./admin-overview.scss'],
   templateUrl: './admin-overview.html'
 })
-export class AdminOverviewComponent implements OnDestroy, OnInit {
+export class GfAdminOverviewComponent implements OnDestroy, OnInit {
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
-  public customCurrencies: string[];
-  public exchangeRates: { label1: string; label2: string; value: number }[];
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
+  public hasPermissionToSyncDemoUserAccount: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
   public isDataGatheringEnabled: boolean;
@@ -63,6 +97,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private notificationService: NotificationService,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
@@ -83,12 +118,25 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
             permissions.enableSystemMessage
           );
 
+          this.hasPermissionToSyncDemoUserAccount = hasPermission(
+            this.user.permissions,
+            permissions.syncDemoUserAccount
+          );
+
           this.hasPermissionToToggleReadOnlyMode = hasPermission(
             this.user.permissions,
             permissions.toggleReadOnlyMode
           );
         }
       });
+
+    addIcons({
+      closeCircleOutline,
+      ellipsisHorizontal,
+      informationCircleOutline,
+      syncOutline,
+      trashOutline
+    });
   }
 
   public ngOnInit() {
@@ -110,6 +158,15 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     return '';
   }
 
+  public formatStringValue(aStringValue: StringValue) {
+    return formatDistanceToNowStrict(
+      addMilliseconds(new Date(), ms(aStringValue)),
+      {
+        locale: getDateFnsLocale(this.user?.settings?.language)
+      }
+    );
+  }
+
   public onAddCoupon() {
     const coupons = [
       ...this.coupons,
@@ -119,24 +176,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       }
     ];
     this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
-  }
-
-  public onAddCurrency() {
-    const currency = prompt($localize`Please add a currency:`);
-
-    if (currency) {
-      if (currency.length === 3) {
-        const currencies = uniq([
-          ...this.customCurrencies,
-          currency.toUpperCase()
-        ]);
-        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-      } else {
-        this.notificationService.alert({
-          title: $localize`${currency} is an invalid currency!`
-        });
-      }
-    }
   }
 
   public onChangeCouponDuration(aCouponDuration: StringValue) {
@@ -153,19 +192,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this coupon?`
-    });
-  }
-
-  public onDeleteCurrency(aCurrency: string) {
-    this.notificationService.confirm({
-      confirmFn: () => {
-        const currencies = this.customCurrencies.filter((currency) => {
-          return currency !== aCurrency;
-        });
-        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-      },
-      confirmType: ConfirmationDialogType.Warn,
-      title: $localize`Do you really want to delete this currency?`
     });
   }
 
@@ -225,10 +251,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       $localize`Please set your system message:`,
       JSON.stringify(
         this.systemMessage ??
-          <SystemMessage>{
+          ({
             message: '⚒️ Scheduled maintenance in progress...',
             targetGroups: ['Basic', 'Premium']
-          }
+          } as SystemMessage)
       )
     );
 
@@ -240,6 +266,21 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     }
   }
 
+  public onSyncDemoUserAccount() {
+    this.adminService
+      .syncDemoUserAccount()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.snackBar.open(
+          '✅ ' + $localize`Demo user account has been synced.`,
+          undefined,
+          {
+            duration: ms('3 seconds')
+          }
+        );
+      });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -249,25 +290,17 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({ exchangeRates, settings, transactionCount, userCount, version }) => {
-          this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
-          this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
-          this.exchangeRates = exchangeRates;
-          this.isDataGatheringEnabled =
-            settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false
-              ? false
-              : true;
-          this.systemMessage = settings[
-            PROPERTY_SYSTEM_MESSAGE
-          ] as SystemMessage;
-          this.transactionCount = transactionCount;
-          this.userCount = userCount;
-          this.version = version;
+      .subscribe(({ settings, transactionCount, userCount, version }) => {
+        this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+        this.isDataGatheringEnabled =
+          settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
+        this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
+        this.transactionCount = transactionCount;
+        this.userCount = userCount;
+        this.version = version;
 
-          this.changeDetectorRef.markForCheck();
-        }
-      );
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private generateCouponCode(aLength: number) {

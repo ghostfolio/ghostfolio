@@ -1,8 +1,7 @@
-import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 
@@ -14,27 +13,44 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Tag } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import {
+  createOutline,
+  ellipsisHorizontal,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CreateOrUpdateTagDialog } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
+import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatSortModule,
+    MatTableModule,
+    RouterModule
+  ],
   selector: 'gf-admin-tag',
   styleUrls: ['./admin-tag.component.scss'],
   templateUrl: './admin-tag.component.html'
 })
-export class AdminTagComponent implements OnInit, OnDestroy {
+export class GfAdminTagComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<Tag> = new MatTableDataSource();
+  public dataSource = new MatTableDataSource<Tag>();
   public deviceType: string;
   public displayedColumns = ['name', 'userId', 'activities', 'actions'];
   public tags: Tag[];
@@ -42,7 +58,6 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
@@ -69,6 +84,8 @@ export class AdminTagComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    addIcons({ createOutline, ellipsisHorizontal, trashOutline });
   }
 
   public ngOnInit() {
@@ -99,7 +116,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   }
 
   private deleteTag(aId: string) {
-    this.adminService
+    this.dataService
       .deleteTag(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
@@ -115,7 +132,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   }
 
   private fetchTags() {
-    this.adminService
+    this.dataService
       .fetchTags()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags) => {
@@ -132,13 +149,13 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   }
 
   private openCreateTagDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdateTagDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
           name: null
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -147,7 +164,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tag: CreateTagDto | null) => {
         if (tag) {
-          this.adminService
+          this.dataService
             .postTag(tag)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
@@ -167,14 +184,14 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   }
 
   private openUpdateTagDialog({ id, name }) {
-    const dialogRef = this.dialog.open(CreateOrUpdateTagDialog, {
+    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
           id,
           name
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -183,7 +200,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tag: UpdateTagDto | null) => {
         if (tag) {
-          this.adminService
+          this.dataService
             .putTag(tag)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({

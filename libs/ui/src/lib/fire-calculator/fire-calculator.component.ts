@@ -41,9 +41,10 @@ import {
   Tooltip
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import * as Color from 'color';
+import Color from 'color';
 import {
   add,
+  addDays,
   addYears,
   getMonth,
   setMonth,
@@ -71,7 +72,6 @@ import { FireCalculatorService } from './fire-calculator.service';
   ],
   providers: [FireCalculatorService],
   selector: 'gf-fire-calculator',
-  standalone: true,
   styleUrls: ['./fire-calculator.component.scss'],
   templateUrl: './fire-calculator.component.html'
 })
@@ -103,6 +103,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   });
   public chart: Chart<'bar'>;
   public isLoading = true;
+  public minDate = addDays(new Date(), 1);
   public periodsToRetire = 0;
 
   private readonly CONTRIBUTION_PERIOD = 12;

@@ -1,3 +1,5 @@
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -6,7 +8,8 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-ghostfolio-meets-internet-identity-page',
-  standalone: true,
   templateUrl: './ghostfolio-meets-internet-identity-page.html'
 })
-export class GhostfolioMeetsInternetIdentityPageComponent {}
+export class GhostfolioMeetsInternetIdentityPageComponent {
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+}

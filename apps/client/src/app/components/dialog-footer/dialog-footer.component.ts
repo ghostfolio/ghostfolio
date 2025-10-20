@@ -3,25 +3,30 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { close } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'justify-content-center' },
-  selector: 'gf-dialog-footer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './dialog-footer.component.html',
-  styleUrls: ['./dialog-footer.component.scss']
+  host: { class: 'justify-content-center' },
+  imports: [IonIcon, MatButtonModule, MatDialogModule],
+  selector: 'gf-dialog-footer',
+  styleUrls: ['./dialog-footer.component.scss'],
+  templateUrl: './dialog-footer.component.html'
 })
-export class DialogFooterComponent implements OnInit {
+export class GfDialogFooterComponent {
   @Input() deviceType: string;
 
   @Output() closeButtonClicked = new EventEmitter<void>();
 
-  public constructor() {}
-
-  public ngOnInit() {}
+  public constructor() {
+    addIcons({ close });
+  }
 
   public onClickCloseButton() {
     this.closeButtonClicked.emit();

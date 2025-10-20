@@ -2,7 +2,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
-import { getLocale } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 
 import {
@@ -31,6 +31,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
+import { format } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  calendarClearOutline,
+  ellipsisHorizontal,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
 import { Subject } from 'rxjs';
 
@@ -40,6 +48,7 @@ import { GfValueComponent } from '../value';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -51,7 +60,6 @@ import { GfValueComponent } from '../value';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-account-balances',
-  standalone: true,
   styleUrls: ['./account-balances.component.scss'],
   templateUrl: './account-balances.component.html'
 })
@@ -74,9 +82,9 @@ export class GfAccountBalancesComponent
     date: new FormControl(new Date(), Validators.required)
   });
 
-  public dataSource: MatTableDataSource<
+  public dataSource = new MatTableDataSource<
     AccountBalancesResponse['balances'][0]
-  > = new MatTableDataSource();
+  >();
 
   public displayedColumns: string[] = ['date', 'value', 'actions'];
   public Validators = Validators;
@@ -86,7 +94,9 @@ export class GfAccountBalancesComponent
   public constructor(
     private dateAdapter: DateAdapter<any>,
     private notificationService: NotificationService
-  ) {}
+  ) {
+    addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
+  }
 
   public ngOnInit() {
     this.dateAdapter.setLocale(this.locale);
@@ -115,7 +125,7 @@ export class GfAccountBalancesComponent
     const accountBalance: CreateAccountBalanceDto = {
       accountId: this.accountId,
       balance: this.accountBalanceForm.get('balance').value,
-      date: this.accountBalanceForm.get('date').value.toISOString()
+      date: format(this.accountBalanceForm.get('date').value, DATE_FORMAT)
     };
 
     try {

@@ -1,37 +1,45 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  PortfolioReport,
-  PortfolioReportRule,
-  User
-} from '@ghostfolio/common/interfaces';
+import { FireWealth, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule, NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Big } from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfFireCalculatorComponent,
+    GfPremiumIndicatorComponent,
+    GfValueComponent,
+    NgStyle,
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
   templateUrl: './fire-page.html'
 })
-export class FirePageComponent implements OnDestroy, OnInit {
-  public accountClusterRiskRules: PortfolioReportRule[];
-  public currencyClusterRiskRules: PortfolioReportRule[];
+export class GfFirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
-  public emergencyFundRules: PortfolioReportRule[];
-  public feeRules: PortfolioReportRule[];
-  public fireWealth: Big;
+  public fireWealth: FireWealth;
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
-  public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
-  public isLoadingPortfolioReport = false;
+  public safeWithdrawalRateControl = new FormControl<number>(undefined);
+  public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
@@ -54,16 +62,22 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
-        this.fireWealth = summary.fireWealth
-          ? new Big(summary.fireWealth)
-          : new Big(0);
-
+        this.fireWealth = {
+          today: {
+            valueInBaseCurrency: summary.fireWealth
+              ? summary.fireWealth.today.valueInBaseCurrency
+              : 0
+          }
+        };
         if (this.user.subscription?.type === 'Basic') {
-          this.fireWealth = new Big(10000);
+          this.fireWealth = {
+            today: {
+              valueInBaseCurrency: 10000
+            }
+          };
         }
 
-        this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
-        this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
+        this.calculateWithdrawalRates();
 
         this.isLoading = false;
 
@@ -75,6 +89,12 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+      });
+
+    this.safeWithdrawalRateControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((value) => {
+        this.onSafeWithdrawalRateChange(Number(value));
       });
 
     this.userService.stateChanged
@@ -91,11 +111,16 @@ export class FirePageComponent implements OnDestroy, OnInit {
                   permissions.updateUserSettings
                 );
 
+          this.safeWithdrawalRateControl.setValue(
+            this.user.settings.safeWithdrawalRate,
+            { emitEvent: false }
+          );
+
+          this.calculateWithdrawalRates();
+
           this.changeDetectorRef.markForCheck();
         }
       });
-
-    this.initializePortfolioReport();
   }
 
   public onAnnualInterestRateChange(annualInterestRate: number) {
@@ -133,17 +158,21 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onRulesUpdated(event: UpdateUserSettingDto) {
+  public onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
     this.dataService
-      .putUserSetting(event)
+      .putUserSetting({ safeWithdrawalRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService
           .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe();
+          .subscribe((user) => {
+            this.user = user;
 
-        this.initializePortfolioReport();
+            this.calculateWithdrawalRates();
+
+            this.changeDetectorRef.markForCheck();
+          });
       });
   }
 
@@ -187,58 +216,13 @@ export class FirePageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private initializePortfolioReport() {
-    this.isLoadingPortfolioReport = true;
+  private calculateWithdrawalRates() {
+    if (this.fireWealth && this.user?.settings?.safeWithdrawalRate) {
+      this.withdrawalRatePerYear = new Big(
+        this.fireWealth.today.valueInBaseCurrency
+      ).mul(this.user.settings.safeWithdrawalRate);
 
-    this.dataService
-      .fetchPortfolioReport()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioReport) => {
-        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
-
-        this.accountClusterRiskRules =
-          portfolioReport.rules['accountClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
-
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
-
-        this.emergencyFundRules =
-          portfolioReport.rules['emergencyFund']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.feeRules =
-          portfolioReport.rules['fees']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.isLoadingPortfolioReport = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  private mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
-    let inactiveRules: PortfolioReportRule[] = [];
-
-    for (const category in report.rules) {
-      const rulesArray = report.rules[category];
-
-      inactiveRules = inactiveRules.concat(
-        rulesArray.filter(({ isActive }) => {
-          return !isActive;
-        })
-      );
+      this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
     }
-
-    return inactiveRules;
   }
 }

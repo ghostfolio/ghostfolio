@@ -1,32 +1,60 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Clipboard } from '@angular/cdk/clipboard';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  copyOutline,
+  createOutline,
+  ellipsisHorizontal,
+  linkOutline,
+  lockClosedOutline,
+  lockOpenOutline,
+  removeCircleOutline
+} from 'ionicons/icons';
+import ms from 'ms';
 
 @Component({
-  selector: 'gf-access-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ClipboardModule,
+    CommonModule,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatTableModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-access-table',
   templateUrl: './access-table.component.html',
   styleUrls: ['./access-table.component.scss']
 })
-export class AccessTableComponent implements OnChanges, OnInit {
+export class GfAccessTableComponent implements OnChanges {
   @Input() accesses: Access[];
   @Input() showActions: boolean;
   @Input() user: User;
 
   @Output() accessDeleted = new EventEmitter<string>();
+  @Output() accessToUpdate = new EventEmitter<string>();
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
@@ -34,10 +62,19 @@ export class AccessTableComponent implements OnChanges, OnInit {
 
   public constructor(
     private clipboard: Clipboard,
-    private notificationService: NotificationService
-  ) {}
-
-  public ngOnInit() {}
+    private notificationService: NotificationService,
+    private snackBar: MatSnackBar
+  ) {
+    addIcons({
+      copyOutline,
+      createOutline,
+      ellipsisHorizontal,
+      linkOutline,
+      lockClosedOutline,
+      lockOpenOutline,
+      removeCircleOutline
+    });
+  }
 
   public ngOnChanges() {
     this.displayedColumns = ['alias', 'grantee', 'type', 'details'];
@@ -52,13 +89,21 @@ export class AccessTableComponent implements OnChanges, OnInit {
   }
 
   public getPublicUrl(aId: string): string {
-    const languageCode = this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
+    const languageCode = this.user.settings.language;
 
-    return `${this.baseUrl}/${languageCode}/p/${aId}`;
+    return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
   }
 
-  public onCopyToClipboard(aId: string): void {
+  public onCopyUrlToClipboard(aId: string): void {
     this.clipboard.copy(this.getPublicUrl(aId));
+
+    this.snackBar.open(
+      '✅ ' + $localize`Link has been copied to the clipboard`,
+      undefined,
+      {
+        duration: ms('3 seconds')
+      }
+    );
   }
 
   public onDeleteAccess(aId: string) {
@@ -69,5 +114,9 @@ export class AccessTableComponent implements OnChanges, OnInit {
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to revoke this granted access?`
     });
+  }
+
+  public onUpdateAccess(aId: string) {
+    this.accessToUpdate.emit(aId);
   }
 }

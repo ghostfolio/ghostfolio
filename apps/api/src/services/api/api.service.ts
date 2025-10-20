@@ -4,8 +4,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ApiService {
-  public constructor() {}
-
   public buildFiltersFromQueryParams({
     filterByAccounts,
     filterByAssetClasses,
@@ -36,28 +34,28 @@ export class ApiService {
 
     const filters = [
       ...accountIds.map((accountId) => {
-        return <Filter>{
+        return {
           id: accountId,
           type: 'ACCOUNT'
-        };
+        } as Filter;
       }),
       ...assetClasses.map((assetClass) => {
-        return <Filter>{
+        return {
           id: assetClass,
           type: 'ASSET_CLASS'
-        };
+        } as Filter;
       }),
       ...assetSubClasses.map((assetClass) => {
-        return <Filter>{
+        return {
           id: assetClass,
           type: 'ASSET_SUB_CLASS'
-        };
+        } as Filter;
       }),
       ...tagIds.map((tagId) => {
-        return <Filter>{
+        return {
           id: tagId,
           type: 'TAG'
-        };
+        } as Filter;
       })
     ];
 

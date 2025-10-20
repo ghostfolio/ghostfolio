@@ -4,7 +4,8 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import {
   getCurrencyFromSymbol,
-  isDerivedCurrency
+  isDerivedCurrency,
+  isRootCurrency
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -59,10 +60,9 @@ export class AdminMarketDataService {
             }),
             finalize(() => {
               window.location.reload();
-              setTimeout(() => {}, 300);
             })
           )
-          .subscribe(() => {});
+          .subscribe();
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete these profiles?`
@@ -72,13 +72,19 @@ export class AdminMarketDataService {
   public hasPermissionToDeleteAssetProfile({
     activitiesCount,
     isBenchmark,
-    symbol
-  }: Pick<AdminMarketDataItem, 'activitiesCount' | 'isBenchmark' | 'symbol'>) {
+    symbol,
+    watchedByCount
+  }: Pick<
+    AdminMarketDataItem,
+    'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
+  >) {
     return (
       activitiesCount === 0 &&
       !isBenchmark &&
       !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
-      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+      !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
+      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix) &&
+      watchedByCount === 0
     );
   }
 }

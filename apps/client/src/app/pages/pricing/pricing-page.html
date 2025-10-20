@@ -6,23 +6,10 @@
         <p i18n>
           Our official Ghostfolio Premium cloud offering is the easiest way to
           get started. Due to the time it saves, this will be the best option
-          for most people. Revenue is used to cover the costs of the hosting
-          infrastructure and to fund ongoing development.
+          for most people. Revenue is used to cover operational costs for the
+          hosting infrastructure and professional data providers, and to fund
+          ongoing development.
         </p>
-        @if (user?.subscription?.type === 'Basic') {
-          <p>
-            If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
-            <i>frankly</i>, <i>Interactive Brokers</i>, <i>Swissquote</i>,
-            <i>VIAC</i>, or <i>Zak</i>, please
-            <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
-              >contact us</a
-            >
-            to use our referral link and get a Ghostfolio Premium membership for
-            one year. Looking for a student discount? Request it
-            <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a>
-            with your university e-mail address.
-          </p>
-        }
         <p i18n>
           If you prefer to run Ghostfolio on your own infrastructure, please
           find the source code and further instructions on
@@ -101,6 +88,11 @@
                   </p>
                 </div>
               }
+              @if (durationExtension) {
+                <div class="d-none d-lg-block hidden mt-3">
+                  <div class="badge p-3 w-100">&nbsp;</div>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -159,6 +151,11 @@
                   </p>
                 </div>
               }
+              @if (durationExtension) {
+                <div class="d-none d-lg-block hidden mt-3">
+                  <div class="badge p-3 w-100">&nbsp;</div>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -169,6 +166,11 @@
             [ngClass]="{ active: user?.subscription?.type === 'Premium' }"
           >
             <mat-card-content class="d-flex flex-column h-100">
+              @if (label) {
+                <div class="badge-container position-absolute text-right">
+                  <span class="badge badge-warning m-1">{{ label }}</span>
+                </div>
+              }
               <div class="flex-grow-1">
                 <div class="align-items-center d-flex mb-2">
                   <h4 class="align-items-center d-flex flex-grow-1 m-0">
@@ -225,10 +227,34 @@
                       <ion-icon name="information-circle-outline" />
                     </span>
                   </li>
-                  <li class="align-items-center d-flex mb-1">
+                  <li
+                    class="align-items-center d-flex"
+                    [ngClass]="{
+                      'mb-1': !user?.settings?.isExperimentalFeatures
+                    }"
+                  >
                     <ion-icon class="mr-1" name="checkmark-circle-outline" />
                     <span i18n>Professional Data Provider</span>
+                    <span
+                      class="align-items-center d-flex ml-1"
+                      matTooltipPosition="above"
+                      [matTooltip]="professionalDataProviderTooltipPremium"
+                    >
+                      <ion-icon name="information-circle-outline" />
+                    </span>
                   </li>
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <li class="align-items-center d-flex line-height-1 mb-1">
+                      <ion-icon
+                        class="hidden mr-1"
+                        name="checkmark-circle-outline"
+                      />
+                      <small class="text-muted"
+                        ><ng-container i18n>with API access for</ng-container>
+                        Open Source</small
+                      >
+                    </li>
+                  }
                   <li class="align-items-center d-flex mb-1">
                     <ion-icon class="mr-1" name="checkmark-circle-outline" />
                     <a i18n [routerLink]="routerLinkFeatures"
@@ -267,18 +293,27 @@
                     mat-flat-button
                     (click)="onCheckout()"
                   >
-                    @if (user.subscription.offer === 'default') {
-                      <ng-container i18n>Upgrade Plan</ng-container>
-                    } @else if (
-                      user.subscription.offer === 'renewal' ||
-                      user.subscription.offer === 'renewal-early-bird'
-                    ) {
+                    @if (user.subscription.offer.isRenewal) {
                       <ng-container i18n>Renew Plan</ng-container>
+                    } @else {
+                      <ng-container i18n>Upgrade Plan</ng-container>
                     }
                   </button>
                   <p class="m-0 text-muted">
                     <small i18n>One-time payment, no auto-renewal.</small>
                   </p>
+                </div>
+              }
+              @if (durationExtension) {
+                <div class="mt-3">
+                  <div
+                    class="badge badge-warning font-weight-normal line-height-1 p-3 w-100"
+                  >
+                    <strong i18n>Limited Offer!</strong>
+                    <ng-container i18n
+                      >Get {{ durationExtension }} extra</ng-container
+                    >
+                  </div>
                 </div>
               }
             </mat-card-content>
@@ -287,7 +322,51 @@
       </div>
     </div>
   </div>
-  @if (!user) {
+  @if (user?.subscription?.type === 'Basic') {
+    <div class="row">
+      <div class="col mt-3">
+        <p>
+          <ng-container i18n>If you plan to open an account at</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          @for (
+            broker of referralBrokers;
+            track broker;
+            let i = $index;
+            let last = $last
+          ) {
+            <i>{{ broker }}</i>
+            @if (last) {
+              <span>, </span>
+            } @else {
+              @if (i === referralBrokers.length - 2) {
+                <ng-container>&nbsp;</ng-container>
+                <ng-container i18n>or</ng-container>
+                <ng-container>&nbsp;</ng-container>
+              } @else {
+                <span>, </span>
+              }
+            }
+          }
+          <ng-container i18n>please</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..." i18n
+            >contact us</a
+          >
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n
+            >to use our referral link and get a Ghostfolio Premium membership
+            for one year</ng-container
+          >. <ng-container i18n>Looking for a student discount?</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>Request it</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <a href="mailto:hi@ghostfol.io?Subject=Student Discount" i18n>here</a>
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>with your university e-mail address</ng-container>.
+        </p>
+      </div>
+    </div>
+  } @else if (!user) {
     <div class="row">
       <div class="col mt-3 text-center">
         <a

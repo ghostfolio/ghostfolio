@@ -1,9 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -68,7 +65,7 @@ export class PortfolioSnapshotProcessor {
       const portfolioCalculator = this.calculatorFactory.createCalculator({
         accountBalanceItems,
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: job.data.calculationType,
         currency: job.data.userCurrency,
         filters: job.data.filters,
         userId: job.data.userId
@@ -86,7 +83,9 @@ export class PortfolioSnapshotProcessor {
 
       const expiration = addMilliseconds(
         new Date(),
-        this.configurationService.get('CACHE_QUOTES_TTL')
+        (snapshot?.errors?.length ?? 0) === 0
+          ? this.configurationService.get('CACHE_QUOTES_TTL')
+          : 0
       );
 
       this.redisCacheService.set(
@@ -94,10 +93,10 @@ export class PortfolioSnapshotProcessor {
           filters: job.data.filters,
           userId: job.data.userId
         }),
-        JSON.stringify(<PortfolioSnapshotValue>(<unknown>{
+        JSON.stringify({
           expiration: expiration.getTime(),
           portfolioSnapshot: snapshot
-        })),
+        } as unknown as PortfolioSnapshotValue),
         CACHE_TTL_INFINITE
       );
 

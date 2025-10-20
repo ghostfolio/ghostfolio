@@ -26,7 +26,7 @@ export class TransformDataSourceInRequestInterceptor<T>
     const request = http.getRequest();
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      if (request.body.activities) {
+      if (request.body?.activities) {
         request.body.activities = request.body.activities.map((activity) => {
           if (DataSource[activity.dataSource]) {
             return activity;
@@ -43,7 +43,16 @@ export class TransformDataSourceInRequestInterceptor<T>
         const dataSourceValue = request[type]?.dataSource;
 
         if (dataSourceValue && !DataSource[dataSourceValue]) {
-          request[type].dataSource = decodeDataSource(dataSourceValue);
+          // In Express 5, request.query is read-only, so request[type].dataSource cannot be directly modified
+          Object.defineProperty(request, type, {
+            configurable: true,
+            enumerable: true,
+            value: {
+              ...request[type],
+              dataSource: decodeDataSource(dataSourceValue)
+            },
+            writable: true
+          });
         }
       }
     }

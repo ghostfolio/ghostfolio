@@ -6,6 +6,11 @@
 
     a {
       color: rgba(var(--light-primary-text));
+      font-weight: bold;
+
+      .text-muted {
+        color: rgba(var(--light-primary-text)) !important;
+      }
     }
   }
 }
@@ -14,6 +19,10 @@
   &.has-focus {
     a {
       color: rgba(var(--dark-primary-text));
+
+      .text-muted {
+        color: rgba(var(--dark-primary-text)) !important;
+      }
     }
   }
 }

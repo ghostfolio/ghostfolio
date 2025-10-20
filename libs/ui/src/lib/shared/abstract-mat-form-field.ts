@@ -14,9 +14,9 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
 @Component({
-  template: ''
+  template: '',
+  standalone: false
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
 export abstract class AbstractMatFormField<T>
   implements ControlValueAccessor, DoCheck, MatFormFieldControl<T>, OnDestroy
 {
@@ -34,7 +34,7 @@ export abstract class AbstractMatFormField<T>
   protected onChange?: (value: T) => void;
   protected onTouched?: () => void;
 
-  private static nextId: number = 0;
+  private static nextId = 0;
 
   protected constructor(
     protected _elementRef: ElementRef,
@@ -82,7 +82,7 @@ export abstract class AbstractMatFormField<T>
     return !this._value;
   }
 
-  public _placeholder: string = '';
+  public _placeholder = '';
 
   public get placeholder() {
     return this._placeholder;
@@ -94,7 +94,7 @@ export abstract class AbstractMatFormField<T>
     this.stateChanges.next();
   }
 
-  public _required: boolean = false;
+  public _required = false;
 
   public get required() {
     return (
@@ -109,10 +109,10 @@ export abstract class AbstractMatFormField<T>
     this.stateChanges.next();
   }
 
-  public _disabled: boolean = false;
+  public _disabled = false;
 
   public get disabled() {
-    if (this.ngControl && this.ngControl.disabled !== null) {
+    if (this.ngControl?.disabled !== null) {
       return this.ngControl.disabled;
     }
 

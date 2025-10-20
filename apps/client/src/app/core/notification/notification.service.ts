@@ -7,7 +7,12 @@ import { isFunction } from 'lodash';
 import { GfAlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { GfConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogType } from './confirmation-dialog/confirmation-dialog.type';
-import { IAlertParams, IConfirmParams } from './interfaces/interfaces';
+import {
+  IAlertParams,
+  IConfirmParams,
+  IPromptParams
+} from './interfaces/interfaces';
+import { GfPromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 
 @Injectable()
 export class NotificationService {
@@ -69,6 +74,36 @@ export class NotificationService {
         aParams.confirmFn();
       } else if (result === 'discard' && isFunction(aParams.discardFn)) {
         aParams.discardFn();
+      }
+    });
+  }
+
+  public prompt(aParams: IPromptParams) {
+    if (!aParams.confirmLabel) {
+      aParams.confirmLabel = translate('OK');
+    }
+
+    if (!aParams.discardLabel) {
+      aParams.discardLabel = translate('CANCEL');
+    }
+
+    const dialog = this.matDialog.open(GfPromptDialogComponent, {
+      autoFocus: true,
+      maxWidth: this.dialogMaxWidth,
+      width: this.dialogWidth
+    });
+
+    dialog.componentInstance.initialize({
+      confirmLabel: aParams.confirmLabel,
+      defaultValue: aParams.defaultValue,
+      discardLabel: aParams.discardLabel,
+      title: aParams.title,
+      valueLabel: aParams.valueLabel
+    });
+
+    return dialog.afterClosed().subscribe((result: string) => {
+      if (result !== 'discard' && isFunction(aParams.confirmFn)) {
+        aParams.confirmFn(result);
       }
     });
   }

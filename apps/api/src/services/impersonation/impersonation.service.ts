@@ -16,7 +16,7 @@ export class ImpersonationService {
     if (this.request.user) {
       const accessObject = await this.prismaService.access.findFirst({
         where: {
-          GranteeUser: { id: this.request.user.id },
+          granteeUserId: this.request.user.id,
           id: aId
         }
       });
@@ -35,8 +35,8 @@ export class ImpersonationService {
       // Public access
       const accessObject = await this.prismaService.access.findFirst({
         where: {
-          GranteeUser: null,
-          User: { id: aId }
+          granteeUserId: null,
+          user: { id: aId }
         }
       });
 

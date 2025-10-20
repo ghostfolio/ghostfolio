@@ -1,9 +1,11 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -13,13 +15,17 @@ export interface DataProviderInterface {
 
   getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>>;
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>>;
 
   getDataProviderInfo(): DataProviderInfo;
 
-  getDividends({ from, granularity, symbol, to }: GetDividendsParams): Promise<{
+  getDividends({
+    from,
+    granularity,
+    requestTimeout,
+    symbol,
+    to
+  }: GetDividendsParams): Promise<{
     [date: string]: IDataProviderHistoricalResponse;
   }>;
 
@@ -44,10 +50,12 @@ export interface DataProviderInterface {
 
   getTestSymbol(): string;
 
-  search({
-    includeIndices,
-    query
-  }: GetSearchParams): Promise<{ items: LookupItem[] }>;
+  search({ includeIndices, query }: GetSearchParams): Promise<LookupResponse>;
+}
+
+export interface GetAssetProfileParams {
+  requestTimeout?: number;
+  symbol: string;
 }
 
 export interface GetDividendsParams {
@@ -74,4 +82,6 @@ export interface GetQuotesParams {
 export interface GetSearchParams {
   includeIndices?: boolean;
   query: string;
+  requestTimeout?: number;
+  userId?: string;
 }

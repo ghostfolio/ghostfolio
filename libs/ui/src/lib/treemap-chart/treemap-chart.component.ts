@@ -29,9 +29,12 @@ import { ChartConfiguration } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
+import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { GetColorParams } from './interfaces/interfaces';
 
 const { gray, green, red } = require('open-color');
 
@@ -39,7 +42,6 @@ const { gray, green, red } = require('open-color');
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-treemap-chart',
-  standalone: true,
   styleUrls: ['./treemap-chart.component.scss'],
   templateUrl: './treemap-chart.component.html'
 })
@@ -57,15 +59,12 @@ export class GfTreemapChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public static readonly HEAT_MULTIPLIER = 5;
-
   public chart: Chart<'treemap'>;
   public isLoading = true;
 
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
-
   public ngAfterViewInit() {
     if (this.holdings) {
       this.initialize();
@@ -82,95 +81,207 @@ export class GfTreemapChartComponent
     this.chart?.destroy();
   }
 
+  private getColor({
+    annualizedNetPerformancePercent,
+    negativeNetPerformancePercentsRange,
+    positiveNetPerformancePercentsRange
+  }: GetColorParams) {
+    if (Math.abs(annualizedNetPerformancePercent) === 0) {
+      return {
+        backgroundColor: gray[3],
+        fontColor: gray[9]
+      };
+    }
+
+    if (annualizedNetPerformancePercent > 0) {
+      let backgroundIndex: number;
+      const range =
+        positiveNetPerformancePercentsRange.max -
+        positiveNetPerformancePercentsRange.min;
+
+      if (
+        annualizedNetPerformancePercent >=
+        positiveNetPerformancePercentsRange.max - range * 0.25
+      ) {
+        backgroundIndex = 9;
+      } else if (
+        annualizedNetPerformancePercent >=
+        positiveNetPerformancePercentsRange.max - range * 0.5
+      ) {
+        backgroundIndex = 7;
+      } else if (
+        annualizedNetPerformancePercent >=
+        positiveNetPerformancePercentsRange.max - range * 0.75
+      ) {
+        backgroundIndex = 5;
+      } else {
+        backgroundIndex = 3;
+      }
+
+      return {
+        backgroundColor: green[backgroundIndex],
+        fontColor: green[backgroundIndex <= 4 ? 9 : 0]
+      };
+    } else {
+      let backgroundIndex: number;
+      const range =
+        negativeNetPerformancePercentsRange.min -
+        negativeNetPerformancePercentsRange.max;
+
+      if (
+        annualizedNetPerformancePercent <=
+        negativeNetPerformancePercentsRange.min + range * 0.25
+      ) {
+        backgroundIndex = 9;
+      } else if (
+        annualizedNetPerformancePercent <=
+        negativeNetPerformancePercentsRange.min + range * 0.5
+      ) {
+        backgroundIndex = 7;
+      } else if (
+        annualizedNetPerformancePercent <=
+        negativeNetPerformancePercentsRange.min + range * 0.75
+      ) {
+        backgroundIndex = 5;
+      } else {
+        backgroundIndex = 3;
+      }
+
+      return {
+        backgroundColor: red[backgroundIndex],
+        fontColor: red[backgroundIndex <= 4 ? 9 : 0]
+      };
+    }
+  }
+
   private initialize() {
     this.isLoading = true;
 
     const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
 
-    const data: ChartConfiguration['data'] = {
+    const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
+      ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {
+        return getAnnualizedPerformancePercent({
+          daysInMarket: differenceInDays(
+            endDate,
+            max([dateOfFirstActivity ?? new Date(0), startDate])
+          ),
+          netPerformancePercentage: new Big(
+            netPerformancePercentWithCurrencyEffect
+          )
+        }).toNumber();
+      }
+    );
+
+    const positiveNetPerformancePercents =
+      netPerformancePercentsWithCurrencyEffect.filter(
+        (annualizedNetPerformancePercent) => {
+          return annualizedNetPerformancePercent > 0;
+        }
+      );
+
+    const positiveNetPerformancePercentsRange = {
+      max: Math.max(...positiveNetPerformancePercents),
+      min: Math.min(...positiveNetPerformancePercents)
+    };
+
+    const negativeNetPerformancePercents =
+      netPerformancePercentsWithCurrencyEffect.filter(
+        (annualizedNetPerformancePercent) => {
+          return annualizedNetPerformancePercent < 0;
+        }
+      );
+
+    const negativeNetPerformancePercentsRange = {
+      max: Math.max(...negativeNetPerformancePercents),
+      min: Math.min(...negativeNetPerformancePercents)
+    };
+
+    const data: ChartConfiguration<'treemap'>['data'] = {
       datasets: [
         {
-          backgroundColor(ctx) {
-            let annualizedNetPerformancePercentWithCurrencyEffect =
+          backgroundColor: (context) => {
+            let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
                   max([
-                    ctx.raw._data.dateOfFirstActivity ?? new Date(0),
+                    context.raw._data.dateOfFirstActivity ?? new Date(0),
                     startDate
                   ])
                 ),
                 netPerformancePercentage: new Big(
-                  ctx.raw._data.netPerformancePercentWithCurrencyEffect
+                  context.raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
 
             // Round to 2 decimal places
-            annualizedNetPerformancePercentWithCurrencyEffect =
-              Math.round(
-                annualizedNetPerformancePercentWithCurrencyEffect * 100
-              ) / 100;
+            annualizedNetPerformancePercent =
+              Math.round(annualizedNetPerformancePercent * 100) / 100;
 
-            if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[9];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[7];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[5];
-            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
-              return green[3];
-            } else if (
-              Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
-            ) {
-              annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
-                annualizedNetPerformancePercentWithCurrencyEffect
-              );
-              return gray[3];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[3];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[5];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[7];
-            } else {
-              return red[9];
-            }
+            const { backgroundColor } = this.getColor({
+              annualizedNetPerformancePercent,
+              negativeNetPerformancePercentsRange,
+              positiveNetPerformancePercentsRange
+            });
+
+            return backgroundColor;
           },
           borderRadius: 4,
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: ['white'],
+            color: (context) => {
+              let annualizedNetPerformancePercent =
+                getAnnualizedPerformancePercent({
+                  daysInMarket: differenceInDays(
+                    endDate,
+                    max([
+                      context.raw._data.dateOfFirstActivity ?? new Date(0),
+                      startDate
+                    ])
+                  ),
+                  netPerformancePercentage: new Big(
+                    context.raw._data.netPerformancePercentWithCurrencyEffect
+                  )
+                }).toNumber();
+
+              // Round to 2 decimal places
+              annualizedNetPerformancePercent =
+                Math.round(annualizedNetPerformancePercent * 100) / 100;
+
+              const { fontColor } = this.getColor({
+                annualizedNetPerformancePercent,
+                negativeNetPerformancePercentsRange,
+                positiveNetPerformancePercentsRange
+              });
+
+              return fontColor;
+            },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter(ctx) {
-              const netPerformancePercentWithCurrencyEffect =
-                ctx.raw._data.netPerformancePercentWithCurrencyEffect;
+            formatter: ({ raw }) => {
+              // Round to 4 decimal places
+              let netPerformancePercentWithCurrencyEffect =
+                Math.round(
+                  raw._data.netPerformancePercentWithCurrencyEffect * 10000
+                ) / 10000;
+
+              if (Math.abs(netPerformancePercentWithCurrencyEffect) === 0) {
+                netPerformancePercentWithCurrencyEffect = Math.abs(
+                  netPerformancePercentWithCurrencyEffect
+                );
+              }
+
+              const name = raw._data.name;
+              const symbol = raw._data.symbol;
 
               return [
-                ctx.raw._data.symbol,
-                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
+                isUUID(symbol) ? (name ?? symbol) : symbol,
+                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
-            hoverColor: 'white',
+            hoverColor: undefined,
             position: 'top'
           },
           spacing: 1,
@@ -234,25 +345,41 @@ export class GfTreemapChartComponent
         locale: this.locale
       }),
       callbacks: {
-        label: (context) => {
-          const name = context.raw._data.name;
-          const symbol = context.raw._data.symbol;
+        label: ({ raw }) => {
+          const allocationInPercentage = `${((raw._data.allocationInPercentage as number) * 100).toFixed(2)}%`;
+          const name = raw._data.name;
+          const sign =
+            raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
+          const symbol = raw._data.symbol;
 
-          if (context.raw._data.valueInBaseCurrency !== null) {
-            const value = context.raw._data.valueInBaseCurrency as number;
+          const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
+
+          if (raw._data.valueInBaseCurrency !== null) {
+            const value = raw._data.valueInBaseCurrency as number;
 
             return [
-              `${name ?? symbol}`,
+              `${name ?? symbol} (${allocationInPercentage})`,
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
-              })} ${this.baseCurrency}`
+              })} ${this.baseCurrency}`,
+              '',
+              $localize`Change` + ' (' + $localize`Performance` + ')',
+              `${sign}${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+                this.locale,
+                {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }
+              )} ${this.baseCurrency} (${netPerformanceInPercentageWithSign})`
             ];
           } else {
-            const percentage =
-              (context.raw._data.allocationInPercentage as number) * 100;
-
-            return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
+            return [
+              `${name ?? symbol} (${allocationInPercentage})`,
+              '',
+              $localize`Performance`,
+              netPerformanceInPercentageWithSign
+            ];
           }
         },
         title: () => {

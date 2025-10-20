@@ -9,8 +9,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class RulesService {
-  public constructor() {}
-
   public async evaluate<T extends RuleSettings>(
     aRules: Rule<T>[],
     aUserSettings: UserSettings

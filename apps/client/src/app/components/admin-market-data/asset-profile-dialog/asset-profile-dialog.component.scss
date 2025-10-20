@@ -3,5 +3,31 @@
 
   .mat-mdc-dialog-content {
     max-height: unset;
+
+    gf-line-chart {
+      aspect-ratio: 16/9;
+    }
+
+    .edit-asset-profile-identifier-container {
+      bottom: 0;
+      right: 1rem;
+      top: 0;
+    }
+
+    .mat-expansion-panel {
+      --mat-expansion-container-background-color: transparent;
+
+      ::ng-deep {
+        .mat-expansion-panel-body {
+          padding: 0;
+        }
+      }
+
+      .mat-expansion-panel-header {
+        &:hover {
+          --mat-expansion-header-hover-state-layer-color: transparent;
+        }
+      }
+    }
   }
 }
