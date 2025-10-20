@@ -63,11 +63,6 @@ export class GfPortfolioFilterFormComponent
 
   public filterForm: FormGroup;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private onChange: (value: PortfolioFilterFormValue) => void = () => {};
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private onTouched: () => void = () => {};
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -170,4 +165,13 @@ export class GfPortfolioFilterFormComponent
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange = (_value: PortfolioFilterFormValue): void => {
+    // ControlValueAccessor onChange callback
+  };
+
+  private onTouched = (): void => {
+    // ControlValueAccessor onTouched callback
+  };
 }
