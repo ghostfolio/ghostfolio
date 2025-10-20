@@ -14,6 +14,8 @@ import {
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 
+import { ExpressAdapter } from '@bull-board/express';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -23,6 +25,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
 
+import { environment } from '../environments/environment';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
@@ -76,6 +79,14 @@ import { UserModule } from './user/user.module';
         port: parseInt(process.env.REDIS_PORT ?? '6379', 10)
       }
     }),
+    ...(!environment.production
+      ? [
+          BullBoardModule.forRoot({
+            route: '/admin/queues',
+            adapter: ExpressAdapter
+          })
+        ]
+      : []),
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,
