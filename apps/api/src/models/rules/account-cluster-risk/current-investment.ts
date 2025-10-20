@@ -128,8 +128,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   }: UserSettings): Settings {
     return {
       baseCurrency,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       locale,
+      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.5
     };
   }

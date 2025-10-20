@@ -116,8 +116,8 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
   }: UserSettings): Settings {
     return {
       baseCurrency,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       locale,
+      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.22,
       thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0.18
     };

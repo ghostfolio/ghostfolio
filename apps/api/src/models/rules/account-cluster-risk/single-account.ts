@@ -74,8 +74,8 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
 
   public getSettings({ locale, xRayRules }: UserSettings): RuleSettings {
     return {
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
-      locale
+      locale,
+      isActive: xRayRules?.[this.getKey()]?.isActive ?? true
     };
   }
 }
