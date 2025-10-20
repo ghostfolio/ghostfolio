@@ -31,7 +31,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
-import { IRuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
+import { RuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
 import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-settings-dialog.component';
 
 @Component({
@@ -83,7 +83,7 @@ export class GfRuleComponent implements OnInit {
         rule,
         categoryName: this.categoryName,
         settings: this.settings
-      } as IRuleSettingsDialogParams,
+      } as RuleSettingsDialogParams,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

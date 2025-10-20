@@ -8,8 +8,8 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -60,7 +60,7 @@ export class GoogleSheetsService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
       const sheet = await this.getSheet({
@@ -71,7 +71,7 @@ export class GoogleSheetsService implements DataProviderInterface {
       const rows = await sheet.getRows();
 
       const historicalData: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       rows
@@ -104,8 +104,8 @@ export class GoogleSheetsService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
+    const response: { [symbol: string]: DataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;
