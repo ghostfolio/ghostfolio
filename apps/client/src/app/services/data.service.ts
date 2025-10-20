@@ -19,7 +19,7 @@ import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -291,7 +291,7 @@ export class DataService {
     date: Date;
     symbol: string;
   }) {
-    return this.http.get<IDataProviderHistoricalResponse>(
+    return this.http.get<DataProviderHistoricalResponse>(
       `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
