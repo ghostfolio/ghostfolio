@@ -40,6 +40,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { AccountsResponse } from './responses/accounts-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
+import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { DataEnhancerHealthResponse } from './responses/data-enhancer-health-response.interface';
@@ -91,6 +92,7 @@ export {
   ApiKeyResponse,
   AssetClassSelectorOption,
   AssetProfileIdentifier,
+  AssetResponse,
   Benchmark,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkProperty,
