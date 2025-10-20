@@ -94,10 +94,11 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
     });
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getSettings({ baseCurrency, locale, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
+      locale,
       thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.15,
       thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0.11
     };
