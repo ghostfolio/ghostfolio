@@ -9,8 +9,8 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -111,10 +111,10 @@ export class GhostfolioService implements DataProviderInterface {
     symbol,
     to
   }: GetDividendsParams): Promise<{
-    [date: string]: IDataProviderHistoricalResponse;
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     let dividends: {
-      [date: string]: IDataProviderHistoricalResponse;
+      [date: string]: DataProviderHistoricalResponse;
     } = {};
 
     try {
@@ -164,7 +164,7 @@ export class GhostfolioService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
       const response = await fetch(
@@ -228,9 +228,9 @@ export class GhostfolioService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
   }: GetQuotesParams): Promise<{
-    [symbol: string]: IDataProviderResponse;
+    [symbol: string]: DataProviderResponse;
   }> {
-    let quotes: { [symbol: string]: IDataProviderResponse } = {};
+    let quotes: { [symbol: string]: DataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return quotes;
