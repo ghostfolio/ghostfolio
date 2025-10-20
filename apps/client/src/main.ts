@@ -16,7 +16,6 @@ import { environment } from './environments/environment';
     | 'ios'
     | 'trusted-web-activity';
 
-
   info.globalPermissions = filterGlobalPermissions(
     info.globalPermissions,
     utmSource
