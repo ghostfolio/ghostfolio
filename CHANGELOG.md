@@ -20,7 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted the portfolio filter form of the assistant to a reusable component
 - Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
+- Reverted the explicit configuration of the _Redis_ address family in the job queue module
 - Improved the language localization for German (`de`)
+- Upgraded `ioredis` from version `5.6.1` to `5.8.2`
 
 ### Fixed
 
