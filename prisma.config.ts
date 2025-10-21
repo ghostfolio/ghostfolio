@@ -3,8 +3,7 @@ import dotenvExpand from 'dotenv-expand';
 import { join } from 'node:path';
 import { defineConfig } from 'prisma/config';
 
-const myEnv = dotenv.config();
-dotenvExpand.expand(myEnv);
+dotenvExpand.expand(dotenv.config({ quiet: true }));
 
 export default defineConfig({
   migrations: {
