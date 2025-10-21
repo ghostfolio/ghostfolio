@@ -28,7 +28,10 @@ import { DataGatheringProcessor } from './data-gathering.processor';
     }),
     BullBoardModule.forFeature({
       name: DATA_GATHERING_QUEUE,
-      adapter: BullAdapter
+      adapter: BullAdapter,
+      options: {
+        readOnlyMode: true
+      }
     }),
     ConfigurationModule,
     DataEnhancerModule,
