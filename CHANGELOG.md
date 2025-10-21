@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
 
+### Changed
+
+- Extracted the portfolio filter form of the assistant to a reusable component
+- Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
+- Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
+- Improved the language localization for German (`de`)
+
 ### Fixed
 
 - Fixed an issue in the database seeding process caused by unresolved environment variables in `DATABASE_URL`
