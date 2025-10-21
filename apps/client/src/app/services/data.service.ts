@@ -9,10 +9,7 @@ import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto'
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import {
-  Activities,
-  Activity
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
@@ -22,6 +19,7 @@ import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setti
 import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
 import {
   Access,
   AccessTokenResponse,
@@ -248,7 +246,7 @@ export class DataService {
   }
 
   public fetchActivity(aActivityId: string) {
-    return this.http.get<Activity>(`/api/v1/order/${aActivityId}`).pipe(
+    return this.http.get<ActivityResponse>(`/api/v1/order/${aActivityId}`).pipe(
       map((activity) => {
         activity.createdAt = parseISO(activity.createdAt as unknown as string);
         activity.date = parseISO(activity.date as unknown as string);
