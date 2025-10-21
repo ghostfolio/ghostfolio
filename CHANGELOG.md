@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
 
+### Fixed
+
+- Fixed an issue in the database seeding process caused by unresolved environment variables in `DATABASE_URL`
+
 ## 2.209.0 - 2025-10-18
 
 ### Added
