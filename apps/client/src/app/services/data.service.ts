@@ -34,7 +34,7 @@ import {
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
   DataProviderHealthResponse,
-  Export,
+  ExportResponse,
   Filter,
   ImportResponse,
   InfoItem,
@@ -407,7 +407,7 @@ export class DataService {
       params = params.append('activityIds', activityIds.join(','));
     }
 
-    return this.http.get<Export>('/api/v1/export', {
+    return this.http.get<ExportResponse>('/api/v1/export', {
       params
     });
   }

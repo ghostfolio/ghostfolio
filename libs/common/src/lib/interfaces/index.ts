@@ -15,7 +15,6 @@ import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
-import type { Export } from './export.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { FireWealth } from './fire-wealth.interface';
@@ -49,6 +48,7 @@ import type { DataProviderGhostfolioStatusResponse } from './responses/data-prov
 import type { DataProviderHealthResponse } from './responses/data-provider-health-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
+import type { ExportResponse } from './responses/export-response.interface';
 import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { InfoResponse } from './responses/info-response.interface';
@@ -105,7 +105,7 @@ export {
   DataProviderInfo,
   DividendsResponse,
   EnhancedSymbolProfile,
-  Export,
+  ExportResponse,
   Filter,
   FilterGroup,
   FireWealth,
