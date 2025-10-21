@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
 - Improved the language localization for German (`de`)
+- Upgraded `ioredis` from version `5.6.1` to `5.8.2`
+- Removed manual IP family selection in favour of library default (0)
 
 ## 2.209.0 - 2025-10-18
 
