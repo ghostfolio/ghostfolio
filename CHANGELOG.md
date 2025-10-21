@@ -7,13 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Fixed
+### Added
 
-- Make Enter key behave like Sign In in the access token login dialog (#5751)
-
-### Changed
-
-- Disabled zoom in PWA
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
 
 ### Changed
@@ -21,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action of the analysis page (experimental)
 - Improved the language localization for German (`de`)
+
+### Fixed
+
+- Make Enter key behave like Sign In in the access token login dialog (#5751)
 
 ## 2.209.0 - 2025-10-18
 
