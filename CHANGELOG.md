@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed an issue in the database seeding process caused by unresolved environment variables in `DATABASE_URL`
+
 ## 2.209.0 - 2025-10-18
 
 ### Added
