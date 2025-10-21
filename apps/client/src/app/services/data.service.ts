@@ -19,12 +19,12 @@ import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setti
 import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { ActivityResponse } from '@ghostfolio/common/interfaces';
 import {
   Access,
   AccessTokenResponse,
   AccountBalancesResponse,
   AccountsResponse,
+  ActivityResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
