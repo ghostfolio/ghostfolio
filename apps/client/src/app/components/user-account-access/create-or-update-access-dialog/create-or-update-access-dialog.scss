@@ -4,4 +4,10 @@
   .mat-mdc-dialog-content {
     max-height: unset;
   }
+
+  ion-icon {
+    &.rotate-90 {
+      transform: rotate(90deg);
+    }
+  }
 }

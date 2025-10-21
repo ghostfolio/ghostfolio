@@ -3,11 +3,15 @@ import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
+import { GfPortfolioFilterFormComponent } from '@ghostfolio/ui/portfolio-filter-form';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   Inject,
   OnDestroy,
   OnInit
@@ -28,7 +32,10 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { IonIcon } from '@ionic/angular/standalone';
 import { StatusCodes } from 'http-status-codes';
+import { addIcons } from 'ionicons';
+import { chevronUpOutline, optionsOutline } from 'ionicons/icons';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
@@ -38,6 +45,8 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    GfPortfolioFilterFormComponent,
+    IonIcon,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -45,6 +54,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     MatSelectModule,
     ReactiveFormsModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-create-or-update-access-dialog',
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
@@ -54,6 +64,14 @@ export class GfCreateOrUpdateAccessDialogComponent
 {
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
+  public showFilterPanel = false;
+  public filterPanelExpanded = false;
+
+  // Datos para el filtro
+  public accounts: AccountWithPlatform[] = [];
+  public assetClasses: Filter[] = [];
+  public holdings: PortfolioPosition[] = [];
+  public tags: Filter[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -66,6 +84,8 @@ export class GfCreateOrUpdateAccessDialogComponent
     private notificationService: NotificationService
   ) {
     this.mode = this.data.access?.id ? 'update' : 'create';
+
+    addIcons({ chevronUpOutline, optionsOutline });
   }
 
   public ngOnInit() {
@@ -73,6 +93,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
+      filter: [null],
       granteeUserId: [
         this.data.access.grantee,
         isPublic ? null : Validators.required
@@ -87,19 +108,30 @@ export class GfCreateOrUpdateAccessDialogComponent
     this.accessForm.get('type').valueChanges.subscribe((accessType) => {
       const granteeUserIdControl = this.accessForm.get('granteeUserId');
       const permissionsControl = this.accessForm.get('permissions');
+      const filterControl = this.accessForm.get('filter');
 
       if (accessType === 'PRIVATE') {
         granteeUserIdControl.setValidators(Validators.required);
+        this.showFilterPanel = false;
+        filterControl.setValue(null);
       } else {
         granteeUserIdControl.clearValidators();
         granteeUserIdControl.setValue(null);
         permissionsControl.setValue(this.data.access.permissions[0]);
+        this.showFilterPanel = true;
+        this.loadFilterData();
       }
 
       granteeUserIdControl.updateValueAndValidity();
 
       this.changeDetectorRef.markForCheck();
     });
+
+    // Si ya es público al iniciar, mostrar el panel y cargar datos
+    if (isPublic) {
+      this.showFilterPanel = true;
+      this.loadFilterData();
+    }
   }
 
   public onCancel() {
@@ -117,6 +149,54 @@ export class GfCreateOrUpdateAccessDialogComponent
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private loadFilterData() {
+    // Cargar cuentas
+    this.dataService
+      .fetchAccounts()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        this.accounts = response.accounts;
+        this.changeDetectorRef.markForCheck();
+      });
+
+    // Cargar holdings y asset classes
+    this.dataService
+      .fetchPortfolioDetails({})
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        if (response.holdings) {
+          this.holdings = Object.values(response.holdings);
+
+          // Extraer asset classes únicas
+          const assetClassesSet = new Set<string>();
+          Object.values(response.holdings).forEach((holding) => {
+            if (holding.assetClass) {
+              assetClassesSet.add(holding.assetClass);
+            }
+          });
+          this.assetClasses = Array.from(assetClassesSet).map((ac) => ({
+            id: ac,
+            label: ac,
+            type: 'ASSET_CLASS' as const
+          }));
+        }
+        this.changeDetectorRef.markForCheck();
+      });
+
+    // Cargar tags
+    this.dataService
+      .fetchTags()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        this.tags = response.map((tag) => ({
+          id: tag.id,
+          label: tag.name,
+          type: 'TAG' as const
+        }));
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private async createAccess() {
