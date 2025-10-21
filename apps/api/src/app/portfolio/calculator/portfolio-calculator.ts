@@ -9,7 +9,7 @@ import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
@@ -193,7 +193,7 @@ export abstract class PortfolioCalculator {
     }
 
     const currencies: { [symbol: string]: string } = {};
-    const dataGatheringItems: IDataGatheringItem[] = [];
+    const dataGatheringItems: DataGatheringItem[] = [];
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
     let totalInterestWithCurrencyEffect = new Big(0);
