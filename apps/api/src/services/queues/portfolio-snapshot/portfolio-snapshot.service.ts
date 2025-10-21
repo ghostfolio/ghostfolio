@@ -4,7 +4,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { JobOptions, Queue } from 'bull';
 
-import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
+import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 @Injectable()
 export class PortfolioSnapshotService {
@@ -18,7 +18,7 @@ export class PortfolioSnapshotService {
     name,
     opts
   }: {
-    data: IPortfolioSnapshotQueueJob;
+    data: PortfolioSnapshotQueueJob;
     name: string;
     opts?: JobOptions;
   }) {
