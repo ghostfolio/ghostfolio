@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the enter key press to submit the form of the login with access token dialog
 - Fixed an issue in the database seeding process caused by unresolved environment variables in `DATABASE_URL`
 
 ## 2.209.0 - 2025-10-18
