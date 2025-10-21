@@ -36,7 +36,10 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
     }),
     BullBoardModule.forFeature({
       name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
-      adapter: BullAdapter
+      adapter: BullAdapter,
+      options: {
+        readOnlyMode: true
+      }
     }),
     ConfigurationModule,
     DataProviderModule,
