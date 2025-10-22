@@ -19,19 +19,19 @@ import { DataGatheringProcessor } from './data-gathering.processor';
 
 @Module({
   imports: [
-    BullModule.registerQueue({
-      limiter: {
-        duration: ms('4 seconds'),
-        max: 1
-      },
-      name: DATA_GATHERING_QUEUE
-    }),
     BullBoardModule.forFeature({
       name: DATA_GATHERING_QUEUE,
       adapter: BullAdapter,
       options: {
         readOnlyMode: true
       }
+    }),
+    BullModule.registerQueue({
+      limiter: {
+        duration: ms('4 seconds'),
+        max: 1
+      },
+      name: DATA_GATHERING_QUEUE
     }),
     ConfigurationModule,
     DataEnhancerModule,

@@ -24,6 +24,13 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
   exports: [BullModule, PortfolioSnapshotService],
   imports: [
     AccountBalanceModule,
+    BullBoardModule.forFeature({
+      name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
+      adapter: BullAdapter,
+      options: {
+        readOnlyMode: true
+      }
+    }),
     BullModule.registerQueue({
       name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
       settings: {
@@ -32,13 +39,6 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
             DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT.toString(),
           10
         )
-      }
-    }),
-    BullBoardModule.forFeature({
-      name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
-      adapter: BullAdapter,
-      options: {
-        readOnlyMode: true
       }
     }),
     ConfigurationModule,
