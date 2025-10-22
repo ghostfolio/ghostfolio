@@ -40,11 +40,11 @@ export class ExportService {
 
     let { activities } = await this.orderService.getOrders({
       filters,
-      userCurrency: userSettings?.baseCurrency,
       userId,
       includeDrafts: true,
       sortColumn: 'date',
       sortDirection: 'asc',
+      userCurrency: userSettings?.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
