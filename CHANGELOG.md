@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
+- Added user detail dialog component to view user information in admin users management
 
 ### Changed
 
