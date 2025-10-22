@@ -9,6 +9,7 @@ import {
 
 import { AccountBalance } from '../account-balance.interface';
 import { MarketData } from '../market-data.interface';
+import { PerformanceCalculationType } from '../../types/performance-calculation-type.type';
 
 export interface ExportResponse {
   accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
@@ -36,5 +37,5 @@ export interface ExportResponse {
   };
   platforms: Platform[];
   tags: Omit<Tag, 'userId'>[];
-  user: { settings: { currency: string } };
+  user: { settings: { currency: string; performanceCalculationType: PerformanceCalculationType } };
 }
