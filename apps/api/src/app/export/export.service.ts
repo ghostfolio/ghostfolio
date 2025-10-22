@@ -25,24 +25,22 @@ export class ExportService {
   public async export({
     activityIds,
     filters,
-    userSettings,
-    userId
+    userId,
+    userSettings
   }: {
     activityIds?: string[];
     filters?: Filter[];
-    userSettings: UserSettings;
     userId: string;
+    userSettings: UserSettings;
   }): Promise<ExportResponse> {
     const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
       return type;
     });
     const platformsMap: { [platformId: string]: Platform } = {};
 
-    const userCurrency = userSettings?.baseCurrency;
-
     let { activities } = await this.orderService.getOrders({
       filters,
-      userCurrency,
+      userCurrency: userSettings?.baseCurrency,
       userId,
       includeDrafts: true,
       sortColumn: 'date',
@@ -251,7 +249,7 @@ export class ExportService {
       ),
       user: {
         settings: {
-          currency: userCurrency,
+          currency: userSettings?.baseCurrency,
           performanceCalculationType: userSettings?.performanceCalculationType
         }
       }
