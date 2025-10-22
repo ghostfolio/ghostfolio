@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the _Prisma Configuration File_ from `prisma.config.ts` to `.config/prisma.ts`
+- Upgraded `prisma` from version `6.17.1` to `6.18.0`
 
 ## 2.210.1 - 2025-10-22
 
@@ -73,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
 - Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
 - Improved the language localization for German (`de`)
-- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+- Upgraded `prisma` from version `6.16.1` to `6.17.1`
 
 ### Fixed
 
