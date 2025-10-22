@@ -9,22 +9,18 @@
   <div class="container p-0">
     <div class="row">
       <div class="col-12 mb-3">
-        <h5 i18n>User Information</h5>
+        <gf-value i18n size="medium">User Information</gf-value>
       </div>
     </div>
 
     <div class="mb-3 row">
       <div class="col-6 mb-3">
-        <div class="d-flex flex-column">
-          <small class="text-muted mb-1" i18n>User ID</small>
-          <span class="text-monospace">{{ userId }}</span>
-        </div>
+        <gf-value i18n size="small" [value]="userId">User ID</gf-value>
       </div>
       <div class="col-6 mb-3">
-        <div class="d-flex flex-column">
-          <small class="text-muted mb-1" i18n>Registration Date</small>
-          <span>{{ registrationDate | date: 'medium' }}</span>
-        </div>
+        <gf-value i18n size="small" [value]="registrationDate | date: 'medium'"
+          >Registration Date</gf-value
+        >
       </div>
     </div>
   </div>

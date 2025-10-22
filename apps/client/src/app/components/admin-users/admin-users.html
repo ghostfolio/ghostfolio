@@ -264,9 +264,8 @@
           ></tr>
           <tr
             *matRowDef="let row; columns: displayedColumns"
-            class="mat-mdc-row"
+            class="cursor-pointer mat-mdc-row"
             mat-row
-            style="cursor: pointer"
             (click)="onOpenUserDetailDialog(row.id)"
           ></tr>
         </table>

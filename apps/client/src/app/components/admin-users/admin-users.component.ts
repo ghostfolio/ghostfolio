@@ -80,7 +80,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public displayedColumns: string[] = [];
   public deviceType: string;
   public getEmojiFlag = getEmojiFlag;
-  public hasImpersonationId: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
@@ -97,10 +96,10 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router,
     private impersonationStorageService: ImpersonationStorageService,
     private notificationService: NotificationService,
+    private route: ActivatedRoute,
+    private router: Router,
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
@@ -153,17 +152,16 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     addIcons({
       contractOutline,
       ellipsisHorizontal,
-      personOutline,
       keyOutline,
+      personOutline,
       trashOutline
     });
 
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-    this.hasImpersonationId = !!this.impersonationStorageService.getId();
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['userId'] && params['userDetailDialog']) {
+        if (params['userDetailDialog'] && params['userId']) {
           this.openUserDetailDialog(params['userId']);
         }
       });
@@ -185,9 +183,8 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
-        userId: userId,
+        userId,
         deviceType: this.deviceType,
-        hasImpersonationId: this.hasImpersonationId,
         userData: userData // Pass the user data
       } as UserDetailDialogParams,
       height: this.deviceType === 'mobile' ? '80vh' : '60vh',

@@ -1,6 +1,7 @@
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { User } from '@ghostfolio/common/interfaces';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -28,6 +29,7 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
     CommonModule,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
+    GfValueComponent,
     MatButtonModule,
     MatDialogModule
   ],
@@ -37,11 +39,11 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
-  private unsubscribeSubject = new Subject<void>();
+  public isLoading = false;
+  public registrationDate: Date;
   public user: User;
   public userId: string;
-  public registrationDate: Date;
-  public isLoading = false;
+  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -52,16 +54,12 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
     addIcons({ personOutline });
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.initialize();
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
-  }
-
-  private initialize(): void {
-    this.fetchUserDetails();
   }
 
   private fetchUserDetails(): void {
@@ -81,8 +79,11 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
       this.changeDetectorRef.markForCheck();
     }
   }
+  private initialize() {
+    this.fetchUserDetails();
+  }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
