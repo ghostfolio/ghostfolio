@@ -40,7 +40,7 @@ export class BuyingPower extends Rule<Settings> {
           languageCode: this.getLanguageCode(),
           placeholders: {
             baseCurrency: ruleSettings.baseCurrency,
-            thresholdMin: ruleSettings.thresholdMin
+            thresholdMin: ruleSettings.thresholdMin.toLocaleString(ruleSettings.locale)
           }
         }),
         value: false
@@ -53,7 +53,7 @@ export class BuyingPower extends Rule<Settings> {
         languageCode: this.getLanguageCode(),
         placeholders: {
           baseCurrency: ruleSettings.baseCurrency,
-          thresholdMin: ruleSettings.thresholdMin
+          thresholdMin: ruleSettings.thresholdMin.toLocaleString(ruleSettings.locale)
         }
       }),
       value: true
