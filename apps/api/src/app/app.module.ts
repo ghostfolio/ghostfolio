@@ -71,6 +71,14 @@ import { UserModule } from './user/user.module';
     AuthDeviceModule,
     AuthModule,
     BenchmarksModule,
+    ...(!environment.production
+      ? [
+          BullBoardModule.forRoot({
+            route: '/admin/queues',
+            adapter: ExpressAdapter
+          })
+        ]
+      : []),
     BullModule.forRoot({
       redis: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
@@ -80,14 +88,6 @@ import { UserModule } from './user/user.module';
         port: parseInt(process.env.REDIS_PORT ?? '6379', 10)
       }
     }),
-    ...(!environment.production
-      ? [
-          BullBoardModule.forRoot({
-            route: '/admin/queues',
-            adapter: ExpressAdapter
-          })
-        ]
-      : []),
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,
