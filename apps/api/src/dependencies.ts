@@ -1,3 +1,3 @@
-// Dependencies required by prisma.config.ts in Docker container
+// Dependencies required by .config/ in Docker container
 import 'dotenv';
 import 'dotenv-expand';

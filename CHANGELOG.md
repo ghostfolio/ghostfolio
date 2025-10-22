@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reverted the explicit configuration of the _Redis_ address family in the job queue module
 - Improved the language localization for German (`de`)
 - Upgraded `ioredis` from version `5.6.1` to `5.8.2`
+- Migrated Prisma configuration from `prisma.config.ts` to `.config/prisma.ts`.
 
 ### Fixed
 
