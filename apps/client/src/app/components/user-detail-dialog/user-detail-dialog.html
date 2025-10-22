@@ -1,0 +1,36 @@
+<gf-dialog-header
+  position="center"
+  [deviceType]="data.deviceType"
+  [title]="userId"
+  (closeButtonClicked)="onClose()"
+/>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <div class="container p-0">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h5 i18n>User Information</h5>
+      </div>
+    </div>
+
+    <div class="mb-3 row">
+      <div class="col-6 mb-3">
+        <div class="d-flex flex-column">
+          <small class="text-muted mb-1" i18n>User ID</small>
+          <span class="text-monospace">{{ userId }}</span>
+        </div>
+      </div>
+      <div class="col-6 mb-3">
+        <div class="d-flex flex-column">
+          <small class="text-muted mb-1" i18n>Registration Date</small>
+          <span>{{ registrationDate | date: 'medium' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<gf-dialog-footer
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+/>

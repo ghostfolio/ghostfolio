@@ -19,6 +19,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   MatPaginator,
@@ -26,6 +27,7 @@ import {
   PageEvent
 } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
   differenceInSeconds,
@@ -37,8 +39,10 @@ import {
   contractOutline,
   ellipsisHorizontal,
   keyOutline,
+  personOutline,
   trashOutline
 } from 'ionicons/icons';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -49,6 +53,8 @@ import { AdminService } from '../../services/admin.service';
 import { DataService } from '../../services/data.service';
 import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
 import { UserService } from '../../services/user/user.service';
+import { UserDetailDialogParams } from '../user-detail-dialog/interfaces/interfaces';
+import { GfUserDetailDialogComponent } from '../user-detail-dialog/user-detail-dialog.component';
 
 @Component({
   imports: [
@@ -72,7 +78,9 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
   public defaultDateFormat: string;
   public displayedColumns: string[] = [];
+  public deviceType: string;
   public getEmojiFlag = getEmojiFlag;
+  public hasImpersonationId: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
@@ -87,6 +95,10 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
     private impersonationStorageService: ImpersonationStorageService,
     private notificationService: NotificationService,
     private tokenStorageService: TokenStorageService,
@@ -138,13 +150,58 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         }
       });
 
-    addIcons({ contractOutline, ellipsisHorizontal, keyOutline, trashOutline });
+    addIcons({
+      contractOutline,
+      ellipsisHorizontal,
+      personOutline,
+      keyOutline,
+      trashOutline
+    });
+
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.hasImpersonationId = !!this.impersonationStorageService.getId();
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['userId'] && params['userDetailDialog']) {
+          this.openUserDetailDialog(params['userId']);
+        }
+      });
   }
 
   public ngOnInit() {
     this.fetchUsers();
   }
+  public onOpenUserDetailDialog(userId: string) {
+    this.router.navigate([], {
+      queryParams: { userId, userDetailDialog: true }
+    });
+  }
 
+  private openUserDetailDialog(userId: string) {
+    // Find the user data from the current dataSource
+    const userData = this.dataSource.data.find((user) => user.id === userId);
+
+    const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
+      autoFocus: false,
+      data: {
+        userId: userId,
+        deviceType: this.deviceType,
+        hasImpersonationId: this.hasImpersonationId,
+        userData: userData // Pass the user data
+      } as UserDetailDialogParams,
+      height: this.deviceType === 'mobile' ? '80vh' : '60vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchUsers(); // Refresh the users list
+        this.router.navigate(['.'], { relativeTo: this.route }); // Clear query params
+      });
+  }
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
