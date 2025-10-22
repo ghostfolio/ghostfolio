@@ -1,22 +1,18 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
-import { GfPortfolioFilterFormComponent } from '@ghostfolio/ui/portfolio-filter-form';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   Inject,
   OnDestroy,
   OnInit
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -32,12 +28,13 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { IonIcon } from '@ionic/angular/standalone';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
-import { addIcons } from 'ionicons';
-import { chevronUpOutline, optionsOutline } from 'ionicons/icons';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
+import { NotificationService } from '../../../core/notification/notification.service';
+import { DataService } from '../../../services/data.service';
+import { validateObjectForForm } from '../../../util/form.util';
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
 @Component({
@@ -45,8 +42,6 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   imports: [
     FormsModule,
-    GfPortfolioFilterFormComponent,
-    IonIcon,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -54,7 +49,6 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     MatSelectModule,
     ReactiveFormsModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-create-or-update-access-dialog',
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
@@ -65,7 +59,6 @@ export class GfCreateOrUpdateAccessDialogComponent
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
   public showFilterPanel = false;
-  public filterPanelExpanded = false;
 
   // Datos para el filtro
   public accounts: AccountWithPlatform[] = [];
@@ -84,8 +77,6 @@ export class GfCreateOrUpdateAccessDialogComponent
     private notificationService: NotificationService
   ) {
     this.mode = this.data.access?.id ? 'update' : 'create';
-
-    addIcons({ chevronUpOutline, optionsOutline });
   }
 
   public ngOnInit() {
@@ -96,12 +87,17 @@ export class GfCreateOrUpdateAccessDialogComponent
       filter: [null],
       granteeUserId: [
         this.data.access.grantee,
-        isPublic ? null : Validators.required
+        isPublic
+          ? null
+          : [(control: AbstractControl) => Validators.required(control)]
       ],
-      permissions: [this.data.access.permissions[0], Validators.required],
+      permissions: [
+        this.data.access.permissions[0],
+        [(control: AbstractControl) => Validators.required(control)]
+      ],
       type: [
         { disabled: this.mode === 'update', value: this.data.access.type },
-        Validators.required
+        [(control: AbstractControl) => Validators.required(control)]
       ]
     });
 
@@ -111,7 +107,9 @@ export class GfCreateOrUpdateAccessDialogComponent
       const filterControl = this.accessForm.get('filter');
 
       if (accessType === 'PRIVATE') {
-        granteeUserIdControl.setValidators(Validators.required);
+        granteeUserIdControl.setValidators([
+          (control: AbstractControl) => Validators.required(control)
+        ]);
         this.showFilterPanel = false;
         filterControl.setValue(null);
       } else {
@@ -201,9 +199,11 @@ export class GfCreateOrUpdateAccessDialogComponent
 
   private async createAccess() {
     const access: CreateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
-      permissions: [this.accessForm.get('permissions').value]
+      alias: this.accessForm.get('alias')?.value as string,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
+      permissions: [
+        this.accessForm.get('permissions')?.value as AccessPermission
+      ]
     };
 
     try {
@@ -216,8 +216,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .postAccess(access)
         .pipe(
-          catchError((error) => {
-            if (error.status === StatusCodes.BAD_REQUEST) {
+          catchError((error: { status?: number }) => {
+            if (error?.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not grant access.`
               });
@@ -237,10 +237,12 @@ export class GfCreateOrUpdateAccessDialogComponent
 
   private async updateAccess() {
     const access: UpdateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
+      alias: this.accessForm.get('alias')?.value as string,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
       id: this.data.access.id,
-      permissions: [this.accessForm.get('permissions').value]
+      permissions: [
+        this.accessForm.get('permissions')?.value as AccessPermission
+      ]
     };
 
     try {
@@ -253,8 +255,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .putAccess(access)
         .pipe(
-          catchError(({ status }) => {
-            if (status.status === StatusCodes.BAD_REQUEST) {
+          catchError((error: { status?: number }) => {
+            if (error?.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });
