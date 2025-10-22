@@ -7,8 +7,8 @@ expand(config({ quiet: true }));
 
 export default defineConfig({
   migrations: {
-    path: join('..', 'prisma', 'migrations'),
-    seed: `node ${join('..', 'prisma', 'seed.mts')}`
+    path: join(__dirname, '..', 'prisma', 'migrations'),
+    seed: `node ${join(__dirname, '..', 'prisma', 'seed.mts')}`
   },
-  schema: join('..', 'prisma', 'schema.prisma')
+  schema: join(__dirname, '..', 'prisma', 'schema.prisma')
 });
