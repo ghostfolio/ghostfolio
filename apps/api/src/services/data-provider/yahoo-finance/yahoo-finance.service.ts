@@ -10,8 +10,8 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
@@ -96,7 +96,7 @@ export class YahooFinanceService implements DataProviderInterface {
         )
       );
       const response: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       for (const historicalItem of historicalResult) {
@@ -124,7 +124,7 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
@@ -145,7 +145,7 @@ export class YahooFinanceService implements DataProviderInterface {
       );
 
       const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
       } = {};
 
       response[symbol] = {};
@@ -183,8 +183,8 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
+    const response: { [symbol: string]: DataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;

@@ -1,6 +1,6 @@
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
@@ -30,7 +30,7 @@ export class MarketDataService {
     dataSource,
     date = new Date(),
     symbol
-  }: IDataGatheringItem): Promise<MarketData> {
+  }: DataGatheringItem): Promise<MarketData> {
     return await this.prismaService.marketData.findFirst({
       where: {
         dataSource,

@@ -1,5 +1,5 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 
 import {
   Controller,
@@ -25,7 +25,7 @@ export class ExchangeRateController {
   public async getExchangeRate(
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
-  ): Promise<IDataProviderHistoricalResponse> {
+  ): Promise<DataProviderHistoricalResponse> {
     const date = parseISO(dateString);
 
     const exchangeRate = await this.exchangeRateService.getExchangeRate({

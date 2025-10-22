@@ -86,9 +86,14 @@ export class BuyingPower extends Rule<Settings> {
     });
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
+      locale,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0
     };

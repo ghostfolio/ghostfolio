@@ -1,8 +1,8 @@
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 
 import { DateQuery } from './date-query.interface';
 
 export interface GetValuesParams {
-  dataGatheringItems: IDataGatheringItem[];
+  dataGatheringItems: DataGatheringItem[];
   dateQuery: DateQuery;
 }

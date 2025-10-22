@@ -1,6 +1,6 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -99,7 +99,7 @@ export class DataGatheringProcessor {
     ),
     name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
   })
-  public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
+  public async gatherHistoricalMarketData(job: Job<DataGatheringItem>) {
     const { dataSource, date, symbol } = job.data;
 
     try {

@@ -134,9 +134,12 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
 
   public onCheckout() {
     this.dataService
-      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .createStripeCheckoutSession({
+        couponId: this.couponId,
+        priceId: this.priceId
+      })
       .pipe(
-        switchMap(({ sessionId }: { sessionId: string }) => {
+        switchMap(({ sessionId }) => {
           return this.stripeService.redirectToCheckout({ sessionId });
         }),
         catchError((error) => {

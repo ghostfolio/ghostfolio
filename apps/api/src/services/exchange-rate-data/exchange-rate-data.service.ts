@@ -1,6 +1,6 @@
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -29,7 +29,7 @@ import ms from 'ms';
 @Injectable()
 export class ExchangeRateDataService {
   private currencies: string[] = [];
-  private currencyPairs: IDataGatheringItem[] = [];
+  private currencyPairs: DataGatheringItem[] = [];
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(

@@ -8,9 +8,9 @@ import { GfAlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { GfConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ConfirmationDialogType } from './confirmation-dialog/confirmation-dialog.type';
 import {
-  IAlertParams,
-  IConfirmParams,
-  IPromptParams
+  AlertParams,
+  ConfirmParams,
+  PromptParams
 } from './interfaces/interfaces';
 import { GfPromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 
@@ -21,7 +21,7 @@ export class NotificationService {
 
   public constructor(private matDialog: MatDialog) {}
 
-  public alert(aParams: IAlertParams) {
+  public alert(aParams: AlertParams) {
     if (!aParams.discardLabel) {
       aParams.discardLabel = translate('CLOSE');
     }
@@ -45,7 +45,7 @@ export class NotificationService {
     });
   }
 
-  public confirm(aParams: IConfirmParams) {
+  public confirm(aParams: ConfirmParams) {
     if (!aParams.confirmLabel) {
       aParams.confirmLabel = translate('YES');
     }
@@ -78,7 +78,7 @@ export class NotificationService {
     });
   }
 
-  public prompt(aParams: IPromptParams) {
+  public prompt(aParams: PromptParams) {
     if (!aParams.confirmLabel) {
       aParams.confirmLabel = translate('OK');
     }

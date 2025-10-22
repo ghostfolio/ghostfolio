@@ -5,11 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.210.0 - 2025-10-22
 
 ### Added
 
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
+
+### Changed
+
+- Extracted the portfolio filter form of the assistant to a reusable component
+- Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
+- Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
+- Reverted the explicit configuration of the _Redis_ address family in the job queue module
+- Improved the language localization for German (`de`)
+- Upgraded `ioredis` from version `5.6.1` to `5.8.2`
+
+### Fixed
+
+- Fixed the enter key press to submit the form of the login with access token dialog
+- Fixed an issue in the database seeding process caused by unresolved environment variables in `DATABASE_URL`
 
 ## 2.209.0 - 2025-10-18
 

@@ -1,1 +1,1 @@
-export interface IRapidApiResponse {}
+export interface RapidApiResponse {}

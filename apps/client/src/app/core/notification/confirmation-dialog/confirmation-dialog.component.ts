@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { ConfirmationDialogType } from './confirmation-dialog.type';
-import { IConfirmDialogParams } from './interfaces/interfaces';
+import { ConfirmDialogParams } from './interfaces/interfaces';
 
 @Component({
   imports: [MatButtonModule, MatDialogModule],
@@ -29,7 +29,7 @@ export class GfConfirmationDialogComponent {
     }
   }
 
-  public initialize(aParams: IConfirmDialogParams) {
+  public initialize(aParams: ConfirmDialogParams) {
     this.confirmLabel = aParams.confirmLabel;
     this.confirmType = aParams.confirmType;
     this.discardLabel = aParams.discardLabel;

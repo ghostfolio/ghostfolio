@@ -6,11 +6,11 @@ import { MarketState } from '@ghostfolio/common/types';
 
 import { DataSource } from '@prisma/client';
 
-export interface IDataProviderHistoricalResponse {
+export interface DataProviderHistoricalResponse {
   marketPrice: number;
 }
 
-export interface IDataProviderResponse {
+export interface DataProviderResponse {
   currency: string;
   dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
@@ -18,6 +18,6 @@ export interface IDataProviderResponse {
   marketState: MarketState;
 }
 
-export interface IDataGatheringItem extends AssetProfileIdentifier {
+export interface DataGatheringItem extends AssetProfileIdentifier {
   date?: Date;
 }

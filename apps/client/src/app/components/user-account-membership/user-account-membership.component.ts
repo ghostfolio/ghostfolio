@@ -108,7 +108,10 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
   public onCheckout() {
     this.dataService
-      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .createStripeCheckoutSession({
+        couponId: this.couponId,
+        priceId: this.priceId
+      })
       .pipe(
         catchError((error) => {
           this.notificationService.alert({
@@ -117,7 +120,7 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
           throw error;
         }),
-        switchMap(({ sessionId }: { sessionId: string }) => {
+        switchMap(({ sessionId }) => {
           return this.stripeService.redirectToCheckout({ sessionId });
         })
       )

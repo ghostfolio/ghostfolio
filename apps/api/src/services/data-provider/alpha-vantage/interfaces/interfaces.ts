@@ -1,1 +1,1 @@
-export interface IAlphaVantageHistoricalResponse {}
+export interface AlphaVantageHistoricalResponse {}

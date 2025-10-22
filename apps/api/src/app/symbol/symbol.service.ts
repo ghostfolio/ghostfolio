@@ -1,7 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import {
-  IDataGatheringItem,
-  IDataProviderHistoricalResponse
+  DataGatheringItem,
+  DataProviderHistoricalResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
@@ -27,7 +27,7 @@ export class SymbolService {
     dataGatheringItem,
     includeHistoricalData
   }: {
-    dataGatheringItem: IDataGatheringItem;
+    dataGatheringItem: DataGatheringItem;
     includeHistoricalData?: number;
   }): Promise<SymbolItem> {
     const quotes = await this.dataProviderService.getQuotes({
@@ -75,10 +75,10 @@ export class SymbolService {
     dataSource,
     date = new Date(),
     symbol
-  }: IDataGatheringItem): Promise<IDataProviderHistoricalResponse> {
+  }: DataGatheringItem): Promise<DataProviderHistoricalResponse> {
     let historicalData: {
       [symbol: string]: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       };
     } = {
       [symbol]: {}

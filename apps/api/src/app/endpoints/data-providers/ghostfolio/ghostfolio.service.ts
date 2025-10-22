@@ -8,7 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -114,7 +114,7 @@ export class GhostfolioService {
 
     try {
       const promises: Promise<{
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       }>[] = [];
 
       for (const dataProviderService of this.getDataProviderServices()) {
@@ -156,7 +156,7 @@ export class GhostfolioService {
 
     try {
       const promises: Promise<{
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
       }>[] = [];
 
       for (const dataProviderService of this.getDataProviderServices()) {

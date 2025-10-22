@@ -1,13 +1,13 @@
 import { Job, JobOptions } from 'bull';
 import { setTimeout } from 'timers/promises';
 
-import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
+import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 export const PortfolioSnapshotServiceMock = {
   addJobToQueue({
     opts
   }: {
-    data: IPortfolioSnapshotQueueJob;
+    data: PortfolioSnapshotQueueJob;
     name: string;
     opts?: JobOptions;
   }): Promise<Job<any>> {

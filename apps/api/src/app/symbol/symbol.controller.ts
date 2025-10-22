@@ -1,7 +1,7 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { LookupResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -97,7 +97,7 @@ export class SymbolController {
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
-  ): Promise<IDataProviderHistoricalResponse> {
+  ): Promise<DataProviderHistoricalResponse> {
     const date = parseISO(dateString);
 
     if (!isDate(date)) {

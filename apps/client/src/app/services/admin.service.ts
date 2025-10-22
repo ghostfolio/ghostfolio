@@ -1,7 +1,7 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
@@ -208,7 +208,7 @@ export class AdminService {
   }) {
     const url = `/api/v1/symbol/${dataSource}/${symbol}/${dateString}`;
 
-    return this.http.get<IDataProviderHistoricalResponse>(url);
+    return this.http.get<DataProviderHistoricalResponse>(url);
   }
 
   public patchAssetProfile(

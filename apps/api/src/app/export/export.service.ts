@@ -3,7 +3,7 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { Filter, Export } from '@ghostfolio/common/interfaces';
+import { ExportResponse, Filter } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { Platform, Prisma } from '@prisma/client';
@@ -28,7 +28,7 @@ export class ExportService {
     filters?: Filter[];
     userCurrency: string;
     userId: string;
-  }): Promise<Export> {
+  }): Promise<ExportResponse> {
     const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
       return type;
     });
