@@ -3,7 +3,11 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { ExportResponse, Filter, UserSettings } from '@ghostfolio/common/interfaces';
+import {
+  ExportResponse,
+  Filter,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { Platform, Prisma } from '@prisma/client';
