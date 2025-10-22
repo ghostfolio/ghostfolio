@@ -164,119 +164,61 @@
       </div>
     }
   </div>
-  <form [formGroup]="filterForm">
-    @if (!searchFormControl.value) {
-      <div class="date-range-selector-container p-3">
-        <mat-form-field appearance="outline" class="w-100 without-hint">
-          <mat-label i18n>Date Range</mat-label>
-          <mat-select
-            [formControl]="dateRangeFormControl"
-            (selectionChange)="onChangeDateRange($event.value)"
-          >
-            @for (range of dateRangeOptions; track range) {
-              <mat-option [value]="range.value">{{ range.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+  @if (!searchFormControl.value) {
+    <div class="date-range-selector-container p-3">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label i18n>Date Range</mat-label>
+        <mat-select
+          [formControl]="dateRangeFormControl"
+          (selectionChange)="onChangeDateRange($event.value)"
+        >
+          @for (
+            dateRangeOption of dateRangeOptions;
+            track dateRangeOption.value
+          ) {
+            <mat-option [value]="dateRangeOption.value">{{
+              dateRangeOption.label
+            }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="p-3">
+      <gf-portfolio-filter-form
+        #portfolioFilterForm
+        [accounts]="user?.accounts"
+        [assetClasses]="assetClasses"
+        [formControl]="portfolioFilterFormControl"
+        [holdings]="holdings"
+        [tags]="tags"
+      />
+      <div class="d-flex w-100">
+        <button
+          i18n
+          mat-button
+          type="button"
+          [disabled]="
+            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled
+          "
+          (click)="onResetFilters()"
+        >
+          Reset Filters
+        </button>
+        <span class="gf-spacer"></span>
+        <button
+          color="primary"
+          i18n
+          mat-flat-button
+          type="button"
+          [disabled]="
+            !portfolioFilterForm.filterForm.dirty ||
+            portfolioFilterForm.disabled
+          "
+          (click)="onApplyFilters()"
+        >
+          Apply Filters
+        </button>
       </div>
-      <div class="p-3">
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Account</mat-label>
-            <mat-select formControlName="account">
-              <mat-option [value]="null" />
-              @for (account of accounts; track account.id) {
-                <mat-option [value]="account.id">
-                  <div class="d-flex">
-                    @if (account.platform?.url) {
-                      <gf-entity-logo
-                        class="mr-1"
-                        [tooltip]="account.platform?.name"
-                        [url]="account.platform?.url"
-                      />
-                    }
-                    <span>{{ account.name }}</span>
-                  </div>
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Holding</mat-label>
-            <mat-select
-              formControlName="holding"
-              [compareWith]="holdingComparisonFunction"
-            >
-              <mat-select-trigger>{{
-                filterForm.get('holding')?.value?.name
-              }}</mat-select-trigger>
-              <mat-option [value]="null" />
-              @for (holding of holdings; track holding.name) {
-                <mat-option [value]="holding">
-                  <div class="line-height-1 text-truncate">
-                    <span
-                      ><b>{{ holding.name }}</b></span
-                    >
-                    <br />
-                    <small class="text-muted"
-                      >{{ holding.symbol | gfSymbol }} ·
-                      {{ holding.currency }}</small
-                    >
-                  </div>
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Tag</mat-label>
-            <mat-select formControlName="tag">
-              <mat-option [value]="null" />
-              @for (tag of tags; track tag.id) {
-                <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Asset Class</mat-label>
-            <mat-select formControlName="assetClass">
-              <mat-option [value]="null" />
-              @for (assetClass of assetClasses; track assetClass.id) {
-                <mat-option [value]="assetClass.id">{{
-                  assetClass.label
-                }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="d-flex w-100">
-          <button
-            i18n
-            mat-button
-            [disabled]="
-              !hasFilter(filterForm.value) || !hasPermissionToChangeFilters
-            "
-            (click)="onResetFilters()"
-          >
-            Reset Filters
-          </button>
-          <span class="gf-spacer"></span>
-          <button
-            color="primary"
-            i18n
-            mat-flat-button
-            [disabled]="!filterForm.dirty || !hasPermissionToChangeFilters"
-            (click)="onApplyFilters()"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </div>
-    }
-  </form>
+    </div>
+  }
 </div>

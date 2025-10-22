@@ -1,5 +1,5 @@
 import { capitalize } from '@ghostfolio/common/helper';
-import { Export } from '@ghostfolio/common/interfaces';
+import { ExportResponse } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@angular/core';
 import { Type } from '@prisma/client';
@@ -13,7 +13,7 @@ export class IcsService {
   private readonly ICS_LINE_BREAK = '\r\n';
 
   public transformActivitiesToIcsContent(
-    aActivities: Export['activities']
+    aActivities: ExportResponse['activities']
   ): string {
     const header = [
       'BEGIN:VCALENDAR',
