@@ -193,7 +193,7 @@ export class ImportActivitiesService {
     type,
     unitPrice,
     updateAccountBalance
-  }: Activity): CreateOrderDto {
+  }: ActivityResponse): CreateOrderDto {
     return {
       accountId,
       comment,
@@ -453,7 +453,7 @@ export class ImportActivitiesService {
     },
     aIsDryRun = false
   ) {
-    return this.http.post<{ activities: Activity[] }>(
+    return this.http.post<{ activities: ActivityResponse[] }>(
       `/api/v1/import?dryRun=${aIsDryRun}`,
       aImportData
     );
