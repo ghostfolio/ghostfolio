@@ -11,7 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the export functionality by the user account’s performance calculation type
 
-## 2.210.0 - 2025-10-22
+### Changed
+
+- Localized the number formatting in the static portfolio analysis rule: _Liquidity_ (Buying Power)
+- Moved the _Prisma Configuration File_ from `prisma.config.ts` to `.config/prisma.ts`
+- Upgraded `prisma` from version `6.17.1` to `6.18.0`
+
+## 2.210.1 - 2025-10-22
 
 ### Added
 
@@ -73,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated endpoint `GET api/v1/portfolio/position/:dataSource/:symbol`
 - Removed the deprecated endpoint `PUT api/v1/portfolio/position/:dataSource/:symbol/tags`
 - Improved the language localization for German (`de`)
-- Upgraded `prisma` from version `6.16.1` to `6.16.3`
+- Upgraded `prisma` from version `6.16.1` to `6.17.1`
 
 ### Fixed
 
