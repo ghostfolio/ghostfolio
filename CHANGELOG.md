@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Localized the number formatting in the static portfolio analysis rule: _Liquidity_ (Buying Power)
 - Upgraded `prisma` from version `6.17.1` to `6.18.0`
 
 ## 2.210.1 - 2025-10-22
