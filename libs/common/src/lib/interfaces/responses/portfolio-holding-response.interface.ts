@@ -1,5 +1,5 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
+  ActivityResponse,
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
@@ -9,7 +9,7 @@ import {
 import { Tag } from '@prisma/client';
 
 export interface PortfolioHoldingResponse {
-  activities: Activity[];
+  activities: ActivityResponse[];
   activitiesCount: number;
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;

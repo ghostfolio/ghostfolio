@@ -1,5 +1,4 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
@@ -7,7 +6,11 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
+import {
+  ActivityResponse,
+  AssetProfileIdentifier,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
@@ -45,7 +48,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   templateUrl: './activities-page.html'
 })
 export class GfActivitiesPageComponent implements OnDestroy, OnInit {
-  public dataSource: MatTableDataSource<Activity>;
+  public dataSource: MatTableDataSource<ActivityResponse>;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
@@ -166,7 +169,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public onCloneActivity(aActivity: Activity) {
+  public onCloneActivity(aActivity: ActivityResponse) {
     this.openCreateActivityDialog(aActivity);
   }
 
@@ -299,13 +302,13 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     this.fetchActivities();
   }
 
-  public onUpdateActivity(aActivity: Activity) {
+  public onUpdateActivity(aActivity: ActivityResponse) {
     this.router.navigate([], {
       queryParams: { activityId: aActivity.id, editDialog: true }
     });
   }
 
-  public openUpdateActivityDialog(aActivity: Activity) {
+  public openUpdateActivityDialog(aActivity: ActivityResponse) {
     const dialogRef = this.dialog.open(
       GfCreateOrUpdateActivityDialogComponent,
       {
@@ -343,7 +346,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateActivityDialog(aActivity?: Activity) {
+  private openCreateActivityDialog(aActivity?: ActivityResponse) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))

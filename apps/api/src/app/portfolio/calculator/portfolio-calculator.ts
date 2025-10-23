@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
@@ -26,6 +25,7 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import {
+  ActivityResponse,
   AssetProfileIdentifier,
   DataProviderInfo,
   Filter,
@@ -87,7 +87,7 @@ export abstract class PortfolioCalculator {
     userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
-    activities: Activity[];
+    activities: ActivityResponse[];
     configurationService: ConfigurationService;
     currency: string;
     currentRateService: CurrentRateService;

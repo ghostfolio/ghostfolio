@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
   symbolProfileDummyData,
@@ -14,6 +13,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -75,7 +75,7 @@ describe('PortfolioCalculator', () => {
     it('with MSFT buy and sell with fractional quantities (multiples of 1/3)', () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-04-01').getTime());
 
-      const activities: Activity[] = [
+      const activities: ActivityResponse[] = [
         {
           ...activityDummyData,
           date: new Date('2024-03-08'),

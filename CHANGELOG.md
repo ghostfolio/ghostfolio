@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Refactor Activities interface to ActivitiesResponse interface
+
 ### Changed
 
 - Upgraded `prisma` from version `6.17.1` to `6.18.0`

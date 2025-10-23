@@ -1,5 +1,5 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
+import { ActivityResponse } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +22,7 @@ import { GfNoTransactionsInfoComponent } from '../no-transactions-info/no-transa
 import { GfValueComponent } from '../value';
 import { GfActivitiesTableComponent } from './activities-table.component';
 
-const activities: Activity[] = [
+const activities: ActivityResponse[] = [
   {
     accountId: '776bd1e9-b2f6-4f7e-933d-18756c2f0625',
     accountUserId: '081aa387-487d-4438-83a4-3060eb2a016e',
@@ -360,7 +360,7 @@ const activities: Activity[] = [
   }
 ];
 
-const dataSource = new MatTableDataSource<Activity>(activities);
+const dataSource = new MatTableDataSource<ActivityResponse>(activities);
 
 export default {
   title: 'Activities Table',
@@ -443,9 +443,9 @@ export const Default: Story = {
 export const Pagination: Story = {
   args: {
     baseCurrency: 'USD',
-    dataSource: new MatTableDataSource<Activity>(
+    dataSource: new MatTableDataSource<ActivityResponse>(
       Array.from({ length: 50 }).map((_, i) => ({
-        ...(activities[i % activities.length] as Activity),
+        ...(activities[i % activities.length] as ActivityResponse),
         date: new Date(2025, 5, (i % 28) + 1),
         id: `${i}`
       }))

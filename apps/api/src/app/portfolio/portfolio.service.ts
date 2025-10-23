@@ -1,7 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
@@ -40,6 +39,7 @@ import {
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   AccountsResponse,
+  ActivityResponse,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
@@ -323,7 +323,7 @@ export class PortfolioService {
     activities,
     groupBy
   }: {
-    activities: Activity[];
+    activities: ActivityResponse[];
     groupBy?: GroupBy;
   }): Promise<InvestmentItem[]> {
     let dividends = activities.map(({ currency, date, value }) => {
@@ -1948,8 +1948,8 @@ export class PortfolioService {
       withExcludedAccountsAndActivities: true
     });
 
-    const excludedActivities: Activity[] = [];
-    const nonExcludedActivities: Activity[] = [];
+    const excludedActivities: ActivityResponse[] = [];
+    const nonExcludedActivities: ActivityResponse[] = [];
 
     for (const activity of activities) {
       if (
@@ -2117,7 +2117,7 @@ export class PortfolioService {
     activityType,
     userCurrency
   }: {
-    activities: Activity[];
+    activities: ActivityResponse[];
     activityType: ActivityType;
     userCurrency: string;
   }) {
@@ -2182,7 +2182,7 @@ export class PortfolioService {
     userId,
     withExcludedAccounts = false
   }: {
-    activities: Activity[];
+    activities: ActivityResponse[];
     filters?: Filter[];
     portfolioItemsNow: Record<string, TimelinePosition>;
     userCurrency: string;
