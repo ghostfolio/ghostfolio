@@ -104,13 +104,20 @@ export class PublicController {
       }
 
       // Add holding filters (symbol + dataSource)
+      // Each holding needs both DATA_SOURCE and SYMBOL filters
       if (accessFilter.holdings && accessFilter.holdings.length > 0) {
-        portfolioFilters.push(
-          ...accessFilter.holdings.map((holding) => ({
-            id: `${holding.dataSource}.${holding.symbol}`,
-            type: 'SYMBOL' as const
-          }))
-        );
+        accessFilter.holdings.forEach((holding) => {
+          portfolioFilters.push(
+            {
+              id: holding.dataSource,
+              type: 'DATA_SOURCE' as const
+            },
+            {
+              id: holding.symbol,
+              type: 'SYMBOL' as const
+            }
+          );
+        });
       }
     }
 
@@ -148,23 +155,65 @@ export class PublicController {
       })
     );
 
+    // Use filters for activities, but exclude DATA_SOURCE/SYMBOL filters
+    // if there are multiple holdings (the service can't handle multiple symbol filters)
+    const hasMultipleHoldingFilters =
+      accessFilter?.holdings && accessFilter.holdings.length > 1;
+
+    const activityFilters = portfolioFilters.filter((filter) => {
+      // Always include ACCOUNT, ASSET_CLASS, TAG filters
+      if (
+        filter.type === 'ACCOUNT' ||
+        filter.type === 'ASSET_CLASS' ||
+        filter.type === 'TAG'
+      ) {
+        return true;
+      }
+
+      // Include DATA_SOURCE and SYMBOL only if there's a single holding filter
+      if (
+        !hasMultipleHoldingFilters &&
+        (filter.type === 'DATA_SOURCE' || filter.type === 'SYMBOL')
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+
     const { activities } = await this.orderService.getOrders({
+      filters: activityFilters.length > 0 ? activityFilters : undefined,
       includeDrafts: false,
       sortColumn: 'date',
       sortDirection: 'desc',
-      take: 10,
+      take: hasMultipleHoldingFilters ? 1000 : 10, // Get more if we need to filter manually
       types: [ActivityType.BUY, ActivityType.SELL],
       userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: user.id,
       withExcludedAccountsAndActivities: false
     });
 
+    // If multiple holdings, filter activities manually
+    let filteredActivities = activities;
+    if (hasMultipleHoldingFilters && accessFilter.holdings) {
+      filteredActivities = activities.filter((activity) => {
+        return accessFilter.holdings.some(
+          (holding) =>
+            activity.SymbolProfile.dataSource === holding.dataSource &&
+            activity.SymbolProfile.symbol === holding.symbol
+        );
+      });
+    }
+
+    // Take only the latest 10 activities after filtering
+    const latestActivitiesData = filteredActivities.slice(0, 10);
+
     // Experimental
     const latestActivities = this.configurationService.get(
       'ENABLE_FEATURE_SUBSCRIPTION'
     )
       ? []
-      : activities.map(
+      : latestActivitiesData.map(
           ({
             currency,
             date,
