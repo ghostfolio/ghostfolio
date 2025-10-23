@@ -16,7 +16,6 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Export } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
@@ -61,7 +60,7 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let exportResponse: Export;
+  let exportResponse: any;
 
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
@@ -143,7 +142,7 @@ describe('PortfolioCalculator', () => {
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('4.46'),
-            feeInBaseCurrency: new Big('3.94'),
+            feeInBaseCurrency: new Big('4.46'),
             firstBuyDate: '2021-12-12',
             grossPerformance: new Big('-1458.72'),
             grossPerformancePercentage: new Big('-0.03273724696701543726'),
