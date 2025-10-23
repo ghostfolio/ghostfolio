@@ -58,19 +58,10 @@ export class ImportActivitiesService {
 
     for (const [index, item] of content.entries()) {
       const currency = this.parseCurrency({ content, index, item });
+      const dataSource = this.parseDataSource({ item });
       const type = this.parseType({ content, index, item });
-      const symbol = this.parseSymbol({ content, index, item });
-      let dataSource = this.parseDataSource({ item });
 
-      // Set default dataSource if not provided in CSV
-      if (!dataSource) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          dataSource = DataSource.MANUAL;
-        } else {
-          // For other types, try to determine from symbol or default to YAHOO
-          dataSource = DataSource.YAHOO;
-        }
-      }
+      const symbol = this.parseSymbol({ content, index, item });
 
       activities.push({
         currency,

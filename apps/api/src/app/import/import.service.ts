@@ -539,9 +539,9 @@ export class ImportService {
             connectOrCreate: {
               create: {
                 dataSource,
+                name,
                 symbol,
                 currency: assetProfile.currency,
-                name,
                 userId: dataSource === 'MANUAL' ? user.id : undefined
               },
               where: {

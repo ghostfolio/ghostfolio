@@ -129,7 +129,7 @@ export class OrderService {
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
 
-      let name: string = data.SymbolProfile.connectOrCreate.create.name;
+      let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
       if (
