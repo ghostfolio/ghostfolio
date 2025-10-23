@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the export functionality by the user account’s performance calculation type
+
 ### Changed
 
 - Localized the number formatting in the static portfolio analysis rule: _Liquidity_ (Buying Power)
