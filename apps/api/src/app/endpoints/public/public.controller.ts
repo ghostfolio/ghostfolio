@@ -10,6 +10,7 @@ import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { getSum } from '@ghostfolio/common/helper';
 import {
   AccessSettings,
+  Filter,
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -23,7 +24,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Type as ActivityType } from '@prisma/client';
+import { Type as ActivityType, AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -66,7 +67,52 @@ export class PublicController {
 
     // Get filter configuration from access settings
     const accessSettings = (access.settings ?? {}) as AccessSettings;
-    const filter = accessSettings.filter;
+    const accessFilter = accessSettings.filter;
+
+    // Convert access filter to portfolio filters
+    const portfolioFilters: Filter[] = [];
+
+    if (accessFilter) {
+      // Add account filters
+      if (accessFilter.accountIds && accessFilter.accountIds.length > 0) {
+        portfolioFilters.push(
+          ...accessFilter.accountIds.map((accountId) => ({
+            id: accountId,
+            type: 'ACCOUNT' as const
+          }))
+        );
+      }
+
+      // Add asset class filters
+      if (accessFilter.assetClasses && accessFilter.assetClasses.length > 0) {
+        portfolioFilters.push(
+          ...accessFilter.assetClasses.map((assetClass) => ({
+            id: assetClass,
+            type: 'ASSET_CLASS' as const
+          }))
+        );
+      }
+
+      // Add tag filters
+      if (accessFilter.tagIds && accessFilter.tagIds.length > 0) {
+        portfolioFilters.push(
+          ...accessFilter.tagIds.map((tagId) => ({
+            id: tagId,
+            type: 'TAG' as const
+          }))
+        );
+      }
+
+      // Add holding filters (symbol + dataSource)
+      if (accessFilter.holdings && accessFilter.holdings.length > 0) {
+        portfolioFilters.push(
+          ...accessFilter.holdings.map((holding) => ({
+            id: `${holding.dataSource}.${holding.symbol}`,
+            type: 'SYMBOL' as const
+          }))
+        );
+      }
+    }
 
     const [
       { createdAt, holdings, markets },
@@ -75,6 +121,7 @@ export class PublicController {
       { performance: performanceYtd }
     ] = await Promise.all([
       this.portfolioService.getDetails({
+        filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
         impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
@@ -82,53 +129,24 @@ export class PublicController {
       ...['1d', 'max', 'ytd'].map((dateRange) => {
         return this.portfolioService.getPerformance({
           dateRange,
+          filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
           impersonationId: undefined,
           userId: user.id
         });
       })
     ]);
 
-    // Apply filter to holdings if configured
-    let filteredHoldings = holdings;
-    if (filter) {
-      filteredHoldings = Object.fromEntries(
-        Object.entries(holdings).filter(([, holding]) => {
-          // Filter by asset class
-          if (
-            filter.assetClasses &&
-            filter.assetClasses.length > 0 &&
-            !filter.assetClasses.includes(holding.assetClass)
-          ) {
-            return false;
-          }
-
-          // Filter by specific holdings (symbol + dataSource)
-          if (filter.holdings && filter.holdings.length > 0) {
-            const matchesHolding = filter.holdings.some(
-              (h) =>
-                h.symbol === holding.symbol &&
-                h.dataSource === holding.dataSource
-            );
-            if (!matchesHolding) {
-              return false;
-            }
-          }
-
-          // Filter by tags - check if holding has at least one of the filtered tags
-          if (filter.tagIds && filter.tagIds.length > 0) {
-            const holdingTagIds = holding.tags?.map((tag) => tag.id) ?? [];
-            const hasMatchingTag = filter.tagIds.some((tagId) =>
-              holdingTagIds.includes(tagId)
-            );
-            if (!hasMatchingTag) {
-              return false;
-            }
-          }
-
-          return true;
-        })
-      );
-    }
+    // Filter out only the base currency cash holdings
+    const baseCurrency =
+      user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
+    const filteredHoldings = Object.fromEntries(
+      Object.entries(holdings).filter(([, holding]) => {
+        // Remove only cash holdings that match the base currency
+        const isCash = holding.assetSubClass === AssetSubClass.CASH;
+        const isBaseCurrency = holding.symbol === baseCurrency;
+        return !(isCash && isBaseCurrency);
+      })
+    );
 
     const { activities } = await this.orderService.getOrders({
       includeDrafts: false,
@@ -141,20 +159,12 @@ export class PublicController {
       withExcludedAccountsAndActivities: false
     });
 
-    // Filter activities by account if filter is configured
-    let filteredActivities = activities;
-    if (filter?.accountIds && filter.accountIds.length > 0) {
-      filteredActivities = activities.filter((activity) =>
-        filter.accountIds.includes(activity.accountId)
-      );
-    }
-
     // Experimental
     const latestActivities = this.configurationService.get(
       'ENABLE_FEATURE_SUBSCRIPTION'
     )
       ? []
-      : filteredActivities.map(
+      : activities.map(
           ({
             currency,
             date,
