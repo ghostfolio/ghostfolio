@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Localized the number formatting in the static portfolio analysis rule: _Liquidity_ (Buying Power)
 - Upgraded `prisma` from version `6.17.1` to `6.18.0`
 
 ## 2.210.1 - 2025-10-22
@@ -23,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Formatted the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
 - Reverted the explicit configuration of the _Redis_ address family in the job queue module
-- Formatted the threshold values in the Buying Power rule with locale-specific number formatting
 - Improved the language localization for German (`de`)
 - Upgraded `ioredis` from version `5.6.1` to `5.8.2`
 
