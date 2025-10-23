@@ -226,6 +226,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
           id: access.id,
           grantee: access.grantee === 'Public' ? null : access.grantee,
           permissions: access.permissions,
+          settings: access.settings,
           type: access.type
         }
       },

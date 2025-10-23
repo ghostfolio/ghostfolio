@@ -22,6 +22,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Access as AccessModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { AccessSettings } from './access-settings.interface';
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
 import { UpdateAccessDto } from './update-access.dto';
@@ -46,12 +47,19 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map(
-      ({ alias, granteeUser, id, permissions }) => {
+      ({
+        alias,
+        granteeUser,
+        id,
+        permissions: accessPermissions,
+        settings
+      }) => {
         if (granteeUser) {
           return {
             alias,
             id,
-            permissions,
+            permissions: accessPermissions,
+            settings: settings as AccessSettings,
             grantee: granteeUser?.id,
             type: 'PRIVATE'
           };
@@ -60,7 +68,8 @@ export class AccessController {
         return {
           alias,
           id,
-          permissions,
+          permissions: accessPermissions,
+          settings: settings as AccessSettings,
           grantee: 'Public',
           type: 'PUBLIC'
         };
@@ -85,12 +94,17 @@ export class AccessController {
     }
 
     try {
+      const settings: AccessSettings = data.filter
+        ? { filter: data.filter }
+        : {};
+
       return this.accessService.createAccess({
         alias: data.alias || undefined,
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
+        settings: settings as any,
         user: { connect: { id: this.request.user.id } }
       });
     } catch {
@@ -152,13 +166,18 @@ export class AccessController {
     }
 
     try {
+      const settings: AccessSettings = data.filter
+        ? { filter: data.filter }
+        : {};
+
       return this.accessService.updateAccess({
         data: {
           alias: data.alias,
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
-          permissions: data.permissions
+          permissions: data.permissions,
+          settings: settings as any
         },
         where: { id }
       });

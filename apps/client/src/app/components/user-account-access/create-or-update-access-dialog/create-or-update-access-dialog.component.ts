@@ -84,7 +84,10 @@ export class GfCreateOrUpdateAccessDialogComponent
 
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
-      filter: [null],
+      filterAccount: [null],
+      filterAssetClass: [null],
+      filterHolding: [null],
+      filterTag: [null],
       granteeUserId: [
         this.data.access.grantee,
         isPublic
@@ -104,14 +107,17 @@ export class GfCreateOrUpdateAccessDialogComponent
     this.accessForm.get('type').valueChanges.subscribe((accessType) => {
       const granteeUserIdControl = this.accessForm.get('granteeUserId');
       const permissionsControl = this.accessForm.get('permissions');
-      const filterControl = this.accessForm.get('filter');
 
       if (accessType === 'PRIVATE') {
         granteeUserIdControl.setValidators([
           (control: AbstractControl) => Validators.required(control)
         ]);
         this.showFilterPanel = false;
-        filterControl.setValue(null);
+        // Limpiar los filtros
+        this.accessForm.get('filterAccount')?.setValue(null);
+        this.accessForm.get('filterAssetClass')?.setValue(null);
+        this.accessForm.get('filterHolding')?.setValue(null);
+        this.accessForm.get('filterTag')?.setValue(null);
       } else {
         granteeUserIdControl.clearValidators();
         granteeUserIdControl.setValue(null);
@@ -149,13 +155,82 @@ export class GfCreateOrUpdateAccessDialogComponent
     this.unsubscribeSubject.complete();
   }
 
+  private buildFilterObject():
+    | {
+        accountIds?: string[];
+        assetClasses?: string[];
+        holdings?: { dataSource: string; symbol: string }[];
+        tagIds?: string[];
+      }
+    | undefined {
+    const filterAccount = this.accessForm.get('filterAccount')?.value as
+      | string
+      | null;
+    const filterAssetClass = this.accessForm.get('filterAssetClass')?.value as
+      | string
+      | null;
+    const filterHolding = this.accessForm.get('filterHolding')?.value as
+      | string
+      | null;
+    const filterTag = this.accessForm.get('filterTag')?.value as string | null;
+
+    // Solo retornar filtro si hay al menos un campo con valor
+    if (!filterAccount && !filterAssetClass && !filterHolding && !filterTag) {
+      return undefined;
+    }
+
+    const filter: {
+      accountIds?: string[];
+      assetClasses?: string[];
+      holdings?: { dataSource: string; symbol: string }[];
+      tagIds?: string[];
+    } = {};
+
+    if (filterAccount) {
+      filter.accountIds = [filterAccount];
+    }
+
+    if (filterAssetClass) {
+      filter.assetClasses = [filterAssetClass];
+    }
+
+    if (filterHolding) {
+      // Buscar el holding seleccionado para obtener dataSource y symbol
+      const holding = this.holdings.find((h) => h.symbol === filterHolding);
+      if (holding) {
+        filter.holdings = [
+          {
+            dataSource: holding.dataSource,
+            symbol: holding.symbol
+          }
+        ];
+      }
+    }
+
+    if (filterTag) {
+      filter.tagIds = [filterTag];
+    }
+
+    return filter;
+  }
+
   private loadFilterData() {
+    const existingFilter = this.data.access.settings?.filter;
+
     // Cargar cuentas
     this.dataService
       .fetchAccounts()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.accounts = response.accounts;
+
+        // Si existe un filtro de cuenta, establecerlo
+        if (existingFilter?.accountIds?.[0]) {
+          this.accessForm
+            .get('filterAccount')
+            ?.setValue(existingFilter.accountIds[0]);
+        }
+
         this.changeDetectorRef.markForCheck();
       });
 
@@ -179,6 +254,20 @@ export class GfCreateOrUpdateAccessDialogComponent
             label: ac,
             type: 'ASSET_CLASS' as const
           }));
+
+          // Si existe un filtro de asset class, establecerlo
+          if (existingFilter?.assetClasses?.[0]) {
+            this.accessForm
+              .get('filterAssetClass')
+              ?.setValue(existingFilter.assetClasses[0]);
+          }
+
+          // Si existe un filtro de holding, establecerlo
+          if (existingFilter?.holdings?.[0]?.symbol) {
+            this.accessForm
+              .get('filterHolding')
+              ?.setValue(existingFilter.holdings[0].symbol);
+          }
         }
         this.changeDetectorRef.markForCheck();
       });
@@ -193,13 +282,23 @@ export class GfCreateOrUpdateAccessDialogComponent
           label: tag.name,
           type: 'TAG' as const
         }));
+
+        // Si existe un filtro de tag, establecerlo
+        if (existingFilter?.tagIds?.[0]) {
+          this.accessForm.get('filterTag')?.setValue(existingFilter.tagIds[0]);
+        }
+
         this.changeDetectorRef.markForCheck();
       });
   }
 
   private async createAccess() {
+    // Construir el objeto filter si estamos en modo PUBLIC
+    const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
+
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias')?.value as string,
+      filter: filter,
       granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
       permissions: [
         this.accessForm.get('permissions')?.value as AccessPermission
@@ -236,8 +335,12 @@ export class GfCreateOrUpdateAccessDialogComponent
   }
 
   private async updateAccess() {
+    // Construir el objeto filter si estamos en modo PUBLIC
+    const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
+
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value as string,
+      filter: filter,
       granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
       id: this.data.access.id,
       permissions: [

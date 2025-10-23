@@ -8,7 +8,10 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { getSum } from '@ghostfolio/common/helper';
-import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
+import {
+  AccessSettings,
+  PublicPortfolioResponse
+} from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -61,6 +64,10 @@ export class PublicController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
+    // Get filter configuration from access settings
+    const accessSettings = (access.settings ?? {}) as AccessSettings;
+    const filter = accessSettings.filter;
+
     const [
       { createdAt, holdings, markets },
       { performance: performance1d },
@@ -81,6 +88,48 @@ export class PublicController {
       })
     ]);
 
+    // Apply filter to holdings if configured
+    let filteredHoldings = holdings;
+    if (filter) {
+      filteredHoldings = Object.fromEntries(
+        Object.entries(holdings).filter(([, holding]) => {
+          // Filter by asset class
+          if (
+            filter.assetClasses &&
+            filter.assetClasses.length > 0 &&
+            !filter.assetClasses.includes(holding.assetClass)
+          ) {
+            return false;
+          }
+
+          // Filter by specific holdings (symbol + dataSource)
+          if (filter.holdings && filter.holdings.length > 0) {
+            const matchesHolding = filter.holdings.some(
+              (h) =>
+                h.symbol === holding.symbol &&
+                h.dataSource === holding.dataSource
+            );
+            if (!matchesHolding) {
+              return false;
+            }
+          }
+
+          // Filter by tags - check if holding has at least one of the filtered tags
+          if (filter.tagIds && filter.tagIds.length > 0) {
+            const holdingTagIds = holding.tags?.map((tag) => tag.id) ?? [];
+            const hasMatchingTag = filter.tagIds.some((tagId) =>
+              holdingTagIds.includes(tagId)
+            );
+            if (!hasMatchingTag) {
+              return false;
+            }
+          }
+
+          return true;
+        })
+      );
+    }
+
     const { activities } = await this.orderService.getOrders({
       includeDrafts: false,
       sortColumn: 'date',
@@ -92,12 +141,20 @@ export class PublicController {
       withExcludedAccountsAndActivities: false
     });
 
+    // Filter activities by account if filter is configured
+    let filteredActivities = activities;
+    if (filter?.accountIds && filter.accountIds.length > 0) {
+      filteredActivities = activities.filter((activity) =>
+        filter.accountIds.includes(activity.accountId)
+      );
+    }
+
     // Experimental
     const latestActivities = this.configurationService.get(
       'ENABLE_FEATURE_SUBSCRIPTION'
     )
       ? []
-      : activities.map(
+      : filteredActivities.map(
           ({
             currency,
             date,
@@ -151,19 +208,23 @@ export class PublicController {
     };
 
     const totalValue = getSum(
-      Object.values(holdings).map(({ currency, marketPrice, quantity }) => {
-        return new Big(
-          this.exchangeRateDataService.toCurrency(
-            quantity * marketPrice,
-            currency,
-            this.request.user?.settings?.settings.baseCurrency ??
-              DEFAULT_CURRENCY
-          )
-        );
-      })
+      Object.values(filteredHoldings).map(
+        ({ currency, marketPrice, quantity }) => {
+          return new Big(
+            this.exchangeRateDataService.toCurrency(
+              quantity * marketPrice,
+              currency,
+              this.request.user?.settings?.settings.baseCurrency ??
+                DEFAULT_CURRENCY
+            )
+          );
+        }
+      )
     ).toNumber();
 
-    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+    for (const [symbol, portfolioPosition] of Object.entries(
+      filteredHoldings
+    )) {
       publicPortfolioResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
