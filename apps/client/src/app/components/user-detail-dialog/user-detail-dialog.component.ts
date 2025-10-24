@@ -6,18 +6,16 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   Inject,
   OnDestroy,
-  OnInit,
-  ChangeDetectorRef
+  OnInit
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
-import { addIcons } from 'ionicons';
-import { personOutline } from 'ionicons/icons';
 import { Subject } from 'rxjs';
 
 import { UserDetailDialogParams } from './interfaces/interfaces';
@@ -39,20 +37,15 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
-  public isLoading = false;
-  public registrationDate: Date;
+  public title: string = 'User Information';
   public user: User;
-  public userId: string;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
     public dialogRef: MatDialogRef<GfUserDetailDialogComponent>
-  ) {
-    this.userId = this.data.userId;
-    addIcons({ personOutline });
-  }
+  ) {}
 
   public ngOnInit() {
     this.initialize();
@@ -62,23 +55,12 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
-  private fetchUserDetails(): void {
-    this.isLoading = true;
-
-    // Use the user data passed from the admin users list if available
+  private fetchUserDetails() {
     if (this.data.userData) {
-      this.userId = this.data.userData.id;
-      this.registrationDate = this.data.userData.createdAt;
-      this.isLoading = false;
-      this.changeDetectorRef.markForCheck();
-    } else {
-      // Fallback: use the user ID and set a placeholder registration date
-      this.userId = this.data.userId;
-      this.registrationDate = new Date(); // Placeholder
-      this.isLoading = false;
       this.changeDetectorRef.markForCheck();
     }
   }
+
   private initialize() {
     this.fetchUserDetails();
   }

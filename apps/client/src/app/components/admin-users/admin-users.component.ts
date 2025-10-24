@@ -77,8 +77,8 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
   public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
   public defaultDateFormat: string;
-  public displayedColumns: string[] = [];
   public deviceType: string;
+  public displayedColumns: string[] = [];
   public getEmojiFlag = getEmojiFlag;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToImpersonateAllUsers: boolean;
@@ -103,6 +103,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
@@ -132,6 +133,14 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['userDetailDialog'] && params['userId']) {
+          this.openUserDetailDialog(params['userId']);
+        }
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -156,20 +165,12 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       personOutline,
       trashOutline
     });
-
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (params['userDetailDialog'] && params['userId']) {
-          this.openUserDetailDialog(params['userId']);
-        }
-      });
   }
 
   public ngOnInit() {
     this.fetchUsers();
   }
+
   public onOpenUserDetailDialog(userId: string) {
     this.router.navigate([], {
       queryParams: { userId, userDetailDialog: true }
@@ -178,14 +179,16 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
   private openUserDetailDialog(userId: string) {
     // Find the user data from the current dataSource
-    const userData = this.dataSource.data.find((user) => user.id === userId);
+    const userData = this.dataSource.data.find(({ id }) => {
+      return id === userId;
+    });
 
     const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
+        userData,
         userId,
-        deviceType: this.deviceType,
-        userData: userData // Pass the user data
+        deviceType: this.deviceType
       } as UserDetailDialogParams,
       height: this.deviceType === 'mobile' ? '80vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -195,10 +198,11 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.fetchUsers(); // Refresh the users list
-        this.router.navigate(['.'], { relativeTo: this.route }); // Clear query params
+        this.fetchUsers();
+        this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
+
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {

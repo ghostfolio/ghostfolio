@@ -1,24 +1,28 @@
 <gf-dialog-header
   position="center"
   [deviceType]="data.deviceType"
-  [title]="userId"
   (closeButtonClicked)="onClose()"
 />
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
-    <div class="row">
-      <div class="col-12 mb-3">
-        <gf-value i18n size="medium">User Information</gf-value>
-      </div>
+    <div class="col-12 d-flex justify-content-center mb-3">
+      <gf-value i18n size="medium" [value]="title"></gf-value>
     </div>
 
     <div class="mb-3 row">
       <div class="col-6 mb-3">
-        <gf-value i18n size="small" [value]="userId">User ID</gf-value>
+        <gf-value i18n size="medium" [value]="data.userData.id"
+          >User ID</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="small" [value]="registrationDate | date: 'medium'"
+        <gf-value
+          i18n
+          size="medium"
+          [isDate]="true"
+          [locale]="user?.settings?.locale"
+          [value]="data.userData.createdAt"
           >Registration Date</gf-value
         >
       </div>
