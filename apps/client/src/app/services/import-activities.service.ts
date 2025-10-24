@@ -59,9 +59,8 @@ export class ImportActivitiesService {
     for (const [index, item] of content.entries()) {
       const currency = this.parseCurrency({ content, index, item });
       const dataSource = this.parseDataSource({ item });
-      const type = this.parseType({ content, index, item });
-
       const symbol = this.parseSymbol({ content, index, item });
+      const type = this.parseType({ content, index, item });
 
       activities.push({
         currency,
