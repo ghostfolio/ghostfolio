@@ -13,11 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
 
 # Only add basic files without the application itself to avoid rebuilding
 # layers when files (package.json etc.) have not changed
+COPY ./.config .config/
 COPY ./CHANGELOG.md CHANGELOG.md
 COPY ./LICENSE LICENSE
 COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
-COPY ./prisma.config.ts prisma.config.ts
 COPY ./prisma/schema.prisma prisma/
 
 RUN npm install
@@ -44,7 +44,7 @@ WORKDIR /ghostfolio/dist/apps/api
 COPY ./package-lock.json /ghostfolio/dist/apps/api/
 
 RUN npm install
-COPY prisma.config.ts /ghostfolio/dist/apps/api/
+COPY .config /ghostfolio/dist/apps/api/.config/
 COPY prisma /ghostfolio/dist/apps/api/prisma/
 
 # Overwrite the generated package.json with the original one to ensure having
