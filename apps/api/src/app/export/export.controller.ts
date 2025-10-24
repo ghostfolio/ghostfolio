@@ -48,8 +48,8 @@ export class ExportController {
     return this.exportService.export({
       activityIds,
       filters,
-      userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: this.request.user.id
+      userId: this.request.user.id,
+      userSettings: this.request.user.settings.settings
     });
   }
 }
