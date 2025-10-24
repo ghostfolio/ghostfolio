@@ -17,6 +17,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -91,6 +92,11 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Output() projectedTotalAmountChanged = new EventEmitter<number>();
   @Output() retirementDateChanged = new EventEmitter<Date>();
   @Output() savingsRateChanged = new EventEmitter<number>();
+  @Output() calculationComplete = new EventEmitter<{
+    projectedTotalAmount: number;
+    retirementDate: Date | undefined;
+    annualInterestRate: number;
+  }>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
@@ -157,7 +163,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(_changes?: SimpleChanges) {
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(
         {
@@ -194,6 +200,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
           }
         );
         this.calculatorForm.get('principalInvestmentAmount').disable();
+
+        // Emit initial calculation payload
+        this.emitCalculationComplete();
 
         this.changeDetectorRef.markForCheck();
       });
@@ -328,6 +337,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     }
 
     this.isLoading = false;
+
+    // Emit after (re)initialization to keep consumers updated
+    this.emitCalculationComplete();
   }
 
   private getChartData() {
@@ -345,7 +357,8 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
     // Calculate retirement date
     // if we want to retire at month x, we need the projectedTotalAmount at month x-1
-    const lastPeriodDate = sub(this.getRetirementDate(), { months: 1 });
+    const safeRetirementDate = this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE;
+    const lastPeriodDate = sub(safeRetirementDate, { months: 1 });
     const yearsToRetire = lastPeriodDate.getFullYear() - currentYear;
 
     // Time
@@ -475,5 +488,19 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
         years: yearsToRetire
       })
     );
+  }
+
+  private emitCalculationComplete() {
+    // Use current form values and calculated helpers
+    const projectedTotalAmount = Number(this.getProjectedTotalAmount());
+    const retirementDate = this.getRetirementDate();
+    const annualInterestRate = this.calculatorForm.get('annualInterestRate')
+      .value;
+
+    this.calculationComplete.emit({
+      projectedTotalAmount,
+      retirementDate,
+      annualInterestRate
+    });
   }
 }
