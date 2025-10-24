@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added bullboard for queue monitoring in development environment
+
+## 2.210.0 - 2025-10-22
 - Extended the export functionality by the user account’s performance calculation type
 - Added a user detail dialog to the users section of the admin control panel
 
