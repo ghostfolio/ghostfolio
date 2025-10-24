@@ -171,38 +171,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     this.fetchUsers();
   }
 
-  public onOpenUserDetailDialog(userId: string) {
-    this.router.navigate([], {
-      queryParams: { userId, userDetailDialog: true }
-    });
-  }
-
-  private openUserDetailDialog(userId: string) {
-    // Find the user data from the current dataSource
-    const userData = this.dataSource.data.find(({ id }) => {
-      return id === userId;
-    });
-
-    const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
-      autoFocus: false,
-      data: {
-        userData,
-        userId,
-        deviceType: this.deviceType
-      } as UserDetailDialogParams,
-      height: this.deviceType === 'mobile' ? '80vh' : '60vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.fetchUsers();
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
-  }
-
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
@@ -217,6 +185,12 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     }
 
     return '';
+  }
+
+  public onChangePage(page: PageEvent) {
+    this.fetchUsers({
+      pageIndex: page.pageIndex
+    });
   }
 
   public onDeleteUser(aId: string) {
@@ -270,9 +244,9 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     window.location.reload();
   }
 
-  public onChangePage(page: PageEvent) {
-    this.fetchUsers({
-      pageIndex: page.pageIndex
+  public onOpenUserDetailDialog(userId: string) {
+    this.router.navigate([], {
+      queryParams: { userId, userDetailDialog: true }
     });
   }
 
@@ -301,6 +275,36 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private openUserDetailDialog(userId: string) {
+    const userData = this.dataSource.data.find(({ id }) => {
+      return id === userId;
+    });
+
+    if (!userData) {
+      this.router.navigate(['.'], { relativeTo: this.route });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
+      autoFocus: false,
+      data: {
+        userData,
+        deviceType: this.deviceType,
+        locale: this.user?.settings?.locale
+      } as UserDetailDialogParams,
+      height: this.deviceType === 'mobile' ? '98vh' : '60vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchUsers();
+        this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
 }
