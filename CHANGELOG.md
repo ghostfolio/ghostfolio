@@ -7,11 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Added User detail dialog component to view user information in admin users management
-
 ### Added
 
 - Extended the export functionality by the user account’s performance calculation type
+- Added a user detail dialog to the users section of the admin control panel
 
 ### Changed
 
