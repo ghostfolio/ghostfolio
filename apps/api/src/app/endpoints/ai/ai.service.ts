@@ -1,5 +1,3 @@
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
@@ -10,7 +8,10 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
-import tablemark, { ColumnDescriptor } from 'tablemark';
+import type { ColumnDescriptor } from 'tablemark';
+
+import { PropertyService } from '../../../services/property/property.service';
+import { PortfolioService } from '../../portfolio/portfolio.service';
 
 @Injectable()
 export class AiService {
@@ -91,6 +92,13 @@ export class AiService {
           };
         }
       );
+
+    // Dynamic import to load ESM module from CommonJS context
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const dynamicImport = new Function('s', 'return import(s)') as (
+      s: string
+    ) => Promise<typeof import('tablemark')>;
+    const { tablemark } = await dynamicImport('tablemark');
 
     const holdingsTableString = tablemark(holdingsTableRows, {
       columns: holdingsTableColumns
