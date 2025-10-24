@@ -44,7 +44,7 @@ export class CreateOrderDto {
   customCurrency?: string;
 
   @IsEnum(DataSource)
-  @IsOptional()
+  @IsOptional() // Optional for type FEE, INTEREST, and LIABILITY (default data source is resolved in the backend)
   dataSource?: DataSource;
 
   @IsISO8601()
