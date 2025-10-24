@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the _Prisma Configuration File_ from `prisma.config.ts` to `.config/prisma.ts`
 - Upgraded `prisma` from version `6.17.1` to `6.18.0`
 
+### Fixed
+
+- Fixed the style in the footer row of the accounts table
+
 ## 2.210.1 - 2025-10-22
 
 ### Added
