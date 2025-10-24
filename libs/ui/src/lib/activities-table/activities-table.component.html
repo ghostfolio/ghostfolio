@@ -143,7 +143,10 @@
             }
           </div>
         </div>
-        @if (!isUUID(element.SymbolProfile?.symbol)) {
+        @if (
+          element.SymbolProfile?.dataSource !== 'MANUAL' &&
+          !isUUID(element.SymbolProfile?.symbol)
+        ) {
           <div>
             <small class="text-muted">{{
               element.SymbolProfile?.symbol | gfSymbol

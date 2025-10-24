@@ -129,7 +129,7 @@ export class OrderService {
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
 
-      let name: string;
+      let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
       if (
@@ -142,7 +142,7 @@ export class OrderService {
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
       } else {
         // Create custom asset profile
-        name = data.SymbolProfile.connectOrCreate.create.symbol;
+        name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
         symbol = uuidv4();
       }
 
