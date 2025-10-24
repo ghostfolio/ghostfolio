@@ -1,3 +1,5 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
@@ -9,9 +11,6 @@ import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
 import type { ColumnDescriptor } from 'tablemark';
-
-import { PropertyService } from '../../../services/property/property.service';
-import { PortfolioService } from '../../portfolio/portfolio.service';
 
 @Injectable()
 export class AiService {
