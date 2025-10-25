@@ -88,6 +88,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public totalItems = 0;
   public user: User;
 
+  private pendingUserId: string | null = null;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -133,11 +134,18 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.queryParams
+    this.route.params
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['userDetailDialog'] && params['userId']) {
-          this.openUserDetailDialog(params['userId']);
+        if (params['userId']) {
+          const userId = params['userId'] as string;
+          // Wait for users to be loaded before opening dialog
+          if (this.dataSource.data.length > 0) {
+            this.openUserDetailDialog(userId);
+          } else {
+            // Store the userId to open dialog after users are loaded
+            this.pendingUserId = userId;
+          }
         }
       });
 
@@ -245,9 +253,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onOpenUserDetailDialog(userId: string) {
-    this.router.navigate([], {
-      queryParams: { userId, userDetailDialog: true }
-    });
+    this.router.navigate(['./', userId], { relativeTo: this.route });
   }
 
   public ngOnDestroy() {
@@ -275,6 +281,12 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
+
+        // Open dialog if there's a pending user ID
+        if (this.pendingUserId) {
+          this.openUserDetailDialog(this.pendingUserId);
+          this.pendingUserId = null;
+        }
       });
   }
 
@@ -284,7 +296,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     });
 
     if (!userData) {
-      this.router.navigate(['.'], { relativeTo: this.route });
+      this.router.navigate(['../'], { relativeTo: this.route });
       return;
     }
 
@@ -304,7 +316,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.fetchUsers();
-        this.router.navigate(['.'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.route });
       });
   }
 }
