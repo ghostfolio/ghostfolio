@@ -17,11 +17,6 @@ export const ExchangeRateDataServiceMock = {
           '2023-07-10': 0.8854
         }
       });
-    } else if (targetCurrency === 'EUR') {
-      return Promise.resolve({
-        EUREUR: {},
-        USDEUR: {}
-      });
     } else if (targetCurrency === 'USD') {
       return Promise.resolve({
         USDUSD: {
