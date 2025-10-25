@@ -441,6 +441,16 @@
                 ><span i18n>Close Holding</span>
               </button>
             }
+            @if (
+              dataSource?.data.length > 0 &&
+              data.hasPermissionToReportDataGlitch === true
+            ) {
+              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+                ><ion-icon class="mr-1" name="flag-outline" /><span i18n
+                  >Report Data Glitch</span
+                >...</a
+              >
+            }
             @if (data.hasPermissionToAccessAdminControl) {
               <a
                 mat-stroked-button
@@ -453,16 +463,6 @@
                 (click)="onClose()"
                 ><ion-icon class="mr-1" name="create-outline" /><span i18n
                   >Manage Asset Profile</span
-                >...</a
-              >
-            }
-            @if (
-              dataSource?.data.length > 0 &&
-              data.hasPermissionToReportDataGlitch === true
-            ) {
-              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
-                ><ion-icon class="mr-1" name="flag-outline" /><span i18n
-                  >Report Data Glitch</span
                 >...</a
               >
             }

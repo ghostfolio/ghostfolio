@@ -58,6 +58,7 @@ import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  arrowDownCircleOutline,
   createOutline,
   flagOutline,
   readerOutline,
@@ -168,6 +169,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     addIcons({
+      arrowDownCircleOutline,
       createOutline,
       flagOutline,
       readerOutline,
@@ -570,7 +572,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       fee: 0,
       quantity: this.quantity,
       symbol: this.SymbolProfile.symbol,
-      tags: [],
+      tags: this.tags.map(({ id }) => {
+        return id;
+      }),
       type: 'SELL',
       unitPrice: this.marketPrice
     };
