@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the user detail dialog in the users section of the admin control panel
+- Enable filtering (by account, holdings, tag or asset class) in public access
 
 ### Fixed
 
