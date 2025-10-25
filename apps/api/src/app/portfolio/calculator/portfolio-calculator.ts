@@ -336,7 +336,7 @@ export abstract class PortfolioCalculator {
       ).mul(
         exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
           endDateString
-        ]
+        ] ?? 1
       );
 
       const {
