@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added close holding button to the holding detail dialog
+
 ### Fixed
 
 - Ensured the locale is available in the settings dialog to customize the rule thresholds of the _X-ray_ page
