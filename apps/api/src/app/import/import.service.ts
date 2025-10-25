@@ -539,6 +539,7 @@ export class ImportService {
             connectOrCreate: {
               create: {
                 dataSource,
+                name,
                 symbol,
                 currency: assetProfile.currency,
                 userId: dataSource === 'MANUAL' ? user.id : undefined
@@ -746,10 +747,19 @@ export class ImportService {
         if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           // Skip asset profile validation for FEE, INTEREST, and LIABILITY
           // as these activity types don't require asset profiles
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
           assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] = {
             currency,
             dataSource,
-            symbol
+            symbol,
+            name: assetProfileInImport?.name
           };
 
           continue;

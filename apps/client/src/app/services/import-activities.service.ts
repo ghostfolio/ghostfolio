@@ -76,12 +76,8 @@ export class ImportActivitiesService {
         updateAccountBalance: false
       });
 
-      if (
-        dataSource === DataSource.MANUAL &&
-        !['FEE', 'INTEREST', 'LIABILITY'].includes(type)
-      ) {
+      if (dataSource === DataSource.MANUAL) {
         // Create synthetic asset profile for MANUAL data source
-        // (except for FEE, INTEREST, and LIABILITY which don't require asset profiles)
         assetProfiles.push({
           currency,
           symbol,
