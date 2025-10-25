@@ -104,7 +104,7 @@ export class AiService {
         }
       );
 
-    const holdingsTableString = tablemark(holdingsTableRows, {
+    const holdingsTableString = tablemark.default(holdingsTableRows, {
       columns: holdingsTableColumns
     });
 
