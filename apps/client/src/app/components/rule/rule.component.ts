@@ -51,6 +51,7 @@ export class GfRuleComponent implements OnInit {
   @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
+  @Input() locale: string;
   @Input() rule: PortfolioReportRule;
   @Input() settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
@@ -82,6 +83,7 @@ export class GfRuleComponent implements OnInit {
       data: {
         rule,
         categoryName: this.categoryName,
+        locale: this.locale,
         settings: this.settings
       } as RuleSettingsDialogParams,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

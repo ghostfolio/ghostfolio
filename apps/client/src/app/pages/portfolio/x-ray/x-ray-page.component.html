@@ -76,6 +76,7 @@
               !hasImpersonationId && hasPermissionToUpdateUserSettings
             "
             [isLoading]="isLoading"
+            [locale]="user?.settings?.locale"
             [rules]="category.rules"
             [settings]="user?.settings?.xRayRules"
             (rulesUpdated)="onRulesUpdated($event)"
@@ -90,6 +91,7 @@
               !hasImpersonationId && hasPermissionToUpdateUserSettings
             "
             [isLoading]="isLoading"
+            [locale]="user?.settings?.locale"
             [rules]="inactiveRules"
             [settings]="user?.settings?.xRayRules"
             (rulesUpdated)="onRulesUpdated($event)"
