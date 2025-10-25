@@ -37,6 +37,7 @@ import type { Product } from './product';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { AccountsResponse } from './responses/accounts-response.interface';
+import type { ActivitiesResponse } from './responses/activities-response.interface';
 import type { ActivityResponse } from './responses/activity-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
@@ -84,6 +85,7 @@ export {
   AccountBalance,
   AccountBalancesResponse,
   AccountsResponse,
+  ActivitiesResponse,
   ActivityResponse,
   AdminData,
   AdminJobs,

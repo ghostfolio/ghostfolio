@@ -83,6 +83,12 @@ export class GfLogoCarouselComponent {
       url: 'https://selfh.st'
     },
     {
+      className: 'logo-selfhostedhub',
+      name: 'SelfhostedHub',
+      title: 'SelfhostedHub — Discover best self-hosted software',
+      url: 'https://selfhostedhub.com'
+    },
+    {
       className: 'logo-sourceforge',
       isMask: true,
       name: 'SourceForge',

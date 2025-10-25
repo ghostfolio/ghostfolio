@@ -3,11 +3,6 @@ import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 import { Order, Tag } from '@prisma/client';
 
-export interface Activities {
-  activities: Activity[];
-  count: number;
-}
-
 export interface Activity extends Order {
   account?: AccountWithPlatform;
   error?: ActivityError;
