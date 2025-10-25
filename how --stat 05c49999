@@ -1,0 +1,38 @@
+[33mcommit bb14162c7abbe09af9f9f16ae9b5c01e842c1465[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor_column[m[33m)[m
+Merge: 05c49999 06936cd7
+Author: Vansh <vanshparate@gmail.com>
+Date:   Sat Oct 25 22:11:23 2025 +0530
+
+    Merge branch 'refactor_column' of https://github.com/Vansh-Parate/ghostfolio into refactor_column
+
+ CHANGELOG.md                                       |  11 [32m+[m[31m-[m
+ apps/api/src/app/endpoints/ai/ai.service.ts        |   6 [32m+[m[31m-[m
+ .../app/order/interfaces/activities.interface.ts   |   5 [31m-[m
+ apps/api/src/app/order/order.controller.ts         |   8 [32m+[m[31m-[m
+ apps/api/src/app/order/order.service.ts            |   5 [32m+[m[31m-[m
+ .../portfolio/calculator/portfolio-calculator.ts   |   2 [32m+[m[31m-[m
+ .../src/app/components/rule/rule.component.ts      |   2 [32m+[m
+ .../src/app/components/rules/rules.component.html  |   1 [32m+[m
+ .../src/app/components/rules/rules.component.ts    |   1 [32m+[m
+ .../portfolio/x-ray/x-ray-page.component.html      |   2 [32m+[m
+ apps/client/src/app/services/data.service.ts       |   4 [32m+[m[31m-[m
+ .../src/assets/images/logo-selfhostedhub.svg       |   2 [32m+[m
+ apps/client/src/locales/messages.ca.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.de.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.es.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.fr.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.it.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.nl.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.pl.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.pt.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.tr.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.uk.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.xlf               | 150 [32m+++++++++++[m[31m---------[m
+ apps/client/src/locales/messages.zh.xlf            | 152 [32m++++++++++++[m[31m---------[m
+ libs/common/src/lib/interfaces/index.ts            |   2 [32m+[m
+ .../responses/activities-response.interface.ts     |   6 [32m+[m
+ .../lib/logo-carousel/logo-carousel.component.scss |   9 [32m++[m
+ .../lib/logo-carousel/logo-carousel.component.ts   |   6 [32m+[m
+ package-lock.json                                  |   4 [32m+[m[31m-[m
+ package.json                                       |   2 [32m+[m[31m-[m
+ 30 files changed, 1088 insertions(+), 812 deletions(-)

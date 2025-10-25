@@ -21,12 +21,42 @@ const HOLDINGS_TABLE_COLUMNS: ({ key: string } & ColumnDescriptor)[] = [
   { key: 'SYMBOL', name: 'Symbol' },
   { key: 'ASSET_CLASS', name: 'Asset Class' },
   {
+    align: 'right',
     key: 'ALLOCATION_PERCENTAGE',
-    name: 'Allocation in Percentage',
-    align: 'right'
+    name: 'Allocation in Percentage'
   },
   { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' }
 ];
+
+// Helper function to get column value for holdings table
+const getColumnValue = (
+  key: string,
+  holding: {
+    currency: string;
+    name: string;
+    symbol: string;
+    assetClass?: string;
+    allocationInPercentage: number;
+    assetSubClass?: string;
+  }
+) => {
+  switch (key) {
+    case 'CURRENCY':
+      return holding.currency;
+    case 'NAME':
+      return holding.name;
+    case 'SYMBOL':
+      return holding.symbol;
+    case 'ASSET_CLASS':
+      return holding.assetClass ?? '';
+    case 'ALLOCATION_PERCENTAGE':
+      return `${(holding.allocationInPercentage * 100).toFixed(3)}%`;
+    case 'ASSET_SUB_CLASS':
+      return holding.assetSubClass ?? '';
+    default:
+      return '';
+  }
+};
 
 @Injectable()
 export class AiService {
@@ -76,48 +106,23 @@ export class AiService {
     });
 
     const holdingsTableColumns: ColumnDescriptor[] = HOLDINGS_TABLE_COLUMNS.map(
-      ({ name, align }) => ({ name, align: align ?? 'left' })
+      ({ name, align }) => {
+        return { name, align: align ?? 'left' };
+      }
     );
-
-    const getColumnValue = (
-      key: string,
-      holding: {
-        currency: string;
-        name: string;
-        symbol: string;
-        assetClass?: string;
-        allocationInPercentage: number;
-        assetSubClass?: string;
-      }
-    ) => {
-      switch (key) {
-        case 'CURRENCY':
-          return holding.currency;
-        case 'NAME':
-          return holding.name;
-        case 'SYMBOL':
-          return holding.symbol;
-        case 'ASSET_CLASS':
-          return holding.assetClass ?? '';
-        case 'ALLOCATION_PERCENTAGE':
-          return `${(holding.allocationInPercentage * 100).toFixed(3)}%`;
-        case 'ASSET_SUB_CLASS':
-          return holding.assetSubClass ?? '';
-        default:
-          return '';
-      }
-    };
 
     const holdingsTableRows = Object.values(holdings)
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })
       .map((holding) => {
-        const row: Record<string, string> = {};
-        HOLDINGS_TABLE_COLUMNS.forEach(({ key, name }) => {
-          row[name] = getColumnValue(key, holding);
-        });
-        return row;
+        return HOLDINGS_TABLE_COLUMNS.reduce(
+          (row, { key, name }) => {
+            row[name] = getColumnValue(key, holding);
+            return row;
+          },
+          {} as Record<string, string>
+        );
       });
 
     const holdingsTableString = tablemark.default(holdingsTableRows, {
