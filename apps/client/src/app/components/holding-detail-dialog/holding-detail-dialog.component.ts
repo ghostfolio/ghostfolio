@@ -562,7 +562,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     const today = new Date();
 
     const activity: CreateOrderDto = {
-      accountId: null,
+      accountId: this.accounts.length === 1 ? this.accounts[0].id : null,
       comment: null,
       currency: this.SymbolProfile.currency,
       dataSource: this.SymbolProfile.dataSource,
@@ -575,13 +575,16 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       unitPrice: this.marketPrice
     };
 
-    this.dataService.postOrder(activity).subscribe(() => {
-      this.router.navigate(
-        internalRoutes.portfolio.subRoutes.activities.routerLink
-      );
+    this.dataService
+      .postOrder(activity)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(
+          internalRoutes.portfolio.subRoutes.activities.routerLink
+        );
 
-      this.dialogRef.close();
-    });
+        this.dialogRef.close();
+      });
   }
 
   public onExport() {
