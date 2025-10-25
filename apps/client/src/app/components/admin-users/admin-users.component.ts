@@ -88,7 +88,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public totalItems = 0;
   public user: User;
 
-  private pendingUserId: string | null = null;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -138,14 +137,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['userId']) {
-          const userId = params['userId'] as string;
-          // Wait for users to be loaded before opening dialog
-          if (this.dataSource.data.length > 0) {
-            this.openUserDetailDialog(userId);
-          } else {
-            // Store the userId to open dialog after users are loaded
-            this.pendingUserId = userId;
-          }
+          this.openUserDetailDialog(params['userId']);
         }
       });
 
@@ -281,12 +273,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
-
-        // Open dialog if there's a pending user ID
-        if (this.pendingUserId) {
-          this.openUserDetailDialog(this.pendingUserId);
-          this.pendingUserId = null;
-        }
       });
   }
 
