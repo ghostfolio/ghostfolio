@@ -138,10 +138,14 @@
             mask-image: url('/assets/images/logo-selfh-st.svg');
             max-height: 1.25rem;
           }
-          
+
           &.logo-selfhostedhub {
-            mask-image: url('/assets/images/logo-selfhostedhub.svg');
-            max-height: 1.25rem; 
+            background-image: url('/assets/images/logo-selfhostedhub.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            filter: grayscale(1);
+            opacity: 0.5;
           }
 
           &.logo-sourceforge {
@@ -199,20 +203,14 @@
       );
     }
 
-    .logo {
-      &.logo-alternative-to,
-      &.logo-dev-community,
-      &.logo-hacker-news,
-      &.logo-openalternative,
-      &.logo-privacy-tools,
-      &.logo-reddit,
-      &.logo-sackgeld,
-      &.logo-selfh-st,
-      &.logo-selfhostedhub,
-      &.logo-sourceforge,
-      &.logo-umbrel,
-      &.logo-unraid,{
-        background-color: rgba(var(--light-primary-text));
+    .logo-carousel-track {
+      .logo-carousel-item {
+        .logo {
+          &.mask {
+            background-color: rgba(var(--light-secondary-text));
+          }
+        }
+      }
     }
   }
 }
