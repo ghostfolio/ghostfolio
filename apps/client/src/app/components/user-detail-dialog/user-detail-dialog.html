@@ -1,0 +1,32 @@
+<gf-dialog-header
+  position="center"
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+/>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <div class="container p-0">
+    <div class="mb-3 row">
+      <div class="col-6 mb-3">
+        <gf-value i18n size="medium" [value]="data.userData.id"
+          >User ID</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isDate]="true"
+          [locale]="data.locale"
+          [value]="data.userData.createdAt"
+          >Registration Date</gf-value
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<gf-dialog-footer
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+/>
