@@ -635,7 +635,7 @@
       </trans-unit>
       <trans-unit id="8119836022359386797" datatype="html">
         <source>Activities</source>
-        <target state="new">Activities</target>
+        <target state="translated">Aktivitäten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">61</context>
@@ -4319,7 +4319,7 @@
       </trans-unit>
       <trans-unit id="1434671461968858301" datatype="html">
         <source>User ID</source>
-        <target state="new">User ID</target>
+        <target state="translated">Benutzer ID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">12</context>
@@ -5785,7 +5785,7 @@
       </trans-unit>
       <trans-unit id="1600023202562292052" datatype="html">
         <source>Close Holding</source>
-        <target state="new">Close Holding</target>
+        <target state="translated">Position abschliessen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">441</context>
@@ -6714,7 +6714,7 @@
       </trans-unit>
       <trans-unit id="2803298218425845065" datatype="html">
         <source>Role</source>
-        <target state="new">Role</target>
+        <target state="translated">Rolle</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">31</context>
@@ -7030,7 +7030,7 @@
       </trans-unit>
       <trans-unit id="7417020438124538834" datatype="html">
         <source>Engagement per Day</source>
-        <target state="new">Engagement per Day</target>
+        <target state="translated">Engagement pro Tag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">76</context>
@@ -7176,7 +7176,7 @@
       </trans-unit>
       <trans-unit id="8514765519764380399" datatype="html">
         <source>Country</source>
-        <target state="new">Country</target>
+        <target state="translated">Land</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">37</context>
@@ -7332,7 +7332,7 @@
       </trans-unit>
       <trans-unit id="8214324091109908102" datatype="html">
         <source>API Requests Today</source>
-        <target state="new">API Requests Today</target>
+        <target state="translated">Heutige API Anfragen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">86</context>
