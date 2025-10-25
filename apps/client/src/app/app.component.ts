@@ -276,7 +276,10 @@ export class AppComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
+        const dialogRef = this.dialog.open<
+          GfHoldingDetailDialogComponent,
+          HoldingDetailDialogParams
+        >(GfHoldingDetailDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -302,7 +305,7 @@ export class AppComponent implements OnDestroy, OnInit {
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
-          } as HoldingDetailDialogParams,
+          },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });

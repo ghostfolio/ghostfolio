@@ -23,6 +23,8 @@ import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
+import { CreateOrUpdateAccountDialogParams } from './create-or-update-account-dialog/interfaces/interfaces';
+import { TransferBalanceDialogParams } from './transfer-balance/interfaces/interfaces';
 import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
@@ -179,7 +181,10 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
     name,
     platformId
   }: AccountModel) {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateAccountDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccountDialogComponent,
+      CreateOrUpdateAccountDialogParams
+    >(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance,
@@ -227,7 +232,10 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openAccountDetailDialog(aAccountId: string) {
-    const dialogRef = this.dialog.open(GfAccountDetailDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfAccountDetailDialogComponent,
+      AccountDetailDialogParams
+    >(GfAccountDetailDialogComponent, {
       autoFocus: false,
       data: {
         accountId: aAccountId,
@@ -237,7 +245,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView
-      } as AccountDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -253,12 +261,16 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openCreateAccountDialog() {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateAccountDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccountDialogComponent,
+      CreateOrUpdateAccountDialogParams
+    >(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance: 0,
           comment: null,
           currency: this.user?.settings?.baseCurrency,
+          id: null,
           isExcluded: false,
           name: null,
           platformId: null
@@ -295,7 +307,10 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openTransferBalanceDialog() {
-    const dialogRef = this.dialog.open(GfTransferBalanceDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfTransferBalanceDialogComponent,
+      TransferBalanceDialogParams
+    >(GfTransferBalanceDialogComponent, {
       data: {
         accounts: this.accounts
       },

@@ -155,14 +155,17 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    const dialogRef = this.dialog.open(GfBenchmarkDetailDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfBenchmarkDetailDialogComponent,
+      BenchmarkDetailDialogParams
+    >(GfBenchmarkDetailDialogComponent, {
       data: {
         dataSource,
         symbol,
         colorScheme: this.user?.settings?.colorScheme,
         deviceType: this.deviceType,
         locale: this.locale
-      } as BenchmarkDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });

@@ -31,6 +31,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccessDialogComponent } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
+import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -187,10 +188,15 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   }
 
   private openCreateAccessDialog() {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccessDialogComponent,
+      CreateOrUpdateAccessDialogParams
+    >(GfCreateOrUpdateAccessDialogComponent, {
       data: {
         access: {
           alias: '',
+          grantee: null,
+          id: null,
           permissions: ['READ_RESTRICTED'],
           type: 'PRIVATE'
         }
@@ -219,12 +225,15 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(GfCreateOrUpdateAccessDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccessDialogComponent,
+      CreateOrUpdateAccessDialogParams
+    >(GfCreateOrUpdateAccessDialogComponent, {
       data: {
         access: {
           alias: access.alias,
-          id: access.id,
           grantee: access.grantee === 'Public' ? null : access.grantee,
+          id: access.id,
           permissions: access.permissions,
           type: access.type
         }

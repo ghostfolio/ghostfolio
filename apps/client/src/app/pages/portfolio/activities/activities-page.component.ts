@@ -28,6 +28,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
+import { CreateOrUpdateActivityDialogParams } from './create-or-update-activity-dialog/interfaces/interfaces';
 import { GfImportActivitiesDialogComponent } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
@@ -245,11 +246,14 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    const dialogRef = this.dialog.open(GfImportActivitiesDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfImportActivitiesDialogComponent,
+      ImportActivitiesDialogParams
+    >(GfImportActivitiesDialogComponent, {
       data: {
         deviceType: this.deviceType,
         user: this.user
-      } as ImportActivitiesDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -268,12 +272,15 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImportDividends() {
-    const dialogRef = this.dialog.open(GfImportActivitiesDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfImportActivitiesDialogComponent,
+      ImportActivitiesDialogParams
+    >(GfImportActivitiesDialogComponent, {
       data: {
         activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
         user: this.user
-      } as ImportActivitiesDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -306,18 +313,18 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public openUpdateActivityDialog(aActivity: Activity) {
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<
       GfCreateOrUpdateActivityDialogComponent,
-      {
-        data: {
-          activity: aActivity,
-          accounts: this.user?.accounts,
-          user: this.user
-        },
-        height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      CreateOrUpdateActivityDialogParams
+    >(GfCreateOrUpdateActivityDialogComponent, {
+      data: {
+        activity: aActivity,
+        accounts: this.user?.accounts,
+        user: this.user
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()
@@ -350,26 +357,26 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(
+        const dialogRef = this.dialog.open<
           GfCreateOrUpdateActivityDialogComponent,
-          {
-            data: {
-              accounts: this.user?.accounts,
-              activity: {
-                ...aActivity,
-                accountId: aActivity?.accountId,
-                date: new Date(),
-                id: null,
-                fee: 0,
-                type: aActivity?.type ?? 'BUY',
-                unitPrice: null
-              },
-              user: this.user
+          CreateOrUpdateActivityDialogParams
+        >(GfCreateOrUpdateActivityDialogComponent, {
+          data: {
+            accounts: this.user?.accounts,
+            activity: {
+              ...aActivity,
+              accountId: aActivity?.accountId,
+              date: new Date(),
+              id: null,
+              fee: 0,
+              type: aActivity?.type ?? 'BUY',
+              unitPrice: null
             },
-            height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-          }
-        );
+            user: this.user
+          },
+          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
 
         dialogRef
           .afterClosed()

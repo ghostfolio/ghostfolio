@@ -84,18 +84,18 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public openShowAccessTokenDialog() {
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<
       GfUserAccountRegistrationDialogComponent,
-      {
-        data: {
-          deviceType: this.deviceType,
-          needsToAcceptTermsOfService: this.hasPermissionForSubscription
-        } as UserAccountRegistrationDialogParams,
-        disableClose: true,
-        height: this.deviceType === 'mobile' ? '98vh' : undefined,
-        width: this.deviceType === 'mobile' ? '100vw' : '30rem'
-      }
-    );
+      UserAccountRegistrationDialogParams
+    >(GfUserAccountRegistrationDialogComponent, {
+      data: {
+        deviceType: this.deviceType,
+        needsToAcceptTermsOfService: this.hasPermissionForSubscription
+      },
+      disableClose: true,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '30rem'
+    });
 
     dialogRef
       .afterClosed()

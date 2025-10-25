@@ -199,21 +199,21 @@ export class GfHistoricalMarketDataEditorComponent
   }) {
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<
       GfHistoricalMarketDataEditorDialogComponent,
-      {
-        data: {
-          marketPrice,
-          currency: this.currency,
-          dataSource: this.dataSource,
-          dateString: `${yearMonth}-${day}`,
-          symbol: this.symbol,
-          user: this.user
-        } as HistoricalMarketDataEditorDialogParams,
-        height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      HistoricalMarketDataEditorDialogParams
+    >(GfHistoricalMarketDataEditorDialogComponent, {
+      data: {
+        marketPrice,
+        currency: this.currency,
+        dataSource: this.dataSource,
+        dateString: `${yearMonth}-${day}`,
+        symbol: this.symbol,
+        user: this.user
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()
