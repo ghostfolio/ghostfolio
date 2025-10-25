@@ -37,7 +37,12 @@
         </gf-value>
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="data.userData.activityCount">
+        <gf-value
+          i18n
+          size="medium"
+          [locale]="data.locale"
+          [value]="data.userData.activityCount"
+        >
           Activities
         </gf-value>
       </div>
