@@ -10,7 +10,8 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
-import tablemark, { ColumnDescriptor } from 'tablemark';
+import * as tablemark from 'tablemark';
+import { ColumnDescriptor } from 'tablemark';
 
 // Column name constants for holdings table
 const HOLDINGS_TABLE_COLUMNS = {
@@ -102,7 +103,7 @@ export class AiService {
         }
       );
 
-    const holdingsTableString = tablemark(holdingsTableRows, {
+    const holdingsTableString = tablemark.default(holdingsTableRows, {
       columns: holdingsTableColumns
     });
 
