@@ -316,7 +316,7 @@ export class GfCreateOrUpdateAccessDialogComponent
         .postAccess(access)
         .pipe(
           catchError((error: { status?: number }) => {
-            if (error?.status === StatusCodes.BAD_REQUEST) {
+            if (error.status === (StatusCodes.BAD_REQUEST as number)) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not grant access.`
               });
@@ -359,7 +359,7 @@ export class GfCreateOrUpdateAccessDialogComponent
         .putAccess(access)
         .pipe(
           catchError((error: { status?: number }) => {
-            if (error?.status === StatusCodes.BAD_REQUEST) {
+            if (error.status === (StatusCodes.BAD_REQUEST as number)) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });
