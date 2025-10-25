@@ -139,6 +139,15 @@
             max-height: 1.25rem;
           }
 
+          &.logo-selfhostedhub {
+            background-image: url('/assets/images/logo-selfhostedhub.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            filter: grayscale(1);
+            opacity: 0.5;
+          }
+
           &.logo-sourceforge {
             mask-image: url('/assets/images/logo-sourceforge.svg');
           }
