@@ -12,15 +12,19 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
 import tablemark, { ColumnDescriptor } from 'tablemark';
 
-// Column name constants for holdings table
-const HOLDINGS_TABLE_COLUMNS = {
-  CURRENCY: 'Currency',
-  NAME: 'Name',
-  SYMBOL: 'Symbol',
-  ASSET_CLASS: 'Asset Class',
-  ALLOCATION_PERCENTAGE: 'Allocation in Percentage',
-  ASSET_SUB_CLASS: 'Asset Sub Class'
-} as const;
+// Column definitions for holdings table
+const HOLDINGS_TABLE_COLUMNS: ({ key: string } & ColumnDescriptor)[] = [
+  { key: 'CURRENCY', name: 'Currency' },
+  { key: 'NAME', name: 'Name' },
+  { key: 'SYMBOL', name: 'Symbol' },
+  { key: 'ASSET_CLASS', name: 'Asset Class' },
+  {
+    key: 'ALLOCATION_PERCENTAGE',
+    name: 'Allocation in Percentage',
+    align: 'right'
+  },
+  { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' }
+];
 
 @Injectable()
 export class AiService {
@@ -69,38 +73,50 @@ export class AiService {
       userId
     });
 
-    const holdingsTableColumns: ColumnDescriptor[] = [
-      { name: HOLDINGS_TABLE_COLUMNS.CURRENCY },
-      { name: HOLDINGS_TABLE_COLUMNS.NAME },
-      { name: HOLDINGS_TABLE_COLUMNS.SYMBOL },
-      { name: HOLDINGS_TABLE_COLUMNS.ASSET_CLASS },
-      { align: 'right', name: HOLDINGS_TABLE_COLUMNS.ALLOCATION_PERCENTAGE },
-      { name: HOLDINGS_TABLE_COLUMNS.ASSET_SUB_CLASS }
-    ];
+    const holdingsTableColumns: ColumnDescriptor[] = HOLDINGS_TABLE_COLUMNS.map(
+      ({ name, align }) => ({ name, align: align ?? 'left' })
+    );
+
+    const getColumnValue = (
+      key: string,
+      holding: {
+        currency: string;
+        name: string;
+        symbol: string;
+        assetClass?: string;
+        allocationInPercentage: number;
+        assetSubClass?: string;
+      }
+    ) => {
+      switch (key) {
+        case 'CURRENCY':
+          return holding.currency;
+        case 'NAME':
+          return holding.name;
+        case 'SYMBOL':
+          return holding.symbol;
+        case 'ASSET_CLASS':
+          return holding.assetClass ?? '';
+        case 'ALLOCATION_PERCENTAGE':
+          return `${(holding.allocationInPercentage * 100).toFixed(3)}%`;
+        case 'ASSET_SUB_CLASS':
+          return holding.assetSubClass ?? '';
+        default:
+          return '';
+      }
+    };
 
     const holdingsTableRows = Object.values(holdings)
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })
-      .map(
-        ({
-          allocationInPercentage,
-          assetClass,
-          assetSubClass,
-          currency,
-          name,
-          symbol
-        }) => {
-          return {
-            [HOLDINGS_TABLE_COLUMNS.CURRENCY]: currency,
-            [HOLDINGS_TABLE_COLUMNS.NAME]: name,
-            [HOLDINGS_TABLE_COLUMNS.SYMBOL]: symbol,
-            [HOLDINGS_TABLE_COLUMNS.ASSET_CLASS]: assetClass ?? '',
-            [HOLDINGS_TABLE_COLUMNS.ALLOCATION_PERCENTAGE]: `${(allocationInPercentage * 100).toFixed(3)}%`,
-            [HOLDINGS_TABLE_COLUMNS.ASSET_SUB_CLASS]: assetSubClass ?? ''
-          };
-        }
-      );
+      .map((holding) => {
+        const row: Record<string, string> = {};
+        HOLDINGS_TABLE_COLUMNS.forEach(({ key, name }) => {
+          row[name] = getColumnValue(key, holding);
+        });
+        return row;
+      });
 
     const holdingsTableString = tablemark(holdingsTableRows, {
       columns: holdingsTableColumns
