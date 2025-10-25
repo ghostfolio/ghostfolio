@@ -14,5 +14,11 @@
       "type": "<invalid>",
       "unitPrice": 100.0
     }
-  ]
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
 }

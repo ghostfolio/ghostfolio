@@ -15,5 +15,11 @@
       "date": "1990-01-01T00:00:00.000Z",
       "symbol": "MSFT"
     }
-  ]
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
 }

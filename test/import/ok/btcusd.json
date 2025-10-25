@@ -23,7 +23,8 @@
   ],
   "user": {
     "settings": {
-      "currency": "USD"
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
     }
   }
 }
