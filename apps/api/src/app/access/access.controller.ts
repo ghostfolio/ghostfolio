@@ -35,48 +35,6 @@ export class AccessController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getAllAccesses(): Promise<Access[]> {
-    const accessesWithGranteeUser = await this.accessService.accesses({
-      include: {
-        granteeUser: true
-      },
-      orderBy: [{ granteeUserId: 'desc' }, { createdAt: 'asc' }],
-      where: { userId: this.request.user.id }
-    });
-
-    return accessesWithGranteeUser.map(
-      ({
-        alias,
-        granteeUser,
-        id,
-        permissions: accessPermissions,
-        settings
-      }) => {
-        if (granteeUser) {
-          return {
-            alias,
-            id,
-            permissions: accessPermissions,
-            settings: settings as AccessSettings,
-            grantee: granteeUser?.id,
-            type: 'PRIVATE'
-          };
-        }
-
-        return {
-          alias,
-          id,
-          permissions: accessPermissions,
-          settings: settings as AccessSettings,
-          grantee: 'Public',
-          type: 'PUBLIC'
-        };
-      }
-    );
-  }
-
   @HasPermission(permissions.createAccess)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -134,6 +92,48 @@ export class AccessController {
     return this.accessService.deleteAccess({
       id
     });
+  }
+
+  @Get()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getAllAccesses(): Promise<Access[]> {
+    const accessesWithGranteeUser = await this.accessService.accesses({
+      include: {
+        granteeUser: true
+      },
+      orderBy: [{ granteeUserId: 'desc' }, { createdAt: 'asc' }],
+      where: { userId: this.request.user.id }
+    });
+
+    return accessesWithGranteeUser.map(
+      ({
+        alias,
+        granteeUser,
+        id,
+        permissions: accessPermissions,
+        settings
+      }) => {
+        if (granteeUser) {
+          return {
+            alias,
+            id,
+            permissions: accessPermissions,
+            settings: settings as AccessSettings,
+            grantee: granteeUser?.id,
+            type: 'PRIVATE'
+          };
+        }
+
+        return {
+          alias,
+          id,
+          permissions: accessPermissions,
+          settings: settings as AccessSettings,
+          grantee: 'Public',
+          type: 'PUBLIC'
+        };
+      }
+    );
   }
 
   @HasPermission(permissions.updateAccess)

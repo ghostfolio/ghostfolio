@@ -69,9 +69,9 @@ export class GfCreateOrUpdateAccessDialogComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService

@@ -244,12 +244,12 @@ export class PublicController {
     });
 
     const publicPortfolioResponse: PublicPortfolioResponse = {
+      alias: access.alias,
       createdAt,
       hasDetails,
       latestActivities,
-      markets,
-      alias: access.alias,
       holdings: {},
+      markets,
       performance: {
         '1d': {
           relativeChange:
