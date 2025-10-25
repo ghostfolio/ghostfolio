@@ -1,3 +1,4 @@
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
@@ -555,6 +556,32 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
   public onClose() {
     this.dialogRef.close();
+  }
+
+  public onCloseHolding() {
+    const today = new Date();
+
+    const activity: CreateOrderDto = {
+      accountId: null,
+      comment: null,
+      currency: this.SymbolProfile.currency,
+      dataSource: this.SymbolProfile.dataSource,
+      date: today.toISOString(),
+      fee: 0,
+      quantity: this.quantity,
+      symbol: this.SymbolProfile.symbol,
+      tags: [],
+      type: 'SELL',
+      unitPrice: this.marketPrice
+    };
+
+    this.dataService.postOrder(activity).subscribe(() => {
+      this.router.navigate(
+        internalRoutes.portfolio.subRoutes.activities.routerLink
+      );
+
+      this.dialogRef.close();
+    });
   }
 
   public onExport() {
