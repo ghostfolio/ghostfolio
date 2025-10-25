@@ -6566,7 +6566,7 @@
         <target state="translated">非活跃</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2159130950882492111" datatype="html">

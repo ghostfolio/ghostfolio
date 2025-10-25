@@ -6018,7 +6018,7 @@
         <source>Inactive</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7819314041543176992" datatype="html">
