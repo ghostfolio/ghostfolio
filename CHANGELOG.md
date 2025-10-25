@@ -25,9 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the style in the footer row of the accounts table
 - Fixed the rendering of names and symbols for custom assets in the import activities dialog
-
-### Fixed
-
 - Fixed an issue with the market price in base currency during the portfolio snapshot calculation
 
 ## 2.210.1 - 2025-10-22
