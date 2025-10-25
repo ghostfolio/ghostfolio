@@ -428,6 +428,19 @@
       <div class="row">
         <div class="col">
           <div class="button-container d-flex flex-wrap">
+            @if (data.hasPermissionToCreateActivity && quantity > 0) {
+              <button
+                color="warn"
+                mat-stroked-button
+                (click)="onCloseHolding()"
+              >
+                <ion-icon
+                  class="mr-1"
+                  name="arrow-down-circle-outline"
+                ></ion-icon
+                ><span i18n>Close Holding</span>
+              </button>
+            }
             @if (data.hasPermissionToAccessAdminControl) {
               <a
                 mat-stroked-button
@@ -442,16 +455,6 @@
                   >Manage Asset Profile</span
                 >...</a
               >
-            }
-            @if (data.hasPermissionToCreateActivity && quantity > 0) {
-              <button
-                color="warn"
-                mat-stroked-button
-                (click)="onCloseHolding()"
-              >
-                <ion-icon class="mr-1" name="close-outline"></ion-icon
-                ><span i18n>Close Holding</span>
-              </button>
             }
             @if (
               dataSource?.data.length > 0 &&
