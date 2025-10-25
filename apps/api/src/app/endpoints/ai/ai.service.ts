@@ -10,7 +10,17 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
-import type { ColumnDescriptor } from 'tablemark';
+import tablemark, { ColumnDescriptor } from 'tablemark';
+
+// Column name constants for holdings table
+const HOLDINGS_TABLE_COLUMNS = {
+  CURRENCY: 'Currency',
+  NAME: 'Name',
+  SYMBOL: 'Symbol',
+  ASSET_CLASS: 'Asset Class',
+  ALLOCATION_PERCENTAGE: 'Allocation in Percentage',
+  ASSET_SUB_CLASS: 'Asset Sub Class'
+} as const;
 
 @Injectable()
 export class AiService {
@@ -60,12 +70,12 @@ export class AiService {
     });
 
     const holdingsTableColumns: ColumnDescriptor[] = [
-      { name: 'Name' },
-      { name: 'Symbol' },
-      { name: 'Currency' },
-      { name: 'Asset Class' },
-      { name: 'Asset Sub Class' },
-      { align: 'right', name: 'Allocation in Percentage' }
+      { name: HOLDINGS_TABLE_COLUMNS.CURRENCY },
+      { name: HOLDINGS_TABLE_COLUMNS.NAME },
+      { name: HOLDINGS_TABLE_COLUMNS.SYMBOL },
+      { name: HOLDINGS_TABLE_COLUMNS.ASSET_CLASS },
+      { align: 'right', name: HOLDINGS_TABLE_COLUMNS.ALLOCATION_PERCENTAGE },
+      { name: HOLDINGS_TABLE_COLUMNS.ASSET_SUB_CLASS }
     ];
 
     const holdingsTableRows = Object.values(holdings)
@@ -82,22 +92,15 @@ export class AiService {
           symbol
         }) => {
           return {
-            Name: name,
-            Symbol: symbol,
-            Currency: currency,
-            'Asset Class': assetClass ?? '',
-            'Asset Sub Class': assetSubClass ?? '',
-            'Allocation in Percentage': `${(allocationInPercentage * 100).toFixed(3)}%`
+            [HOLDINGS_TABLE_COLUMNS.CURRENCY]: currency,
+            [HOLDINGS_TABLE_COLUMNS.NAME]: name,
+            [HOLDINGS_TABLE_COLUMNS.SYMBOL]: symbol,
+            [HOLDINGS_TABLE_COLUMNS.ASSET_CLASS]: assetClass ?? '',
+            [HOLDINGS_TABLE_COLUMNS.ALLOCATION_PERCENTAGE]: `${(allocationInPercentage * 100).toFixed(3)}%`,
+            [HOLDINGS_TABLE_COLUMNS.ASSET_SUB_CLASS]: assetSubClass ?? ''
           };
         }
       );
-
-    // Dynamic import to load ESM module from CommonJS context
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    const dynamicImport = new Function('s', 'return import(s)') as (
-      s: string
-    ) => Promise<typeof import('tablemark')>;
-    const { tablemark } = await dynamicImport('tablemark');
 
     const holdingsTableString = tablemark(holdingsTableRows, {
       columns: holdingsTableColumns
