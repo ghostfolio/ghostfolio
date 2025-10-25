@@ -8,7 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { analyticsOutline, walletOutline } from 'ionicons/icons';
+import { albumsOutline, analyticsOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -43,7 +43,7 @@ export class GfZenPageComponent implements OnDestroy, OnInit {
               routerLink: internalRoutes.zen.routerLink
             },
             {
-              iconName: 'wallet-outline',
+              iconName: 'albums-outline',
               label: internalRoutes.zen.subRoutes.holdings.title,
               routerLink: internalRoutes.zen.subRoutes.holdings.routerLink
             }
@@ -54,7 +54,7 @@ export class GfZenPageComponent implements OnDestroy, OnInit {
         }
       });
 
-    addIcons({ analyticsOutline, walletOutline });
+    addIcons({ albumsOutline, analyticsOutline });
   }
 
   public ngOnInit() {
