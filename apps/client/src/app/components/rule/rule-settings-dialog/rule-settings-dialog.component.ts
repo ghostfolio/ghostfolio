@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import { MatSliderModule } from '@angular/material/slider';
 
-import { IRuleSettingsDialogParams } from './interfaces/interfaces';
+import { RuleSettingsDialogParams } from './interfaces/interfaces';
 
 @Component({
   imports: [
@@ -31,7 +31,7 @@ export class GfRuleSettingsDialogComponent {
   public settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: IRuleSettingsDialogParams,
+    @Inject(MAT_DIALOG_DATA) public data: RuleSettingsDialogParams,
     public dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>
   ) {}
 }

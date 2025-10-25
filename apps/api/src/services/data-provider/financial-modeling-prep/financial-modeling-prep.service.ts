@@ -9,8 +9,8 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
@@ -245,7 +245,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
     try {
       const response: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       const dividends = await fetch(
@@ -289,11 +289,11 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     const MAX_YEARS_PER_REQUEST = 5;
     const result: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {
       [symbol]: {}
     };
@@ -353,8 +353,8 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
+    const response: { [symbol: string]: DataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;

@@ -8,8 +8,8 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   ghostfolioFearAndGreedIndexSymbol,
@@ -59,7 +59,7 @@ export class RapidApiService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
       if (
@@ -96,7 +96,7 @@ export class RapidApiService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
     if (symbols.length <= 0) {
       return {};
     }

@@ -9,17 +9,13 @@ import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto'
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import {
-  Activities,
-  Activity
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -27,13 +23,17 @@ import {
   AccessTokenResponse,
   AccountBalancesResponse,
   AccountsResponse,
+  ActivitiesResponse,
+  ActivityResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
+  AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
+  CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
-  Export,
+  ExportResponse,
   Filter,
   ImportResponse,
   InfoItem,
@@ -169,17 +169,20 @@ export class DataService {
     return params;
   }
 
-  public createCheckoutSession({
+  public createStripeCheckoutSession({
     couponId,
     priceId
   }: {
     couponId?: string;
     priceId: string;
   }) {
-    return this.http.post('/api/v1/subscription/stripe/checkout-session', {
-      couponId,
-      priceId
-    });
+    return this.http.post<CreateStripeCheckoutSessionResponse>(
+      '/api/v1/subscription/stripe/checkout-session',
+      {
+        couponId,
+        priceId
+      }
+    );
   }
 
   public fetchAccount(aAccountId: string) {
@@ -212,7 +215,7 @@ export class DataService {
     sortColumn?: string;
     sortDirection?: SortDirection;
     take?: number;
-  }): Observable<Activities> {
+  }): Observable<ActivitiesResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     if (range) {
@@ -247,7 +250,7 @@ export class DataService {
   }
 
   public fetchActivity(aActivityId: string) {
-    return this.http.get<Activity>(`/api/v1/order/${aActivityId}`).pipe(
+    return this.http.get<ActivityResponse>(`/api/v1/order/${aActivityId}`).pipe(
       map((activity) => {
         activity.createdAt = parseISO(activity.createdAt as unknown as string);
         activity.date = parseISO(activity.date as unknown as string);
@@ -291,7 +294,7 @@ export class DataService {
     date: Date;
     symbol: string;
   }) {
-    return this.http.get<IDataProviderHistoricalResponse>(
+    return this.http.get<DataProviderHistoricalResponse>(
       `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
@@ -345,7 +348,7 @@ export class DataService {
   public fetchAsset({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
+  }: AssetProfileIdentifier): Observable<AssetResponse> {
     return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
       map((data) => {
         for (const item of data.marketData) {
@@ -406,7 +409,7 @@ export class DataService {
       params = params.append('activityIds', activityIds.join(','));
     }
 
-    return this.http.get<Export>('/api/v1/export', {
+    return this.http.get<ExportResponse>('/api/v1/export', {
       params
     });
   }

@@ -8,8 +8,8 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -89,7 +89,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol,
     to
   }: GetDividendsParams): Promise<{
-    [date: string]: IDataProviderHistoricalResponse;
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     symbol = this.convertToEodSymbol(symbol);
 
@@ -99,7 +99,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
     try {
       const response: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       const historicalResult = await fetch(
@@ -141,7 +141,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     symbol = this.convertToEodSymbol(symbol);
 
@@ -198,8 +198,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
+    const response: { [symbol: string]: DataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;

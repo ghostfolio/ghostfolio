@@ -216,6 +216,15 @@
                 <ion-icon name="ellipsis-horizontal" />
               </button>
               <mat-menu #userMenu="matMenu" xPosition="before">
+                <button
+                  mat-menu-item
+                  (click)="onOpenUserDetailDialog(element.id)"
+                >
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="person-outline" />
+                    <span i18n>View Details</span>
+                  </span>
+                </button>
                 @if (hasPermissionToImpersonateAllUsers) {
                   <button mat-menu-item (click)="onImpersonateUser(element.id)">
                     <span class="align-items-center d-flex">
@@ -255,8 +264,9 @@
           ></tr>
           <tr
             *matRowDef="let row; columns: displayedColumns"
-            class="mat-mdc-row"
+            class="cursor-pointer mat-mdc-row"
             mat-row
+            (click)="onOpenUserDetailDialog(row.id)"
           ></tr>
         </table>
       </div>

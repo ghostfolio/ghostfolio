@@ -1,6 +1,6 @@
 import { ConfirmationDialogType } from '../confirmation-dialog.type';
 
-export interface IConfirmDialogParams {
+export interface ConfirmDialogParams {
   confirmLabel?: string;
   confirmType: ConfirmationDialogType;
   discardLabel?: string;

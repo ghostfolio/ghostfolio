@@ -2,8 +2,8 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  DataProviderHistoricalResponse,
+  DataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -215,10 +215,10 @@ export class DataProviderService implements OnModuleInit {
     from: Date,
     to: Date
   ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     let response: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {};
 
     if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
@@ -284,7 +284,7 @@ export class DataProviderService implements OnModuleInit {
     from: Date;
     to: Date;
   }): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
@@ -317,11 +317,11 @@ export class DataProviderService implements OnModuleInit {
     );
 
     const result: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {};
 
     const promises: Promise<{
-      data: { [date: string]: IDataProviderHistoricalResponse };
+      data: { [date: string]: DataProviderHistoricalResponse };
       symbol: string;
     }>[] = [];
     for (const { dataSource, symbol } of assetProfileIdentifiers) {
@@ -329,7 +329,7 @@ export class DataProviderService implements OnModuleInit {
       if (dataProvider.canHandle(symbol)) {
         if (symbol === `${DEFAULT_CURRENCY}USX`) {
           const data: {
-            [date: string]: IDataProviderHistoricalResponse;
+            [date: string]: DataProviderHistoricalResponse;
           } = {};
 
           for (const date of eachDayOfInterval({ end: to, start: from })) {
@@ -399,10 +399,10 @@ export class DataProviderService implements OnModuleInit {
     useCache?: boolean;
     user?: UserWithSettings;
   }): Promise<{
-    [symbol: string]: IDataProviderResponse;
+    [symbol: string]: DataProviderResponse;
   }> {
     const response: {
-      [symbol: string]: IDataProviderResponse;
+      [symbol: string]: DataProviderResponse;
     } = {};
     const startTimeTotal = performance.now();
 
@@ -716,7 +716,7 @@ export class DataProviderService implements OnModuleInit {
   }: {
     allData: {
       data: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       };
       symbol: string;
     }[];
@@ -728,7 +728,7 @@ export class DataProviderService implements OnModuleInit {
     })?.data;
 
     const data: {
-      [date: string]: IDataProviderHistoricalResponse;
+      [date: string]: DataProviderHistoricalResponse;
     } = {};
 
     for (const date in rootData) {

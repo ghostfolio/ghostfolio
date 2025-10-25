@@ -10,6 +10,7 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
+import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
 export class AiService {
@@ -58,34 +59,57 @@ export class AiService {
       userId
     });
 
-    const holdingsTable = [
-      '| Name | Symbol | Currency | Asset Class | Asset Sub Class | Allocation in Percentage |',
-      '| --- | --- | --- | --- | --- | --- |',
-      ...Object.values(holdings)
-        .sort((a, b) => {
-          return b.allocationInPercentage - a.allocationInPercentage;
-        })
-        .map(
-          ({
-            allocationInPercentage,
-            assetClass,
-            assetSubClass,
-            currency,
-            name,
-            symbol
-          }) => {
-            return `| ${name} | ${symbol} | ${currency} | ${assetClass} | ${assetSubClass} | ${(allocationInPercentage * 100).toFixed(3)}% |`;
-          }
-        )
+    const holdingsTableColumns: ColumnDescriptor[] = [
+      { name: 'Name' },
+      { name: 'Symbol' },
+      { name: 'Currency' },
+      { name: 'Asset Class' },
+      { name: 'Asset Sub Class' },
+      { align: 'right', name: 'Allocation in Percentage' }
     ];
 
+    const holdingsTableRows = Object.values(holdings)
+      .sort((a, b) => {
+        return b.allocationInPercentage - a.allocationInPercentage;
+      })
+      .map(
+        ({
+          allocationInPercentage,
+          assetClass,
+          assetSubClass,
+          currency,
+          name,
+          symbol
+        }) => {
+          return {
+            Name: name,
+            Symbol: symbol,
+            Currency: currency,
+            'Asset Class': assetClass ?? '',
+            'Asset Sub Class': assetSubClass ?? '',
+            'Allocation in Percentage': `${(allocationInPercentage * 100).toFixed(3)}%`
+          };
+        }
+      );
+
+    // Dynamic import to load ESM module from CommonJS context
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const dynamicImport = new Function('s', 'return import(s)') as (
+      s: string
+    ) => Promise<typeof import('tablemark')>;
+    const { tablemark } = await dynamicImport('tablemark');
+
+    const holdingsTableString = tablemark(holdingsTableRows, {
+      columns: holdingsTableColumns
+    });
+
     if (mode === 'portfolio') {
-      return holdingsTable.join('\n');
+      return holdingsTableString;
     }
 
     return [
       `You are a neutral financial assistant. Please analyze the following investment portfolio (base currency being ${userCurrency}) in simple words.`,
-      ...holdingsTable,
+      holdingsTableString,
       'Structure your answer with these sections:',
       'Overview: Briefly summarize the portfolio’s composition and allocation rationale.',
       'Risk Assessment: Identify potential risks, including market volatility, concentration, and sectoral imbalances.',

@@ -1,4 +1,4 @@
-export interface IAlertDialogParams {
+export interface AlertDialogParams {
   confirmLabel?: string;
   discardLabel?: string;
   message?: string;
