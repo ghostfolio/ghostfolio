@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the holdings endpoint to include the performance with currency effect for cash
 - Extended the user detail dialog in the users section of the admin control panel
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ### Fixed
 
 - Ensured the locale is available in the settings dialog to customize the rule thresholds of the _X-ray_ page
