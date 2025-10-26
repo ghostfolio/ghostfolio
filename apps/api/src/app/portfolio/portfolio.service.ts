@@ -575,6 +575,7 @@ export class PortfolioService {
       (user.settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
+    // Activities for non-cash assets
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
@@ -582,22 +583,28 @@ export class PortfolioService {
         userId
       });
 
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      activities,
+    // Synthetic activities for cash
+    const cashDetails = await this.accountService.getCashDetails({
       filters,
       userId,
+      currency: userCurrency
+    });
+    const cashActivities = await this.getCashActivities({
+      cashDetails,
+      userCurrency,
+      userId
+    });
+
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      filters,
+      userId,
+      activities: [...activities, ...cashActivities],
       calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
     const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
       await portfolioCalculator.getSnapshot();
-
-    const cashDetails = await this.accountService.getCashDetails({
-      filters,
-      userId,
-      currency: userCurrency
-    });
 
     const holdings: PortfolioDetails['holdings'] = {};
 
