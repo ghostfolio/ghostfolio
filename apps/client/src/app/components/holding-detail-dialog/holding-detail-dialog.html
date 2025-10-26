@@ -414,7 +414,7 @@
     <gf-tags-selector
       [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
       [readonly]="!data.hasPermissionToUpdateOrder"
-      [tags]="activityForm.get('tags')?.value"
+      [tags]="holdingForm.get('tags')?.value"
       [tagsAvailable]="tagsAvailable"
       (tagsChanged)="onTagsChanged($event)"
     />
