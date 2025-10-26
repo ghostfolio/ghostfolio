@@ -24,7 +24,6 @@ import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/ru
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { ExchangeRatesByCurrency } from '@ghostfolio/api/services/exchange-rate-data/interfaces/exchange-rate-data.interface';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -756,32 +755,9 @@ export class PortfolioService {
       };
     }
 
-    const { endDate, startDate } = getIntervalFromDateRange(
-      dateRange,
-      portfolioCalculator.getStartDate()
-    );
-
-    // Gather historical exchange rate data for all currencies in cash positions
-    const exchangeRatesByCurrency =
-      await this.exchangeRateDataService.getExchangeRatesByCurrency({
-        endDate,
-        startDate,
-        currencies: [
-          ...new Set(
-            cashDetails.accounts.map(({ currency }) => {
-              return currency;
-            })
-          )
-        ],
-        targetCurrency: userCurrency
-      });
-
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = this.getCashPositions({
         cashDetails,
-        endDate,
-        exchangeRatesByCurrency,
-        startDate,
         userCurrency,
         value: filteredValueInBaseCurrency
       });
@@ -807,9 +783,6 @@ export class PortfolioService {
     ) {
       const emergencyFundCashPositions = this.getCashPositions({
         cashDetails,
-        endDate,
-        exchangeRatesByCurrency,
-        startDate,
         userCurrency,
         value: filteredValueInBaseCurrency
       });
@@ -1745,16 +1718,10 @@ export class PortfolioService {
 
   private getCashPositions({
     cashDetails,
-    endDate,
-    exchangeRatesByCurrency,
-    startDate,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
-    endDate: Date;
-    exchangeRatesByCurrency: ExchangeRatesByCurrency;
-    startDate: Date;
     userCurrency: string;
     value: Big;
   }) {
@@ -1776,24 +1743,8 @@ export class PortfolioService {
         continue;
       }
 
-      const exchangeRates =
-        exchangeRatesByCurrency[`${account.currency}${userCurrency}`];
-
-      // Calculate the performance of the cash position including currency effects
-      const netPerformanceWithCurrencyEffect = new Big(account.balance)
-        .mul(exchangeRates?.[format(endDate, DATE_FORMAT)] ?? 1)
-        .minus(
-          new Big(account.balance).mul(
-            exchangeRates?.[format(startDate, DATE_FORMAT)] ?? 1
-          )
-        )
-        .toNumber();
-
       if (cashPositions[account.currency]) {
         cashPositions[account.currency].investment += convertedBalance;
-
-        cashPositions[account.currency].netPerformanceWithCurrencyEffect +=
-          netPerformanceWithCurrencyEffect;
 
         cashPositions[account.currency].valueInBaseCurrency += convertedBalance;
       } else {
@@ -1801,26 +1752,16 @@ export class PortfolioService {
           balance: convertedBalance,
           currency: account.currency
         });
-
-        cashPositions[account.currency].netPerformanceWithCurrencyEffect =
-          netPerformanceWithCurrencyEffect;
       }
     }
 
     for (const symbol of Object.keys(cashPositions)) {
-      // Calculate allocations and net performance percentages for each currency
+      // Calculate allocations for each currency
       cashPositions[symbol].allocationInPercentage = value.gt(0)
         ? new Big(cashPositions[symbol].valueInBaseCurrency)
             .div(value)
             .toNumber()
         : 0;
-
-      cashPositions[symbol].netPerformancePercentWithCurrencyEffect =
-        cashPositions[symbol].investment > 0
-          ? new Big(cashPositions[symbol].netPerformanceWithCurrencyEffect)
-              .div(cashPositions[symbol].investment)
-              .toNumber()
-          : 0;
     }
 
     return cashPositions;
