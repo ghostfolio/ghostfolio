@@ -1745,7 +1745,6 @@ export class PortfolioService {
 
       if (cashPositions[account.currency]) {
         cashPositions[account.currency].investment += convertedBalance;
-
         cashPositions[account.currency].valueInBaseCurrency += convertedBalance;
       } else {
         cashPositions[account.currency] = this.getInitialCashPosition({
