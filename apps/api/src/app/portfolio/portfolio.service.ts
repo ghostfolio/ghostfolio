@@ -320,6 +320,92 @@ export class PortfolioService {
     };
   }
 
+  public async getCashActivities({
+    cashDetails,
+    userCurrency,
+    userId
+  }: {
+    cashDetails: CashDetails;
+    userCurrency: string;
+    userId: string;
+  }) {
+    const syntheticActivities: Activity[] = [];
+
+    for (const account of cashDetails.accounts) {
+      const { balances } = await this.accountBalanceService.getAccountBalances({
+        filters: [{ id: account.id, type: 'ACCOUNT' }],
+        userCurrency,
+        userId
+      });
+
+      let currentBalance = 0;
+      let currentBalanceInBaseCurrency = 0;
+      for (const balanceItem of balances) {
+        const syntheticActivityTemplate: Activity = {
+          userId,
+          accountId: account.id,
+          accountUserId: account.userId,
+          comment: account.name,
+          createdAt: new Date(balanceItem.date),
+          currency: account.currency,
+          date: new Date(balanceItem.date),
+          fee: 0,
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          id: balanceItem.id,
+          isDraft: false,
+          quantity: 1,
+          SymbolProfile: {
+            activitiesCount: 0,
+            assetClass: 'LIQUIDITY',
+            assetSubClass: 'CASH',
+            countries: [],
+            createdAt: new Date(balanceItem.date),
+            currency: account.currency,
+            dataSource: 'YAHOO',
+            holdings: [],
+            id: account.currency,
+            isActive: true,
+            sectors: [],
+            symbol: account.currency,
+            updatedAt: new Date(balanceItem.date)
+          },
+          symbolProfileId: account.currency,
+          type: 'BUY',
+          unitPrice: 1,
+          unitPriceInAssetProfileCurrency: 1,
+          updatedAt: new Date(balanceItem.date),
+          valueInBaseCurrency: 0,
+          value: 0
+        };
+
+        if (currentBalance < balanceItem.value) {
+          // BUY
+          syntheticActivities.push({
+            ...syntheticActivityTemplate,
+            type: 'BUY',
+            value: balanceItem.value - currentBalance,
+            valueInBaseCurrency:
+              balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
+          });
+        } else if (currentBalance > balanceItem.value) {
+          // SELL
+          syntheticActivities.push({
+            ...syntheticActivityTemplate,
+            type: 'SELL',
+            value: currentBalance - balanceItem.value,
+            valueInBaseCurrency:
+              currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
+          });
+        }
+        currentBalance = balanceItem.value;
+        currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
+      }
+    }
+
+    return syntheticActivities;
+  }
+
   public async getDividends({
     activities,
     groupBy
