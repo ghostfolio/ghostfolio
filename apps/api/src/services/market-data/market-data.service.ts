@@ -228,21 +228,18 @@ export class MarketDataService {
         }
       });
 
-      const upsertPromises = data.map(
-        ({ dataSource, date, marketPrice, state }) => {
-          return prisma.marketData.create({
-            data: {
-              dataSource: dataSource as DataSource,
-              date: date as Date,
-              marketPrice: marketPrice as number,
-              state: state as MarketDataState,
-              symbol: symbol as string
-            }
-          });
-        }
-      );
-
-      await Promise.all(upsertPromises);
+      if (data.length > 0) {
+        await prisma.marketData.createMany({
+          data: data.map(({ dataSource, date, marketPrice, state }) => ({
+            dataSource: dataSource as DataSource,
+            date: date as Date,
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState,
+            symbol: symbol as string
+          })),
+          skipDuplicates: true
+        });
+      }
     });
   }
 }
