@@ -889,6 +889,23 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    const startYear = startDate.getFullYear();
+    const endYear = endDate.getFullYear();
+
+    for (let year = startYear; year <= endYear; year++) {
+      const firstDay = new Date(year, 0, 1);  // January 1st
+      const lastDay = new Date(year, 11, 31); // December 31st
+
+      // Add only if they lie within the selected range
+      if (!isBefore(firstDay, startDate) && !isAfter(firstDay, endDate)) {
+        chartDateMap[format(firstDay, DATE_FORMAT)] = true;
+      }
+
+      if (!isBefore(lastDay, startDate) && !isAfter(lastDay, endDate)) {
+        chartDateMap[format(lastDay, DATE_FORMAT)] = true;
+      }
+    }
+
     return chartDateMap;
   }
 
