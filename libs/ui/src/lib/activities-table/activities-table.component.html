@@ -437,6 +437,19 @@
           class="no-max-width"
           xPosition="before"
         >
+          @if (
+            hasPermissionToOpenDetails &&
+            isExcludedFromAnalysis(element) === false &&
+            element.isDraft === false &&
+            ['BUY', 'DIVIDEND', 'SELL'].includes(element.type)
+          ) {
+            <button mat-menu-item (click)="onClickActivity(element)">
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="wallet-outline" />
+                <span i18n>View Holding</span>
+              </span>
+            </button>
+          }
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
