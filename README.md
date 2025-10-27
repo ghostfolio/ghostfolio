@@ -299,6 +299,17 @@ Not sure what to work on? We have [some ideas](https://github.com/ghostfolio/gho
 
 If you like to support this project, become a [**Sponsor**](https://github.com/sponsors/ghostfolio), get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
 
+## Sponsors
+
+<div align="center">
+  <p>
+    Browser testing via<br />
+    <a href="https://www.lambdatest.com?utm_medium=sponsor&utm_source=ghostfolio" target="_blank" title="LambdaTest - AI Powered Testing Tool">
+      <img alt="LambdaTest Logo" height="45" width="250" src="https://www.lambdatest.com/blue-logo.png" />
+    </a>
+  </p>
+</div>
+
 ## Analytics
 
 ![Alt](https://repobeats.axiom.co/api/embed/281a80b2d0c4af1162866c24c803f1f18e5ed60e.svg 'Repobeats analytics image')
