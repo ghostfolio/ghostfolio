@@ -15,7 +15,13 @@ import type { ColumnDescriptor } from 'tablemark';
 @Injectable()
 export class AiService {
   private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: ({
-    key: string;
+    key:
+      | 'ALLOCATION_PERCENTAGE'
+      | 'ASSET_CLASS'
+      | 'ASSET_SUB_CLASS'
+      | 'CURRENCY'
+      | 'NAME'
+      | 'SYMBOL';
   } & ColumnDescriptor)[] = [
     { key: 'NAME', name: 'Name' },
     { key: 'SYMBOL', name: 'Symbol' },
