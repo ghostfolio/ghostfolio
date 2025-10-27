@@ -205,4 +205,46 @@ export class MarketDataService {
 
     return this.prismaService.$transaction(upsertPromises);
   }
+
+  /**
+   * Atomically replace all market data for a symbol.
+   * Deletes existing data and inserts new data within a single transaction
+   * to prevent data loss if the operation fails.
+   */
+  public async replaceAllForSymbol({
+    dataSource,
+    symbol,
+    data
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+    data: Prisma.MarketDataUpdateInput[];
+  }): Promise<void> {
+    await this.prismaService.$transaction(async (prisma) => {
+      // First, delete all existing market data for this symbol
+      await prisma.marketData.deleteMany({
+        where: {
+          dataSource,
+          symbol
+        }
+      });
+
+      // Then, insert all new market data
+      const upsertPromises = data.map(
+        ({ dataSource, date, marketPrice, state }) => {
+          return prisma.marketData.create({
+            data: {
+              dataSource: dataSource as DataSource,
+              date: date as Date,
+              marketPrice: marketPrice as number,
+              state: state as MarketDataState,
+              symbol: symbol as string
+            }
+          });
+        }
+      );
+
+      await Promise.all(upsertPromises);
+    });
+  }
 }

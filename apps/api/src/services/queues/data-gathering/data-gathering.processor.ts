@@ -100,7 +100,7 @@ export class DataGatheringProcessor {
     name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
   })
   public async gatherHistoricalMarketData(job: Job<DataGatheringItem>) {
-    const { dataSource, date, symbol } = job.data;
+    const { dataSource, date, symbol, replaceExistingData } = job.data;
 
     try {
       let currentDate = parseISO(date as unknown as string);
@@ -109,7 +109,7 @@ export class DataGatheringProcessor {
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
           currentDate,
           DATE_FORMAT
-        )}`,
+        )}${replaceExistingData ? ' (replace mode)' : ''}`,
         `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
@@ -157,7 +157,17 @@ export class DataGatheringProcessor {
         currentDate = addDays(currentDate, 1);
       }
 
-      await this.marketDataService.updateMany({ data });
+      // If replaceExistingData is true, use atomic replace to prevent data loss
+      // on failure. Otherwise, use the normal upsert approach.
+      if (replaceExistingData) {
+        await this.marketDataService.replaceAllForSymbol({
+          dataSource,
+          symbol,
+          data
+        });
+      } else {
+        await this.marketDataService.updateMany({ data });
+      }
 
       Logger.log(
         `Historical market data gathering has been completed for ${symbol} (${dataSource}) at ${format(

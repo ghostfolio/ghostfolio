@@ -2,7 +2,6 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -41,7 +40,6 @@ export class DataGatheringService {
     private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
@@ -95,8 +93,6 @@ export class DataGatheringService {
   }
 
   public async gatherSymbol({ dataSource, date, symbol }: DataGatheringItem) {
-    await this.marketDataService.deleteMany({ dataSource, symbol });
-
     const dataGatheringItems = (await this.getSymbolsMax())
       .filter((dataGatheringItem) => {
         return (
@@ -109,9 +105,12 @@ export class DataGatheringService {
         date: date ?? item.date
       }));
 
+    // Add a flag to indicate this should replace all existing data
+    // The data will be deleted and replaced within a transaction in the processor
     await this.gatherSymbols({
       dataGatheringItems,
-      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+      replaceExistingData: true
     });
   }
 
@@ -274,10 +273,12 @@ export class DataGatheringService {
 
   public async gatherSymbols({
     dataGatheringItems,
-    priority
+    priority,
+    replaceExistingData = false
   }: {
     dataGatheringItems: DataGatheringItem[];
     priority: number;
+    replaceExistingData?: boolean;
   }) {
     await this.addJobsToQueue(
       dataGatheringItems.map(({ dataSource, date, symbol }) => {
@@ -285,7 +286,8 @@ export class DataGatheringService {
           data: {
             dataSource,
             date,
-            symbol
+            symbol,
+            replaceExistingData
           },
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
           opts: {
