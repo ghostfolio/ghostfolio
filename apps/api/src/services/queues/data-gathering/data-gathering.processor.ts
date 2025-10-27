@@ -157,8 +157,6 @@ export class DataGatheringProcessor {
         currentDate = addDays(currentDate, 1);
       }
 
-      // If replaceExistingData is true, use atomic replace to prevent data loss
-      // on failure. Otherwise, use the normal upsert approach.
       if (replaceExistingData) {
         await this.marketDataService.replaceAllForSymbol({
           dataSource,

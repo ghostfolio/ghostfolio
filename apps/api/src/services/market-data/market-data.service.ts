@@ -221,7 +221,6 @@ export class MarketDataService {
     data: Prisma.MarketDataUpdateInput[];
   }): Promise<void> {
     await this.prismaService.$transaction(async (prisma) => {
-      // First, delete all existing market data for this symbol
       await prisma.marketData.deleteMany({
         where: {
           dataSource,
@@ -229,7 +228,6 @@ export class MarketDataService {
         }
       });
 
-      // Then, insert all new market data
       const upsertPromises = data.map(
         ({ dataSource, date, marketPrice, state }) => {
           return prisma.marketData.create({

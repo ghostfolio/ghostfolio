@@ -105,8 +105,6 @@ export class DataGatheringService {
         date: date ?? item.date
       }));
 
-    // Add a flag to indicate this should replace all existing data
-    // The data will be deleted and replaced within a transaction in the processor
     await this.gatherSymbols({
       dataGatheringItems,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
