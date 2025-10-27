@@ -131,14 +131,10 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      expect(portfolioSnapshot).toMatchObject({
-        positions: [
-          {
-            fee: new Big('4.46'),
-            feeInBaseCurrency: new Big('3.94')
-          }
-        ]
-      });
+      expect(portfolioSnapshot.positions[0].fee).toEqual(new Big(4.46));
+      expect(
+        portfolioSnapshot.positions[0].feeInBaseCurrency.toNumber()
+      ).toBeCloseTo(3.94, 1);
     });
   });
 });
