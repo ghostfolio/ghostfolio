@@ -28,36 +28,6 @@ const HOLDINGS_TABLE_COLUMNS: ({ key: string } & ColumnDescriptor)[] = [
   { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' }
 ];
 
-// Helper function to get column value for holdings table
-const getColumnValue = (
-  key: string,
-  holding: {
-    currency: string;
-    name: string;
-    symbol: string;
-    assetClass?: string;
-    allocationInPercentage: number;
-    assetSubClass?: string;
-  }
-) => {
-  switch (key) {
-    case 'CURRENCY':
-      return holding.currency;
-    case 'NAME':
-      return holding.name;
-    case 'SYMBOL':
-      return holding.symbol;
-    case 'ASSET_CLASS':
-      return holding.assetClass ?? '';
-    case 'ALLOCATION_PERCENTAGE':
-      return `${(holding.allocationInPercentage * 100).toFixed(3)}%`;
-    case 'ASSET_SUB_CLASS':
-      return holding.assetSubClass ?? '';
-    default:
-      return '';
-  }
-};
-
 @Injectable()
 export class AiService {
   public constructor(
@@ -106,7 +76,7 @@ export class AiService {
     });
 
     const holdingsTableColumns: ColumnDescriptor[] = HOLDINGS_TABLE_COLUMNS.map(
-      ({ name, align }) => {
+      ({ align, name }) => {
         return { name, align: align ?? 'left' };
       }
     );
@@ -118,7 +88,30 @@ export class AiService {
       .map((holding) => {
         return HOLDINGS_TABLE_COLUMNS.reduce(
           (row, { key, name }) => {
-            row[name] = getColumnValue(key, holding);
+            switch (key) {
+              case 'CURRENCY':
+                row[name] = holding.currency;
+                break;
+              case 'NAME':
+                row[name] = holding.name;
+                break;
+              case 'SYMBOL':
+                row[name] = holding.symbol;
+                break;
+              case 'ASSET_CLASS':
+                row[name] = holding.assetClass ?? '';
+                break;
+              case 'ALLOCATION_PERCENTAGE':
+                row[name] =
+                  `${(holding.allocationInPercentage * 100).toFixed(3)}%`;
+                break;
+              case 'ASSET_SUB_CLASS':
+                row[name] = holding.assetSubClass ?? '';
+                break;
+              default:
+                row[name] = '';
+                break;
+            }
             return row;
           },
           {} as Record<string, string>
