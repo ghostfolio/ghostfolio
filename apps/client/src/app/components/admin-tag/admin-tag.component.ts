@@ -32,6 +32,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
 import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
+import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,9 +150,13 @@ export class GfAdminTagComponent implements OnInit, OnDestroy {
   }
 
   private openCreateTagDialog() {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateTagDialogComponent,
+      CreateOrUpdateTagDialogParams
+    >(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
+          id: null,
           name: null
         }
       },
@@ -183,8 +188,11 @@ export class GfAdminTagComponent implements OnInit, OnDestroy {
       });
   }
 
-  private openUpdateTagDialog({ id, name }) {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
+  private openUpdateTagDialog({ id, name }: { id: string; name: string }) {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateTagDialogComponent,
+      CreateOrUpdateTagDialogParams
+    >(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
           id,

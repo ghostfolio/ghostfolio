@@ -1,5 +1,5 @@
 import { Tag } from '@prisma/client';
 
 export interface CreateOrUpdateTagDialogParams {
-  tag: Tag;
+  tag: Pick<Tag, 'id' | 'name'>;
 }
