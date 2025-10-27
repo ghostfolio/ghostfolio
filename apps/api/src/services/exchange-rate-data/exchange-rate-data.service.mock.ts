@@ -19,14 +19,19 @@ export const ExchangeRateDataServiceMock = {
       });
     } else if (targetCurrency === 'EUR') {
       return Promise.resolve({
-        EUREUR: {},
-        USDEUR: {}
+        EUREUR: {
+          '2021-12-12': 1
+        },
+        USDEUR: {
+          '2021-12-12': 0.8855
+        }
       });
     } else if (targetCurrency === 'USD') {
       return Promise.resolve({
         USDUSD: {
           '2018-01-01': 1,
           '2021-11-16': 1,
+          '2021-12-12': 1,
           '2023-07-10': 1
         }
       });
