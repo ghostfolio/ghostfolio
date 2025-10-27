@@ -14,7 +14,7 @@ import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
 export class AiService {
-  private static readonly HOLDINGS_TABLE_COLUMNS: ({
+  private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: ({
     key: string;
   } & ColumnDescriptor)[] = [
     { key: 'NAME', name: 'Name' },
@@ -75,7 +75,7 @@ export class AiService {
     });
 
     const holdingsTableColumns: ColumnDescriptor[] =
-      AiService.HOLDINGS_TABLE_COLUMNS.map(({ align, name }) => {
+      AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ align, name }) => {
         return { name, align: align ?? 'left' };
       });
 
@@ -92,7 +92,7 @@ export class AiService {
           name: label,
           symbol
         }) => {
-          return AiService.HOLDINGS_TABLE_COLUMNS.reduce(
+          return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
             (row, { key, name }) => {
               switch (key) {
                 case 'ALLOCATION_PERCENTAGE':
