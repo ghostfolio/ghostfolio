@@ -133,7 +133,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.params
+    this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['userId']) {
@@ -245,7 +245,10 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onOpenUserDetailDialog(userId: string) {
-    this.router.navigate(['./', userId], { relativeTo: this.route });
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { userId }
+    });
   }
 
   public ngOnDestroy() {
@@ -276,27 +279,26 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       });
   }
 
-  private openUserDetailDialog(aUserId: string) {
+  private openUserDetailDialog(userId: string) {
     const userData = this.dataSource.data.find(({ id }) => {
-      return id === aUserId;
+      return id === userId;
     });
 
     if (!userData) {
-      this.router.navigate(['../'], { relativeTo: this.route });
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {}
+      });
       return;
     }
 
-    const dialogRef = this.dialog.open<
-      GfUserDetailDialogComponent,
-      UserDetailDialogParams
-    >(GfUserDetailDialogComponent, {
+    const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
         userData,
         deviceType: this.deviceType,
-        hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale
-      },
+      } as UserDetailDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -306,7 +308,10 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.fetchUsers();
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: {}
+        });
       });
   }
 }
