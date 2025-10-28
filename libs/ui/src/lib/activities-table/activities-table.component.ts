@@ -246,17 +246,21 @@ export class GfActivitiesTableComponent
       if (!activity.error) {
         this.selectedRows.toggle(activity);
       }
-    } else if (
-      this.hasPermissionToOpenDetails &&
-      this.isExcludedFromAnalysis(activity) === false &&
-      activity.isDraft === false &&
-      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
-    ) {
+    } else if (this.canClickActivity(activity)) {
       this.activityClicked.emit({
         dataSource: activity.SymbolProfile.dataSource,
         symbol: activity.SymbolProfile.symbol
       });
     }
+  }
+
+  public canClickActivity(activity: Activity) {
+    return (
+      this.hasPermissionToOpenDetails &&
+      this.isExcludedFromAnalysis(activity) === false &&
+      activity.isDraft === false &&
+      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
+    );
   }
 
   public onCloneActivity(aActivity: OrderWithAccount) {
