@@ -1,3 +1,4 @@
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
@@ -57,6 +58,7 @@ import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  arrowDownCircleOutline,
   createOutline,
   flagOutline,
   readerOutline,
@@ -167,6 +169,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     addIcons({
+      arrowDownCircleOutline,
       createOutline,
       flagOutline,
       readerOutline,
@@ -555,6 +558,37 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
   public onClose() {
     this.dialogRef.close();
+  }
+
+  public onCloseHolding() {
+    const today = new Date();
+
+    const activity: CreateOrderDto = {
+      accountId: this.accounts.length === 1 ? this.accounts[0].id : null,
+      comment: null,
+      currency: this.SymbolProfile.currency,
+      dataSource: this.SymbolProfile.dataSource,
+      date: today.toISOString(),
+      fee: 0,
+      quantity: this.quantity,
+      symbol: this.SymbolProfile.symbol,
+      tags: this.tags.map(({ id }) => {
+        return id;
+      }),
+      type: 'SELL',
+      unitPrice: this.marketPrice
+    };
+
+    this.dataService
+      .postOrder(activity)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(
+          internalRoutes.portfolio.subRoutes.activities.routerLink
+        );
+
+        this.dialogRef.close();
+      });
   }
 
   public onExport() {
