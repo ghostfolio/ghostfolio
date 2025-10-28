@@ -1,4 +1,5 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
 import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
@@ -271,7 +272,10 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   public openLoginDialog() {
-    const dialogRef = this.dialog.open(GfLoginWithAccessTokenDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfLoginWithAccessTokenDialogComponent,
+      LoginWithAccessTokenDialogParams
+    >(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
         accessToken: '',

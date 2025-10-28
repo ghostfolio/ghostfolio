@@ -430,7 +430,10 @@ export class GfAdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(GfAssetProfileDialogComponent, {
+        const dialogRef = this.dialog.open<
+          GfAssetProfileDialogComponent,
+          AssetProfileDialogParams
+        >(GfAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -438,7 +441,7 @@ export class GfAdminMarketDataComponent
             colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          } as AssetProfileDialogParams,
+          },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
@@ -465,17 +468,17 @@ export class GfAdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(
+        const dialogRef = this.dialog.open<
           GfCreateAssetProfileDialogComponent,
-          {
-            autoFocus: false,
-            data: {
-              deviceType: this.deviceType,
-              locale: this.user?.settings?.locale
-            } as CreateAssetProfileDialogParams,
-            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-          }
-        );
+          CreateAssetProfileDialogParams
+        >(GfCreateAssetProfileDialogComponent, {
+          autoFocus: false,
+          data: {
+            deviceType: this.deviceType,
+            locale: this.user?.settings?.locale
+          },
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
 
         dialogRef
           .afterClosed()
