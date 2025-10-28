@@ -133,14 +133,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (params['userDetailDialog'] && params['userId']) {
-          this.openUserDetailDialog(params['userId']);
-        }
-      });
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -169,6 +161,23 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.fetchUsers();
+
+    // Handle route parameter changes when component is reused
+    this.route.params
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['userId']) {
+          // If data is already loaded, open dialog immediately
+          if (this.dataSource.data.length > 0) {
+            this.openUserDetailDialog(params['userId']);
+          } else {
+            // If data is not loaded yet, wait for it to load
+            this.fetchUsers().then(() => {
+              this.openUserDetailDialog(params['userId']);
+            });
+          }
+        }
+      });
   }
 
   public formatDistanceToNow(aDateString: string) {
@@ -245,9 +254,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onOpenUserDetailDialog(userId: string) {
-    this.router.navigate([], {
-      queryParams: { userId, userDetailDialog: true }
-    });
+    this.router.navigate(['./', userId], { relativeTo: this.route });
   }
 
   public ngOnDestroy() {
@@ -255,50 +262,51 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
+  private fetchUsers(
+    { pageIndex }: { pageIndex: number } = { pageIndex: 0 }
+  ): Promise<void> {
     this.isLoading = true;
 
     if (pageIndex === 0 && this.paginator) {
       this.paginator.pageIndex = 0;
     }
 
-    this.adminService
-      .fetchUsers({
-        skip: pageIndex * this.pageSize,
-        take: this.pageSize
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ count, users }) => {
-        this.dataSource = new MatTableDataSource(users);
-        this.totalItems = count;
+    return new Promise((resolve) => {
+      this.adminService
+        .fetchUsers({
+          skip: pageIndex * this.pageSize,
+          take: this.pageSize
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ count, users }) => {
+          this.dataSource = new MatTableDataSource(users);
+          this.totalItems = count;
 
-        this.isLoading = false;
+          this.isLoading = false;
 
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+          resolve();
+        });
+    });
   }
 
-  private openUserDetailDialog(aUserId: string) {
+  private openUserDetailDialog(userId: string) {
     const userData = this.dataSource.data.find(({ id }) => {
-      return id === aUserId;
+      return id === userId;
     });
 
     if (!userData) {
-      this.router.navigate(['.'], { relativeTo: this.route });
+      this.router.navigate(['../'], { relativeTo: this.route });
       return;
     }
 
-    const dialogRef = this.dialog.open<
-      GfUserDetailDialogComponent,
-      UserDetailDialogParams
-    >(GfUserDetailDialogComponent, {
+    const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
         userData,
         deviceType: this.deviceType,
-        hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale
-      },
+      } as UserDetailDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -308,7 +316,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.fetchUsers();
-        this.router.navigate(['.'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.route });
       });
   }
 }
