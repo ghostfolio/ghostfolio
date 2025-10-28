@@ -307,7 +307,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.fetchUsers();
         this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
