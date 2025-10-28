@@ -133,7 +133,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -162,7 +161,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.fetchUsers();
-    
+
     // Handle route parameter changes when component is reused
     this.route.params
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -263,7 +262,9 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }): Promise<void> {
+  private fetchUsers(
+    { pageIndex }: { pageIndex: number } = { pageIndex: 0 }
+  ): Promise<void> {
     this.isLoading = true;
 
     if (pageIndex === 0 && this.paginator) {
