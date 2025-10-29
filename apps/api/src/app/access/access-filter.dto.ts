@@ -8,7 +8,7 @@ import {
   ValidateNested
 } from 'class-validator';
 
-export class HoldingFilterDto {
+class HoldingFilterDto {
   @IsEnum(DataSource)
   dataSource: DataSource;
 
@@ -29,8 +29,8 @@ export class AccessFilterDto {
 
   @IsArray()
   @IsOptional()
-  @ValidateNested({ each: true })
   @Type(() => HoldingFilterDto)
+  @ValidateNested({ each: true })
   holdings?: HoldingFilterDto[];
 
   @IsArray()

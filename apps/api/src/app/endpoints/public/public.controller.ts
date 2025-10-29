@@ -74,7 +74,7 @@ export class PublicController {
 
     if (accessFilter) {
       // Add account filters
-      if (accessFilter.accountIds && accessFilter.accountIds.length > 0) {
+      if (accessFilter.accountIds?.length > 0) {
         portfolioFilters.push(
           ...accessFilter.accountIds.map((accountId) => ({
             id: accountId,
@@ -84,7 +84,7 @@ export class PublicController {
       }
 
       // Add asset class filters
-      if (accessFilter.assetClasses && accessFilter.assetClasses.length > 0) {
+      if (accessFilter.assetClasses?.length > 0) {
         portfolioFilters.push(
           ...accessFilter.assetClasses.map((assetClass) => ({
             id: assetClass,
@@ -94,7 +94,7 @@ export class PublicController {
       }
 
       // Add tag filters
-      if (accessFilter.tagIds && accessFilter.tagIds.length > 0) {
+      if (accessFilter.tagIds?.length > 0) {
         portfolioFilters.push(
           ...accessFilter.tagIds.map((tagId) => ({
             id: tagId,
@@ -105,7 +105,7 @@ export class PublicController {
 
       // Add holding filters (symbol + dataSource)
       // Each holding needs both DATA_SOURCE and SYMBOL filters
-      if (accessFilter.holdings && accessFilter.holdings.length > 0) {
+      if (accessFilter.holdings?.length > 0) {
         accessFilter.holdings.forEach((holding) => {
           portfolioFilters.push(
             {
@@ -143,7 +143,6 @@ export class PublicController {
       })
     ]);
 
-    // Filter out only the base currency cash holdings
     const baseCurrency =
       user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
     const filteredHoldings = Object.fromEntries(
@@ -193,7 +192,6 @@ export class PublicController {
       withExcludedAccountsAndActivities: false
     });
 
-    // If multiple holdings, filter activities manually
     let filteredActivities = activities;
     if (hasMultipleHoldingFilters && accessFilter.holdings) {
       filteredActivities = activities.filter((activity) => {

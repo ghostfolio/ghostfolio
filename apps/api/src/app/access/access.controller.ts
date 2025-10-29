@@ -19,13 +19,23 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Access as AccessModel } from '@prisma/client';
+import { Access as AccessModel, Prisma } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { AccessSettings } from './access-settings.interface';
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
 import { UpdateAccessDto } from './update-access.dto';
+
+interface AccessFilter {
+  accountIds?: string[];
+  assetClasses?: string[];
+  holdings?: { dataSource: string; symbol: string }[];
+  tagIds?: string[];
+}
+
+interface AccessSettings {
+  filter?: AccessFilter;
+}
 
 @Controller('access')
 export class AccessController {
@@ -62,7 +72,7 @@ export class AccessController {
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
-        settings: settings as any,
+        settings: settings as Prisma.InputJsonValue,
         user: { connect: { id: this.request.user.id } }
       });
     } catch {
@@ -116,20 +126,20 @@ export class AccessController {
         if (granteeUser) {
           return {
             alias,
+            grantee: granteeUser?.id,
             id,
             permissions: accessPermissions,
             settings: settings as AccessSettings,
-            grantee: granteeUser?.id,
             type: 'PRIVATE'
           };
         }
 
         return {
           alias,
+          grantee: 'Public',
           id,
           permissions: accessPermissions,
           settings: settings as AccessSettings,
-          grantee: 'Public',
           type: 'PUBLIC'
         };
       }
@@ -177,7 +187,7 @@ export class AccessController {
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
           permissions: data.permissions,
-          settings: settings as any
+          settings: settings as Prisma.InputJsonValue
         },
         where: { id }
       });
