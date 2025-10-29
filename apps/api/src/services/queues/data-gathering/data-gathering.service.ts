@@ -107,8 +107,8 @@ export class DataGatheringService {
 
     await this.gatherSymbols({
       dataGatheringItems,
-      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-      force: true
+      force: true,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
   }
 
@@ -271,12 +271,12 @@ export class DataGatheringService {
 
   public async gatherSymbols({
     dataGatheringItems,
-    priority,
-    force = false
+    force = false,
+    priority
   }: {
     dataGatheringItems: DataGatheringItem[];
-    priority: number;
     force?: boolean;
+    priority: number;
   }) {
     await this.addJobsToQueue(
       dataGatheringItems.map(({ dataSource, date, symbol }) => {
@@ -284,8 +284,8 @@ export class DataGatheringService {
           data: {
             dataSource,
             date,
-            symbol,
-            force
+            force,
+            symbol
           },
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
           opts: {

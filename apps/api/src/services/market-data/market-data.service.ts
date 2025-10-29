@@ -207,9 +207,9 @@ export class MarketDataService {
   }
 
   public async replaceAllForSymbol({
+    data,
     dataSource,
-    symbol,
-    data
+    symbol
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
     /**
      * Atomically replace all market data for a symbol.

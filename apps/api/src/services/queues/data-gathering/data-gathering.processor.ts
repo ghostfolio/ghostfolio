@@ -159,9 +159,9 @@ export class DataGatheringProcessor {
 
       if (force) {
         await this.marketDataService.replaceAllForSymbol({
+          data,
           dataSource,
-          symbol,
-          data
+          symbol
         });
       } else {
         await this.marketDataService.updateMany({ data });
