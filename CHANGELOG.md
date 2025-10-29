@@ -5,15 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.212.0 - 2025-10-29
 
 ### Added
 
 - Added a close holding button to the holding detail dialog
+- Added the _Sponsors_ section to the about page
 - Extended the user detail dialog in the users section of the admin control panel
 
 ### Changed
 
+- Refactored the generation of the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
+- Refactored the generation of the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
+- Improved the usability of the user detail dialog in the users section of the admin control panel
 - Improved the language localization for German (`de`)
 
 ### Fixed
