@@ -100,7 +100,7 @@ export class DataGatheringProcessor {
     name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
   })
   public async gatherHistoricalMarketData(job: Job<DataGatheringItem>) {
-    const { dataSource, date, symbol, replaceExistingData } = job.data;
+    const { dataSource, date, force, symbol } = job.data;
 
     try {
       let currentDate = parseISO(date as unknown as string);
@@ -109,7 +109,7 @@ export class DataGatheringProcessor {
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
           currentDate,
           DATE_FORMAT
-        )}${replaceExistingData ? ' (replace mode)' : ''}`,
+        )}${force ? ' (replace mode)' : ''}`,
         `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
@@ -157,7 +157,7 @@ export class DataGatheringProcessor {
         currentDate = addDays(currentDate, 1);
       }
 
-      if (replaceExistingData) {
+      if (force) {
         await this.marketDataService.replaceAllForSymbol({
           dataSource,
           symbol,

@@ -15,11 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Ensured atomic data replacememt for historical market data fetching
 
 ### Fixed
 
 - Ensured the locale is available in the settings dialog to customize the rule thresholds of the _X-ray_ page
-- Ensured atomic data replacememt for historical market data fetching
 
 ## 2.211.0 - 2025-10-25
 
