@@ -228,6 +228,15 @@ export class GfActivitiesTableComponent
     return numSelectedRows === numTotalRows;
   }
 
+  public canClickActivity(activity: Activity) {
+    return (
+      this.hasPermissionToOpenDetails &&
+      this.isExcludedFromAnalysis(activity) === false &&
+      activity.isDraft === false &&
+      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
+    );
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
       activity.account?.isExcluded ||
@@ -252,15 +261,6 @@ export class GfActivitiesTableComponent
         symbol: activity.SymbolProfile.symbol
       });
     }
-  }
-
-  public canClickActivity(activity: Activity) {
-    return (
-      this.hasPermissionToOpenDetails &&
-      this.isExcludedFromAnalysis(activity) === false &&
-      activity.isDraft === false &&
-      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
-    );
   }
 
   public onCloneActivity(aActivity: OrderWithAccount) {
