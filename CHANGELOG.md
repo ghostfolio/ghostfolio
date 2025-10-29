@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the activities table menu with a _View Holding_ item
+
+## Unreleased
+
+### Added
+
 - Added a close holding button to the holding detail dialog
 - Added the _Sponsors_ section to the about page
 - Extended the user detail dialog in the users section of the admin control panel
-- Extended the activities table menu with a _View Holding_ item
 
 ### Changed
 
