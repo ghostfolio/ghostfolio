@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the activities table menu with a _View Holding_ item
+
 ### Changed
 
 - Improved the icon of the holdings tab on the home page
