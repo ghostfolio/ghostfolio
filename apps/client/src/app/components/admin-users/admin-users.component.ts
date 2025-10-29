@@ -288,14 +288,17 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(GfUserDetailDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfUserDetailDialogComponent,
+      UserDetailDialogParams
+    >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
         userData,
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale
-      } as UserDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -304,7 +307,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.fetchUsers();
         this.router.navigate(['.'], { relativeTo: this.route });
       });
   }

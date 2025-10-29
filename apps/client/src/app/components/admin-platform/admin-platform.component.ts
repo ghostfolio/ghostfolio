@@ -34,6 +34,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
 import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
+import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -153,19 +154,20 @@ export class GfAdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   private openCreatePlatformDialog() {
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<
       GfCreateOrUpdatePlatformDialogComponent,
-      {
-        data: {
-          platform: {
-            name: null,
-            url: null
-          }
-        },
-        height: this.deviceType === 'mobile' ? '98vh' : undefined,
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      CreateOrUpdatePlatformDialogParams
+    >(GfCreateOrUpdatePlatformDialogComponent, {
+      data: {
+        platform: {
+          id: null,
+          name: null,
+          url: null
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()
@@ -191,21 +193,29 @@ export class GfAdminPlatformComponent implements OnInit, OnDestroy {
       });
   }
 
-  private openUpdatePlatformDialog({ id, name, url }) {
-    const dialogRef = this.dialog.open(
+  private openUpdatePlatformDialog({
+    id,
+    name,
+    url
+  }: {
+    id: string;
+    name: string;
+    url: string;
+  }) {
+    const dialogRef = this.dialog.open<
       GfCreateOrUpdatePlatformDialogComponent,
-      {
-        data: {
-          platform: {
-            id,
-            name,
-            url
-          }
-        },
-        height: this.deviceType === 'mobile' ? '98vh' : undefined,
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      CreateOrUpdatePlatformDialogParams
+    >(GfCreateOrUpdatePlatformDialogComponent, {
+      data: {
+        platform: {
+          id,
+          name,
+          url
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()

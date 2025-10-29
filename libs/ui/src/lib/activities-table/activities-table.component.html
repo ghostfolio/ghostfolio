@@ -437,6 +437,14 @@
           class="no-max-width"
           xPosition="before"
         >
+          @if (canClickActivity(element)) {
+            <button mat-menu-item (click)="onClickActivity(element)">
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="wallet-outline" />
+                <span i18n>View Holding</span>
+              </span>
+            </button>
+          }
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
@@ -479,11 +487,7 @@
       *matRowDef="let row; columns: displayedColumns"
       mat-row
       [ngClass]="{
-        'cursor-pointer':
-          hasPermissionToOpenDetails &&
-          isExcludedFromAnalysis(row) === false &&
-          row.isDraft === false &&
-          ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
+        'cursor-pointer': canClickActivity(row)
       }"
       (click)="onClickActivity(row)"
     ></tr>
