@@ -39,7 +39,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -94,6 +94,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     MatFormFieldModule,
     MatTabsModule,
     NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -615,10 +616,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  public onTagsChanged(tags: Tag[]) {
-    this.holdingForm.get('tags').setValue(tags);
   }
 
   public onUpdateActivity(aActivity: Activity) {

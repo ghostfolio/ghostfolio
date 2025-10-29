@@ -411,13 +411,14 @@
       }
     </mat-tab-group>
 
-    <gf-tags-selector
-      [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-      [readonly]="!data.hasPermissionToUpdateOrder"
-      [tags]="holdingForm.get('tags')?.value"
-      [tagsAvailable]="tagsAvailable"
-      (tagsChanged)="onTagsChanged($event)"
-    />
+    <form [formGroup]="holdingForm">
+      <gf-tags-selector
+        formControlName="tags"
+        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+        [readonly]="!data.hasPermissionToUpdateOrder"
+        [tagsAvailable]="tagsAvailable"
+      />
+    </form>
 
     @if (
       data.hasPermissionToAccessAdminControl ||
