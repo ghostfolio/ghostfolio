@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the icon of the holdings tab on the home page for the _Zen Mode_
 - Improved the icon of the holdings tab in the account detail dialog
 - Migrated the tags selector component in the holding detail dialog to form control
+- Improved the language localization for German (`de`)
 
 ## 2.212.0 - 2025-10-29
 
