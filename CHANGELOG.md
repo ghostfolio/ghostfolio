@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
-- Ensured atomic data replacememt for historical market data fetching
+- Ensured atomic data replacement for historical market data fetching
 
 ### Fixed
 
