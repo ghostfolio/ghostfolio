@@ -43,9 +43,9 @@ import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  albumsOutline,
   cashOutline,
-  swapVerticalOutline,
-  walletOutline
+  swapVerticalOutline
 } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -129,7 +129,7 @@ export class GfAccountDetailDialogComponent implements OnDestroy, OnInit {
         }
       });
 
-    addIcons({ cashOutline, swapVerticalOutline, walletOutline });
+    addIcons({ albumsOutline, cashOutline, swapVerticalOutline });
   }
 
   public ngOnInit() {
