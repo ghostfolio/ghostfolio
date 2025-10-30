@@ -181,14 +181,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.holdingForm = this.formBuilder.group({
-      tags: [] as string[]
-    });
-
     const filters: Filter[] = [
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
+
+    this.holdingForm = this.formBuilder.group({
+      tags: [] as string[]
+    });
 
     this.holdingForm
       .get('tags')
