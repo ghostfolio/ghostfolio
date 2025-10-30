@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the activities table menu with a _View Holding_ item
-- Migrated tags selector component in holding detail dialog to form control
 
 ### Changed
 
 - Improved the icon of the holdings tab on the home page
 - Improved the icon of the holdings tab on the home page for the _Zen Mode_
 - Improved the icon of the holdings tab in the account detail dialog
+- Migrated the tags selector component in the holding detail dialog to form control
 
 ## 2.212.0 - 2025-10-29
 
