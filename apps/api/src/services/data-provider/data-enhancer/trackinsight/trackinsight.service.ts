@@ -202,9 +202,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
         return undefined;
       })
-      .catch((error) => {
+      .catch(({ message }) => {
         Logger.error(
-          `Failed to search Trackinsight symbol for ${symbol} (${error.message})`,
+          `Failed to search Trackinsight symbol for ${symbol} (${message})`,
           'TrackinsightDataEnhancerService'
         );
 
