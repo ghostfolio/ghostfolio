@@ -7,15 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the icon of the _View Holding_ menu item in the activities table
+- Refreshed the cryptocurrencies list
+
+## 2.213.0 - 2025-10-30
+
 ### Added
 
 - Extended the activities table menu with a _View Holding_ item
+- Added the error logging to the symbol lookup in the _Trackinsight_ data enhancer
 
 ### Changed
 
 - Improved the icon of the holdings tab on the home page
 - Improved the icon of the holdings tab on the home page for the _Zen Mode_
 - Improved the icon of the holdings tab in the account detail dialog
+- Migrated the tags selector component in the holding detail dialog to form control
+- Improved the language localization for German (`de`)
+- Upgraded `nestjs` from version `11.1.3` to `11.1.8`
 
 ## 2.212.0 - 2025-10-29
 

@@ -39,7 +39,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -94,6 +94,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     MatFormFieldModule,
     MatTabsModule,
     NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -103,7 +104,6 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public activitiesCount: number;
-  public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
   public assetSubClass: string;
@@ -124,6 +124,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
+  public holdingForm: FormGroup;
   public investmentInBaseCurrencyWithCurrencyEffect: number;
   public investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
   public isUUID = isUUID;
@@ -180,16 +181,16 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.activityForm = this.formBuilder.group({
-      tags: [] as string[]
-    });
-
     const filters: Filter[] = [
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
 
-    this.activityForm
+    this.holdingForm = this.formBuilder.group({
+      tags: [] as string[]
+    });
+
+    this.holdingForm
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags: Tag[]) => {
@@ -430,7 +431,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             };
           });
 
-          this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
+          this.holdingForm.setValue({ tags: this.tags }, { emitEvent: false });
 
           this.value = value;
 
@@ -615,10 +616,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  public onTagsChanged(tags: Tag[]) {
-    this.activityForm.get('tags').setValue(tags);
   }
 
   public onUpdateActivity(aActivity: Activity) {
