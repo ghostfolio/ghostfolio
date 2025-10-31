@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.213.0 - 2025-10-30
 
+- Added a dedicated Slack community link
+
 ### Added
 
 - Extended the activities table menu with a _View Holding_ item
