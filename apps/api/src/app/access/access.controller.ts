@@ -34,65 +34,6 @@ export class AccessController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @HasPermission(permissions.createAccess)
-  @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async createAccess(
-    @Body() data: CreateAccessDto
-  ): Promise<AccessModel> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    try {
-      const settings: AccessSettings = data.filter
-        ? { filter: data.filter }
-        : {};
-
-      return this.accessService.createAccess({
-        alias: data.alias || undefined,
-        granteeUser: data.granteeUserId
-          ? { connect: { id: data.granteeUserId } }
-          : undefined,
-        permissions: data.permissions,
-        settings: settings as Prisma.InputJsonValue,
-        user: { connect: { id: this.request.user.id } }
-      });
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.BAD_REQUEST),
-        StatusCodes.BAD_REQUEST
-      );
-    }
-  }
-
-  @Delete(':id')
-  @HasPermission(permissions.deleteAccess)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
-    const originalAccess = await this.accessService.access({
-      id,
-      userId: this.request.user.id
-    });
-
-    if (!originalAccess) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return this.accessService.deleteAccess({
-      id
-    });
-  }
-
   @Get()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAllAccesses(): Promise<Access[]> {
@@ -133,6 +74,44 @@ export class AccessController {
         };
       }
     );
+  }
+
+  @HasPermission(permissions.createAccess)
+  @Post()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async createAccess(
+    @Body() data: CreateAccessDto
+  ): Promise<AccessModel> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    try {
+      const settings: AccessSettings = data.filter
+        ? { filter: data.filter }
+        : {};
+
+      return this.accessService.createAccess({
+        alias: data.alias || undefined,
+        granteeUser: data.granteeUserId
+          ? { connect: { id: data.granteeUserId } }
+          : undefined,
+        permissions: data.permissions,
+        settings: settings as Prisma.InputJsonValue,
+        user: { connect: { id: this.request.user.id } }
+      });
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
   }
 
   @HasPermission(permissions.updateAccess)
@@ -186,5 +165,26 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  @Delete(':id')
+  @HasPermission(permissions.deleteAccess)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
+    const originalAccess = await this.accessService.access({
+      id,
+      userId: this.request.user.id
+    });
+
+    if (!originalAccess) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accessService.deleteAccess({
+      id
+    });
   }
 }
