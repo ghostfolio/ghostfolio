@@ -56,8 +56,8 @@ import {
   documentTextOutline,
   ellipsisHorizontal,
   ellipsisVertical,
-  trashOutline,
-  walletOutline
+  tabletLandscapeOutline,
+  trashOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription, takeUntil } from 'rxjs';
@@ -154,8 +154,8 @@ export class GfActivitiesTableComponent
       documentTextOutline,
       ellipsisHorizontal,
       ellipsisVertical,
-      trashOutline,
-      walletOutline
+      tabletLandscapeOutline,
+      trashOutline
     });
   }
 
