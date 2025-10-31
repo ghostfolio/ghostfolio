@@ -227,12 +227,7 @@ export class PublicController {
     });
 
     const publicPortfolioResponse: PublicPortfolioResponse = {
-      alias: access.alias,
       createdAt,
-      hasDetails,
-      latestActivities,
-      holdings: {},
-      markets,
       performance: {
         '1d': {
           relativeChange:
@@ -246,7 +241,12 @@ export class PublicController {
           relativeChange:
             performanceYtd.netPerformancePercentageWithCurrencyEffect
         }
-      }
+      },
+      alias: access.alias,
+      hasDetails,
+      holdings: {},
+      latestActivities,
+      markets
     };
 
     const totalValue = getSum(
