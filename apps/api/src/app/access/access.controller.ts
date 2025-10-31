@@ -1,7 +1,7 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { Access } from '@ghostfolio/common/interfaces';
+import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -25,17 +25,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
 import { UpdateAccessDto } from './update-access.dto';
-
-interface AccessFilter {
-  accountIds?: string[];
-  assetClasses?: string[];
-  holdings?: { dataSource: string; symbol: string }[];
-  tagIds?: string[];
-}
-
-interface AccessSettings {
-  filter?: AccessFilter;
-}
 
 @Controller('access')
 export class AccessController {

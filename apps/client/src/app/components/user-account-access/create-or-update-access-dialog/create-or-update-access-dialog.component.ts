@@ -1,6 +1,10 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
-import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Filter,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import {
   GfPortfolioFilterFormComponent,
@@ -155,7 +159,7 @@ export class GfCreateOrUpdateAccessDialogComponent
     | {
         accountIds?: string[];
         assetClasses?: string[];
-        holdings?: { dataSource: string; symbol: string }[];
+        holdings?: AssetProfileIdentifier[];
         tagIds?: string[];
       }
     | undefined {
@@ -175,7 +179,7 @@ export class GfCreateOrUpdateAccessDialogComponent
     const filter: {
       accountIds?: string[];
       assetClasses?: string[];
-      holdings?: { dataSource: string; symbol: string }[];
+      holdings?: AssetProfileIdentifier[];
       tagIds?: string[];
     } = {};
 
@@ -262,7 +266,7 @@ export class GfCreateOrUpdateAccessDialogComponent
       | {
           accountIds?: string[];
           assetClasses?: string[];
-          holdings?: { dataSource: string; symbol: string }[];
+          holdings?: AssetProfileIdentifier[];
           tagIds?: string[];
         }
       | undefined

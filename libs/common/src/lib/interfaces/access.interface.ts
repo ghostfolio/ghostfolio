@@ -2,10 +2,12 @@ import { AccessType } from '@ghostfolio/common/types';
 
 import { AccessPermission } from '@prisma/client';
 
+import { AssetProfileIdentifier } from './asset-profile-identifier.interface';
+
 export interface AccessFilter {
   accountIds?: string[];
   assetClasses?: string[];
-  holdings?: { dataSource: string; symbol: string }[];
+  holdings?: AssetProfileIdentifier[];
   tagIds?: string[];
 }
 
