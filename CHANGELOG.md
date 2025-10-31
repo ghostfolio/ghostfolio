@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the icon of the _View Holding_ menu item in the activities table
 - Refreshed the cryptocurrencies list
 
 ## 2.213.0 - 2025-10-30
