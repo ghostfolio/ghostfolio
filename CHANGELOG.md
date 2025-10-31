@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Add Average Buy Price in holdings table
+
 ### Changed
 
 - Improved the icon of the _View Holding_ menu item in the activities table
