@@ -106,18 +106,18 @@ export class PublicController {
       // Add holding filters (symbol + dataSource)
       // Each holding needs both DATA_SOURCE and SYMBOL filters
       if (accessFilter.holdings?.length > 0) {
-        accessFilter.holdings.forEach((holding) => {
+        for (const { dataSource, symbol } of accessFilter.holdings) {
           portfolioFilters.push(
             {
-              id: holding.dataSource,
+              id: dataSource,
               type: 'DATA_SOURCE' as const
             },
             {
-              id: holding.symbol,
+              id: symbol,
               type: 'SYMBOL' as const
             }
           );
-        });
+        }
       }
     }
 
@@ -185,33 +185,18 @@ export class PublicController {
       includeDrafts: false,
       sortColumn: 'date',
       sortDirection: 'desc',
-      take: hasMultipleHoldingFilters ? 1000 : 10, // Get more if we need to filter manually
+      take: 10,
       types: [ActivityType.BUY, ActivityType.SELL],
       userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: user.id,
       withExcludedAccountsAndActivities: false
     });
 
-    let filteredActivities = activities;
-    if (hasMultipleHoldingFilters && accessFilter.holdings) {
-      filteredActivities = activities.filter((activity) => {
-        return accessFilter.holdings.some(
-          (holding) =>
-            activity.SymbolProfile.dataSource === holding.dataSource &&
-            activity.SymbolProfile.symbol === holding.symbol
-        );
-      });
-    }
-
-    // Take only the latest 10 activities after filtering
-    const latestActivitiesData = filteredActivities.slice(0, 10);
-
-    // Experimental
     const latestActivities = this.configurationService.get(
       'ENABLE_FEATURE_SUBSCRIPTION'
     )
       ? []
-      : latestActivitiesData.map(
+      : activities.map(
           ({
             currency,
             date,
