@@ -14,6 +14,27 @@ import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
 export class AiService {
+  private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: ({
+    key:
+      | 'ALLOCATION_PERCENTAGE'
+      | 'ASSET_CLASS'
+      | 'ASSET_SUB_CLASS'
+      | 'CURRENCY'
+      | 'NAME'
+      | 'SYMBOL';
+  } & ColumnDescriptor)[] = [
+    { key: 'NAME', name: 'Name' },
+    { key: 'SYMBOL', name: 'Symbol' },
+    { key: 'CURRENCY', name: 'Currency' },
+    { key: 'ASSET_CLASS', name: 'Asset Class' },
+    { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' },
+    {
+      align: 'right',
+      key: 'ALLOCATION_PERCENTAGE',
+      name: 'Allocation in Percentage'
+    }
+  ];
+
   public constructor(
     private readonly portfolioService: PortfolioService,
     private readonly propertyService: PropertyService
@@ -59,14 +80,10 @@ export class AiService {
       userId
     });
 
-    const holdingsTableColumns: ColumnDescriptor[] = [
-      { name: 'Name' },
-      { name: 'Symbol' },
-      { name: 'Currency' },
-      { name: 'Asset Class' },
-      { name: 'Asset Sub Class' },
-      { align: 'right', name: 'Allocation in Percentage' }
-    ];
+    const holdingsTableColumns: ColumnDescriptor[] =
+      AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ align, name }) => {
+        return { name, align: align ?? 'left' };
+      });
 
     const holdingsTableRows = Object.values(holdings)
       .sort((a, b) => {
@@ -78,17 +95,45 @@ export class AiService {
           assetClass,
           assetSubClass,
           currency,
-          name,
+          name: label,
           symbol
         }) => {
-          return {
-            Name: name,
-            Symbol: symbol,
-            Currency: currency,
-            'Asset Class': assetClass ?? '',
-            'Asset Sub Class': assetSubClass ?? '',
-            'Allocation in Percentage': `${(allocationInPercentage * 100).toFixed(3)}%`
-          };
+          return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
+            (row, { key, name }) => {
+              switch (key) {
+                case 'ALLOCATION_PERCENTAGE':
+                  row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
+                  break;
+
+                case 'ASSET_CLASS':
+                  row[name] = assetClass ?? '';
+                  break;
+
+                case 'ASSET_SUB_CLASS':
+                  row[name] = assetSubClass ?? '';
+                  break;
+
+                case 'CURRENCY':
+                  row[name] = currency;
+                  break;
+
+                case 'NAME':
+                  row[name] = label;
+                  break;
+
+                case 'SYMBOL':
+                  row[name] = symbol;
+                  break;
+
+                default:
+                  row[name] = '';
+                  break;
+              }
+
+              return row;
+            },
+            {} as Record<string, string>
+          );
         }
       );
 
