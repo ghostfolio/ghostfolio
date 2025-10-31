@@ -212,19 +212,29 @@ export class MarketDataService {
     symbol
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
     /**
-     * Atomically replace all market data for a symbol.
-     * Deletes existing data and inserts new data within a single transaction
-     * to prevent data loss if the operation fails.
+     * Atomically replace market data for a symbol within a date range.
+     * Deletes existing data in the range and inserts new data within a single
+     * transaction to prevent data loss if the operation fails.
      */
     await this.prismaService.$transaction(async (prisma) => {
-      await prisma.marketData.deleteMany({
-        where: {
-          dataSource,
-          symbol
-        }
-      });
-
       if (data.length > 0) {
+        // Find the earliest and latest dates in the incoming data
+        const dates = data.map(({ date }) => date as Date);
+        const minDate = new Date(Math.min(...dates.map((d) => d.getTime())));
+        const maxDate = new Date(Math.max(...dates.map((d) => d.getTime())));
+
+        // Only delete data within the date range that will be replaced
+        await prisma.marketData.deleteMany({
+          where: {
+            dataSource,
+            symbol,
+            date: {
+              gte: minDate,
+              lte: maxDate
+            }
+          }
+        });
+
         await prisma.marketData.createMany({
           data: data.map(({ dataSource, date, marketPrice, state }) => ({
             dataSource: dataSource as DataSource,
