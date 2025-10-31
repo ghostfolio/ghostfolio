@@ -210,7 +210,6 @@ export class GfCreateOrUpdateAccessDialogComponent
   private loadFilterData() {
     const existingFilter = this.data.access.settings?.filter;
 
-    // Cargar cuentas
     this.dataService
       .fetchAccounts()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -219,7 +218,6 @@ export class GfCreateOrUpdateAccessDialogComponent
         this.updateFiltersFormControl(existingFilter);
       });
 
-    // Cargar holdings y asset classes
     this.dataService
       .fetchPortfolioDetails({})
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -227,7 +225,6 @@ export class GfCreateOrUpdateAccessDialogComponent
         if (response.holdings) {
           this.holdings = Object.values(response.holdings);
 
-          // Extraer asset classes únicas
           const assetClassesSet = new Set<string>();
           Object.values(response.holdings).forEach((holding) => {
             if (holding.assetClass) {
@@ -245,7 +242,6 @@ export class GfCreateOrUpdateAccessDialogComponent
         this.changeDetectorRef.markForCheck();
       });
 
-    // Cargar tags
     this.dataService
       .fetchTags()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -308,7 +304,6 @@ export class GfCreateOrUpdateAccessDialogComponent
   }
 
   private async createAccess() {
-    // Construir el objeto filter si estamos en modo PUBLIC
     const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
 
     const access: CreateAccessDto = {
@@ -350,7 +345,6 @@ export class GfCreateOrUpdateAccessDialogComponent
   }
 
   private async updateAccess() {
-    // Construir el objeto filter si estamos en modo PUBLIC
     const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
 
     const access: UpdateAccessDto = {
