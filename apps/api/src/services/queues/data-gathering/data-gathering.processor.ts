@@ -109,7 +109,7 @@ export class DataGatheringProcessor {
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
           currentDate,
           DATE_FORMAT
-        )}${force ? ' (replace mode)' : ''}`,
+        )}${force ? ' (forced update)' : ''}`,
         `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
@@ -158,7 +158,7 @@ export class DataGatheringProcessor {
       }
 
       if (force) {
-        await this.marketDataService.replaceAllForSymbol({
+        await this.marketDataService.replaceForSymbol({
           data,
           dataSource,
           symbol
