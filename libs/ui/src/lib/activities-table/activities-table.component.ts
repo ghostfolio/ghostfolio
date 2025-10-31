@@ -56,7 +56,8 @@ import {
   documentTextOutline,
   ellipsisHorizontal,
   ellipsisVertical,
-  trashOutline
+  trashOutline,
+  walletOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription, takeUntil } from 'rxjs';
@@ -153,7 +154,8 @@ export class GfActivitiesTableComponent
       documentTextOutline,
       ellipsisHorizontal,
       ellipsisVertical,
-      trashOutline
+      trashOutline,
+      walletOutline
     });
   }
 
@@ -226,6 +228,15 @@ export class GfActivitiesTableComponent
     return numSelectedRows === numTotalRows;
   }
 
+  public canClickActivity(activity: Activity) {
+    return (
+      this.hasPermissionToOpenDetails &&
+      this.isExcludedFromAnalysis(activity) === false &&
+      activity.isDraft === false &&
+      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
+    );
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
       activity.account?.isExcluded ||
@@ -244,12 +255,7 @@ export class GfActivitiesTableComponent
       if (!activity.error) {
         this.selectedRows.toggle(activity);
       }
-    } else if (
-      this.hasPermissionToOpenDetails &&
-      this.isExcludedFromAnalysis(activity) === false &&
-      activity.isDraft === false &&
-      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
-    ) {
+    } else if (this.canClickActivity(activity)) {
       this.activityClicked.emit({
         dataSource: activity.SymbolProfile.dataSource,
         symbol: activity.SymbolProfile.symbol

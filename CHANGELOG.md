@@ -9,12 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a close holding button to the holding detail dialog
 - Extended the holdings endpoint to include the performance with currency effect for cash
+
+## 2.213.0 - 2025-10-30
+
+### Added
+
+- Extended the activities table menu with a _View Holding_ item
+- Added the error logging to the symbol lookup in the _Trackinsight_ data enhancer
+
+### Changed
+
+- Improved the icon of the holdings tab on the home page
+- Improved the icon of the holdings tab on the home page for the _Zen Mode_
+- Improved the icon of the holdings tab in the account detail dialog
+- Migrated the tags selector component in the holding detail dialog to form control
+- Improved the language localization for German (`de`)
+- Upgraded `nestjs` from version `11.1.3` to `11.1.8`
+
+## 2.212.0 - 2025-10-29
+
+### Added
+
+- Added a close holding button to the holding detail dialog
+- Added the _Sponsors_ section to the about page
 - Extended the user detail dialog in the users section of the admin control panel
 
 ### Changed
 
+- Refactored the generation of the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
+- Refactored the generation of the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
+- Improved the usability of the user detail dialog in the users section of the admin control panel
 - Improved the language localization for German (`de`)
 
 ### Fixed

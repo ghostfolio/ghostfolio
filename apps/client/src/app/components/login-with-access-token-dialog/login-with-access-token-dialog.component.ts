@@ -26,6 +26,8 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 
+import { LoginWithAccessTokenDialogParams } from './interfaces/interfaces';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -51,7 +53,7 @@ export class GfLoginWithAccessTokenDialogComponent {
   public isAccessTokenHidden = true;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: LoginWithAccessTokenDialogParams,
     public dialogRef: MatDialogRef<GfLoginWithAccessTokenDialogComponent>,
     private internetIdentityService: InternetIdentityService,
     private router: Router,
