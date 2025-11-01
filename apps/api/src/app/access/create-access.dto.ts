@@ -1,3 +1,5 @@
+import { AccessFilter } from '@ghostfolio/common/interfaces';
+
 import { AccessPermission } from '@prisma/client';
 import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
@@ -5,6 +7,9 @@ export class CreateAccessDto {
   @IsOptional()
   @IsString()
   alias?: string;
+
+  @IsOptional()
+  filter?: AccessFilter;
 
   @IsOptional()
   @IsUUID()

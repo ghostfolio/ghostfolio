@@ -59,6 +59,24 @@
         </mat-form-field>
       </div>
     }
+
+    @if (showFilterPanel) {
+      <div class="mt-4">
+        <h2 class="filter-settings-title" i18n>Filter Settings (Optional)</h2>
+        <p class="filter-settings-description text-muted" i18n>
+          Configure which accounts, holdings, tags, and asset classes will be
+          visible in this public access. Leave empty to show all data.
+        </p>
+
+        <gf-portfolio-filter-form
+          formControlName="filters"
+          [accounts]="accounts"
+          [assetClasses]="assetClasses"
+          [holdings]="holdings"
+          [tags]="tags"
+        />
+      </div>
+    }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">
