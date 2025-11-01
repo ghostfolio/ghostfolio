@@ -1,5 +1,4 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -43,7 +42,6 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
-    private internetIdentityService: InternetIdentityService,
     private router: Router,
     private tokenStorageService: TokenStorageService
   ) {
@@ -71,16 +69,6 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
       globalPermissions,
       permissions.createUserAccount
     );
-  }
-
-  public async onLoginWithInternetIdentity() {
-    try {
-      const { authToken } = await this.internetIdentityService.login();
-
-      this.tokenStorageService.saveToken(authToken);
-
-      await this.router.navigate(['/']);
-    } catch {}
   }
 
   public openShowAccessTokenDialog() {
