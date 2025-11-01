@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-09-17T00:00:00.000Z",
+  "createdAt": "2025-10-31T00:00:00.000Z",
   "data": [
     {
       "name": "Activepieces",
@@ -15,6 +15,11 @@
       "name": "Argos",
       "description": "Argos provides the developer tools to debug tests and detect visual regressions.",
       "href": "https://argos-ci.com"
+    },
+    {
+      "name": "Bifrost",
+      "description": "Fastest LLM gateway with adaptive load balancer, cluster mode, guardrails, 1000+ models support & <100 µs overhead at 5k RPS.",
+      "href": "https://www.getmaxim.ai/bifrost"
     },
     {
       "name": "Cal.com",
@@ -55,11 +60,6 @@
       "name": "Inbox Zero",
       "description": "Inbox Zero makes it easy to clean up your inbox and reach inbox zero fast. It provides bulk newsletter unsubscribe, cold email blocking, email analytics, and AI automations.",
       "href": "https://getinboxzero.com"
-    },
-    {
-      "name": "Infisical",
-      "description": "Open source, end-to-end encrypted platform that lets you securely manage secrets and configs across your team, devices, and infrastructure.",
-      "href": "https://infisical.com"
     },
     {
       "name": "KeepHQ",
