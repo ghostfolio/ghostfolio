@@ -33,10 +33,11 @@ import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import OpenColor from 'open-color';
 
 import { GetColorParams } from './interfaces/interfaces';
 
-const { gray, green, red } = require('open-color');
+const { gray, green, red } = OpenColor;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
