@@ -63,28 +63,28 @@
     "build": {
       "executor": "@nx/angular:browser-esbuild",
       "options": {
-        "deleteOutputPath": false,
-        "localize": true,
-        "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "main": "apps/client/src/main.ts",
-        "polyfills": "apps/client/src/polyfills.ts",
+        "outputPath": "dist/apps/client",
         "tsConfig": "apps/client/tsconfig.app.json",
+        "buildOptimizer": false,
+        "deleteOutputPath": false,
+        "extractLicenses": false,
+        "localize": true,
+        "namedChunks": true,
+        "ngswConfigPath": "apps/client/ngsw-config.json",
+        "optimization": false,
+        "polyfills": "apps/client/src/polyfills.ts",
+        "scripts": ["node_modules/marked/marked.min.js"],
+        "serviceWorker": true,
+        "sourceMap": true,
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",
           "apps/client/src/styles.scss",
           "node_modules/open-color/open-color.css"
         ],
-        "scripts": ["node_modules/marked/marked.min.js"],
-        "vendorChunk": true,
-        "extractLicenses": false,
-        "buildOptimizer": false,
-        "sourceMap": true,
-        "optimization": false,
-        "namedChunks": true,
-        "serviceWorker": true,
-        "ngswConfigPath": "apps/client/ngsw-config.json"
+        "vendorChunk": true
       },
       "configurations": {
         "development-ca": {
@@ -136,19 +136,6 @@
           "localize": ["zh"]
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/client/src/environments/environment.ts",
-              "with": "apps/client/src/environments/environment.prod.ts"
-            }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true,
           "budgets": [
             {
               "type": "initial",
@@ -160,7 +147,20 @@
               "maximumWarning": "6kb",
               "maximumError": "10kb"
             }
-          ]
+          ],
+          "buildOptimizer": true,
+          "extractLicenses": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/client/src/environments/environment.ts",
+              "with": "apps/client/src/environments/environment.prod.ts"
+            }
+          ],
+          "namedChunks": false,
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "vendorChunk": false
         }
       },
       "outputs": ["{options.outputPath}"],
