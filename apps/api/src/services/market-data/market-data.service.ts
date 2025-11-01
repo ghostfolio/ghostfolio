@@ -147,8 +147,8 @@ export class MarketDataService {
         let minTime = Infinity;
         let maxTime = -Infinity;
 
-        for (const item of data) {
-          const time = (item.date as Date).getTime();
+        for (const { date } of data) {
+          const time = (date as Date).getTime();
 
           if (time < minTime) {
             minTime = time;
