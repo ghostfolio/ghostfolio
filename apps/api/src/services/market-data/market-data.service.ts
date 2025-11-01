@@ -144,26 +144,24 @@ export class MarketDataService {
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
     await this.prismaService.$transaction(async (prisma) => {
       if (data.length > 0) {
-        // Find the earliest and latest dates in the incoming data
-        const dates = data.map(({ date }) => {
-          return date as Date;
-        });
+        // Find the earliest and latest dates in the incoming data using a single loop
+        let minTime = Infinity;
+        let maxTime = -Infinity;
 
-        const minDate = new Date(
-          Math.min(
-            ...dates.map((date) => {
-              return date.getTime();
-            })
-          )
-        );
+        for (const item of data) {
+          const time = (item.date as Date).getTime();
 
-        const maxDate = new Date(
-          Math.max(
-            ...dates.map((date) => {
-              return date.getTime();
-            })
-          )
-        );
+          if (time < minTime) {
+            minTime = time;
+          }
+
+          if (time > maxTime) {
+            maxTime = time;
+          }
+        }
+
+        const minDate = new Date(minTime);
+        const maxDate = new Date(maxTime);
 
         await prisma.marketData.deleteMany({
           where: {
