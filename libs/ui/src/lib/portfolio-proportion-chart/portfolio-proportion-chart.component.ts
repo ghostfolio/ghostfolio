@@ -31,6 +31,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { isUUID } from 'class-validator';
 import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import OpenColor from 'open-color';
 
 import { translate } from '../i18n';
 
@@ -47,7 +48,7 @@ const {
   teal,
   violet,
   yellow
-} = require('open-color');
+} = OpenColor;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
