@@ -65,7 +65,7 @@ export class I18nService {
   }
 
   private parseLanguageCode(aFileName: string) {
-    const match = aFileName.match(/\.([a-zA-Z]+)\.xlf$/);
+    const match = /\.([a-zA-Z]+)\.xlf$/.exec(aFileName);
 
     return match ? match[1] : DEFAULT_LANGUAGE_CODE;
   }

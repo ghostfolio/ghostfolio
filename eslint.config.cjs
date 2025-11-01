@@ -189,8 +189,7 @@ module.exports = [
 
         // The following rules are part of @typescript-eslint/stylistic-type-checked
         // and can be remove once solved
-        '@typescript-eslint/prefer-nullish-coalescing': 'warn', // TODO: Requires strictNullChecks: true
-        '@typescript-eslint/prefer-regexp-exec': 'warn'
+        '@typescript-eslint/prefer-nullish-coalescing': 'warn' // TODO: Requires strictNullChecks: true
       }
     }))
 ];
