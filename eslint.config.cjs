@@ -152,7 +152,6 @@ module.exports = [
 
         // The following rules are part of eslint:recommended
         // and can be remove once solved
-        'no-constant-binary-expression': 'warn',
         'no-loss-of-precision': 'warn',
 
         // The following rules are part of @typescript-eslint/recommended-type-checked
