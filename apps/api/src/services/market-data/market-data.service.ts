@@ -144,7 +144,6 @@ export class MarketDataService {
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
     await this.prismaService.$transaction(async (prisma) => {
       if (data.length > 0) {
-        // Find the earliest and latest dates in the incoming data using a single loop
         let minTime = Infinity;
         let maxTime = -Infinity;
 
