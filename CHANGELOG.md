@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refreshed the cryptocurrencies list
 - Upgraded `countries-list` from version `3.1.1` to `3.2.0`
 - Upgraded `ng-extract-i18n-merge` from version `3.0.0` to `3.1.0`
+- Upgraded `twitter-api-v2` from version `1.23.0` to `1.27.0`
 
 ## 2.213.0 - 2025-10-30
 
