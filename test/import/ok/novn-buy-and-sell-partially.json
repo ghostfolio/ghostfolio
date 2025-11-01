@@ -27,7 +27,8 @@
   ],
   "user": {
     "settings": {
-      "currency": "CHF"
+      "currency": "CHF",
+      "performanceCalculationType": "ROAI"
     }
   }
 }
