@@ -2,7 +2,6 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -41,7 +40,6 @@ export class DataGatheringService {
     private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
@@ -95,8 +93,6 @@ export class DataGatheringService {
   }
 
   public async gatherSymbol({ dataSource, date, symbol }: DataGatheringItem) {
-    await this.marketDataService.deleteMany({ dataSource, symbol });
-
     const dataGatheringItems = (await this.getSymbolsMax())
       .filter((dataGatheringItem) => {
         return (
@@ -111,6 +107,7 @@ export class DataGatheringService {
 
     await this.gatherSymbols({
       dataGatheringItems,
+      force: true,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
   }
@@ -274,9 +271,11 @@ export class DataGatheringService {
 
   public async gatherSymbols({
     dataGatheringItems,
+    force = false,
     priority
   }: {
     dataGatheringItems: DataGatheringItem[];
+    force?: boolean;
     priority: number;
   }) {
     await this.addJobsToQueue(
@@ -285,6 +284,7 @@ export class DataGatheringService {
           data: {
             dataSource,
             date,
+            force,
             symbol
           },
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,

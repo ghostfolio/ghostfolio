@@ -20,4 +20,5 @@ export interface DataProviderResponse {
 
 export interface DataGatheringItem extends AssetProfileIdentifier {
   date?: Date;
+  force?: boolean;
 }

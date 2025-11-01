@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the icon of the _View Holding_ menu item in the activities table
+- Ensured atomic data replacement during historical market data gathering
 - Refreshed the cryptocurrencies list
 - Upgraded `ng-extract-i18n-merge` from version `3.0.0` to `3.1.0`
 
