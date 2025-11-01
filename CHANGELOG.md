@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ensured atomic data replacement during historical market data gathering
 - Removed _Internet Identity_ as a social login provider
 - Refreshed the cryptocurrencies list
+- Upgraded `countries-list` from version `3.1.1` to `3.2.0`
 - Upgraded `ng-extract-i18n-merge` from version `3.0.0` to `3.1.0`
 
 ## 2.213.0 - 2025-10-30
