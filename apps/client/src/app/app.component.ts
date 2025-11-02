@@ -1,5 +1,3 @@
-import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
-import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -22,7 +20,9 @@ import {
   ActivatedRoute,
   NavigationEnd,
   PRIMARY_OUTLET,
-  Router
+  Router,
+  RouterLink,
+  RouterOutlet
 } from '@angular/router';
 import { DataSource } from '@prisma/client';
 import { addIcons } from 'ionicons';
@@ -31,6 +31,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
+import { GfFooterComponent } from './components/footer/footer.component';
+import { GfHeaderComponent } from './components/header/header.component';
+import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogParams } from './components/holding-detail-dialog/interfaces/interfaces';
 import { NotificationService } from './core/notification/notification.service';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
@@ -42,7 +46,7 @@ import { UserService } from './services/user/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  standalone: false
+  imports: [RouterOutlet, RouterLink, GfHeaderComponent, GfFooterComponent]
 })
 export class AppComponent implements OnDestroy, OnInit {
   @HostBinding('class.has-info-message') get getHasMessage() {
