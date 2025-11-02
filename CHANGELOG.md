@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
 
+### Fixed
+
+- Fixed the style of the safe withdrawal rate selector in the _FIRE_ section (experimental)
+
 ## 2.214.0 - 2025-11-01
 
 ### Changed
