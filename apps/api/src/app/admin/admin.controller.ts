@@ -17,7 +17,7 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
-  AdminUsers,
+  AdminUsersResponse,
   EnhancedSymbolProfile,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
@@ -315,7 +315,7 @@ export class AdminController {
   public async getUsers(
     @Query('skip') skip?: number,
     @Query('take') take?: number
-  ): Promise<AdminUsers> {
+  ): Promise<AdminUsersResponse> {
     return this.adminService.getUsers({
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take
