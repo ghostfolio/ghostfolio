@@ -1,9 +1,16 @@
+@use '../../../../styles/variables.scss' as variables;
+
 :host {
   display: block;
 
   .safe-withdrawal-rate-select {
+    appearance: none;
     background-color: transparent;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='#{variables.$dark-primary-text}'><polygon points='0,0 10,0 5,6'/></svg>");
+    background-position: right 0 center;
+    background-repeat: no-repeat;
     color: rgb(var(--dark-primary-text));
+    padding: 0 0.75rem 0 0.25rem;
 
     &:focus {
       box-shadow: none;
@@ -14,6 +21,7 @@
 
 :host-context(.theme-dark) {
   .safe-withdrawal-rate-select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='#{variables.$light-primary-text}'><polygon points='0,0 10,0 5,6'/></svg>");
     color: rgb(var(--light-primary-text));
   }
 }

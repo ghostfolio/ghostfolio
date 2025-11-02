@@ -1,9 +1,6 @@
 @use '@angular/material' as mat;
 
-$dark-primary-text: rgba(black, 0.87);
-$light-primary-text: white;
-
-$mat-css-dark-theme-selector: '.theme-dark';
+@use './variables.scss' as variables;
 
 $gf-primary: (
   50: var(--gf-theme-primary-50),
@@ -21,20 +18,20 @@ $gf-primary: (
   A400: var(--gf-theme-primary-A400),
   A700: var(--gf-theme-primary-A700),
   contrast: (
-    50: $dark-primary-text,
-    100: $dark-primary-text,
-    200: $dark-primary-text,
-    300: $light-primary-text,
-    400: $light-primary-text,
-    500: $light-primary-text,
-    600: $light-primary-text,
-    700: $light-primary-text,
-    800: $light-primary-text,
-    900: $light-primary-text,
-    A100: $dark-primary-text,
-    A200: $light-primary-text,
-    A400: $light-primary-text,
-    A700: $light-primary-text
+    50: variables.$dark-primary-text,
+    100: variables.$dark-primary-text,
+    200: variables.$dark-primary-text,
+    300: variables.$light-primary-text,
+    400: variables.$light-primary-text,
+    500: variables.$light-primary-text,
+    600: variables.$light-primary-text,
+    700: variables.$light-primary-text,
+    800: variables.$light-primary-text,
+    900: variables.$light-primary-text,
+    A100: variables.$dark-primary-text,
+    A200: variables.$light-primary-text,
+    A400: variables.$light-primary-text,
+    A700: variables.$light-primary-text
   )
 );
 
@@ -54,20 +51,20 @@ $gf-secondary: (
   A400: var(--gf-theme-secondary-A400),
   A700: var(--gf-theme-secondary-A700),
   contrast: (
-    50: $dark-primary-text,
-    100: $dark-primary-text,
-    200: $dark-primary-text,
-    300: $light-primary-text,
-    400: $light-primary-text,
-    500: $light-primary-text,
-    600: $light-primary-text,
-    700: $light-primary-text,
-    800: $light-primary-text,
-    900: $light-primary-text,
-    A100: $dark-primary-text,
-    A200: $light-primary-text,
-    A400: $light-primary-text,
-    A700: $light-primary-text
+    50: variables.$dark-primary-text,
+    100: variables.$dark-primary-text,
+    200: variables.$dark-primary-text,
+    300: variables.$light-primary-text,
+    400: variables.$light-primary-text,
+    500: variables.$light-primary-text,
+    600: variables.$light-primary-text,
+    700: variables.$light-primary-text,
+    800: variables.$light-primary-text,
+    900: variables.$light-primary-text,
+    A100: variables.$dark-primary-text,
+    A200: variables.$light-primary-text,
+    A400: variables.$light-primary-text,
+    A700: variables.$light-primary-text
   )
 );
 
