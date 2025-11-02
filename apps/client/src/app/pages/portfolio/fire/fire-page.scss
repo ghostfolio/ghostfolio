@@ -1,7 +1,7 @@
 @use '../../../../styles/variables.scss' as variables;
 
 @mixin select-arrow($color) {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='#{$color}'><polygon points='0,0 10,0 5,6'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='#{$color}' height='6' width='10'><polygon points='0,0 10,0 5,6'/></svg>");
 }
 
 :host {
