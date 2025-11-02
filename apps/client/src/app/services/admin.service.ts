@@ -12,7 +12,7 @@ import {
   AdminData,
   AdminJobs,
   AdminMarketData,
-  AdminUsers,
+  AdminUsersResponse,
   DataProviderGhostfolioStatusResponse,
   EnhancedSymbolProfile,
   Filter
@@ -154,7 +154,7 @@ export class AdminService {
     params = params.append('skip', skip);
     params = params.append('take', take);
 
-    return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
+    return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
 
   public gather7Days() {

@@ -23,7 +23,7 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
-  AdminUsers,
+  AdminUsersResponse,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -513,7 +513,7 @@ export class AdminService {
   }: {
     skip?: number;
     take?: number;
-  }): Promise<AdminUsers> {
+  }): Promise<AdminUsersResponse> {
     const [count, users] = await Promise.all([
       this.countUsersWithAnalytics(),
       this.getUsersWithAnalytics({ skip, take })
@@ -818,7 +818,7 @@ export class AdminService {
   }: {
     skip?: number;
     take?: number;
-  }): Promise<AdminUsers['users']> {
+  }): Promise<AdminUsersResponse['users']> {
     let orderBy: Prisma.Enumerable<Prisma.UserOrderByWithRelationInput> = [
       { createdAt: 'desc' }
     ];
