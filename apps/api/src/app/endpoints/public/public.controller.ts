@@ -66,8 +66,7 @@ export class PublicController {
     }
 
     // Get filter configuration from access settings
-    const accessSettings = (access.settings ?? {}) as AccessSettings;
-    const accessFilter = accessSettings.filter;
+    const { filter: accessFilter } = (access.settings ?? {}) as AccessSettings;
 
     // Convert access filter to portfolio filters
     const portfolioFilters: Filter[] = [];
@@ -93,16 +92,6 @@ export class PublicController {
         );
       }
 
-      // Add tag filters
-      if (accessFilter.tagIds?.length > 0) {
-        portfolioFilters.push(
-          ...accessFilter.tagIds.map((tagId) => ({
-            id: tagId,
-            type: 'TAG' as const
-          }))
-        );
-      }
-
       // Add holding filters (symbol + dataSource)
       // Each holding needs both DATA_SOURCE and SYMBOL filters
       if (accessFilter.holdings?.length > 0) {
@@ -118,6 +107,16 @@ export class PublicController {
             }
           );
         }
+      }
+
+      // Add tag filters
+      if (accessFilter.tagIds?.length > 0) {
+        portfolioFilters.push(
+          ...accessFilter.tagIds.map((tagId) => ({
+            id: tagId,
+            type: 'TAG' as const
+          }))
+        );
       }
     }
 
@@ -156,8 +155,7 @@ export class PublicController {
 
     // Use filters for activities, but exclude DATA_SOURCE/SYMBOL filters
     // if there are multiple holdings (the service can't handle multiple symbol filters)
-    const hasMultipleHoldingFilters =
-      accessFilter?.holdings && accessFilter.holdings.length > 1;
+    const hasMultipleHoldingFilters = accessFilter?.holdings?.length > 1;
 
     const activityFilters = portfolioFilters.filter((filter) => {
       // Always include ACCOUNT, ASSET_CLASS, TAG filters
@@ -192,6 +190,7 @@ export class PublicController {
       withExcludedAccountsAndActivities: false
     });
 
+    // Experimental
     const latestActivities = this.configurationService.get(
       'ENABLE_FEATURE_SUBSCRIPTION'
     )
@@ -228,6 +227,11 @@ export class PublicController {
 
     const publicPortfolioResponse: PublicPortfolioResponse = {
       createdAt,
+      hasDetails,
+      latestActivities,
+      markets,
+      alias: access.alias,
+      holdings: {},
       performance: {
         '1d': {
           relativeChange:
@@ -241,12 +245,7 @@ export class PublicController {
           relativeChange:
             performanceYtd.netPerformancePercentageWithCurrencyEffect
         }
-      },
-      alias: access.alias,
-      hasDetails,
-      holdings: {},
-      latestActivities,
-      markets
+      }
     };
 
     const totalValue = getSum(

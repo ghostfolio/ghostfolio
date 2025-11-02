@@ -42,6 +42,7 @@ import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
 import { NotificationService } from '../../../core/notification/notification.service';
 import { DataService } from '../../../services/data.service';
+import { UserService } from '../../../services/user/user.service';
 import { validateObjectForForm } from '../../../util/form.util';
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
@@ -80,9 +81,10 @@ export class GfCreateOrUpdateAccessDialogComponent
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
     private dataService: DataService,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>
+    private userService: UserService
   ) {
     this.mode = this.data.access?.id ? 'update' : 'create';
   }
@@ -210,11 +212,18 @@ export class GfCreateOrUpdateAccessDialogComponent
   private loadFilterData() {
     const existingFilter = this.data.access.settings?.filter;
 
-    this.dataService
-      .fetchAccounts()
+    this.userService
+      .get()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.accounts = response.accounts;
+      .subscribe((user) => {
+        this.accounts = user.accounts;
+        this.tags = user.tags
+          .filter(({ isUsed }) => isUsed)
+          .map(({ id, name }) => ({
+            id,
+            label: name,
+            type: 'TAG' as const
+          }));
         this.updateFiltersFormControl(existingFilter);
       });
 
@@ -239,20 +248,6 @@ export class GfCreateOrUpdateAccessDialogComponent
 
           this.updateFiltersFormControl(existingFilter);
         }
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchTags()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.tags = response.map((tag) => ({
-          id: tag.id,
-          label: tag.name,
-          type: 'TAG' as const
-        }));
-
-        this.updateFiltersFormControl(existingFilter);
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -307,8 +302,8 @@ export class GfCreateOrUpdateAccessDialogComponent
     const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
 
     const access: CreateAccessDto = {
+      filter,
       alias: this.accessForm.get('alias')?.value as string,
-      filter: filter,
       granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
       permissions: [
         this.accessForm.get('permissions')?.value as AccessPermission
@@ -349,7 +344,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value as string,
-      filter: filter,
+      filter,
       granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
       id: this.data.access.id,
       permissions: [
