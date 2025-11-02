@@ -1,9 +1,21 @@
+@use '../../../../styles/variables.scss' as variables;
+
+@mixin select-arrow($color) {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='#{$color}' height='6' width='10'><polygon points='0,0 10,0 5,6'/></svg>");
+}
+
 :host {
   display: block;
 
   .safe-withdrawal-rate-select {
+    @include select-arrow(variables.$dark-primary-text);
+
+    appearance: none;
     background-color: transparent;
+    background-position: right 0 center;
+    background-repeat: no-repeat;
     color: rgb(var(--dark-primary-text));
+    padding: 0 0.75rem 0 0.25rem;
 
     &:focus {
       box-shadow: none;
@@ -14,6 +26,8 @@
 
 :host-context(.theme-dark) {
   .safe-withdrawal-rate-select {
+    @include select-arrow(variables.$light-primary-text);
+
     color: rgb(var(--light-primary-text));
   }
 }
