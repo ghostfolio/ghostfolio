@@ -1,20 +1,7 @@
-import { DataSource } from '@prisma/client';
+import { AssetProfileIdentifierDto } from '@ghostfolio/common/dto';
+
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsEnum,
-  IsOptional,
-  IsString,
-  ValidateNested
-} from 'class-validator';
-
-class HoldingFilterDto {
-  @IsEnum(DataSource)
-  dataSource: DataSource;
-
-  @IsString()
-  symbol: string;
-}
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class AccessFilterDto {
   @IsArray()
@@ -29,9 +16,9 @@ export class AccessFilterDto {
 
   @IsArray()
   @IsOptional()
-  @Type(() => HoldingFilterDto)
+  @Type(() => AssetProfileIdentifierDto)
   @ValidateNested({ each: true })
-  holdings?: HoldingFilterDto[];
+  holdings?: AssetProfileIdentifierDto[];
 
   @IsArray()
   @IsOptional()
