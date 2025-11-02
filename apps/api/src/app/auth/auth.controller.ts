@@ -102,23 +102,6 @@ export class AuthController {
     }
   }
 
-  @Post('internet-identity')
-  public async internetIdentityLogin(
-    @Body() body: { principalId: string }
-  ): Promise<OAuthResponse> {
-    try {
-      const authToken = await this.authService.validateInternetIdentityLogin(
-        body.principalId
-      );
-      return { authToken };
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-  }
-
   @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async generateRegistrationOptions() {

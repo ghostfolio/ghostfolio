@@ -185,7 +185,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
               'principalInvestmentAmount'
             ).value,
             projectedTotalAmount:
-              Number(this.getProjectedTotalAmount().toFixed(0)) ?? 0,
+              Math.round(this.getProjectedTotalAmount()) || 0,
             retirementDate:
               this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
           },
