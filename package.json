@@ -70,7 +70,7 @@
     "@codewithdan/observable-store": "2.2.15",
     "@date-fns/utc": "2.1.0",
     "@internationalized/number": "3.6.3",
-    "@ionic/angular": "8.7.3",
+    "@ionic/angular": "8.7.8",
     "@keyv/redis": "4.4.0",
     "@nestjs/bull": "11.0.4",
     "@nestjs/cache-manager": "3.0.1",
