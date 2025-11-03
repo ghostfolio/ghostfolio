@@ -13,8 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
+
+### Fixed
+
+- Fixed the style of the safe withdrawal rate selector in the _FIRE_ section (experimental)
+
+## 2.214.0 - 2025-11-01
+
+### Changed
+
 - Improved the icon of the _View Holding_ menu item in the activities table
+- Ensured atomic data replacement during historical market data gathering
+- Removed _Internet Identity_ as a social login provider
 - Refreshed the cryptocurrencies list
+- Upgraded `countries-list` from version `3.1.1` to `3.2.0`
+- Upgraded `ng-extract-i18n-merge` from version `3.0.0` to `3.1.0`
+- Upgraded `twitter-api-v2` from version `1.23.0` to `1.27.0`
 
 ## 2.213.0 - 2025-10-30
 

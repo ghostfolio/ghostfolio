@@ -3,6 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
+import { DoneCallback } from 'passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 
 import { AuthService } from './auth.service';
@@ -29,7 +30,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     _token: string,
     _refreshToken: string,
     profile: Profile,
-    done: Function
+    done: DoneCallback
   ) {
     try {
       const jwt = await this.authService.validateOAuthLogin({

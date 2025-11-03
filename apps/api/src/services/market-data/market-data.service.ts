@@ -132,6 +132,61 @@ export class MarketDataService {
     });
   }
 
+  /**
+   * Atomically replace market data for a symbol within a date range.
+   * Deletes existing data in the range and inserts new data within a single
+   * transaction to prevent data loss if the operation fails.
+   */
+  public async replaceForSymbol({
+    data,
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
+    await this.prismaService.$transaction(async (prisma) => {
+      if (data.length > 0) {
+        let minTime = Infinity;
+        let maxTime = -Infinity;
+
+        for (const { date } of data) {
+          const time = (date as Date).getTime();
+
+          if (time < minTime) {
+            minTime = time;
+          }
+
+          if (time > maxTime) {
+            maxTime = time;
+          }
+        }
+
+        const minDate = new Date(minTime);
+        const maxDate = new Date(maxTime);
+
+        await prisma.marketData.deleteMany({
+          where: {
+            dataSource,
+            symbol,
+            date: {
+              gte: minDate,
+              lte: maxDate
+            }
+          }
+        });
+
+        await prisma.marketData.createMany({
+          data: data.map(({ date, marketPrice, state }) => ({
+            dataSource,
+            symbol,
+            date: date as Date,
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState
+          })),
+          skipDuplicates: true
+        });
+      }
+    });
+  }
+
   public async updateAssetProfileIdentifier(
     oldAssetProfileIdentifier: AssetProfileIdentifier,
     newAssetProfileIdentifier: AssetProfileIdentifier

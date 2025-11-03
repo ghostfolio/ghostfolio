@@ -5,7 +5,11 @@ import {
   getDateFormatString,
   getEmojiFlag
 } from '@ghostfolio/common/helper';
-import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  AdminUsersResponse,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -75,7 +79,7 @@ import { GfUserDetailDialogComponent } from '../user-detail-dialog/user-detail-d
 export class GfAdminUsersComponent implements OnDestroy, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
+  public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
   public defaultDateFormat: string;
   public deviceType: string;
   public displayedColumns: string[] = [];

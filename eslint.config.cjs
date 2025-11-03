@@ -152,7 +152,6 @@ module.exports = [
 
         // The following rules are part of eslint:recommended
         // and can be remove once solved
-        'no-constant-binary-expression': 'warn',
         'no-loss-of-precision': 'warn',
 
         // The following rules are part of @typescript-eslint/recommended-type-checked
@@ -170,7 +169,6 @@ module.exports = [
         '@typescript-eslint/no-unsafe-argument': 'warn',
         '@typescript-eslint/no-unsafe-assignment': 'warn',
         '@typescript-eslint/no-unsafe-enum-comparison': 'warn',
-        '@typescript-eslint/no-unsafe-function-type': 'warn',
         '@typescript-eslint/no-unsafe-member-access': 'warn',
         '@typescript-eslint/no-unsafe-return': 'warn',
         '@typescript-eslint/no-unsafe-call': 'warn',
@@ -189,8 +187,7 @@ module.exports = [
 
         // The following rules are part of @typescript-eslint/stylistic-type-checked
         // and can be remove once solved
-        '@typescript-eslint/prefer-nullish-coalescing': 'warn', // TODO: Requires strictNullChecks: true
-        '@typescript-eslint/prefer-regexp-exec': 'warn'
+        '@typescript-eslint/prefer-nullish-coalescing': 'warn' // TODO: Requires strictNullChecks: true
       }
     }))
 ];
