@@ -60,11 +60,15 @@ export class AuthService {
           throw new Error('Sign up forbidden');
         }
 
+        // Check if there's already an admin user
+        const hasAdmin = await this.userService.hasAdmin();
+
         // Create new user if not found
         user = await this.userService.createUser({
           data: {
             provider,
-            thirdPartyId
+            thirdPartyId,
+            role: hasAdmin ? 'USER' : 'ADMIN'
           }
         });
       }
