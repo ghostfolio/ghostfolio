@@ -14,6 +14,7 @@ export interface InfoItem {
   isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;
   platforms: Platform[];
+  socialLoginProviders?: string[];
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptionOffer?: SubscriptionOffer;

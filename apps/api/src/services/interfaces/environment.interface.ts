@@ -30,6 +30,15 @@ export interface Environment extends CleanedEnvAccessors {
   JWT_SECRET_KEY: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_CHART_ITEMS: number;
+  OIDC_AUTHORIZATION_URL: string;
+  OIDC_CALLBACK_URL: string;
+  OIDC_CLIENT_ID: string;
+  OIDC_CLIENT_SECRET: string;
+  OIDC_ENABLED: string;
+  OIDC_ISSUER: string;
+  OIDC_SCOPE: string;
+  OIDC_TOKEN_URL: string;
+  OIDC_USER_INFO_URL: string;
   PORT: number;
   PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: number;
   PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY: number;

@@ -55,6 +55,15 @@ export class ConfigurationService {
       JWT_SECRET_KEY: str({}),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
+      OIDC_AUTHORIZATION_URL: str({ default: '' }),
+      OIDC_CALLBACK_URL: str({ default: '' }),
+      OIDC_CLIENT_ID: str({ default: '' }),
+      OIDC_CLIENT_SECRET: str({ default: '' }),
+      OIDC_ENABLED: str({ default: 'false' }),
+      OIDC_ISSUER: str({ default: '' }),
+      OIDC_SCOPE: str({ default: 'openid profile email' }),
+      OIDC_TOKEN_URL: str({ default: '' }),
+      OIDC_USER_INFO_URL: str({ default: '' }),
       PORT: port({ default: DEFAULT_PORT }),
       PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: num({
         default: DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY
