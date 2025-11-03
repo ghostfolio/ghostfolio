@@ -280,6 +280,7 @@ export class GfHeaderComponent implements OnChanges {
       data: {
         accessToken: '',
         hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        isAccessTokenLoginEnabled: this.info?.isAccessTokenLoginEnabled,
         socialLoginProviders: this.info?.socialLoginProviders,
         title: $localize`Sign in`
       },

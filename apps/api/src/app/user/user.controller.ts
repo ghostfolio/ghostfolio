@@ -126,6 +126,17 @@ export class UserController {
       );
     }
 
+    const isAccessTokenLoginEnabled = this.configurationService.get(
+      'ENABLE_ACCESS_TOKEN_LOGIN'
+    );
+
+    if (!isAccessTokenLoginEnabled) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     const hasAdmin = await this.userService.hasAdmin();
 
     const { accessToken, id, role } = await this.userService.createUser({

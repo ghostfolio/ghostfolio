@@ -3,28 +3,32 @@
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
     <form class="w-100">
-      <mat-form-field appearance="outline" class="without-hint w-100">
-        <mat-label i18n>Security Token</mat-label>
-        <input
-          matInput
-          [formControl]="accessTokenFormControl"
-          [type]="isAccessTokenHidden ? 'password' : 'text'"
-          (keydown.enter)="onLoginWithAccessToken(); $event.preventDefault()"
-        />
-        <button
-          mat-button
-          matSuffix
-          type="button"
-          (click)="isAccessTokenHidden = !isAccessTokenHidden"
-        >
-          <ion-icon
-            [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+      @if (data.isAccessTokenLoginEnabled !== false) {
+        <mat-form-field appearance="outline" class="without-hint w-100">
+          <mat-label i18n>Security Token</mat-label>
+          <input
+            matInput
+            [formControl]="accessTokenFormControl"
+            [type]="isAccessTokenHidden ? 'password' : 'text'"
+            (keydown.enter)="onLoginWithAccessToken(); $event.preventDefault()"
           />
-        </button>
-      </mat-form-field>
+          <button
+            mat-button
+            matSuffix
+            type="button"
+            (click)="isAccessTokenHidden = !isAccessTokenHidden"
+          >
+            <ion-icon
+              [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+            />
+          </button>
+        </mat-form-field>
+      }
 
       @if (data.hasPermissionToUseSocialLogin) {
-        <div class="my-3 text-center text-muted" i18n>or</div>
+        @if (data.isAccessTokenLoginEnabled !== false) {
+          <div class="my-3 text-center text-muted" i18n>or</div>
+        }
         <div class="d-flex flex-column gap-2">
           @if (data.socialLoginProviders?.includes('google')) {
             <a
@@ -59,16 +63,18 @@
       >Stay signed in</mat-checkbox
     >
   </div>
-  <div>
-    <button
-      color="primary"
-      mat-flat-button
-      [disabled]="
-        !(accessTokenFormControl.dirty && accessTokenFormControl.valid)
-      "
-      (click)="onLoginWithAccessToken()"
-    >
-      <ng-container i18n>Sign in</ng-container>
-    </button>
-  </div>
+  @if (data.isAccessTokenLoginEnabled !== false) {
+    <div>
+      <button
+        color="primary"
+        mat-flat-button
+        [disabled]="
+          !(accessTokenFormControl.dirty && accessTokenFormControl.valid)
+        "
+        (click)="onLoginWithAccessToken()"
+      >
+        <ng-container i18n>Sign in</ng-container>
+      </button>
+    </div>
+  }
 </div>

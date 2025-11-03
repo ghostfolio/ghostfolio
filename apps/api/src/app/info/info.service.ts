@@ -128,7 +128,11 @@ export class InfoService {
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
 
-    if (isUserSignupEnabled) {
+    const isAccessTokenLoginEnabled = this.configurationService.get(
+      'ENABLE_ACCESS_TOKEN_LOGIN'
+    );
+
+    if (isUserSignupEnabled && isAccessTokenLoginEnabled) {
       globalPermissions.push(permissions.createUserAccount);
     }
 
@@ -137,6 +141,7 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       globalPermissions,
+      isAccessTokenLoginEnabled,
       isReadOnlyMode,
       platforms,
       statistics,
