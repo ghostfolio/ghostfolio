@@ -235,6 +235,7 @@
                 }
                 <button
                   mat-menu-item
+                  [disabled]="info?.isAccessTokenLoginEnabled === false"
                   (click)="onGenerateAccessToken(element.id)"
                 >
                   <span class="align-items-center d-flex">

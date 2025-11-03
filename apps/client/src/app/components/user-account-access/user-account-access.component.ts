@@ -5,7 +5,7 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Access, User } from '@ghostfolio/common/interfaces';
+import { Access, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
@@ -59,6 +59,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateAccess: boolean;
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateOwnAccessToken: boolean;
+  public info: InfoItem;
   public isAccessTokenHidden = true;
   public updateOwnAccessTokenForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
@@ -79,7 +80,8 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
-    const { globalPermissions } = this.dataService.fetchInfo();
+    this.info = this.dataService.fetchInfo();
+    const { globalPermissions } = this.info;
 
     this.hasPermissionToDeleteAccess = hasPermission(
       globalPermissions,
@@ -102,10 +104,11 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
             permissions.deleteAccess
           );
 
-          this.hasPermissionToUpdateOwnAccessToken = hasPermission(
-            this.user.permissions,
-            permissions.updateOwnAccessToken
-          );
+          this.hasPermissionToUpdateOwnAccessToken =
+            hasPermission(
+              this.user.permissions,
+              permissions.updateOwnAccessToken
+            ) && this.info?.isAccessTokenLoginEnabled !== false;
 
           this.changeDetectorRef.markForCheck();
         }
