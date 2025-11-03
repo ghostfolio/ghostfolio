@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
+- Upgraded `@ionic/angular` from version `8.7.3` to `8.7.8`
 
 ### Fixed
 
