@@ -23,6 +23,7 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AdminUserResponse,
   AdminUsersResponse,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
@@ -35,7 +36,8 @@ import {
   BadRequestException,
   HttpException,
   Injectable,
-  Logger
+  Logger,
+  NotFoundException
 } from '@nestjs/common';
 import {
   AssetClass,
@@ -520,6 +522,73 @@ export class AdminService {
     ]);
 
     return { count, users };
+  }
+
+  public async getUser(id: string): Promise<AdminUserResponse> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        role: true,
+        provider: true,
+        createdAt: true,
+        updatedAt: true,
+        analytics: {
+          select: {
+            activityCount: true,
+            country: true,
+            dataProviderGhostfolioDailyRequests: true,
+            updatedAt: true
+          }
+        },
+        _count: {
+          select: {
+            accounts: true,
+            activities: true,
+            watchlist: true
+          }
+        },
+        subscriptions: {
+          orderBy: { expiresAt: 'desc' },
+          take: 3,
+          select: {
+            id: true,
+            expiresAt: true,
+            createdAt: true
+          }
+        },
+        tags: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const { _count, analytics, createdAt, id: userId, role, provider } = user;
+
+    return {
+      id: userId,
+      role,
+      provider,
+      createdAt,
+      updatedAt: user.updatedAt,
+      accountCount: _count.accounts || 0,
+      activityCount: _count.activities || 0,
+      watchlistCount: _count.watchlist || 0,
+      analytics: {
+        country: analytics?.country,
+        dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
+        lastActivity: analytics?.updatedAt
+      },
+      subscriptions: user.subscriptions,
+      tags: user.tags
+    };
   }
 
   public async patchAssetProfileData(
