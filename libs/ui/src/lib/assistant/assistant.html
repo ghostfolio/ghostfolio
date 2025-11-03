@@ -54,8 +54,8 @@
             isLoading.quickLinks || searchResults?.quickLinks?.length !== 0
           ) {
             <div class="mb-2">
-              <div class="font-weight-bold px-3 text-muted title" i18n>
-                Quick Links
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Quick Links</ng-container>
               </div>
               @for (
                 searchResultItem of searchResults.quickLinks;
@@ -80,8 +80,8 @@
           }
           @if (isLoading.accounts || searchResults?.accounts?.length !== 0) {
             <div>
-              <div class="font-weight-bold px-3 text-muted title" i18n>
-                Accounts
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Accounts</ng-container>
               </div>
               @for (
                 searchResultItem of searchResults.accounts;
@@ -106,8 +106,8 @@
           }
           @if (isLoading.holdings || searchResults?.holdings?.length !== 0) {
             <div>
-              <div class="font-weight-bold px-3 text-muted title" i18n>
-                Holdings
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Holdings</ng-container>
               </div>
               @for (
                 searchResultItem of searchResults.holdings;
@@ -136,8 +136,8 @@
               searchResults?.assetProfiles?.length !== 0)
           ) {
             <div class="mt-2">
-              <div class="font-weight-bold px-3 text-muted title" i18n>
-                Asset Profiles
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Asset Profiles</ng-container>
               </div>
               @for (
                 searchResultItem of searchResults.assetProfiles;
@@ -194,7 +194,6 @@
       />
       <div class="d-flex w-100">
         <button
-          i18n
           mat-button
           type="button"
           [disabled]="
@@ -202,12 +201,11 @@
           "
           (click)="onResetFilters()"
         >
-          Reset Filters
+          <ng-container i18n>Reset Filters</ng-container>
         </button>
         <span class="gf-spacer"></span>
         <button
           color="primary"
-          i18n
           mat-flat-button
           type="button"
           [disabled]="
@@ -216,7 +214,7 @@
           "
           (click)="onApplyFilters()"
         >
-          Apply Filters
+          <ng-container i18n>Apply Filters</ng-container>
         </button>
       </div>
     </div>
