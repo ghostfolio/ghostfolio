@@ -91,9 +91,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
     _refreshToken: any,
     params: any
   ) {
-    // El 'sub' (subject) del ID Token es el identificador único estándar de OIDC
-    // Según OpenID Connect Core 1.0, el 'sub' es el identificador único e inmutable del usuario
-    // El 'sub' viene en el idToken parseado o en params
     const thirdPartyId =
       params?.sub || idToken?.sub || context?.claims?.sub || profile?.id;
 
