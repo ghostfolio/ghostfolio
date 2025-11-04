@@ -535,6 +535,13 @@ export class UserService {
       data.provider = 'ANONYMOUS';
     }
 
+    // Check if there's already an admin user
+    // If not, assign ADMIN role to the first user
+    if (!data.role) {
+      const hasAdmin = await this.hasAdmin();
+      data.role = hasAdmin ? 'USER' : 'ADMIN';
+    }
+
     const user = await this.prismaService.user.create({
       data: {
         ...data,

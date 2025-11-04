@@ -126,10 +126,8 @@ export class UserController {
       );
     }
 
-    const hasAdmin = await this.userService.hasAdmin();
-
     const { accessToken, id, role } = await this.userService.createUser({
-      data: { role: hasAdmin ? 'USER' : 'ADMIN' }
+      data: {}
     });
 
     return {
