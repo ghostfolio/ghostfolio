@@ -62,8 +62,7 @@ function fastClone(obj: any, seen = new WeakMap()): any {
   const cloned: any = {};
   seen.set(obj, cloned);
   const keys = Object.keys(obj);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
+  for (const key of keys) {
     cloned[key] = fastClone(obj[key], seen);
   }
   return cloned;
@@ -128,8 +127,7 @@ export function redactAttributes({
 
     // Optimization 4: Use Object.keys() instead of for...in (faster, no inherited props)
     const keys = Object.keys(current);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
+    for (const key of keys) {
       const value = current[key];
 
       // Optimization 5: Cache type check
@@ -141,8 +139,7 @@ export function redactAttributes({
       if (isArray(value)) {
         // Optimization 6: Batch array processing
         if (value.length > 0) {
-          for (let j = 0; j < value.length; j++) {
-            const item = value[j];
+          for (const item of value) {
             if (item != null && typeof item === 'object') {
               workQueue.push(item);
             }
