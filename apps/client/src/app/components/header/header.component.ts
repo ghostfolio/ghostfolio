@@ -105,7 +105,8 @@ export class GfHeaderComponent implements OnChanges {
 
   public hasFilters: boolean;
   public hasImpersonationId: boolean;
-  public hasPermissionForSocialLogin: boolean;
+  public hasPermissionForAuthGoogle: boolean;
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionToAccessAssistant: boolean;
@@ -165,9 +166,14 @@ export class GfHeaderComponent implements OnChanges {
   public ngOnChanges() {
     this.hasFilters = this.userService.hasFilters();
 
-    this.hasPermissionForSocialLogin = hasPermission(
+    this.hasPermissionForAuthGoogle = hasPermission(
       this.info?.globalPermissions,
-      permissions.enableSocialLogin
+      permissions.enableAuthGoogle
+    );
+
+    this.hasPermissionForAuthToken = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
@@ -280,7 +286,8 @@ export class GfHeaderComponent implements OnChanges {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        hasPermissionToUseAuthGoogle: this.hasPermissionForAuthGoogle,
+        hasPermissionToUseAuthToken: this.hasPermissionForAuthToken,
         title: $localize`Sign in`
       },
       width: '30rem'

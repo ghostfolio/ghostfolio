@@ -32,7 +32,8 @@ export const permissions = {
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
   enableBlog: 'enableBlog',
-  enableSocialLogin: 'enableSocialLogin',
+  enableAuthGoogle: 'enableAuthGoogle',
+  enableAuthToken: 'enableAuthToken',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
   enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
@@ -157,7 +158,7 @@ export function filterGlobalPermissions(
   if (aUtmSource === 'ios') {
     return globalPermissions.filter((permission) => {
       return (
-        permission !== permissions.enableSocialLogin &&
+        permission !== permissions.enableAuthGoogle &&
         permission !== permissions.enableSubscription
       );
     });

@@ -70,8 +70,12 @@ export class InfoService {
       );
     }
 
-    if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
-      globalPermissions.push(permissions.enableSocialLogin);
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_GOOGLE')) {
+      globalPermissions.push(permissions.enableAuthGoogle);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_TOKEN')) {
+      globalPermissions.push(permissions.enableAuthToken);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
