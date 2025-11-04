@@ -116,18 +116,18 @@ export class UserService extends ObservableStore<UserStoreState> {
             permissions.enableSubscriptionInterstitial
           )
         ) {
-          const dialogRef = this.dialog.open(
+          const dialogRef = this.dialog.open<
             GfSubscriptionInterstitialDialogComponent,
-            {
-              autoFocus: false,
-              data: {
-                user
-              } as SubscriptionInterstitialDialogParams,
-              disableClose: true,
-              height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-              width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-            }
-          );
+            SubscriptionInterstitialDialogParams
+          >(GfSubscriptionInterstitialDialogComponent, {
+            autoFocus: false,
+            data: {
+              user
+            },
+            disableClose: true,
+            height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          });
 
           dialogRef
             .afterClosed()

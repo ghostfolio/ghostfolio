@@ -26,6 +26,7 @@ export class GfRulesComponent {
   @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
+  @Input() locale: string;
   @Input() rules: PortfolioReportRule[];
   @Input() settings: XRayRulesSettings;
 

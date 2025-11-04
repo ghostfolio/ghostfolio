@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client';
 
-export interface AdminUsers {
+export interface AdminUsersResponse {
   count: number;
   users: {
     accountCount: number;

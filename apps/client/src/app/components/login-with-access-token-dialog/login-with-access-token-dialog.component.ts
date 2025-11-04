@@ -1,10 +1,8 @@
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import {
   KEY_STAY_SIGNED_IN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
@@ -21,10 +19,11 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
+
+import { LoginWithAccessTokenDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,12 +50,9 @@ export class GfLoginWithAccessTokenDialogComponent {
   public isAccessTokenHidden = true;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: LoginWithAccessTokenDialogParams,
     public dialogRef: MatDialogRef<GfLoginWithAccessTokenDialogComponent>,
-    private internetIdentityService: InternetIdentityService,
-    private router: Router,
-    private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private settingsStorageService: SettingsStorageService
   ) {
     addIcons({ eyeOffOutline, eyeOutline });
   }
@@ -78,15 +74,5 @@ export class GfLoginWithAccessTokenDialogComponent {
         accessToken: this.accessTokenFormControl.value
       });
     }
-  }
-
-  public async onLoginWithInternetIdentity() {
-    try {
-      const { authToken } = await this.internetIdentityService.login();
-
-      this.tokenStorageService.saveToken(authToken);
-      this.dialogRef.close();
-      this.router.navigate(['/']);
-    } catch {}
   }
 }
