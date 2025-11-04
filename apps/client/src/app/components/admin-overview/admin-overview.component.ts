@@ -76,6 +76,7 @@ import { takeUntil } from 'rxjs/operators';
 export class GfAdminOverviewComponent implements OnDestroy, OnInit {
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToSyncDemoUserAccount: boolean;
@@ -107,6 +108,11 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionForAuthToken = hasPermission(
+            this.info.globalPermissions,
+            permissions.enableAuthToken
+          );
 
           this.hasPermissionForSubscription = hasPermission(
             this.info.globalPermissions,
