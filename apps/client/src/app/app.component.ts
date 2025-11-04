@@ -42,13 +42,13 @@ import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
 
 @Component({
-  selector: 'gf-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './app.component.html',
+  imports: [GfFooterComponent, GfHeaderComponent, RouterLink, RouterOutlet],
+  selector: 'gf-root',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, RouterLink, GfHeaderComponent, GfFooterComponent]
+  templateUrl: './app.component.html'
 })
-export class AppComponent implements OnDestroy, OnInit {
+export class GfAppComponent implements OnDestroy, OnInit {
   @HostBinding('class.has-info-message') get getHasMessage() {
     return this.hasInfoMessage;
   }

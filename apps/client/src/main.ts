@@ -29,7 +29,7 @@ import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
 import { CustomDateAdapter } from './app/adapter/custom-date-adapter';
 import { DateFormats } from './app/adapter/date-formats';
 import { AppRoutingModule } from './app/app-routing.module';
-import { AppComponent } from './app/app.component';
+import { GfAppComponent } from './app/app.component';
 import { authInterceptorProviders } from './app/core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './app/core/http-response.interceptor';
 import { LanguageService } from './app/core/language.service';
@@ -56,7 +56,7 @@ import { environment } from './environments/environment';
     enableProdMode();
   }
 
-  await bootstrapApplication(AppComponent, {
+  await bootstrapApplication(GfAppComponent, {
     providers: [
       { provide: LOCALE_ID, useValue: locale },
       authInterceptorProviders,
@@ -79,6 +79,7 @@ import { environment } from './environments/environment';
       importProvidersFrom(
         AppRoutingModule,
         BrowserAnimationsModule,
+        GfNotificationModule,
         MatAutocompleteModule,
         MatChipsModule,
         MatNativeDateModule,
@@ -88,8 +89,7 @@ import { environment } from './environments/environment';
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: environment.production,
           registrationStrategy: 'registerImmediately'
-        }),
-        GfNotificationModule
+        })
       )
     ]
   });
