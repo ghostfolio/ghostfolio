@@ -8,8 +8,8 @@
     [dataSource]="dataSource"
   >
     <ng-container matColumnDef="name" sticky>
-      <th *matHeaderCellDef class="px-2" i18n mat-header-cell mat-sort-header>
-        Name
+      <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
+        <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2 text-nowrap" mat-cell>
         <div class="text-truncate">

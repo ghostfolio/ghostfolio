@@ -7,7 +7,6 @@ import type {
   AdminMarketData,
   AdminMarketDataItem
 } from './admin-market-data.interface';
-import type { AdminUsers } from './admin-users.interface';
 import type { AssetClassSelectorOption } from './asset-class-selector-option.interface';
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
@@ -39,6 +38,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { AccountsResponse } from './responses/accounts-response.interface';
 import type { ActivitiesResponse } from './responses/activities-response.interface';
 import type { ActivityResponse } from './responses/activity-response.interface';
+import type { AdminUsersResponse } from './responses/admin-users-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { AssetResponse } from './responses/asset-response.interface';
@@ -92,7 +92,7 @@ export {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
-  AdminUsers,
+  AdminUsersResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetClassSelectorOption,
