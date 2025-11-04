@@ -422,7 +422,11 @@
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
-      @if (currentRoute !== 'register' && hasPermissionToCreateUser) {
+      @if (
+        currentRoute !== 'register' &&
+        hasPermissionToCreateUser &&
+        hasPermissionForAuthToken
+      ) {
         <li class="list-inline-item ml-1">
           <a
             class="d-none d-sm-block"

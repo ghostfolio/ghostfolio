@@ -52,6 +52,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public durationExtension: StringValue;
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
@@ -100,8 +101,14 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { baseCurrency, subscriptionOffer } = this.dataService.fetchInfo();
+    const { baseCurrency, globalPermissions, subscriptionOffer } =
+      this.dataService.fetchInfo();
     this.baseCurrency = baseCurrency;
+
+    this.hasPermissionForAuthToken = hasPermission(
+      globalPermissions,
+      permissions.enableAuthToken
+    );
 
     this.coupon = subscriptionOffer?.coupon;
     this.durationExtension = subscriptionOffer?.durationExtension;

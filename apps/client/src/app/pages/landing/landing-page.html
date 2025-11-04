@@ -32,7 +32,7 @@
 <div class="container">
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
-      @if (hasPermissionToCreateUser) {
+      @if (hasPermissionToCreateUser && hasPermissionForAuthToken) {
         <a
           color="primary"
           i18n
@@ -42,7 +42,7 @@
         >
       }
       @if (hasPermissionForDemo) {
-        @if (hasPermissionToCreateUser) {
+        @if (hasPermissionToCreateUser && hasPermissionForAuthToken) {
           <div class="mx-3 text-muted" i18n>or</div>
         }
         <a i18n mat-stroked-button [routerLink]="routerLinkDemo">Live Demo</a>
@@ -323,7 +323,7 @@
     </div>
   }
 
-  @if (hasPermissionToCreateUser) {
+  @if (hasPermissionToCreateUser && hasPermissionForAuthToken) {
     <div class="row my-5">
       <div class="col">
         <h2 class="h4 mb-1 text-center" i18n>
