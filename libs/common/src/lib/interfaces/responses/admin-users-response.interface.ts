@@ -1,45 +1,35 @@
-import { Provider, Role } from '@prisma/client';
+import { Provider, Role, Subscription, Tag } from '@prisma/client';
 
-export interface AdminUsersResponse {
-  count: number;
-  users: {
-    accountCount: number;
-    activityCount: number;
-    country: string;
-    createdAt: Date;
-    dailyApiRequests: number;
-    engagement: number;
-    id: string;
-    lastActivity: Date;
-    role: Role;
-  }[];
-}
-
-export interface AdminUserResponse {
-  id: string;
-  role: Role;
-  provider: Provider;
-  createdAt: Date;
-  updatedAt: Date;
-
+interface AdminUser {
   accountCount: number;
   activityCount: number;
-  watchlistCount: number;
-
   analytics?: {
     country?: string | null;
     dailyApiRequests: number;
     lastActivity?: Date | null;
   };
+  createdAt: Date;
+  id: string;
+  provider: Provider;
+  role: Role;
+  updatedAt: Date;
+  watchlistCount: number;
+}
 
-  subscriptions: {
-    id: string;
-    expiresAt: Date;
-    createdAt: Date;
-  }[];
+export interface AdminUserResponse extends AdminUser {
+  subscriptions: Subscription[];
+  tags: Tag[];
+}
 
-  tags: {
-    id: string;
-    name: string;
-  }[];
+export interface AdminUsersResponse {
+  count: number;
+  users: (Pick<
+    AdminUser,
+    'accountCount' | 'activityCount' | 'createdAt' | 'id' | 'role'
+  > & {
+    country: string;
+    dailyApiRequests: number;
+    engagement: number;
+    lastActivity: Date;
+  })[];
 }
