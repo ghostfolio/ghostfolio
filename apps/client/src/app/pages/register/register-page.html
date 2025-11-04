@@ -14,24 +14,20 @@
     </div>
   </div>
 
-  @if (hasPermissionToCreateUser) {
+  @if (hasPermissionToCreateUser && hasPermissionForAuthToken) {
     <div class="button-container row">
       <div class="align-items-center col d-flex justify-content-center">
         <div class="py-5 text-center">
-          @if (hasPermissionForAuthToken) {
-            <button
-              class="d-inline-block"
-              color="primary"
-              mat-flat-button
-              (click)="openShowAccessTokenDialog()"
-            >
-              <ng-container i18n>Create Account</ng-container>
-            </button>
-          }
-          @if (hasPermissionForAuthGoogle && hasPermissionForAuthToken) {
-            <div class="my-3 text-muted" i18n>or</div>
-          }
+          <button
+            class="d-inline-block"
+            color="primary"
+            mat-flat-button
+            (click)="openShowAccessTokenDialog()"
+          >
+            <ng-container i18n>Create Account</ng-container>
+          </button>
           @if (hasPermissionForAuthGoogle) {
+            <div class="my-3 text-muted" i18n>or</div>
             <a
               class="px-4 rounded-pill w-100"
               href="../api/v1/auth/google"
