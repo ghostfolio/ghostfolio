@@ -9,7 +9,6 @@ import {
 } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatChipsModule } from '@angular/material/chips';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -19,7 +18,8 @@ import {
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { RouterModule, TitleStrategy } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { provideMarkdown } from 'ngx-markdown';
@@ -28,12 +28,14 @@ import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
 
 import { CustomDateAdapter } from './app/adapter/custom-date-adapter';
 import { DateFormats } from './app/adapter/date-formats';
-import { AppRoutingModule } from './app/app-routing.module';
 import { GfAppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
 import { authInterceptorProviders } from './app/core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './app/core/http-response.interceptor';
 import { LanguageService } from './app/core/language.service';
+import { ModulePreloadService } from './app/core/module-preload.service';
 import { GfNotificationModule } from './app/core/notification/notification.module';
+import { PageTitleStrategy } from './app/services/page-title.strategy';
 import { environment } from './environments/environment';
 
 (async () => {
@@ -77,11 +79,13 @@ import { environment } from './environments/environment';
         useFactory: () => environment.stripePublicKey
       },
       importProvidersFrom(
-        AppRoutingModule,
-        BrowserAnimationsModule,
+        RouterModule.forRoot(routes, {
+          anchorScrolling: 'enabled',
+          preloadingStrategy: ModulePreloadService,
+          scrollPositionRestoration: 'top'
+        }),
         GfNotificationModule,
         MatAutocompleteModule,
-        MatChipsModule,
         MatNativeDateModule,
         MatSnackBarModule,
         MatTooltipModule,
@@ -90,7 +94,10 @@ import { environment } from './environments/environment';
           enabled: environment.production,
           registrationStrategy: 'registerImmediately'
         })
-      )
+      ),
+      provideAnimations(),
+      ModulePreloadService,
+      { provide: TitleStrategy, useClass: PageTitleStrategy }
     ]
   });
 })();
