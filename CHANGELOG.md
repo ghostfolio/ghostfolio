@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the _Self-Hosting_ section content for the _Compare with..._ concept on the Frequently Asked Questions (FAQ) page
+- Improved the _Self-Hosting_ section content for the _Markets_ concept on the Frequently Asked Questions (FAQ) page
 - Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
 - Improved the language localization for German (`de`)
 
@@ -16,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the style of the safe withdrawal rate selector in the _FIRE_ section (experimental)
 - Assigned the `ADMIN` role to the first user signing up via a social login provider if no administrator existed
+- Improved the table headers’ alignment in the platform management of the admin control panel
+- Improved the table headers’ alignment in the tag management of the admin control panel
 
 ## 2.214.0 - 2025-11-01
 
