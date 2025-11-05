@@ -126,9 +126,7 @@ export class UserController {
       );
     }
 
-    const { accessToken, id, role } = await this.userService.createUser({
-      data: {}
-    });
+    const { accessToken, id, role } = await this.userService.createUser();
 
     return {
       accessToken,

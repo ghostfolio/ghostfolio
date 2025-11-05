@@ -526,19 +526,20 @@ export class UserService {
     });
   }
 
-  public async createUser({
-    data
-  }: {
-    data: Prisma.UserCreateInput;
-  }): Promise<User> {
-    if (!data?.provider) {
+  public async createUser(
+    {
+      data
+    }: {
+      data: Prisma.UserCreateInput;
+    } = { data: {} }
+  ): Promise<User> {
+    if (!data.provider) {
       data.provider = 'ANONYMOUS';
     }
 
-    // Check if there's already an admin user
-    // If not, assign ADMIN role to the first user
     if (!data.role) {
       const hasAdmin = await this.hasAdmin();
+
       data.role = hasAdmin ? 'USER' : 'ADMIN';
     }
 
