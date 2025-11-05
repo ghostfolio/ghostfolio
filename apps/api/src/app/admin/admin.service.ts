@@ -530,7 +530,15 @@ export class AdminService {
   }): Promise<AdminUsersResponse> {
     const [count, users] = await Promise.all([
       this.countUsersWithAnalytics(),
-      this.getUsersWithAnalytics({ skip, take })
+      this.getUsersWithAnalytics({
+        skip,
+        take,
+        where: {
+          NOT: {
+            analytics: null
+          }
+        }
+      })
     ]);
 
     return { count, users };
@@ -829,11 +837,7 @@ export class AdminService {
   private async getUsersWithAnalytics({
     skip,
     take,
-    where = {
-      NOT: {
-        analytics: null
-      }
-    }
+    where
   }: {
     skip?: number;
     take?: number;
