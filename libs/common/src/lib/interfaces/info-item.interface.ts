@@ -11,9 +11,11 @@ export interface InfoItem {
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
   globalPermissions: string[];
+  isAccessTokenLoginEnabled?: boolean;
   isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;
   platforms: Platform[];
+  socialLoginProviders?: string[];
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptionOffer?: SubscriptionOffer;

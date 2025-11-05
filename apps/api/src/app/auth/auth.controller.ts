@@ -102,6 +102,53 @@ export class AuthController {
     }
   }
 
+  @Get('oidc')
+  @UseGuards(AuthGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLogin(@Res() response: Response) {
+    // Check if OIDC is enabled
+    const oidcEnabled =
+      this.configurationService.get('OIDC_ENABLED') === 'true';
+
+    if (!oidcEnabled) {
+      response.status(404).send('OIDC authentication is not enabled');
+      return;
+    }
+
+    // Initiates the OIDC login flow
+  }
+
+  @Get('oidc/callback')
+  @UseGuards(AuthGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
+    // Check if OIDC is enabled
+    const oidcEnabled =
+      this.configurationService.get('OIDC_ENABLED') === 'true';
+
+    if (!oidcEnabled) {
+      response.status(404).send('OIDC authentication is not enabled');
+      return;
+    }
+
+    // Handles the OIDC callback
+    const jwt: string = (request.user as any).jwt;
+
+    if (jwt) {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
+      );
+    } else {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth?error=oidc_failed`
+      );
+    }
+  }
+
   @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async generateRegistrationOptions() {

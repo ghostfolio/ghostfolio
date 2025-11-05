@@ -40,6 +40,7 @@ export class ConfigurationService {
       DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: json({
         default: []
       }),
+      ENABLE_ACCESS_TOKEN_LOGIN: bool({ default: true }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
@@ -55,6 +56,15 @@ export class ConfigurationService {
       JWT_SECRET_KEY: str({}),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
+      OIDC_AUTHORIZATION_URL: str({ default: '' }),
+      OIDC_CALLBACK_URL: str({ default: '' }),
+      OIDC_CLIENT_ID: str({ default: '' }),
+      OIDC_CLIENT_SECRET: str({ default: '' }),
+      OIDC_ENABLED: str({ default: 'false' }),
+      OIDC_ISSUER: str({ default: '' }),
+      OIDC_SCOPE: str({ default: 'openid profile email' }),
+      OIDC_TOKEN_URL: str({ default: '' }),
+      OIDC_USER_INFO_URL: str({ default: '' }),
       PORT: port({ default: DEFAULT_PORT }),
       PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: num({
         default: DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY

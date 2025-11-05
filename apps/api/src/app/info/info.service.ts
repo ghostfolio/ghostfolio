@@ -72,6 +72,24 @@ export class InfoService {
 
     if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
       globalPermissions.push(permissions.enableSocialLogin);
+
+      // Determine which social login providers are enabled
+      const socialLoginProviders: string[] = [];
+
+      const googleClientId = this.configurationService.get('GOOGLE_CLIENT_ID');
+      if (
+        googleClientId &&
+        googleClientId.trim() !== '' &&
+        googleClientId !== 'dummyClientId'
+      ) {
+        socialLoginProviders.push('google');
+      }
+
+      if (this.configurationService.get('OIDC_ENABLED') === 'true') {
+        socialLoginProviders.push('oidc');
+      }
+
+      info.socialLoginProviders = socialLoginProviders;
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
@@ -110,7 +128,11 @@ export class InfoService {
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
 
-    if (isUserSignupEnabled) {
+    const isAccessTokenLoginEnabled = this.configurationService.get(
+      'ENABLE_ACCESS_TOKEN_LOGIN'
+    );
+
+    if (isUserSignupEnabled && isAccessTokenLoginEnabled) {
       globalPermissions.push(permissions.createUserAccount);
     }
 
@@ -119,6 +141,7 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       globalPermissions,
+      isAccessTokenLoginEnabled,
       isReadOnlyMode,
       platforms,
       statistics,

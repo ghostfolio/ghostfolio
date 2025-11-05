@@ -28,16 +28,29 @@
           </button>
           @if (hasPermissionForSocialLogin) {
             <div class="my-3 text-muted" i18n>or</div>
-            <a
-              class="px-4 rounded-pill w-100"
-              href="../api/v1/auth/google"
-              mat-stroked-button
-              ><img
-                class="mr-2"
-                src="../assets/icons/google.svg"
-                style="height: 1rem"
-              /><span i18n>Continue with Google</span></a
-            >
+            <div class="d-flex flex-column gap-2">
+              @if (info.socialLoginProviders?.includes('google')) {
+                <a
+                  class="px-4 rounded-pill w-100"
+                  href="../api/v1/auth/google"
+                  mat-stroked-button
+                  ><img
+                    class="mr-2"
+                    src="../assets/icons/google.svg"
+                    style="height: 1rem"
+                  /><span i18n>Continue with Google</span></a
+                >
+              }
+              @if (info.socialLoginProviders?.includes('oidc')) {
+                <a
+                  class="px-4 rounded-pill w-100"
+                  href="../api/auth/oidc"
+                  mat-stroked-button
+                  ><ion-icon class="mr-2" name="key-outline"></ion-icon
+                  ><span i18n>Continue with OIDC</span></a
+                >
+              }
+            </div>
           }
         </div>
       </div>
