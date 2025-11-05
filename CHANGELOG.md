@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the endpoint `GET /api/v1/admin/user/:id`
+
 ### Changed
 
 - Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
 - Improved the language localization for German (`de`)
-
-### Feature
-
-- New API endpoint `GET /api/v1/admin/user/:id` to get user data by _id_
 
 ### Fixed
 
