@@ -510,24 +510,7 @@ export class AdminService {
   }
 
   public async getUser(id: string): Promise<AdminUserResponse> {
-    const user = await this.prismaService.user.findUnique({
-      select: {
-        _count: {
-          select: {
-            accounts: true,
-            activities: true,
-            watchlist: true
-          }
-        },
-        analytics: true,
-        createdAt: true,
-        id: true,
-        provider: true,
-        role: true,
-        subscriptions: true,
-        tags: true,
-        updatedAt: true
-      },
+    const [user] = await this.getUsersWithAnalytics({
       where: { id }
     });
 
@@ -535,25 +518,7 @@ export class AdminService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    const { _count, analytics, createdAt, provider, role, updatedAt } = user;
-
-    return {
-      accountCount: _count.accounts || 0,
-      activityCount: _count.activities || 0,
-      analytics: {
-        country: analytics?.country,
-        dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
-        lastActivity: analytics?.updatedAt
-      },
-      createdAt,
-      id,
-      provider,
-      role,
-      subscriptions: user.subscriptions,
-      tags: user.tags,
-      updatedAt,
-      watchlistCount: _count.watchlist || 0
-    };
+    return user;
   }
 
   public async getUsers({
@@ -863,16 +828,20 @@ export class AdminService {
 
   private async getUsersWithAnalytics({
     skip,
-    take
+    take,
+    where = {
+      NOT: {
+        analytics: null
+      }
+    }
   }: {
     skip?: number;
     take?: number;
+    where?: Prisma.UserWhereInput;
   }): Promise<AdminUsersResponse['users']> {
     let orderBy: Prisma.Enumerable<Prisma.UserOrderByWithRelationInput> = [
       { createdAt: 'desc' }
     ];
-
-    let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       orderBy = [
@@ -882,12 +851,6 @@ export class AdminService {
           }
         }
       ];
-
-      where = {
-        NOT: {
-          analytics: null
-        }
-      };
     }
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
