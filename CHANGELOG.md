@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the _Self-Hosting_ section content for the _Compare with..._ concept on the Frequently Asked Questions (FAQ) page
+- Improved the _Self-Hosting_ section content for the _Markets_ concept on the Frequently Asked Questions (FAQ) page
 - Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
 - Improved the language localization for German (`de`)
 
