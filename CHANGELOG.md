@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the style of the safe withdrawal rate selector in the _FIRE_ section (experimental)
-- Centralize admin role assignment so that any auth method can create the first admin user
+- Assigned the `ADMIN` role to the first user signing up via a social login provider if no administrator existed
 
 ## 2.214.0 - 2025-11-01
 
