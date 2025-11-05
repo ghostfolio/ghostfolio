@@ -4,6 +4,7 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -28,6 +29,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
@@ -44,6 +46,7 @@ export class ImportService {
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly marketDataService: MarketDataService,
     private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
@@ -604,6 +607,16 @@ export class ImportService {
           };
         }),
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      });
+
+      uniqueActivities.forEach(({ SymbolProfile }) => {
+        this.eventEmitter.emit(
+          AssetProfileChangedEvent.getName(),
+          new AssetProfileChangedEvent(
+            SymbolProfile.currency,
+            SymbolProfile.symbol
+          )
+        );
       });
     }
 

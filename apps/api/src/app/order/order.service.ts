@@ -1,4 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -230,6 +231,14 @@ export class OrderService {
       new PortfolioChangedEvent({
         userId: order.userId
       })
+    );
+
+    this.eventEmitter.emit(
+      AssetProfileChangedEvent.getName(),
+      new AssetProfileChangedEvent(
+        order.SymbolProfile.currency,
+        order.SymbolProfile.symbol
+      )
     );
 
     return order;
