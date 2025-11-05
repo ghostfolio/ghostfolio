@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.215.0-beta.1 - 2025-11-05
 
+### Added
+
+- Added the endpoint `GET /api/v1/admin/user/:id`
+
 ### Changed
 
 - Improved the _Self-Hosting_ section content for the _Compare with..._ concept on the Frequently Asked Questions (FAQ) page

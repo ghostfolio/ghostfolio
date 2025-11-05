@@ -17,6 +17,7 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
+  AdminUserResponse,
   AdminUsersResponse,
   EnhancedSymbolProfile,
   ScraperConfiguration
@@ -320,5 +321,12 @@ export class AdminController {
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take
     });
+  }
+
+  @Get('user/:id')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getUser(@Param('id') id: string): Promise<AdminUserResponse> {
+    return this.adminService.getUser(id);
   }
 }
