@@ -87,9 +87,9 @@ import { environment } from './environments/environment';
       provideMarkdown(),
       provideNgxSkeletonLoader(),
       {
+        deps: [LanguageService, MAT_DATE_LOCALE, Platform],
         provide: DateAdapter,
-        useClass: CustomDateAdapter,
-        deps: [LanguageService, MAT_DATE_LOCALE, Platform]
+        useClass: CustomDateAdapter
       },
       {
         provide: LOCALE_ID,
