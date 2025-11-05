@@ -60,10 +60,28 @@ import { environment } from './environments/environment';
 
   await bootstrapApplication(GfAppComponent, {
     providers: [
-      { provide: LOCALE_ID, useValue: locale },
       authInterceptorProviders,
       httpResponseInterceptorProviders,
+      importProvidersFrom(
+        GfNotificationModule,
+        MatAutocompleteModule,
+        MatNativeDateModule,
+        MatSnackBarModule,
+        MatTooltipModule,
+        NgxStripeModule.forRoot(environment.stripePublicKey),
+        RouterModule.forRoot(routes, {
+          anchorScrolling: 'enabled',
+          preloadingStrategy: ModulePreloadService,
+          scrollPositionRestoration: 'top'
+        }),
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          registrationStrategy: 'registerImmediately'
+        })
+      ),
       LanguageService,
+      ModulePreloadService,
+      provideAnimations(),
       provideHttpClient(withInterceptorsFromDi()),
       provideIonicAngular(),
       provideMarkdown(),
@@ -73,31 +91,22 @@ import { environment } from './environments/environment';
         useClass: CustomDateAdapter,
         deps: [LanguageService, MAT_DATE_LOCALE, Platform]
       },
-      { provide: MAT_DATE_FORMATS, useValue: DateFormats },
+      {
+        provide: LOCALE_ID,
+        useValue: locale
+      },
+      {
+        provide: MAT_DATE_FORMATS,
+        useValue: DateFormats
+      },
       {
         provide: STRIPE_PUBLISHABLE_KEY,
         useFactory: () => environment.stripePublicKey
       },
-      importProvidersFrom(
-        RouterModule.forRoot(routes, {
-          anchorScrolling: 'enabled',
-          preloadingStrategy: ModulePreloadService,
-          scrollPositionRestoration: 'top'
-        }),
-        GfNotificationModule,
-        MatAutocompleteModule,
-        MatNativeDateModule,
-        MatSnackBarModule,
-        MatTooltipModule,
-        NgxStripeModule.forRoot(environment.stripePublicKey),
-        ServiceWorkerModule.register('ngsw-worker.js', {
-          enabled: environment.production,
-          registrationStrategy: 'registerImmediately'
-        })
-      ),
-      provideAnimations(),
-      ModulePreloadService,
-      { provide: TitleStrategy, useClass: PageTitleStrategy }
+      {
+        provide: TitleStrategy,
+        useClass: PageTitleStrategy
+      }
     ]
   });
 })();

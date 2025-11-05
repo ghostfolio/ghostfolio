@@ -1,4 +1,4 @@
-import { publicRoutes, internalRoutes } from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Routes } from '@angular/router';
 
