@@ -8,7 +8,6 @@ import {
   withInterceptorsFromDi
 } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom, LOCALE_ID } from '@angular/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -64,7 +63,6 @@ import { environment } from './environments/environment';
       httpResponseInterceptorProviders,
       importProvidersFrom(
         GfNotificationModule,
-        MatAutocompleteModule,
         MatNativeDateModule,
         MatSnackBarModule,
         MatTooltipModule,
