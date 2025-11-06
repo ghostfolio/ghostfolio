@@ -14,6 +14,7 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
+  ActivitiesResponse,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -36,8 +37,6 @@ import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-
-import { Activities } from './interfaces/activities.interface';
 
 @Injectable()
 export class OrderService {
@@ -129,7 +128,7 @@ export class OrderService {
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
 
-      let name: string;
+      let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
       if (
@@ -142,7 +141,7 @@ export class OrderService {
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
       } else {
         // Create custom asset profile
-        name = data.SymbolProfile.connectOrCreate.create.symbol;
+        name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
         symbol = uuidv4();
       }
 
@@ -345,7 +344,7 @@ export class OrderService {
     userCurrency: string;
     userId: string;
     withExcludedAccountsAndActivities?: boolean;
-  }): Promise<Activities> {
+  }): Promise<ActivitiesResponse> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
       { date: 'asc' }
     ];

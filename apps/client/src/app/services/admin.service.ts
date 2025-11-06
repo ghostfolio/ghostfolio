@@ -1,7 +1,7 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
@@ -12,11 +12,12 @@ import {
   AdminData,
   AdminJobs,
   AdminMarketData,
-  AdminUsers,
+  AdminUsersResponse,
   DataProviderGhostfolioStatusResponse,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -153,7 +154,7 @@ export class AdminService {
     params = params.append('skip', skip);
     params = params.append('take', take);
 
-    return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
+    return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
 
   public gather7Days() {
@@ -178,9 +179,22 @@ export class AdminService {
     );
   }
 
-  public gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
+  public gatherSymbol({
+    dataSource,
+    range,
+    symbol
+  }: {
+    range?: DateRange;
+  } & AssetProfileIdentifier) {
+    let params = new HttpParams();
+
+    if (range) {
+      params = params.append('range', range);
+    }
+
     const url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
-    return this.http.post<MarketData | void>(url, {});
+
+    return this.http.post<MarketData | void>(url, undefined, { params });
   }
 
   public fetchSymbolForDate({
@@ -194,7 +208,7 @@ export class AdminService {
   }) {
     const url = `/api/v1/symbol/${dataSource}/${symbol}/${dateString}`;
 
-    return this.http.get<IDataProviderHistoricalResponse>(url);
+    return this.http.get<DataProviderHistoricalResponse>(url);
   }
 
   public patchAssetProfile(

@@ -558,7 +558,10 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
   }
 
   private openAccountDetailDialog(aAccountId: string) {
-    const dialogRef = this.dialog.open(GfAccountDetailDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfAccountDetailDialogComponent,
+      AccountDetailDialogParams
+    >(GfAccountDetailDialogComponent, {
       autoFocus: false,
       data: {
         accountId: aAccountId,
@@ -568,7 +571,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView
-      } as AccountDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });

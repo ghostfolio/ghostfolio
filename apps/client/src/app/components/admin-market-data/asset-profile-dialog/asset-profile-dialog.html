@@ -26,12 +26,30 @@
         [disabled]="
           assetProfileForm.dirty || !assetProfileForm.controls.isActive.value
         "
+        [matMenuTriggerFor]="gatherHistoricalMarketDataMenu"
         (click)="
           onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
         "
       >
         <ng-container i18n>Gather Historical Market Data</ng-container>
       </button>
+      <mat-menu #gatherHistoricalMarketDataMenu="matMenu">
+        @for (dateRange of dateRangeOptions; track dateRange.value) {
+          <button
+            mat-menu-item
+            type="button"
+            (click)="
+              onGatherSymbol({
+                dataSource: data.dataSource,
+                range: dateRange.value,
+                symbol: data.symbol
+              })
+            "
+          >
+            {{ dateRange.label }}
+          </button>
+        }
+      </mat-menu>
       <button
         mat-menu-item
         type="button"
@@ -334,7 +352,6 @@
               <div class="w-50">
                 <mat-checkbox
                   color="primary"
-                  i18n
                   [checked]="isBenchmark"
                   [disabled]="isEditAssetProfileIdentifierMode"
                   (change)="
@@ -348,8 +365,13 @@
                           symbol: data.symbol
                         })
                   "
-                  >Benchmark</mat-checkbox
                 >
+                  <ng-container i18n>Include in</ng-container>
+                  <ng-container>&nbsp;</ng-container>
+                  <ng-container i18n>Benchmark</ng-container>
+                  <ng-container> / </ng-container>
+                  <ng-container i18n>Markets</ng-container>
+                </mat-checkbox>
               </div>
             </div>
             <div class="mt-3">

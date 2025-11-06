@@ -8,7 +8,7 @@ import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper'
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import type {
   AssetProfileIdentifier,
-  BenchmarkMarketDataDetails,
+  BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -125,7 +125,7 @@ export class BenchmarksController {
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
-  ): Promise<BenchmarkMarketDataDetails> {
+  ): Promise<BenchmarkMarketDataDetailsResponse> {
     const { endDate, startDate } = getIntervalFromDateRange(
       dateRange,
       new Date(startDateString)

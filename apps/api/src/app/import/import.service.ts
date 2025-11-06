@@ -539,6 +539,7 @@ export class ImportService {
             connectOrCreate: {
               create: {
                 dataSource,
+                name,
                 symbol,
                 currency: assetProfile.currency,
                 userId: dataSource === 'MANUAL' ? user.id : undefined
@@ -743,14 +744,36 @@ export class ImportService {
       }
 
       if (!assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]) {
-        const assetProfile = {
-          currency,
-          ...(
+        if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+          // Skip asset profile validation for FEE, INTEREST, and LIABILITY
+          // as these activity types don't require asset profiles
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
+          assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] = {
+            currency,
+            dataSource,
+            symbol,
+            name: assetProfileInImport?.name
+          };
+
+          continue;
+        }
+
+        let assetProfile: Partial<SymbolProfile> = { currency };
+
+        try {
+          assetProfile = (
             await this.dataProviderService.getAssetProfiles([
               { dataSource, symbol }
             ])
-          )?.[symbol]
-        };
+          )?.[symbol];
+        } catch {}
 
         if (!assetProfile?.name) {
           const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
@@ -787,11 +810,7 @@ export class ImportService {
           }
         }
 
-        if (
-          (dataSource !== 'MANUAL' && type === 'BUY') ||
-          type === 'DIVIDEND' ||
-          type === 'SELL'
-        ) {
+        if (!['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           if (!assetProfile?.name) {
             throw new Error(
               `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`

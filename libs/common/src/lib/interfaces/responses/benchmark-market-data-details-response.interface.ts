@@ -1,5 +1,5 @@
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 
-export interface BenchmarkMarketDataDetails {
+export interface BenchmarkMarketDataDetailsResponse {
   marketData: LineChartItem[];
 }

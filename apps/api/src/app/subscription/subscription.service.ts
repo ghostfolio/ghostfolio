@@ -6,7 +6,10 @@ import {
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
-import { SubscriptionOffer } from '@ghostfolio/common/interfaces';
+import {
+  CreateStripeCheckoutSessionResponse,
+  SubscriptionOffer
+} from '@ghostfolio/common/interfaces';
 import {
   SubscriptionOfferKey,
   UserWithSettings
@@ -38,7 +41,7 @@ export class SubscriptionService {
     }
   }
 
-  public async createCheckoutSession({
+  public async createStripeCheckoutSession({
     couponId,
     priceId,
     user
@@ -46,7 +49,7 @@ export class SubscriptionService {
     couponId?: string;
     priceId: string;
     user: UserWithSettings;
-  }) {
+  }): Promise<CreateStripeCheckoutSessionResponse> {
     const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
@@ -58,33 +61,34 @@ export class SubscriptionService {
       }
     );
 
-    const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
-      cancel_url: `${this.configurationService.get('ROOT_URL')}/${
-        user.settings.settings.language
-      }/account`,
-      client_reference_id: user.id,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1
-        }
-      ],
-      locale:
-        (user.settings?.settings
-          ?.language as Stripe.Checkout.SessionCreateParams.Locale) ??
-        DEFAULT_LANGUAGE_CODE,
-      metadata: subscriptionOffer
-        ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
-        : {},
-      mode: 'payment',
-      payment_method_types: ['card'],
-      success_url: `${this.configurationService.get(
-        'ROOT_URL'
-      )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
-    };
+    const stripeCheckoutSessionCreateParams: Stripe.Checkout.SessionCreateParams =
+      {
+        cancel_url: `${this.configurationService.get('ROOT_URL')}/${
+          user.settings.settings.language
+        }/account`,
+        client_reference_id: user.id,
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1
+          }
+        ],
+        locale:
+          (user.settings?.settings
+            ?.language as Stripe.Checkout.SessionCreateParams.Locale) ??
+          DEFAULT_LANGUAGE_CODE,
+        metadata: subscriptionOffer
+          ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
+          : {},
+        mode: 'payment',
+        payment_method_types: ['card'],
+        success_url: `${this.configurationService.get(
+          'ROOT_URL'
+        )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
+      };
 
     if (couponId) {
-      checkoutSessionCreateParams.discounts = [
+      stripeCheckoutSessionCreateParams.discounts = [
         {
           coupon: couponId
         }
@@ -92,7 +96,7 @@ export class SubscriptionService {
     }
 
     const session = await this.stripe.checkout.sessions.create(
-      checkoutSessionCreateParams
+      stripeCheckoutSessionCreateParams
     );
 
     return {

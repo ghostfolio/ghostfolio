@@ -1,7 +1,7 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { Export } from '@ghostfolio/common/interfaces';
+import { ExportResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -35,7 +35,7 @@ export class ExportController {
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
-  ): Promise<Export> {
+  ): Promise<ExportResponse> {
     const activityIds = filterByActivityIds?.split(',') ?? [];
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -48,8 +48,8 @@ export class ExportController {
     return this.exportService.export({
       activityIds,
       filters,
-      userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: this.request.user.id
+      userId: this.request.user.id,
+      userSettings: this.request.user.settings.settings
     });
   }
 }

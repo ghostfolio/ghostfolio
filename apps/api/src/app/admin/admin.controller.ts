@@ -17,7 +17,8 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
-  AdminUsers,
+  AdminUserResponse,
+  AdminUsersResponse,
   EnhancedSymbolProfile,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
@@ -169,7 +170,7 @@ export class AdminController {
     let date: Date;
 
     if (dateRange) {
-      const { startDate } = getIntervalFromDateRange(dateRange, new Date());
+      const { startDate } = getIntervalFromDateRange(dateRange);
       date = startDate;
     }
 
@@ -315,10 +316,17 @@ export class AdminController {
   public async getUsers(
     @Query('skip') skip?: number,
     @Query('take') take?: number
-  ): Promise<AdminUsers> {
+  ): Promise<AdminUsersResponse> {
     return this.adminService.getUsers({
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take
     });
+  }
+
+  @Get('user/:id')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getUser(@Param('id') id: string): Promise<AdminUserResponse> {
+    return this.adminService.getUser(id);
   }
 }
