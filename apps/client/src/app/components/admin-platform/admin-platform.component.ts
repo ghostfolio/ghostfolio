@@ -51,7 +51,7 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
   styleUrls: ['./admin-platform.component.scss'],
   templateUrl: './admin-platform.component.html'
 })
-export class GfAdminPlatformComponent implements OnInit, OnDestroy {
+export class GfAdminPlatformComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Platform>();
