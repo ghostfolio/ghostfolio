@@ -53,7 +53,7 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
   templateUrl: 'create-asset-profile-dialog.html'
 })
-export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
+export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   public createAssetProfileForm: FormGroup;
   public ghostfolioPrefix = `${ghostfolioPrefix}_`;
   public mode: CreateAssetProfileDialogMode;
