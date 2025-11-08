@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
@@ -8,6 +7,7 @@ import {
 } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { SelectionModel } from '@angular/cdk/collections';

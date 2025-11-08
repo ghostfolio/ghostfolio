@@ -1,5 +1,4 @@
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
@@ -13,6 +12,7 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { OrderWithAccount } from '@ghostfolio/common/types';

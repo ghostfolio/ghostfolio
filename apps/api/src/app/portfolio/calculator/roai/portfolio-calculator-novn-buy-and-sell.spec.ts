@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
   loadExportFile,
@@ -16,6 +15,7 @@ import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfo
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 import { ExportResponse } from '@ghostfolio/common/interfaces';
+import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
