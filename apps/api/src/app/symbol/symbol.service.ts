@@ -1,14 +1,12 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import {
-  DataGatheringItem,
-  DataProviderHistoricalResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   HistoricalDataItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';

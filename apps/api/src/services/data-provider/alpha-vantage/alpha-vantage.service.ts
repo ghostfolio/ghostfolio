@@ -7,16 +7,16 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderHistoricalResponse,
+  DataProviderResponse
+} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 
 import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';

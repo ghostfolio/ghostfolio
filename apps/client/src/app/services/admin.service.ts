@@ -1,7 +1,6 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
@@ -17,6 +16,7 @@ import {
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { DateRange } from '@ghostfolio/common/types';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';

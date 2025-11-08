@@ -8,7 +8,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -25,6 +24,7 @@ import {
   LookupResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';

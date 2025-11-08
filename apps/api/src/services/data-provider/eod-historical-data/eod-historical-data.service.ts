@@ -7,10 +7,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -22,6 +18,10 @@ import {
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderHistoricalResponse,
+  DataProviderResponse
+} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { MarketState } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
