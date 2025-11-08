@@ -48,7 +48,7 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
   styleUrls: ['./admin-tag.component.scss'],
   templateUrl: './admin-tag.component.html'
 })
-export class GfAdminTagComponent implements OnInit, OnDestroy {
+export class GfAdminTagComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Tag>();

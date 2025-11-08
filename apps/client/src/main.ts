@@ -2,11 +2,39 @@ import { locale } from '@ghostfolio/common/config';
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 
-import { enableProdMode } from '@angular/core';
-import { LOCALE_ID } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { Platform } from '@angular/cdk/platform';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
+import { enableProdMode, importProvidersFrom, LOCALE_ID } from '@angular/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatNativeDateModule
+} from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { RouterModule, TitleStrategy } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { provideMarkdown } from 'ngx-markdown';
+import { provideNgxSkeletonLoader } from 'ngx-skeleton-loader';
+import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
 
-import { AppModule } from './app/app.module';
+import { CustomDateAdapter } from './app/adapter/custom-date-adapter';
+import { DateFormats } from './app/adapter/date-formats';
+import { GfAppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+import { authInterceptorProviders } from './app/core/auth.interceptor';
+import { httpResponseInterceptorProviders } from './app/core/http-response.interceptor';
+import { LanguageService } from './app/core/language.service';
+import { ModulePreloadService } from './app/core/module-preload.service';
+import { GfNotificationModule } from './app/core/notification/notification.module';
+import { PageTitleStrategy } from './app/services/page-title.strategy';
 import { environment } from './environments/environment';
 
 (async () => {
@@ -29,9 +57,54 @@ import { environment } from './environments/environment';
     enableProdMode();
   }
 
-  platformBrowserDynamic()
-    .bootstrapModule(AppModule, {
-      providers: [{ provide: LOCALE_ID, useValue: locale }]
-    })
-    .catch((error) => console.error(error));
+  await bootstrapApplication(GfAppComponent, {
+    providers: [
+      authInterceptorProviders,
+      httpResponseInterceptorProviders,
+      importProvidersFrom(
+        GfNotificationModule,
+        MatNativeDateModule,
+        MatSnackBarModule,
+        MatTooltipModule,
+        NgxStripeModule.forRoot(environment.stripePublicKey),
+        RouterModule.forRoot(routes, {
+          anchorScrolling: 'enabled',
+          preloadingStrategy: ModulePreloadService,
+          scrollPositionRestoration: 'top'
+        }),
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          registrationStrategy: 'registerImmediately'
+        })
+      ),
+      LanguageService,
+      ModulePreloadService,
+      provideAnimations(),
+      provideHttpClient(withInterceptorsFromDi()),
+      provideIonicAngular(),
+      provideMarkdown(),
+      provideNgxSkeletonLoader(),
+      {
+        deps: [LanguageService, MAT_DATE_LOCALE, Platform],
+        provide: DateAdapter,
+        useClass: CustomDateAdapter
+      },
+      {
+        provide: LOCALE_ID,
+        useValue: locale
+      },
+      {
+        provide: MAT_DATE_FORMATS,
+        useValue: DateFormats
+      },
+      {
+        provide: STRIPE_PUBLISHABLE_KEY,
+        useFactory: () => environment.stripePublicKey
+      },
+      {
+        provide: TitleStrategy,
+        useClass: PageTitleStrategy
+      }
+    ]
+  });
 })();

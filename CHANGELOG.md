@@ -13,11 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `chart.js` from version `4.5.0` to `4.5.1`
+
+## 2.215.0 - 2025-11-06
+
+### Added
+
+- Added the endpoint `GET /api/v1/admin/user/:id`
+
+### Changed
+
+- Improved the _Self-Hosting_ section content for the _Compare with..._ concept on the Frequently Asked Questions (FAQ) page
+- Improved the _Self-Hosting_ section content for the _Markets_ concept on the Frequently Asked Questions (FAQ) page
 - Changed the build executor of the client from `@nx/angular:webpack-browser` to `@nx/angular:browser-esbuild`
+- Refactored the app component to standalone
+- Improved the language localization for German (`de`)
+- Upgraded `@ionic/angular` from version `8.7.3` to `8.7.8`
 
 ### Fixed
 
 - Fixed the style of the safe withdrawal rate selector in the _FIRE_ section (experimental)
+- Assigned the `ADMIN` role to the first user signing up via a social login provider if no administrator existed
+- Improved the table headers’ alignment in the platform management of the admin control panel
+- Improved the table headers’ alignment in the tag management of the admin control panel
 
 ## 2.214.0 - 2025-11-01
 
