@@ -361,7 +361,8 @@ export class PortfolioService {
             countries: [],
             createdAt: new Date(balanceItem.date),
             currency: account.currency,
-            dataSource: 'YAHOO',
+            dataSource:
+              this.dataProviderService.getDataSourceForExchangeRates(),
             holdings: [],
             id: account.currency,
             isActive: true,
