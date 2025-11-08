@@ -1,4 +1,4 @@
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
+import { Activity } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioOrder extends Pick<Activity, 'tags' | 'type'> {
   date: string;

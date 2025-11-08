@@ -9,11 +9,11 @@ import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/conf
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
+  Activity,
   HistoricalDataItem,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { OrderWithAccount } from '@ghostfolio/common/types';

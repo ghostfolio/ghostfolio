@@ -39,6 +39,7 @@ import {
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   AccountsResponse,
+  Activity,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
@@ -53,7 +54,6 @@ import {
   PortfolioSummary,
   UserSettings
 } from '@ghostfolio/common/interfaces';
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 import { TimelinePosition } from '@ghostfolio/common/models';
 import {
   AccountWithValue,

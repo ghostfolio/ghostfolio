@@ -4,7 +4,7 @@ import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
+import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

@@ -1,10 +1,10 @@
 import {
+  Activity,
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 
 import { Tag } from '@prisma/client';
 

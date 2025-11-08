@@ -25,6 +25,7 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import {
+  Activity,
   AssetProfileIdentifier,
   DataProviderInfo,
   Filter,
@@ -33,7 +34,6 @@ import {
   ResponseError,
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';

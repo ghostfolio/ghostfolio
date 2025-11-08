@@ -1,5 +1,4 @@
-import { User } from '@ghostfolio/common/interfaces';
-import { Activity } from '@ghostfolio/common/interfaces/activities.interface';
+import { Activity, User } from '@ghostfolio/common/interfaces';
 
 import { Account } from '@prisma/client';
 
