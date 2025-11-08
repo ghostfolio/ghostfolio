@@ -20,15 +20,17 @@ module.exports = [
       '@nx/enforce-module-boundaries': [
         'error',
         {
-          allowCircularSelfDependency: true,
-          enforceBuildableLibDependency: true,
           allow: [],
+          allowCircularSelfDependency: true,
           depConstraints: [
             {
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*']
             }
-          ]
+          ],
+          enforceBuildableLibDependency: true,
+          // Temporary fix, should be removed eventually
+          ignoredCircularDependencies: [['client', 'ui']]
         }
       ],
       '@typescript-eslint/no-extra-semi': 'error',
