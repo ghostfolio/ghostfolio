@@ -1,4 +1,3 @@
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import {
   getDateFnsLocale,
@@ -56,6 +55,7 @@ import { NotificationService } from '../../core/notification/notification.servic
 import { AdminService } from '../../services/admin.service';
 import { DataService } from '../../services/data.service';
 import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { TokenStorageService } from '../../services/token-storage.service';
 import { UserService } from '../../services/user/user.service';
 import { UserDetailDialogParams } from '../user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '../user-detail-dialog/user-detail-dialog.component';
@@ -283,22 +283,13 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   }
 
   private openUserDetailDialog(aUserId: string) {
-    const userData = this.dataSource.data.find(({ id }) => {
-      return id === aUserId;
-    });
-
-    if (!userData) {
-      this.router.navigate(['.'], { relativeTo: this.route });
-      return;
-    }
-
     const dialogRef = this.dialog.open<
       GfUserDetailDialogComponent,
       UserDetailDialogParams
     >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
-        userData,
+        userId: aUserId,
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale

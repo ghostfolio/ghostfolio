@@ -157,6 +157,12 @@ export class AdminService {
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
 
+  public fetchUserById(id: string) {
+    return this.http.get<
+      import('@ghostfolio/common/interfaces').AdminUserResponse
+    >(`/api/v1/admin/user/${id}`);
+  }
+
   public gather7Days() {
     return this.http.post<void>('/api/v1/admin/gather', {});
   }
