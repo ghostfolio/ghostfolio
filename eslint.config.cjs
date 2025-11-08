@@ -20,6 +20,7 @@ module.exports = [
       '@nx/enforce-module-boundaries': [
         'warn',
         {
+          allowCircularSelfDependency: true,
           enforceBuildableLibDependency: true,
           allow: [],
           depConstraints: [
