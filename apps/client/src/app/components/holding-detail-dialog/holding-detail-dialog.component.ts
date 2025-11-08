@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';

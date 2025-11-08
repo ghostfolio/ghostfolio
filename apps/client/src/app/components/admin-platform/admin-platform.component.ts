@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';

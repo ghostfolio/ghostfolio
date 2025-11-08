@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';

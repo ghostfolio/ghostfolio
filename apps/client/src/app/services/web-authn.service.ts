@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import {
   PublicKeyCredentialCreationOptionsJSON,
