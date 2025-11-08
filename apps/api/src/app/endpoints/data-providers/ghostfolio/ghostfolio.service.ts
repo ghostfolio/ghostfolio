@@ -17,6 +17,7 @@ import {
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   DataProviderGhostfolioAssetProfileResponse,
+  DataProviderHistoricalResponse,
   DataProviderInfo,
   DividendsResponse,
   HistoricalResponse,
@@ -24,7 +25,6 @@ import {
   LookupResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';

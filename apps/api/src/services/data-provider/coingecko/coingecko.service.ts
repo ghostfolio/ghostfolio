@@ -10,14 +10,12 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 
 import { Injectable, Logger } from '@nestjs/common';
 import {

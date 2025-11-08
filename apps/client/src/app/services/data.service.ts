@@ -32,6 +32,7 @@ import {
   BenchmarkResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
+  DataProviderHistoricalResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -51,7 +52,6 @@ import {
   User,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {

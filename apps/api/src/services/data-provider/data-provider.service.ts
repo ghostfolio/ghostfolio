@@ -19,13 +19,11 @@ import {
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  DataProviderHistoricalResponse,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';

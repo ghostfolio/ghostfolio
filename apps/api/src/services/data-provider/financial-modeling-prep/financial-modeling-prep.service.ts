@@ -15,14 +15,12 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency, parseDate } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { MarketState } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';

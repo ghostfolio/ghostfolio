@@ -1,5 +1,5 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 
 import {
   Controller,

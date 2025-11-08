@@ -3,10 +3,10 @@ import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interface
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   HistoricalDataItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import { UserWithSettings } from '@ghostfolio/common/types';
 

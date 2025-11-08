@@ -51,6 +51,10 @@ import type { DataEnhancerHealthResponse } from './responses/data-enhancer-healt
 import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { DataProviderHealthResponse } from './responses/data-provider-health-response.interface';
+import type {
+  DataProviderResponse,
+  DataProviderHistoricalResponse
+} from './responses/data-provider-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ExportResponse } from './responses/export-response.interface';
@@ -112,7 +116,9 @@ export {
   DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DataProviderHealthResponse,
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   DividendsResponse,
   EnhancedSymbolProfile,
   ExportResponse,

@@ -2,7 +2,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { LookupResponse } from '@ghostfolio/common/interfaces';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 

@@ -14,10 +14,10 @@ import {
   AdminMarketData,
   AdminUsersResponse,
   DataProviderGhostfolioStatusResponse,
+  DataProviderHistoricalResponse,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { DateRange } from '@ghostfolio/common/types';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';

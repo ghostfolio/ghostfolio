@@ -15,14 +15,12 @@ import {
   getYesterday
 } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';

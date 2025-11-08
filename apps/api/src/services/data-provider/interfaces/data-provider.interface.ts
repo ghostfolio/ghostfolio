@@ -1,11 +1,9 @@
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
 import { Granularity } from '@ghostfolio/common/types';
 
 import { DataSource, SymbolProfile } from '@prisma/client';
