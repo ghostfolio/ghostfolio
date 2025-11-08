@@ -5,9 +5,9 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   HistoricalDataItem,
-  LookupResponse
+  LookupResponse,
+  SymbolItem
 } from '@ghostfolio/common/interfaces';
-import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';

@@ -49,10 +49,10 @@ import {
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
+  SymbolItem,
   User,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
-import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
   AccountWithValue,
