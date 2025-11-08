@@ -3,6 +3,7 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { LookupResponse } from '@ghostfolio/common/interfaces';
 import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
+import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -22,7 +23,6 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
-import { SymbolItem } from './interfaces/symbol-item.interface';
 import { SymbolService } from './symbol.service';
 
 @Controller('symbol')

@@ -10,7 +10,6 @@ import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto'
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
@@ -52,6 +51,7 @@ import {
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
+import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
   AccountWithValue,

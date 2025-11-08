@@ -7,12 +7,11 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces/responses/data-provider-response.interface';
+import { SymbolItem } from '@ghostfolio/common/interfaces/symbol-item.interface';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
-
-import { SymbolItem } from './interfaces/symbol-item.interface';
 
 @Injectable()
 export class SymbolService {
