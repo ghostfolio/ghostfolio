@@ -22,6 +22,7 @@ import {
   Access,
   AccessTokenResponse,
   AccountBalancesResponse,
+  AccountResponse,
   AccountsResponse,
   ActivitiesResponse,
   ActivityResponse,
@@ -54,7 +55,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
-  AccountWithValue,
   AiPromptMode,
   DateRange,
   GroupBy
@@ -186,7 +186,7 @@ export class DataService {
   }
 
   public fetchAccount(aAccountId: string) {
-    return this.http.get<AccountWithValue>(`/api/v1/account/${aAccountId}`);
+    return this.http.get<AccountResponse>(`/api/v1/account/${aAccountId}`);
   }
 
   public fetchAccountBalances(aAccountId: string) {
