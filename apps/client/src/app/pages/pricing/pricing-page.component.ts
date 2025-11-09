@@ -53,6 +53,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public couponId: string;
   public durationExtension: StringValue;
   public hasPermissionForAuthToken: boolean;
+  public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
@@ -103,17 +104,22 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     const { baseCurrency, globalPermissions, subscriptionOffer } =
       this.dataService.fetchInfo();
+
     this.baseCurrency = baseCurrency;
+    this.coupon = subscriptionOffer?.coupon;
+    this.durationExtension = subscriptionOffer?.durationExtension;
+    this.label = subscriptionOffer?.label;
+    this.price = subscriptionOffer?.price;
 
     this.hasPermissionForAuthToken = hasPermission(
       globalPermissions,
       permissions.enableAuthToken
     );
 
-    this.coupon = subscriptionOffer?.coupon;
-    this.durationExtension = subscriptionOffer?.durationExtension;
-    this.label = subscriptionOffer?.label;
-    this.price = subscriptionOffer?.price;
+    this.hasPermissionToCreateUser = hasPermission(
+      globalPermissions,
+      permissions.createUserAccount
+    );
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))

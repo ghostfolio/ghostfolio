@@ -51,11 +51,9 @@
 
 <div mat-dialog-actions>
   <div class="flex-grow-1">
-    @if (data.hasPermissionToUseAuthToken) {
-      <mat-checkbox color="primary" i18n (change)="onChangeStaySignedIn($event)"
-        >Stay signed in</mat-checkbox
-      >
-    }
+    <mat-checkbox color="primary" i18n (change)="onChangeStaySignedIn($event)"
+      >Stay signed in</mat-checkbox
+    >
   </div>
   <div>
     @if (data.hasPermissionToUseAuthToken) {
