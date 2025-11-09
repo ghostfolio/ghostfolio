@@ -64,18 +64,18 @@ export class InfoService {
       globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
 
-    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
-      isReadOnlyMode = await this.propertyService.getByKey<boolean>(
-        PROPERTY_IS_READ_ONLY_MODE
-      );
-    }
-
     if (this.configurationService.get('ENABLE_FEATURE_AUTH_GOOGLE')) {
       globalPermissions.push(permissions.enableAuthGoogle);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_AUTH_TOKEN')) {
       globalPermissions.push(permissions.enableAuthToken);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
+      isReadOnlyMode = await this.propertyService.getByKey<boolean>(
+        PROPERTY_IS_READ_ONLY_MODE
+      );
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
