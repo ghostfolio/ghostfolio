@@ -110,10 +110,6 @@ export class GfAppComponent implements OnDestroy, OnInit {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
-    this.hasPromotion =
-      !!this.info?.subscriptionOffer?.coupon ||
-      !!this.info?.subscriptionOffer?.durationExtension;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -217,9 +213,11 @@ export class GfAppComponent implements OnDestroy, OnInit {
         this.hasInfoMessage =
           this.canCreateAccount || !!this.user?.systemMessage;
 
-        this.hasPromotion =
-          !!this.user?.subscription?.offer?.coupon ||
-          !!this.user?.subscription?.offer?.durationExtension;
+        this.hasPromotion = this.user
+          ? !!this.user.subscription?.offer?.coupon ||
+            !!this.user.subscription?.offer?.durationExtension
+          : !!this.info?.subscriptionOffer?.coupon ||
+            !!this.info?.subscriptionOffer?.durationExtension;
 
         this.initializeTheme(this.user?.settings.colorScheme);
 
