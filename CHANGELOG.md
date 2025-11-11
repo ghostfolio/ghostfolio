@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the get holding functionality in the portfolio service
+- Improved the language localization for German (`de`)
 
 ## 2.216.0 - 2025-11-10
 
