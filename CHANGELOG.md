@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.216.0 - 2025-11-10
 
+- Added dependabot for version update
+
 ### Changed
 
 - Improved the language localization for Chinese (`zh`)
