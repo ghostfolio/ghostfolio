@@ -17,6 +17,8 @@ import {
   ElementRef,
   Input,
   OnChanges,
+  Output,
+  EventEmitter,
   ViewChild
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -44,6 +46,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() precision: number;
   @Input() showDetails: boolean;
   @Input() unit: string;
+  @Output() metricClick = new EventEmitter<string>();
 
   @ViewChild('value') value: ElementRef;
 
@@ -94,5 +97,9 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
       message: errorMessageParts.join('<br />'),
       title: $localize`Market data is delayed for`
     });
+  }
+
+  public onMetricClick(selectedChoice: string): void {
+    this.metricClick.emit(selectedChoice); // notify parent
   }
 }
