@@ -244,7 +244,7 @@
         <target state="translated">请</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8650499415827640724" datatype="html">
@@ -1323,6 +1323,14 @@
           <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="2395205455607568422" datatype="html">
+        <source>No auto-renewal on membership.</source>
+        <target state="new">No auto-renewal on membership.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="5209005842640458222" datatype="html">
         <source>Engagement per Day</source>
         <target state="translated">每天的参与度</target>
@@ -1700,7 +1708,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">344</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
@@ -2188,7 +2196,7 @@
         <target state="translated">尝试高级版</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5779112962677150663" datatype="html">
@@ -2196,7 +2204,7 @@
         <target state="translated">兑换优惠券</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="616064537937996961" datatype="html">
@@ -2988,7 +2996,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">377</context>
+          <context context-type="linenumber">378</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -3444,7 +3452,7 @@
         <target state="translated">使用您的学校电子邮件地址</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">365</context>
+          <context context-type="linenumber">366</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4808791512433987109" datatype="html">
@@ -3992,7 +4000,7 @@
         <target state="translated">寻找学生折扣？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">359</context>
+          <context context-type="linenumber">360</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
@@ -4344,7 +4352,7 @@
         <target state="translated">免费。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">379</context>
+          <context context-type="linenumber">380</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5342721262799645301" datatype="html">
@@ -4765,7 +4773,7 @@
         <target state="translated">请求它</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">361</context>
+          <context context-type="linenumber">362</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
@@ -4933,7 +4941,7 @@
         <target state="translated">联系我们</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">353</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1533391340482659699" datatype="html">
@@ -5777,7 +5785,7 @@
         <target state="translated">这里</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">364</context>
+          <context context-type="linenumber">365</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1501828122056907560" datatype="html">
@@ -6746,7 +6754,7 @@
         <target state="translated">如果您计划开通账户在</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">329</context>
+          <context context-type="linenumber">330</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
@@ -6787,14 +6795,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1442341407847672405" datatype="html">
-        <source>No auto-renewal.</source>
-        <target state="translated">不自动续订。</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
-          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8462417627724236320" datatype="html">
@@ -6858,7 +6858,7 @@
         <target state="translated">使用我们的推荐链接并获得一年的Ghostfolio Premium会员资格</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">358</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
@@ -7911,6 +7911,10 @@
         <source>Limited Offer!</source>
         <target state="translated">限时优惠！</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">312</context>
         </context-group>
@@ -7919,8 +7923,12 @@
         <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
         <target state="translated">获取额外 <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/></target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">315</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3955868613858648955" datatype="html">
