@@ -1,12 +1,11 @@
-export class AssetProfileChangedEvent {
-  private static readonly eventName = 'asset-profile.changed';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
+export class AssetProfileChangedEvent {
   public constructor(
-    public readonly currency: string,
-    public readonly symbol: string
+    public readonly data: AssetProfileIdentifier & { currency: string }
   ) {}
 
   public static getName(): string {
-    return AssetProfileChangedEvent.eventName;
+    return 'assetProfile.changed';
   }
 }

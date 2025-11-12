@@ -609,15 +609,16 @@ export class ImportService {
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       });
 
-      uniqueActivities.forEach(({ SymbolProfile }) => {
+      for (const { SymbolProfile } of uniqueActivities) {
         this.eventEmitter.emit(
           AssetProfileChangedEvent.getName(),
-          new AssetProfileChangedEvent(
-            SymbolProfile.currency,
-            SymbolProfile.symbol
-          )
+          new AssetProfileChangedEvent({
+            currency: SymbolProfile.currency,
+            dataSource: SymbolProfile.dataSource,
+            symbol: SymbolProfile.symbol
+          })
         );
-      });
+      }
     }
 
     return activities;

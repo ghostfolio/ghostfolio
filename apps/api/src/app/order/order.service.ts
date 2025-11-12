@@ -227,18 +227,19 @@ export class OrderService {
     }
 
     this.eventEmitter.emit(
-      PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({
-        userId: order.userId
+      AssetProfileChangedEvent.getName(),
+      new AssetProfileChangedEvent({
+        currency: order.SymbolProfile.currency,
+        dataSource: order.SymbolProfile.dataSource,
+        symbol: order.SymbolProfile.symbol
       })
     );
 
     this.eventEmitter.emit(
-      AssetProfileChangedEvent.getName(),
-      new AssetProfileChangedEvent(
-        order.SymbolProfile.currency,
-        order.SymbolProfile.symbol
-      )
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
     );
 
     return order;
