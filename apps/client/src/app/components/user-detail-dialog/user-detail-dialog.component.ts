@@ -1,3 +1,6 @@
+import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
+import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -17,9 +20,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { AdminService } from '../../services/admin.service';
-import { GfDialogFooterComponent } from '../dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '../dialog-header/dialog-header.component';
 import { UserDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
