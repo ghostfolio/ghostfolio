@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Adapted the user detail dialog in the admin control panel to load user data on demand via `GET /api/v1/admin/user/:id` and pass only the user id
 - Refactored the get holding functionality in the portfolio service
+- Changed the user data loading in the user detail dialog of the admin control panel’s users section to fetch data on demand
 - Improved the language localization for German (`de`)
 
 ## 2.216.0 - 2025-11-10
