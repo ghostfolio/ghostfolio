@@ -9,7 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the get holding functionality in the portfolio service
+- Improved the language localization for German (`de`)
+
+## 2.216.0 - 2025-11-10
+
+### Changed
+
+- Improved the language localization for Chinese (`zh`)
 - Upgraded `chart.js` from version `4.5.0` to `4.5.1`
+- Upgraded `svgmap` from version `2.12.2` to `2.14.0`
 
 ## 2.215.0 - 2025-11-06
 

@@ -241,10 +241,10 @@
       </trans-unit>
       <trans-unit id="9153520284278555926" datatype="html">
         <source>please</source>
-        <target state="new">please</target>
+        <target state="translated">请</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8650499415827640724" datatype="html">
@@ -285,7 +285,7 @@
       </trans-unit>
       <trans-unit id="1351814922314683865" datatype="html">
         <source>with</source>
-        <target state="new">with</target>
+        <target state="translated">和</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">87</context>
@@ -665,7 +665,7 @@
       </trans-unit>
       <trans-unit id="5611965261696422586" datatype="html">
         <source>and is driven by the efforts of its <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/graphs/contributors&quot; title=&quot;Contributors to Ghostfolio&quot; &gt;"/>contributors<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></source>
-        <target state="new">and is driven by the efforts of its <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/graphs/contributors&quot; title=&quot;Contributors to Ghostfolio&quot; &gt;"/>contributors<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
+        <target state="translated">并且得益于其 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/graphs/contributors&quot; title=&quot;Contributors to Ghostfolio&quot; &gt;"/>贡献者<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">49</context>
@@ -965,7 +965,7 @@
       </trans-unit>
       <trans-unit id="577204259483334667" datatype="html">
         <source>and we share aggregated <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>key metrics<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> of the platform’s performance</source>
-        <target state="new">and we share aggregated <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>key metrics<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> of the platform’s performance</target>
+        <target state="translated">并且我们分享平台性能的聚合 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>关键指标<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">32</context>
@@ -1181,7 +1181,7 @@
       </trans-unit>
       <trans-unit id="8119836022359386797" datatype="html">
         <source>Activities</source>
-        <target state="new">Activities</target>
+        <target state="translated">活动</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">61</context>
@@ -1233,7 +1233,7 @@
       </trans-unit>
       <trans-unit id="4340477809050781416" datatype="html">
         <source>Current year</source>
-        <target state="new">Current year</target>
+        <target state="translated">当前年份</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">204</context>
@@ -1321,6 +1321,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">231</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2395205455607568422" datatype="html">
+        <source>No auto-renewal on membership.</source>
+        <target state="new">No auto-renewal on membership.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5209005842640458222" datatype="html">
@@ -1545,7 +1553,7 @@
       </trans-unit>
       <trans-unit id="5289957034780335504" datatype="html">
         <source>The source code is fully available as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></source>
-        <target state="new">The source code is fully available as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
+        <target state="translated">源代码完全可用，作为<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>开源软件<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS)，遵循<x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0许可证<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">16</context>
@@ -1609,7 +1617,7 @@
       </trans-unit>
       <trans-unit id="6004588582437169024" datatype="html">
         <source>Current week</source>
-        <target state="new">Current week</target>
+        <target state="translated">当前周</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">196</context>
@@ -1700,7 +1708,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">344</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
@@ -2188,7 +2196,7 @@
         <target state="translated">尝试高级版</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5779112962677150663" datatype="html">
@@ -2196,7 +2204,7 @@
         <target state="translated">兑换优惠券</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="616064537937996961" datatype="html">
@@ -2517,7 +2525,7 @@
       </trans-unit>
       <trans-unit id="8553460997100418147" datatype="html">
         <source>for</source>
-        <target state="new">for</target>
+        <target state="translated">用于</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">128</context>
@@ -2953,7 +2961,7 @@
       </trans-unit>
       <trans-unit id="3556628518893194463" datatype="html">
         <source>per week</source>
-        <target state="new">per week</target>
+        <target state="translated">每周</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">130</context>
@@ -2988,7 +2996,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">377</context>
+          <context context-type="linenumber">378</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -3129,7 +3137,7 @@
       </trans-unit>
       <trans-unit id="9187635907883145155" datatype="html">
         <source>Edit access</source>
-        <target state="new">Edit access</target>
+        <target state="translated">编辑权限</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">11</context>
@@ -3233,7 +3241,7 @@
       </trans-unit>
       <trans-unit id="8984201769958269296" datatype="html">
         <source>Get access to 80’000+ tickers from over 50 exchanges</source>
-        <target state="new">Get access to 80’000+ tickers from over 50 exchanges</target>
+        <target state="translated">获取来自 50 多个交易所的 80,000 多个行情的访问权限</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">84</context>
@@ -3369,7 +3377,7 @@
       </trans-unit>
       <trans-unit id="8014012170270529279" datatype="html">
         <source>less than</source>
-        <target state="new">less than</target>
+        <target state="translated">少于</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">129</context>
@@ -3433,7 +3441,7 @@
       </trans-unit>
       <trans-unit id="4257439615478050183" datatype="html">
         <source>Ghostfolio Status</source>
-        <target state="new">Ghostfolio Status</target>
+        <target state="translated">Ghostfolio 状态</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">62</context>
@@ -3441,10 +3449,10 @@
       </trans-unit>
       <trans-unit id="4275978599610634089" datatype="html">
         <source>with your university e-mail address</source>
-        <target state="new">with your university e-mail address</target>
+        <target state="translated">使用您的学校电子邮件地址</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">365</context>
+          <context context-type="linenumber">366</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4808791512433987109" datatype="html">
@@ -3473,7 +3481,7 @@
       </trans-unit>
       <trans-unit id="70768492340592330" datatype="html">
         <source>and a safe withdrawal rate (SWR) of</source>
-        <target state="new">and a safe withdrawal rate (SWR) of</target>
+        <target state="translated">和安全取款率 (SWR) 为</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">107</context>
@@ -3497,7 +3505,7 @@
       </trans-unit>
       <trans-unit id="3627006945295714424" datatype="html">
         <source>Job ID</source>
-        <target state="new">Job ID</target>
+        <target state="translated">作业 ID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">34</context>
@@ -3709,7 +3717,7 @@
       </trans-unit>
       <trans-unit id="7500665368930738879" datatype="html">
         <source>or start a discussion at</source>
-        <target state="new">or start a discussion at</target>
+        <target state="translated">或在以下位置开始讨论</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">94</context>
@@ -3897,7 +3905,7 @@
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
         <source>Exclude from Analysis</source>
-        <target state="new">Exclude from Analysis</target>
+        <target state="translated">排除在分析之外</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">90</context>
@@ -3921,7 +3929,7 @@
       </trans-unit>
       <trans-unit id="7934616470747135563" datatype="html">
         <source>Latest activities</source>
-        <target state="new">Latest activities</target>
+        <target state="translated">最新活动</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">211</context>
@@ -3989,10 +3997,10 @@
       </trans-unit>
       <trans-unit id="7763941937414903315" datatype="html">
         <source>Looking for a student discount?</source>
-        <target state="new">Looking for a student discount?</target>
+        <target state="translated">寻找学生折扣？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">359</context>
+          <context context-type="linenumber">360</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
@@ -4165,7 +4173,7 @@
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
         <source>Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover operational costs for the hosting infrastructure and professional data providers, and to fund ongoing development.</source>
-        <target state="new">我们的官方 Ghostfolio Premium 云产品是最简单的入门方法。由于它节省了时间，这对于大多数人来说将是最佳选择。收入用于支付托管基础设施的成本和资助持续开发。</target>
+        <target state="translated">我们的官方 Ghostfolio Premium 云产品是最简单的入门方法。由于它节省了时间，这对于大多数人来说将是最佳选择。收入用于支付托管基础设施的成本和资助持续开发。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">7</context>
@@ -4344,7 +4352,7 @@
         <target state="translated">免费。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">379</context>
+          <context context-type="linenumber">380</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5342721262799645301" datatype="html">
@@ -4365,7 +4373,7 @@
       </trans-unit>
       <trans-unit id="2003818202621229370" datatype="html">
         <source>Sustainable retirement income</source>
-        <target state="new">Sustainable retirement income</target>
+        <target state="translated">可持续的退休收入</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">40</context>
@@ -4498,7 +4506,7 @@
       </trans-unit>
       <trans-unit id="4905798562247431262" datatype="html">
         <source>per month</source>
-        <target state="new">per month</target>
+        <target state="translated">每月</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">92</context>
@@ -4514,7 +4522,7 @@
       </trans-unit>
       <trans-unit id="5271053765919315173" datatype="html">
         <source>Website of Thomas Kaul</source>
-        <target state="new">Website of Thomas Kaul</target>
+        <target state="translated">Thomas Kaul 的网站</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">44</context>
@@ -4642,7 +4650,7 @@
       </trans-unit>
       <trans-unit id="1434671461968858301" datatype="html">
         <source>User ID</source>
-        <target state="new">User ID</target>
+        <target state="translated">用户 ID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">12</context>
@@ -4762,10 +4770,10 @@
       </trans-unit>
       <trans-unit id="5276907121760788823" datatype="html">
         <source>Request it</source>
-        <target state="new">Request it</target>
+        <target state="translated">请求它</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">361</context>
+          <context context-type="linenumber">362</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
@@ -4906,7 +4914,7 @@
       </trans-unit>
       <trans-unit id="3302046820145091217" datatype="html">
         <source>,</source>
-        <target state="new">,</target>
+        <target state="translated">,</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">93</context>
@@ -4930,10 +4938,10 @@
       </trans-unit>
       <trans-unit id="1531212547408073567" datatype="html">
         <source>contact us</source>
-        <target state="new">contact us</target>
+        <target state="translated">联系我们</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">353</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1533391340482659699" datatype="html">
@@ -5318,7 +5326,7 @@
       </trans-unit>
       <trans-unit id="1468015720862673946" datatype="html">
         <source>View Details</source>
-        <target state="new">View Details</target>
+        <target state="translated">查看详细信息</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">225</context>
@@ -5526,7 +5534,7 @@
       </trans-unit>
       <trans-unit id="3227075298129844075" datatype="html">
         <source>If you retire today, you would be able to withdraw</source>
-        <target state="new">If you retire today, you would be able to withdraw</target>
+        <target state="translated">如果您今天退休，您将能够提取</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">66</context>
@@ -5662,7 +5670,7 @@
       </trans-unit>
       <trans-unit id="2575998129003872734" datatype="html">
         <source>Argentina</source>
-        <target state="new">Argentina</target>
+        <target state="translated">阿根廷</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">78</context>
@@ -5734,7 +5742,7 @@
       </trans-unit>
       <trans-unit id="1600023202562292052" datatype="html">
         <source>Close Holding</source>
-        <target state="new">Close Holding</target>
+        <target state="translated">关闭持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">442</context>
@@ -5774,10 +5782,10 @@
       </trans-unit>
       <trans-unit id="858192247408211331" datatype="html">
         <source>here</source>
-        <target state="new">here</target>
+        <target state="translated">这里</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">364</context>
+          <context context-type="linenumber">365</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1501828122056907560" datatype="html">
@@ -6011,7 +6019,7 @@
       </trans-unit>
       <trans-unit id="5303806780432428245" datatype="html">
         <source>Indonesia</source>
-        <target state="new">Indonesia</target>
+        <target state="translated">印度尼西亚</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">90</context>
@@ -6147,7 +6155,7 @@
       </trans-unit>
       <trans-unit id="5707368132268957392" datatype="html">
         <source>Include in</source>
-        <target state="new">Include in</target>
+        <target state="translated">包含在</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">369</context>
@@ -6427,7 +6435,7 @@
       </trans-unit>
       <trans-unit id="3477953895055172777" datatype="html">
         <source>View Holding</source>
-        <target state="new">View Holding</target>
+        <target state="translated">查看持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">444</context>
@@ -6571,7 +6579,7 @@
       </trans-unit>
       <trans-unit id="4762855117875399861" datatype="html">
         <source>Oops! Could not update access.</source>
-        <target state="new">Oops! Could not update access.</target>
+        <target state="translated">哎呀！无法更新访问权限。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
           <context context-type="linenumber">179</context>
@@ -6579,7 +6587,7 @@
       </trans-unit>
       <trans-unit id="184247710717595241" datatype="html">
         <source>based on your total assets of</source>
-        <target state="new">based on your total assets of</target>
+        <target state="translated">基于您总资产的</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">95</context>
@@ -6695,7 +6703,7 @@
       </trans-unit>
       <trans-unit id="2803298218425845065" datatype="html">
         <source>Role</source>
-        <target state="new">Role</target>
+        <target state="translated">角色</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">31</context>
@@ -6711,7 +6719,7 @@
       </trans-unit>
       <trans-unit id="6574710269679413520" datatype="html">
         <source>Accounts</source>
-        <target state="new">Accounts</target>
+        <target state="translated">账户</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">51</context>
@@ -6743,10 +6751,10 @@
       </trans-unit>
       <trans-unit id="6602358241522477056" datatype="html">
         <source>If you plan to open an account at</source>
-        <target state="new">If you plan to open an account at</target>
+        <target state="translated">如果您计划开通账户在</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">329</context>
+          <context context-type="linenumber">330</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
@@ -6775,7 +6783,7 @@
       </trans-unit>
       <trans-unit id="6664504469290651320" datatype="html">
         <source>send an e-mail to</source>
-        <target state="new">send an e-mail to</target>
+        <target state="translated">发送电子邮件至</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">87</context>
@@ -6787,14 +6795,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1442341407847672405" datatype="html">
-        <source>No auto-renewal.</source>
-        <target state="translated">不自动续订。</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
-          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8462417627724236320" datatype="html">
@@ -6855,10 +6855,10 @@
       </trans-unit>
       <trans-unit id="7522916136412124285" datatype="html">
         <source>to use our referral link and get a Ghostfolio Premium membership for one year</source>
-        <target state="new">to use our referral link and get a Ghostfolio Premium membership for one year</target>
+        <target state="translated">使用我们的推荐链接并获得一年的Ghostfolio Premium会员资格</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">358</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
@@ -6935,7 +6935,7 @@
       </trans-unit>
       <trans-unit id="3528767106831563012" datatype="html">
         <source>Ghostfolio is a lightweight wealth management application for individuals to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.</source>
-        <target state="new">Ghostfolio is a lightweight wealth management application for individuals to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.</target>
+        <target state="translated">Ghostfolio 是一款轻量级的财富管理应用程序，旨在帮助个人跟踪股票、ETF 或加密货币，并做出基于数据的稳健投资决策。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">10</context>
@@ -7007,7 +7007,7 @@
       </trans-unit>
       <trans-unit id="7417020438124538834" datatype="html">
         <source>Engagement per Day</source>
-        <target state="new">Engagement per Day</target>
+        <target state="translated">每日参与度</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">76</context>
@@ -7153,7 +7153,7 @@
       </trans-unit>
       <trans-unit id="8514765519764380399" datatype="html">
         <source>Country</source>
-        <target state="new">Country</target>
+        <target state="translated">国家</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">37</context>
@@ -7261,7 +7261,7 @@
       </trans-unit>
       <trans-unit id="1789421195684815451" datatype="html">
         <source>Check the system status at</source>
-        <target state="new">Check the system status at</target>
+        <target state="translated">检查系统状态</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">57</context>
@@ -7309,7 +7309,7 @@
       </trans-unit>
       <trans-unit id="8214324091109908102" datatype="html">
         <source>API Requests Today</source>
-        <target state="new">API Requests Today</target>
+        <target state="translated">今日 API 请求</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">86</context>
@@ -7417,7 +7417,7 @@
       </trans-unit>
       <trans-unit id="1325095699053123251" datatype="html">
         <source>The project has been initiated by</source>
-        <target state="new">The project has been initiated by</target>
+        <target state="translated">该项目发起于</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">40</context>
@@ -7525,7 +7525,7 @@
       </trans-unit>
       <trans-unit id="6752851341939241310" datatype="html">
         <source>Find account, holding or page...</source>
-        <target state="new">Find account, holding or page...</target>
+        <target state="translated">查找账户、持仓或页面...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">152</context>
@@ -7911,6 +7911,10 @@
         <source>Limited Offer!</source>
         <target state="translated">限时优惠！</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">312</context>
         </context-group>
@@ -7919,8 +7923,12 @@
         <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
         <target state="translated">获取额外 <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/></target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">315</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3955868613858648955" datatype="html">
@@ -7941,7 +7949,7 @@
       </trans-unit>
       <trans-unit id="7383756232563820625" datatype="html">
         <source>Current month</source>
-        <target state="new">Current month</target>
+        <target state="translated">当前月份</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">200</context>
@@ -8126,7 +8134,7 @@
       </trans-unit>
       <trans-unit id="5199695670214400859" datatype="html">
         <source>If you encounter a bug, would like to suggest an improvement or a new <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot;&gt;"/>feature<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, please join the Ghostfolio <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; title=&quot;Join the Ghostfolio Slack community&quot; &gt;"/>Slack<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> community, post to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://x.com/ghostfolio_&quot; title=&quot;Post to Ghostfolio on X (formerly Twitter)&quot; &gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></source>
-        <target state="new">If you encounter a bug, would like to suggest an improvement or a new <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot;&gt;"/>feature<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, please join the Ghostfolio <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; title=&quot;Join the Ghostfolio Slack community&quot; &gt;"/>Slack<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> community, post to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://x.com/ghostfolio_&quot; title=&quot;Post to Ghostfolio on X (formerly Twitter)&quot; &gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
+        <target state="translated">如果您遇到错误，想要建议改进或新<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot;&gt;"/>功能<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>，请加入 Ghostfolio <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; title=&quot;Join the Ghostfolio Slack community&quot; &gt;"/>Slack<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> 社区，发布到 <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://x.com/ghostfolio_&quot; title=&quot;Post to Ghostfolio on X (formerly Twitter)&quot; &gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">69</context>
@@ -8250,7 +8258,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidity.category" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">流动性</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">70</context>
@@ -8258,7 +8266,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower" datatype="html">
         <source>Buying Power</source>
-        <target state="new">Buying Power</target>
+        <target state="translated">购买力</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">71</context>
@@ -8266,7 +8274,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.min" datatype="html">
         <source>Your buying power is below ${thresholdMin} ${baseCurrency}</source>
-        <target state="new">Your buying power is below ${thresholdMin} ${baseCurrency}</target>
+        <target state="translated">您的购买力低于 ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">73</context>
@@ -8274,7 +8282,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.zero" datatype="html">
         <source>Your buying power is 0 ${baseCurrency}</source>
-        <target state="new">Your buying power is 0 ${baseCurrency}</target>
+        <target state="translated">您的购买力为 0 ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">77</context>
@@ -8282,7 +8290,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.true" datatype="html">
         <source>Your buying power exceeds ${thresholdMin} ${baseCurrency}</source>
-        <target state="new">Your buying power exceeds ${thresholdMin} ${baseCurrency}</target>
+        <target state="translated">您的购买力超过了 ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">80</context>
@@ -8586,7 +8594,7 @@
       </trans-unit>
       <trans-unit id="889243574476657449" datatype="html">
         <source>Registration Date</source>
-        <target state="new">Registration Date</target>
+        <target state="translated">注册日期</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">23</context>
