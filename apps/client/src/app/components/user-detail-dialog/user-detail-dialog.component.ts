@@ -4,6 +4,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   Inject,
@@ -14,9 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EMPTY, Subject } from 'rxjs';
-import { catchError, finalize, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 
-import { NotificationService } from '../../core/notification/notification.service';
 import { AdminService } from '../../services/admin.service';
 import { GfDialogFooterComponent } from '../dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '../dialog-header/dialog-header.component';
@@ -39,15 +39,14 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
-  public isLoading = true;
   public user: AdminUserResponse;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
     private adminService: AdminService,
-    private notificationService: NotificationService,
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
     public dialogRef: MatDialogRef<GfUserDetailDialogComponent>
   ) {}
 
@@ -57,19 +56,15 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
       .pipe(
         takeUntil(this.unsubscribeSubject),
         catchError(() => {
-          this.notificationService.alert({
-            title: $localize`User`,
-            message: $localize`Unable to load user`
-          });
-
           this.dialogRef.close();
 
           return EMPTY;
-        }),
-        finalize(() => (this.isLoading = false))
+        })
       )
       .subscribe((user) => {
         this.user = user;
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
