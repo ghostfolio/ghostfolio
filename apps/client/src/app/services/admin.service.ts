@@ -8,11 +8,12 @@ import {
 } from '@ghostfolio/common/config';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import {
-  AssetProfileIdentifier,
   AdminData,
   AdminJobs,
   AdminMarketData,
+  AdminUserResponse,
   AdminUsersResponse,
+  AssetProfileIdentifier,
   DataProviderGhostfolioStatusResponse,
   EnhancedSymbolProfile,
   Filter
@@ -142,6 +143,10 @@ export class AdminService {
     return this.http.get<Platform[]>('/api/v1/platform');
   }
 
+  public fetchUserById(id: string) {
+    return this.http.get<AdminUserResponse>(`/api/v1/admin/user/${id}`);
+  }
+
   public fetchUsers({
     skip,
     take = DEFAULT_PAGE_SIZE
@@ -155,12 +160,6 @@ export class AdminService {
     params = params.append('take', take);
 
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
-  }
-
-  public fetchUserById(id: string) {
-    return this.http.get<
-      import('@ghostfolio/common/interfaces').AdminUserResponse
-    >(`/api/v1/admin/user/${id}`);
   }
 
   public gather7Days() {

@@ -289,10 +289,10 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
-        userId: aUserId,
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
-        locale: this.user?.settings?.locale
+        locale: this.user?.settings?.locale,
+        userId: aUserId
       },
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

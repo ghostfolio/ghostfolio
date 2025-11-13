@@ -6,14 +6,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnInit,
   Inject,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Subject, EMPTY } from 'rxjs';
+import { EMPTY, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil } from 'rxjs/operators';
 
 import { NotificationService } from '../../core/notification/notification.service';
@@ -38,32 +38,35 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./user-detail-dialog.component.scss'],
   templateUrl: './user-detail-dialog.html'
 })
-export class GfUserDetailDialogComponent implements OnInit, OnDestroy {
-  private unsubscribeSubject = new Subject<void>();
+export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
   public isLoading = true;
   public user: AdminUserResponse;
 
+  private unsubscribeSubject = new Subject<void>();
+
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
-    public dialogRef: MatDialogRef<GfUserDetailDialogComponent>,
     private adminService: AdminService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public dialogRef: MatDialogRef<GfUserDetailDialogComponent>
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.adminService
       .fetchUserById(this.data.userId)
       .pipe(
         takeUntil(this.unsubscribeSubject),
-        finalize(() => (this.isLoading = false)),
         catchError(() => {
           this.notificationService.alert({
             title: $localize`User`,
             message: $localize`Unable to load user`
           });
+
           this.dialogRef.close();
+
           return EMPTY;
-        })
+        }),
+        finalize(() => (this.isLoading = false))
       )
       .subscribe((user) => {
         this.user = user;
