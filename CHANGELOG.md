@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the get holding functionality in the portfolio service
+- Changed the user data loading in the user detail dialog of the admin control panel’s users section to fetch data on demand
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `6.18.0` to `6.19.0`
 
