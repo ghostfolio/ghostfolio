@@ -24,7 +24,6 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './features-page.html'
 })
 export class GfFeaturesPageComponent implements OnDestroy {
-  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
   public info: InfoItem;
@@ -52,11 +51,6 @@ export class GfFeaturesPageComponent implements OnDestroy {
           this.changeDetectorRef.markForCheck();
         }
       });
-
-    this.hasPermissionForAuthToken = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableAuthToken
-    );
 
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,

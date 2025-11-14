@@ -367,7 +367,7 @@
         </p>
       </div>
     </div>
-  } @else if (!user && hasPermissionToCreateUser) {
+  } @else if (hasPermissionToCreateUser && !user) {
     <div class="row">
       <div class="col mt-3 text-center">
         <a

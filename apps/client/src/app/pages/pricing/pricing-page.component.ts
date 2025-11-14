@@ -52,7 +52,6 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public durationExtension: StringValue;
-  public hasPermissionForAuthToken: boolean;
   public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public importAndExportTooltipBasic = translate(
@@ -110,11 +109,6 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     this.durationExtension = subscriptionOffer?.durationExtension;
     this.label = subscriptionOffer?.label;
     this.price = subscriptionOffer?.price;
-
-    this.hasPermissionForAuthToken = hasPermission(
-      globalPermissions,
-      permissions.enableAuthToken
-    );
 
     this.hasPermissionToCreateUser = hasPermission(
       globalPermissions,

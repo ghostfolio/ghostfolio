@@ -309,7 +309,7 @@
       </div>
     </div>
   </div>
-  @if (!user && hasPermissionToCreateUser) {
+  @if (hasPermissionToCreateUser && !user) {
     <div class="row">
       <div class="col mt-3 text-center">
         <a
