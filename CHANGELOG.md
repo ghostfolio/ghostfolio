@@ -23,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Chinese (`zh`)
 - Upgraded `chart.js` from version `4.5.0` to `4.5.1`
 - Upgraded `svgmap` from version `2.12.2` to `2.14.0`
-- Renamed `ENABLE_FEATURE_SOCIAL_LOGIN` to `ENABLE_FEATURE_AUTH_GOOGLE` and added `ENABLE_FEATURE_AUTH_TOKEN` to independently control Google OAuth and token-based authentication methods
 
 ## 2.215.0 - 2025-11-06
 
