@@ -107,13 +107,14 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     this.baseCurrency = baseCurrency;
     this.coupon = subscriptionOffer?.coupon;
     this.durationExtension = subscriptionOffer?.durationExtension;
-    this.label = subscriptionOffer?.label;
-    this.price = subscriptionOffer?.price;
 
     this.hasPermissionToCreateUser = hasPermission(
       globalPermissions,
       permissions.createUserAccount
     );
+
+    this.label = subscriptionOffer?.label;
+    this.price = subscriptionOffer?.price;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
