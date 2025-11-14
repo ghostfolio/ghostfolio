@@ -8,11 +8,12 @@ import {
 } from '@ghostfolio/common/config';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import {
-  AssetProfileIdentifier,
   AdminData,
   AdminJobs,
   AdminMarketData,
+  AdminUserResponse,
   AdminUsersResponse,
+  AssetProfileIdentifier,
   DataProviderGhostfolioStatusResponse,
   DataProviderHistoricalResponse,
   EnhancedSymbolProfile,
@@ -141,6 +142,10 @@ export class AdminService {
 
   public fetchPlatforms() {
     return this.http.get<Platform[]>('/api/v1/platform');
+  }
+
+  public fetchUserById(id: string) {
+    return this.http.get<AdminUserResponse>(`/api/v1/admin/user/${id}`);
   }
 
   public fetchUsers({
