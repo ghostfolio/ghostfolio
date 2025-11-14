@@ -1,7 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
@@ -40,6 +39,7 @@ import {
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   AccountsResponse,
+  Activity,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,

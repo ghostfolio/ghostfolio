@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {

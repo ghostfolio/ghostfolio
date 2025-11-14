@@ -1,9 +1,7 @@
 import {
   DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import {
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';

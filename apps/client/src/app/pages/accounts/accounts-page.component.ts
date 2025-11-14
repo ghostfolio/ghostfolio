@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';

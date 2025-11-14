@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { UserService } from '@ghostfolio/client/services/user/user.service';

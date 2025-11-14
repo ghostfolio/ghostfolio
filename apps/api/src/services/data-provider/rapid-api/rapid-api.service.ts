@@ -8,16 +8,14 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import {
   ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolStocks
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 

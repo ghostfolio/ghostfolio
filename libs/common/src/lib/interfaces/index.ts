@@ -1,5 +1,6 @@
 import type { Access } from './access.interface';
 import type { AccountBalance } from './account-balance.interface';
+import type { Activity, ActivityError } from './activities.interface';
 import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
 import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
@@ -52,6 +53,10 @@ import type { DataEnhancerHealthResponse } from './responses/data-enhancer-healt
 import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { DataProviderHealthResponse } from './responses/data-provider-health-response.interface';
+import type {
+  DataProviderResponse,
+  DataProviderHistoricalResponse
+} from './responses/data-provider-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ExportResponse } from './responses/export-response.interface';
@@ -74,6 +79,7 @@ import type { WatchlistResponse } from './responses/watchlist-response.interface
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
+import type { SymbolItem } from './symbol-item.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
@@ -90,6 +96,8 @@ export {
   AccountResponse,
   AccountsResponse,
   ActivitiesResponse,
+  Activity,
+  ActivityError,
   ActivityResponse,
   AdminData,
   AdminJobs,
@@ -114,7 +122,9 @@ export {
   DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DataProviderHealthResponse,
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   DividendsResponse,
   EnhancedSymbolProfile,
   ExportResponse,
@@ -156,8 +166,9 @@ export {
   ScraperConfiguration,
   Statistics,
   SubscriptionOffer,
-  SystemMessage,
+  SymbolItem,
   SymbolMetrics,
+  SystemMessage,
   TabConfiguration,
   ToggleOption,
   User,

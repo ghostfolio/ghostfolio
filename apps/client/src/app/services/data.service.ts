@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
@@ -10,12 +11,10 @@ import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto'
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { DataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -34,6 +33,7 @@ import {
   BenchmarkResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
+  DataProviderHistoricalResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -50,6 +50,7 @@ import {
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
+  SymbolItem,
   User,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
