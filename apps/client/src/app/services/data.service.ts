@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -15,6 +14,7 @@ import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interfac
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
+  CreateAccessDto,
   CreateAccountBalanceDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
