@@ -1,5 +1,5 @@
-import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
+import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';

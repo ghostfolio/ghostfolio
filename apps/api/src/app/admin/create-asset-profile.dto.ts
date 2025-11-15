@@ -1,4 +1,4 @@
-import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import {
