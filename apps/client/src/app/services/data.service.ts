@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -14,6 +13,7 @@ import {
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
+  UpdateBulkMarketDataDto,
   UpdateOrderDto,
   UpdateTagDto,
   UpdateUserSettingDto
