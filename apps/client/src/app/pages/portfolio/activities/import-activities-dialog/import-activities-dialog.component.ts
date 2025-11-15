@@ -1,4 +1,3 @@
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -11,6 +10,7 @@ import {
 import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 
 import {
   StepperOrientation,
