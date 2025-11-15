@@ -68,7 +68,7 @@ import type { MarketDataDetailsResponse } from './responses/market-data-details-
 import type { MarketDataOfMarketsResponse } from './responses/market-data-of-markets-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioDividendsResponse } from './responses/portfolio-dividends-response.interface';
-import { PortfolioHoldingResponse } from './responses/portfolio-holding-response.interface';
+import type { PortfolioHoldingResponse } from './responses/portfolio-holding-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioInvestmentsResponse } from './responses/portfolio-investments.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
@@ -76,6 +76,7 @@ import type { PortfolioReportResponse } from './responses/portfolio-report.inter
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { WatchlistResponse } from './responses/watchlist-response.interface';
+import type { RuleSettings } from './rule-settings.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
@@ -163,6 +164,7 @@ export {
   PublicPortfolioResponse,
   QuotesResponse,
   ResponseError,
+  RuleSettings,
   ScraperConfiguration,
   Statistics,
   SubscriptionOffer,

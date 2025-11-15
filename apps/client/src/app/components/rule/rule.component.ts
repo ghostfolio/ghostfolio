@@ -1,8 +1,7 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   PortfolioReportRule,
+  RuleSettings,
   XRayRulesSettings
 } from '@ghostfolio/common/interfaces';
 
