@@ -4,7 +4,6 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
-import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
@@ -13,7 +12,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
-import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
+import { PropertyDto, UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,

@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
   CreateAccessDto,
   CreateAccountBalanceDto,
@@ -8,6 +6,7 @@ import {
   CreateTagDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
+  PropertyDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
