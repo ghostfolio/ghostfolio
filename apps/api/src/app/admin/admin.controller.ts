@@ -12,7 +12,10 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
-import { PropertyDto, UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
+import {
+  UpdateAssetProfileDto,
+  UpdatePropertyDto
+} from '@ghostfolio/common/dtos';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
@@ -304,7 +307,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateProperty(
     @Param('key') key: string,
-    @Body() data: PropertyDto
+    @Body() data: UpdatePropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);
   }

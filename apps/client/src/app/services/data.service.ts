@@ -6,13 +6,13 @@ import {
   CreateTagDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
-  PropertyDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
   UpdateBulkMarketDataDto,
   UpdateOrderDto,
   UpdateOwnAccessTokenDto,
+  UpdatePropertyDto,
   UpdateTagDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
@@ -809,7 +809,7 @@ export class DataService {
     return this.http.put<UserItem>(`/api/v1/account/${aAccount.id}`, aAccount);
   }
 
-  public putAdminSetting(key: string, aData: PropertyDto) {
+  public putAdminSetting(key: string, aData: UpdatePropertyDto) {
     return this.http.put<void>(`/api/v1/admin/settings/${key}`, aData);
   }
 

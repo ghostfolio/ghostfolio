@@ -10,7 +10,6 @@ import { CreatePlatformDto } from './create-platform.dto';
 import { CreateTagDto } from './create-tag.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
-import { PropertyDto } from './property.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
@@ -20,6 +19,7 @@ import { UpdateMarketDataDto } from './update-market-data.dto';
 import { UpdateOrderDto } from './update-order.dto';
 import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
 import { UpdatePlatformDto } from './update-platform.dto';
+import { UpdatePropertyDto } from './update-property.dto';
 import { UpdateTagDto } from './update-tag.dto';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 
@@ -36,7 +36,6 @@ export {
   CreateTagDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
-  PropertyDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
@@ -46,6 +45,7 @@ export {
   UpdateOrderDto,
   UpdateOwnAccessTokenDto,
   UpdatePlatformDto,
+  UpdatePropertyDto,
   UpdateTagDto,
   UpdateUserSettingDto
 };
