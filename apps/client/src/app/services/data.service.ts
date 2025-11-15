@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
@@ -54,6 +53,7 @@ import {
   PublicPortfolioResponse,
   SymbolItem,
   User,
+  UserItem,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';

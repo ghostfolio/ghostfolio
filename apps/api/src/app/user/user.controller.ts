@@ -10,6 +10,7 @@ import {
 import {
   AccessTokenResponse,
   User,
+  UserItem,
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -35,7 +36,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash';
 
-import { UserItem } from './interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
 import { UserService } from './user.service';
 
