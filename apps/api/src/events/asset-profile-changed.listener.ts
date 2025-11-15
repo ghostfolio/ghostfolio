@@ -22,53 +22,40 @@ export class AssetProfileChangedListener {
 
   @OnEvent(AssetProfileChangedEvent.getName())
   public async handleAssetProfileChanged(event: AssetProfileChangedEvent) {
-    const isEnabled = this.configurationService.get(
-      'ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES'
-    );
-
-    if (isEnabled === false) {
-      return;
-    }
-
-    if (event.data.currency === DEFAULT_CURRENCY) {
-      return;
-    }
-
     Logger.log(
-      `Asset profile changed: ${event.data.symbol} (${event.data.currency})`,
+      `Asset profile of ${event.data.symbol} (${event.data.dataSource}) has changed`,
       'AssetProfileChangedListener'
     );
+
+    if (
+      this.configurationService.get(
+        'ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES'
+      ) === false ||
+      event.data.currency === DEFAULT_CURRENCY
+    ) {
+      return;
+    }
 
     const existingCurrencies = this.exchangeRateDataService.getCurrencies();
-    const currencyAlreadyExists = existingCurrencies.includes(
-      event.data.currency
-    );
 
-    if (currencyAlreadyExists) {
-      return;
+    if (!existingCurrencies.includes(event.data.currency)) {
+      Logger.log(
+        `New currency ${event.data.currency} has been detected`,
+        'AssetProfileChangedListener'
+      );
+
+      await this.exchangeRateDataService.initialize();
     }
-
-    Logger.log(
-      `New currency detected: ${event.data.currency}`,
-      'AssetProfileChangedListener'
-    );
-
-    await this.exchangeRateDataService.initialize();
 
     const { dateOfFirstActivity } =
       await this.orderService.getStatisticsByCurrency(event.data.currency);
 
-    const startDate = dateOfFirstActivity ?? new Date();
-
-    Logger.log(
-      `Triggering exchange rate data gathering for ${DEFAULT_CURRENCY}${event.data.currency} from ${startDate.toISOString()}.`,
-      'AssetProfileChangedListener'
-    );
-
-    await this.dataGatheringService.gatherSymbol({
-      dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
-      symbol: `${DEFAULT_CURRENCY}${event.data.currency}`,
-      date: startDate
-    });
+    if (dateOfFirstActivity) {
+      await this.dataGatheringService.gatherSymbol({
+        dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
+        date: dateOfFirstActivity,
+        symbol: `${DEFAULT_CURRENCY}${event.data.currency}`
+      });
+    }
   }
 }
