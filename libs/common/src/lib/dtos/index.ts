@@ -12,6 +12,7 @@ import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
+import { UpdateMarketDataDto } from './update-market-data.dto';
 import { UpdateOrderDto } from './update-order.dto';
 import { UpdatePlatformDto } from './update-platform.dto';
 import { UpdateTagDto } from './update-tag.dto';
@@ -32,6 +33,7 @@ export {
   UpdateAccessDto,
   UpdateAccountDto,
   UpdateAssetProfileDto,
+  UpdateMarketDataDto,
   UpdateOrderDto,
   UpdatePlatformDto,
   UpdateTagDto,
