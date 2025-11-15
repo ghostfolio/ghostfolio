@@ -1,5 +1,4 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { CreateTagDto } from '@ghostfolio/common/dtos';
+import { CreateOrderDto, CreateTagDto } from '@ghostfolio/common/dtos';
 
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';

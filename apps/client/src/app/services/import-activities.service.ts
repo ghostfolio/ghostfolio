@@ -1,8 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { CreateTagDto } from '@ghostfolio/common/dtos';
+import { CreateOrderDto, CreateTagDto } from '@ghostfolio/common/dtos';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
