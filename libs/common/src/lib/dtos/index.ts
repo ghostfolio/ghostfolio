@@ -9,6 +9,7 @@ import { CreateOrderDto } from './create-order.dto';
 import { CreatePlatformDto } from './create-platform.dto';
 import { CreateTagDto } from './create-tag.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
+import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
@@ -32,6 +33,7 @@ export {
   CreatePlatformDto,
   CreateTagDto,
   CreateWatchlistItemDto,
+  DeleteOwnUserDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
