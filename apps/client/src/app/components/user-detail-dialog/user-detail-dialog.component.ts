@@ -1,7 +1,7 @@
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
+import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
