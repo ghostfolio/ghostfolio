@@ -13,9 +13,11 @@ import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
-import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
+import {
+  CreateAccountBalanceDto,
+  UpdateUserSettingDto
+} from '@ghostfolio/common/dtos';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,

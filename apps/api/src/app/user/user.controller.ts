@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   AccessTokenResponse,
   User,
@@ -34,7 +35,6 @@ import { merge, size } from 'lodash';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
-import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
