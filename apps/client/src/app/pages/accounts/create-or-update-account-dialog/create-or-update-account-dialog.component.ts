@@ -1,8 +1,6 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
-import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 

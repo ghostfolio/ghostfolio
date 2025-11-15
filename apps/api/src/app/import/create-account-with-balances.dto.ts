@@ -1,4 +1,4 @@
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { CreateAccountDto } from '@ghostfolio/common/dtos';
 import { AccountBalance } from '@ghostfolio/common/interfaces';
 
 import { IsArray, IsOptional } from 'class-validator';

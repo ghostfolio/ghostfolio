@@ -8,6 +8,11 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
+  CreateAccountDto,
+  TransferBalanceDto,
+  UpdateAccountDto
+} from '@ghostfolio/common/dtos';
+import {
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse
@@ -36,9 +41,6 @@ import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
-import { CreateAccountDto } from './create-account.dto';
-import { TransferBalanceDto } from './transfer-balance.dto';
-import { UpdateAccountDto } from './update-account.dto';
 
 @Controller('account')
 export class AccountController {
