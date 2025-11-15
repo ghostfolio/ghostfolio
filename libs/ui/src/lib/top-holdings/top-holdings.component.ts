@@ -1,10 +1,9 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents
 } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import {
   animate,

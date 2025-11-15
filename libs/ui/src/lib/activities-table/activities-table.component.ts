@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import {
   DEFAULT_PAGE_SIZE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
@@ -11,6 +10,7 @@ import {
   Activity,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { SelectionModel } from '@angular/cdk/collections';
