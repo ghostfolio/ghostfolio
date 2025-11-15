@@ -1,7 +1,6 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import {
   CreateAccountWithBalancesDto,
+  CreateAssetProfileWithMarketDataDto,
   CreateOrderDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';

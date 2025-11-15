@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
@@ -7,6 +5,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import {
   CreateAccountWithBalancesDto,
+  CreateAssetProfileWithMarketDataDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
 import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';

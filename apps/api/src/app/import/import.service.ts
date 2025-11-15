@@ -9,7 +9,11 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
-import { CreateAccountDto, CreateOrderDto } from '@ghostfolio/common/dtos';
+import {
+  CreateAssetProfileDto,
+  CreateAccountDto,
+  CreateOrderDto
+} from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
   parseDate
@@ -33,7 +37,6 @@ import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CreateAssetProfileDto } from '../admin/create-asset-profile.dto';
 import { ImportDataDto } from './import-data.dto';
 
 @Injectable()

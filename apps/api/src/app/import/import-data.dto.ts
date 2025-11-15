@@ -1,13 +1,12 @@
 import {
   CreateAccountWithBalancesDto,
+  CreateAssetProfileWithMarketDataDto,
   CreateOrderDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
 
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';
-
-import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-market-data.dto';
 
 export class ImportDataDto {
   @IsArray()
