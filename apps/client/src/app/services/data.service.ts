@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
@@ -10,6 +9,7 @@ import {
   CreateAccountDto,
   CreateOrderDto,
   CreateTagDto,
+  CreateWatchlistItemDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
