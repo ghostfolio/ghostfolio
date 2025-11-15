@@ -1,5 +1,5 @@
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { SubscriptionOffer, UserSettings } from '@ghostfolio/common/interfaces';
-import { SubscriptionType } from '@ghostfolio/common/types';
 
 import { Access, Account, Settings, User } from '@prisma/client';
 

@@ -5,6 +5,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   CreateStripeCheckoutSessionResponse,
@@ -14,7 +15,6 @@ import {
   SubscriptionOfferKey,
   UserWithSettings
 } from '@ghostfolio/common/types';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
