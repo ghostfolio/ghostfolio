@@ -1,5 +1,6 @@
 import { CreateAccessDto } from './create-access.dto';
 import { CreateAccountBalanceDto } from './create-account-balance.dto';
+import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
 import { CreateAccountDto } from './create-account.dto';
 import { CreateOrderDto } from './create-order.dto';
 import { CreatePlatformDto } from './create-platform.dto';
@@ -17,6 +18,7 @@ export {
   CreateAccessDto,
   CreateAccountBalanceDto,
   CreateAccountDto,
+  CreateAccountWithBalancesDto,
   CreateOrderDto,
   CreatePlatformDto,
   CreateTagDto,
