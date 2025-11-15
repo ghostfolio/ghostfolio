@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';
 
 import { CreateTagDto } from '../endpoints/tags/create-tag.dto';
+import { CreatePlatformDto } from '../platform/create-platform.dto';
 import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
 import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-market-data.dto';
 
@@ -24,6 +25,12 @@ export class ImportDataDto {
   @Type(() => CreateAssetProfileWithMarketDataDto)
   @ValidateNested({ each: true })
   assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreatePlatformDto)
+  @ValidateNested({ each: true })
+  platforms?: CreatePlatformDto[];
 
   @IsArray()
   @IsOptional()
