@@ -1,6 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { CreatePlatformDto } from '@ghostfolio/common/dtos';
+import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 
 import {
@@ -19,7 +19,6 @@ import { Platform } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PlatformService } from './platform.service';
-import { UpdatePlatformDto } from './update-platform.dto';
 
 @Controller('platform')
 export class PlatformController {
