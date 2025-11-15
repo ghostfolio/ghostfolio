@@ -13,6 +13,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
+import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
@@ -52,7 +53,6 @@ import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
-import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 
 @Controller('admin')
 export class AdminController {
