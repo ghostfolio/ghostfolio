@@ -1,8 +1,6 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING } from '@ghostfolio/common/config';
-import { CreateOrderDto } from '@ghostfolio/common/dtos';
+import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
   AssetClassSelectorOption,

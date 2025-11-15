@@ -4,7 +4,6 @@ import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
@@ -15,6 +14,7 @@ import {
   CreateOrderDto,
   CreateTagDto,
   UpdateAccessDto,
+  UpdateOrderDto,
   UpdateTagDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
