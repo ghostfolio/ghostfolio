@@ -17,6 +17,7 @@ import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
 import { UpdateOrderDto } from './update-order.dto';
+import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
 import { UpdatePlatformDto } from './update-platform.dto';
 import { UpdateTagDto } from './update-tag.dto';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
@@ -41,6 +42,7 @@ export {
   UpdateBulkMarketDataDto,
   UpdateMarketDataDto,
   UpdateOrderDto,
+  UpdateOwnAccessTokenDto,
   UpdatePlatformDto,
   UpdateTagDto,
   UpdateUserSettingDto

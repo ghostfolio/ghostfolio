@@ -5,6 +5,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DeleteOwnUserDto,
+  UpdateOwnAccessTokenDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
 import {
@@ -36,7 +37,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash';
 
-import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
 import { UserService } from './user.service';
 
 @Controller('user')

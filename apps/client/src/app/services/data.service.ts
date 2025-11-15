@@ -1,5 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
   CreateAccessDto,
@@ -14,6 +13,7 @@ import {
   UpdateAccountDto,
   UpdateBulkMarketDataDto,
   UpdateOrderDto,
+  UpdateOwnAccessTokenDto,
   UpdateTagDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
