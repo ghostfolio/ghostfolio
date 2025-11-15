@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced support for automatically gathering required exchange rates, exposed as an environment variable (`ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES`)
 - Added a blog post: _Black Weeks 2025_
 
+### Added
+
+- Extended the holdings endpoint to include the performance with currency effect for cash
+
 ### Changed
 
 - Refactored the get holding functionality in the portfolio service
