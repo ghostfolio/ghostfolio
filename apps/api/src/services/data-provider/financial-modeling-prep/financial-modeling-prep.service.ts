@@ -504,8 +504,11 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         ).then((res) => res.json());
 
         items = result
-          .filter(({ symbol }) => {
-            if (includeIndices === false && symbol.startsWith('^')) {
+          .filter(({ exchange, symbol }) => {
+            if (
+              exchange === 'FOREX' ||
+              (includeIndices === false && symbol.startsWith('^'))
+            ) {
               return false;
             }
 

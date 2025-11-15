@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the get holding functionality in the portfolio service
 - Changed the user data loading in the user detail dialog of the admin control panel’s users section to fetch data on demand
 - Exposed the authentication with access token as an environment variable (`ENABLE_FEATURE_AUTH_TOKEN`)
+- Improved the search functionality of the _Financial Modeling Prep_ service
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `6.18.0` to `6.19.0`
 
