@@ -78,6 +78,12 @@ import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { WatchlistResponse } from './responses/watchlist-response.interface';
 import type { RuleSettings } from './rule-settings.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
+import type {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON,
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON
+} from './simplewebauthn.interface';
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolItem } from './symbol-item.interface';
@@ -110,9 +116,11 @@ export {
   AdminUsersResponse,
   AiPromptResponse,
   ApiKeyResponse,
+  AssertionCredentialJSON,
   AssetClassSelectorOption,
   AssetProfileIdentifier,
   AssetResponse,
+  AttestationCredentialJSON,
   Benchmark,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkProperty,
@@ -161,6 +169,8 @@ export {
   PortfolioSummary,
   Position,
   Product,
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON,
   PublicPortfolioResponse,
   QuotesResponse,
   ResponseError,
