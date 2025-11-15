@@ -1,6 +1,5 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';

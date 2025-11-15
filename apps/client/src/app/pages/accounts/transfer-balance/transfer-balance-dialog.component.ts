@@ -1,5 +1,4 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
+import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {

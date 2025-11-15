@@ -1,6 +1,7 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -20,9 +21,6 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Tag } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-
-import { CreateTagDto } from './create-tag.dto';
-import { UpdateTagDto } from './update-tag.dto';
 
 @Controller('tags')
 export class TagsController {
