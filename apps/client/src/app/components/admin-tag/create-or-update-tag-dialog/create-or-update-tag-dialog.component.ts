@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { CreateTagDto } from '@ghostfolio/common/dtos';
 
 import {
   ChangeDetectionStrategy,

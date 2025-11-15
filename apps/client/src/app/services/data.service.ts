@@ -3,7 +3,6 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
@@ -15,6 +14,7 @@ import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
   CreateAccessDto,
   CreateAccountBalanceDto,
+  CreateTagDto,
   UpdateAccessDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
