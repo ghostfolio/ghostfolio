@@ -1,5 +1,5 @@
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
 
 import {
   ChangeDetectionStrategy,

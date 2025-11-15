@@ -1,8 +1,9 @@
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+
 import { Component, HostListener } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { ConfirmationDialogType } from './confirmation-dialog.type';
 import { ConfirmDialogParams } from './interfaces/interfaces';
 
 @Component({

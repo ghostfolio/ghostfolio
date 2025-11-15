@@ -1,7 +1,5 @@
-import {
-  AccountWithPlatform,
-  SubscriptionType
-} from '@ghostfolio/common/types';
+import { SubscriptionType } from '@ghostfolio/common/enums';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 import { Access, Tag } from '@prisma/client';
 

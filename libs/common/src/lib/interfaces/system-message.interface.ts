@@ -1,4 +1,4 @@
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 
 export interface SystemMessage {
   message: string;
