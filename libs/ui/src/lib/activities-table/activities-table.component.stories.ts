@@ -1,5 +1,5 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
+import { Activity } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';

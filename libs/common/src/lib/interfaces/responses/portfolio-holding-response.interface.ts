@@ -1,5 +1,5 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
+  Activity,
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,

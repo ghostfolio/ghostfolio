@@ -310,6 +310,7 @@
                     class="badge badge-warning font-weight-normal line-height-1 p-3 w-100"
                   >
                     <strong i18n>Limited Offer!</strong>
+                    <ng-container>&nbsp;</ng-container>
                     <ng-container i18n
                       >Get {{ durationExtension }} extra</ng-container
                     >
@@ -366,7 +367,7 @@
         </p>
       </div>
     </div>
-  } @else if (!user) {
+  } @else if (hasPermissionToCreateUser && !user) {
     <div class="row">
       <div class="col mt-3 text-center">
         <a

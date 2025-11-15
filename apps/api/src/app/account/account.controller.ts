@@ -9,13 +9,11 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation/imp
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   AccountBalancesResponse,
+  AccountResponse,
   AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type {
-  AccountWithValue,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -114,7 +112,7 @@ export class AccountController {
   public async getAccountById(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
-  ): Promise<AccountWithValue> {
+  ): Promise<AccountResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
 

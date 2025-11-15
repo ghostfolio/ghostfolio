@@ -127,6 +127,7 @@ export class GfLandingPageComponent implements OnDestroy, OnInit {
     }
 
     this.hasPermissionForDemo = !!demoAuthToken;
+
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics

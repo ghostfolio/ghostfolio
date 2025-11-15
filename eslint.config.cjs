@@ -18,16 +18,19 @@ module.exports = [
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
       '@nx/enforce-module-boundaries': [
-        'warn',
+        'error',
         {
-          enforceBuildableLibDependency: true,
           allow: [],
+          allowCircularSelfDependency: true,
           depConstraints: [
             {
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*']
             }
-          ]
+          ],
+          enforceBuildableLibDependency: true,
+          // Temporary fix, should be removed eventually
+          ignoredCircularDependencies: [['client', 'ui']]
         }
       ],
       '@typescript-eslint/no-extra-semi': 'error',

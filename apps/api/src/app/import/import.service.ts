@@ -1,10 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import {
-  Activity,
-  ActivityError
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -19,7 +15,11 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  ActivityError,
+  AssetProfileIdentifier
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   AccountWithPlatform,
@@ -58,13 +58,18 @@ export class ImportService {
     userId
   }: AssetProfileIdentifier & { userId: string }): Promise<Activity[]> {
     try {
-      const { activities, firstBuyDate, historicalData } =
-        await this.portfolioService.getHolding({
-          dataSource,
-          symbol,
-          userId,
-          impersonationId: undefined
-        });
+      const holding = await this.portfolioService.getHolding({
+        dataSource,
+        symbol,
+        userId,
+        impersonationId: undefined
+      });
+
+      if (!holding) {
+        return [];
+      }
+
+      const { activities, firstBuyDate, historicalData } = holding;
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([

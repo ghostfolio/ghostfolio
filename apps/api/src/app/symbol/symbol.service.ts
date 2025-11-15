@@ -1,20 +1,17 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import {
-  DataGatheringItem,
-  DataProviderHistoricalResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   HistoricalDataItem,
-  LookupResponse
+  LookupResponse,
+  SymbolItem
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
-
-import { SymbolItem } from './interfaces/symbol-item.interface';
 
 @Injectable()
 export class SymbolService {

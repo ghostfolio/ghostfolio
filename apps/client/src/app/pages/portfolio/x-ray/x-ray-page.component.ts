@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.component';
 import { DataService } from '@ghostfolio/client/services/data.service';

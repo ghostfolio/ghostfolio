@@ -1,4 +1,4 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { Activity } from '@ghostfolio/common/interfaces';
 
 export interface ImportResponse {
   activities: Activity[];

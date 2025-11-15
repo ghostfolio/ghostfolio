@@ -51,6 +51,14 @@ export class InfoService {
 
     const globalPermissions: string[] = [];
 
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_GOOGLE')) {
+      globalPermissions.push(permissions.enableAuthGoogle);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_TOKEN')) {
+      globalPermissions.push(permissions.enableAuthToken);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
@@ -68,10 +76,6 @@ export class InfoService {
       isReadOnlyMode = await this.propertyService.getByKey<boolean>(
         PROPERTY_IS_READ_ONLY_MODE
       );
-    }
-
-    if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
-      globalPermissions.push(permissions.enableSocialLogin);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
