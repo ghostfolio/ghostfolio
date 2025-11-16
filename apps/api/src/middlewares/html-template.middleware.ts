@@ -79,6 +79,10 @@ const locales = {
   '/en/blog/2025/09/hacktoberfest-2025': {
     featureGraphicPath: 'assets/images/blog/hacktoberfest-2025.png',
     title: `Hacktoberfest 2025 - ${title}`
+  },
+  '/en/blog/2025/11/black-weeks-2025': {
+    featureGraphicPath: 'assets/images/blog/black-weeks-2025.jpg',
+    title: `Black Weeks 2025 - ${title}`
   }
 };
 

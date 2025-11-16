@@ -1,4 +1,4 @@
-import { ConfirmationDialogType } from '../confirmation-dialog.type';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
 export interface ConfirmDialogParams {
   confirmLabel?: string;

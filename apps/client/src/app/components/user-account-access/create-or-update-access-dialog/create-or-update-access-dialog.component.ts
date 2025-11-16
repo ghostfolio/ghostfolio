@@ -1,7 +1,6 @@
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import {
   AssetProfileIdentifier,
@@ -9,6 +8,7 @@ import {
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
 import {
   GfPortfolioFilterFormComponent,
   PortfolioFilterFormValue
