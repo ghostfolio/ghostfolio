@@ -1,4 +1,4 @@
-import { AssetProfileIdentifierDto } from '@ghostfolio/common/dto';
+import { AssetProfileIdentifierDto } from '@ghostfolio/common/dtos';
 
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
