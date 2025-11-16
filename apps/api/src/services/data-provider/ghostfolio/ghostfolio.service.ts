@@ -8,10 +8,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   HEADER_KEY_TOKEN,
@@ -20,7 +16,9 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioAssetProfileResponse,
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   DividendsResponse,
   HistoricalResponse,
   LookupResponse,

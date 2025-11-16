@@ -1,8 +1,8 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   PortfolioReportResponse,
   PortfolioReportRule

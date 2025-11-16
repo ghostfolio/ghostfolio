@@ -1,10 +1,10 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { groupBy } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
   PortfolioReportRule,
+  RuleSettings,
   UserSettings
 } from '@ghostfolio/common/interfaces';
 

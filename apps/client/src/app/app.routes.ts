@@ -1,13 +1,10 @@
-import { publicRoutes, internalRoutes } from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes, TitleStrategy } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { AuthGuard } from './core/auth.guard';
-import { ModulePreloadService } from './core/module-preload.service';
-import { PageTitleStrategy } from './services/page-title.strategy';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: publicRoutes.about.path,
     loadChildren: () =>
@@ -147,24 +144,3 @@ const routes: Routes = [
     pathMatch: 'full'
   }
 ];
-
-@NgModule({
-  imports: [
-    RouterModule.forRoot(
-      routes,
-      // Preload all lazy loaded modules with the attribute preload === true
-      {
-        anchorScrolling: 'enabled',
-        // enableTracing: true, // <-- debugging purposes only
-        preloadingStrategy: ModulePreloadService,
-        scrollPositionRestoration: 'top'
-      }
-    )
-  ],
-  providers: [
-    ModulePreloadService,
-    { provide: TitleStrategy, useClass: PageTitleStrategy }
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}

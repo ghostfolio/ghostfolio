@@ -1,5 +1,6 @@
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
   getDateFormatString,

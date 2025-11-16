@@ -1,4 +1,4 @@
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { FocusableOption } from '@angular/cdk/a11y';

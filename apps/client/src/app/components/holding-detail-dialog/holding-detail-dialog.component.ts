@@ -1,5 +1,3 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
 import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -9,8 +7,10 @@ import {
   NUMERICAL_PRECISION_THRESHOLD_5_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  Activity,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,

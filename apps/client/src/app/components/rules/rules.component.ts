@@ -1,5 +1,5 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { GfRuleComponent } from '@ghostfolio/client/components/rule/rule.component';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   PortfolioReportRule,
   XRayRulesSettings

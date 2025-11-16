@@ -23,7 +23,8 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
-  AdminUsers,
+  AdminUserResponse,
+  AdminUsersResponse,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -35,7 +36,8 @@ import {
   BadRequestException,
   HttpException,
   Injectable,
-  Logger
+  Logger,
+  NotFoundException
 } from '@nestjs/common';
 import {
   AssetClass,
@@ -507,16 +509,36 @@ export class AdminService {
     };
   }
 
+  public async getUser(id: string): Promise<AdminUserResponse> {
+    const [user] = await this.getUsersWithAnalytics({
+      where: { id }
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
+  }
+
   public async getUsers({
     skip,
     take = Number.MAX_SAFE_INTEGER
   }: {
     skip?: number;
     take?: number;
-  }): Promise<AdminUsers> {
+  }): Promise<AdminUsersResponse> {
     const [count, users] = await Promise.all([
       this.countUsersWithAnalytics(),
-      this.getUsersWithAnalytics({ skip, take })
+      this.getUsersWithAnalytics({
+        skip,
+        take,
+        where: {
+          NOT: {
+            analytics: null
+          }
+        }
+      })
     ]);
 
     return { count, users };
@@ -814,16 +836,16 @@ export class AdminService {
 
   private async getUsersWithAnalytics({
     skip,
-    take
+    take,
+    where
   }: {
     skip?: number;
     take?: number;
-  }): Promise<AdminUsers['users']> {
+    where?: Prisma.UserWhereInput;
+  }): Promise<AdminUsersResponse['users']> {
     let orderBy: Prisma.Enumerable<Prisma.UserOrderByWithRelationInput> = [
       { createdAt: 'desc' }
     ];
-
-    let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       orderBy = [
@@ -833,12 +855,6 @@ export class AdminService {
           }
         }
       ];
-
-      where = {
-        NOT: {
-          analytics: null
-        }
-      };
     }
 
     const usersWithAnalytics = await this.prismaService.user.findMany({

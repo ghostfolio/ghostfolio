@@ -1,7 +1,11 @@
-import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { AuthDeviceDto } from '@ghostfolio/common/dtos';
+import {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON
+} from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -26,11 +30,6 @@ import {
 } from '@simplewebauthn/server';
 import { isoBase64URL, isoUint8Array } from '@simplewebauthn/server/helpers';
 import ms from 'ms';
-
-import {
-  AssertionCredentialJSON,
-  AttestationCredentialJSON
-} from './interfaces/simplewebauthn';
 
 @Injectable()
 export class WebAuthService {

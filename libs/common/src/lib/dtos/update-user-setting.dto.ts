@@ -1,4 +1,3 @@
-import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
 import type {
   ColorScheme,
@@ -6,6 +5,7 @@ import type {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import {
   IsArray,

@@ -1,4 +1,4 @@
-import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
+import { AuthDeviceDto } from '@ghostfolio/common/dtos';
 
 import { Provider } from '@prisma/client';
 
