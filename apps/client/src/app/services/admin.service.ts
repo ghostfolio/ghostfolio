@@ -1,12 +1,13 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
-import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import {
+  DEFAULT_PAGE_SIZE,
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
 } from '@ghostfolio/common/config';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import {
+  CreatePlatformDto,
+  UpdateAssetProfileDto,
+  UpdatePlatformDto
+} from '@ghostfolio/common/dtos';
 import {
   AdminData,
   AdminJobs,

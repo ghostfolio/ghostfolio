@@ -1,5 +1,4 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
-import { UserSettings } from '@ghostfolio/common/interfaces';
+import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
 import { EvaluationResult } from './evaluation-result.interface';
 

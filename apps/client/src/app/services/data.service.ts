@@ -1,21 +1,21 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
-import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
-import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
-import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
-import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
-import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
-import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
-import { UpdateOwnAccessTokenDto } from '@ghostfolio/api/app/user/update-own-access-token.dto';
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
+import {
+  CreateAccessDto,
+  CreateAccountBalanceDto,
+  CreateAccountDto,
+  CreateOrderDto,
+  CreateTagDto,
+  CreateWatchlistItemDto,
+  DeleteOwnUserDto,
+  TransferBalanceDto,
+  UpdateAccessDto,
+  UpdateAccountDto,
+  UpdateBulkMarketDataDto,
+  UpdateOrderDto,
+  UpdateOwnAccessTokenDto,
+  UpdatePropertyDto,
+  UpdateTagDto,
+  UpdateUserSettingDto
+} from '@ghostfolio/common/dtos';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
@@ -52,6 +52,7 @@ import {
   PublicPortfolioResponse,
   SymbolItem,
   User,
+  UserItem,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
@@ -808,7 +809,7 @@ export class DataService {
     return this.http.put<UserItem>(`/api/v1/account/${aAccount.id}`, aAccount);
   }
 
-  public putAdminSetting(key: string, aData: PropertyDto) {
+  public putAdminSetting(key: string, aData: UpdatePropertyDto) {
     return this.http.put<void>(`/api/v1/admin/settings/${key}`, aData);
   }
 

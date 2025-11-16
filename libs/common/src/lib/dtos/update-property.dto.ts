@@ -1,6 +1,6 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class PropertyDto {
+export class UpdatePropertyDto {
   @IsOptional()
   @IsString()
   value: string;
