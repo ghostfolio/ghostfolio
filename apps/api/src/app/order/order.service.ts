@@ -387,6 +387,7 @@ export class OrderService {
           // BUY
           activities.push({
             ...syntheticActivityTemplate,
+            quantity: balanceItem.value - currentBalance,
             type: 'BUY',
             value: balanceItem.value - currentBalance,
             valueInBaseCurrency:
@@ -396,6 +397,7 @@ export class OrderService {
           // SELL
           activities.push({
             ...syntheticActivityTemplate,
+            quantity: currentBalance - balanceItem.value,
             type: 'SELL',
             value: currentBalance - balanceItem.value,
             valueInBaseCurrency:
