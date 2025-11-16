@@ -318,93 +318,6 @@ export class PortfolioService {
     };
   }
 
-  public async getCashActivities({
-    cashDetails,
-    userCurrency,
-    userId
-  }: {
-    cashDetails: CashDetails;
-    userCurrency: string;
-    userId: string;
-  }) {
-    const syntheticActivities: Activity[] = [];
-
-    for (const account of cashDetails.accounts) {
-      const { balances } = await this.accountBalanceService.getAccountBalances({
-        filters: [{ id: account.id, type: 'ACCOUNT' }],
-        userCurrency,
-        userId
-      });
-
-      let currentBalance = 0;
-      let currentBalanceInBaseCurrency = 0;
-      for (const balanceItem of balances) {
-        const syntheticActivityTemplate: Activity = {
-          userId,
-          accountId: account.id,
-          accountUserId: account.userId,
-          comment: account.name,
-          createdAt: new Date(balanceItem.date),
-          currency: account.currency,
-          date: new Date(balanceItem.date),
-          fee: 0,
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          id: balanceItem.id,
-          isDraft: false,
-          quantity: 1,
-          SymbolProfile: {
-            activitiesCount: 0,
-            assetClass: 'LIQUIDITY',
-            assetSubClass: 'CASH',
-            countries: [],
-            createdAt: new Date(balanceItem.date),
-            currency: account.currency,
-            dataSource:
-              this.dataProviderService.getDataSourceForExchangeRates(),
-            holdings: [],
-            id: account.currency,
-            isActive: true,
-            sectors: [],
-            symbol: account.currency,
-            updatedAt: new Date(balanceItem.date)
-          },
-          symbolProfileId: account.currency,
-          type: 'BUY',
-          unitPrice: 1,
-          unitPriceInAssetProfileCurrency: 1,
-          updatedAt: new Date(balanceItem.date),
-          valueInBaseCurrency: 0,
-          value: 0
-        };
-
-        if (currentBalance < balanceItem.value) {
-          // BUY
-          syntheticActivities.push({
-            ...syntheticActivityTemplate,
-            type: 'BUY',
-            value: balanceItem.value - currentBalance,
-            valueInBaseCurrency:
-              balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
-          });
-        } else if (currentBalance > balanceItem.value) {
-          // SELL
-          syntheticActivities.push({
-            ...syntheticActivityTemplate,
-            type: 'SELL',
-            value: currentBalance - balanceItem.value,
-            valueInBaseCurrency:
-              currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
-          });
-        }
-        currentBalance = balanceItem.value;
-        currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
-      }
-    }
-
-    return syntheticActivities;
-  }
-
   public async getDividends({
     activities,
     groupBy
@@ -588,16 +501,11 @@ export class PortfolioService {
       userId,
       currency: userCurrency
     });
-    const cashActivities = await this.getCashActivities({
-      cashDetails,
-      userCurrency,
-      userId
-    });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
+      activities,
       filters,
       userId,
-      activities: [...activities, ...cashActivities],
       calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
@@ -715,10 +623,10 @@ export class PortfolioService {
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
-        assetClass: assetProfile.assetClass,
-        assetSubClass: assetProfile.assetSubClass,
-        countries: assetProfile.countries,
-        dataSource: assetProfile.dataSource,
+        assetClass: assetProfile?.assetClass,
+        assetSubClass: assetProfile?.assetSubClass,
+        countries: assetProfile?.countries,
+        dataSource: assetProfile?.dataSource,
         dateOfFirstActivity: parseDate(firstBuyDate),
         dividend: dividend?.toNumber() ?? 0,
         grossPerformance: grossPerformance?.toNumber() ?? 0,
@@ -727,8 +635,8 @@ export class PortfolioService {
           grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
-        holdings: assetProfile.holdings.map(
-          ({ allocationInPercentage, name }) => {
+        holdings:
+          assetProfile?.holdings.map(({ allocationInPercentage, name }) => {
             return {
               allocationInPercentage,
               name,
@@ -736,10 +644,9 @@ export class PortfolioService {
                 .mul(allocationInPercentage)
                 .toNumber()
             };
-          }
-        ),
+          }) ?? [],
         investment: investment.toNumber(),
-        name: assetProfile.name,
+        name: assetProfile?.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
@@ -749,8 +656,8 @@ export class PortfolioService {
         netPerformanceWithCurrencyEffect:
           netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ?? 0,
         quantity: quantity.toNumber(),
-        sectors: assetProfile.sectors,
-        url: assetProfile.url,
+        sectors: assetProfile?.sectors,
+        url: assetProfile?.url,
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
@@ -2251,7 +2158,7 @@ export class PortfolioService {
           accounts[account?.id || UNKNOWN_KEY] = {
             balance: 0,
             currency: account?.currency,
-            name: account.name,
+            name: account?.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
@@ -2265,7 +2172,7 @@ export class PortfolioService {
           platforms[account?.platformId || UNKNOWN_KEY] = {
             balance: 0,
             currency: account?.currency,
-            name: account.platform?.name,
+            name: account?.platform?.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
