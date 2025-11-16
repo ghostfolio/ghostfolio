@@ -1,4 +1,4 @@
-import { ConfirmationDialogType } from '../confirmation-dialog/confirmation-dialog.type';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
 export interface AlertParams {
   discardFn?: () => void;
