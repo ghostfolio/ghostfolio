@@ -1,3 +1,4 @@
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Injectable } from '@angular/core';
@@ -6,7 +7,6 @@ import { isFunction } from 'lodash';
 
 import { GfAlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { GfConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { ConfirmationDialogType } from './confirmation-dialog/confirmation-dialog.type';
 import {
   AlertParams,
   ConfirmParams,
