@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the OSS Gallery logo to the logo carousel
 - Introduced support for automatically gathering required exchange rates, exposed as an environment variable (`ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES`)
 - Added a blog post: _Black Weeks 2025_
 
