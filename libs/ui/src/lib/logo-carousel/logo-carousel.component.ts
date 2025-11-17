@@ -52,7 +52,7 @@ export class GfLogoCarouselComponent {
       className: 'logo-oss-gallery',
       isMask: true,
       name: 'OSS Gallery',
-      title: 'OSS Gallery - Discover and promote open source projects',
+      title: 'OSS Gallery: Discover the best open-source projects',
       url: 'https://oss.gallery'
     },
     {
