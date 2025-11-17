@@ -301,6 +301,13 @@
           <ion-icon name="ellipsis-horizontal" />
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="onOpenAccountDetailDialog(element.id)">
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="wallet-outline" />
+              <span i18n>View Details</span>
+            </span>
+          </button>
+          <hr class="m-0" />
           <button mat-menu-item (click)="onUpdateAccount(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
