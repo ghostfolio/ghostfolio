@@ -16,7 +16,7 @@
         other {activities}
       }</ng-container>
       <span
-        class="align-items-center d-flex ml-1"
+        class="align-items-center d-none d-sm-flex ml-1"
         matTooltipPosition="above"
         [matTooltip]="buyAndSellActivitiesTooltip"
       >
@@ -34,6 +34,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalBuy"
       />
@@ -46,6 +47,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalSell"
       />
@@ -61,6 +63,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.committedFunds"
       />
@@ -73,6 +76,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="
           isLoading ? undefined : summary?.grossPerformanceWithCurrencyEffect
@@ -90,6 +94,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.fees"
       />
@@ -105,6 +110,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="
           isLoading ? undefined : summary?.netPerformanceWithCurrencyEffect
@@ -116,7 +122,7 @@
     <div class="flex-grow-1 text-truncate ml-3">
       <ng-container i18n>Net Performance</ng-container>
       <abbr
-        class="initialism ml-2 text-muted"
+        class="d-none d-sm-inline-block initialism ml-2 text-muted"
         title="Return on Average Investment"
         >(ROAI)</abbr
       >
@@ -147,6 +153,7 @@
         position="end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentValueInBaseCurrency"
       />
@@ -181,6 +188,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.total"
       />
@@ -194,6 +202,7 @@
         position="end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.cash"
       />
@@ -207,6 +216,7 @@
         position="end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
       />
@@ -219,6 +229,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.cash"
       />
@@ -231,6 +242,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.excludedAccountsAndActivities"
       />
@@ -252,6 +264,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.liabilitiesInBaseCurrency"
       />
@@ -267,6 +280,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalValueInBaseCurrency"
       />
@@ -301,6 +315,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.interestInBaseCurrency"
       />
@@ -313,6 +328,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.dividendInBaseCurrency"
       />

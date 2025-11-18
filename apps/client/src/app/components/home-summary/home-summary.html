@@ -6,6 +6,7 @@
         <mat-card-content>
           <gf-portfolio-summary
             [baseCurrency]="user?.settings?.baseCurrency"
+            [deviceType]="deviceType"
             [hasPermissionToUpdateUserSettings]="
               !hasImpersonationId && hasPermissionToUpdateUserSettings
             "
