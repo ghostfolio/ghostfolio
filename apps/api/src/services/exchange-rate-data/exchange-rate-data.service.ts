@@ -271,56 +271,65 @@ export class ExchangeRateDataService {
     if (aFromCurrency === aToCurrency) {
       factor = 1;
     } else {
-      const dataSource =
-        this.dataProviderService.getDataSourceForExchangeRates();
-      const symbol = `${aFromCurrency}${aToCurrency}`;
+      const derivedCurrencyFactor = this.getDerivedCurrencyFactor(
+        aFromCurrency,
+        aToCurrency
+      );
 
-      const marketData = await this.marketDataService.get({
-        dataSource,
-        symbol,
-        date: aDate
-      });
-
-      if (marketData?.marketPrice) {
-        factor = marketData?.marketPrice;
+      if (derivedCurrencyFactor !== null) {
+        factor = derivedCurrencyFactor;
       } else {
-        // Calculate indirectly via base currency
+        const dataSource =
+          this.dataProviderService.getDataSourceForExchangeRates();
+        const symbol = `${aFromCurrency}${aToCurrency}`;
 
-        let marketPriceBaseCurrencyFromCurrency: number;
-        let marketPriceBaseCurrencyToCurrency: number;
+        const marketData = await this.marketDataService.get({
+          dataSource,
+          symbol,
+          date: aDate
+        });
 
-        try {
-          if (aFromCurrency === DEFAULT_CURRENCY) {
-            marketPriceBaseCurrencyFromCurrency = 1;
-          } else {
-            marketPriceBaseCurrencyFromCurrency = (
-              await this.marketDataService.get({
-                dataSource,
-                date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
-              })
-            )?.marketPrice;
-          }
-        } catch {}
+        if (marketData?.marketPrice) {
+          factor = marketData?.marketPrice;
+        } else {
+          // Calculate indirectly via base currency
 
-        try {
-          if (aToCurrency === DEFAULT_CURRENCY) {
-            marketPriceBaseCurrencyToCurrency = 1;
-          } else {
-            marketPriceBaseCurrencyToCurrency = (
-              await this.marketDataService.get({
-                dataSource,
-                date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
-              })
-            )?.marketPrice;
-          }
-        } catch {}
+          let marketPriceBaseCurrencyFromCurrency: number;
+          let marketPriceBaseCurrencyToCurrency: number;
 
-        // Calculate the opposite direction
-        factor =
-          (1 / marketPriceBaseCurrencyFromCurrency) *
-          marketPriceBaseCurrencyToCurrency;
+          try {
+            if (aFromCurrency === DEFAULT_CURRENCY) {
+              marketPriceBaseCurrencyFromCurrency = 1;
+            } else {
+              marketPriceBaseCurrencyFromCurrency = (
+                await this.marketDataService.get({
+                  dataSource,
+                  date: aDate,
+                  symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
+                })
+              )?.marketPrice;
+            }
+          } catch {}
+
+          try {
+            if (aToCurrency === DEFAULT_CURRENCY) {
+              marketPriceBaseCurrencyToCurrency = 1;
+            } else {
+              marketPriceBaseCurrencyToCurrency = (
+                await this.marketDataService.get({
+                  dataSource,
+                  date: aDate,
+                  symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
+                })
+              )?.marketPrice;
+            }
+          } catch {}
+
+          // Calculate the opposite direction
+          factor =
+            (1 / marketPriceBaseCurrencyFromCurrency) *
+            marketPriceBaseCurrencyToCurrency;
+        }
       }
     }
 
@@ -357,7 +366,25 @@ export class ExchangeRateDataService {
       for (const date of dates) {
         factors[format(date, DATE_FORMAT)] = 1;
       }
-    } else {
+      return factors;
+    }
+
+    // Check if this is a conversion between a derived currency and its root currency
+    const derivedCurrencyFactor = this.getDerivedCurrencyFactor(
+      currencyFrom,
+      currencyTo
+    );
+
+    if (derivedCurrencyFactor !== null) {
+      // Use the fixed mathematical factor for derived currencies
+      for (const date of dates) {
+        factors[format(date, DATE_FORMAT)] = derivedCurrencyFactor;
+      }
+      return factors;
+    }
+
+    // Continue with standard exchange rate logic
+    {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
       const symbol = `${currencyFrom}${currencyTo}`;
@@ -467,6 +494,35 @@ export class ExchangeRateDataService {
     }
 
     return factors;
+  }
+
+  private getDerivedCurrencyFactor(
+    currencyFrom: string,
+    currencyTo: string
+  ): number | null {
+    // Check if currencyFrom is a derived currency of currencyTo
+    const derivedFrom = DERIVED_CURRENCIES.find(
+      ({ currency, rootCurrency }) =>
+        currency === currencyFrom && rootCurrency === currencyTo
+    );
+
+    if (derivedFrom) {
+      // e.g., GBp → GBP: factor = 1/100 = 0.01
+      return 1 / derivedFrom.factor;
+    }
+
+    // Check if currencyTo is a derived currency of currencyFrom
+    const derivedTo = DERIVED_CURRENCIES.find(
+      ({ currency, rootCurrency }) =>
+        currency === currencyTo && rootCurrency === currencyFrom
+    );
+
+    if (derivedTo) {
+      // e.g., GBP → GBp: factor = 100
+      return derivedTo.factor;
+    }
+
+    return null;
   }
 
   private async prepareCurrencies(): Promise<string[]> {
