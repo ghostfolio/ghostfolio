@@ -1,8 +1,11 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
-import { LookupResponse } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderHistoricalResponse,
+  LookupResponse,
+  SymbolItem
+} from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -22,7 +25,6 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
-import { SymbolItem } from './interfaces/symbol-item.interface';
 import { SymbolService } from './symbol.service';
 
 @Controller('symbol')
@@ -47,7 +49,7 @@ export class SymbolController {
     try {
       return this.symbolService.lookup({
         includeIndices,
-        query: query.toLowerCase(),
+        query,
         user: this.request.user
       });
     } catch {
@@ -97,7 +99,7 @@ export class SymbolController {
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
-  ): Promise<IDataProviderHistoricalResponse> {
+  ): Promise<DataProviderHistoricalResponse> {
     const date = parseISO(dateString);
 
     if (!isDate(date)) {

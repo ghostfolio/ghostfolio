@@ -50,14 +50,18 @@ export class RedactValuesInResponseInterceptor<T>
               'feeInBaseCurrency',
               'grossPerformance',
               'grossPerformanceWithCurrencyEffect',
+              'interestInBaseCurrency',
               'investment',
               'netPerformance',
               'netPerformanceWithCurrencyEffect',
               'quantity',
               'symbolMapping',
               'totalBalanceInBaseCurrency',
+              'totalDividendInBaseCurrency',
+              'totalInterestInBaseCurrency',
               'totalValueInBaseCurrency',
               'unitPrice',
+              'unitPriceInAssetProfileCurrency',
               'value',
               'valueInBaseCurrency'
             ].map((attribute) => {

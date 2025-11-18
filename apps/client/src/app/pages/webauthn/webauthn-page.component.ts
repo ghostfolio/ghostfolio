@@ -13,7 +13,6 @@ import { takeUntil } from 'rxjs/operators';
   host: { class: 'page' },
   imports: [GfLogoComponent, MatButtonModule, MatProgressSpinnerModule],
   selector: 'gf-webauthn-page',
-  standalone: true,
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
 })
@@ -22,7 +21,7 @@ export class GfWebauthnPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  constructor(
+  public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private tokenStorageService: TokenStorageService,

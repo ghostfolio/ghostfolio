@@ -1,5 +1,5 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { ISearchResultItem } from '@ghostfolio/ui/assistant/interfaces/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { FocusableOption } from '@angular/cdk/a11y';
 import {
@@ -16,11 +16,16 @@ import {
 } from '@angular/core';
 import { Params, RouterModule } from '@angular/router';
 
+import { SearchMode } from '../enums/search-mode';
+import {
+  AssetSearchResultItem,
+  SearchResultItem
+} from '../interfaces/interfaces';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfSymbolModule, RouterModule],
+  imports: [GfSymbolPipe, RouterModule],
   selector: 'gf-assistant-list-item',
-  standalone: true,
   styleUrls: ['./assistant-list-item.scss'],
   templateUrl: './assistant-list-item.html'
 })
@@ -32,8 +37,7 @@ export class GfAssistantListItemComponent
     return this.hasFocus;
   }
 
-  @Input() item: ISearchResultItem;
-  @Input() mode: 'assetProfile' | 'holding';
+  @Input() item: SearchResultItem;
 
   @Output() clicked = new EventEmitter<void>();
 
@@ -46,23 +50,33 @@ export class GfAssistantListItemComponent
   public constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnChanges() {
-    const dataSource = this.item?.dataSource;
-    const symbol = this.item?.symbol;
+    if (this.item?.mode === SearchMode.ACCOUNT) {
+      this.queryParams = {
+        accountDetailDialog: true,
+        accountId: this.item.id
+      };
 
-    if (this.mode === 'assetProfile') {
+      this.routerLink = internalRoutes.accounts.routerLink;
+    } else if (this.item?.mode === SearchMode.ASSET_PROFILE) {
       this.queryParams = {
-        dataSource,
-        symbol,
-        assetProfileDialog: true
+        assetProfileDialog: true,
+        dataSource: this.item.dataSource,
+        symbol: this.item.symbol
       };
-      this.routerLink = ['/admin', 'market-data'];
-    } else if (this.mode === 'holding') {
+
+      this.routerLink =
+        internalRoutes.adminControl.subRoutes.marketData.routerLink;
+    } else if (this.item?.mode === SearchMode.HOLDING) {
       this.queryParams = {
-        dataSource,
-        symbol,
-        holdingDetailDialog: true
+        dataSource: this.item.dataSource,
+        holdingDetailDialog: true,
+        symbol: this.item.symbol
       };
+
       this.routerLink = [];
+    } else if (this.item?.mode === SearchMode.QUICK_LINK) {
+      this.queryParams = {};
+      this.routerLink = this.item.routerLink;
     }
   }
 
@@ -70,6 +84,15 @@ export class GfAssistantListItemComponent
     this.hasFocus = true;
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  public isAsset(item: SearchResultItem): item is AssetSearchResultItem {
+    return (
+      (item.mode === SearchMode.ASSET_PROFILE ||
+        item.mode === SearchMode.HOLDING) &&
+      !!item.dataSource &&
+      !!item.symbol
+    );
   }
 
   public onClick() {

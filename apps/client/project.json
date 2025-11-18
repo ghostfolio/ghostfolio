@@ -2,38 +2,89 @@
   "name": "client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
+  "sourceRoot": "apps/client/src",
+  "prefix": "gf",
+  "i18n": {
+    "locales": {
+      "ca": {
+        "baseHref": "/ca/",
+        "translation": "apps/client/src/locales/messages.ca.xlf"
+      },
+      "de": {
+        "baseHref": "/de/",
+        "translation": "apps/client/src/locales/messages.de.xlf"
+      },
+      "es": {
+        "baseHref": "/es/",
+        "translation": "apps/client/src/locales/messages.es.xlf"
+      },
+      "fr": {
+        "baseHref": "/fr/",
+        "translation": "apps/client/src/locales/messages.fr.xlf"
+      },
+      "it": {
+        "baseHref": "/it/",
+        "translation": "apps/client/src/locales/messages.it.xlf"
+      },
+      "nl": {
+        "baseHref": "/nl/",
+        "translation": "apps/client/src/locales/messages.nl.xlf"
+      },
+      "pl": {
+        "baseHref": "/pl/",
+        "translation": "apps/client/src/locales/messages.pl.xlf"
+      },
+      "pt": {
+        "baseHref": "/pt/",
+        "translation": "apps/client/src/locales/messages.pt.xlf"
+      },
+      "tr": {
+        "baseHref": "/tr/",
+        "translation": "apps/client/src/locales/messages.tr.xlf"
+      },
+      "uk": {
+        "baseHref": "/uk/",
+        "translation": "apps/client/src/locales/messages.uk.xlf"
+      },
+      "zh": {
+        "baseHref": "/zh/",
+        "translation": "apps/client/src/locales/messages.zh.xlf"
+      }
+    },
+    "sourceLocale": "en"
+  },
+  "tags": [],
   "generators": {
     "@schematics/angular:component": {
       "style": "scss"
     }
   },
-  "sourceRoot": "apps/client/src",
-  "prefix": "gf",
   "targets": {
     "build": {
-      "executor": "@nx/angular:webpack-browser",
+      "executor": "@nx/angular:browser-esbuild",
       "options": {
-        "deleteOutputPath": false,
-        "localize": true,
-        "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "main": "apps/client/src/main.ts",
-        "polyfills": "apps/client/src/polyfills.ts",
+        "outputPath": "dist/apps/client",
         "tsConfig": "apps/client/tsconfig.app.json",
+        "buildOptimizer": false,
+        "deleteOutputPath": false,
+        "extractLicenses": false,
+        "localize": true,
+        "namedChunks": true,
+        "ngswConfigPath": "apps/client/ngsw-config.json",
+        "optimization": false,
+        "polyfills": "apps/client/src/polyfills.ts",
+        "scripts": ["node_modules/marked/marked.min.js"],
+        "serviceWorker": true,
+        "sourceMap": true,
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",
-          "apps/client/src/styles.scss"
+          "apps/client/src/styles.scss",
+          "node_modules/open-color/open-color.css"
         ],
-        "scripts": ["node_modules/marked/marked.min.js"],
-        "vendorChunk": true,
-        "extractLicenses": false,
-        "buildOptimizer": false,
-        "sourceMap": true,
-        "optimization": false,
-        "namedChunks": true,
-        "serviceWorker": true,
-        "ngswConfigPath": "apps/client/ngsw-config.json"
+        "vendorChunk": true
       },
       "configurations": {
         "development-ca": {
@@ -76,24 +127,15 @@
           "baseHref": "/tr/",
           "localize": ["tr"]
         },
+        "development-uk": {
+          "baseHref": "/uk/",
+          "localize": ["uk"]
+        },
         "development-zh": {
           "baseHref": "/zh/",
           "localize": ["zh"]
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/client/src/environments/environment.ts",
-              "with": "apps/client/src/environments/environment.prod.ts"
-            }
-          ],
-          "optimization": true,
-          "outputHashing": "all",
-          "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true,
           "budgets": [
             {
               "type": "initial",
@@ -105,7 +147,20 @@
               "maximumWarning": "6kb",
               "maximumError": "10kb"
             }
-          ]
+          ],
+          "buildOptimizer": true,
+          "extractLicenses": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/client/src/environments/environment.ts",
+              "with": "apps/client/src/environments/environment.prod.ts"
+            }
+          ],
+          "namedChunks": false,
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "vendorChunk": false
         }
       },
       "outputs": ["{options.outputPath}"],
@@ -125,13 +180,10 @@
             "command": "shx mkdir -p dist/apps/client/assets"
           },
           {
-            "command": "shx mkdir -p dist/apps/client/ionicons"
-          },
-          {
             "command": "shx cp -r apps/client/src/assets/* dist/apps/client/assets"
           },
           {
-            "command": "shx cp -r apps/client/src/assets/.well-known/* dist/apps/client/.well-known"
+            "command": "shx cp -r apps/client/src/assets/.well-known/assetlinks.json dist/apps/client/.well-known"
           },
           {
             "command": "shx cp apps/client/src/assets/favicon.ico dist/apps/client"
@@ -141,18 +193,6 @@
           },
           {
             "command": "shx cp apps/client/src/assets/robots.txt dist/apps/client"
-          },
-          {
-            "command": "shx cp apps/client/src/assets/site.webmanifest dist/apps/client"
-          },
-          {
-            "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
-          },
-          {
-            "command": "shx cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
-          },
-          {
-            "command": "shx cp -r node_modules/ionicons/dist/ionicons/* dist/apps/client/ionicons"
           },
           {
             "command": "shx cp CHANGELOG.md dist/apps/client/assets"
@@ -201,18 +241,22 @@
         "development-tr": {
           "buildTarget": "client:build:development-tr"
         },
+        "development-uk": {
+          "buildTarget": "client:build:development-uk"
+        },
         "development-zh": {
           "buildTarget": "client:build:development-zh"
         },
         "production": {
           "buildTarget": "client:build:production"
         }
-      }
+      },
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "ng-extract-i18n-merge:ng-extract-i18n-merge",
       "options": {
-        "browserTarget": "client:build",
+        "buildTarget": "client:build",
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
@@ -225,8 +269,10 @@
           "messages.pl.xlf",
           "messages.pt.xlf",
           "messages.tr.xlf",
+          "messages.uk.xlf",
           "messages.zh.xlf"
-        ]
+        ],
+        "trim": true
       }
     },
     "lint": {
@@ -238,55 +284,10 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/client/jest.config.ts"
+        "jestConfig": "apps/client/jest.config.ts",
+        "tsConfig": "apps/client/tsconfig.spec.json"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
-  },
-  "i18n": {
-    "locales": {
-      "ca": {
-        "baseHref": "/ca/",
-        "translation": "apps/client/src/locales/messages.ca.xlf"
-      },
-      "de": {
-        "baseHref": "/de/",
-        "translation": "apps/client/src/locales/messages.de.xlf"
-      },
-      "es": {
-        "baseHref": "/es/",
-        "translation": "apps/client/src/locales/messages.es.xlf"
-      },
-      "fr": {
-        "baseHref": "/fr/",
-        "translation": "apps/client/src/locales/messages.fr.xlf"
-      },
-      "it": {
-        "baseHref": "/it/",
-        "translation": "apps/client/src/locales/messages.it.xlf"
-      },
-      "nl": {
-        "baseHref": "/nl/",
-        "translation": "apps/client/src/locales/messages.nl.xlf"
-      },
-      "pl": {
-        "baseHref": "/pl/",
-        "translation": "apps/client/src/locales/messages.pl.xlf"
-      },
-      "pt": {
-        "baseHref": "/pt/",
-        "translation": "apps/client/src/locales/messages.pt.xlf"
-      },
-      "tr": {
-        "baseHref": "/tr/",
-        "translation": "apps/client/src/locales/messages.tr.xlf"
-      },
-      "zh": {
-        "baseHref": "/zh/",
-        "translation": "apps/client/src/locales/messages.zh.xlf"
-      }
-    },
-    "sourceLocale": "en"
-  },
-  "tags": []
+  }
 }

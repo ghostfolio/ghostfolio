@@ -2,6 +2,7 @@ import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, getSum, resetHours } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
@@ -14,8 +15,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
-
-import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
 @Injectable()
 export class AccountBalanceService {
@@ -30,7 +29,7 @@ export class AccountBalanceService {
   ): Promise<AccountBalance | null> {
     return this.prismaService.accountBalance.findFirst({
       include: {
-        Account: true
+        account: true
       },
       where: accountBalanceWhereInput
     });
@@ -46,7 +45,7 @@ export class AccountBalanceService {
   }): Promise<AccountBalance> {
     const accountBalance = await this.prismaService.accountBalance.upsert({
       create: {
-        Account: {
+        account: {
           connect: {
             id_userId: {
               userId,
@@ -154,7 +153,7 @@ export class AccountBalanceService {
     }
 
     if (withExcludedAccounts === false) {
-      where.Account = { isExcluded: false };
+      where.account = { isExcluded: false };
     }
 
     const balances = await this.prismaService.accountBalance.findMany({
@@ -163,7 +162,7 @@ export class AccountBalanceService {
         date: 'asc'
       },
       select: {
-        Account: true,
+        account: true,
         date: true,
         id: true,
         value: true
@@ -174,10 +173,10 @@ export class AccountBalanceService {
       balances: balances.map((balance) => {
         return {
           ...balance,
-          accountId: balance.Account.id,
+          accountId: balance.account.id,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
             balance.value,
-            balance.Account.currency,
+            balance.account.currency,
             userCurrency
           )
         };

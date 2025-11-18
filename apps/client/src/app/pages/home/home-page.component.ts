@@ -1,19 +1,40 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  albumsOutline,
+  analyticsOutline,
+  bookmarkOutline,
+  newspaperOutline,
+  readerOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [IonIcon, MatTabsModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-page',
   styleUrls: ['./home-page.scss'],
   templateUrl: './home-page.html'
 })
-export class HomePageComponent implements OnDestroy, OnInit {
+export class GfHomePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public tabs: TabConfiguration[] = [];
@@ -31,33 +52,57 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
+          this.user = state.user;
+
           this.tabs = [
             {
               iconName: 'analytics-outline',
-              label: $localize`Overview`,
-              path: ['/home']
+              label: internalRoutes.home.title,
+              routerLink: internalRoutes.home.routerLink
             },
             {
-              iconName: 'wallet-outline',
-              label: $localize`Holdings`,
-              path: ['/home', 'holdings']
+              iconName: 'albums-outline',
+              label: internalRoutes.home.subRoutes.holdings.title,
+              routerLink: internalRoutes.home.subRoutes.holdings.routerLink
             },
             {
               iconName: 'reader-outline',
-              label: $localize`Summary`,
-              path: ['/home', 'summary']
+              label: internalRoutes.home.subRoutes.summary.title,
+              routerLink: internalRoutes.home.subRoutes.summary.routerLink
+            },
+            {
+              iconName: 'bookmark-outline',
+              label: internalRoutes.home.subRoutes.watchlist.title,
+              routerLink: internalRoutes.home.subRoutes.watchlist.routerLink
             },
             {
               iconName: 'newspaper-outline',
-              label: $localize`Markets`,
-              path: ['/home', 'market']
+              label: hasPermission(
+                this.user?.permissions,
+                permissions.readMarketDataOfMarkets
+              )
+                ? internalRoutes.home.subRoutes.marketsPremium.title
+                : internalRoutes.home.subRoutes.markets.title,
+              routerLink: hasPermission(
+                this.user?.permissions,
+                permissions.readMarketDataOfMarkets
+              )
+                ? internalRoutes.home.subRoutes.marketsPremium.routerLink
+                : internalRoutes.home.subRoutes.markets.routerLink
             }
           ];
-          this.user = state.user;
 
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({
+      albumsOutline,
+      analyticsOutline,
+      bookmarkOutline,
+      newspaperOutline,
+      readerOutline
+    });
   }
 
   public ngOnInit() {

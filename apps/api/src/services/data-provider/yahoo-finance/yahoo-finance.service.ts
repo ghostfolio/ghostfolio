@@ -1,20 +1,20 @@
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
+import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
@@ -22,16 +22,29 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
-import yahooFinance from 'yahoo-finance2';
-import { ChartResultArray } from 'yahoo-finance2/dist/esm/src/modules/chart';
+import { uniqBy } from 'lodash';
+import YahooFinance from 'yahoo-finance2';
+import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
 import {
   HistoricalDividendsResult,
   HistoricalHistoryResult
-} from 'yahoo-finance2/dist/esm/src/modules/historical';
-import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
+} from 'yahoo-finance2/esm/src/modules/historical';
+import {
+  Quote,
+  QuoteResponseArray
+} from 'yahoo-finance2/esm/src/modules/quote';
+import {
+  Price,
+  QuoteSummaryResult
+} from 'yahoo-finance2/esm/src/modules/quoteSummary';
+import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private readonly yahooFinance = new YahooFinance({
+    suppressNotices: ['yahooSurvey']
+  });
+
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService,
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
@@ -43,14 +56,13 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     return this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.YAHOO,
       isPremium: false,
       name: 'Yahoo Finance',
       url: 'https://finance.yahoo.com'
@@ -69,7 +81,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const historicalResult = this.convertToDividendResult(
-        await yahooFinance.chart(
+        await this.yahooFinance.chart(
           this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
             symbol
           ),
@@ -82,7 +94,7 @@ export class YahooFinanceService implements DataProviderInterface {
         )
       );
       const response: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       for (const historicalItem of historicalResult) {
@@ -110,7 +122,7 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
@@ -118,7 +130,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const historicalResult = this.convertToHistoricalResult(
-        await yahooFinance.chart(
+        await this.yahooFinance.chart(
           this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
             symbol
           ),
@@ -131,7 +143,7 @@ export class YahooFinanceService implements DataProviderInterface {
       );
 
       const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
       } = {};
 
       response[symbol] = {};
@@ -144,12 +156,18 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      throw new Error(
-        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
-          from,
-          DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
-      );
+      if (error.message === 'No data found, symbol may be delisted') {
+        throw new AssetProfileDelistedError(
+          `No data found, ${symbol} (${this.getName()}) may be delisted`
+        );
+      } else {
+        throw new Error(
+          `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
+            from,
+            DATE_FORMAT
+          )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+        );
+      }
     }
   }
 
@@ -163,8 +181,8 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
+    const response: { [symbol: string]: DataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;
@@ -175,13 +193,10 @@ export class YahooFinanceService implements DataProviderInterface {
     );
 
     try {
-      let quotes: Pick<
-        Quote,
-        'currency' | 'marketState' | 'regularMarketPrice' | 'symbol'
-      >[] = [];
+      let quotes: Price[] | Quote[] = [];
 
       try {
-        quotes = await yahooFinance.quote(yahooFinanceSymbols);
+        quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
       } catch (error) {
         Logger.error(error, 'YahooFinanceService');
 
@@ -237,13 +252,15 @@ export class YahooFinanceService implements DataProviderInterface {
         quoteTypes.push('INDEX');
       }
 
-      const searchResult = await yahooFinance.search(query);
+      const searchResult = await this.yahooFinance.search(query);
 
       const quotes = searchResult.quotes
-        .filter((quote) => {
-          // Filter out undefined symbols
-          return quote.symbol;
-        })
+        .filter(
+          (quote): quote is Exclude<typeof quote, SearchQuoteNonYahoo> => {
+            // Filter out undefined symbols
+            return !!quote.symbol;
+          }
+        )
         .filter(({ quoteType, symbol }) => {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
@@ -269,41 +286,51 @@ export class YahooFinanceService implements DataProviderInterface {
           return true;
         });
 
-      const marketData = await yahooFinance.quote(
-        quotes.map(({ symbol }) => {
-          return symbol;
-        })
-      );
+      let marketData: QuoteResponseArray = [];
 
-      for (const marketDataItem of marketData) {
-        const quote = quotes.find((currentQuote) => {
-          return currentQuote.symbol === marketDataItem.symbol;
-        });
+      try {
+        marketData = await this.yahooFinance.quote(
+          uniqBy(quotes, ({ symbol }) => {
+            return symbol;
+          }).map(({ symbol }) => {
+            return symbol;
+          })
+        );
+      } catch (error) {
+        if (error?.result?.length > 0) {
+          marketData = error.result;
+        }
+      }
 
-        const symbol =
-          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-            marketDataItem.symbol
-          );
-
+      for (const {
+        currency,
+        longName,
+        quoteType,
+        shortName,
+        symbol
+      } of marketData) {
         const { assetClass, assetSubClass } =
           this.yahooFinanceDataEnhancerService.parseAssetClass({
-            quoteType: quote.quoteType,
-            shortName: quote.shortname
+            quoteType,
+            shortName
           });
 
         items.push({
           assetClass,
           assetSubClass,
-          symbol,
-          currency: marketDataItem.currency,
+          currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName(),
           name: this.yahooFinanceDataEnhancerService.formatName({
-            longName: quote.longname,
-            quoteType: quote.quoteType,
-            shortName: quote.shortname,
-            symbol: quote.symbol
-          })
+            longName,
+            quoteType,
+            shortName,
+            symbol
+          }),
+          symbol:
+            this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+              symbol
+            )
         });
       }
     } catch (error) {
@@ -329,23 +356,28 @@ export class YahooFinanceService implements DataProviderInterface {
 
   private async getQuotesWithQuoteSummary(aYahooFinanceSymbols: string[]) {
     const quoteSummaryPromises = aYahooFinanceSymbols.map((symbol) => {
-      return yahooFinance.quoteSummary(symbol).catch(() => {
-        Logger.error(
-          `Could not get quote summary for ${symbol}`,
-          'YahooFinanceService'
-        );
-        return null;
-      });
+      return this.yahooFinance.quoteSummary(symbol);
     });
 
-    const quoteSummaryItems = await Promise.all(quoteSummaryPromises);
+    const settledResults = await Promise.allSettled(quoteSummaryPromises);
 
-    return quoteSummaryItems
-      .filter((item) => {
-        return item !== null;
-      })
-      .map(({ price }) => {
-        return price;
+    return settledResults
+      .filter(
+        (result): result is PromiseFulfilledResult<QuoteSummaryResult> => {
+          if (result.status === 'rejected') {
+            Logger.error(
+              `Could not get quote summary: ${result.reason}`,
+              'YahooFinanceService'
+            );
+
+            return false;
+          }
+
+          return true;
+        }
+      )
+      .map(({ value }) => {
+        return value.price;
       });
   }
 }

@@ -1,5 +1,3 @@
-import { SubscriptionOfferKey } from '@ghostfolio/common/types';
-
 import { Platform, SymbolProfile } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
@@ -18,5 +16,5 @@ export interface InfoItem {
   platforms: Platform[];
   statistics: Statistics;
   stripePublicKey?: string;
-  subscriptionOffers: { [offer in SubscriptionOfferKey]: SubscriptionOffer };
+  subscriptionOffer?: SubscriptionOffer;
 }

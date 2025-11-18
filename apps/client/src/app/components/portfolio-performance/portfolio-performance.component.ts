@@ -8,7 +8,9 @@ import {
   PortfolioPerformance,
   ResponseError
 } from '@ghostfolio/common/interfaces';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,16 +19,21 @@ import {
   OnChanges,
   ViewChild
 } from '@angular/core';
+import { IonIcon } from '@ionic/angular/standalone';
 import { CountUp } from 'countup.js';
+import { addIcons } from 'ionicons';
+import { timeOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-portfolio-performance',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './portfolio-performance.component.html',
-  styleUrls: ['./portfolio-performance.component.scss']
+  imports: [CommonModule, GfValueComponent, IonIcon, NgxSkeletonLoaderModule],
+  selector: 'gf-portfolio-performance',
+  styleUrls: ['./portfolio-performance.component.scss'],
+  templateUrl: './portfolio-performance.component.html'
 })
-export class PortfolioPerformanceComponent implements OnChanges {
+export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() deviceType: string;
   @Input() errors: ResponseError['errors'];
   @Input() isAllTimeHigh: boolean;
@@ -40,7 +47,9 @@ export class PortfolioPerformanceComponent implements OnChanges {
 
   @ViewChild('value') value: ElementRef;
 
-  public constructor(private notificationService: NotificationService) {}
+  public constructor(private notificationService: NotificationService) {
+    addIcons({ timeOutline });
+  }
 
   public ngOnChanges() {
     this.precision = this.precision >= 0 ? this.precision : 2;

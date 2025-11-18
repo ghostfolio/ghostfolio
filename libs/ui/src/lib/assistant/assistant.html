@@ -15,188 +15,208 @@
         [formControl]="searchFormControl"
         [placeholder]="placeholder"
       />
-      <div
-        *ngIf="deviceType !== 'mobile' && !searchFormControl.value"
-        class="hot-key-hint mx-1 px-1"
-      >
-        /
-      </div>
-      <button
-        *ngIf="searchFormControl.value"
-        class="h-100 no-min-width px-3 rounded-0"
-        mat-button
-        (click)="initialize()"
-      >
-        <ion-icon class="m-0" name="close-circle-outline" />
-      </button>
-      <button
-        *ngIf="!searchFormControl.value"
-        class="h-100 no-min-width px-3 rounded-0"
-        mat-button
-        (click)="onCloseAssistant()"
-      >
-        <ion-icon class="m-0" name="close-outline" />
-      </button>
+      @if (deviceType !== 'mobile' && !searchFormControl.value) {
+        <div class="hot-key-hint mx-1 px-1">/</div>
+      }
+      @if (searchFormControl.value) {
+        <button
+          class="h-100 no-min-width px-3 rounded-0"
+          mat-button
+          (click)="initialize()"
+        >
+          <ion-icon class="m-0" name="close-circle-outline" />
+        </button>
+      } @else {
+        <button
+          class="h-100 no-min-width px-3 rounded-0"
+          mat-button
+          (click)="onCloseAssistant()"
+        >
+          <ion-icon class="m-0" name="close-outline" />
+        </button>
+      }
     </div>
-    <div
-      *ngIf="isLoading || searchFormControl.value"
-      class="overflow-auto py-3 result-container"
-    >
-      <div>
-        <div class="h6 mb-1 px-2" i18n>Holdings</div>
-        <gf-assistant-list-item
-          *ngFor="let searchResultItem of searchResults?.holdings"
-          mode="holding"
-          [item]="searchResultItem"
-          (clicked)="onCloseAssistant()"
-        />
-        <ng-container *ngIf="searchResults?.holdings?.length === 0">
-          <ngx-skeleton-loader
-            *ngIf="isLoading"
-            animation="pulse"
-            class="mx-2"
-            [theme]="{
-              height: '1.5rem',
-              width: '100%'
-            }"
-          />
-          <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
-        </ng-container>
+    @if (searchFormControl.value) {
+      <div class="overflow-auto py-2 result-container">
+        @if (
+          !isLoading.accounts &&
+          !isLoading.assetProfiles &&
+          !isLoading.holdings &&
+          !isLoading.quickLinks &&
+          searchResults.accounts?.length === 0 &&
+          searchResults.assetProfiles?.length === 0 &&
+          searchResults.holdings?.length === 0 &&
+          searchResults.quickLinks?.length === 0
+        ) {
+          <div class="px-3 py-1 text-muted" i18n>No results found...</div>
+        } @else {
+          @if (
+            isLoading.quickLinks || searchResults?.quickLinks?.length !== 0
+          ) {
+            <div class="mb-2">
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Quick Links</ng-container>
+              </div>
+              @for (
+                searchResultItem of searchResults.quickLinks;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.quickLinks) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
+          @if (isLoading.accounts || searchResults?.accounts?.length !== 0) {
+            <div>
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Accounts</ng-container>
+              </div>
+              @for (
+                searchResultItem of searchResults.accounts;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.accounts) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
+          @if (isLoading.holdings || searchResults?.holdings?.length !== 0) {
+            <div>
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Holdings</ng-container>
+              </div>
+              @for (
+                searchResultItem of searchResults.holdings;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.holdings) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
+          @if (
+            hasPermissionToAccessAdminControl &&
+            (isLoading.assetProfiles ||
+              searchResults?.assetProfiles?.length !== 0)
+          ) {
+            <div class="mt-2">
+              <div class="font-weight-bold px-3 text-muted title">
+                <ng-container i18n>Asset Profiles</ng-container>
+              </div>
+              @for (
+                searchResultItem of searchResults.assetProfiles;
+                track searchResultItem
+              ) {
+                <gf-assistant-list-item
+                  [item]="searchResultItem"
+                  (clicked)="onCloseAssistant()"
+                />
+              }
+              @if (isLoading.assetProfiles) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
+            </div>
+          }
+        }
       </div>
-      <div *ngIf="hasPermissionToAccessAdminControl" class="mt-3">
-        <div class="h6 mb-1 px-2" i18n>Asset Profiles</div>
-        <gf-assistant-list-item
-          *ngFor="let searchResultItem of searchResults?.assetProfiles"
-          mode="assetProfile"
-          [item]="searchResultItem"
-          (clicked)="onCloseAssistant()"
-        />
-        <ng-container *ngIf="searchResults?.assetProfiles?.length === 0">
-          <ngx-skeleton-loader
-            *ngIf="isLoading"
-            animation="pulse"
-            class="mx-2"
-            [theme]="{
-              height: '1.5rem',
-              width: '100%'
-            }"
-          />
-          <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
-        </ng-container>
-      </div>
-    </div>
+    }
   </div>
-  <form [formGroup]="filterForm">
-    <ng-container *ngIf="!(isLoading || searchFormControl.value)">
-      <div class="date-range-selector-container p-3">
-        <mat-form-field appearance="outline" class="w-100 without-hint">
-          <mat-label i18n>Date Range</mat-label>
-          <mat-select
-            [formControl]="dateRangeFormControl"
-            (selectionChange)="onChangeDateRange($event.value)"
-          >
-            @for (range of dateRangeOptions; track range) {
-              <mat-option [value]="range.value">{{ range.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+  @if (!searchFormControl.value) {
+    <div class="date-range-selector-container p-3">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label i18n>Date Range</mat-label>
+        <mat-select
+          [formControl]="dateRangeFormControl"
+          (selectionChange)="onChangeDateRange($event.value)"
+        >
+          @for (
+            dateRangeOption of dateRangeOptions;
+            track dateRangeOption.value
+          ) {
+            <mat-option [value]="dateRangeOption.value">{{
+              dateRangeOption.label
+            }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="p-3">
+      <gf-portfolio-filter-form
+        #portfolioFilterForm
+        [accounts]="user?.accounts"
+        [assetClasses]="assetClasses"
+        [formControl]="portfolioFilterFormControl"
+        [holdings]="holdings"
+        [tags]="tags"
+      />
+      <div class="d-flex w-100">
+        <button
+          mat-button
+          type="button"
+          [disabled]="
+            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled
+          "
+          (click)="onResetFilters()"
+        >
+          <ng-container i18n>Reset Filters</ng-container>
+        </button>
+        <span class="gf-spacer"></span>
+        <button
+          color="primary"
+          mat-flat-button
+          type="button"
+          [disabled]="
+            !portfolioFilterForm.filterForm.dirty ||
+            portfolioFilterForm.disabled
+          "
+          (click)="onApplyFilters()"
+        >
+          <ng-container i18n>Apply Filters</ng-container>
+        </button>
       </div>
-      <div class="p-3">
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Accounts</mat-label>
-            <mat-select formControlName="account">
-              <mat-option [value]="null" />
-              @for (account of accounts; track account.id) {
-                <mat-option [value]="account.id">
-                  <div class="d-flex">
-                    <gf-asset-profile-icon
-                      *ngIf="account.Platform?.url"
-                      class="mr-1"
-                      [tooltip]="account.Platform?.name"
-                      [url]="account.Platform?.url"
-                    /><span>{{ account.name }}</span>
-                  </div>
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Holding</mat-label>
-            <mat-select
-              formControlName="holding"
-              [compareWith]="holdingComparisonFunction"
-            >
-              <mat-select-trigger>{{
-                filterForm.get('holding')?.value?.name
-              }}</mat-select-trigger>
-              <mat-option [value]="null" />
-              @for (holding of holdings; track holding.name) {
-                <mat-option [value]="holding">
-                  <div class="line-height-1 text-truncate">
-                    <span
-                      ><b>{{ holding.name }}</b></span
-                    >
-                    <br />
-                    <small class="text-muted"
-                      >{{ holding.symbol | gfSymbol }} ·
-                      {{ holding.currency }}</small
-                    >
-                  </div>
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Tags</mat-label>
-            <mat-select formControlName="tag">
-              <mat-option [value]="null" />
-              @for (tag of tags; track tag.id) {
-                <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="mb-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-label i18n>Asset Classes</mat-label>
-            <mat-select formControlName="assetClass">
-              <mat-option [value]="null" />
-              @for (assetClass of assetClasses; track assetClass.id) {
-                <mat-option [value]="assetClass.id">{{
-                  assetClass.label
-                }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="d-flex w-100">
-          <button
-            i18n
-            mat-button
-            [disabled]="
-              !hasFilter(filterForm.value) || !hasPermissionToChangeFilters
-            "
-            (click)="onResetFilters()"
-          >
-            Reset Filters
-          </button>
-          <span class="gf-spacer"></span>
-          <button
-            color="primary"
-            i18n
-            mat-flat-button
-            [disabled]="!filterForm.dirty || !hasPermissionToChangeFilters"
-            (click)="onApplyFilters()"
-          >
-            Apply Filters
-          </button>
-        </div>
-      </div>
-    </ng-container>
-  </form>
+    </div>
+  }
 </div>

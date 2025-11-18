@@ -1,5 +1,5 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
+import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -10,14 +10,20 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
   HostListener,
   Input,
@@ -25,19 +31,46 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  closeOutline,
+  logoGithub,
+  menuOutline,
+  optionsOutline,
+  personCircleOutline,
+  radioButtonOffOutline,
+  radioButtonOnOutline
+} from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'gf-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfAssistantComponent,
+    GfLogoComponent,
+    GfPremiumIndicatorComponent,
+    IonIcon,
+    MatBadgeModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatToolbarModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnChanges {
+export class GfHeaderComponent implements OnChanges {
   @HostListener('window:keydown', ['$event'])
   openAssistantWithHotKey(event: KeyboardEvent) {
     if (
@@ -70,25 +103,32 @@ export class HeaderComponent implements OnChanges {
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
   public hasFilters: boolean;
-  public hasPermissionForSocialLogin: boolean;
+  public hasImpersonationId: boolean;
+  public hasPermissionForAuthGoogle: boolean;
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionToAccessAssistant: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
+  public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
-  public routeAbout = $localize`:snake-case:about`;
-  public routeFeatures = $localize`:snake-case:features`;
-  public routeMarkets = $localize`:snake-case:markets`;
-  public routePricing = $localize`:snake-case:pricing`;
-  public routeResources = $localize`:snake-case:resources`;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routeAbout = publicRoutes.about.path;
+  public routeFeatures = publicRoutes.features.path;
+  public routeMarkets = publicRoutes.markets.path;
+  public routePricing = publicRoutes.pricing.path;
+  public routeResources = publicRoutes.resources.path;
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkAccount = internalRoutes.account.routerLink;
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
+  public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
+  public routerLinkRegister = publicRoutes.register.routerLink;
+  public routerLinkResources = publicRoutes.resources.routerLink;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -107,16 +147,32 @@ export class HeaderComponent implements OnChanges {
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
       });
+
+    addIcons({
+      closeOutline,
+      logoGithub,
+      menuOutline,
+      optionsOutline,
+      personCircleOutline,
+      radioButtonOffOutline,
+      radioButtonOnOutline
+    });
   }
 
   public ngOnChanges() {
     this.hasFilters = this.userService.hasFilters();
 
-    this.hasPermissionForSocialLogin = hasPermission(
+    this.hasPermissionForAuthGoogle = hasPermission(
       this.info?.globalPermissions,
-      permissions.enableSocialLogin
+      permissions.enableAuthGoogle
+    );
+
+    this.hasPermissionForAuthToken = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
@@ -222,11 +278,15 @@ export class HeaderComponent implements OnChanges {
   }
 
   public openLoginDialog() {
-    const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
+    const dialogRef = this.dialog.open<
+      GfLoginWithAccessTokenDialogComponent,
+      LoginWithAccessTokenDialogParams
+    >(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        hasPermissionToUseAuthGoogle: this.hasPermissionForAuthGoogle,
+        hasPermissionToUseAuthToken: this.hasPermissionForAuthToken,
         title: $localize`Sign in`
       },
       width: '30rem'

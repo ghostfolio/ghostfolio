@@ -5,9 +5,9 @@
       <div class="overview-list">
         @for (item of overviewItems; track item) {
           <div class="mb-4">
-            <h3 class="h5 mt-0">{{ item.title }}</h3>
+            <h2 class="h5 mb-1 mt-0">{{ item.title }}</h2>
             <p class="mb-1">{{ item.description }}</p>
-            <a [routerLink]="item.link">Explore {{ item.title }} →</a>
+            <a [routerLink]="item.routerLink">Explore {{ item.title }} →</a>
           </div>
         }
       </div>

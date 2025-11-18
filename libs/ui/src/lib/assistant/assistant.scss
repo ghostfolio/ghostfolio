@@ -7,6 +7,24 @@
 
   .result-container {
     max-height: 15rem;
+
+    .title {
+      align-items: center;
+      display: flex;
+      font-size: 0.75rem;
+      display: flex;
+      margin: 0;
+      position: relative;
+      white-space: nowrap;
+
+      &::after {
+        content: '';
+        flex-grow: 1;
+        height: 1px;
+        background: rgba(var(--dark-dividers));
+        margin-left: 0.25rem;
+      }
+    }
   }
 
   .search-container {
@@ -29,6 +47,14 @@
 :host-context(.theme-dark) {
   .date-range-selector-container {
     border-color: rgba(var(--light-dividers));
+  }
+
+  .result-container {
+    .title {
+      &::after {
+        background: rgba(var(--light-dividers));
+      }
+    }
   }
 
   .search-container {

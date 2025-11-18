@@ -1,8 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -41,7 +40,6 @@ export class DataGatheringService {
     private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
@@ -94,19 +92,22 @@ export class DataGatheringService {
     });
   }
 
-  public async gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
-    await this.marketDataService.deleteMany({ dataSource, symbol });
-
-    const dataGatheringItems = (await this.getSymbolsMax()).filter(
-      (dataGatheringItem) => {
+  public async gatherSymbol({ dataSource, date, symbol }: DataGatheringItem) {
+    const dataGatheringItems = (await this.getSymbolsMax())
+      .filter((dataGatheringItem) => {
         return (
           dataGatheringItem.dataSource === dataSource &&
           dataGatheringItem.symbol === symbol
         );
-      }
-    );
+      })
+      .map((item) => ({
+        ...item,
+        date: date ?? item.date
+      }));
+
     await this.gatherSymbols({
       dataGatheringItems,
+      force: true,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
   }
@@ -159,7 +160,8 @@ export class DataGatheringService {
     );
 
     if (!assetProfileIdentifiers) {
-      assetProfileIdentifiers = await this.getAllAssetProfileIdentifiers();
+      assetProfileIdentifiers =
+        await this.getAllActiveAssetProfileIdentifiers();
     }
 
     if (assetProfileIdentifiers.length <= 0) {
@@ -200,6 +202,7 @@ export class DataGatheringService {
         assetSubClass,
         countries,
         currency,
+        cusip,
         dataSource,
         figi,
         figiComposite,
@@ -218,6 +221,7 @@ export class DataGatheringService {
             assetSubClass,
             countries,
             currency,
+            cusip,
             dataSource,
             figi,
             figiComposite,
@@ -234,6 +238,7 @@ export class DataGatheringService {
             assetSubClass,
             countries,
             currency,
+            cusip,
             figi,
             figiComposite,
             figiShareClass,
@@ -266,9 +271,11 @@ export class DataGatheringService {
 
   public async gatherSymbols({
     dataGatheringItems,
+    force = false,
     priority
   }: {
-    dataGatheringItems: IDataGatheringItem[];
+    dataGatheringItems: DataGatheringItem[];
+    force?: boolean;
     priority: number;
   }) {
     await this.addJobsToQueue(
@@ -277,6 +284,7 @@ export class DataGatheringService {
           data: {
             dataSource,
             date,
+            force,
             symbol
           },
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
@@ -293,11 +301,14 @@ export class DataGatheringService {
     );
   }
 
-  public async getAllAssetProfileIdentifiers(): Promise<
+  public async getAllActiveAssetProfileIdentifiers(): Promise<
     AssetProfileIdentifier[]
   > {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }]
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true
+      }
     });
 
     return symbolProfiles
@@ -337,7 +348,7 @@ export class DataGatheringService {
       });
   }
 
-  private async getCurrencies7D(): Promise<IDataGatheringItem[]> {
+  private async getCurrencies7D(): Promise<DataGatheringItem[]> {
     const assetProfileIdentifiersWithCompleteMarketData =
       await this.getAssetProfileIdentifiersWithCompleteMarketData();
 
@@ -365,11 +376,13 @@ export class DataGatheringService {
     withUserSubscription = false
   }: {
     withUserSubscription?: boolean;
-  }): Promise<IDataGatheringItem[]> {
+  }): Promise<DataGatheringItem[]> {
     const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfilesByUserSubscription({
-        withUserSubscription
-      });
+      await this.symbolProfileService.getActiveSymbolProfilesByUserSubscription(
+        {
+          withUserSubscription
+        }
+      );
 
     const assetProfileIdentifiersWithCompleteMarketData =
       await this.getAssetProfileIdentifiersWithCompleteMarketData();
@@ -394,12 +407,12 @@ export class DataGatheringService {
       });
   }
 
-  private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
+  private async getSymbolsMax(): Promise<DataGatheringItem[]> {
     const benchmarkAssetProfileIdMap: { [key: string]: boolean } = {};
     (
-      ((await this.propertyService.getByKey(
+      (await this.propertyService.getByKey<BenchmarkProperty[]>(
         PROPERTY_BENCHMARKS
-      )) as BenchmarkProperty[]) ?? []
+      )) ?? []
     ).forEach(({ symbolProfileId }) => {
       benchmarkAssetProfileIdMap[symbolProfileId] = true;
     });
@@ -424,15 +437,18 @@ export class DataGatheringService {
       await this.prismaService.symbolProfile.findMany({
         orderBy: [{ symbol: 'asc' }],
         select: {
-          dataSource: true,
-          id: true,
-          Order: {
+          activities: {
             orderBy: [{ date: 'asc' }],
             select: { date: true },
             take: 1
           },
+          dataSource: true,
+          id: true,
           scraperConfiguration: true,
           symbol: true
+        },
+        where: {
+          isActive: true
         }
       })
     )
@@ -447,7 +463,7 @@ export class DataGatheringService {
         );
       })
       .map((symbolProfile) => {
-        let date = symbolProfile.Order?.[0]?.date ?? startDate;
+        let date = symbolProfile.activities?.[0]?.date ?? startDate;
 
         if (benchmarkAssetProfileIdMap[symbolProfile.id]) {
           date = this.getEarliestDate(startDate);

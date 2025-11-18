@@ -42,7 +42,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-line-chart',
-  standalone: true,
   styleUrls: ['./line-chart.component.scss'],
   templateUrl: './line-chart.component.html'
 })
@@ -55,13 +54,13 @@ export class GfLineChartComponent
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
+  @Input() label: string;
   @Input() locale = getLocale();
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
   @Input() showXAxis = false;
   @Input() showYAxis = false;
-  @Input() symbol: string;
   @Input() unit: string;
   @Input() yMax: number;
   @Input() yMaxLabel: string;
@@ -163,7 +162,7 @@ export class GfLineChartComponent
           borderWidth: 2,
           data: marketPrices,
           fill: true,
-          label: this.symbol,
+          label: this.label,
           pointRadius: 0
         }
       ]
@@ -262,7 +261,10 @@ export class GfLineChartComponent
                       }
 
                       if (typeof tickValue === 'number') {
-                        return tickValue.toFixed(2);
+                        return tickValue.toLocaleString(this.locale, {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2
+                        });
                       }
 
                       return tickValue;

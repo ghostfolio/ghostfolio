@@ -2,7 +2,11 @@ import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { OAuthResponse } from '@ghostfolio/common/interfaces';
+import {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON,
+  OAuthResponse
+} from '@ghostfolio/common/interfaces';
 
 import {
   Body,
@@ -22,10 +26,6 @@ import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
-import {
-  AssertionCredentialJSON,
-  AttestationCredentialJSON
-} from './interfaces/simplewebauthn';
 
 @Controller('auth')
 export class AuthController {
@@ -102,23 +102,6 @@ export class AuthController {
     }
   }
 
-  @Post('internet-identity')
-  public async internetIdentityLogin(
-    @Body() body: { principalId: string }
-  ): Promise<OAuthResponse> {
-    try {
-      const authToken = await this.authService.validateInternetIdentityLogin(
-        body.principalId
-      );
-      return { authToken };
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-  }
-
   @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async generateRegistrationOptions() {
@@ -133,17 +116,19 @@ export class AuthController {
     return this.webAuthService.verifyAttestation(body.credential);
   }
 
-  @Post('webauthn/generate-assertion-options')
-  public async generateAssertionOptions(@Body() body: { deviceId: string }) {
-    return this.webAuthService.generateAssertionOptions(body.deviceId);
+  @Post('webauthn/generate-authentication-options')
+  public async generateAuthenticationOptions(
+    @Body() body: { deviceId: string }
+  ) {
+    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
-  @Post('webauthn/verify-assertion')
-  public async verifyAssertion(
+  @Post('webauthn/verify-authentication')
+  public async verifyAuthentication(
     @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
   ) {
     try {
-      const authToken = await this.webAuthService.verifyAssertion(
+      const authToken = await this.webAuthService.verifyAuthentication(
         body.deviceId,
         body.credential
       );

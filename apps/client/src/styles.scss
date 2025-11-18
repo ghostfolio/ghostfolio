@@ -1,21 +1,26 @@
 @import './styles/bootstrap';
 @import './styles/table';
+@import './styles/variables';
 
-@import 'node_modules/svgmap/dist/svgMap';
+@import 'svgmap/dist/svgMap';
 
 :root {
   --dark-background: rgb(25, 25, 25);
   --font-family-sans-serif: 'Inter', Roboto, 'Helvetica Neue', sans-serif;
   --light-background: rgb(255, 255, 255);
 
-  --dark-primary-text: 0, 0, 0, 0.87;
+  --dark-primary-text:
+    #{red($dark-primary-text)}, #{green($dark-primary-text)},
+    #{blue($dark-primary-text)}, #{alpha($dark-primary-text)};
   --dark-secondary-text: 0, 0, 0, 0.54;
   --dark-accent-text: 0, 0, 0, 0.87;
   --dark-warn-text: 0, 0, 0, 0.87;
   --dark-disabled-text: 0, 0, 0, 0.38;
   --dark-dividers: 0, 0, 0, 0.12;
   --dark-focused: 0, 0, 0, 0.12;
-  --light-primary-text: 255, 255, 255, 1;
+  --light-primary-text:
+    #{red($light-primary-text)}, #{green($light-primary-text)},
+    #{blue($light-primary-text)}, #{alpha($light-primary-text)};
   --light-secondary-text: 255, 255, 255, 0.7;
   --light-accent-text: 255, 255, 255, 1;
   --light-warn-text: 255, 255, 255, 1;
@@ -237,10 +242,10 @@ body {
     }
 
     .mat-mdc-dialog-container {
-      --mdc-dialog-container-color: var(--dark-background);
+      --mat-dialog-container-color: var(--dark-background);
 
       .mdc-dialog__content {
-        --mdc-dialog-supporting-text-color: rgba(var(--light-primary-text));
+        --mat-dialog-supporting-text-color: rgba(var(--light-primary-text));
       }
     }
 
@@ -252,13 +257,13 @@ body {
     }
 
     .mat-mdc-card {
-      --mdc-elevated-card-container-color: var(--dark-background);
-      --mdc-outlined-card-container-color: var(--dark-background);
+      --mat-card-elevated-container-color: var(--dark-background);
+      --mat-card-outlined-container-color: var(--dark-background);
     }
 
     .mat-mdc-fab {
       &.mat-primary {
-        --mdc-fab-icon-color: rgba(var(--dark-primary-text));
+        --mat-fab-icon-color: rgba(var(--dark-primary-text));
         --mat-mdc-fab-color: rgba(var(--dark-primary-text));
       }
     }
@@ -267,19 +272,41 @@ body {
       background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
 
+    .mat-mdc-slide-toggle {
+      .mdc-switch__track {
+        --mat-slide-toggle-selected-focus-track-color: rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+        --mat-slide-toggle-selected-hover-track-color: rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+        --mat-slide-toggle-selected-pressed-track-color: rgba(
+          255,
+          255,
+          255,
+          0.12
+        );
+        --mat-slide-toggle-selected-track-color: rgba(255, 255, 255, 0.12);
+      }
+    }
+
     .mdc-button {
       &.mat-accent,
       &.mat-primary {
-        --mdc-filled-button-label-text-color: rgba(var(--dark-primary-text));
+        --mat-button-filled-label-text-color: rgba(var(--dark-primary-text));
       }
     }
 
     .page {
       &.has-tabs {
         .mat-mdc-tab-nav-bar {
-          --mat-tab-header-inactive-label-text-color: rgba(
-            var(--light-primary-text)
-          );
+          --mat-tab-inactive-label-text-color: rgba(var(--light-primary-text));
         }
 
         @media (min-width: 576px) {
@@ -414,6 +441,14 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-card {
+  .mat-mdc-card-title {
+    --mat-card-title-text-line-height: 1.2;
+
+    margin-bottom: 0.5rem;
+  }
+}
+
 .mat-mdc-checkbox {
   label {
     margin-bottom: 0;
@@ -422,7 +457,7 @@ ngx-skeleton-loader {
 
 .mat-mdc-dialog-container {
   .mdc-dialog__content {
-    --mdc-dialog-supporting-text-color: rgba(var(--dark-primary-text));
+    --mat-dialog-supporting-text-color: rgba(var(--dark-primary-text));
   }
 }
 
@@ -437,7 +472,7 @@ ngx-skeleton-loader {
   color: var(--mat-mdc-fab-color, inherit) !important;
 
   &.mat-primary {
-    --mdc-fab-icon-color: rgba(var(--light-primary-text));
+    --mat-fab-icon-color: rgba(var(--light-primary-text));
     --mat-mdc-fab-color: rgba(var(--light-primary-text));
   }
 }
@@ -451,7 +486,7 @@ ngx-skeleton-loader {
 }
 
 .mat-mdc-menu-panel {
-  &.assistant {
+  &.no-max-width {
     max-width: unset !important;
 
     .mat-mdc-menu-content {
@@ -482,12 +517,12 @@ ngx-skeleton-loader {
   }
 }
 
-/**
- * Fix for https://github.com/angular/components/issues/26818
- */
 .mat-mdc-slide-toggle {
   .mdc-switch__track {
-    background-color: rgba(var(--palette-primary-500), 1);
+    --mat-slide-toggle-selected-focus-track-color: rgba(0, 0, 0, 0.12);
+    --mat-slide-toggle-selected-hover-track-color: rgba(0, 0, 0, 0.12);
+    --mat-slide-toggle-selected-pressed-track-color: rgba(0, 0, 0, 0.12);
+    --mat-slide-toggle-selected-track-color: rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -499,7 +534,7 @@ ngx-skeleton-loader {
 .mdc-button {
   &.mat-accent,
   &.mat-primary {
-    --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
+    --mat-button-filled-label-text-color: rgba(var(--light-primary-text));
   }
 }
 
@@ -549,12 +584,10 @@ ngx-skeleton-loader {
     }
 
     .mat-mdc-tab-nav-bar {
-      --mat-tab-header-active-focus-indicator-color: transparent;
-      --mat-tab-header-active-hover-indicator-color: transparent;
-      --mat-tab-header-inactive-label-text-color: rgba(
-        var(--dark-primary-text)
-      );
-      --mdc-tab-indicator-active-indicator-color: transparent;
+      --mat-tab-active-focus-indicator-color: transparent;
+      --mat-tab-active-hover-indicator-color: transparent;
+      --mat-tab-inactive-label-text-color: rgba(var(--dark-primary-text));
+      --mat-tab-active-indicator-color: transparent;
     }
 
     .mat-mdc-tab-nav-panel {
@@ -563,7 +596,7 @@ ngx-skeleton-loader {
 
     @media (max-width: 575.98px) {
       .mat-mdc-tab-link {
-        --mdc-secondary-navigation-tab-container-height: 3rem;
+        --mat-tab-container-height: 3rem;
       }
     }
 
@@ -574,8 +607,8 @@ ngx-skeleton-loader {
         background-color: rgba(var(--palette-foreground-base), 0.02);
         padding: 2rem 0;
         width: 14rem;
-        --mat-tab-header-label-text-tracking: normal;
-        --mdc-secondary-navigation-tab-container-height: 2rem;
+        --mat-tab-label-text-tracking: normal;
+        --mat-tab-container-height: 2rem;
 
         .mat-mdc-tab-links {
           flex-direction: column;

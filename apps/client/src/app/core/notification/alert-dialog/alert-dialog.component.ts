@@ -1,14 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { IAlertDialogParams } from './interfaces/interfaces';
+import { AlertDialogParams } from './interfaces/interfaces';
 
 @Component({
-  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  imports: [MatButtonModule, MatDialogModule],
   selector: 'gf-alert-dialog',
-  standalone: true,
   styleUrls: ['./alert-dialog.scss'],
   templateUrl: './alert-dialog.html'
 })
@@ -19,7 +17,7 @@ export class GfAlertDialogComponent {
 
   public constructor(public dialogRef: MatDialogRef<GfAlertDialogComponent>) {}
 
-  public initialize(aParams: IAlertDialogParams) {
+  public initialize(aParams: AlertDialogParams) {
     this.discardLabel = aParams.discardLabel;
     this.message = aParams.message;
     this.title = aParams.title;

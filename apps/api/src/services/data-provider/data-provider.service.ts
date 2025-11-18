@@ -1,40 +1,42 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
+  PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getCurrencyFromSymbol,
   getStartOfUtcDate,
+  isCurrency,
   isDerivedCurrency
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  DataProviderHistoricalResponse,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
+import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
+
 @Injectable()
-export class DataProviderService {
+export class DataProviderService implements OnModuleInit {
   private dataProviderMapping: { [dataProviderName: string]: string };
 
   public constructor(
@@ -45,15 +47,13 @@ export class DataProviderService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService
-  ) {
-    this.initialize();
-  }
+  ) {}
 
-  public async initialize() {
+  public async onModuleInit() {
     this.dataProviderMapping =
-      ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
+      (await this.propertyService.getByKey<{
         [dataProviderName: string]: string;
-      }) ?? {};
+      }>(PROPERTY_DATA_SOURCE_MAPPING)) ?? {};
   }
 
   public async checkQuote(dataSource: DataSource) {
@@ -106,14 +106,28 @@ export class DataProviderService {
         );
 
         promises.push(
-          promise.then((symbolProfile) => {
-            response[symbol] = symbolProfile;
+          promise.then((assetProfile) => {
+            if (isCurrency(assetProfile?.currency)) {
+              response[symbol] = assetProfile;
+            }
           })
         );
       }
     }
 
-    await Promise.all(promises);
+    try {
+      await Promise.all(promises);
+
+      if (isEmpty(response)) {
+        throw new AssetProfileInvalidError(
+          'No valid asset profiles have been found'
+        );
+      }
+    } catch (error) {
+      Logger.error(error, 'DataProviderService');
+
+      throw error;
+    }
 
     return response;
   }
@@ -153,6 +167,24 @@ export class DataProviderService {
     return DataSource[this.configurationService.get('DATA_SOURCE_IMPORT')];
   }
 
+  public async getDataSources(): Promise<DataSource[]> {
+    const dataSources: DataSource[] = this.configurationService
+      .get('DATA_SOURCES')
+      .map((dataSource) => {
+        return DataSource[dataSource];
+      });
+
+    const ghostfolioApiKey = await this.propertyService.getByKey<string>(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    );
+
+    if (ghostfolioApiKey) {
+      dataSources.push('GHOSTFOLIO');
+    }
+
+    return dataSources.sort();
+  }
+
   public async getDividends({
     dataSource,
     from,
@@ -181,10 +213,10 @@ export class DataProviderService {
     from: Date,
     to: Date
   ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     let response: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {};
 
     if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
@@ -250,7 +282,7 @@ export class DataProviderService {
     from: Date;
     to: Date;
   }): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
@@ -283,11 +315,11 @@ export class DataProviderService {
     );
 
     const result: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {};
 
     const promises: Promise<{
-      data: { [date: string]: IDataProviderHistoricalResponse };
+      data: { [date: string]: DataProviderHistoricalResponse };
       symbol: string;
     }>[] = [];
     for (const { dataSource, symbol } of assetProfileIdentifiers) {
@@ -295,7 +327,7 @@ export class DataProviderService {
       if (dataProvider.canHandle(symbol)) {
         if (symbol === `${DEFAULT_CURRENCY}USX`) {
           const data: {
-            [date: string]: IDataProviderHistoricalResponse;
+            [date: string]: DataProviderHistoricalResponse;
           } = {};
 
           for (const date of eachDayOfInterval({ end: to, start: from })) {
@@ -365,10 +397,10 @@ export class DataProviderService {
     useCache?: boolean;
     user?: UserWithSettings;
   }): Promise<{
-    [symbol: string]: IDataProviderResponse;
+    [symbol: string]: DataProviderResponse;
   }> {
     const response: {
-      [symbol: string]: IDataProviderResponse;
+      [symbol: string]: DataProviderResponse;
     } = {};
     const startTimeTotal = performance.now();
 
@@ -430,17 +462,21 @@ export class DataProviderService {
     )) {
       const dataProvider = this.getDataProvider(DataSource[dataSource]);
 
-      if (
-        dataProvider.getDataProviderInfo().isPremium &&
-        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        user?.subscription.type === 'Basic'
-      ) {
-        continue;
-      }
-
       const symbols = assetProfileIdentifiers
         .filter(({ symbol }) => {
-          return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
+          if (isCurrency(getCurrencyFromSymbol(symbol))) {
+            // Keep non-derived currencies
+            return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
+          } else if (
+            dataProvider.getDataProviderInfo().isPremium &&
+            this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+            user?.subscription.type === 'Basic'
+          ) {
+            // Skip symbols of Premium data providers for users without subscription
+            return false;
+          }
+
+          return true;
         })
         .map(({ symbol }) => {
           return symbol;
@@ -589,36 +625,37 @@ export class DataProviderService {
       return { items: lookupItems };
     }
 
-    const dataProviderServices = this.configurationService
-      .get('DATA_SOURCES')
-      .map((dataSource) => {
-        return this.getDataProvider(DataSource[dataSource]);
-      });
+    const dataSources = await this.getDataSources();
+
+    const dataProviderServices = dataSources.map((dataSource) => {
+      return this.getDataProvider(DataSource[dataSource]);
+    });
 
     for (const dataProviderService of dataProviderServices) {
       promises.push(
         dataProviderService.search({
           includeIndices,
-          query
+          query,
+          userId: user.id
         })
       );
     }
 
     const searchResults = await Promise.all(promises);
 
-    searchResults.forEach(({ items }) => {
+    for (const { items } of searchResults) {
       if (items?.length > 0) {
         lookupItems = lookupItems.concat(items);
       }
-    });
+    }
 
     const filteredItems = lookupItems
       .filter(({ currency }) => {
-        // Only allow symbols with supported currency
-        return currency ? true : false;
-      })
-      .sort(({ name: name1 }, { name: name2 }) => {
-        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
+        if (includeIndices) {
+          return true;
+        }
+
+        return currency ? isCurrency(currency) : false;
       })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -626,13 +663,28 @@ export class DataProviderService {
             lookupItem.dataProviderInfo.isPremium = false;
           }
 
+          lookupItem.dataProviderInfo.dataSource = undefined;
           lookupItem.dataProviderInfo.name = undefined;
           lookupItem.dataProviderInfo.url = undefined;
         } else {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
+        if (
+          lookupItem.assetSubClass === 'CRYPTOCURRENCY' &&
+          user?.settings?.settings.isExperimentalFeatures
+        ) {
+          // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
+          lookupItem.name = lookupItem.name.replace(
+            new RegExp(` ${DEFAULT_CURRENCY}$`),
+            ''
+          );
+        }
+
         return lookupItem;
+      })
+      .sort(({ name: name1 }, { name: name2 }) => {
+        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
       });
 
     return {
@@ -662,7 +714,7 @@ export class DataProviderService {
   }: {
     allData: {
       data: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       };
       symbol: string;
     }[];
@@ -674,7 +726,7 @@ export class DataProviderService {
     })?.data;
 
     const data: {
-      [date: string]: IDataProviderHistoricalResponse;
+      [date: string]: DataProviderHistoricalResponse;
     } = {};
 
     for (const date in rootData) {

@@ -1,15 +1,14 @@
-import { CommonModule } from '@angular/common';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+
 import { Component, HostListener } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { ConfirmationDialogType } from './confirmation-dialog.type';
-import { IConfirmDialogParams } from './interfaces/interfaces';
+import { ConfirmDialogParams } from './interfaces/interfaces';
 
 @Component({
-  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  imports: [MatButtonModule, MatDialogModule],
   selector: 'gf-confirmation-dialog',
-  standalone: true,
   styleUrls: ['./confirmation-dialog.scss'],
   templateUrl: './confirmation-dialog.html'
 })
@@ -31,7 +30,7 @@ export class GfConfirmationDialogComponent {
     }
   }
 
-  public initialize(aParams: IConfirmDialogParams) {
+  public initialize(aParams: ConfirmDialogParams) {
     this.confirmLabel = aParams.confirmLabel;
     this.confirmType = aParams.confirmType;
     this.discardLabel = aParams.discardLabel;

@@ -1,11 +1,9 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  HoldingWithParents,
-  PortfolioPosition
+  HoldingWithParents
 } from '@ghostfolio/common/interfaces';
-import { GfValueComponent } from '@ghostfolio/ui/value';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import {
   animate,
@@ -29,9 +27,10 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { DataSource } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
+
+import { GfValueComponent } from '../value/value.component';
 
 @Component({
   animations: [
@@ -47,7 +46,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    GfSymbolModule,
+    GfSymbolPipe,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
@@ -56,7 +55,6 @@ import { Subject } from 'rxjs';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-top-holdings',
-  standalone: true,
   styleUrls: ['./top-holdings.component.scss'],
   templateUrl: './top-holdings.component.html'
 })
@@ -65,13 +63,6 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
   @Input() topHoldings: HoldingWithParents[];
-  @Input() positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'type'> & {
-      dataSource?: DataSource;
-      name: string;
-      value: number;
-    };
-  } = {};
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 

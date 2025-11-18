@@ -8,8 +8,10 @@ export interface TransactionPointSymbol {
   dividend: Big;
   fee: Big;
   firstBuyDate: string;
+  includeInHoldings: boolean;
   investment: Big;
   quantity: Big;
+  skipErrors: boolean;
   symbol: string;
   tags?: Tag[];
   transactionCount: number;

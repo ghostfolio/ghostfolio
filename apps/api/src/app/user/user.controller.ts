@@ -1,8 +1,19 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { User, UserSettings } from '@ghostfolio/common/interfaces';
+import {
+  DeleteOwnUserDto,
+  UpdateOwnAccessTokenDto,
+  UpdateUserSettingDto
+} from '@ghostfolio/common/dtos';
+import {
+  AccessTokenResponse,
+  User,
+  UserItem,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -26,9 +37,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash';
 
-import { DeleteOwnUserDto } from './delete-own-user.dto';
-import { UserItem } from './interfaces/user-item.interface';
-import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -36,6 +44,7 @@ export class UserController {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
@@ -47,24 +56,12 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const hashedAccessToken = this.userService.createAccessToken(
+    const user = await this.validateAccessToken(
       data.accessToken,
-      this.configurationService.get('ACCESS_TOKEN_SALT')
+      this.request.user.id
     );
 
-    const [user] = await this.userService.users({
-      where: { accessToken: hashedAccessToken, id: this.request.user.id }
-    });
-
-    if (!user) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.userService.deleteUser({
-      accessToken: hashedAccessToken,
       id: user.id
     });
   }
@@ -83,6 +80,29 @@ export class UserController {
     return this.userService.deleteUser({
       id
     });
+  }
+
+  @HasPermission(permissions.accessAdminControl)
+  @Post(':id/access-token')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateUserAccessToken(
+    @Param('id') id: string
+  ): Promise<AccessTokenResponse> {
+    return this.rotateUserAccessToken(id);
+  }
+
+  @HasPermission(permissions.updateOwnAccessToken)
+  @Post('access-token')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateOwnAccessToken(
+    @Body() data: UpdateOwnAccessTokenDto
+  ): Promise<AccessTokenResponse> {
+    const user = await this.validateAccessToken(
+      data.accessToken,
+      this.request.user.id
+    );
+
+    return this.rotateUserAccessToken(user.id);
   }
 
   @Get()
@@ -108,11 +128,7 @@ export class UserController {
       );
     }
 
-    const hasAdmin = await this.userService.hasAdmin();
-
-    const { accessToken, id, role } = await this.userService.createUser({
-      data: { role: hasAdmin ? 'USER' : 'ADMIN' }
-    });
+    const { accessToken, id, role } = await this.userService.createUser();
 
     return {
       accessToken,
@@ -148,7 +164,7 @@ export class UserController {
 
     const userSettings: UserSettings = merge(
       {},
-      this.request.user.Settings.settings as UserSettings,
+      this.request.user.settings.settings as UserSettings,
       data
     );
 
@@ -163,5 +179,44 @@ export class UserController {
       userSettings,
       userId: this.request.user.id
     });
+  }
+
+  private async rotateUserAccessToken(
+    userId: string
+  ): Promise<AccessTokenResponse> {
+    const { accessToken, hashedAccessToken } =
+      this.userService.generateAccessToken({
+        userId
+      });
+
+    await this.prismaService.user.update({
+      data: { accessToken: hashedAccessToken },
+      where: { id: userId }
+    });
+
+    return { accessToken };
+  }
+
+  private async validateAccessToken(
+    accessToken: string,
+    userId: string
+  ): Promise<UserModel> {
+    const hashedAccessToken = this.userService.createAccessToken({
+      password: accessToken,
+      salt: this.configurationService.get('ACCESS_TOKEN_SALT')
+    });
+
+    const [user] = await this.userService.users({
+      where: { accessToken: hashedAccessToken, id: userId }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return user;
   }
 }

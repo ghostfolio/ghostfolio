@@ -1,10 +1,10 @@
-import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
-import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {
   ChangeDetectionStrategy,
@@ -14,24 +14,43 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Platform } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import {
+  createOutline,
+  ellipsisHorizontal,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
+import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
+import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    GfEntityLogoComponent,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    MatSortModule,
+    MatTableModule,
+    RouterModule
+  ],
   selector: 'gf-admin-platform',
   styleUrls: ['./admin-platform.component.scss'],
   templateUrl: './admin-platform.component.html'
 })
-export class AdminPlatformComponent implements OnInit, OnDestroy {
+export class GfAdminPlatformComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Platform>();
@@ -69,6 +88,8 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    addIcons({ createOutline, ellipsisHorizontal, trashOutline });
   }
 
   public ngOnInit() {
@@ -132,9 +153,13 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   private openCreatePlatformDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdatePlatformDialogComponent,
+      CreateOrUpdatePlatformDialogParams
+    >(GfCreateOrUpdatePlatformDialogComponent, {
       data: {
         platform: {
+          id: null,
           name: null,
           url: null
         }
@@ -167,8 +192,19 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
       });
   }
 
-  private openUpdatePlatformDialog({ id, name, url }) {
-    const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
+  private openUpdatePlatformDialog({
+    id,
+    name,
+    url
+  }: {
+    id: string;
+    name: string;
+    url: string;
+  }) {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdatePlatformDialogComponent,
+      CreateOrUpdatePlatformDialogParams
+    >(GfCreateOrUpdatePlatformDialogComponent, {
       data: {
         platform: {
           id,

@@ -1,33 +1,42 @@
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
-import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
-import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
+import { GfAccountDetailDialogComponent } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import {
+  CreateAccountDto,
+  TransferBalanceDto,
+  UpdateAccountDto
+} from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
-import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
+import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
+import { CreateOrUpdateAccountDialogParams } from './create-or-update-account-dialog/interfaces/interfaces';
+import { TransferBalanceDialogParams } from './transfer-balance/interfaces/interfaces';
+import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
   host: { class: 'has-fab page' },
+  imports: [GfAccountsTableComponent, MatButtonModule, RouterModule],
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
 })
-export class AccountsPageComponent implements OnDestroy, OnInit {
+export class GfAccountsPageComponent implements OnDestroy, OnInit {
   public accounts: AccountModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -76,6 +85,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           this.openTransferBalanceDialog();
         }
       });
+
+    addIcons({ addOutline });
   }
 
   public ngOnInit() {
@@ -172,7 +183,10 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     name,
     platformId
   }: AccountModel) {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccountDialogComponent,
+      CreateOrUpdateAccountDialogParams
+    >(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance,
@@ -220,17 +234,20 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openAccountDetailDialog(aAccountId: string) {
-    const dialogRef = this.dialog.open(AccountDetailDialog, {
+    const dialogRef = this.dialog.open<
+      GfAccountDetailDialogComponent,
+      AccountDetailDialogParams
+    >(GfAccountDetailDialogComponent, {
       autoFocus: false,
       data: {
         accountId: aAccountId,
         deviceType: this.deviceType,
         hasImpersonationId: this.hasImpersonationId,
-        hasPermissionToCreateOrder:
+        hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView
-      } as AccountDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -246,12 +263,16 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openCreateAccountDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccountDialogComponent,
+      CreateOrUpdateAccountDialogParams
+    >(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
           balance: 0,
           comment: null,
           currency: this.user?.settings?.baseCurrency,
+          id: null,
           isExcluded: false,
           name: null,
           platformId: null
@@ -288,7 +309,10 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   private openTransferBalanceDialog() {
-    const dialogRef = this.dialog.open(TransferBalanceDialog, {
+    const dialogRef = this.dialog.open<
+      GfTransferBalanceDialogComponent,
+      TransferBalanceDialogParams
+    >(GfTransferBalanceDialogComponent, {
       data: {
         accounts: this.accounts
       },

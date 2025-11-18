@@ -2,11 +2,11 @@
   <div class="row">
     <div class="col text-center">
       <div>
-        <h1 class="font-weight-bold intro" i18n>
+        <h1 class="font-weight-bold gf-text-wrap-balance intro" i18n>
           Manage your wealth like a boss
         </h1>
       </div>
-      <p class="lead mb-4" i18n>
+      <p class="gf-text-wrap-balance lead mb-4" i18n>
         Ghostfolio is a privacy-first, open source dashboard for your personal
         finances. Break down your asset allocation, know your net worth and make
         solid, data-driven investment decisions.
@@ -38,15 +38,14 @@
           i18n
           mat-flat-button
           [routerLink]="routerLinkRegister"
+          >Get Started</a
         >
-          Get Started
-        </a>
       }
       @if (hasPermissionForDemo) {
         @if (hasPermissionToCreateUser) {
           <div class="mx-3 text-muted" i18n>or</div>
         }
-        <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+        <a i18n mat-stroked-button [routerLink]="routerLinkDemo">Live Demo</a>
       }
     </div>
   </div>
@@ -60,7 +59,7 @@
         <a
           class="d-block"
           title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
-          [routerLink]="['/open']"
+          [routerLink]="routerLinkOpenStartup"
         >
           <gf-value
             i18n
@@ -78,7 +77,7 @@
         <a
           class="d-block"
           title="Ghostfolio in Numbers: Stars on GitHub"
-          [routerLink]="['/open']"
+          [routerLink]="routerLinkOpenStartup"
         >
           <gf-value
             i18n
@@ -96,7 +95,7 @@
         <a
           class="d-block"
           title="Ghostfolio in Numbers: Pulls on Docker Hub"
-          [routerLink]="['/open']"
+          [routerLink]="routerLinkOpenStartup"
         >
           <gf-value
             i18n
@@ -114,119 +113,18 @@
     <div class="col-12 text-center text-muted">
       <small i18n>As seen in</small>
     </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-alternative-to mask"
-        href="https://alternativeto.net"
-        target="_blank"
-        title="AlternativeTo - Crowdsourced software recommendations"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-awesome"
-        href="https://github.com/awesome-selfhosted/awesome-selfhosted"
-        target="_blank"
-        title="Awesome-Selfhosted: A list of Free Software network services and web applications which can be hosted on your own servers"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-dev-community mask"
-        href="https://dev.to"
-        target="_blank"
-        title="DEV Community - A constructive and inclusive social network for software developers"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-hacker-news mask"
-        href="https://news.ycombinator.com"
-        target="_blank"
-        title="Hacker News"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-openalternative mask"
-        href="https://openalternative.co"
-        target="_blank"
-        title="OpenAlternative: Open Source Alternatives to Popular Software"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-privacy-tools mask"
-        href="https://www.privacytools.io"
-        target="_blank"
-        title="Privacy Tools: Software Alternatives and Encryption"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-product-hunt"
-        href="https://www.producthunt.com"
-        target="_blank"
-        title="Product Hunt – The best new products in tech."
-      ></a>
-    </div>
-    <div class="align-items-center col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-reddit mask"
-        href="https://www.reddit.com"
-        target="_blank"
-        title="Reddit - Dive into anything"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-sackgeld mask"
-        href="https://www.sackgeld.com"
-        target="_blank"
-        title="Sackgeld.com – Apps für ein höheres Sackgeld"
-      ></a>
-    </div>
-    <div class="align-items-center col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-selfh-st mask"
-        href="https://selfh.st"
-        target="_blank"
-        title="selfh.st — Self-hosted content and software"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-sourceforge mask"
-        href="https://sourceforge.net"
-        target="_blank"
-        title="SourceForge: The Complete Open-Source and Business Software Platform"
-      ></a>
-    </div>
-    <div class="align-items-center col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-umbrel mask"
-        href="https://umbrel.com"
-        target="_blank"
-        title="Umbrel — A personal server OS for self-hosting"
-      ></a>
-    </div>
-    <div class="col-md-3 d-flex justify-content-center my-1">
-      <a
-        class="d-block logo logo-unraid mask"
-        href="https://unraid.net"
-        target="_blank"
-        title="Unraid | Unleash Your Hardware"
-      ></a>
+    <div class="col-12">
+      <gf-logo-carousel class="py-3" />
     </div>
   </div>
 
   <div class="pt-3 row">
     <div class="col text-center">
-      <h2 class="h4 mb-1 text-center" i18n>
+      <h2 class="gf-text-wrap-balance h4 mb-1 text-center" i18n>
         Protect your <strong>assets</strong>. Refine your
         <strong>personal investment strategy</strong>.
       </h2>
-      <p class="lead m-0" i18n>
+      <p class="gf-text-wrap-balance lead m-0" i18n>
         Ghostfolio empowers busy people to keep track of stocks, ETFs or
         cryptocurrencies without being tracked.
       </p>
@@ -270,7 +168,7 @@
   <div class="row my-5">
     <div class="col-md-6 offset-md-3">
       <h2 class="h4 mb-1 text-center" i18n>Why <strong>Ghostfolio</strong>?</h2>
-      <p class="lead mb-3 text-center" i18n>
+      <p class="gf-text-wrap-balance lead mb-3 text-center" i18n>
         Ghostfolio is for you if you are...
       </p>
       <ul class="list-unstyled">
@@ -363,7 +261,7 @@
   @if (hasPermissionForSubscription) {
     <div class="row my-5">
       <div class="col-12">
-        <h2 class="h4 text-center" i18n>
+        <h2 class="gf-text-wrap-balance h4 text-center" i18n>
           Members from around the globe are using
           <a href="pricing"><strong>Ghostfolio Premium</strong></a>
         </h2>
@@ -431,7 +329,7 @@
         <h2 class="h4 mb-1 text-center" i18n>
           Are <strong>you</strong> ready?
         </h2>
-        <p class="lead mb-3 text-center" i18n>
+        <p class="gf-text-wrap-balance lead mb-3 text-center" i18n>
           Join now
           @if (hasPermissionForDemo) {
             or check out the example account
@@ -443,12 +341,13 @@
             i18n
             mat-flat-button
             [routerLink]="routerLinkRegister"
+            >Get Started</a
           >
-            Get Started
-          </a>
           @if (hasPermissionForDemo) {
             <div class="mx-3 text-muted" i18n>or</div>
-            <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+            <a i18n mat-stroked-button [routerLink]="routerLinkDemo"
+              >Live Demo</a
+            >
           }
         </div>
       </div>

@@ -1,10 +1,11 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   getCurrencyFromSymbol,
-  isDerivedCurrency
+  isDerivedCurrency,
+  isRootCurrency
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -71,13 +72,19 @@ export class AdminMarketDataService {
   public hasPermissionToDeleteAssetProfile({
     activitiesCount,
     isBenchmark,
-    symbol
-  }: Pick<AdminMarketDataItem, 'activitiesCount' | 'isBenchmark' | 'symbol'>) {
+    symbol,
+    watchedByCount
+  }: Pick<
+    AdminMarketDataItem,
+    'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
+  >) {
     return (
       activitiesCount === 0 &&
       !isBenchmark &&
       !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
-      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+      !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
+      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix) &&
+      watchedByCount === 0
     );
   }
 }

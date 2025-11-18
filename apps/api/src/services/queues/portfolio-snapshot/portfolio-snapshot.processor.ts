@@ -1,9 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -19,7 +16,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { addMilliseconds } from 'date-fns';
 
-import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
+import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 @Injectable()
 @Processor(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
@@ -40,9 +37,7 @@ export class PortfolioSnapshotProcessor {
     ),
     name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME
   })
-  public async calculatePortfolioSnapshot(
-    job: Job<IPortfolioSnapshotQueueJob>
-  ) {
+  public async calculatePortfolioSnapshot(job: Job<PortfolioSnapshotQueueJob>) {
     try {
       const startTime = performance.now();
 
@@ -68,7 +63,7 @@ export class PortfolioSnapshotProcessor {
       const portfolioCalculator = this.calculatorFactory.createCalculator({
         accountBalanceItems,
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: job.data.calculationType,
         currency: job.data.userCurrency,
         filters: job.data.filters,
         userId: job.data.userId
@@ -86,7 +81,9 @@ export class PortfolioSnapshotProcessor {
 
       const expiration = addMilliseconds(
         new Date(),
-        this.configurationService.get('CACHE_QUOTES_TTL')
+        (snapshot?.errors?.length ?? 0) === 0
+          ? this.configurationService.get('CACHE_QUOTES_TTL')
+          : 0
       );
 
       this.redisCacheService.set(

@@ -1,49 +1,90 @@
-import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
+import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
+import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HistoricalDataItem,
   InvestmentItem,
-  PortfolioInvestments,
+  PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPosition,
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { GroupBy } from '@ghostfolio/common/types';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfToggleComponent } from '@ghostfolio/ui/toggle';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { copyOutline, ellipsisVertical } from 'ionicons/icons';
 import { isNumber, sortBy } from 'lodash';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    GfBenchmarkComparatorComponent,
+    GfInvestmentChartComponent,
+    GfPremiumIndicatorComponent,
+    GfToggleComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
   selector: 'gf-analysis-page',
   styleUrls: ['./analysis-page.scss'],
   templateUrl: './analysis-page.html'
 })
-export class AnalysisPageComponent implements OnDestroy, OnInit {
+export class GfAnalysisPageComponent implements OnDestroy, OnInit {
+  @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
+
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: PortfolioPosition[];
-  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
+  public hasPermissionToReadAiPrompt: boolean;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
+  public isLoadingAnalysisPrompt: boolean;
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingDividendTimelineChart: boolean;
   public isLoadingInvestmentChart: boolean;
   public isLoadingInvestmentTimelineChart: boolean;
+  public isLoadingPortfolioPrompt: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -53,7 +94,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public portfolioEvolutionDataLabel = $localize`Investment`;
-  public streaks: PortfolioInvestments['streaks'];
+  public streaks: PortfolioInvestmentsResponse['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
@@ -63,13 +104,17 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private clipboard: Clipboard,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
     const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
+
+    addIcons({ copyOutline, ellipsisVertical });
   }
 
   get savingsRate() {
@@ -103,6 +148,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             return id === this.user.settings?.benchmark;
           });
 
+          this.hasPermissionToReadAiPrompt = hasPermission(
+            this.user.permissions,
+            permissions.readAiPrompt
+          );
+
           this.update();
         }
       });
@@ -127,6 +177,47 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
     this.fetchDividendsAndInvestments();
+  }
+
+  public onCopyPromptToClipboard(mode: AiPromptMode) {
+    if (mode === 'analysis') {
+      this.isLoadingAnalysisPrompt = true;
+    } else if (mode === 'portfolio') {
+      this.isLoadingPortfolioPrompt = true;
+    }
+
+    this.dataService
+      .fetchPrompt({
+        mode,
+        filters: this.userService.getFilters()
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ prompt }) => {
+        this.clipboard.copy(prompt);
+
+        const snackBarRef = this.snackBar.open(
+          '✅ ' + $localize`AI prompt has been copied to the clipboard`,
+          $localize`Open Duck.ai` + ' →',
+          {
+            duration: ms('7 seconds')
+          }
+        );
+
+        snackBarRef
+          .onAction()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            window.open('https://duck.ai', '_blank');
+          });
+
+        this.actionsMenuButton.closeMenu();
+
+        if (mode === 'analysis') {
+          this.isLoadingAnalysisPrompt = false;
+        } else if (mode === 'portfolio') {
+          this.isLoadingPortfolioPrompt = false;
+        }
+      });
   }
 
   public ngOnDestroy() {
@@ -253,13 +344,20 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           'netPerformancePercentWithCurrencyEffect'
         ).reverse();
 
-        this.top3 = holdingsSorted.slice(0, 3);
+        this.top3 = holdingsSorted
+          .filter(
+            ({ netPerformancePercentWithCurrencyEffect }) =>
+              netPerformancePercentWithCurrencyEffect > 0
+          )
+          .slice(0, 3);
 
-        if (holdings?.length > 3) {
-          this.bottom3 = holdingsSorted.slice(-3).reverse();
-        } else {
-          this.bottom3 = [];
-        }
+        this.bottom3 = holdingsSorted
+          .filter(
+            ({ netPerformancePercentWithCurrencyEffect }) =>
+              netPerformancePercentWithCurrencyEffect < 0
+          )
+          .slice(-3)
+          .reverse();
 
         this.changeDetectorRef.markForCheck();
       });
@@ -284,6 +382,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           .fetchBenchmarkForUser({
             dataSource,
             symbol,
+            filters: this.userService.getFilters(),
             range: this.user?.settings?.dateRange,
             startDate: this.firstOrderDate
           })

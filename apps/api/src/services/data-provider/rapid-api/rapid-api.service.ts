@@ -1,26 +1,27 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+  ghostfolioFearAndGreedIndexSymbol,
+  ghostfolioFearAndGreedIndexSymbolStocks
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
-import got from 'got';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
@@ -32,19 +33,15 @@ export class RapidApiService implements DataProviderInterface {
     return !!this.configurationService.get('API_KEY_RAPID_API');
   }
 
-  public async getAssetProfile({
-    symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
-    return {
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({}: GetAssetProfileParams): Promise<
+    Partial<SymbolProfile>
+  > {
+    return undefined;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.RAPID_API,
       isPremium: false,
       name: 'Rapid API',
       url: 'https://rapidapi.com'
@@ -60,14 +57,19 @@ export class RapidApiService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
-      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
+      if (
+        [
+          ghostfolioFearAndGreedIndexSymbol,
+          ghostfolioFearAndGreedIndexSymbolStocks
+        ].includes(symbol)
+      ) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {
-          [ghostfolioFearAndGreedIndexSymbol]: {
+          [symbol]: {
             [format(getYesterday(), DATE_FORMAT)]: {
               marketPrice: fgi.previousClose.value
             }
@@ -92,7 +94,7 @@ export class RapidApiService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
     if (symbols.length <= 0) {
       return {};
     }
@@ -100,11 +102,16 @@ export class RapidApiService implements DataProviderInterface {
     try {
       const symbol = symbols[0];
 
-      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
+      if (
+        [
+          ghostfolioFearAndGreedIndexSymbol,
+          ghostfolioFearAndGreedIndexSymbolStocks
+        ].includes(symbol)
+      ) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {
-          [ghostfolioFearAndGreedIndexSymbol]: {
+          [symbol]: {
             currency: undefined,
             dataSource: this.getName(),
             marketPrice: fgi.now.value,
@@ -135,13 +142,7 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-      const { fgi } = await got(
+      const { fgi } = await fetch(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
         {
           headers: {
@@ -149,19 +150,20 @@ export class RapidApiService implements DataProviderInterface {
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
             'x-rapidapi-key': this.configurationService.get('API_KEY_RAPID_API')
           },
-          // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       return fgi;
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
-          'REQUEST_TIMEOUT'
-        )}ms`;
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
       }
 
       Logger.error(message, 'RapidApiService');

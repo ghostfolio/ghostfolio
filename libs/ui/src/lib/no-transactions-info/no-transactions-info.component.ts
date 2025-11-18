@@ -1,3 +1,5 @@
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
+
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -15,10 +17,12 @@ import { GfLogoComponent } from '../logo';
   imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-no-transactions-info-indicator',
-  standalone: true,
   styleUrls: ['./no-transactions-info.component.scss'],
   templateUrl: './no-transactions-info.component.html'
 })
 export class GfNoTransactionsInfoComponent {
   @HostBinding('class.has-border') @Input() hasBorder = true;
+
+  public routerLinkPortfolioActivities =
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
 }

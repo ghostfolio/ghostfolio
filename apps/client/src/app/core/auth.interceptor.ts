@@ -2,6 +2,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import {
   HEADER_KEY_IMPERSONATION,
+  HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TIMEZONE,
   HEADER_KEY_TOKEN
 } from '@ghostfolio/common/config';
@@ -27,6 +28,16 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     let request = req;
+
+    if (request.headers.has(HEADER_KEY_SKIP_INTERCEPTOR)) {
+      // Bypass the interceptor
+      request = request.clone({
+        headers: req.headers.delete(HEADER_KEY_SKIP_INTERCEPTOR)
+      });
+
+      return next.handle(request);
+    }
+
     let headers = request.headers.set(
       HEADER_KEY_TIMEZONE,
       Intl?.DateTimeFormat().resolvedOptions().timeZone

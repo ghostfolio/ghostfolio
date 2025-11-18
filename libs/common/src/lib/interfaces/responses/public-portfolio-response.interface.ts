@@ -1,5 +1,11 @@
-import { PortfolioDetails, PortfolioPosition } from '..';
-import { Market } from '../../types';
+import {
+  EnhancedSymbolProfile,
+  PortfolioDetails,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
+import { Market } from '@ghostfolio/common/types';
+
+import { Order } from '@prisma/client';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
@@ -23,6 +29,14 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
       | 'valueInPercentage'
     >;
   };
+  latestActivities: (Pick<
+    Order,
+    'currency' | 'date' | 'fee' | 'quantity' | 'type' | 'unitPrice'
+  > & {
+    SymbolProfile?: EnhancedSymbolProfile;
+    value: number;
+    valueInBaseCurrency: number;
+  })[];
   markets: {
     [key in Market]: Pick<
       PortfolioDetails['markets'][key],
@@ -32,6 +46,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
 }
 
 interface PublicPortfolioResponseV1 {
+  createdAt: Date;
   performance: {
     '1d': {
       relativeChange: number;

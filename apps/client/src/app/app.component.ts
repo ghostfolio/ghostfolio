@@ -1,15 +1,14 @@
-import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
-import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DOCUMENT,
   HostBinding,
   Inject,
   OnDestroy,
@@ -21,13 +20,21 @@ import {
   ActivatedRoute,
   NavigationEnd,
   PRIMARY_OUTLET,
-  Router
+  Router,
+  RouterLink,
+  RouterOutlet
 } from '@angular/router';
 import { DataSource } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { openOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
+import { GfFooterComponent } from './components/footer/footer.component';
+import { GfHeaderComponent } from './components/header/header.component';
+import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogParams } from './components/holding-detail-dialog/interfaces/interfaces';
 import { NotificationService } from './core/notification/notification.service';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
@@ -35,12 +42,13 @@ import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
 
 @Component({
-  selector: 'gf-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  imports: [GfFooterComponent, GfHeaderComponent, RouterLink, RouterOutlet],
+  selector: 'gf-root',
+  styleUrls: ['./app.component.scss'],
+  templateUrl: './app.component.html'
 })
-export class AppComponent implements OnDestroy, OnInit {
+export class GfAppComponent implements OnDestroy, OnInit {
   @HostBinding('class.has-info-message') get getHasMessage() {
     return this.hasInfoMessage;
   }
@@ -48,38 +56,16 @@ export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentSubRoute: string;
-  public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
-  public hasPermissionForStatistics: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkAboutChangelog = [
-    '/' + $localize`:snake-case:about`,
-    'changelog'
-  ];
-  public routerLinkAboutLicense = [
-    '/' + $localize`:snake-case:about`,
-    $localize`:snake-case:license`
-  ];
-  public routerLinkAboutPrivacyPolicy = [
-    '/' + $localize`:snake-case:about`,
-    $localize`:snake-case:privacy-policy`
-  ];
-  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routerLinkRegister = publicRoutes.register.routerLink;
   public showFooter = false;
   public user: User;
 
@@ -116,30 +102,13 @@ export class AppComponent implements OnDestroy, OnInit {
           });
         }
       });
+
+    addIcons({ openOutline });
   }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
-
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
-
-    this.hasPermissionForStatistics = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableStatistics
-    );
-
-    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableFearAndGreedIndex
-    );
-
-    this.hasPromotion =
-      !!this.info?.subscriptionOffers?.default?.coupon ||
-      !!this.info?.subscriptionOffers?.default?.durationExtension;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -158,12 +127,14 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentSubRoute = urlSegments[1]?.path;
 
         if (
-          (this.currentRoute === 'home' && !this.currentSubRoute) ||
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          ((this.currentRoute === internalRoutes.home.path &&
+            !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.home.path &&
+              this.currentSubRoute ===
+                internalRoutes.home.subRoutes.holdings.path) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              !this.currentSubRoute)) &&
+          this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
         } else {
@@ -171,14 +142,20 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         if (
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'portfolio' &&
-            this.currentSubRoute === 'activities') ||
-          (this.currentRoute === 'portfolio' &&
-            this.currentSubRoute === 'allocations') ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          (this.currentRoute === internalRoutes.home.path &&
+            this.currentSubRoute ===
+              internalRoutes.home.subRoutes.holdings.path) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            !this.currentSubRoute) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            this.currentSubRoute ===
+              internalRoutes.portfolio.subRoutes.activities.path) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            this.currentSubRoute ===
+              internalRoutes.portfolio.subRoutes.allocations.path) ||
+          (this.currentRoute === internalRoutes.zen.path &&
+            this.currentSubRoute ===
+              internalRoutes.home.subRoutes.holdings.path)
         ) {
           this.hasPermissionToChangeFilters = true;
         } else {
@@ -186,25 +163,25 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         this.hasTabs =
-          (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
-            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
-            this.currentRoute === this.routerLinkResources[0].slice(1) ||
-            this.currentRoute === 'account' ||
-            this.currentRoute === 'admin' ||
-            this.currentRoute === 'home' ||
-            this.currentRoute === 'portfolio' ||
-            this.currentRoute === 'zen') &&
+          (this.currentRoute === publicRoutes.about.path ||
+            this.currentRoute === publicRoutes.faq.path ||
+            this.currentRoute === publicRoutes.resources.path ||
+            this.currentRoute === internalRoutes.account.path ||
+            this.currentRoute === internalRoutes.adminControl.path ||
+            this.currentRoute === internalRoutes.home.path ||
+            this.currentRoute === internalRoutes.portfolio.path ||
+            this.currentRoute === internalRoutes.zen.path) &&
           this.deviceType !== 'mobile';
 
         this.showFooter =
-          (this.currentRoute === 'blog' ||
-            this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
-            this.currentRoute === this.routerLinkMarkets[0].slice(1) ||
-            this.currentRoute === 'open' ||
-            this.currentRoute === 'p' ||
-            this.currentRoute === this.routerLinkPricing[0].slice(1) ||
-            this.currentRoute === this.routerLinkRegister[0].slice(1) ||
-            this.currentRoute === 'start') &&
+          (this.currentRoute === publicRoutes.blog.path ||
+            this.currentRoute === publicRoutes.features.path ||
+            this.currentRoute === publicRoutes.markets.path ||
+            this.currentRoute === publicRoutes.openStartup.path ||
+            this.currentRoute === publicRoutes.public.path ||
+            this.currentRoute === publicRoutes.pricing.path ||
+            this.currentRoute === publicRoutes.register.path ||
+            this.currentRoute === publicRoutes.start.path) &&
           this.deviceType !== 'mobile';
 
         if (this.deviceType === 'mobile') {
@@ -236,13 +213,11 @@ export class AppComponent implements OnDestroy, OnInit {
         this.hasInfoMessage =
           this.canCreateAccount || !!this.user?.systemMessage;
 
-        this.hasPromotion =
-          !!this.info?.subscriptionOffers?.[
-            this.user?.subscription?.offer ?? 'default'
-          ]?.coupon ||
-          !!this.info?.subscriptionOffers?.[
-            this.user?.subscription?.offer ?? 'default'
-          ]?.durationExtension;
+        this.hasPromotion = this.user
+          ? !!this.user.subscription?.offer?.coupon ||
+            !!this.user.subscription?.offer?.durationExtension
+          : !!this.info?.subscriptionOffer?.coupon ||
+            !!this.info?.subscriptionOffer?.durationExtension;
 
         this.initializeTheme(this.user?.settings.colorScheme);
 
@@ -303,7 +278,10 @@ export class AppComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
+        const dialogRef = this.dialog.open<
+          GfHoldingDetailDialogComponent,
+          HoldingDetailDialogParams
+        >(GfHoldingDetailDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -312,7 +290,11 @@ export class AppComponent implements OnDestroy, OnInit {
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
-            hasPermissionToCreateOrder:
+            hasPermissionToAccessAdminControl: hasPermission(
+              this.user?.permissions,
+              permissions.accessAdminControl
+            ),
+            hasPermissionToCreateActivity:
               !this.hasImpersonationId &&
               hasPermission(this.user?.permissions, permissions.createOrder) &&
               !this.user?.settings?.isRestrictedView,
@@ -325,7 +307,7 @@ export class AppComponent implements OnDestroy, OnInit {
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
-          } as HoldingDetailDialogParams,
+          },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });

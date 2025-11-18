@@ -1,6 +1,6 @@
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -23,13 +23,13 @@ import {
   isToday,
   subDays
 } from 'date-fns';
-import { isNumber, uniq } from 'lodash';
+import { isNumber } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
 export class ExchangeRateDataService {
   private currencies: string[] = [];
-  private currencyPairs: IDataGatheringItem[] = [];
+  private currencyPairs: DataGatheringItem[] = [];
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(
@@ -497,9 +497,8 @@ export class ExchangeRateDataService {
       currencies.push(currency);
     });
 
-    const customCurrencies = (await this.propertyService.getByKey(
-      PROPERTY_CURRENCIES
-    )) as string[];
+    const customCurrencies =
+      await this.propertyService.getByKey<string[]>(PROPERTY_CURRENCIES);
 
     if (customCurrencies?.length > 0) {
       currencies = currencies.concat(customCurrencies);
@@ -515,7 +514,7 @@ export class ExchangeRateDataService {
       }
     }
 
-    return uniq(currencies).filter(Boolean).sort();
+    return Array.from(new Set(currencies)).filter(Boolean).sort();
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {

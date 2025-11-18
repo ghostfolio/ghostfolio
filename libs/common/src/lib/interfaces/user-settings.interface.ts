@@ -5,6 +5,9 @@ import {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+
+import { AssetClass } from '@prisma/client';
 
 export interface UserSettings {
   annualInterestRate?: number;
@@ -14,6 +17,7 @@ export interface UserSettings {
   dateRange?: DateRange;
   emergencyFund?: number;
   'filters.accounts'?: string[];
+  'filters.assetClasses'?: AssetClass[];
   'filters.dataSource'?: string;
   'filters.symbol'?: string;
   'filters.tags'?: string[];
@@ -22,8 +26,10 @@ export interface UserSettings {
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;
+  performanceCalculationType?: PerformanceCalculationType;
   projectedTotalAmount?: number;
   retirementDate?: string;
+  safeWithdrawalRate?: number;
   savingsRate?: number;
   viewMode?: ViewMode;
   xRayRules?: XRayRulesSettings;

@@ -1,18 +1,20 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { UserSettings } from '@ghostfolio/common/interfaces';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class EmergencyFundSetup extends Rule<Settings> {
   private emergencyFund: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     emergencyFund: number
   ) {
     super(exchangeRateDataService, {
-      key: EmergencyFundSetup.name,
-      name: 'Emergency Fund: Set up'
+      languageCode,
+      key: EmergencyFundSetup.name
     });
 
     this.emergencyFund = emergencyFund;
@@ -21,25 +23,50 @@ export class EmergencyFundSetup extends Rule<Settings> {
   public evaluate() {
     if (!this.emergencyFund) {
       return {
-        evaluation: 'No emergency fund has been set up',
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.emergencyFundSetup.false',
+          languageCode: this.getLanguageCode()
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: 'An emergency fund has been set up',
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.emergencyFundSetup.true',
+        languageCode: this.getLanguageCode()
+      }),
       value: true
     };
+  }
+
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.emergencyFund.category',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getConfiguration() {
     return undefined;
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.emergencyFundSetup',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
-      isActive: xRayRules?.[this.getKey()].isActive ?? true
+      locale,
+      isActive: xRayRules?.[this.getKey()]?.isActive ?? true
     };
   }
 }

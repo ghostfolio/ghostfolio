@@ -1,9 +1,7 @@
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -15,14 +13,18 @@ export interface DataProviderInterface {
 
   getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>>;
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>>;
 
   getDataProviderInfo(): DataProviderInfo;
 
-  getDividends({ from, granularity, symbol, to }: GetDividendsParams): Promise<{
-    [date: string]: IDataProviderHistoricalResponse;
+  getDividends({
+    from,
+    granularity,
+    requestTimeout,
+    symbol,
+    to
+  }: GetDividendsParams): Promise<{
+    [date: string]: DataProviderHistoricalResponse;
   }>;
 
   getHistorical({
@@ -32,7 +34,7 @@ export interface DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }>; // TODO: Return only one symbol
 
   getMaxNumberOfSymbolsPerRequest?(): number;
@@ -42,11 +44,16 @@ export interface DataProviderInterface {
   getQuotes({
     requestTimeout,
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }>;
 
   getTestSymbol(): string;
 
   search({ includeIndices, query }: GetSearchParams): Promise<LookupResponse>;
+}
+
+export interface GetAssetProfileParams {
+  requestTimeout?: number;
+  symbol: string;
 }
 
 export interface GetDividendsParams {
@@ -73,4 +80,6 @@ export interface GetQuotesParams {
 export interface GetSearchParams {
   includeIndices?: boolean;
   query: string;
+  requestTimeout?: number;
+  userId?: string;
 }

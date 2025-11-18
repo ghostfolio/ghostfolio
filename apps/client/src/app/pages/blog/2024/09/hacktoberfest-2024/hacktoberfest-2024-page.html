@@ -51,10 +51,12 @@
           <p>
             The OSS project counting more than 100 contributors is used daily by
             its growing global community. With over
-            <a [routerLink]="['/open']">4’000 stars on GitHub</a> and
-            <a [routerLink]="['/open']">800’000+ pulls on Docker Hub</a>,
-            Ghostfolio has gained widespread recognition for its user-friendly
-            experience and simplicity.
+            <a [routerLink]="routerLinkOpenStartup">4’000 stars on GitHub</a>
+            and
+            <a [routerLink]="routerLinkOpenStartup"
+              >800’000+ pulls on Docker Hub</a
+            >, Ghostfolio has gained widespread recognition for its
+            user-friendly experience and simplicity.
           </p>
         </section>
         <section class="mb-4">
@@ -184,7 +186,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a i18n [routerLink]="['/blog']">Blog</a>
+              <a i18n [routerLink]="routerLinkBlog">Blog</a>
             </li>
             <li
               aria-current="page"

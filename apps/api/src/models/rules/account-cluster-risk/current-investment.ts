@@ -1,22 +1,26 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
   PortfolioDetails,
-  PortfolioPosition,
+  RuleSettings,
   UserSettings
 } from '@ghostfolio/common/interfaces';
+
+import { Account } from '@prisma/client';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   private accounts: PortfolioDetails['accounts'];
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
-      key: AccountClusterRiskCurrentInvestment.name,
-      name: 'Investment'
+      languageCode,
+      key: AccountClusterRiskCurrentInvestment.name
     });
 
     this.accounts = accounts;
@@ -24,56 +28,81 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
 
   public evaluate(ruleSettings: Settings) {
     const accounts: {
-      [symbol: string]: Pick<PortfolioPosition, 'name'> & {
+      [symbol: string]: Pick<Account, 'name'> & {
         investment: number;
       };
     } = {};
 
     for (const [accountId, account] of Object.entries(this.accounts)) {
       accounts[accountId] = {
-        name: account.name,
-        investment: account.valueInBaseCurrency
+        investment: account.valueInBaseCurrency,
+        name: account.name
       };
     }
 
-    let maxItem: (typeof accounts)[0];
+    if (Object.keys(accounts).length === 0) {
+      return {
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRiskCurrentInvestment.false.invalid',
+          languageCode: this.getLanguageCode()
+        }),
+        value: false
+      };
+    }
+
+    let maxAccount: (typeof accounts)[0];
     let totalInvestment = 0;
 
     for (const account of Object.values(accounts)) {
-      if (!maxItem) {
-        maxItem = account;
+      if (!maxAccount) {
+        maxAccount = account;
       }
 
       // Calculate total investment
       totalInvestment += account.investment;
 
       // Find maximum
-      if (account.investment > maxItem?.investment) {
-        maxItem = account;
+      if (account.investment > maxAccount?.investment) {
+        maxAccount = account;
       }
     }
 
-    const maxInvestmentRatio = maxItem?.investment / totalInvestment || 0;
+    const maxInvestmentRatio = maxAccount?.investment / totalInvestment || 0;
 
     if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `Over ${
-          ruleSettings.thresholdMax * 100
-        }% of your current investment is at ${maxItem.name} (${(
-          maxInvestmentRatio * 100
-        ).toPrecision(3)}%)`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRiskCurrentInvestment.false',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            maxAccountName: maxAccount.name,
+            maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
+            thresholdMax: ruleSettings.thresholdMax * 100
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The major part of your current investment is at ${
-        maxItem.name
-      } (${(maxInvestmentRatio * 100).toPrecision(3)}%) and does not exceed ${
-        ruleSettings.thresholdMax * 100
-      }%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.accountClusterRiskCurrentInvestment.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          maxAccountName: maxAccount.name,
+          maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
+          thresholdMax: ruleSettings.thresholdMax * 100
+        }
+      }),
       value: true
     };
+  }
+
+  public getCategoryName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.accountClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getConfiguration() {
@@ -88,10 +117,22 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     };
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.accountClusterRiskCurrentInvestment',
+      languageCode: this.getLanguageCode()
+    });
+  }
+
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
-      isActive: xRayRules?.[this.getKey()].isActive ?? true,
+      locale,
+      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.5
     };
   }

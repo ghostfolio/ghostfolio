@@ -1,10 +1,11 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   PortfolioReportRule,
+  RuleSettings,
   XRayRulesSettings
 } from '@ghostfolio/common/interfaces';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,22 +14,44 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  addCircleOutline,
+  checkmarkCircleOutline,
+  ellipsisHorizontal,
+  optionsOutline,
+  removeCircleOutline,
+  warningOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
-import { IRuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
+import { RuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
 import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-settings-dialog.component';
 
 @Component({
-  selector: 'gf-rule',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './rule.component.html',
-  styleUrls: ['./rule.component.scss']
+  imports: [
+    CommonModule,
+    IonIcon,
+    MatButtonModule,
+    MatMenuModule,
+    NgxSkeletonLoaderModule
+  ],
+  selector: 'gf-rule',
+  styleUrls: ['./rule.component.scss'],
+  templateUrl: './rule.component.html'
 })
-export class RuleComponent implements OnInit {
+export class GfRuleComponent implements OnInit {
+  @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
+  @Input() locale: string;
   @Input() rule: PortfolioReportRule;
   @Input() settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
@@ -40,18 +63,32 @@ export class RuleComponent implements OnInit {
   public constructor(
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    addIcons({
+      addCircleOutline,
+      checkmarkCircleOutline,
+      ellipsisHorizontal,
+      optionsOutline,
+      removeCircleOutline,
+      warningOutline
+    });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
   public onCustomizeRule(rule: PortfolioReportRule) {
-    const dialogRef = this.dialog.open(GfRuleSettingsDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfRuleSettingsDialogComponent,
+      RuleSettingsDialogParams
+    >(GfRuleSettingsDialogComponent, {
       data: {
         rule,
+        categoryName: this.categoryName,
+        locale: this.locale,
         settings: this.settings
-      } as IRuleSettingsDialogParams,
+      },
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

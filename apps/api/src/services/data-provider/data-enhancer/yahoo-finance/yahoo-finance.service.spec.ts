@@ -49,9 +49,19 @@ describe('YahooFinanceDataEnhancerService', () => {
     ).toEqual('BTCUSD');
     expect(
       await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+        'USD.AX'
+      )
+    ).toEqual('USD.AX');
+    expect(
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
         'EURUSD=X'
       )
     ).toEqual('EURUSD');
+    expect(
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+        'USDCHF=X'
+      )
+    ).toEqual('USDCHF');
   });
 
   it('convertToYahooFinanceSymbol', async () => {
@@ -65,6 +75,16 @@ describe('YahooFinanceDataEnhancerService', () => {
         'DOGEUSD'
       )
     ).toEqual('DOGE-USD');
+    expect(
+      await yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        'EURUSD'
+      )
+    ).toEqual('EURUSD=X');
+    expect(
+      await yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        'USD.AX'
+      )
+    ).toEqual('USD.AX');
     expect(
       await yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
         'USDCHF'

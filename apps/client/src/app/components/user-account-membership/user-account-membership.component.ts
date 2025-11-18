@@ -1,44 +1,56 @@
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy
 } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarRef,
-  TextOnlySnackBar
-} from '@angular/material/snack-bar';
-import { StringValue } from 'ms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
+import ms, { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfMembershipCardComponent,
+    GfPremiumIndicatorComponent,
+    MatButtonModule,
+    MatCardModule,
+    RouterModule
+  ],
   selector: 'gf-user-account-membership',
   styleUrls: ['./user-account-membership.scss'],
   templateUrl: './user-account-membership.html'
 })
-export class UserAccountMembershipComponent implements OnDestroy {
+export class GfUserAccountMembershipComponent implements OnDestroy {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
   public defaultDateFormat: string;
   public durationExtension: StringValue;
   public hasPermissionForSubscription: boolean;
+  public hasPermissionToCreateApiKey: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public trySubscriptionMail =
     'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;
@@ -53,8 +65,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
     private stripeService: StripeService,
     private userService: UserService
   ) {
-    const { baseCurrency, globalPermissions, subscriptionOffers } =
-      this.dataService.fetchInfo();
+    const { baseCurrency, globalPermissions } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
 
@@ -73,23 +84,22 @@ export class UserAccountMembershipComponent implements OnDestroy {
             this.user.settings.locale
           );
 
+          this.hasPermissionToCreateApiKey = hasPermission(
+            this.user.permissions,
+            permissions.createApiKey
+          );
+
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
             permissions.updateUserSettings
           );
 
-          this.coupon =
-            subscriptionOffers?.[this.user.subscription.offer]?.coupon;
-          this.couponId =
-            subscriptionOffers?.[this.user.subscription.offer]?.couponId;
+          this.coupon = this.user?.subscription?.offer?.coupon;
+          this.couponId = this.user?.subscription?.offer?.couponId;
           this.durationExtension =
-            subscriptionOffers?.[
-              this.user.subscription.offer
-            ]?.durationExtension;
-          this.price =
-            subscriptionOffers?.[this.user.subscription.offer]?.price;
-          this.priceId =
-            subscriptionOffers?.[this.user.subscription.offer]?.priceId;
+            this.user?.subscription?.offer?.durationExtension;
+          this.price = this.user?.subscription?.offer?.price;
+          this.priceId = this.user?.subscription?.offer?.priceId;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -98,17 +108,20 @@ export class UserAccountMembershipComponent implements OnDestroy {
 
   public onCheckout() {
     this.dataService
-      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .createStripeCheckoutSession({
+        couponId: this.couponId,
+        priceId: this.priceId
+      })
       .pipe(
-        switchMap(({ sessionId }: { sessionId: string }) => {
-          return this.stripeService.redirectToCheckout({ sessionId });
-        }),
         catchError((error) => {
           this.notificationService.alert({
             title: error.message
           });
 
           throw error;
+        }),
+        switchMap(({ sessionId }) => {
+          return this.stripeService.redirectToCheckout({ sessionId });
         })
       )
       .subscribe((result) => {
@@ -120,51 +133,90 @@ export class UserAccountMembershipComponent implements OnDestroy {
       });
   }
 
+  public onGenerateApiKey() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.dataService
+          .postApiKey()
+          .pipe(
+            catchError(() => {
+              this.snackBar.open(
+                '😞 ' + $localize`Could not generate an API key`,
+                undefined,
+                {
+                  duration: ms('3 seconds')
+                }
+              );
+
+              return EMPTY;
+            }),
+            takeUntil(this.unsubscribeSubject)
+          )
+          .subscribe(({ apiKey }) => {
+            this.notificationService.alert({
+              discardLabel: $localize`Okay`,
+              message:
+                $localize`Set this API key in your self-hosted environment:` +
+                '<br />' +
+                apiKey,
+              title: $localize`Ghostfolio Premium Data Provider API Key`
+            });
+          });
+      },
+      confirmType: ConfirmationDialogType.Primary,
+      title: $localize`Do you really want to generate a new API key?`
+    });
+  }
+
   public onRedeemCoupon() {
-    let couponCode = prompt($localize`Please enter your coupon code:`);
-    couponCode = couponCode?.trim();
+    this.notificationService.prompt({
+      confirmFn: (value) => {
+        const couponCode = value?.trim();
 
-    if (couponCode) {
-      this.dataService
-        .redeemCoupon(couponCode)
-        .pipe(
-          takeUntil(this.unsubscribeSubject),
-          catchError(() => {
-            this.snackBar.open(
-              '😞 ' + $localize`Could not redeem coupon code`,
-              undefined,
-              {
-                duration: 3000
-              }
-            );
+        if (couponCode) {
+          this.dataService
+            .redeemCoupon(couponCode)
+            .pipe(
+              catchError(() => {
+                this.snackBar.open(
+                  '😞 ' + $localize`Could not redeem coupon code`,
+                  undefined,
+                  {
+                    duration: ms('3 seconds')
+                  }
+                );
 
-            return EMPTY;
-          })
-        )
-        .subscribe(() => {
-          this.snackBarRef = this.snackBar.open(
-            '✅ ' + $localize`Coupon code has been redeemed`,
-            $localize`Reload`,
-            {
-              duration: 3000
-            }
-          );
-
-          this.snackBarRef
-            .afterDismissed()
-            .pipe(takeUntil(this.unsubscribeSubject))
+                return EMPTY;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
             .subscribe(() => {
-              window.location.reload();
-            });
+              const snackBarRef = this.snackBar.open(
+                '✅ ' + $localize`Coupon code has been redeemed`,
+                $localize`Reload`,
+                {
+                  duration: ms('3 seconds')
+                }
+              );
 
-          this.snackBarRef
-            .onAction()
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(() => {
-              window.location.reload();
+              snackBarRef
+                .afterDismissed()
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe(() => {
+                  window.location.reload();
+                });
+
+              snackBarRef
+                .onAction()
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe(() => {
+                  window.location.reload();
+                });
             });
-        });
-    }
+        }
+      },
+      title: $localize`Please enter your coupon code.`
+    });
   }
 
   public ngOnDestroy() {

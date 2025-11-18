@@ -1,3 +1,4 @@
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Injectable } from '@angular/core';
@@ -6,8 +7,12 @@ import { isFunction } from 'lodash';
 
 import { GfAlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { GfConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { ConfirmationDialogType } from './confirmation-dialog/confirmation-dialog.type';
-import { IAlertParams, IConfirmParams } from './interfaces/interfaces';
+import {
+  AlertParams,
+  ConfirmParams,
+  PromptParams
+} from './interfaces/interfaces';
+import { GfPromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 
 @Injectable()
 export class NotificationService {
@@ -16,7 +21,7 @@ export class NotificationService {
 
   public constructor(private matDialog: MatDialog) {}
 
-  public alert(aParams: IAlertParams) {
+  public alert(aParams: AlertParams) {
     if (!aParams.discardLabel) {
       aParams.discardLabel = translate('CLOSE');
     }
@@ -40,7 +45,7 @@ export class NotificationService {
     });
   }
 
-  public confirm(aParams: IConfirmParams) {
+  public confirm(aParams: ConfirmParams) {
     if (!aParams.confirmLabel) {
       aParams.confirmLabel = translate('YES');
     }
@@ -69,6 +74,36 @@ export class NotificationService {
         aParams.confirmFn();
       } else if (result === 'discard' && isFunction(aParams.discardFn)) {
         aParams.discardFn();
+      }
+    });
+  }
+
+  public prompt(aParams: PromptParams) {
+    if (!aParams.confirmLabel) {
+      aParams.confirmLabel = translate('OK');
+    }
+
+    if (!aParams.discardLabel) {
+      aParams.discardLabel = translate('CANCEL');
+    }
+
+    const dialog = this.matDialog.open(GfPromptDialogComponent, {
+      autoFocus: true,
+      maxWidth: this.dialogMaxWidth,
+      width: this.dialogWidth
+    });
+
+    dialog.componentInstance.initialize({
+      confirmLabel: aParams.confirmLabel,
+      defaultValue: aParams.defaultValue,
+      discardLabel: aParams.discardLabel,
+      title: aParams.title,
+      valueLabel: aParams.valueLabel
+    });
+
+    return dialog.afterClosed().subscribe((result: string) => {
+      if (result !== 'discard' && isFunction(aParams.confirmFn)) {
+        aParams.confirmFn(result);
       }
     });
   }

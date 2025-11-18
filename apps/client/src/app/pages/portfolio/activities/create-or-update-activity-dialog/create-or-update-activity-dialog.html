@@ -65,9 +65,9 @@
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
-          <mat-option value="ITEM">
+          <mat-option value="VALUABLE">
             <span
-              ><b>{{ typesTranslationMap['ITEM'] }}</b></span
+              ><b>{{ typesTranslationMap['VALUABLE'] }}</b></span
             >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Luxury items, real estate, private companies</small
@@ -93,11 +93,11 @@
           @for (account of data.accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">
-                @if (account.Platform?.url) {
-                  <gf-asset-profile-icon
+                @if (account.platform?.url) {
+                  <gf-entity-logo
                     class="mr-1"
-                    [tooltip]="account.Platform?.name"
-                    [url]="account.Platform?.url"
+                    [tooltip]="account.platform?.name"
+                    [url]="account.platform?.url"
                   />
                 }
                 <span>{{ account.name }}</span>
@@ -124,6 +124,7 @@
         <mat-label i18n>Name, symbol or ISIN</mat-label>
         <gf-symbol-autocomplete
           formControlName="searchSymbol"
+          [defaultLookupItems]="defaultLookupItems"
           [isLoading]="isLoading"
         />
       </mat-form-field>
@@ -214,11 +215,7 @@
               }
             }
           </mat-label>
-          <input
-            formControlName="unitPriceInCustomCurrency"
-            matInput
-            type="number"
-          />
+          <input formControlName="unitPrice" matInput type="number" />
           <div
             class="ml-2"
             matTextSuffix
@@ -232,23 +229,12 @@
               }
             </mat-select>
           </div>
-          @if (
-            activityForm.get('unitPriceInCustomCurrency').hasError('invalid')
-          ) {
-            <mat-error
-              ><ng-container i18n
-                >Oops! Could not get the historical exchange rate
-                from</ng-container
-              >
-              {{
-                activityForm.get('date')?.value | date: defaultDateFormat
-              }}</mat-error
-            >
-          }
         </mat-form-field>
         @if (
+          currencyOfAssetProfile ===
+            activityForm.get('currencyOfUnitPrice').value &&
           currentMarketPrice &&
-          (data.activity.type === 'BUY' || data.activity.type === 'SELL') &&
+          ['BUY', 'SELL'].includes(data.activity.type) &&
           isToday(activityForm.get('date')?.value)
         ) {
           <button
@@ -263,36 +249,6 @@
         }
       </div>
     </div>
-    <div class="d-none">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>
-          @switch (activityForm.get('type')?.value) {
-            @case ('DIVIDEND') {
-              <ng-container i18n>Dividend</ng-container>
-            }
-            @case ('FEE') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @case ('INTEREST') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @case ('ITEM') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @case ('LIABILITY') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @default {
-              <ng-container i18n>Unit Price</ng-container>
-            }
-          }
-        </mat-label>
-        <input formControlName="unitPrice" matInput type="number" />
-        <span class="ml-2" matTextSuffix>{{
-          activityForm.get('currency').value
-        }}</span>
-      </mat-form-field>
-    </div>
     <div
       class="mb-3"
       [ngClass]="{
@@ -304,7 +260,7 @@
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
-        <input formControlName="feeInCustomCurrency" matInput type="number" />
+        <input formControlName="fee" matInput type="number" />
         <div
           class="ml-2"
           matTextSuffix
@@ -312,26 +268,6 @@
         >
           {{ activityForm.get('currencyOfUnitPrice').value }}
         </div>
-        @if (activityForm.get('feeInCustomCurrency').hasError('invalid')) {
-          <mat-error
-            ><ng-container i18n
-              >Oops! Could not get the historical exchange rate
-              from</ng-container
-            >
-            {{
-              activityForm.get('date')?.value | date: defaultDateFormat
-            }}</mat-error
-          >
-        }
-      </mat-form-field>
-    </div>
-    <div class="d-none">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Fee</mat-label>
-        <input formControlName="fee" matInput type="number" />
-        <span class="ml-2" matTextSuffix>{{
-          activityForm.get('currency').value
-        }}</span>
       </mat-form-field>
     </div>
     <div class="mb-3">
@@ -354,9 +290,12 @@
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null" />
-          @for (assetClass of assetClasses; track assetClass) {
-            <mat-option [value]="assetClass.id">{{
-              assetClass.label
+          @for (
+            assetClassOption of assetClassOptions;
+            track assetClassOption.id
+          ) {
+            <mat-option [value]="assetClassOption.id">{{
+              assetClassOption.label
             }}</mat-option>
           }
         </mat-select>
@@ -370,47 +309,23 @@
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
           <mat-option [value]="null" />
-          @for (assetSubClass of assetSubClasses; track assetSubClass) {
-            <mat-option [value]="assetSubClass.id">{{
-              assetSubClass.label
+          @for (
+            assetSubClassOption of assetSubClassOptions;
+            track assetSubClassOption.id
+          ) {
+            <mat-option [value]="assetSubClassOption.id">{{
+              assetSubClassOption.label
             }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Tags</mat-label>
-        <mat-chip-grid #tagsChipList>
-          @for (tag of activityForm.get('tags')?.value; track tag.id) {
-            <mat-chip-row
-              matChipRemove
-              [removable]="true"
-              (removed)="onRemoveTag(tag)"
-            >
-              {{ tag.name }}
-              <ion-icon class="ml-2" matPrefix name="close-outline" />
-            </mat-chip-row>
-          }
-          <input
-            #tagInput
-            name="close-outline"
-            [matAutocomplete]="autocompleteTags"
-            [matChipInputFor]="tagsChipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          />
-        </mat-chip-grid>
-        <mat-autocomplete
-          #autocompleteTags="matAutocomplete"
-          (optionSelected)="onAddTag($event)"
-        >
-          @for (tag of filteredTagsObservable | async; track tag.id) {
-            <mat-option [value]="tag.id">
-              {{ tag.name }}
-            </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+    <div class="mb-3">
+      <gf-tags-selector
+        formControlName="tags"
+        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+        [tagsAvailable]="tagsAvailable"
+      />
     </div>
   </div>
   <div class="d-flex" mat-dialog-actions>
@@ -419,17 +334,24 @@
       [isCurrency]="true"
       [locale]="data.user?.settings?.locale"
       [unit]="
-        activityForm.get('currency')?.value ?? data.user?.settings?.baseCurrency
+        activityForm.get('currencyOfUnitPrice')?.value ??
+        data.user?.settings?.baseCurrency
       "
       [value]="total"
     />
     <div>
-      <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-button type="button" (click)="onCancel()">
+        @if (activityForm.dirty) {
+          <ng-container i18n>Cancel</ng-container>
+        } @else {
+          <ng-container i18n>Close</ng-container>
+        }
+      </button>
       <button
         color="primary"
         mat-flat-button
         type="submit"
-        [disabled]="!activityForm.valid"
+        [disabled]="!(activityForm.dirty && activityForm.valid)"
       >
         <ng-container i18n>Save</ng-container>
       </button>

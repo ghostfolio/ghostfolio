@@ -1,6 +1,11 @@
 {
-  "createdAt": "2024-08-31T00:00:00.000Z",
+  "createdAt": "2025-10-31T00:00:00.000Z",
   "data": [
+    {
+      "name": "Activepieces",
+      "description": "Activepieces is an open source, no-code, AI-first business automation tool. Alternative to Zapier, Make and Workato.",
+      "href": "https://activepieces.com"
+    },
     {
       "name": "Aptabase",
       "description": "Analytics for Apps, open source, simple and privacy-friendly. SDKs for Swift, React Native, Electron, Flutter and many others.",
@@ -12,9 +17,9 @@
       "href": "https://argos-ci.com"
     },
     {
-      "name": "BoxyHQ",
-      "description": "BoxyHQ’s suite of APIs for security and privacy helps engineering teams build and ship compliant cloud applications faster.",
-      "href": "https://boxyhq.com"
+      "name": "Bifrost",
+      "description": "Fastest LLM gateway with adaptive load balancer, cluster mode, guardrails, 1000+ models support & <100 µs overhead at 5k RPS.",
+      "href": "https://www.getmaxim.ai/bifrost"
     },
     {
       "name": "Cal.com",
@@ -22,19 +27,14 @@
       "href": "https://cal.com"
     },
     {
+      "name": "Cap",
+      "description": "Cap is the open source alternative to Loom. Lightweight, powerful, and cross-platform. Record and share securely in seconds.",
+      "href": "https://cap.so"
+    },
+    {
       "name": "ClassroomIO.com",
       "description": "ClassroomIO is a no-code tool that allows you build and scale your own teaching platform with ease.",
       "href": "https://www.classroomio.com"
-    },
-    {
-      "name": "Crowd.dev",
-      "description": "Centralize community, product, and customer data to understand which companies are engaging with your open source project.",
-      "href": "https://www.crowd.dev"
-    },
-    {
-      "name": "DevHunt",
-      "description": "Find the best Dev Tools upvoted by the community every week.",
-      "href": "https://devhunt.org"
     },
     {
       "name": "Documenso",
@@ -42,24 +42,9 @@
       "href": "https://documenso.com"
     },
     {
-      "name": "dyrector.io",
-      "description": "dyrector.io is an open-source continuous delivery & deployment platform with version management.",
-      "href": "https://dyrector.io"
-    },
-    {
-      "name": "Firecamp",
-      "description": "vscode for apis, open-source postman/insomnia alternative",
-      "href": "https://firecamp.io"
-    },
-    {
       "name": "Formbricks",
-      "description": "Survey granular user segments at any point in the user journey. Gather up to 6x more insights with targeted micro-surveys. All open-source.",
+      "description": "Open source survey software and Experience Management Platform. Understand your customers, keep full control over your data.",
       "href": "https://formbricks.com"
-    },
-    {
-      "name": "GitWonk",
-      "description": "GitWonk is an open-source technical documentation tool, designed and built focusing on the developer experience.",
-      "href": "https://gitwonk.com"
     },
     {
       "name": "Hanko",
@@ -77,19 +62,14 @@
       "href": "https://getinboxzero.com"
     },
     {
-      "name": "Infisical",
-      "description": "Open source, end-to-end encrypted platform that lets you securely manage secrets and configs across your team, devices, and infrastructure.",
-      "href": "https://infisical.com"
+      "name": "KeepHQ",
+      "description": "Keep is an open-source AIOps (AI for IT operations) platform",
+      "href": "https://www.keephq.dev"
     },
     {
       "name": "Langfuse",
       "description": "Open source LLM engineering platform. Debug, analyze and iterate together.",
       "href": "https://langfuse.com"
-    },
-    {
-      "name": "Lost Pixel",
-      "description": "Open source visual regression testing alternative to Percy & Chromatic",
-      "href": "https://lost-pixel.com"
     },
     {
       "name": "Mockoon",
@@ -105,6 +85,11 @@
       "name": "OpenStatus",
       "description": "Open-source monitoring platform with beautiful status pages",
       "href": "https://www.openstatus.dev"
+    },
+    {
+      "name": "Papermark",
+      "description": "Open-Source Docsend Alternative to securely share documents with real-time analytics.",
+      "href": "https://www.papermark.com"
     },
     {
       "name": "Portkey AI",
@@ -137,11 +122,6 @@
       "href": "https://www.sniffnet.net"
     },
     {
-      "name": "Spark.NET",
-      "description": "The .NET Web Framework for Makers. Build production ready, full-stack web applications fast without sweating the small stuff.",
-      "href": "https://spark-framework.net"
-    },
-    {
       "name": "Tiledesk",
       "description": "The innovative open-source framework for developing LLM-enabled chatbots, Tiledesk empowers developers to create advanced, conversational AI agents.",
       "href": "https://tiledesk.com"
@@ -167,14 +147,14 @@
       "href": "https://typebot.io"
     },
     {
-      "name": "UnInbox",
-      "description": "Modern email for teams and professionals. Bringing the best of email and messaging into a single, modern, and secure platform.",
-      "href": "https://uninbox.com"
-    },
-    {
       "name": "Unkey",
       "description": "An API authentication and authorization platform for scaling user facing APIs. Create, verify, and manage low latency API keys in seconds.",
       "href": "https://unkey.dev"
+    },
+    {
+      "name": "Voltagent",
+      "description": "Open Source TypeScript framework for building AI agents with enterprise-grade capabilities and seamless integrations.",
+      "href": "https://voltagent.dev"
     },
     {
       "name": "Webiny",

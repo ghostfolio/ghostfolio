@@ -14,9 +14,14 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
+import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -26,31 +31,72 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
+import {
+  MatSort,
+  MatSortModule,
+  Sort,
+  SortDirection
+} from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
+import { addIcons } from 'ionicons';
+import {
+  addOutline,
+  banOutline,
+  createOutline,
+  documentTextOutline,
+  ellipsisHorizontal,
+  ellipsisVertical,
+  trashOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
-import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
+import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
-import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
+import { GfCreateAssetProfileDialogComponent } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'has-fab' },
+  imports: [
+    CommonModule,
+    GfActivitiesFilterComponent,
+    GfPremiumIndicatorComponent,
+    GfSymbolPipe,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
+  providers: [AdminMarketDataService],
   selector: 'gf-admin-market-data',
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'
 })
-export class AdminMarketDataComponent
+export class GfAdminMarketDataComponent
   implements AfterViewInit, OnDestroy, OnInit
 {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -58,44 +104,45 @@ export class AdminMarketDataComponent
 
   public activeFilters: Filter[] = [];
   public allFilters: Filter[] = [
-    AssetSubClass.BOND,
-    AssetSubClass.COMMODITY,
-    AssetSubClass.CRYPTOCURRENCY,
-    AssetSubClass.ETF,
-    AssetSubClass.MUTUALFUND,
-    AssetSubClass.PRECIOUS_METAL,
-    AssetSubClass.PRIVATE_EQUITY,
-    AssetSubClass.STOCK
-  ]
-    .map((assetSubClass) => {
+    ...Object.keys(AssetSubClass)
+      .filter((assetSubClass) => {
+        return assetSubClass !== 'CASH';
+      })
+      .map((assetSubClass) => {
+        return {
+          id: assetSubClass.toString(),
+          label: translate(assetSubClass),
+          type: 'ASSET_SUB_CLASS' as Filter['type']
+        };
+      }),
+    ...Object.keys(DataSource).map((dataSource) => {
       return {
-        id: assetSubClass.toString(),
-        label: translate(assetSubClass),
-        type: 'ASSET_SUB_CLASS' as Filter['type']
+        id: dataSource.toString(),
+        label: dataSource,
+        type: 'DATA_SOURCE' as Filter['type']
       };
-    })
-    .concat([
-      {
-        id: 'BENCHMARKS',
-        label: $localize`Benchmarks`,
-        type: 'PRESET_ID' as Filter['type']
-      },
-      {
-        id: 'CURRENCIES',
-        label: $localize`Currencies`,
-        type: 'PRESET_ID' as Filter['type']
-      },
-      {
-        id: 'ETF_WITHOUT_COUNTRIES',
-        label: $localize`ETFs without Countries`,
-        type: 'PRESET_ID' as Filter['type']
-      },
-      {
-        id: 'ETF_WITHOUT_SECTORS',
-        label: $localize`ETFs without Sectors`,
-        type: 'PRESET_ID' as Filter['type']
-      }
-    ]);
+    }),
+    {
+      id: 'BENCHMARKS',
+      label: $localize`Benchmarks`,
+      type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'CURRENCIES',
+      label: $localize`Currencies`,
+      type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'ETF_WITHOUT_COUNTRIES',
+      label: $localize`ETFs without Countries`,
+      type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'ETF_WITHOUT_SECTORS',
+      label: $localize`ETFs without Sectors`,
+      type: 'PRESET_ID' as Filter['type']
+    }
+  ];
   public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
@@ -136,6 +183,7 @@ export class AdminMarketDataComponent
     );
 
     this.displayedColumns = [
+      'status',
       'select',
       'nameWithSymbol',
       'dataSource',
@@ -192,6 +240,16 @@ export class AdminMarketDataComponent
 
         this.loadData();
       });
+
+    addIcons({
+      addOutline,
+      banOutline,
+      createOutline,
+      documentTextOutline,
+      ellipsisHorizontal,
+      ellipsisVertical,
+      trashOutline
+    });
   }
 
   public ngAfterViewInit() {
@@ -372,7 +430,10 @@ export class AdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(AssetProfileDialog, {
+        const dialogRef = this.dialog.open<
+          GfAssetProfileDialogComponent,
+          AssetProfileDialogParams
+        >(GfAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -380,7 +441,7 @@ export class AdminMarketDataComponent
             colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          } as AssetProfileDialogParams,
+          },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
@@ -388,9 +449,15 @@ export class AdminMarketDataComponent
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
+          .subscribe(
+            (newAssetProfileIdentifier: AssetProfileIdentifier | undefined) => {
+              if (newAssetProfileIdentifier) {
+                this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
+              } else {
+                this.router.navigate(['.'], { relativeTo: this.route });
+              }
+            }
+          );
       });
   }
 
@@ -401,12 +468,15 @@ export class AdminMarketDataComponent
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
+        const dialogRef = this.dialog.open<
+          GfCreateAssetProfileDialogComponent,
+          CreateAssetProfileDialogParams
+        >(GfCreateAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          } as CreateAssetProfileDialogParams,
+          },
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

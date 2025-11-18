@@ -1,5 +1,4 @@
 <gf-dialog-header
-  mat-dialog-title
   [deviceType]="data.deviceType"
   [title]="dialogTitle"
   (closeButtonClicked)="onCancel()"
@@ -8,13 +7,13 @@
 <div class="flex-grow-1" mat-dialog-content>
   <mat-stepper
     #stepper
-    animationDuration="0"
+    animationDuration="0ms"
     [linear]="true"
     [orientation]="stepperOrientation"
     [selectedIndex]="importStep"
     (selectionChange)="onImportStepChange($event)"
   >
-    <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
+    <mat-step [completed]="importStep === 0">
       <ng-template matStepLabel>
         @if (mode === 'DIVIDEND') {
           <ng-container i18n>Select Holding</ng-container>
@@ -22,9 +21,10 @@
           <ng-container i18n>Select File</ng-container>
         }
       </ng-template>
-      <div class="pt-3">
+      <div>
         @if (mode === 'DIVIDEND') {
           <form
+            class="pt-3"
             [formGroup]="assetProfileForm"
             (ngSubmit)="onLoadDividends(stepper)"
           >
@@ -90,13 +90,13 @@
                   >The following file formats are supported:</span
                 >
                 <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.csv"
                   target="_blank"
                   >CSV</a
                 >
                 <span class="mx-1" i18n>or</span>
                 <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.json"
                   target="_blank"
                   >JSON</a
                 >
@@ -107,7 +107,7 @@
       </div>
     </mat-step>
 
-    <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
+    <mat-step [completed]="importStep === 1">
       <ng-template matStepLabel>
         @if (mode === 'DIVIDEND') {
           <ng-container i18n>Select Dividends</ng-container>
@@ -115,7 +115,7 @@
           <ng-container i18n>Select Activities</ng-container>
         }
       </ng-template>
-      <div class="pt-3">
+      <div>
         @if (errorMessages?.length === 0) {
           @if (importStep === 1) {
             <gf-activities-table
@@ -128,7 +128,8 @@
               [hasPermissionToFilter]="false"
               [hasPermissionToOpenDetails]="false"
               [locale]="data?.user?.settings?.locale"
-              [pageSize]="maxSafeInteger"
+              [pageIndex]="pageIndex"
+              [pageSize]="pageSize"
               [showActions]="false"
               [showCheckbox]="true"
               [showSymbolColumn]="false"
@@ -136,6 +137,7 @@
               [sortDirection]="sortDirection"
               [sortDisabled]="true"
               [totalItems]="totalItems"
+              (pageChanged)="onPageChanged($event)"
               (selectedActivities)="updateSelection($event)"
             />
           }
@@ -154,25 +156,27 @@
             </button>
           </div>
         } @else {
-          <mat-accordion displayMode="flat">
-            @for (message of errorMessages; track message; let i = $index) {
-              <mat-expansion-panel [disabled]="!details[i]">
-                <mat-expansion-panel-header class="pl-1">
-                  <mat-panel-title>
-                    <div class="d-flex">
-                      <div class="align-items-center d-flex mr-2">
-                        <ion-icon name="warning-outline" />
+          <div class="pt-3">
+            <mat-accordion displayMode="flat">
+              @for (message of errorMessages; track message; let i = $index) {
+                <mat-expansion-panel [disabled]="!details[i]">
+                  <mat-expansion-panel-header class="pl-1">
+                    <mat-panel-title>
+                      <div class="d-flex">
+                        <div class="align-items-center d-flex mr-2">
+                          <ion-icon name="warning-outline" />
+                        </div>
+                        <div>{{ message }}</div>
                       </div>
-                      <div>{{ message }}</div>
-                    </div>
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                @if (details[i]) {
-                  <pre class="m-0"><code>{{ details[i] | json }}</code></pre>
-                }
-              </mat-expansion-panel>
-            }
-          </mat-accordion>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  @if (details[i]) {
+                    <pre class="m-0"><code>{{ details[i] | json }}</code></pre>
+                  }
+                </mat-expansion-panel>
+              }
+            </mat-accordion>
+          </div>
           <div class="d-flex justify-content-end mt-3">
             <button mat-button (click)="onReset(stepper)">
               <ng-container i18n>Back</ng-container>
@@ -193,7 +197,6 @@
 </div>
 
 <gf-dialog-footer
-  mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onCancel()"
 />

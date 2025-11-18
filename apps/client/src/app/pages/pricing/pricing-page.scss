@@ -23,6 +23,12 @@
     ion-icon[name='checkmark-circle-outline'] {
       color: rgba(var(--palette-primary-500), 1);
     }
+
+    .badge-container {
+      left: 0;
+      right: 0;
+      top: 0;
+    }
   }
 }
 

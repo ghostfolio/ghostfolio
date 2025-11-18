@@ -1,37 +1,53 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  AssetProfileIdentifier,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { format, parseISO } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
-import { ImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
+import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
+import { CreateOrUpdateActivityDialogParams } from './create-or-update-activity-dialog/interfaces/interfaces';
+import { GfImportActivitiesDialogComponent } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
   host: { class: 'has-fab' },
+  imports: [
+    GfActivitiesTableComponent,
+    IonIcon,
+    MatButtonModule,
+    MatSnackBarModule,
+    RouterModule
+  ],
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
 })
-export class ActivitiesPageComponent implements OnDestroy, OnInit {
+export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -85,6 +101,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
           }
         }
       });
+
+    addIcons({ addOutline });
   }
 
   public ngOnInit() {
@@ -124,7 +142,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         this.dataSource = new MatTableDataSource(activities);
         this.totalItems = count;
 
-        if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
+        if (
+          this.hasPermissionToCreateActivity &&
+          this.user?.activitiesCount === 0
+        ) {
           this.router.navigate([], { queryParams: { createDialog: true } });
         }
 
@@ -159,6 +180,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.fetchActivities();
       });
   }
@@ -168,6 +194,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .deleteActivity(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.fetchActivities();
       });
   }
@@ -217,11 +248,15 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+    const dialogRef = this.dialog.open<
+      GfImportActivitiesDialogComponent,
+      ImportActivitiesDialogParams
+    >(GfImportActivitiesDialogComponent, {
       data: {
         deviceType: this.deviceType,
         user: this.user
-      } as ImportActivitiesDialogParams,
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -229,17 +264,26 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.fetchActivities();
       });
   }
 
   public onImportDividends() {
-    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+    const dialogRef = this.dialog.open<
+      GfImportActivitiesDialogComponent,
+      ImportActivitiesDialogParams
+    >(GfImportActivitiesDialogComponent, {
       data: {
         activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
         user: this.user
-      } as ImportActivitiesDialogParams,
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -247,6 +291,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.fetchActivities();
       });
   }
@@ -265,10 +314,13 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateActivityDialog(activity: Activity) {
-    const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
+  public openUpdateActivityDialog(aActivity: Activity) {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateActivityDialogComponent,
+      CreateOrUpdateActivityDialogParams
+    >(GfCreateOrUpdateActivityDialogComponent, {
       data: {
-        activity,
+        activity: aActivity,
         accounts: this.user?.accounts,
         user: this.user
       },
@@ -279,10 +331,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((transaction: UpdateOrderDto | null) => {
-        if (transaction) {
+      .subscribe((activity: UpdateOrderDto) => {
+        if (activity) {
           this.dataService
-            .putOrder(transaction)
+            .putOrder(activity)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
@@ -307,7 +359,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
+        const dialogRef = this.dialog.open<
+          GfCreateOrUpdateActivityDialogComponent,
+          CreateOrUpdateActivityDialogParams
+        >(GfCreateOrUpdateActivityDialogComponent, {
           data: {
             accounts: this.user?.accounts,
             activity: {
@@ -332,6 +387,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({
                 next: () => {
+                  this.userService
+                    .get(true)
+                    .pipe(takeUntil(this.unsubscribeSubject))
+                    .subscribe();
+
                   this.fetchActivities();
                 }
               });

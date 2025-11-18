@@ -1,7 +1,10 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
 import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,15 +13,23 @@ import {
   OnChanges,
   Output
 } from '@angular/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { IonIcon } from '@ionic/angular/standalone';
 import { formatDistanceToNow } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  ellipsisHorizontalCircleOutline,
+  informationCircleOutline
+} from 'ionicons/icons';
 
 @Component({
-  selector: 'gf-portfolio-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './portfolio-summary.component.html',
-  styleUrls: ['./portfolio-summary.component.scss']
+  imports: [CommonModule, GfValueComponent, IonIcon, MatTooltipModule],
+  selector: 'gf-portfolio-summary',
+  styleUrls: ['./portfolio-summary.component.scss'],
+  templateUrl: './portfolio-summary.component.html'
 })
-export class PortfolioSummaryComponent implements OnChanges {
+export class GfPortfolioSummaryComponent implements OnChanges {
   @Input() baseCurrency: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
@@ -34,10 +45,14 @@ export class PortfolioSummaryComponent implements OnChanges {
   );
   public timeInMarket: string;
 
+  public constructor(private notificationService: NotificationService) {
+    addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });
+  }
+
   public ngOnChanges() {
     if (this.summary) {
-      if (this.summary.firstOrderDate) {
-        this.timeInMarket = formatDistanceToNow(this.summary.firstOrderDate, {
+      if (this.user.dateOfFirstActivity) {
+        this.timeInMarket = formatDistanceToNow(this.user.dateOfFirstActivity, {
           locale: getDateFnsLocale(this.language)
         });
       } else {
@@ -49,14 +64,15 @@ export class PortfolioSummaryComponent implements OnChanges {
   }
 
   public onEditEmergencyFund() {
-    const emergencyFundInput = prompt(
-      $localize`Please enter the amount of your emergency fund:`,
-      this.summary.emergencyFund?.total?.toString() ?? '0'
-    );
-    const emergencyFund = parseFloat(emergencyFundInput?.trim());
+    this.notificationService.prompt({
+      confirmFn: (value) => {
+        const emergencyFund = parseFloat(value.trim()) || 0;
 
-    if (emergencyFund >= 0) {
-      this.emergencyFundChanged.emit(emergencyFund);
-    }
+        this.emergencyFundChanged.emit(emergencyFund);
+      },
+      confirmLabel: $localize`Save`,
+      defaultValue: this.summary.emergencyFund?.total?.toString() ?? '0',
+      title: $localize`Please set the amount of your emergency fund.`
+    });
   }
 }

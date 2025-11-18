@@ -1,13 +1,13 @@
-import { ConfirmationDialogType } from '../confirmation-dialog/confirmation-dialog.type';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
-export interface IAlertParams {
+export interface AlertParams {
   discardFn?: () => void;
   discardLabel?: string;
   message?: string;
   title: string;
 }
 
-export interface IConfirmParams {
+export interface ConfirmParams {
   confirmFn: () => void;
   confirmLabel?: string;
   confirmType?: ConfirmationDialogType;
@@ -16,4 +16,13 @@ export interface IConfirmParams {
   discardLabel?: string;
   message?: string;
   title: string;
+}
+
+export interface PromptParams {
+  confirmFn: (value: string) => void;
+  confirmLabel?: string;
+  defaultValue?: string;
+  discardLabel?: string;
+  title: string;
+  valueLabel?: string;
 }

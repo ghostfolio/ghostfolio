@@ -2,19 +2,21 @@
   "name": "ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "sourceRoot": "libs/ui/src",
+  "prefix": "gf",
+  "tags": [],
   "generators": {
     "@schematics/angular:component": {
       "style": "scss"
     }
   },
-  "sourceRoot": "libs/ui/src",
-  "prefix": "gf",
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/ui"],
       "options": {
-        "jestConfig": "libs/ui/jest.config.ts"
+        "jestConfig": "libs/ui/jest.config.ts",
+        "tsConfig": "libs/ui/tsconfig.spec.json"
       }
     },
     "lint": {
@@ -26,10 +28,15 @@
     "storybook": {
       "executor": "@storybook/angular:start-storybook",
       "options": {
-        "port": 4400,
-        "configDir": "libs/ui/.storybook",
         "browserTarget": "ui:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "configDir": "libs/ui/.storybook",
+        "port": 4400,
+        "styles": [
+          "apps/client/src/assets/fonts/inter.css",
+          "apps/client/src/styles/theme.scss",
+          "apps/client/src/styles.scss"
+        ]
       },
       "configurations": {
         "ci": {
@@ -41,10 +48,15 @@
       "executor": "@storybook/angular:build-storybook",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook/ui",
-        "configDir": "libs/ui/.storybook",
         "browserTarget": "ui:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "configDir": "libs/ui/.storybook",
+        "outputDir": "dist/apps/client/development/storybook",
+        "styles": [
+          "apps/client/src/assets/fonts/inter.css",
+          "apps/client/src/styles/theme.scss",
+          "apps/client/src/styles.scss"
+        ]
       },
       "configurations": {
         "ci": {
@@ -56,7 +68,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "ui:build-storybook",
-        "staticFilePath": "dist/storybook/ui"
+        "staticFilePath": "dist/storybook"
       },
       "configurations": {
         "ci": {
@@ -64,6 +76,5 @@
         }
       }
     }
-  },
-  "tags": []
+  }
 }

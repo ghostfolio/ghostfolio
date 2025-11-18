@@ -1,18 +1,17 @@
-import { SubscriptionOfferKey } from '@ghostfolio/common/types';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
+import { SubscriptionType } from '@ghostfolio/common/enums';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 
-import { Account, Tag } from '@prisma/client';
+import { Access, Tag } from '@prisma/client';
 
+import { SubscriptionOffer } from './subscription-offer.interface';
 import { SystemMessage } from './system-message.interface';
 import { UserSettings } from './user-settings.interface';
 
 // TODO: Compare with UserWithSettings
 export interface User {
-  access: {
-    alias?: string;
-    id: string;
-  }[];
-  accounts: Account[];
+  access: Pick<Access, 'alias' | 'id' | 'permissions'>[];
+  accounts: AccountWithPlatform[];
+  activitiesCount: number;
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
@@ -20,7 +19,7 @@ export interface User {
   systemMessage?: SystemMessage;
   subscription: {
     expiresAt?: Date;
-    offer: SubscriptionOfferKey;
+    offer: SubscriptionOffer;
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];

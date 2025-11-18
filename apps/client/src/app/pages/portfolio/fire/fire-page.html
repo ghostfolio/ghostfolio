@@ -14,7 +14,7 @@
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
-          [fireWealth]="fireWealth?.toNumber()"
+          [fireWealth]="fireWealth?.today.valueInBaseCurrency"
           [hasPermissionToUpdateUserSettings]="
             !hasImpersonationId && hasPermissionToUpdateUserSettings
           "
@@ -37,7 +37,7 @@
   </div>
   <div>
     <h4 class="align-items-center d-flex">
-      <span i18n>4% Rule</span>
+      <span i18n>Sustainable retirement income</span>
       @if (user?.subscription?.type === 'Basic') {
         <gf-premium-indicator class="ml-1" />
       }
@@ -61,11 +61,11 @@
         />
       </div>
     } @else {
-      <div
-        i18n
-        [ngClass]="{ 'text-muted': user?.subscription?.type === 'Basic' }"
-      >
-        If you retire today, you would be able to withdraw
+      <div [ngClass]="{ 'text-muted': user?.subscription?.type === 'Basic' }">
+        <ng-container i18n
+          >If you retire today, you would be able to withdraw</ng-container
+        >
+        <ng-container>&nbsp;</ng-container>
         <span class="font-weight-bold"
           ><gf-value
             class="d-inline-block"
@@ -74,9 +74,12 @@
             [unit]="user?.settings?.baseCurrency"
             [value]="withdrawalRatePerYear?.toNumber()"
           />
-          per year</span
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>per year</ng-container></span
         >
-        or
+        <ng-container>&nbsp;</ng-container>
+        <ng-container i18n>or</ng-container>
+        <ng-container>&nbsp;</ng-container>
         <span class="font-weight-bold"
           ><gf-value
             class="d-inline-block"
@@ -85,18 +88,49 @@
             [unit]="user?.settings?.baseCurrency"
             [value]="withdrawalRatePerMonth?.toNumber()"
           />
-          per month</span
-        >, based on your total assets of
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>per month</ng-container></span
+        ><ng-container i18n>,</ng-container>
+        <ng-container>&nbsp;</ng-container>
+        <ng-container i18n>based on your total assets of</ng-container>
+        <ng-container>&nbsp;</ng-container>
         <span class="font-weight-bold"
           ><gf-value
             class="d-inline-block"
             [isCurrency]="true"
             [locale]="user?.settings?.locale"
             [unit]="user?.settings?.baseCurrency"
-            [value]="fireWealth?.toNumber()"
+            [value]="fireWealth?.today.valueInBaseCurrency"
           />
         </span>
-        and a withdrawal rate of 4%.
+        <ng-container>&nbsp;</ng-container>
+        <ng-container i18n>and a safe withdrawal rate (SWR) of</ng-container>
+        @if (
+          !hasImpersonationId &&
+          hasPermissionToUpdateUserSettings &&
+          user?.settings?.isExperimentalFeatures
+        ) {
+          <select
+            class="border-0 cursor-pointer d-inline-block font-weight-bold safe-withdrawal-rate-select"
+            [formControl]="safeWithdrawalRateControl"
+          >
+            @for (rate of safeWithdrawalRateOptions; track rate) {
+              <option [value]="rate">
+                {{ rate | percent: '1.1-1' }}
+              </option>
+            }</select
+          >.
+        } @else {
+          <ng-container>&nbsp;</ng-container>
+          <span class="font-weight-bold"
+            ><gf-value
+              class="d-inline-block"
+              [isPercent]="true"
+              [locale]="user?.settings?.locale"
+              [precision]="1"
+              [value]="user?.settings?.safeWithdrawalRate" /></span
+          >.
+        }
       </div>
     }
   </div>

@@ -28,7 +28,7 @@
             [defaultValue]="holdingType"
             [isLoading]="false"
             [options]="holdingTypeOptions"
-            (change)="onChangeHoldingType($event.value)"
+            (valueChange)="onChangeHoldingType($event.value)"
           />
         </div>
       </div>
@@ -48,18 +48,22 @@
         <gf-holdings-table
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
-          [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+          [hasPermissionToShowQuantities]="false"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
           (holdingClicked)="onHoldingClicked($event)"
         />
-        @if (hasPermissionToCreateOrder && holdings?.length > 0) {
+        @if (
+          !hasImpersonationId &&
+          hasPermissionToCreateActivity &&
+          holdings?.length > 0
+        ) {
           <div class="text-center">
             <a
               class="mt-3"
               i18n
               mat-stroked-button
-              [routerLink]="['/portfolio', 'activities']"
+              [routerLink]="routerLinkPortfolioActivities"
               >Manage Activities</a
             >
           </div>
