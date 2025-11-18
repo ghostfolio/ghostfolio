@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _OSS Gallery_ logo to the logo carousel on the landing page
+
 ### Changed
 
 - Upgraded `yahoo-finance2` from version `3.10.0` to `3.10.1`
