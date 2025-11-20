@@ -136,19 +136,19 @@ export class AuthController {
     return this.webAuthService.generateRegistrationOptions();
   }
 
+  @Post('webauthn/generate-authentication-options')
+  public async generateAuthenticationOptions(
+    @Body() body: { deviceId: string }
+  ) {
+    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
+  }
+
   @Post('webauthn/verify-attestation')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async verifyAttestation(
     @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
   ) {
     return this.webAuthService.verifyAttestation(body.credential);
-  }
-
-  @Post('webauthn/generate-authentication-options')
-  public async generateAuthenticationOptions(
-    @Body() body: { deviceId: string }
-  ) {
-    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
   @Post('webauthn/verify-authentication')
