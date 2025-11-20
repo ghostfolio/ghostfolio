@@ -15,6 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { NextFunction, Request, Response } from 'express';
+import * as session from 'express-session';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
@@ -58,6 +59,14 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
       whitelist: true
+    })
+  );
+
+  app.use(
+    session({
+      resave: false,
+      saveUninitialized: false,
+      secret: configService.get<string>('JWT_SECRET_KEY')
     })
   );
 
