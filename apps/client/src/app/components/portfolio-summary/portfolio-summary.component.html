@@ -160,7 +160,21 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Emergency Fund</div>
+    <div class="align-items-center d-flex flex-grow-1">
+      <ng-container i18n>Emergency Fund</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : emergencyFundPercentage"
+        />
+      }
+    </div>
     <div
       class="align-items-center d-flex justify-content-end"
       [ngClass]="{
@@ -223,10 +237,23 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Buying Power</div>
-    <div class="justify-content-end">
+    <div class="align-items-center d-flex flex-grow-1">
+      <ng-container i18n>Buying Power</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : buyingPowerPercentage"
+        />
+      }
+    </div>
+    <div class="align-items-center d-flex justify-content-end">
       <gf-value
-        class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
         [precision]="precision"
@@ -236,10 +263,23 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Excluded from Analysis</div>
-    <div class="justify-content-end">
+    <div class="align-items-center d-flex flex-grow-1">
+      <ng-container i18n>Excluded from Analysis</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : excludedFromAnalysisPercentage"
+        />
+      }
+    </div>
+    <div class="align-items-center d-flex justify-content-end">
       <gf-value
-        class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
         [precision]="precision"
