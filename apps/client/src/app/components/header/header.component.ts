@@ -105,6 +105,7 @@ export class GfHeaderComponent implements OnChanges {
   public hasFilters: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionForAuthGoogle: boolean;
+  public hasPermissionForAuthOidc: boolean;
   public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
@@ -168,6 +169,11 @@ export class GfHeaderComponent implements OnChanges {
     this.hasPermissionForAuthGoogle = hasPermission(
       this.info?.globalPermissions,
       permissions.enableAuthGoogle
+    );
+
+    this.hasPermissionForAuthOidc = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableAuthOidc
     );
 
     this.hasPermissionForAuthToken = hasPermission(
@@ -286,6 +292,7 @@ export class GfHeaderComponent implements OnChanges {
       data: {
         accessToken: '',
         hasPermissionToUseAuthGoogle: this.hasPermissionForAuthGoogle,
+        hasPermissionToUseAuthOidc: this.hasPermissionForAuthOidc,
         hasPermissionToUseAuthToken: this.hasPermissionForAuthToken,
         title: $localize`Sign in`
       },

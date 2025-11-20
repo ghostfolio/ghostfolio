@@ -4,10 +4,11 @@ import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscriptio
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { ApiKeyStrategy } from './api-key.strategy';
@@ -15,6 +16,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { OidcStrategy } from './oidc.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -36,6 +38,47 @@ import { JwtStrategy } from './jwt.strategy';
     AuthService,
     GoogleStrategy,
     JwtStrategy,
+    {
+      provide: OidcStrategy,
+      useFactory: async (
+        authService: AuthService,
+        configurationService: ConfigurationService
+      ) => {
+        const issuer = configurationService.get('OIDC_ISSUER');
+        const options: any = {
+          callbackURL: `${configurationService.get(
+            'ROOT_URL'
+          )}/api/auth/oidc/callback`,
+          clientID: configurationService.get('OIDC_CLIENT_ID'),
+          clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
+        };
+
+        if (issuer) {
+          try {
+            const response = await fetch(
+              `${issuer}/.well-known/openid-configuration`
+            );
+            const config = await response.json();
+
+            options.authorizationURL = config.authorization_endpoint;
+            options.issuer = issuer;
+            options.tokenURL = config.token_endpoint;
+            options.userInfoURL = config.userinfo_endpoint;
+          } catch (error) {
+            Logger.error(error, 'OidcStrategy');
+          }
+        } else {
+          options.authorizationURL = configurationService.get(
+            'OIDC_AUTHORIZATION_URL'
+          );
+          options.tokenURL = configurationService.get('OIDC_TOKEN_URL');
+          options.userInfoURL = configurationService.get('OIDC_USER_INFO_URL');
+        }
+
+        return new OidcStrategy(authService, options);
+      },
+      inject: [AuthService, ConfigurationService]
+    },
     WebAuthService
   ]
 })
