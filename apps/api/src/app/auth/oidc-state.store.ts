@@ -14,10 +14,8 @@ export class OidcStateStore {
   >();
   private readonly STATE_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 
-  /**
-   * Store request state.
-   * Signature matches passport-openidconnect SessionStore
-   */
+  // Store request state.
+  // Signature matches passport-openidconnect SessionStore
   public store(
     _req: unknown,
     ctx: { maxAge?: number; nonce?: string; issued?: Date },
@@ -45,10 +43,8 @@ export class OidcStateStore {
     }
   }
 
-  /**
-   * Verify request state.
-   * Signature matches passport-openidconnect SessionStore
-   */
+  // Verify request state.
+  // Signature matches passport-openidconnect SessionStore
   public verify(
     _req: unknown,
     handle: string,
@@ -80,9 +76,7 @@ export class OidcStateStore {
     }
   }
 
-  /**
-   * Generate a cryptographically secure random handle
-   */
+  // Generate a cryptographically secure random handle
   private generateHandle(): string {
     return (
       Math.random().toString(36).substring(2, 15) +
@@ -91,9 +85,7 @@ export class OidcStateStore {
     );
   }
 
-  /**
-   * Clean up expired states
-   */
+  // Clean up expired states
   private cleanup(): void {
     const now = Date.now();
     const expiredKeys: string[] = [];
