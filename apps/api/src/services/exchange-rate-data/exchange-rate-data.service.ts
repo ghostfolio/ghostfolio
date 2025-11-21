@@ -30,6 +30,7 @@ import ms from 'ms';
 export class ExchangeRateDataService {
   private currencies: string[] = [];
   private currencyPairs: DataGatheringItem[] = [];
+  private derivedCurrencyFactors = new Map<string, number>();
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(
@@ -136,6 +137,13 @@ export class ExchangeRateDataService {
     this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
     this.exchangeRates = {};
+    this.derivedCurrencyFactors = new Map();
+
+    // Initialize derived currencies factor map in both directions
+    for (const { currency, factor, rootCurrency } of DERIVED_CURRENCIES) {
+      this.derivedCurrencyFactors.set(`${currency}${rootCurrency}`, 1 / factor);
+      this.derivedCurrencyFactors.set(`${rootCurrency}${currency}`, factor);
+    }
 
     for (const {
       currency1,
@@ -500,29 +508,10 @@ export class ExchangeRateDataService {
     currencyFrom: string,
     currencyTo: string
   ): number | null {
-    // Check if currencyFrom is a derived currency of currencyTo
-    const derivedFrom = DERIVED_CURRENCIES.find(
-      ({ currency, rootCurrency }) =>
-        currency === currencyFrom && rootCurrency === currencyTo
+    const factor = this.derivedCurrencyFactors.get(
+      `${currencyFrom}${currencyTo}`
     );
-
-    if (derivedFrom) {
-      // e.g., GBp → GBP: factor = 1/100 = 0.01
-      return 1 / derivedFrom.factor;
-    }
-
-    // Check if currencyTo is a derived currency of currencyFrom
-    const derivedTo = DERIVED_CURRENCIES.find(
-      ({ currency, rootCurrency }) =>
-        currency === currencyTo && rootCurrency === currencyFrom
-    );
-
-    if (derivedTo) {
-      // e.g., GBP → GBp: factor = 100
-      return derivedTo.factor;
-    }
-
-    return null;
+    return factor ?? null;
   }
 
   private async prepareCurrencies(): Promise<string[]> {
