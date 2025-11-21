@@ -34,6 +34,7 @@ import { GfLogoComponent } from '../logo';
 export class GfMembershipCardComponent {
   @Input() public expiresAt: string;
   @Input() public hasPermissionToCreateApiKey: boolean;
+  @Input() public hover3d = false;
   @Input() public name: string;
 
   @Output() generateApiKeyClicked = new EventEmitter<void>();

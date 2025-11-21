@@ -7,6 +7,14 @@
   padding-top: calc(1 * var(--borderWidth));
   width: 100%;
 
+  .card-wrapper {
+    position: relative;
+
+    &.hover-3d-enabled {
+      perspective: 1000px;
+    }
+  }
+
   .card-container {
     border-radius: var(--borderRadius);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
@@ -66,6 +74,219 @@
       .card-item {
         background-color: #ffffff;
         color: rgba(var(--dark-primary-text));
+      }
+    }
+  }
+
+  .hover-3d-enabled {
+    .card-container {
+      transition:
+        transform 300ms ease,
+        box-shadow 300ms ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(255, 255, 255, 0.25),
+          transparent 60%
+        );
+        opacity: 0;
+        mix-blend-mode: screen;
+        transition: opacity 300ms ease;
+        pointer-events: none;
+        border-radius: var(--borderRadius);
+        z-index: 1;
+      }
+    }
+
+    .hover-zone {
+      position: absolute;
+      width: 33.333%;
+      height: 33.333%;
+      pointer-events: auto;
+      z-index: 2;
+
+      &:nth-child(3) {
+        top: 0;
+        left: 0;
+      }
+
+      &:nth-child(4) {
+        top: 0;
+        left: 33.333%;
+      }
+
+      &:nth-child(5) {
+        top: 0;
+        right: 0;
+      }
+
+      &:nth-child(6) {
+        top: 33.333%;
+        left: 0;
+      }
+
+      &:nth-child(7) {
+        top: 33.333%;
+        right: 0;
+      }
+
+      &:nth-child(8) {
+        bottom: 0;
+        left: 0;
+      }
+
+      &:nth-child(9) {
+        bottom: 0;
+        left: 33.333%;
+      }
+
+      &:nth-child(10) {
+        bottom: 0;
+        right: 0;
+      }
+    }
+
+    &:has(.hover-zone:nth-child(3):hover) .card-container {
+      transform: perspective(1000px) rotateX(5deg) rotateY(-5deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 0% 0%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(4):hover) .card-container {
+      transform: perspective(1000px) rotateX(5deg) rotateY(0deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(5):hover) .card-container {
+      transform: perspective(1000px) rotateX(5deg) rotateY(5deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 100% 0%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(6):hover) .card-container {
+      transform: perspective(1000px) rotateX(0deg) rotateY(-5deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 0% 50%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(7):hover) .card-container {
+      transform: perspective(1000px) rotateX(0deg) rotateY(5deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 100% 50%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(8):hover) .card-container {
+      transform: perspective(1000px) rotateX(-5deg) rotateY(-5deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 0% 100%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(9):hover) .card-container {
+      transform: perspective(1000px) rotateX(-5deg) rotateY(0deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 50% 100%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+
+    &:has(.hover-zone:nth-child(10):hover) .card-container {
+      transform: perspective(1000px) rotateX(-5deg) rotateY(5deg)
+        translateY(-2px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+
+      &::before {
+        opacity: 1;
+        background: radial-gradient(
+          circle at 100% 100%,
+          rgba(255, 255, 255, 0.35),
+          transparent 60%
+        );
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-3d-enabled {
+      .card-container {
+        transition: none !important;
+        transform: none !important;
+
+        &::before {
+          transition: none !important;
+        }
+      }
+
+      &:has(.hover-zone:hover) .card-container {
+        transform: none !important;
       }
     }
   }
