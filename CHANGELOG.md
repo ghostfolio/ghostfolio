@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.218.0 - 2025-11-20
 
+- Added a dedicated Slack community link
+
 ### Added
 
 - Extended the accounts table menu with a _View Details_ item
