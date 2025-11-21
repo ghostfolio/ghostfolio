@@ -1,50 +1,62 @@
-<div
-  class="card-container position-relative"
-  [ngClass]="{ premium: name === 'Premium' }"
->
-  <a
-    class="card-item d-flex flex-column justify-content-between p-4"
-    [routerLink]="routerLinkPricing"
+<div class="card-wrapper" [class.hover-3d-enabled]="hover3d">
+  <div
+    class="card-container position-relative"
+    [ngClass]="{ premium: name === 'Premium' }"
   >
-    <div class="d-flex justify-content-end">
-      <gf-logo
-        size="large"
-        [ngClass]="{ 'text-muted': name === 'Basic' }"
-        [showLabel]="false"
-      />
-    </div>
-    @if (hasPermissionToCreateApiKey) {
-      <div class="mt-5">
-        <div class="heading text-muted" i18n>API Key</div>
-        <div class="align-items-center d-flex">
-          <div class="text-monospace value">* * * * * * * * *</div>
-          <div class="ml-1">
-            <button
-              class="no-min-width"
-              i18n-title
-              mat-button
-              title="Generate Ghostfolio Premium Data Provider API key for self-hosted environments..."
-              (click)="onGenerateApiKey($event)"
-            >
-              <ion-icon name="refresh-outline" />
-            </button>
-          </div>
-        </div>
+    <a
+      class="card-item d-flex flex-column justify-content-between p-4"
+      [routerLink]="routerLinkPricing"
+    >
+      <div class="d-flex justify-content-end">
+        <gf-logo
+          size="large"
+          [ngClass]="{ 'text-muted': name === 'Basic' }"
+          [showLabel]="false"
+        />
       </div>
-    }
-    <div class="d-flex justify-content-between">
-      <div>
-        <div class="heading text-muted" i18n>Membership</div>
-        <div class="text-truncate value">{{ name }}</div>
-      </div>
-      @if (expiresAt) {
-        <div>
-          <div class="heading text-muted" i18n>Valid until</div>
-          <div class="text-truncate value">
-            {{ expiresAt }}
+      @if (hasPermissionToCreateApiKey) {
+        <div class="mt-5">
+          <div class="heading text-muted" i18n>API Key</div>
+          <div class="align-items-center d-flex">
+            <div class="text-monospace value">* * * * * * * * *</div>
+            <div class="ml-1">
+              <button
+                class="no-min-width"
+                i18n-title
+                mat-button
+                title="Generate Ghostfolio Premium Data Provider API key for self-hosted environments..."
+                (click)="onGenerateApiKey($event)"
+              >
+                <ion-icon name="refresh-outline" />
+              </button>
+            </div>
           </div>
         </div>
       }
-    </div>
-  </a>
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="heading text-muted" i18n>Membership</div>
+          <div class="text-truncate value">{{ name }}</div>
+        </div>
+        @if (expiresAt) {
+          <div>
+            <div class="heading text-muted" i18n>Valid until</div>
+            <div class="text-truncate value">
+              {{ expiresAt }}
+            </div>
+          </div>
+        }
+      </div>
+    </a>
+  </div>
+  @if (hover3d) {
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+    <div class="hover-zone"></div>
+  }
 </div>
