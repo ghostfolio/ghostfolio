@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the portfolio summary tab on the home page by percentage values (experimental)
 - Added the _OSS Gallery_ logo to the logo carousel on the landing page
 
+### Added
+
+- Add Average Buy Price in holdings table
+
 ### Changed
 
 - Improved the dynamic numerical precision for various values in the portfolio summary tab on the home page
