@@ -107,9 +107,8 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
       });
     } else if (this.mode === 'currency') {
-      const currency = (
-        this.createAssetProfileForm.get('addCurrency').value as string
-      ).toUpperCase();
+      const currency = this.createAssetProfileForm.get('addCurrency')
+        .value as string;
 
       const currencies = Array.from(
         new Set([...this.customCurrencies, currency])
@@ -201,7 +200,10 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
 
   private iso4217CurrencyCodeValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!isISO4217CurrencyCode(control.value?.toUpperCase())) {
+      if (
+        control.value !== control.value?.toUpperCase() ||
+        !isISO4217CurrencyCode(control.value)
+      ) {
         return { invalidCurrency: true };
       }
 
