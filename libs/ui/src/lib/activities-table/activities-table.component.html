@@ -59,7 +59,9 @@
       <button
         class="align-items-center d-flex"
         mat-menu-item
-        [disabled]="!hasPermissionToDeleteActivity"
+        [disabled]="
+          dataSource?.data.length === 0 || !hasPermissionToDeleteActivity
+        "
         (click)="onDeleteActivities()"
       >
         <span class="align-items-center d-flex">
