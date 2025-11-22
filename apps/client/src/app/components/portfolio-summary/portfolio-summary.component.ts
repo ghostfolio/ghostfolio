@@ -33,6 +33,7 @@ import {
 export class GfPortfolioSummaryComponent implements OnChanges {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() hasImpersonationId: boolean;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() language: string;
@@ -48,6 +49,26 @@ export class GfPortfolioSummaryComponent implements OnChanges {
 
   public precision = 2;
   public timeInMarket: string;
+
+  public get buyingPowerPercentage() {
+    return this.summary?.totalValueInBaseCurrency
+      ? this.summary.cash / this.summary.totalValueInBaseCurrency
+      : 0;
+  }
+
+  public get emergencyFundPercentage() {
+    return this.summary?.totalValueInBaseCurrency
+      ? (this.summary.emergencyFund?.total || 0) /
+          this.summary.totalValueInBaseCurrency
+      : 0;
+  }
+
+  public get excludedFromAnalysisPercentage() {
+    return this.summary?.totalValueInBaseCurrency
+      ? this.summary.excludedAccountsAndActivities /
+          this.summary.totalValueInBaseCurrency
+      : 0;
+  }
 
   public constructor(private notificationService: NotificationService) {
     addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });

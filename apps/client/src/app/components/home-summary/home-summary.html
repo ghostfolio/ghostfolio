@@ -7,6 +7,7 @@
           <gf-portfolio-summary
             [baseCurrency]="user?.settings?.baseCurrency"
             [deviceType]="deviceType"
+            [hasImpersonationId]="hasImpersonationId"
             [hasPermissionToUpdateUserSettings]="
               !hasImpersonationId && hasPermissionToUpdateUserSettings
             "
