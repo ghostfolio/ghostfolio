@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed exchange rate conversion errors when converting between derived currencies (e.g., GBp) and their root currencies (e.g., GBP) by using fixed mathematical factors instead of fetching from external data sources
+- Fixed an issue with the exchange rate calculation when converting between derived currencies and their root currencies
 
 ## 2.218.0 - 2025-11-20
 
