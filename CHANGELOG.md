@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed an issue with the edit of future activities (drafts)
+
 ## 2.218.0 - 2025-11-20
 
 ### Added
