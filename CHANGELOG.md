@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
 - Refreshed the cryptocurrencies list
 - Improved the language localization for German (`de`)
+- Upgraded `yahoo-finance2` from version `3.10.1` to `3.10.2`
 
 ### Fixed
 
