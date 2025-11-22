@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Provider, Role, Subscription } from '@prisma/client';
 
 export interface AdminUser {
   accountCount: number;
@@ -9,5 +9,7 @@ export interface AdminUser {
   engagement: number;
   id: string;
   lastActivity: Date;
+  provider: Provider;
   role: Role;
+  subscription?: Subscription;
 }

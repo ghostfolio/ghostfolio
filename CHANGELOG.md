@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the user detail dialog of the admin control panel’s users section by the authentication method
+
 ### Changed
 
+- Resolved the data source of the `GHOSTFOLIO` data provider in the export functionality
+- Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
 - Refreshed the cryptocurrencies list
 
 ## 2.218.0 - 2025-11-20
