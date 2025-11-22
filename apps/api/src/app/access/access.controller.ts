@@ -2,7 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
-import { Access } from '@ghostfolio/common/interfaces';
+import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -20,7 +20,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Access as AccessModel } from '@prisma/client';
+import { Access as AccessModel, Prisma } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';
@@ -45,22 +45,30 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map(
-      ({ alias, granteeUser, id, permissions }) => {
+      ({
+        alias,
+        granteeUser,
+        id,
+        permissions: accessPermissions,
+        settings
+      }) => {
         if (granteeUser) {
           return {
             alias,
-            id,
-            permissions,
             grantee: granteeUser?.id,
+            id,
+            permissions: accessPermissions,
+            settings: settings as AccessSettings,
             type: 'PRIVATE'
           };
         }
 
         return {
           alias,
-          id,
-          permissions,
           grantee: 'Public',
+          id,
+          permissions: accessPermissions,
+          settings: settings as AccessSettings,
           type: 'PUBLIC'
         };
       }
@@ -84,12 +92,17 @@ export class AccessController {
     }
 
     try {
+      const settings: AccessSettings = data.filter
+        ? { filter: data.filter }
+        : {};
+
       return this.accessService.createAccess({
         alias: data.alias || undefined,
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
+        settings: settings as Prisma.InputJsonValue,
         user: { connect: { id: this.request.user.id } }
       });
     } catch {
@@ -98,27 +111,6 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
-  }
-
-  @Delete(':id')
-  @HasPermission(permissions.deleteAccess)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
-    const originalAccess = await this.accessService.access({
-      id,
-      userId: this.request.user.id
-    });
-
-    if (!originalAccess) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return this.accessService.deleteAccess({
-      id
-    });
   }
 
   @HasPermission(permissions.updateAccess)
@@ -151,13 +143,18 @@ export class AccessController {
     }
 
     try {
+      const settings: AccessSettings = data.filter
+        ? { filter: data.filter }
+        : {};
+
       return this.accessService.updateAccess({
         data: {
           alias: data.alias,
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
-          permissions: data.permissions
+          permissions: data.permissions,
+          settings: settings as Prisma.InputJsonValue
         },
         where: { id }
       });
@@ -167,5 +164,26 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  @Delete(':id')
+  @HasPermission(permissions.deleteAccess)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
+    const originalAccess = await this.accessService.access({
+      id,
+      userId: this.request.user.id
+    });
+
+    if (!originalAccess) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accessService.deleteAccess({
+      id
+    });
   }
 }
