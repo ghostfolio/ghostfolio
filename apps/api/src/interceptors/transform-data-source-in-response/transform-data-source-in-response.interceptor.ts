@@ -16,9 +16,28 @@ import { map } from 'rxjs/operators';
 export class TransformDataSourceInResponseInterceptor<T>
   implements NestInterceptor<T, any>
 {
+  private encodedDataSourceMap: {
+    [dataSource: string]: string;
+  } = {};
+
   public constructor(
     private readonly configurationService: ConfigurationService
-  ) {}
+  ) {
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      this.encodedDataSourceMap = Object.keys(DataSource).reduce(
+        (encodedDataSourceMap, dataSource) => {
+          if (!['GHOSTFOLIO', 'MANUAL'].includes(dataSource)) {
+            encodedDataSourceMap[dataSource] = encodeDataSource(
+              DataSource[dataSource]
+            );
+          }
+
+          return encodedDataSourceMap;
+        },
+        {}
+      );
+    }
+  }
 
   public intercept(
     _context: ExecutionContext,
@@ -31,18 +50,7 @@ export class TransformDataSourceInResponseInterceptor<T>
             options: [
               {
                 attribute: 'dataSource',
-                valueMap: Object.keys(DataSource).reduce(
-                  (valueMap, dataSource) => {
-                    if (!['MANUAL'].includes(dataSource)) {
-                      valueMap[dataSource] = encodeDataSource(
-                        DataSource[dataSource]
-                      );
-                    }
-
-                    return valueMap;
-                  },
-                  {}
-                )
+                valueMap: this.encodedDataSourceMap
               }
             ],
             object: data
