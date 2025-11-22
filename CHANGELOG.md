@@ -7,8 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the user detail dialog of the admin control panel’s users section by the authentication method
+
+### Changed
+
+- Disabled the action to delete activities if the activities table is empty
+- Improved the validation of the currency management in the admin control panel
+- Resolved the data source of the `GHOSTFOLIO` data provider in the export functionality
+- Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+
 ### Fixed
 
+- Fixed an issue with the edit of future activities (drafts)
 - Fixed an issue with the exchange rate calculation when converting between derived currencies and their root currencies
 
 ## 2.218.0 - 2025-11-20
