@@ -59,6 +59,7 @@ export class ConfigurationService {
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
       OIDC_AUTHORIZATION_URL: str({ default: '' }),
+      OIDC_CALLBACK_URL: str({ default: '' }),
       OIDC_CLIENT_ID: str({ default: '' }),
       OIDC_CLIENT_SECRET: str({ default: '' }),
       OIDC_ISSUER: str({ default: '' }),
