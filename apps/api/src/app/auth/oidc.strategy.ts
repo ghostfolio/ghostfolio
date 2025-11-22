@@ -29,7 +29,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
     super({
       ...options,
       passReqToCallback: true,
-      scope: ['openid', 'profile', 'email'],
       store: OidcStrategy.stateStore
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
