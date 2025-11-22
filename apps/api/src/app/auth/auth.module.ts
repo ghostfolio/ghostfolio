@@ -45,12 +45,19 @@ import { OidcStrategy } from './oidc.strategy';
         configurationService: ConfigurationService
       ) => {
         const issuer = configurationService.get('OIDC_ISSUER');
+        const scopeString = configurationService.get('OIDC_SCOPE');
+        const scope = scopeString
+          .split(' ')
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0);
+
         const options: any = {
           callbackURL: `${configurationService.get(
             'ROOT_URL'
           )}/api/auth/oidc/callback`,
           clientID: configurationService.get('OIDC_CLIENT_ID'),
-          clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
+          clientSecret: configurationService.get('OIDC_CLIENT_SECRET'),
+          scope
         };
 
         if (issuer) {
