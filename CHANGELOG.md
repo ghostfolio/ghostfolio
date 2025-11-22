@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the validation of the currency management in the admin control panel
 - Resolved the data source of the `GHOSTFOLIO` data provider in the export functionality
 - Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
 - Improved the language localization for German (`de`)
