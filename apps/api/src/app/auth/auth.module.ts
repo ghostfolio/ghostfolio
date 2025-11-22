@@ -51,6 +51,10 @@ import { OidcStrategy } from './oidc.strategy';
           .map((s) => s.trim())
           .filter((s) => s.length > 0);
 
+        const callbackUrl =
+          configurationService.get('OIDC_CALLBACK_URL') ||
+          `${configurationService.get('ROOT_URL')}/api/auth/oidc/callback`;
+
         const options: {
           authorizationURL?: string;
           callbackURL: string;
@@ -61,9 +65,7 @@ import { OidcStrategy } from './oidc.strategy';
           tokenURL?: string;
           userInfoURL?: string;
         } = {
-          callbackURL: `${configurationService.get(
-            'ROOT_URL'
-          )}/api/auth/oidc/callback`,
+          callbackURL: callbackUrl,
           clientID: configurationService.get('OIDC_CLIENT_ID'),
           clientSecret: configurationService.get('OIDC_CLIENT_SECRET'),
           scope
