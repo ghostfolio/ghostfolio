@@ -82,7 +82,6 @@ export class PublicController {
     ]);
 
     const { activities } = await this.orderService.getOrders({
-      includeDrafts: false,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,
