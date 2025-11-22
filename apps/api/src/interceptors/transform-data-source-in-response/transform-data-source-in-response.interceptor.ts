@@ -40,20 +40,32 @@ export class TransformDataSourceInResponseInterceptor<T>
   }
 
   public intercept(
-    _context: ExecutionContext,
+    context: ExecutionContext,
     next: CallHandler<T>
   ): Observable<any> {
+    const isExportMode = context.getClass().name === 'ExportController';
+
     return next.handle().pipe(
       map((data: any) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+          const valueMap = this.encodedDataSourceMap;
+
+          if (isExportMode) {
+            for (const dataSource of this.configurationService.get(
+              'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
+            )) {
+              valueMap[dataSource] = 'GHOSTFOLIO';
+            }
+          }
+
           data = redactAttributes({
+            object: data,
             options: [
               {
-                attribute: 'dataSource',
-                valueMap: this.encodedDataSourceMap
+                valueMap,
+                attribute: 'dataSource'
               }
-            ],
-            object: data
+            ]
           });
         }
 
