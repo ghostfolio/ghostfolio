@@ -51,7 +51,16 @@ import { OidcStrategy } from './oidc.strategy';
           .map((s) => s.trim())
           .filter((s) => s.length > 0);
 
-        const options: any = {
+        const options: {
+          authorizationURL?: string;
+          callbackURL: string;
+          clientID: string;
+          clientSecret: string;
+          issuer?: string;
+          scope: string[];
+          tokenURL?: string;
+          userInfoURL?: string;
+        } = {
           callbackURL: `${configurationService.get(
             'ROOT_URL'
           )}/api/auth/oidc/callback`,
@@ -65,7 +74,11 @@ import { OidcStrategy } from './oidc.strategy';
             const response = await fetch(
               `${issuer}/.well-known/openid-configuration`
             );
-            const config = await response.json();
+            const config = (await response.json()) as {
+              authorization_endpoint: string;
+              token_endpoint: string;
+              userinfo_endpoint: string;
+            };
 
             options.authorizationURL = config.authorization_endpoint;
             options.issuer = issuer;
