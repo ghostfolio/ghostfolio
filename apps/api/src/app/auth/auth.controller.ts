@@ -102,10 +102,45 @@ export class AuthController {
     }
   }
 
+  @Get('oidc')
+  @UseGuards(AuthGuard('oidc'))
+  public oidcLogin() {
+    // Initiates the OIDC login flow
+  }
+
+  @Get('oidc/callback')
+  @UseGuards(AuthGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
+    // Handles the OIDC callback
+    const jwt: string = (request.user as any).jwt;
+
+    if (jwt) {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
+      );
+    } else {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth`
+      );
+    }
+  }
+
   @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async generateRegistrationOptions() {
     return this.webAuthService.generateRegistrationOptions();
+  }
+
+  @Post('webauthn/generate-authentication-options')
+  public async generateAuthenticationOptions(
+    @Body() body: { deviceId: string }
+  ) {
+    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
   @Post('webauthn/verify-attestation')
@@ -114,13 +149,6 @@ export class AuthController {
     @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
   ) {
     return this.webAuthService.verifyAttestation(body.credential);
-  }
-
-  @Post('webauthn/generate-authentication-options')
-  public async generateAuthenticationOptions(
-    @Body() body: { deviceId: string }
-  ) {
-    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
   @Post('webauthn/verify-authentication')

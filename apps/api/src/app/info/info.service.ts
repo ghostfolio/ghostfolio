@@ -55,6 +55,10 @@ export class InfoService {
       globalPermissions.push(permissions.enableAuthGoogle);
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_OIDC')) {
+      globalPermissions.push(permissions.enableAuthOidc);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_AUTH_TOKEN')) {
       globalPermissions.push(permissions.enableAuthToken);
     }
