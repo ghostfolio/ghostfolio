@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the user detail dialog of the admin control panel’s users section by the authentication method
 
+### Changed
+
+- Disabled the action to delete activities if the activities table is empty
+
 ## 2.218.0 - 2025-11-20
 
 ### Added
