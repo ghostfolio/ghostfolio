@@ -876,6 +876,7 @@ export class AdminService {
         },
         createdAt: true,
         id: true,
+        provider: true,
         role: true,
         subscriptions: {
           orderBy: {
@@ -892,7 +893,7 @@ export class AdminService {
     });
 
     return usersWithAnalytics.map(
-      ({ _count, analytics, createdAt, id, role, subscriptions }) => {
+      ({ _count, analytics, createdAt, id, provider, role, subscriptions }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
         const engagement = analytics
@@ -909,6 +910,7 @@ export class AdminService {
           createdAt,
           engagement,
           id,
+          provider,
           role,
           subscription,
           accountCount: _count.accounts || 0,
