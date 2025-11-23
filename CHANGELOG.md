@@ -10,6 +10,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the holdings endpoint to include the performance with currency effect for cash
+- Extended the user detail dialog of the admin control panel’s users section by the authentication method
+
+### Changed
+
+- Disabled the action to delete activities if the activities table is empty
+- Improved the validation of the currency management in the admin control panel
+- Resolved the data source of the `GHOSTFOLIO` data provider in the export functionality
+- Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed an issue with the edit of future activities (drafts)
+
+## 2.218.0 - 2025-11-20
+
+### Added
+
+- Extended the accounts table menu with a _View Details_ item
+- Extended the portfolio summary tab on the home page by percentage values (experimental)
+- Added the _OSS Gallery_ logo to the logo carousel on the landing page
+
+### Changed
+
+- Improved the dynamic numerical precision for various values in the portfolio summary tab on the home page
+- Upgraded `yahoo-finance2` from version `3.10.0` to `3.10.1`
 
 ## 2.217.1 - 2025-11-16
 
