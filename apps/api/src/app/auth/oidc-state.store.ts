@@ -6,8 +6,8 @@ export class OidcStateStore {
   private stateMap = new Map<
     string,
     {
-      ctx: { maxAge?: number; nonce?: string; issued?: Date };
       appState?: unknown;
+      ctx: { maxAge?: number; nonce?: string; issued?: Date };
       meta?: unknown;
       timestamp: number;
     }
@@ -18,9 +18,9 @@ export class OidcStateStore {
   // Signature matches passport-openidconnect SessionStore
   public store(
     _req: unknown,
-    ctx: { maxAge?: number; nonce?: string; issued?: Date },
-    appState: unknown,
     _meta: unknown,
+    appState: unknown,
+    ctx: { maxAge?: number; nonce?: string; issued?: Date },
     callback: (err: Error | null, handle?: string) => void
   ): void {
     try {
@@ -50,8 +50,8 @@ export class OidcStateStore {
     handle: string,
     callback: (
       err: Error | null,
-      ctx?: { maxAge?: number; nonce?: string; issued?: Date },
-      appState?: unknown
+      appState?: unknown,
+      ctx?: { maxAge?: number; nonce?: string; issued?: Date }
     ) => void
   ): void {
     try {

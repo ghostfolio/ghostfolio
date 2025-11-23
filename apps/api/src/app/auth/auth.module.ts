@@ -88,16 +88,30 @@ import { OidcStrategy } from './oidc.strategy';
             options.userInfoURL = config.userinfo_endpoint;
           } catch (error) {
             Logger.error(error, 'OidcStrategy');
+            throw new Error('Failed to fetch OIDC configuration from issuer');
           }
         } else {
           options.authorizationURL = configurationService.get(
             'OIDC_AUTHORIZATION_URL'
           );
+          options.issuer = configurationService.get('OIDC_ISSUER');
           options.tokenURL = configurationService.get('OIDC_TOKEN_URL');
           options.userInfoURL = configurationService.get('OIDC_USER_INFO_URL');
         }
 
-        return new OidcStrategy(authService, options);
+        return new OidcStrategy(
+          authService,
+          options as {
+            authorizationURL: string;
+            callbackURL: string;
+            clientID: string;
+            clientSecret: string;
+            issuer: string;
+            scope: string[];
+            tokenURL: string;
+            userInfoURL: string;
+          }
+        );
       },
       inject: [AuthService, ConfigurationService]
     },

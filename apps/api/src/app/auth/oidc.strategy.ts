@@ -8,14 +8,33 @@ import { AuthService } from './auth.service';
 import { OidcStateStore } from './oidc-state.store';
 
 interface OidcStrategyOptions {
-  authorizationURL?: string;
+  authorizationURL: string;
   callbackURL: string;
   clientID: string;
   clientSecret: string;
-  issuer?: string;
+  issuer: string;
   scope?: string[];
-  tokenURL?: string;
-  userInfoURL?: string;
+  tokenURL: string;
+  userInfoURL: string;
+}
+
+interface OidcProfile {
+  id?: string;
+  sub?: string;
+}
+
+interface OidcContext {
+  claims?: {
+    sub?: string;
+  };
+}
+
+interface OidcIdToken {
+  sub?: string;
+}
+
+interface OidcParams {
+  sub?: string;
 }
 
 @Injectable()
@@ -30,25 +49,32 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       ...options,
       passReqToCallback: true,
       store: OidcStrategy.stateStore
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any);
+    });
   }
 
   public async validate(
     _request: Request,
-    _issuer: string,
-    profile: { id?: string },
-    context: { claims?: { sub?: string } },
-    idToken: { sub?: string },
+    issuer: string,
+    profile: OidcProfile,
+    context: OidcContext,
+    idToken: OidcIdToken,
     _accessToken: string,
     _refreshToken: string,
-    params: { sub?: string }
+    params: OidcParams
   ) {
     try {
       const thirdPartyId =
-        params?.sub || idToken?.sub || context?.claims?.sub || profile?.id;
+        profile?.id ??
+        profile?.sub ??
+        idToken?.sub ??
+        params?.sub ??
+        context?.claims?.sub;
 
       if (!thirdPartyId) {
+        Logger.error(
+          `Missing subject identifier in OIDC response from ${issuer}`,
+          'OidcStrategy'
+        );
         throw new Error('Missing subject identifier in OIDC response');
       }
 
