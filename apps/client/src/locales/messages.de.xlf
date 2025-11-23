@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="8261513428977234574" datatype="html">
         <source>plus</source>
-        <target state="new">plus</target>
+        <target state="translated">plus</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">202</context>
@@ -4407,7 +4407,7 @@
       </trans-unit>
       <trans-unit id="1802177588180209216" datatype="html">
         <source>Everything in</source>
-        <target state="new">Everything in</target>
+        <target state="translated">Alles von</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">199</context>
