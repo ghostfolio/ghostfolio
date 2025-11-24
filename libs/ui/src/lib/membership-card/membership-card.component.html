@@ -1,8 +1,5 @@
-<div class="card-wrapper" [class.hover-3d-enabled]="hover3d">
-  <div
-    class="card-container position-relative"
-    [ngClass]="{ premium: name === 'Premium' }"
-  >
+<div class="card-wrapper position-relative" [class.hover-3d]="hover3d">
+  <div class="card-container" [ngClass]="{ premium: name === 'Premium' }">
     <a
       class="card-item d-flex flex-column justify-content-between p-4"
       [routerLink]="routerLinkPricing"
@@ -50,13 +47,8 @@
     </a>
   </div>
   @if (hover3d) {
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
-    <div class="hover-zone"></div>
+    @for (zone of [1, 2, 3, 4, 5, 6, 7, 8]; track zone) {
+      <a class="hover-zone" [routerLink]="routerLinkPricing"></a>
+    }
   }
 </div>

@@ -1,6 +1,8 @@
 :host {
   --borderRadius: 1rem;
   --borderWidth: 2px;
+  --hover3dGradientOpacity: 0.15;
+  --hover3dGradientOpacityHover: 0.2;
 
   display: block;
   max-width: 25rem;
@@ -8,277 +10,279 @@
   width: 100%;
 
   .card-wrapper {
-    position: relative;
-
-    &.hover-3d-enabled {
+    &.hover-3d {
       perspective: 1000px;
     }
-  }
 
-  .card-container {
-    border-radius: var(--borderRadius);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-
-    &:after {
-      animation: animatedborder 7s ease alternate infinite;
-      background: linear-gradient(60deg, #5073b8, #1098ad, #07b39b, #6fba82);
-      background-size: 300% 300%;
+    .card-container {
       border-radius: var(--borderRadius);
-      content: '';
-      height: calc(100% + var(--borderWidth) * 2);
-      left: calc(-1 * var(--borderWidth));
-      top: calc(-1 * var(--borderWidth));
-      position: absolute;
-      width: calc(100% + var(--borderWidth) * 2);
-      z-index: -1;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 
-      @keyframes animatedborder {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-    }
-
-    .card-item {
-      aspect-ratio: 1.586;
-      background-color: #1d2124;
-      border-radius: calc(var(--borderRadius) - var(--borderWidth));
-      color: rgba(var(--light-primary-text));
-      line-height: 1.2;
-
-      button {
-        color: rgba(var(--light-primary-text));
-        height: 1.5rem;
-      }
-
-      .heading {
-        font-size: 13px;
-      }
-
-      .value {
-        font-size: 18px;
-      }
-    }
-
-    &:not(.premium) {
       &:after {
-        opacity: 0;
+        animation: animatedborder 7s ease alternate infinite;
+        background: linear-gradient(60deg, #5073b8, #1098ad, #07b39b, #6fba82);
+        background-size: 300% 300%;
+        border-radius: var(--borderRadius);
+        content: '';
+        height: calc(100% + var(--borderWidth) * 2);
+        left: calc(-1 * var(--borderWidth));
+        position: absolute;
+        top: calc(-1 * var(--borderWidth));
+        width: calc(100% + var(--borderWidth) * 2);
+        z-index: -1;
+
+        @keyframes animatedborder {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
       }
 
       .card-item {
-        background-color: #ffffff;
-        color: rgba(var(--dark-primary-text));
+        aspect-ratio: 1.586;
+        background-color: #1d2124;
+        border-radius: calc(var(--borderRadius) - var(--borderWidth));
+        color: rgba(var(--light-primary-text));
+        line-height: 1.2;
+
+        button {
+          color: rgba(var(--light-primary-text));
+          height: 1.5rem;
+        }
+
+        .heading {
+          font-size: 13px;
+        }
+
+        .value {
+          font-size: 18px;
+        }
+      }
+
+      &:not(.premium) {
+        &:after {
+          opacity: 0;
+        }
+
+        .card-item {
+          background-color: #ffffff;
+          color: rgba(var(--dark-primary-text));
+        }
       }
     }
-  }
 
-  .hover-3d-enabled {
-    .card-container {
-      transition:
-        transform 300ms ease,
-        box-shadow 300ms ease;
-      transform-style: preserve-3d;
-      will-change: transform;
-      position: relative;
+    &.hover-3d {
+      .card-container {
+        position: relative;
+        transform-style: preserve-3d;
+        transition:
+          box-shadow 300ms ease,
+          transform 300ms ease;
+        will-change: transform;
 
-      &::before {
-        content: '';
+        .card-item {
+          pointer-events: none;
+        }
+
+        &::before {
+          background: radial-gradient(
+            circle at 50% 0%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacity)),
+            transparent 60%
+          );
+          border-radius: var(--borderRadius);
+          content: '';
+          inset: 0;
+          mix-blend-mode: screen;
+          opacity: 0;
+          pointer-events: none;
+          position: absolute;
+          transition: opacity 300ms ease;
+          z-index: 1;
+        }
+      }
+
+      .hover-zone {
+        height: 33.333%;
+        pointer-events: auto;
         position: absolute;
-        inset: 0;
-        background: radial-gradient(
-          circle at 50% 0%,
-          rgba(255, 255, 255, 0.25),
-          transparent 60%
-        );
-        opacity: 0;
-        mix-blend-mode: screen;
-        transition: opacity 300ms ease;
-        pointer-events: none;
-        border-radius: var(--borderRadius);
-        z-index: 1;
-      }
-    }
+        width: 33.333%;
+        z-index: 2;
 
-    .hover-zone {
-      position: absolute;
-      width: 33.333%;
-      height: 33.333%;
-      pointer-events: auto;
-      z-index: 2;
+        &:nth-child(3) {
+          left: 0;
+          top: 0;
+        }
 
-      &:nth-child(3) {
-        top: 0;
-        left: 0;
-      }
+        &:nth-child(4) {
+          left: 33.333%;
+          top: 0;
+        }
 
-      &:nth-child(4) {
-        top: 0;
-        left: 33.333%;
-      }
+        &:nth-child(5) {
+          right: 0;
+          top: 0;
+        }
 
-      &:nth-child(5) {
-        top: 0;
-        right: 0;
-      }
+        &:nth-child(6) {
+          left: 0;
+          top: 33.333%;
+        }
 
-      &:nth-child(6) {
-        top: 33.333%;
-        left: 0;
-      }
+        &:nth-child(7) {
+          right: 0;
+          top: 33.333%;
+        }
 
-      &:nth-child(7) {
-        top: 33.333%;
-        right: 0;
+        &:nth-child(8) {
+          bottom: 0;
+          left: 0;
+        }
+
+        &:nth-child(9) {
+          bottom: 0;
+          left: 33.333%;
+        }
+
+        &:nth-child(10) {
+          bottom: 0;
+          right: 0;
+        }
       }
 
-      &:nth-child(8) {
-        bottom: 0;
-        left: 0;
+      &:has(.hover-zone:nth-child(3):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(5deg) rotateY(-5deg)
+          translateY(-2px);
+
+        &::before {
+          background: radial-gradient(
+            circle at 0% 0%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
 
-      &:nth-child(9) {
-        bottom: 0;
-        left: 33.333%;
+      &:has(.hover-zone:nth-child(4):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(5deg) rotateY(0deg)
+          translateY(-2px);
+
+        &::before {
+          background: radial-gradient(
+            circle at 50% 0%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
 
-      &:nth-child(10) {
-        bottom: 0;
-        right: 0;
+      &:has(.hover-zone:nth-child(5):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(5deg) rotateY(5deg)
+          translateY(-2px);
+
+        &::before {
+          background: radial-gradient(
+            circle at 100% 0%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
-    }
 
-    &:has(.hover-zone:nth-child(3):hover) .card-container {
-      transform: perspective(1000px) rotateX(5deg) rotateY(-5deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+      &:has(.hover-zone:nth-child(6):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(0deg) rotateY(-5deg)
+          translateY(-2px);
 
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 0% 0%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
+        &::before {
+          background: radial-gradient(
+            circle at 0% 50%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
-    }
 
-    &:has(.hover-zone:nth-child(4):hover) .card-container {
-      transform: perspective(1000px) rotateX(5deg) rotateY(0deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+      &:has(.hover-zone:nth-child(7):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(0deg) rotateY(5deg)
+          translateY(-2px);
 
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 50% 0%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
+        &::before {
+          background: radial-gradient(
+            circle at 100% 50%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
-    }
 
-    &:has(.hover-zone:nth-child(5):hover) .card-container {
-      transform: perspective(1000px) rotateX(5deg) rotateY(5deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+      &:has(.hover-zone:nth-child(8):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(-5deg) rotateY(-5deg)
+          translateY(-2px);
 
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 100% 0%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
+        &::before {
+          background: radial-gradient(
+            circle at 0% 100%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
-    }
 
-    &:has(.hover-zone:nth-child(6):hover) .card-container {
-      transform: perspective(1000px) rotateX(0deg) rotateY(-5deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+      &:has(.hover-zone:nth-child(9):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(-5deg) rotateY(0deg)
+          translateY(-2px);
 
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 0% 50%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
+        &::before {
+          background: radial-gradient(
+            circle at 50% 100%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
-    }
 
-    &:has(.hover-zone:nth-child(7):hover) .card-container {
-      transform: perspective(1000px) rotateX(0deg) rotateY(5deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+      &:has(.hover-zone:nth-child(10):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(-5deg) rotateY(5deg)
+          translateY(-2px);
 
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 100% 50%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
-      }
-    }
-
-    &:has(.hover-zone:nth-child(8):hover) .card-container {
-      transform: perspective(1000px) rotateX(-5deg) rotateY(-5deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
-
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 0% 100%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
-      }
-    }
-
-    &:has(.hover-zone:nth-child(9):hover) .card-container {
-      transform: perspective(1000px) rotateX(-5deg) rotateY(0deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
-
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 50% 100%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
-      }
-    }
-
-    &:has(.hover-zone:nth-child(10):hover) .card-container {
-      transform: perspective(1000px) rotateX(-5deg) rotateY(5deg)
-        translateY(-2px);
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
-
-      &::before {
-        opacity: 1;
-        background: radial-gradient(
-          circle at 100% 100%,
-          rgba(255, 255, 255, 0.35),
-          transparent 60%
-        );
+        &::before {
+          background: radial-gradient(
+            circle at 100% 100%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
       }
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hover-3d-enabled {
+    .card-wrapper.hover-3d {
       .card-container {
-        transition: none !important;
         transform: none !important;
+        transition: none !important;
 
         &::before {
           transition: none !important;

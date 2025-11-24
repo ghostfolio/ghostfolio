@@ -26,12 +26,12 @@ export default {
     })
   ],
   argTypes: {
+    hover3d: {
+      control: { type: 'boolean' }
+    },
     name: {
       control: { type: 'select' },
       options: ['Basic', 'Premium']
-    },
-    hover3d: {
-      control: { type: 'boolean' }
     }
   }
 } as Meta<GfMembershipCardComponent>;
@@ -40,8 +40,7 @@ type Story = StoryObj<GfMembershipCardComponent>;
 
 export const Basic: Story = {
   args: {
-    name: 'Basic',
-    hover3d: false
+    name: 'Basic'
   }
 };
 
@@ -49,7 +48,6 @@ export const Premium: Story = {
   args: {
     expiresAt: addYears(new Date(), 1).toLocaleDateString(),
     hasPermissionToCreateApiKey: true,
-    name: 'Premium',
-    hover3d: false
+    name: 'Premium'
   }
 };
