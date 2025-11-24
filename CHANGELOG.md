@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `color` from version `5.0.0` to `5.0.3`
 
+### Fixed
+
+- Fixed an issue with the exchange rate calculation when converting between derived currencies and their root currencies
+
 ## 2.219.0 - 2025-11-23
 
 ### Added
