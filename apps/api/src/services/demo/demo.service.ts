@@ -7,7 +7,7 @@ import {
 } from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class DemoService {
@@ -41,7 +41,7 @@ export class DemoService {
         accountId: demoAccountId,
         accountUserId: demoUserId,
         comment: null,
-        id: uuidv4(),
+        id: randomUUID(),
         userId: demoUserId
       };
     });
