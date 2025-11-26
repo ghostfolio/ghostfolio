@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added _OpenID Connect_ (`OIDC`) as a new login provider
+
 ### Changed
 
 - Refactored the API query parameters in various data provider services
@@ -36,7 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the user detail dialog of the admin control panel’s users section by the authentication method
-- Added OIDC (OpenID Connect) as a login auth provider
 
 ### Changed
 
