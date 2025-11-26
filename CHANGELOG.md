@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added OIDC (OpenID Connect) as a login auth provider
 
+### Changed
+
+- Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
+
+### Fixed
+
+- Fixed an issue with the exchange rate calculation when converting between derived currencies and their root currencies
+
 ## 2.219.0 - 2025-11-23
 
 ### Added
