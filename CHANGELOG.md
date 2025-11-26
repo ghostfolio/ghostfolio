@@ -134,6 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a close holding button to the holding detail dialog
 - Added the _Sponsors_ section to the about page
 - Extended the user detail dialog in the users section of the admin control panel
+- Added bullboard for queue monitoring in the development environment
 
 ### Changed
 
