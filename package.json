@@ -101,7 +101,7 @@
     "cheerio": "1.0.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
-    "color": "5.0.0",
+    "color": "5.0.3",
     "countries-and-timezones": "3.8.0",
     "countries-list": "3.2.0",
     "countup.js": "2.9.0",
@@ -135,7 +135,6 @@
     "svgmap": "2.14.0",
     "tablemark": "4.1.0",
     "twitter-api-v2": "1.27.0",
-    "uuid": "11.1.0",
     "yahoo-finance2": "3.10.2",
     "zone.js": "0.15.1"
   },
