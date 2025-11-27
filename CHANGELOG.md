@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added dependabot for version update
+
 ### Changed
 
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
