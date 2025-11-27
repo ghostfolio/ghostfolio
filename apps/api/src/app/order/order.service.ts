@@ -41,7 +41,7 @@ import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class OrderService {
@@ -149,7 +149,7 @@ export class OrderService {
       } else {
         // Create custom asset profile
         name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
-        symbol = uuidv4();
+        symbol = randomUUID();
       }
 
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
