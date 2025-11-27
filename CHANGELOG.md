@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the holdings endpoint to include the performance with currency effect for cash
+
 ### Changed
 
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
@@ -20,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the holdings endpoint to include the performance with currency effect for cash
 - Extended the user detail dialog of the admin control panel’s users section by the authentication method
 
 ### Changed
