@@ -1,3 +1,5 @@
+import ms from 'ms';
+
 /**
  * Custom state store for OIDC authentication that doesn't rely on express-session.
  * This store manages OAuth2 state parameters in memory with automatic cleanup.
@@ -7,15 +9,17 @@ export class OidcStateStore {
     string,
     {
       appState?: unknown;
-      ctx: { maxAge?: number; nonce?: string; issued?: Date };
+      ctx: { issued?: Date; maxAge?: number; nonce?: string };
       meta?: unknown;
       timestamp: number;
     }
   >();
-  private readonly STATE_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+  private readonly STATE_EXPIRY_MS = ms('10 minutes');
 
-  // Store request state.
-  // Signature matches passport-openidconnect SessionStore
+  /**
+   * Store request state.
+   * Signature matches passport-openidconnect SessionStore
+   */
   public store(
     _req: unknown,
     _meta: unknown,
@@ -43,8 +47,10 @@ export class OidcStateStore {
     }
   }
 
-  // Verify request state.
-  // Signature matches passport-openidconnect SessionStore
+  /**
+   * Verify request state.
+   * Signature matches passport-openidconnect SessionStore
+   */
   public verify(
     _req: unknown,
     handle: string,
@@ -76,16 +82,9 @@ export class OidcStateStore {
     }
   }
 
-  // Generate a cryptographically secure random handle
-  private generateHandle(): string {
-    return (
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15) +
-      Date.now().toString(36)
-    );
-  }
-
-  // Clean up expired states
+  /**
+   * Clean up expired states
+   */
   private cleanup(): void {
     const now = Date.now();
     const expiredKeys: string[] = [];
@@ -99,5 +98,16 @@ export class OidcStateStore {
     for (const key of expiredKeys) {
       this.stateMap.delete(key);
     }
+  }
+
+  /**
+   * Generate a cryptographically secure random handle
+   */
+  private generateHandle(): string {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15) +
+      Date.now().toString(36)
+    );
   }
 }
