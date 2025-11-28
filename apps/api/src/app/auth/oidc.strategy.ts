@@ -59,6 +59,11 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         params?.sub ??
         context?.claims?.sub;
 
+      const jwt = await this.authService.validateOAuthLogin({
+        provider: Provider.OIDC,
+        thirdPartyId
+      });
+
       if (!thirdPartyId) {
         Logger.error(
           `Missing subject identifier in OIDC response from ${issuer}`,
@@ -66,11 +71,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         );
         throw new Error('Missing subject identifier in OIDC response');
       }
-
-      const jwt = await this.authService.validateOAuthLogin({
-        provider: Provider.OIDC,
-        thirdPartyId
-      });
 
       return { jwt };
     } catch (error) {

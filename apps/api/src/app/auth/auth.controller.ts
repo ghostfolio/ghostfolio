@@ -84,7 +84,6 @@ export class AuthController {
     @Req() request: Request,
     @Res() response: Response
   ) {
-    // Handles the Google OAuth2 callback
     const jwt: string = (request.user as any).jwt;
 
     if (jwt) {
@@ -120,7 +119,6 @@ export class AuthController {
   @UseGuards(AuthGuard('oidc'))
   @Version(VERSION_NEUTRAL)
   public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
-    // Handles the OIDC callback
     const jwt: string = (request.user as any).jwt;
 
     if (jwt) {

@@ -40,6 +40,7 @@ import { OidcStrategy } from './oidc.strategy';
     GoogleStrategy,
     JwtStrategy,
     {
+      inject: [AuthService, ConfigurationService],
       provide: OidcStrategy,
       useFactory: async (
         authService: AuthService,
@@ -95,8 +96,7 @@ import { OidcStrategy } from './oidc.strategy';
         }
 
         return new OidcStrategy(authService, options);
-      },
-      inject: [AuthService, ConfigurationService]
+      }
     },
     WebAuthService
   ]
