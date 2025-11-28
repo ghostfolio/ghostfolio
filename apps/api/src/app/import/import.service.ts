@@ -35,7 +35,7 @@ import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
 
@@ -277,7 +277,7 @@ export class ImportService {
 
           // Asset profile belongs to a different user
           if (existingAssetProfile) {
-            const symbol = uuidv4();
+            const symbol = randomUUID();
             assetProfileSymbolMapping[assetProfile.symbol] = symbol;
             assetProfile.symbol = symbol;
           }
@@ -496,7 +496,7 @@ export class ImportService {
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
-          id: uuidv4(),
+          id: randomUUID(),
           isDraft: isAfter(date, endOfToday()),
           SymbolProfile: {
             assetClass,

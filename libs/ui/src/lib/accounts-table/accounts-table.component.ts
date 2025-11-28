@@ -30,7 +30,8 @@ import {
   documentTextOutline,
   ellipsisHorizontal,
   eyeOffOutline,
-  trashOutline
+  trashOutline,
+  walletOutline
 } from 'ionicons/icons';
 import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -94,7 +95,8 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
       documentTextOutline,
       ellipsisHorizontal,
       eyeOffOutline,
-      trashOutline
+      trashOutline,
+      walletOutline
     });
   }
 

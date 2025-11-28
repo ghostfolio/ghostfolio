@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
+- Upgraded `color` from version `5.0.0` to `5.0.3`
+
+### Fixed
+
+- Fixed an issue with the exchange rate calculation when converting between derived currencies and their root currencies
+
+## 2.219.0 - 2025-11-23
+
+### Added
+
+- Extended the user detail dialog of the admin control panel’s users section by the authentication method
+
+### Changed
+
+- Disabled the action to delete activities if the activities table is empty
+- Improved the validation of the currency management in the admin control panel
+- Improved the content of the pricing page
+- Resolved the data source of the `GHOSTFOLIO` data provider in the export functionality
+- Resolved the data source of the `GHOSTFOLIO` data provider in the import functionality
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+- Upgraded `yahoo-finance2` from version `3.10.1` to `3.10.2`
+
+### Fixed
+
+- Fixed an issue with the edit of future activities (drafts)
+
+## 2.218.0 - 2025-11-20
+
+### Added
+
+- Extended the accounts table menu with a _View Details_ item
+- Extended the portfolio summary tab on the home page by percentage values (experimental)
+- Added the _OSS Gallery_ logo to the logo carousel on the landing page
+
+### Changed
+
+- Improved the dynamic numerical precision for various values in the portfolio summary tab on the home page
+- Upgraded `yahoo-finance2` from version `3.10.0` to `3.10.1`
+
 ## 2.217.1 - 2025-11-16
 
 ### Added

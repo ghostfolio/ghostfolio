@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-10-31T00:00:00.000Z",
+  "createdAt": "2025-11-21T00:00:00.000Z",
   "data": [
     {
       "name": "Activepieces",
@@ -110,6 +110,11 @@
       "name": "Rivet",
       "description": "Open-source solution to deploy, scale, and operate your multiplayer game.",
       "href": "https://rivet.gg"
+    },
+    {
+      "name": "Rybbit",
+      "description": "Next-gen, open source, lightweight, cookieless web & product analytics for everyone.",
+      "href": "https://rybbit.com"
     },
     {
       "name": "Shelf.nu",

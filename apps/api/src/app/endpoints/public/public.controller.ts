@@ -180,7 +180,6 @@ export class PublicController {
 
     const { activities } = await this.orderService.getOrders({
       filters: activityFilters.length > 0 ? activityFilters : undefined,
-      includeDrafts: false,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,

@@ -49,6 +49,13 @@ export class GfLogoCarouselComponent {
       url: 'https://openalternative.co'
     },
     {
+      className: 'logo-oss-gallery',
+      isMask: true,
+      name: 'OSS Gallery',
+      title: 'OSS Gallery: Discover the best open-source projects',
+      url: 'https://oss.gallery'
+    },
+    {
       className: 'logo-privacy-tools',
       isMask: true,
       name: 'Privacy Tools',
