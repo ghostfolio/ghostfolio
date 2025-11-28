@@ -17,7 +17,12 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -61,7 +66,10 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateOwnAccessToken: boolean;
   public isAccessTokenHidden = true;
   public updateOwnAccessTokenForm = this.formBuilder.group({
-    accessToken: ['', Validators.required]
+    accessToken: [
+      '',
+      [(control: AbstractControl) => Validators.required(control)]
+    ]
   });
   public user: User;
 
@@ -117,7 +125,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
         } else if (params['editDialog'] && params['accessId']) {
-          this.openUpdateAccessDialog(params['accessId']);
+          this.openUpdateAccessDialog(params['accessId'] as string);
         }
       });
 
@@ -235,6 +243,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
           grantee: access.grantee === 'Public' ? null : access.grantee,
           id: access.id,
           permissions: access.permissions,
+          settings: access.settings,
           type: access.type
         }
       },
