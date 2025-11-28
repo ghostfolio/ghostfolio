@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added OIDC (OpenID Connect) as a login auth provider
+- Added OIDC (_OpenID Connect_) as a login auth provider
 
 ### Changed
 
