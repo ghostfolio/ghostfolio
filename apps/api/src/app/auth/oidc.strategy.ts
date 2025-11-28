@@ -2,21 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
-import { Strategy } from 'passport-openidconnect';
+import { Strategy, type StrategyOptions } from 'passport-openidconnect';
 
 import { AuthService } from './auth.service';
 import { OidcStateStore } from './oidc-state.store';
-
-interface OidcStrategyOptions {
-  authorizationURL: string;
-  callbackURL: string;
-  clientID: string;
-  clientSecret: string;
-  issuer: string;
-  scope?: string[];
-  tokenURL: string;
-  userInfoURL: string;
-}
 
 interface OidcProfile {
   id?: string;
@@ -43,7 +32,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
 
   public constructor(
     private readonly authService: AuthService,
-    options: OidcStrategyOptions
+    options: StrategyOptions
   ) {
     super({
       ...options,

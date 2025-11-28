@@ -38,7 +38,7 @@ export interface Environment extends CleanedEnvAccessors {
   OIDC_CLIENT_ID: string;
   OIDC_CLIENT_SECRET: string;
   OIDC_ISSUER: string;
-  OIDC_SCOPE: string;
+  OIDC_SCOPE: string[];
   OIDC_TOKEN_URL: string;
   OIDC_USER_INFO_URL: string;
   PORT: number;

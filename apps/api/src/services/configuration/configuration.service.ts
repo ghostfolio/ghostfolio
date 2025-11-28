@@ -63,7 +63,7 @@ export class ConfigurationService {
       OIDC_CLIENT_ID: str({ default: '' }),
       OIDC_CLIENT_SECRET: str({ default: '' }),
       OIDC_ISSUER: str({ default: '' }),
-      OIDC_SCOPE: str({ default: 'profile' }),
+      OIDC_SCOPE: json({ default: ['openid'] }),
       OIDC_TOKEN_URL: str({ default: '' }),
       OIDC_USER_INFO_URL: str({ default: '' }),
       PORT: port({ default: DEFAULT_PORT }),
