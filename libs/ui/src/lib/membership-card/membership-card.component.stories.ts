@@ -26,6 +26,9 @@ export default {
     })
   ],
   argTypes: {
+    hover3d: {
+      control: { type: 'boolean' }
+    },
     name: {
       control: { type: 'select' },
       options: ['Basic', 'Premium']
