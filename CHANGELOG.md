@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added OIDC (_OpenID Connect_) as a login auth provider
+
 ### Changed
 
 - Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
