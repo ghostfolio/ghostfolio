@@ -12,14 +12,14 @@ services:
     env_file:
       - ../.env
     ports:
-      - 3333:3333
+      - ${EXPOSE_HOST:-0.0.0.0}:${EXPOSE_PORT:-3333}:${PORT:-3333}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:3333/api/v1/health']
+      test: ['CMD-SHELL', 'curl -f http://localhost:$${PORT:-3333}/api/v1/health']
       interval: 10s
       timeout: 5s
       retries: 5
