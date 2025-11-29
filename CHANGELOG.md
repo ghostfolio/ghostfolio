@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the holdings endpoint to include the performance with currency effect for cash
+
 ### Changed
 
 - Restricted the asset profile data gathering on Sundays to only process outdated asset profiles
