@@ -44,6 +44,12 @@ import {
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
+  private static countriesMapping = {
+    'Korea (the Republic of)': 'South Korea',
+    'Russian Federation': 'Russia',
+    'Taiwan (Province of China)': 'Taiwan'
+  };
+
   private apiKey: string;
 
   public constructor(
@@ -121,12 +127,19 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             }
           ).then((res) => res.json());
 
-          response.countries = etfCountryWeightings.map(
-            ({ country: countryName, weightPercentage }) => {
+          response.countries = etfCountryWeightings
+            .filter(({ country: countryName }) => {
+              return countryName.toLowerCase() !== 'other';
+            })
+            .map(({ country: countryName, weightPercentage }) => {
               let countryCode: string;
 
               for (const [code, country] of Object.entries(countries)) {
-                if (country.name === countryName) {
+                if (
+                  country.name === countryName ||
+                  country.name ===
+                    FinancialModelingPrepService.countriesMapping[countryName]
+                ) {
                   countryCode = code;
                   break;
                 }
@@ -136,8 +149,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
                 code: countryCode,
                 weight: parseFloat(weightPercentage.slice(0, -1)) / 100
               };
-            }
-          );
+            });
 
           const etfHoldings = await fetch(
             `${this.getUrl({ version: 'stable' })}/etf/holdings?symbol=${symbol}&apikey=${this.apiKey}`,
