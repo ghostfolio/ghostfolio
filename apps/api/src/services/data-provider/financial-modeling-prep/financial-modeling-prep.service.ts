@@ -129,7 +129,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
           response.countries = etfCountryWeightings
             .filter(({ country: countryName }) => {
-              return countryName !== 'Other';
+              return countryName.toLowerCase() !== 'other';
             })
             .map(({ country: countryName, weightPercentage }) => {
               let countryCode: string;
