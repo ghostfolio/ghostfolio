@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the _Cypress_ testing setup
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
 - Upgraded `color` from version `5.0.0` to `5.0.3`
+- Upgraded `prettier` from version `3.6.2` to `3.7.2`
 
 ### Fixed
 
