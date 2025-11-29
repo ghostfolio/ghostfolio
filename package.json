@@ -67,7 +67,7 @@
     "@angular/service-worker": "20.2.4",
     "@codewithdan/observable-store": "2.2.15",
     "@date-fns/utc": "2.1.0",
-    "@internationalized/number": "3.6.3",
+    "@internationalized/number": "3.6.5",
     "@ionic/angular": "8.7.8",
     "@keyv/redis": "4.4.0",
     "@nestjs/bull": "11.0.4",
