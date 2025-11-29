@@ -307,23 +307,19 @@ export class DataGatheringService {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       orderBy: [{ symbol: 'asc' }],
       where: {
+        dataSource: {
+          notIn: ['MANUAL', 'RAPID_API']
+        },
         isActive: true
       }
     });
 
-    return symbolProfiles
-      .filter(({ dataSource }) => {
-        return (
-          dataSource !== DataSource.MANUAL &&
-          dataSource !== DataSource.RAPID_API
-        );
-      })
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol
-        };
-      });
+    return symbolProfiles.map(({ dataSource, symbol }) => {
+      return {
+        dataSource,
+        symbol
+      };
+    });
   }
 
   private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
