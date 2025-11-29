@@ -28,8 +28,9 @@ import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
-import { format, min, subDays, subYears } from 'date-fns';
+import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
+import ms, { StringValue } from 'ms';
 
 @Injectable()
 export class DataGatheringService {
@@ -160,8 +161,7 @@ export class DataGatheringService {
     );
 
     if (!assetProfileIdentifiers) {
-      assetProfileIdentifiers =
-        await this.getAllActiveAssetProfileIdentifiers();
+      assetProfileIdentifiers = await this.getActiveAssetProfileIdentifiers();
     }
 
     if (assetProfileIdentifiers.length <= 0) {
@@ -301,29 +301,36 @@ export class DataGatheringService {
     );
   }
 
-  public async getAllActiveAssetProfileIdentifiers(): Promise<
-    AssetProfileIdentifier[]
-  > {
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }],
+  /**
+   * Returns active asset profile identifiers
+   *
+   * @param {StringValue} maxAge - Optional. Specifies the maximum allowed age
+   * of a profile’s last update timestamp. Only asset profiles considered stale
+   * are returned.
+   */
+  public async getActiveAssetProfileIdentifiers({
+    maxAge
+  }: {
+    maxAge?: StringValue;
+  } = {}): Promise<AssetProfileIdentifier[]> {
+    return this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
+      select: {
+        dataSource: true,
+        symbol: true
+      },
       where: {
-        isActive: true
+        dataSource: {
+          notIn: ['MANUAL', 'RAPID_API']
+        },
+        isActive: true,
+        ...(maxAge && {
+          updatedAt: {
+            lt: subMilliseconds(new Date(), ms(maxAge))
+          }
+        })
       }
     });
-
-    return symbolProfiles
-      .filter(({ dataSource }) => {
-        return (
-          dataSource !== DataSource.MANUAL &&
-          dataSource !== DataSource.RAPID_API
-        );
-      })
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol
-        };
-      });
   }
 
   private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
