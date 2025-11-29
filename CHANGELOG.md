@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restricted the asset profile data gathering on Sundays to only process outdated asset profiles
 - Removed the _Cypress_ testing setup
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
 - Upgraded `color` from version `5.0.0` to `5.0.3`
