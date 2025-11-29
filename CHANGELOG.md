@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Update Storybook and Cypress version
+- Update Nx version
+
 ### Changed
 
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
