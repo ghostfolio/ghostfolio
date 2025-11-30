@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the API query parameters in various data provider services
 - Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
 
 ### Fixed
