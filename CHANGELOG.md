@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
 
+### Fixed
+
+- Improved the country weightings in the _Financial Modeling Prep_ service
+
 ## 2.220.0 - 2025-11-29
 
 ### Changed
