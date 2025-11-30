@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
+- Upgraded `@internationalized/number` from version `3.6.3` to `3.6.5`
 
 ### Fixed
 
@@ -22,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restricted the asset profile data gathering on Sundays to only process outdated asset profiles
 - Removed the _Cypress_ testing setup
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
-- Upgraded `@internationalized/number` from version `3.6.3` to `3.6.5`
 - Upgraded `color` from version `5.0.0` to `5.0.3`
 - Upgraded `prettier` from version `3.6.2` to `3.7.2`
 
