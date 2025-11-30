@@ -205,14 +205,16 @@
             </button>
             <mat-menu #jobActionsMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="onViewData(element.data)">
-                <ng-container i18n>View Data</ng-container>
+                <span><ng-container i18n>View Data</ng-container>...</span>
               </button>
               <button
                 mat-menu-item
                 [disabled]="element.stacktrace?.length <= 0"
                 (click)="onViewStacktrace(element.stacktrace)"
               >
-                <ng-container i18n>View Stacktrace</ng-container>
+                <span
+                  ><ng-container i18n>View Stacktrace</ng-container>...</span
+                >
               </button>
               <button mat-menu-item (click)="onExecuteJob(element.id)">
                 <ng-container i18n>Execute Job</ng-container>

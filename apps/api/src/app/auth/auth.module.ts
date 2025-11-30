@@ -60,6 +60,7 @@ import { OidcStrategy } from './oidc.strategy';
             const response = await fetch(
               `${issuer}/.well-known/openid-configuration`
             );
+
             const config = (await response.json()) as {
               authorization_endpoint: string;
               token_endpoint: string;
@@ -67,12 +68,12 @@ import { OidcStrategy } from './oidc.strategy';
             };
 
             options = {
+              issuer,
+              scope,
               authorizationURL: config.authorization_endpoint,
               callbackURL: callbackUrl,
               clientID: configurationService.get('OIDC_CLIENT_ID'),
               clientSecret: configurationService.get('OIDC_CLIENT_SECRET'),
-              issuer,
-              scope,
               tokenURL: config.token_endpoint,
               userInfoURL: config.userinfo_endpoint
             };
@@ -82,6 +83,7 @@ import { OidcStrategy } from './oidc.strategy';
           }
         } else {
           options = {
+            scope,
             authorizationURL: configurationService.get(
               'OIDC_AUTHORIZATION_URL'
             ),
@@ -89,7 +91,6 @@ import { OidcStrategy } from './oidc.strategy';
             clientID: configurationService.get('OIDC_CLIENT_ID'),
             clientSecret: configurationService.get('OIDC_CLIENT_SECRET'),
             issuer: configurationService.get('OIDC_ISSUER'),
-            scope,
             tokenURL: configurationService.get('OIDC_TOKEN_URL'),
             userInfoURL: configurationService.get('OIDC_USER_INFO_URL')
           };

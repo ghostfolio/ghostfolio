@@ -111,8 +111,6 @@ export class AuthController {
         StatusCodes.FORBIDDEN
       );
     }
-
-    // Initiates the OIDC login flow
   }
 
   @Get('oidc/callback')

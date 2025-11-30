@@ -5,26 +5,13 @@ import { Request } from 'express';
 import { Strategy, type StrategyOptions } from 'passport-openidconnect';
 
 import { AuthService } from './auth.service';
+import {
+  OidcContext,
+  OidcIdToken,
+  OidcParams,
+  OidcProfile
+} from './interfaces/interfaces';
 import { OidcStateStore } from './oidc-state.store';
-
-interface OidcProfile {
-  id?: string;
-  sub?: string;
-}
-
-interface OidcContext {
-  claims?: {
-    sub?: string;
-  };
-}
-
-interface OidcIdToken {
-  sub?: string;
-}
-
-interface OidcParams {
-  sub?: string;
-}
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
@@ -60,8 +47,8 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         context?.claims?.sub;
 
       const jwt = await this.authService.validateOAuthLogin({
-        provider: Provider.OIDC,
-        thirdPartyId
+        thirdPartyId,
+        provider: Provider.OIDC
       });
 
       if (!thirdPartyId) {
@@ -69,6 +56,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
           `Missing subject identifier in OIDC response from ${issuer}`,
           'OidcStrategy'
         );
+
         throw new Error('Missing subject identifier in OIDC response');
       }
 
