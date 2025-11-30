@@ -5,26 +5,13 @@ import { Request } from 'express';
 import { Strategy, type StrategyOptions } from 'passport-openidconnect';
 
 import { AuthService } from './auth.service';
+import {
+  OidcContext,
+  OidcIdToken,
+  OidcParams,
+  OidcProfile
+} from './interfaces/interfaces';
 import { OidcStateStore } from './oidc-state.store';
-
-interface OidcProfile {
-  id?: string;
-  sub?: string;
-}
-
-interface OidcContext {
-  claims?: {
-    sub?: string;
-  };
-}
-
-interface OidcIdToken {
-  sub?: string;
-}
-
-interface OidcParams {
-  sub?: string;
-}
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {

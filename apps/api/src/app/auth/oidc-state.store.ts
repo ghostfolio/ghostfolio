@@ -5,6 +5,8 @@ import ms from 'ms';
  * This store manages OAuth2 state parameters in memory with automatic cleanup.
  */
 export class OidcStateStore {
+  private readonly STATE_EXPIRY_MS = ms('10 minutes');
+
   private stateMap = new Map<
     string,
     {
@@ -14,7 +16,6 @@ export class OidcStateStore {
       timestamp: number;
     }
   >();
-  private readonly STATE_EXPIRY_MS = ms('10 minutes');
 
   /**
    * Store request state.
@@ -26,7 +27,7 @@ export class OidcStateStore {
     appState: unknown,
     ctx: { maxAge?: number; nonce?: string; issued?: Date },
     callback: (err: Error | null, handle?: string) => void
-  ): void {
+  ) {
     try {
       // Generate a unique handle for this state
       const handle = this.generateHandle();
@@ -59,7 +60,7 @@ export class OidcStateStore {
       appState?: unknown,
       ctx?: { maxAge?: number; nonce?: string; issued?: Date }
     ) => void
-  ): void {
+  ) {
     try {
       const data = this.stateMap.get(handle);
 
@@ -85,7 +86,7 @@ export class OidcStateStore {
   /**
    * Clean up expired states
    */
-  private cleanup(): void {
+  private cleanup() {
     const now = Date.now();
     const expiredKeys: string[] = [];
 
@@ -103,7 +104,7 @@ export class OidcStateStore {
   /**
    * Generate a cryptographically secure random handle
    */
-  private generateHandle(): string {
+  private generateHandle() {
     return (
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15) +
