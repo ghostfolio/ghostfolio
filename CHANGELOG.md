@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- improved test coverage for AuthService
+
 ### Changed
 
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`

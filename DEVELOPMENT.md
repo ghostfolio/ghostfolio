@@ -52,7 +52,28 @@ npm run database:push
 
 ## Testing
 
-Run `npm test`
+### Run Tests
+
+```bash
+npm test              # All tests
+```
+
+### Writing Tests
+
+**Always add tests for:**
+
+- New services and controllers (required)
+- Bug fixes (recommended)
+- focus on business logic
+- test expected behavior - not implementation details
+
+**Test file location:** Place `.spec.ts` file next to the code file
+
+**Key rules:**
+
+- Mock external dependencies (database, APIs, HTTP)
+- Test happy path AND error cases
+- Use descriptive test names
 
 ## Experimental Features
 
