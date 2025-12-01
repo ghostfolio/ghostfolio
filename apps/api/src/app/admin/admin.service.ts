@@ -532,12 +532,7 @@ export class AdminService {
       this.countUsersWithAnalytics(),
       this.getUsersWithAnalytics({
         skip,
-        take,
-        where: {
-          NOT: {
-            analytics: null
-          }
-        }
+        take
       })
     ]);
 
@@ -855,6 +850,20 @@ export class AdminService {
           }
         }
       ];
+
+      const noAnalyticsCondition: Prisma.UserWhereInput['NOT'] = {
+        analytics: null
+      };
+
+      if (where) {
+        if (where.NOT) {
+          where.NOT = { ...where.NOT, ...noAnalyticsCondition };
+        } else {
+          where.NOT = noAnalyticsCondition;
+        }
+      } else {
+        where = { NOT: noAnalyticsCondition };
+      }
     }
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
