@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Upgraded `nx` from version `21.5.1` to `22.1.3`
+
 ### Changed
 
 - Refactored the API query parameters in various data provider services
