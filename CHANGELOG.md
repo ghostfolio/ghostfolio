@@ -18,7 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the country weightings in the _Financial Modeling Prep_ service
 - Improved the search functionality by name in the _Financial Modeling Prep_ service
+<<<<<<< HEAD
 - Resolved an issue in the user endpoint where the list was returning empty in the admin control panel’s users section
+=======
+>>>>>>> b731e050 (Bugfix/improve search by name in FMP service (#6012))
 
 ## 2.220.0 - 2025-11-29
 
