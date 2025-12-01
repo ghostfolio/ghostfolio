@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Refactored the API query parameters in various data provider services
+- Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
+- Upgraded `@internationalized/number` from version `3.6.3` to `3.6.5`
+- Upgraded `prettier` from version `3.7.2` to `3.7.3`
+
+### Fixed
+
+- Improved the country weightings in the _Financial Modeling Prep_ service
+
+## 2.220.0 - 2025-11-29
+
+### Changed
+
+- Restricted the asset profile data gathering on Sundays to only process outdated asset profiles
+- Removed the _Cypress_ testing setup
+- Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
+- Upgraded `color` from version `5.0.0` to `5.0.3`
+- Upgraded `prettier` from version `3.6.2` to `3.7.2`
+
+### Fixed
+
+- Fixed an issue with the exchange rate calculation when converting between derived currencies and their root currencies
+
 ## 2.219.0 - 2025-11-23
 
 ### Added

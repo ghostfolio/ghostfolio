@@ -30,6 +30,7 @@ import ms from 'ms';
 export class ExchangeRateDataService {
   private currencies: string[] = [];
   private currencyPairs: DataGatheringItem[] = [];
+  private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(
@@ -135,7 +136,13 @@ export class ExchangeRateDataService {
   public async initialize() {
     this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
+    this.derivedCurrencyFactors = {};
     this.exchangeRates = {};
+
+    for (const { currency, factor, rootCurrency } of DERIVED_CURRENCIES) {
+      this.derivedCurrencyFactors[`${currency}${rootCurrency}`] = 1 / factor;
+      this.derivedCurrencyFactors[`${rootCurrency}${currency}`] = factor;
+    }
 
     for (const {
       currency1,
@@ -266,10 +273,14 @@ export class ExchangeRateDataService {
       return this.toCurrency(aValue, aFromCurrency, aToCurrency);
     }
 
+    const derivedCurrencyFactor =
+      this.derivedCurrencyFactors[`${aFromCurrency}${aToCurrency}`];
     let factor: number;
 
     if (aFromCurrency === aToCurrency) {
       factor = 1;
+    } else if (derivedCurrencyFactor) {
+      factor = derivedCurrencyFactor;
     } else {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
@@ -357,111 +368,120 @@ export class ExchangeRateDataService {
       for (const date of dates) {
         factors[format(date, DATE_FORMAT)] = 1;
       }
-    } else {
-      const dataSource =
-        this.dataProviderService.getDataSourceForExchangeRates();
-      const symbol = `${currencyFrom}${currencyTo}`;
 
-      const marketData = await this.marketDataService.getRange({
-        assetProfileIdentifiers: [
-          {
-            dataSource,
-            symbol
-          }
-        ],
-        dateQuery: { gte: startDate, lt: endDate }
-      });
+      return factors;
+    }
 
-      if (marketData?.length > 0) {
-        for (const { date, marketPrice } of marketData) {
-          factors[format(date, DATE_FORMAT)] = marketPrice;
+    const derivedCurrencyFactor =
+      this.derivedCurrencyFactors[`${currencyFrom}${currencyTo}`];
+
+    if (derivedCurrencyFactor) {
+      for (const date of dates) {
+        factors[format(date, DATE_FORMAT)] = derivedCurrencyFactor;
+      }
+
+      return factors;
+    }
+
+    const dataSource = this.dataProviderService.getDataSourceForExchangeRates();
+    const symbol = `${currencyFrom}${currencyTo}`;
+
+    const marketData = await this.marketDataService.getRange({
+      assetProfileIdentifiers: [
+        {
+          dataSource,
+          symbol
         }
-      } else {
-        // Calculate indirectly via base currency
+      ],
+      dateQuery: { gte: startDate, lt: endDate }
+    });
 
-        const marketPriceBaseCurrencyFromCurrency: {
-          [dateString: string]: number;
-        } = {};
-        const marketPriceBaseCurrencyToCurrency: {
-          [dateString: string]: number;
-        } = {};
+    if (marketData?.length > 0) {
+      for (const { date, marketPrice } of marketData) {
+        factors[format(date, DATE_FORMAT)] = marketPrice;
+      }
+    } else {
+      // Calculate indirectly via base currency
 
-        try {
-          if (currencyFrom === DEFAULT_CURRENCY) {
-            for (const date of dates) {
-              marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] =
-                1;
-            }
-          } else {
-            const marketData = await this.marketDataService.getRange({
-              assetProfileIdentifiers: [
-                {
-                  dataSource,
-                  symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
-                }
-              ],
-              dateQuery: { gte: startDate, lt: endDate }
-            });
+      const marketPriceBaseCurrencyFromCurrency: {
+        [dateString: string]: number;
+      } = {};
+      const marketPriceBaseCurrencyToCurrency: {
+        [dateString: string]: number;
+      } = {};
 
-            for (const { date, marketPrice } of marketData) {
-              marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] =
-                marketPrice;
-            }
+      try {
+        if (currencyFrom === DEFAULT_CURRENCY) {
+          for (const date of dates) {
+            marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] = 1;
           }
-        } catch {}
-
-        try {
-          if (currencyTo === DEFAULT_CURRENCY) {
-            for (const date of dates) {
-              marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] = 1;
-            }
-          } else {
-            const marketData = await this.marketDataService.getRange({
-              assetProfileIdentifiers: [
-                {
-                  dataSource,
-                  symbol: `${DEFAULT_CURRENCY}${currencyTo}`
-                }
-              ],
-              dateQuery: {
-                gte: startDate,
-                lt: endDate
+        } else {
+          const marketData = await this.marketDataService.getRange({
+            assetProfileIdentifiers: [
+              {
+                dataSource,
+                symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
               }
-            });
+            ],
+            dateQuery: { gte: startDate, lt: endDate }
+          });
 
-            for (const { date, marketPrice } of marketData) {
-              marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] =
-                marketPrice;
-            }
+          for (const { date, marketPrice } of marketData) {
+            marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] =
+              marketPrice;
           }
-        } catch {}
+        }
+      } catch {}
 
-        for (const date of dates) {
-          try {
-            const factor =
-              (1 /
-                marketPriceBaseCurrencyFromCurrency[
-                  format(date, DATE_FORMAT)
-                ]) *
-              marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)];
-
-            if (isNaN(factor)) {
-              throw new Error('Exchange rate is not a number');
-            } else {
-              factors[format(date, DATE_FORMAT)] = factor;
-            }
-          } catch {
-            let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
-              date,
-              DATE_FORMAT
-            )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
-
-            if (DEFAULT_CURRENCY !== currencyTo) {
-              errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
-            }
-
-            Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
+      try {
+        if (currencyTo === DEFAULT_CURRENCY) {
+          for (const date of dates) {
+            marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] = 1;
           }
+        } else {
+          const marketData = await this.marketDataService.getRange({
+            assetProfileIdentifiers: [
+              {
+                dataSource,
+                symbol: `${DEFAULT_CURRENCY}${currencyTo}`
+              }
+            ],
+            dateQuery: {
+              gte: startDate,
+              lt: endDate
+            }
+          });
+
+          for (const { date, marketPrice } of marketData) {
+            marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] =
+              marketPrice;
+          }
+        }
+      } catch {}
+
+      for (const date of dates) {
+        try {
+          const factor =
+            (1 /
+              marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)]) *
+            marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)];
+
+          if (isNaN(factor)) {
+            throw new Error('Exchange rate is not a number');
+          } else {
+            factors[format(date, DATE_FORMAT)] = factor;
+          }
+        } catch {
+          let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
+            date,
+            DATE_FORMAT
+          )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
+
+          if (DEFAULT_CURRENCY !== currencyTo) {
+            errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
+          }
+
+          Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
         }
       }
     }
