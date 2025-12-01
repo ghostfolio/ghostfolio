@@ -4,6 +4,11 @@
       class="card-item d-flex flex-column justify-content-between p-4"
       [routerLink]="routerLinkPricing"
     >
+      @if (hover3d) {
+        @for (zone of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track zone) {
+          <span class="hover-zone"></span>
+        }
+      }
       <div class="d-flex justify-content-end">
         <gf-logo
           size="large"
@@ -46,9 +51,4 @@
       </div>
     </a>
   </div>
-  @if (hover3d) {
-    @for (zone of [1, 2, 3, 4, 5, 6, 7, 8]; track zone) {
-      <a class="hover-zone" [routerLink]="routerLinkPricing"></a>
-    }
-  }
 </div>

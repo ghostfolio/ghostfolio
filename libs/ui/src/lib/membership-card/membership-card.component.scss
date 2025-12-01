@@ -86,10 +86,6 @@
           transform 300ms ease;
         will-change: transform;
 
-        .card-item {
-          pointer-events: none;
-        }
-
         &::before {
           background: radial-gradient(
             circle at 50% 0%,
@@ -106,57 +102,65 @@
           transition: opacity 300ms ease;
           z-index: 1;
         }
+
+        .card-item {
+          position: relative;
+
+          .hover-zone {
+            height: 33.333%;
+            position: absolute;
+            width: 33.333%;
+            z-index: 2;
+
+            &:nth-child(1) {
+              left: 0;
+              top: 0;
+            }
+
+            &:nth-child(2) {
+              left: 33.333%;
+              top: 0;
+            }
+
+            &:nth-child(3) {
+              right: 0;
+              top: 0;
+            }
+
+            &:nth-child(4) {
+              left: 0;
+              top: 33.333%;
+            }
+
+            &:nth-child(5) {
+              left: 33.333%;
+              top: 33.333%;
+            }
+
+            &:nth-child(6) {
+              right: 0;
+              top: 33.333%;
+            }
+
+            &:nth-child(7) {
+              bottom: 0;
+              left: 0;
+            }
+
+            &:nth-child(8) {
+              bottom: 0;
+              left: 33.333%;
+            }
+
+            &:nth-child(9) {
+              bottom: 0;
+              right: 0;
+            }
+          }
+        }
       }
 
-      .hover-zone {
-        height: 33.333%;
-        pointer-events: auto;
-        position: absolute;
-        width: 33.333%;
-        z-index: 2;
-
-        &:nth-child(3) {
-          left: 0;
-          top: 0;
-        }
-
-        &:nth-child(4) {
-          left: 33.333%;
-          top: 0;
-        }
-
-        &:nth-child(5) {
-          right: 0;
-          top: 0;
-        }
-
-        &:nth-child(6) {
-          left: 0;
-          top: 33.333%;
-        }
-
-        &:nth-child(7) {
-          right: 0;
-          top: 33.333%;
-        }
-
-        &:nth-child(8) {
-          bottom: 0;
-          left: 0;
-        }
-
-        &:nth-child(9) {
-          bottom: 0;
-          left: 33.333%;
-        }
-
-        &:nth-child(10) {
-          bottom: 0;
-          right: 0;
-        }
-      }
-
-      &:has(.hover-zone:nth-child(3):hover) .card-container {
+      &:has(.hover-zone:nth-child(1):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(5deg) rotateY(-5deg)
           translateY(-2px);
@@ -171,7 +175,7 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(4):hover) .card-container {
+      &:has(.hover-zone:nth-child(2):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(5deg) rotateY(0deg)
           translateY(-2px);
@@ -186,7 +190,7 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(5):hover) .card-container {
+      &:has(.hover-zone:nth-child(3):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(5deg) rotateY(5deg)
           translateY(-2px);
@@ -201,7 +205,7 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(6):hover) .card-container {
+      &:has(.hover-zone:nth-child(4):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(0deg) rotateY(-5deg)
           translateY(-2px);
@@ -216,7 +220,22 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(7):hover) .card-container {
+      &:has(.hover-zone:nth-child(5):hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        transform: perspective(1000px) rotateX(0deg) rotateY(0deg)
+          translateY(-4px);
+
+        &::before {
+          background: radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, var(--hover3dGradientOpacityHover)),
+            transparent 60%
+          );
+          opacity: 1;
+        }
+      }
+
+      &:has(.hover-zone:nth-child(6):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(0deg) rotateY(5deg)
           translateY(-2px);
@@ -231,7 +250,7 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(8):hover) .card-container {
+      &:has(.hover-zone:nth-child(7):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(-5deg) rotateY(-5deg)
           translateY(-2px);
@@ -246,7 +265,7 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(9):hover) .card-container {
+      &:has(.hover-zone:nth-child(8):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(-5deg) rotateY(0deg)
           translateY(-2px);
@@ -261,7 +280,7 @@
         }
       }
 
-      &:has(.hover-zone:nth-child(10):hover) .card-container {
+      &:has(.hover-zone:nth-child(9):hover) .card-container {
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
         transform: perspective(1000px) rotateX(-5deg) rotateY(5deg)
           translateY(-2px);
