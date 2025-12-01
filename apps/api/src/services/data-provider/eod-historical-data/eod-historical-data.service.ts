@@ -96,17 +96,19 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
 
     try {
+      const queryParams = new URLSearchParams({
+        api_token: this.apiKey,
+        fmt: 'json',
+        from: format(from, DATE_FORMAT),
+        to: format(to, DATE_FORMAT)
+      });
+
       const response: {
         [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       const historicalResult = await fetch(
-        `${this.URL}/div/${symbol}?api_token=${
-          this.apiKey
-        }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
-          to,
-          DATE_FORMAT
-        )}`,
+        `${this.URL}/div/${symbol}?${queryParams.toString()}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -144,13 +146,16 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol = this.convertToEodSymbol(symbol);
 
     try {
+      const queryParams = new URLSearchParams({
+        api_token: this.apiKey,
+        fmt: 'json',
+        from: format(from, DATE_FORMAT),
+        period: granularity,
+        to: format(to, DATE_FORMAT)
+      });
+
       const response = await fetch(
-        `${this.URL}/eod/${symbol}?api_token=${
-          this.apiKey
-        }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
-          to,
-          DATE_FORMAT
-        )}&period=${granularity}`,
+        `${this.URL}/eod/${symbol}?${queryParams.toString()}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -208,10 +213,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
     });
 
     try {
+      const queryParams = new URLSearchParams({
+        api_token: this.apiKey,
+        fmt: 'json',
+        s: eodHistoricalDataSymbols.join(',')
+      });
+
       const realTimeResponse = await fetch(
-        `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?api_token=${
-          this.apiKey
-        }&fmt=json&s=${eodHistoricalDataSymbols.join(',')}`,
+        `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?${queryParams.toString()}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -413,8 +422,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
     })[] = [];
 
     try {
+      const queryParams = new URLSearchParams({
+        api_token: this.apiKey
+      });
+
       const response = await fetch(
-        `${this.URL}/search/${query}?api_token=${this.apiKey}`,
+        `${this.URL}/search/${query}?${queryParams.toString()}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
