@@ -1,6 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -8,8 +5,10 @@ import {
   NUMERICAL_PRECISION_THRESHOLD_5_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  Activity,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,
@@ -21,6 +20,8 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
+import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
+import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
@@ -38,7 +39,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -57,6 +58,7 @@ import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  arrowDownCircleOutline,
   createOutline,
   flagOutline,
   readerOutline,
@@ -92,6 +94,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     MatFormFieldModule,
     MatTabsModule,
     NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -101,7 +104,6 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public activitiesCount: number;
-  public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
   public assetSubClass: string;
@@ -122,6 +124,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
+  public holdingForm: FormGroup;
   public investmentInBaseCurrencyWithCurrencyEffect: number;
   public investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
   public isUUID = isUUID;
@@ -167,6 +170,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     addIcons({
+      arrowDownCircleOutline,
       createOutline,
       flagOutline,
       readerOutline,
@@ -177,16 +181,16 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.activityForm = this.formBuilder.group({
-      tags: [] as string[]
-    });
-
     const filters: Filter[] = [
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
 
-    this.activityForm
+    this.holdingForm = this.formBuilder.group({
+      tags: [] as string[]
+    });
+
+    this.holdingForm
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags: Tag[]) => {
@@ -429,7 +433,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             };
           });
 
-          this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
+          this.holdingForm.setValue({ tags: this.tags }, { emitEvent: false });
 
           this.value = value;
 
@@ -559,6 +563,37 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
+  public onCloseHolding() {
+    const today = new Date();
+
+    const activity: CreateOrderDto = {
+      accountId: this.accounts.length === 1 ? this.accounts[0].id : null,
+      comment: null,
+      currency: this.SymbolProfile.currency,
+      dataSource: this.SymbolProfile.dataSource,
+      date: today.toISOString(),
+      fee: 0,
+      quantity: this.quantity,
+      symbol: this.SymbolProfile.symbol,
+      tags: this.tags.map(({ id }) => {
+        return id;
+      }),
+      type: 'SELL',
+      unitPrice: this.marketPrice
+    };
+
+    this.dataService
+      .postOrder(activity)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(
+          internalRoutes.portfolio.subRoutes.activities.routerLink
+        );
+
+        this.dialogRef.close();
+      });
+  }
+
   public onExport() {
     const activityIds = this.dataSource.data.map(({ id }) => {
       return id;
@@ -583,10 +618,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  public onTagsChanged(tags: Tag[]) {
-    this.activityForm.get('tags').setValue(tags);
   }
 
   public onUpdateActivity(aActivity: Activity) {

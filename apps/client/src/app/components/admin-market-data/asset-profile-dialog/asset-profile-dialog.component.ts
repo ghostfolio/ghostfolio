@@ -1,14 +1,13 @@
-import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import {
   ASSET_CLASS_MAPPING,
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
+import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -19,6 +18,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';

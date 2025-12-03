@@ -1,5 +1,6 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale } from '@ghostfolio/common/helper';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -29,7 +30,8 @@ import {
   documentTextOutline,
   ellipsisHorizontal,
   eyeOffOutline,
-  trashOutline
+  trashOutline,
+  walletOutline
 } from 'ionicons/icons';
 import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -93,7 +95,8 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
       documentTextOutline,
       ellipsisHorizontal,
       eyeOffOutline,
-      trashOutline
+      trashOutline,
+      walletOutline
     });
   }
 

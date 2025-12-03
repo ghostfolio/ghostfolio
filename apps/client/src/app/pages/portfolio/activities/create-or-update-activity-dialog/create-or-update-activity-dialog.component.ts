@@ -1,13 +1,13 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING } from '@ghostfolio/common/config';
+import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
   AssetClassSelectorOption,
   LookupItem
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
@@ -49,7 +49,6 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
 import { DataService } from '../../../../services/data.service';
-import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
 

@@ -1,9 +1,10 @@
-import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { DATE_FORMAT, getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,

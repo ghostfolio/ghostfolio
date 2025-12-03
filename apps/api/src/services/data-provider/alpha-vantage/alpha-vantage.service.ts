@@ -7,14 +7,12 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
@@ -23,7 +21,7 @@ import { DataSource, SymbolProfile } from '@prisma/client';
 import * as Alphavantage from 'alphavantage';
 import { format, isAfter, isBefore, parse } from 'date-fns';
 
-import { IAlphaVantageHistoricalResponse } from './interfaces/interfaces';
+import { AlphaVantageHistoricalResponse } from './interfaces/interfaces';
 
 @Injectable()
 export class AlphaVantageService implements DataProviderInterface {
@@ -68,11 +66,11 @@ export class AlphaVantageService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
       const historicalData: {
-        [symbol: string]: IAlphaVantageHistoricalResponse[];
+        [symbol: string]: AlphaVantageHistoricalResponse[];
       } = await this.alphaVantage.crypto.daily(
         symbol
           .substring(0, symbol.length - DEFAULT_CURRENCY.length)
@@ -81,7 +79,7 @@ export class AlphaVantageService implements DataProviderInterface {
       );
 
       const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
       } = {};
 
       response[symbol] = {};
@@ -115,7 +113,7 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public async getQuotes({}: GetQuotesParams): Promise<{
-    [symbol: string]: IDataProviderResponse;
+    [symbol: string]: DataProviderResponse;
   }> {
     return {};
   }

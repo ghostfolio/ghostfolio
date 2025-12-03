@@ -1,7 +1,7 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   PortfolioReportRule,
+  RuleSettings,
   XRayRulesSettings
 } from '@ghostfolio/common/interfaces';
 
@@ -31,7 +31,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
-import { IRuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
+import { RuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
 import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-settings-dialog.component';
 
 @Component({
@@ -51,6 +51,7 @@ export class GfRuleComponent implements OnInit {
   @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
+  @Input() locale: string;
   @Input() rule: PortfolioReportRule;
   @Input() settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
@@ -78,12 +79,16 @@ export class GfRuleComponent implements OnInit {
   }
 
   public onCustomizeRule(rule: PortfolioReportRule) {
-    const dialogRef = this.dialog.open(GfRuleSettingsDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfRuleSettingsDialogComponent,
+      RuleSettingsDialogParams
+    >(GfRuleSettingsDialogComponent, {
       data: {
         rule,
         categoryName: this.categoryName,
+        locale: this.locale,
         settings: this.settings
-      } as IRuleSettingsDialogParams,
+      },
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

@@ -1,8 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -29,8 +28,9 @@ import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
-import { format, min, subDays, subYears } from 'date-fns';
+import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
+import ms, { StringValue } from 'ms';
 
 @Injectable()
 export class DataGatheringService {
@@ -41,7 +41,6 @@ export class DataGatheringService {
     private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
@@ -94,9 +93,7 @@ export class DataGatheringService {
     });
   }
 
-  public async gatherSymbol({ dataSource, date, symbol }: IDataGatheringItem) {
-    await this.marketDataService.deleteMany({ dataSource, symbol });
-
+  public async gatherSymbol({ dataSource, date, symbol }: DataGatheringItem) {
     const dataGatheringItems = (await this.getSymbolsMax())
       .filter((dataGatheringItem) => {
         return (
@@ -111,6 +108,7 @@ export class DataGatheringService {
 
     await this.gatherSymbols({
       dataGatheringItems,
+      force: true,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
   }
@@ -163,8 +161,7 @@ export class DataGatheringService {
     );
 
     if (!assetProfileIdentifiers) {
-      assetProfileIdentifiers =
-        await this.getAllActiveAssetProfileIdentifiers();
+      assetProfileIdentifiers = await this.getActiveAssetProfileIdentifiers();
     }
 
     if (assetProfileIdentifiers.length <= 0) {
@@ -274,9 +271,11 @@ export class DataGatheringService {
 
   public async gatherSymbols({
     dataGatheringItems,
+    force = false,
     priority
   }: {
-    dataGatheringItems: IDataGatheringItem[];
+    dataGatheringItems: DataGatheringItem[];
+    force?: boolean;
     priority: number;
   }) {
     await this.addJobsToQueue(
@@ -285,6 +284,7 @@ export class DataGatheringService {
           data: {
             dataSource,
             date,
+            force,
             symbol
           },
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
@@ -301,29 +301,36 @@ export class DataGatheringService {
     );
   }
 
-  public async getAllActiveAssetProfileIdentifiers(): Promise<
-    AssetProfileIdentifier[]
-  > {
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }],
+  /**
+   * Returns active asset profile identifiers
+   *
+   * @param {StringValue} maxAge - Optional. Specifies the maximum allowed age
+   * of a profile’s last update timestamp. Only asset profiles considered stale
+   * are returned.
+   */
+  public async getActiveAssetProfileIdentifiers({
+    maxAge
+  }: {
+    maxAge?: StringValue;
+  } = {}): Promise<AssetProfileIdentifier[]> {
+    return this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
+      select: {
+        dataSource: true,
+        symbol: true
+      },
       where: {
-        isActive: true
+        dataSource: {
+          notIn: ['MANUAL', 'RAPID_API']
+        },
+        isActive: true,
+        ...(maxAge && {
+          updatedAt: {
+            lt: subMilliseconds(new Date(), ms(maxAge))
+          }
+        })
       }
     });
-
-    return symbolProfiles
-      .filter(({ dataSource }) => {
-        return (
-          dataSource !== DataSource.MANUAL &&
-          dataSource !== DataSource.RAPID_API
-        );
-      })
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol
-        };
-      });
   }
 
   private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
@@ -348,7 +355,7 @@ export class DataGatheringService {
       });
   }
 
-  private async getCurrencies7D(): Promise<IDataGatheringItem[]> {
+  private async getCurrencies7D(): Promise<DataGatheringItem[]> {
     const assetProfileIdentifiersWithCompleteMarketData =
       await this.getAssetProfileIdentifiersWithCompleteMarketData();
 
@@ -376,7 +383,7 @@ export class DataGatheringService {
     withUserSubscription = false
   }: {
     withUserSubscription?: boolean;
-  }): Promise<IDataGatheringItem[]> {
+  }): Promise<DataGatheringItem[]> {
     const symbolProfiles =
       await this.symbolProfileService.getActiveSymbolProfilesByUserSubscription(
         {
@@ -407,7 +414,7 @@ export class DataGatheringService {
       });
   }
 
-  private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
+  private async getSymbolsMax(): Promise<DataGatheringItem[]> {
     const benchmarkAssetProfileIdMap: { [key: string]: boolean } = {};
     (
       (await this.propertyService.getByKey<BenchmarkProperty[]>(

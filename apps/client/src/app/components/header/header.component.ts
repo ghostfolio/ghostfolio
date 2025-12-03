@@ -1,4 +1,4 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
 import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
@@ -10,6 +10,7 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -103,7 +104,8 @@ export class GfHeaderComponent implements OnChanges {
 
   public hasFilters: boolean;
   public hasImpersonationId: boolean;
-  public hasPermissionForSocialLogin: boolean;
+  public hasPermissionForAuthGoogle: boolean;
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionToAccessAssistant: boolean;
@@ -163,9 +165,14 @@ export class GfHeaderComponent implements OnChanges {
   public ngOnChanges() {
     this.hasFilters = this.userService.hasFilters();
 
-    this.hasPermissionForSocialLogin = hasPermission(
+    this.hasPermissionForAuthGoogle = hasPermission(
       this.info?.globalPermissions,
-      permissions.enableSocialLogin
+      permissions.enableAuthGoogle
+    );
+
+    this.hasPermissionForAuthToken = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
@@ -271,11 +278,15 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   public openLoginDialog() {
-    const dialogRef = this.dialog.open(GfLoginWithAccessTokenDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfLoginWithAccessTokenDialogComponent,
+      LoginWithAccessTokenDialogParams
+    >(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        hasPermissionToUseAuthGoogle: this.hasPermissionForAuthGoogle,
+        hasPermissionToUseAuthToken: this.hasPermissionForAuthToken,
         title: $localize`Sign in`
       },
       width: '30rem'

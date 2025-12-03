@@ -1,13 +1,16 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
 import {
   DEFAULT_PAGE_SIZE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  AssetProfileIdentifier
+} from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -56,6 +59,7 @@ import {
   documentTextOutline,
   ellipsisHorizontal,
   ellipsisVertical,
+  tabletLandscapeOutline,
   trashOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -153,6 +157,7 @@ export class GfActivitiesTableComponent
       documentTextOutline,
       ellipsisHorizontal,
       ellipsisVertical,
+      tabletLandscapeOutline,
       trashOutline
     });
   }
@@ -226,6 +231,15 @@ export class GfActivitiesTableComponent
     return numSelectedRows === numTotalRows;
   }
 
+  public canClickActivity(activity: Activity) {
+    return (
+      this.hasPermissionToOpenDetails &&
+      this.isExcludedFromAnalysis(activity) === false &&
+      activity.isDraft === false &&
+      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
+    );
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
       activity.account?.isExcluded ||
@@ -244,12 +258,7 @@ export class GfActivitiesTableComponent
       if (!activity.error) {
         this.selectedRows.toggle(activity);
       }
-    } else if (
-      this.hasPermissionToOpenDetails &&
-      this.isExcludedFromAnalysis(activity) === false &&
-      activity.isDraft === false &&
-      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
-    ) {
+    } else if (this.canClickActivity(activity)) {
       this.activityClicked.emit({
         dataSource: activity.SymbolProfile.dataSource,
         symbol: activity.SymbolProfile.symbol

@@ -411,13 +411,14 @@
       }
     </mat-tab-group>
 
-    <gf-tags-selector
-      [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-      [readonly]="!data.hasPermissionToUpdateOrder"
-      [tags]="activityForm.get('tags')?.value"
-      [tagsAvailable]="tagsAvailable"
-      (tagsChanged)="onTagsChanged($event)"
-    />
+    <form [formGroup]="holdingForm">
+      <gf-tags-selector
+        formControlName="tags"
+        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+        [readonly]="!data.hasPermissionToUpdateOrder"
+        [tagsAvailable]="tagsAvailable"
+      />
+    </form>
 
     @if (
       data.hasPermissionToAccessAdminControl ||
@@ -428,6 +429,29 @@
       <div class="row">
         <div class="col">
           <div class="button-container d-flex flex-wrap">
+            @if (data.hasPermissionToCreateActivity && quantity > 0) {
+              <button
+                color="warn"
+                mat-stroked-button
+                (click)="onCloseHolding()"
+              >
+                <ion-icon
+                  class="mr-1"
+                  name="arrow-down-circle-outline"
+                ></ion-icon
+                ><span i18n>Close Holding</span>
+              </button>
+            }
+            @if (
+              dataSource?.data.length > 0 &&
+              data.hasPermissionToReportDataGlitch === true
+            ) {
+              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+                ><ion-icon class="mr-1" name="flag-outline" /><span i18n
+                  >Report Data Glitch</span
+                >...</a
+              >
+            }
             @if (data.hasPermissionToAccessAdminControl) {
               <a
                 mat-stroked-button
@@ -440,16 +464,6 @@
                 (click)="onClose()"
                 ><ion-icon class="mr-1" name="create-outline" /><span i18n
                   >Manage Asset Profile</span
-                >...</a
-              >
-            }
-            @if (
-              dataSource?.data.length > 0 &&
-              data.hasPermissionToReportDataGlitch === true
-            ) {
-              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
-                ><ion-icon class="mr-1" name="flag-outline" /><span i18n
-                  >Report Data Glitch</span
                 >...</a
               >
             }

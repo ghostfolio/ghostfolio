@@ -1,5 +1,6 @@
 @import './styles/bootstrap';
 @import './styles/table';
+@import './styles/variables';
 
 @import 'svgmap/dist/svgMap';
 
@@ -8,14 +9,18 @@
   --font-family-sans-serif: 'Inter', Roboto, 'Helvetica Neue', sans-serif;
   --light-background: rgb(255, 255, 255);
 
-  --dark-primary-text: 0, 0, 0, 0.87;
+  --dark-primary-text:
+    #{red($dark-primary-text)}, #{green($dark-primary-text)},
+    #{blue($dark-primary-text)}, #{alpha($dark-primary-text)};
   --dark-secondary-text: 0, 0, 0, 0.54;
   --dark-accent-text: 0, 0, 0, 0.87;
   --dark-warn-text: 0, 0, 0, 0.87;
   --dark-disabled-text: 0, 0, 0, 0.38;
   --dark-dividers: 0, 0, 0, 0.12;
   --dark-focused: 0, 0, 0, 0.12;
-  --light-primary-text: 255, 255, 255, 1;
+  --light-primary-text:
+    #{red($light-primary-text)}, #{green($light-primary-text)},
+    #{blue($light-primary-text)}, #{alpha($light-primary-text)};
   --light-secondary-text: 255, 255, 255, 0.7;
   --light-accent-text: 255, 255, 255, 1;
   --light-warn-text: 255, 255, 255, 1;

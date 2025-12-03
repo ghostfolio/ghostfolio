@@ -1,7 +1,7 @@
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -30,7 +30,7 @@ export class MarketDataService {
     dataSource,
     date = new Date(),
     symbol
-  }: IDataGatheringItem): Promise<MarketData> {
+  }: DataGatheringItem): Promise<MarketData> {
     return await this.prismaService.marketData.findFirst({
       where: {
         dataSource,
@@ -129,6 +129,61 @@ export class MarketDataService {
       skip,
       take,
       where
+    });
+  }
+
+  /**
+   * Atomically replace market data for a symbol within a date range.
+   * Deletes existing data in the range and inserts new data within a single
+   * transaction to prevent data loss if the operation fails.
+   */
+  public async replaceForSymbol({
+    data,
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
+    await this.prismaService.$transaction(async (prisma) => {
+      if (data.length > 0) {
+        let minTime = Infinity;
+        let maxTime = -Infinity;
+
+        for (const { date } of data) {
+          const time = (date as Date).getTime();
+
+          if (time < minTime) {
+            minTime = time;
+          }
+
+          if (time > maxTime) {
+            maxTime = time;
+          }
+        }
+
+        const minDate = new Date(minTime);
+        const maxDate = new Date(maxTime);
+
+        await prisma.marketData.deleteMany({
+          where: {
+            dataSource,
+            symbol,
+            date: {
+              gte: minDate,
+              lte: maxDate
+            }
+          }
+        });
+
+        await prisma.marketData.createMany({
+          data: data.map(({ date, marketPrice, state }) => ({
+            dataSource,
+            symbol,
+            date: date as Date,
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState
+          })),
+          skipDuplicates: true
+        });
+      }
     });
   }
 

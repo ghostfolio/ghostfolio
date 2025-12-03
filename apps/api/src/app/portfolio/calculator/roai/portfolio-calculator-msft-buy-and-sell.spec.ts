@@ -1,4 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
   symbolProfileDummyData,
@@ -14,6 +13,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { Activity } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -28,7 +28,6 @@ jest.mock(
   '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service',
   () => {
     return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       PortfolioSnapshotService: jest.fn().mockImplementation(() => {
         return PortfolioSnapshotServiceMock;
       })
@@ -38,7 +37,6 @@ jest.mock(
 
 jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     RedisCacheService: jest.fn().mockImplementation(() => {
       return RedisCacheServiceMock;
     })

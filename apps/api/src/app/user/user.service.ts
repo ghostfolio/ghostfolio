@@ -527,13 +527,21 @@ export class UserService {
     });
   }
 
-  public async createUser({
-    data
-  }: {
-    data: Prisma.UserCreateInput;
-  }): Promise<User> {
-    if (!data?.provider) {
+  public async createUser(
+    {
+      data
+    }: {
+      data: Prisma.UserCreateInput;
+    } = { data: {} }
+  ): Promise<User> {
+    if (!data.provider) {
       data.provider = 'ANONYMOUS';
+    }
+
+    if (!data.role) {
+      const hasAdmin = await this.hasAdmin();
+
+      data.role = hasAdmin ? 'USER' : 'ADMIN';
     }
 
     const user = await this.prismaService.user.create({

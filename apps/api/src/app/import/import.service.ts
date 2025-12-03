@@ -1,10 +1,4 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import {
-  Activity,
-  ActivityError
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -16,10 +10,19 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import {
+  CreateAssetProfileDto,
+  CreateAccountDto,
+  CreateOrderDto
+} from '@ghostfolio/common/dtos';
+import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  ActivityError,
+  AssetProfileIdentifier
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   AccountWithPlatform,
@@ -32,9 +35,8 @@ import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
-import { CreateAssetProfileDto } from '../admin/create-asset-profile.dto';
 import { ImportDataDto } from './import-data.dto';
 
 @Injectable()
@@ -58,13 +60,18 @@ export class ImportService {
     userId
   }: AssetProfileIdentifier & { userId: string }): Promise<Activity[]> {
     try {
-      const { activities, firstBuyDate, historicalData } =
-        await this.portfolioService.getHolding({
-          dataSource,
-          symbol,
-          userId,
-          impersonationId: undefined
-        });
+      const holding = await this.portfolioService.getHolding({
+        dataSource,
+        symbol,
+        userId,
+        impersonationId: undefined
+      });
+
+      if (!holding) {
+        return [];
+      }
+
+      const { activities, firstBuyDate, historicalData } = holding;
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
@@ -270,7 +277,7 @@ export class ImportService {
 
           // Asset profile belongs to a different user
           if (existingAssetProfile) {
-            const symbol = uuidv4();
+            const symbol = randomUUID();
             assetProfileSymbolMapping[assetProfile.symbol] = symbol;
             assetProfile.symbol = symbol;
           }
@@ -489,7 +496,7 @@ export class ImportService {
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
-          id: uuidv4(),
+          id: randomUUID(),
           isDraft: isAfter(date, endOfToday()),
           SymbolProfile: {
             assetClass,
@@ -539,6 +546,7 @@ export class ImportService {
             connectOrCreate: {
               create: {
                 dataSource,
+                name,
                 symbol,
                 currency: assetProfile.currency,
                 userId: dataSource === 'MANUAL' ? user.id : undefined
@@ -746,10 +754,19 @@ export class ImportService {
         if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           // Skip asset profile validation for FEE, INTEREST, and LIABILITY
           // as these activity types don't require asset profiles
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
           assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] = {
             currency,
             dataSource,
-            symbol
+            symbol,
+            name: assetProfileInImport?.name
           };
 
           continue;

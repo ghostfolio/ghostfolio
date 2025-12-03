@@ -49,6 +49,13 @@ export class GfLogoCarouselComponent {
       url: 'https://openalternative.co'
     },
     {
+      className: 'logo-oss-gallery',
+      isMask: true,
+      name: 'OSS Gallery',
+      title: 'OSS Gallery: Discover the best open-source projects',
+      url: 'https://oss.gallery'
+    },
+    {
       className: 'logo-privacy-tools',
       isMask: true,
       name: 'Privacy Tools',
@@ -81,6 +88,12 @@ export class GfLogoCarouselComponent {
       name: 'selfh.st',
       title: 'selfh.st — Self-hosted content and software',
       url: 'https://selfh.st'
+    },
+    {
+      className: 'logo-selfhostedhub',
+      name: 'SelfhostedHub',
+      title: 'SelfhostedHub — Discover best self-hosted software',
+      url: 'https://selfhostedhub.com'
     },
     {
       className: 'logo-sourceforge',

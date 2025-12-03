@@ -40,9 +40,11 @@ export class ConfigurationService {
       DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: json({
         default: []
       }),
+      ENABLE_FEATURE_AUTH_GOOGLE: bool({ default: false }),
+      ENABLE_FEATURE_AUTH_TOKEN: bool({ default: true }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
+      ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: bool({ default: true }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
-      ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
       ENABLE_FEATURE_SYSTEM_MESSAGE: bool({ default: false }),

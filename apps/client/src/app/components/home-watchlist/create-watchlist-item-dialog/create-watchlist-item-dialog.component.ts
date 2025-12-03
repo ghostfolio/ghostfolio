@@ -36,7 +36,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./create-watchlist-item-dialog.component.scss'],
   templateUrl: 'create-watchlist-item-dialog.html'
 })
-export class GfCreateWatchlistItemDialogComponent implements OnInit, OnDestroy {
+export class GfCreateWatchlistItemDialogComponent implements OnDestroy, OnInit {
   public createWatchlistItemForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();

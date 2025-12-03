@@ -52,6 +52,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public durationExtension: StringValue;
+  public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
@@ -100,11 +101,18 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { baseCurrency, subscriptionOffer } = this.dataService.fetchInfo();
-    this.baseCurrency = baseCurrency;
+    const { baseCurrency, globalPermissions, subscriptionOffer } =
+      this.dataService.fetchInfo();
 
+    this.baseCurrency = baseCurrency;
     this.coupon = subscriptionOffer?.coupon;
     this.durationExtension = subscriptionOffer?.durationExtension;
+
+    this.hasPermissionToCreateUser = hasPermission(
+      globalPermissions,
+      permissions.createUserAccount
+    );
+
     this.label = subscriptionOffer?.label;
     this.price = subscriptionOffer?.price;
 
@@ -134,9 +142,12 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
 
   public onCheckout() {
     this.dataService
-      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .createStripeCheckoutSession({
+        couponId: this.couponId,
+        priceId: this.priceId
+      })
       .pipe(
-        switchMap(({ sessionId }: { sessionId: string }) => {
+        switchMap(({ sessionId }) => {
           return this.stripeService.redirectToCheckout({ sessionId });
         }),
         catchError((error) => {

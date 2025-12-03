@@ -1,7 +1,7 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -108,7 +108,10 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
   public onCheckout() {
     this.dataService
-      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .createStripeCheckoutSession({
+        couponId: this.couponId,
+        priceId: this.priceId
+      })
       .pipe(
         catchError((error) => {
           this.notificationService.alert({
@@ -117,7 +120,7 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
           throw error;
         }),
-        switchMap(({ sessionId }: { sessionId: string }) => {
+        switchMap(({ sessionId }) => {
           return this.stripeService.redirectToCheckout({ sessionId });
         })
       )

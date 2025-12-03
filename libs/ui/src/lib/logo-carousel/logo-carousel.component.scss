@@ -113,6 +113,10 @@
             mask-image: url('/assets/images/logo-openalternative.svg');
           }
 
+          &.logo-oss-gallery {
+            mask-image: url('/assets/images/logo-oss-gallery.svg');
+          }
+
           &.logo-privacy-tools {
             mask-image: url('/assets/images/logo-privacy-tools.svg');
           }
@@ -137,6 +141,15 @@
           &.logo-selfh-st {
             mask-image: url('/assets/images/logo-selfh-st.svg');
             max-height: 1.25rem;
+          }
+
+          &.logo-selfhostedhub {
+            background-image: url('/assets/images/logo-selfhostedhub.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            filter: grayscale(1);
+            opacity: 0.5;
           }
 
           &.logo-sourceforge {

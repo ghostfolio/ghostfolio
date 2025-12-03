@@ -1,5 +1,6 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -155,14 +156,17 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    const dialogRef = this.dialog.open(GfBenchmarkDetailDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfBenchmarkDetailDialogComponent,
+      BenchmarkDetailDialogParams
+    >(GfBenchmarkDetailDialogComponent, {
       data: {
         dataSource,
         symbol,
         colorScheme: this.user?.settings?.colorScheme,
         deviceType: this.deviceType,
         locale: this.locale
-      } as BenchmarkDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });

@@ -1,9 +1,7 @@
 import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -26,7 +24,7 @@ export interface DataProviderInterface {
     symbol,
     to
   }: GetDividendsParams): Promise<{
-    [date: string]: IDataProviderHistoricalResponse;
+    [date: string]: DataProviderHistoricalResponse;
   }>;
 
   getHistorical({
@@ -36,7 +34,7 @@ export interface DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }>; // TODO: Return only one symbol
 
   getMaxNumberOfSymbolsPerRequest?(): number;
@@ -46,7 +44,7 @@ export interface DataProviderInterface {
   getQuotes({
     requestTimeout,
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }>;
 
   getTestSymbol(): string;
 

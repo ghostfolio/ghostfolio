@@ -53,7 +53,7 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
   templateUrl: 'create-asset-profile-dialog.html'
 })
-export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
+export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   public createAssetProfileForm: FormGroup;
   public ghostfolioPrefix = `${ghostfolioPrefix}_`;
   public mode: CreateAssetProfileDialogMode;
@@ -107,9 +107,8 @@ export class GfCreateAssetProfileDialogComponent implements OnInit, OnDestroy {
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
       });
     } else if (this.mode === 'currency') {
-      const currency = (
-        this.createAssetProfileForm.get('addCurrency').value as string
-      ).toUpperCase();
+      const currency = this.createAssetProfileForm.get('addCurrency')
+        .value as string;
 
       const currencies = Array.from(
         new Set([...this.customCurrencies, currency])

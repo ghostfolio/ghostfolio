@@ -1,4 +1,4 @@
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { FocusableOption } from '@angular/cdk/a11y';
@@ -18,8 +18,8 @@ import { Params, RouterModule } from '@angular/router';
 
 import { SearchMode } from '../enums/search-mode';
 import {
-  IAssetSearchResultItem,
-  ISearchResultItem
+  AssetSearchResultItem,
+  SearchResultItem
 } from '../interfaces/interfaces';
 
 @Component({
@@ -37,7 +37,7 @@ export class GfAssistantListItemComponent
     return this.hasFocus;
   }
 
-  @Input() item: ISearchResultItem;
+  @Input() item: SearchResultItem;
 
   @Output() clicked = new EventEmitter<void>();
 
@@ -86,7 +86,7 @@ export class GfAssistantListItemComponent
     this.changeDetectorRef.markForCheck();
   }
 
-  public isAsset(item: ISearchResultItem): item is IAssetSearchResultItem {
+  public isAsset(item: SearchResultItem): item is AssetSearchResultItem {
     return (
       (item.mode === SearchMode.ASSET_PROFILE ||
         item.mode === SearchMode.HOLDING) &&

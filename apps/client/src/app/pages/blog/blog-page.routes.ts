@@ -209,5 +209,14 @@ export const routes: Routes = [
         './2025/09/hacktoberfest-2025/hacktoberfest-2025-page.component'
       ).then((c) => c.Hacktoberfest2025PageComponent),
     title: 'Hacktoberfest 2025'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2025/11/black-weeks-2025',
+    loadComponent: () =>
+      import('./2025/11/black-weeks-2025/black-weeks-2025-page.component').then(
+        (c) => c.BlackWeeks2025PageComponent
+      ),
+    title: 'Black Weeks 2025'
   }
 ];

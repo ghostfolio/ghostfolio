@@ -1,14 +1,12 @@
-import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
+import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
+  Activity,
   HistoricalDataItem,
   PortfolioPosition,
   User
@@ -18,6 +16,8 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
+import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -43,9 +43,9 @@ import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  albumsOutline,
   cashOutline,
-  swapVerticalOutline,
-  walletOutline
+  swapVerticalOutline
 } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -129,7 +129,7 @@ export class GfAccountDetailDialogComponent implements OnDestroy, OnInit {
         }
       });
 
-    addIcons({ cashOutline, swapVerticalOutline, walletOutline });
+    addIcons({ albumsOutline, cashOutline, swapVerticalOutline });
   }
 
   public ngOnInit() {

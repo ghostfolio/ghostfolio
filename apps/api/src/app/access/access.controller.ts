@@ -1,6 +1,7 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { Access } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -23,8 +24,6 @@ import { Access as AccessModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';
-import { CreateAccessDto } from './create-access.dto';
-import { UpdateAccessDto } from './update-access.dto';
 
 @Controller('access')
 export class AccessController {

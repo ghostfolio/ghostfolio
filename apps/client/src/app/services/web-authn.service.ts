@@ -1,9 +1,9 @@
-import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
+import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+import { AuthDeviceDto } from '@ghostfolio/common/dtos';
 import {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON
-} from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
-import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+} from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
