@@ -207,6 +207,8 @@ export class UserController {
       password: accessToken,
       salt: this.configurationService.get('ACCESS_TOKEN_SALT')
     });
+    //const hashedAccessToken = accessToken; // TEMPORARY REMOVE HASHING FOR TESTING PURPOSES ONLY
+    //if (!this.configurationService) console.log('config service exists');
 
     const [user] = await this.userService.users({
       where: { accessToken: hashedAccessToken, id: userId }

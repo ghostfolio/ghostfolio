@@ -92,6 +92,7 @@ export class UserService {
       password: accessToken,
       salt: this.configurationService.get('ACCESS_TOKEN_SALT')
     });
+    //const hashedAccessToken = accessToken; // TEMPORARY REMOVE HASHING FOR TESTING PURPOSES ONLY
 
     return { accessToken, hashedAccessToken };
   }

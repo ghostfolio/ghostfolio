@@ -25,6 +25,10 @@ export class AuthService {
           salt: this.configurationService.get('ACCESS_TOKEN_SALT')
         });
 
+        //if (!this.configurationService) console.log('config service exists');
+
+        //const hashedAccessToken = accessToken; // TEMPORARY REMOVE HASHING FOR TESTING PURPOSES ONLY
+
         const [user] = await this.userService.users({
           where: { accessToken: hashedAccessToken }
         });
