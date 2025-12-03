@@ -2,12 +2,12 @@
 export default {
   displayName: 'common',
 
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
   transform: {
     '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/libs/common',
-  setupFiles: ['<rootDir>/src/test-setup.ts'],
   preset: '../../jest.preset.js'
 };
