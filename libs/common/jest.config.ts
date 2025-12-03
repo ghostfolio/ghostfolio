@@ -8,5 +8,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/libs/common',
+  setupFiles: ['<rootDir>/jest.setup.ts'],
   preset: '../../jest.preset.js'
 };
