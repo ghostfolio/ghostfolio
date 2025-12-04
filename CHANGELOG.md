@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `nx` from version `21.5.1` to `22.1.3`
 
+#### Changed
+
+- Upgraded `envalid` from version `8.1.0` to `8.1.1`
+
+## 2.221.0 - 2025-12-01
+
 ### Changed
 
 - Refactored the API query parameters in various data provider services
@@ -21,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the country weightings in the _Financial Modeling Prep_ service
+- Improved the search functionality by name in the _Financial Modeling Prep_ service
+- Resolved an issue in the user endpoint where the list was returning empty in the admin control panel’s users section
 
 ## 2.220.0 - 2025-11-29
 
@@ -2256,7 +2264,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the portfolio summary with the currency conversion of fees
-- Fixed an issue in the the search for a holding
+- Fixed an issue in the search for a holding
 - Removed the show condition of the experimental features setting in the user settings
 
 ## 2.95.0 - 2024-07-12
