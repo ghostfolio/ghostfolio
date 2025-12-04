@@ -15,6 +15,10 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   public constructor(configService: ConfigService) {
+    const adapter = new PrismaPg({
+      connectionString: configService.get<string>('DATABASE_URL')
+    });
+
     let customLogLevels: LogLevel[];
 
     try {
@@ -28,9 +32,6 @@ export class PrismaService
         ? [{ emit: 'stdout', level: 'query' }]
         : [];
 
-    const adapter = new PrismaPg({
-      connectionString: configService.get<string>('DATABASE_URL')
-    });
     super({
       adapter,
       log,
