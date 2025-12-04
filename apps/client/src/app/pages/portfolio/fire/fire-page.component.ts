@@ -178,6 +178,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
             this.user = user;
 
             this.calculateWithdrawalRates();
+            this.calculateProjectedWithdrawalRates();
 
             this.changeDetectorRef.markForCheck();
           });
@@ -221,19 +222,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
 
   public onCalculationComplete(calculation: FireCalculation) {
     this.fireCalculation = calculation;
-
-    if (
-      this.fireWealth &&
-      this.user?.settings?.safeWithdrawalRate &&
-      calculation.projectedTotalAmount
-    ) {
-      this.projectedWithdrawalRatePerYear = new Big(
-        calculation.projectedTotalAmount
-      ).mul(this.user.settings.safeWithdrawalRate);
-
-      this.projectedWithdrawalRatePerMonth =
-        this.projectedWithdrawalRatePerYear.div(12);
-    }
+    this.calculateProjectedWithdrawalRates();
   }
 
   public ngOnDestroy() {
@@ -248,6 +237,21 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       ).mul(this.user.settings.safeWithdrawalRate);
 
       this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
+    }
+  }
+
+  private calculateProjectedWithdrawalRates() {
+    if (
+      this.fireWealth &&
+      this.user?.settings?.safeWithdrawalRate &&
+      this.fireCalculation.projectedTotalAmount
+    ) {
+      this.projectedWithdrawalRatePerYear = new Big(
+        this.fireCalculation.projectedTotalAmount
+      ).mul(this.user.settings.safeWithdrawalRate);
+
+      this.projectedWithdrawalRatePerMonth =
+        this.projectedWithdrawalRatePerYear.div(12);
     }
   }
 }
