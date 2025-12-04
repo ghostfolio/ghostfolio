@@ -1,7 +1,11 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { FireWealth, User } from '@ghostfolio/common/interfaces';
+import {
+  FireWealth,
+  User,
+  FireCalculation
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -43,6 +47,10 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
+
+  public projectedWithdrawalRatePerMonth: Big;
+  public projectedWithdrawalRatePerYear: Big;
+  public fireCalculation: FireCalculation;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -209,6 +217,23 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
             this.changeDetectorRef.markForCheck();
           });
       });
+  }
+
+  public onCalculationComplete(calculation: FireCalculation) {
+    this.fireCalculation = calculation;
+
+    if (
+      this.fireWealth &&
+      this.user?.settings?.safeWithdrawalRate &&
+      calculation.projectedTotalAmount
+    ) {
+      this.projectedWithdrawalRatePerYear = new Big(
+        calculation.projectedTotalAmount
+      ).mul(this.user.settings.safeWithdrawalRate);
+
+      this.projectedWithdrawalRatePerMonth =
+        this.projectedWithdrawalRatePerYear.div(12);
+    }
   }
 
   public ngOnDestroy() {
