@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+#### Added
+
+- Introduced data source transformation support in the import functionality for self-hosted environments
+
 #### Changed
 
 - Upgraded `envalid` from version `8.1.0` to `8.1.1`
