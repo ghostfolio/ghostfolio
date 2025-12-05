@@ -13,9 +13,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class TransformDataSourceInResponseInterceptor<T>
-  implements NestInterceptor<T, any>
-{
+export class TransformDataSourceInResponseInterceptor<
+  T
+> implements NestInterceptor<T, any> {
   private encodedDataSourceMap: {
     [dataSource: string]: string;
   } = {};
