@@ -179,6 +179,8 @@ export class SubscriptionService {
         offerKey = 'renewal-early-bird-2023';
       } else if (isBefore(createdAt, parseDate('2024-01-01'))) {
         offerKey = 'renewal-early-bird-2024';
+      } else if (isBefore(createdAt, parseDate('2025-12-01'))) {
+        offerKey = 'renewal-early-bird-2025';
       }
 
       const offer = await this.getSubscriptionOffer({

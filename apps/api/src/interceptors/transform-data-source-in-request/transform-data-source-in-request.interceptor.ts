@@ -11,9 +11,9 @@ import { DataSource } from '@prisma/client';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class TransformDataSourceInRequestInterceptor<T>
-  implements NestInterceptor<T, any>
-{
+export class TransformDataSourceInRequestInterceptor<
+  T
+> implements NestInterceptor<T, any> {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {}
