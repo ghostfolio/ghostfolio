@@ -6,6 +6,10 @@ import { join } from 'node:path';
 expand(config({ quiet: true }));
 
 export default defineConfig({
+  datasource: {
+    provider: 'postgresql',
+    url: process.env.DATABASE_URL
+  },
   migrations: {
     path: join(__dirname, '..', 'prisma', 'migrations'),
     seed: `node ${join(__dirname, '..', 'prisma', 'seed.mts')}`
