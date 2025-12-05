@@ -41,7 +41,18 @@
               class="mr-2"
               src="../assets/icons/google.svg"
               style="height: 1rem"
-            /><span i18n>Sign in with Google</span></a
+            /><ng-container i18n>Sign in with Google</ng-container></a
+          >
+        </div>
+      }
+
+      @if (data.hasPermissionToUseAuthOidc) {
+        <div class="d-flex flex-column mt-2">
+          <a
+            class="px-4 rounded-pill"
+            href="../api/auth/oidc"
+            mat-stroked-button
+            ><ng-container i18n>Sign in with OIDC</ng-container></a
           >
         </div>
       }

@@ -29,6 +29,7 @@ export const permissions = {
   deleteUser: 'deleteUser',
   deleteWatchlistItem: 'deleteWatchlistItem',
   enableAuthGoogle: 'enableAuthGoogle',
+  enableAuthOidc: 'enableAuthOidc',
   enableAuthToken: 'enableAuthToken',
   enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
@@ -159,6 +160,7 @@ export function filterGlobalPermissions(
     return globalPermissions.filter((permission) => {
       return (
         permission !== permissions.enableAuthGoogle &&
+        permission !== permissions.enableAuthOidc &&
         permission !== permissions.enableSubscription
       );
     });
