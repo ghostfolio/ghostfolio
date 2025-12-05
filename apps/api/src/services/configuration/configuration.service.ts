@@ -60,9 +60,18 @@ export class ConfigurationService {
       MAX_CHART_ITEMS: num({ default: 365 }),
       OIDC_AUTHORIZATION_URL: str({ default: '' }),
       OIDC_CALLBACK_URL: str({ default: '' }),
-      OIDC_CLIENT_ID: str({ default: '' }),
-      OIDC_CLIENT_SECRET: str({ default: '' }),
-      OIDC_ISSUER: str({ default: '' }),
+      OIDC_CLIENT_ID: str({
+        default: undefined,
+        requiredWhen: (env) => env.ENABLE_FEATURE_AUTH_OIDC === true
+      }),
+      OIDC_CLIENT_SECRET: str({
+        default: undefined,
+        requiredWhen: (env) => env.ENABLE_FEATURE_AUTH_OIDC === true
+      }),
+      OIDC_ISSUER: str({
+        default: undefined,
+        requiredWhen: (env) => env.ENABLE_FEATURE_AUTH_OIDC === true
+      }),
       OIDC_SCOPE: json({ default: ['openid'] }),
       OIDC_TOKEN_URL: str({ default: '' }),
       OIDC_USER_INFO_URL: str({ default: '' }),
