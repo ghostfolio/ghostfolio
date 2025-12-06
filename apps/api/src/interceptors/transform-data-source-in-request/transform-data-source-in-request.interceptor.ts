@@ -11,9 +11,9 @@ import { DataSource } from '@prisma/client';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class TransformDataSourceInRequestInterceptor<T>
-  implements NestInterceptor<T, any>
-{
+export class TransformDataSourceInRequestInterceptor<
+  T
+> implements NestInterceptor<T, any> {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {}
@@ -68,6 +68,19 @@ export class TransformDataSourceInRequestInterceptor<T>
             writable: true
           });
         }
+      }
+    } else {
+      if (request.body?.activities) {
+        request.body.activities = request.body.activities.map((activity) => {
+          if (DataSource[activity.dataSource]) {
+            return activity;
+          } else {
+            return {
+              ...activity,
+              dataSource: decodeDataSource(activity.dataSource)
+            };
+          }
+        });
       }
     }
 
