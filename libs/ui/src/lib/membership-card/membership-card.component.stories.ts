@@ -40,6 +40,7 @@ type Story = StoryObj<GfMembershipCardComponent>;
 
 export const Basic: Story = {
   args: {
+    hover3d: false,
     name: 'Basic'
   }
 };
@@ -48,6 +49,7 @@ export const Premium: Story = {
   args: {
     expiresAt: addYears(new Date(), 1).toLocaleDateString(),
     hasPermissionToCreateApiKey: true,
+    hover3d: false,
     name: 'Premium'
   }
 };

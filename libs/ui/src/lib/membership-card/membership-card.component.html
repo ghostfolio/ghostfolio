@@ -6,7 +6,7 @@
     >
       @if (hover3d) {
         @for (zone of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track zone) {
-          <span class="hover-zone"></span>
+          <span class="hover-zone position-absolute"></span>
         }
       }
       <div class="d-flex justify-content-end">
@@ -23,7 +23,7 @@
             <div class="text-monospace value">* * * * * * * * *</div>
             <div class="ml-1">
               <button
-                class="no-min-width"
+                class="bg-transparent no-min-width"
                 i18n-title
                 mat-button
                 title="Generate Ghostfolio Premium Data Provider API key for self-hosted environments..."

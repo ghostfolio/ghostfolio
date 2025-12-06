@@ -1,7 +1,7 @@
 :host {
   --borderRadius: 1rem;
   --borderWidth: 2px;
-  --hover3dSpotlightOpacity: 0.1;
+  --hover3dSpotlightOpacity: 0.2;
 
   display: block;
   max-width: 25rem;
@@ -17,32 +17,6 @@
       border-radius: var(--borderRadius);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 
-      &:after {
-        animation: animatedborder 7s ease alternate infinite;
-        background: linear-gradient(60deg, #5073b8, #1098ad, #07b39b, #6fba82);
-        background-size: 300% 300%;
-        border-radius: var(--borderRadius);
-        content: '';
-        height: calc(100% + var(--borderWidth) * 2);
-        left: calc(-1 * var(--borderWidth));
-        position: absolute;
-        top: calc(-1 * var(--borderWidth));
-        width: calc(100% + var(--borderWidth) * 2);
-        z-index: -1;
-
-        @keyframes animatedborder {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      }
-
       .card-item {
         aspect-ratio: 1.586;
         background-color: #1d2124;
@@ -53,6 +27,7 @@
         button {
           color: rgba(var(--light-primary-text));
           height: 1.5rem;
+          z-index: 3;
         }
 
         .heading {
@@ -65,7 +40,7 @@
       }
 
       &:not(.premium) {
-        &:after {
+        &::after {
           opacity: 0;
         }
 
@@ -124,7 +99,6 @@
 
           .hover-zone {
             height: 33.333%;
-            position: absolute;
             width: 33.333%;
             z-index: 2;
 
