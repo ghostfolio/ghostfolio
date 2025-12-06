@@ -69,6 +69,19 @@ export class TransformDataSourceInRequestInterceptor<
           });
         }
       }
+    } else {
+      if (request.body?.activities) {
+        request.body.activities = request.body.activities.map((activity) => {
+          if (DataSource[activity.dataSource]) {
+            return activity;
+          } else {
+            return {
+              ...activity,
+              dataSource: decodeDataSource(activity.dataSource)
+            };
+          }
+        });
+      }
     }
 
     return next.handle();
