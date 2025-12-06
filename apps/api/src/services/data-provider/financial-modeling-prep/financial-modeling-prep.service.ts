@@ -41,6 +41,7 @@ import {
   isSameDay,
   parseISO
 } from 'date-fns';
+import { uniqBy } from 'lodash';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
@@ -549,14 +550,27 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           apikey: this.apiKey
         });
 
-        const result = await fetch(
-          `${this.getUrl({ version: 'stable' })}/search-symbol?${queryParams.toString()}`,
-          {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
+        const [nameResults, symbolResults] = await Promise.all([
+          fetch(
+            `${this.getUrl({ version: 'stable' })}/search-name?${queryParams.toString()}`,
+            {
+              signal: AbortSignal.timeout(requestTimeout)
+            }
+          ).then((res) => res.json()),
+          fetch(
+            `${this.getUrl({ version: 'stable' })}/search-symbol?${queryParams.toString()}`,
+            {
+              signal: AbortSignal.timeout(requestTimeout)
+            }
+          ).then((res) => res.json())
+        ]);
+
+        const result = uniqBy(
+          [...nameResults, ...symbolResults],
+          ({ exchange, symbol }) => {
+            return `${exchange}-${symbol}`;
           }
-        ).then((res) => res.json());
+        );
 
         items = result
           .filter(({ exchange, symbol }) => {
