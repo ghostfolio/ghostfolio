@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+#### Added
+
+- Introduced data source transformation support in the import functionality for self-hosted environments
+
 #### Changed
 
 - Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
