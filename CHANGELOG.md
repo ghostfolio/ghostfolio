@@ -10,11 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added _OpenID Connect_ (`OIDC`) as a new login provider (experimental)
+- Introduced data source transformation support in the import functionality for self-hosted environments
+- Added an optional 3D hover effect to the membership card component
 
 #### Changed
 
+- Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
 - Upgraded `envalid` from version `8.1.0` to `8.1.1`
-- Upgraded `prettier` from version `3.7.3` to `3.7.4`
+- Upgraded `prettier` fr version `3.7.3` to `3.7.4`
 
 ## 2.221.0 - 2025-12-01
 
