@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Upgraded `nx` from version `21.5.1` to `22.1.3`
+
+## 2.221.0 - 2025-12-01
+
 #### Added
 
 - Introduced data source transformation support in the import functionality for self-hosted environments
@@ -16,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
 - Upgraded `envalid` from version `8.1.0` to `8.1.1`
-- Upgraded `prettier` from version `3.7.3` to `3.7.4`
 
 ## 2.221.0 - 2025-12-01
 
