@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - Introduced data source transformation support in the import functionality for self-hosted environments
+- Added an optional 3D hover effect to the membership card component
 
 #### Changed
 

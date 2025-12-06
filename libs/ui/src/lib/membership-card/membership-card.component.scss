@@ -1,71 +1,231 @@
 :host {
   --borderRadius: 1rem;
   --borderWidth: 2px;
+  --hover3dSpotlightOpacity: 0.2;
 
   display: block;
   max-width: 25rem;
   padding-top: calc(1 * var(--borderWidth));
   width: 100%;
 
-  .card-container {
-    border-radius: var(--borderRadius);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  .card-wrapper {
+    &.hover-3d {
+      perspective: 1000px;
+    }
 
-    &:after {
-      animation: animatedborder 7s ease alternate infinite;
-      background: linear-gradient(60deg, #5073b8, #1098ad, #07b39b, #6fba82);
-      background-size: 300% 300%;
+    .card-container {
       border-radius: var(--borderRadius);
-      content: '';
-      height: calc(100% + var(--borderWidth) * 2);
-      left: calc(-1 * var(--borderWidth));
-      top: calc(-1 * var(--borderWidth));
-      position: absolute;
-      width: calc(100% + var(--borderWidth) * 2);
-      z-index: -1;
-
-      @keyframes animatedborder {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-    }
-
-    .card-item {
-      aspect-ratio: 1.586;
-      background-color: #1d2124;
-      border-radius: calc(var(--borderRadius) - var(--borderWidth));
-      color: rgba(var(--light-primary-text));
-      line-height: 1.2;
-
-      button {
-        color: rgba(var(--light-primary-text));
-        height: 1.5rem;
-      }
-
-      .heading {
-        font-size: 13px;
-      }
-
-      .value {
-        font-size: 18px;
-      }
-    }
-
-    &:not(.premium) {
-      &:after {
-        opacity: 0;
-      }
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 
       .card-item {
-        background-color: #ffffff;
-        color: rgba(var(--dark-primary-text));
+        aspect-ratio: 1.586;
+        background-color: #1d2124;
+        border-radius: calc(var(--borderRadius) - var(--borderWidth));
+        color: rgba(var(--light-primary-text));
+        line-height: 1.2;
+
+        button {
+          color: rgba(var(--light-primary-text));
+          height: 1.5rem;
+          z-index: 3;
+        }
+
+        .heading {
+          font-size: 13px;
+        }
+
+        .value {
+          font-size: 18px;
+        }
+      }
+
+      &:not(.premium) {
+        &::after {
+          opacity: 0;
+        }
+
+        .card-item {
+          background-color: #ffffff;
+          color: rgba(var(--dark-primary-text));
+        }
+      }
+    }
+
+    &.hover-3d {
+      --hover3d-rotate-x: 0;
+      --hover3d-rotate-y: 0;
+      --hover3d-shine: 100% 100%;
+
+      .card-container {
+        overflow: hidden;
+        position: relative;
+        scale: 1;
+        transform: rotate3d(
+          var(--hover3d-rotate-x),
+          var(--hover3d-rotate-y),
+          0,
+          10deg
+        );
+        transform-style: preserve-3d;
+        transition:
+          box-shadow 400ms ease-out,
+          scale 500ms ease-out,
+          transform 500ms ease-out;
+        will-change: transform, scale;
+
+        &::before {
+          background-image: radial-gradient(
+            circle at 50%,
+            rgba(255, 255, 255, var(--hover3dSpotlightOpacity)) 10%,
+            transparent 50%
+          );
+          content: '';
+          filter: blur(0.75rem);
+          height: 33.333%;
+          opacity: 0;
+          pointer-events: none;
+          position: absolute;
+          scale: 500%;
+          translate: var(--hover3d-shine);
+          transition:
+            opacity 400ms ease-out,
+            translate 400ms ease-out;
+          width: 33.333%;
+          z-index: 1;
+        }
+
+        .card-item {
+          position: relative;
+
+          .hover-zone {
+            height: 33.333%;
+            width: 33.333%;
+            z-index: 2;
+
+            &:nth-child(1) {
+              left: 0;
+              top: 0;
+            }
+
+            &:nth-child(2) {
+              left: 33.333%;
+              top: 0;
+            }
+
+            &:nth-child(3) {
+              right: 0;
+              top: 0;
+            }
+
+            &:nth-child(4) {
+              left: 0;
+              top: 33.333%;
+            }
+
+            &:nth-child(5) {
+              left: 33.333%;
+              top: 33.333%;
+            }
+
+            &:nth-child(6) {
+              right: 0;
+              top: 33.333%;
+            }
+
+            &:nth-child(7) {
+              bottom: 0;
+              left: 0;
+            }
+
+            &:nth-child(8) {
+              bottom: 0;
+              left: 33.333%;
+            }
+
+            &:nth-child(9) {
+              bottom: 0;
+              right: 0;
+            }
+          }
+        }
+      }
+
+      &:has(.hover-zone:hover) .card-container {
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+        scale: 1.05;
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      &:has(.hover-zone:nth-child(1):hover) {
+        --hover3d-rotate-x: 1;
+        --hover3d-rotate-y: -1;
+        --hover3d-shine: 0% 0%;
+      }
+
+      &:has(.hover-zone:nth-child(2):hover) {
+        --hover3d-rotate-x: 1;
+        --hover3d-rotate-y: 0;
+        --hover3d-shine: 100% 0%;
+      }
+
+      &:has(.hover-zone:nth-child(3):hover) {
+        --hover3d-rotate-x: 1;
+        --hover3d-rotate-y: 1;
+        --hover3d-shine: 200% 0%;
+      }
+
+      &:has(.hover-zone:nth-child(4):hover) {
+        --hover3d-rotate-x: 0;
+        --hover3d-rotate-y: -1;
+        --hover3d-shine: 0% 100%;
+      }
+
+      &:has(.hover-zone:nth-child(5):hover) {
+        --hover3d-rotate-x: 0;
+        --hover3d-rotate-y: 0;
+        --hover3d-shine: 100% 100%;
+      }
+
+      &:has(.hover-zone:nth-child(6):hover) {
+        --hover3d-rotate-x: 0;
+        --hover3d-rotate-y: 1;
+        --hover3d-shine: 200% 100%;
+      }
+
+      &:has(.hover-zone:nth-child(7):hover) {
+        --hover3d-rotate-x: -1;
+        --hover3d-rotate-y: -1;
+        --hover3d-shine: 0% 200%;
+      }
+
+      &:has(.hover-zone:nth-child(8):hover) {
+        --hover3d-rotate-x: -1;
+        --hover3d-rotate-y: 0;
+        --hover3d-shine: 100% 200%;
+      }
+
+      &:has(.hover-zone:nth-child(9):hover) {
+        --hover3d-rotate-x: -1;
+        --hover3d-rotate-y: 1;
+        --hover3d-shine: 200% 200%;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-wrapper.hover-3d {
+      .card-container {
+        scale: 1 !important;
+        transform: none !important;
+        transition: none !important;
+
+        &::before {
+          opacity: 0 !important;
+          transition: none !important;
+        }
       }
     }
   }
