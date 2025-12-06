@@ -54,23 +54,30 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public durationExtension: StringValue;
   public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
   );
+
   public importAndExportTooltipOSS = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
   );
+
   public importAndExportTooltipPremium = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM'
   );
+
   public isLoggedIn: boolean;
   public label: string;
   public price: number;
   public priceId: string;
+
   public professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
+
   public referralBrokers = [
+    'Alpian',
     'DEGIRO',
     'finpension',
     'frankly',
@@ -80,6 +87,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     'VIAC',
     'Zak'
   ];
+
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
