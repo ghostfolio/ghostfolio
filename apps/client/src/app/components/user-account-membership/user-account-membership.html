@@ -5,6 +5,7 @@
         <gf-membership-card
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
           [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
+          [hover3d]="true"
           [name]="user?.subscription?.type"
           (generateApiKeyClicked)="onGenerateApiKey()"
         />
