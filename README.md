@@ -103,6 +103,21 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `REDIS_PASSWORD`         | `string`              |               | The password of _Redis_                                                                                                             |
 | `REDIS_PORT`             | `number`              |               | The port where _Redis_ is running                                                                                                   |
 | `REQUEST_TIMEOUT`        | `number` (optional)   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
+| `ROOT_URL`               | `string` (optional)   |               | The root URL of the Ghostfolio application (e.g., `https://example.com`). Used for generating callback URLs and external links.     |
+
+#### OpenID Connect (OIDC)
+
+| Name                       | Type                  | Default Value                       | Description                                                                                                                      |
+| -------------------------- | --------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `ENABLE_FEATURE_AUTH_OIDC` | `boolean`             | `false`                             | Enables OpenID Connect authentication                                                                                            |
+| `OIDC_AUTHORIZATION_URL`   | `string` (optional)   |                                     | Manual override for the OIDC authorization endpoint. If not provided, it will be discovered from the issuer                      |
+| `OIDC_CLIENT_ID`           | `string`              |                                     | The OIDC client ID (required when OIDC is enabled)                                                                               |
+| `OIDC_CLIENT_SECRET`       | `string`              |                                     | The OIDC client secret (required when OIDC is enabled)                                                                           |
+| `OIDC_CALLBACK_URL`        | `string` (optional)   | `{ROOT_URL}/api/auth/oidc/callback` | The OIDC callback URL.                                                                                                           |
+| `OIDC_ISSUER`              | `string`              |                                     | The OIDC issuer URL (required when OIDC is enabled). Used to discover OIDC configuration via `/.well-known/openid-configuration` |
+| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                        | The OIDC scopes to request. Must be provided as a JSON array, e.g. `["openid", "profile", "email"]`                              |
+| `OIDC_TOKEN_URL`           | `string` (optional)   |                                     | Manual override for the OIDC token endpoint. If not provided, it will be discovered from the issuer                              |
+| `OIDC_USER_INFO_URL`       | `string` (optional)   |                                     | Manual override for the OIDC user info endpoint. If not provided, it will be discovered from the issuer                          |
 
 ### Run with Docker Compose
 
