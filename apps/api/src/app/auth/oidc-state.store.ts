@@ -68,8 +68,8 @@ export class OidcStateStore {
         return callback(null, undefined, undefined);
       }
 
-      // Check if state has expired
       if (Date.now() - data.timestamp > this.STATE_EXPIRY_MS) {
+        // State has expired
         this.stateMap.delete(handle);
         return callback(null, undefined, undefined);
       }

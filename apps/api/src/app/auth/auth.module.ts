@@ -73,12 +73,13 @@ import { OidcStrategy } from './oidc.strategy';
         let tokenURL: string;
         let userInfoURL: string;
 
-        // If all manual URLs are provided, use them; otherwise fetch from discovery
         if (manualAuthorizationUrl && manualTokenUrl && manualUserInfoUrl) {
+          // Use manual URLs
           authorizationURL = manualAuthorizationUrl;
           tokenURL = manualTokenUrl;
           userInfoURL = manualUserInfoUrl;
         } else {
+          // Fetch OIDC configuration from discovery endpoint
           try {
             const response = await fetch(
               `${issuer}/.well-known/openid-configuration`
@@ -102,14 +103,14 @@ import { OidcStrategy } from './oidc.strategy';
         }
 
         const options: StrategyOptions = {
+          authorizationURL,
           issuer,
           scope,
-          authorizationURL,
+          tokenURL,
+          userInfoURL,
           callbackURL: callbackUrl,
           clientID: configurationService.get('OIDC_CLIENT_ID'),
-          clientSecret: configurationService.get('OIDC_CLIENT_SECRET'),
-          tokenURL,
-          userInfoURL
+          clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
         };
 
         return new OidcStrategy(authService, options);

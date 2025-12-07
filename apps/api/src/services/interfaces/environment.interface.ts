@@ -35,9 +35,9 @@ export interface Environment extends CleanedEnvAccessors {
   MAX_CHART_ITEMS: number;
   OIDC_AUTHORIZATION_URL: string;
   OIDC_CALLBACK_URL: string;
-  OIDC_CLIENT_ID: string | undefined;
-  OIDC_CLIENT_SECRET: string | undefined;
-  OIDC_ISSUER: string | undefined;
+  OIDC_CLIENT_ID: string;
+  OIDC_CLIENT_SECRET: string;
+  OIDC_ISSUER: string;
   OIDC_SCOPE: string[];
   OIDC_TOKEN_URL: string;
   OIDC_USER_INFO_URL: string;

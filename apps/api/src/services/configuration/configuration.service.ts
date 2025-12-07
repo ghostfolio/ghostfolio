@@ -62,15 +62,21 @@ export class ConfigurationService {
       OIDC_CALLBACK_URL: str({ default: '' }),
       OIDC_CLIENT_ID: str({
         default: undefined,
-        requiredWhen: (env) => env.ENABLE_FEATURE_AUTH_OIDC === true
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_OIDC === true;
+        }
       }),
       OIDC_CLIENT_SECRET: str({
         default: undefined,
-        requiredWhen: (env) => env.ENABLE_FEATURE_AUTH_OIDC === true
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_OIDC === true;
+        }
       }),
       OIDC_ISSUER: str({
         default: undefined,
-        requiredWhen: (env) => env.ENABLE_FEATURE_AUTH_OIDC === true
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_OIDC === true;
+        }
       }),
       OIDC_SCOPE: json({ default: ['openid'] }),
       OIDC_TOKEN_URL: str({ default: '' }),
