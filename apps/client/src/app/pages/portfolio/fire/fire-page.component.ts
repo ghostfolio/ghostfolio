@@ -2,9 +2,9 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  FireCalculation,
   FireWealth,
-  User,
-  FireCalculation
+  User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
@@ -38,6 +38,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class GfFirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
+  public fireCalculation: FireCalculation;
   public fireWealth: FireWealth;
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
@@ -47,10 +48,8 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
-
-  public projectedWithdrawalRatePerMonth: Big;
-  public projectedWithdrawalRatePerYear: Big;
-  public fireCalculation: FireCalculation;
+  public withdrawalRatePerMonthProjected: Big;
+  public withdrawalRatePerYearProjected: Big;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -246,12 +245,12 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       this.user?.settings?.safeWithdrawalRate &&
       this.fireCalculation.projectedTotalAmount
     ) {
-      this.projectedWithdrawalRatePerYear = new Big(
+      this.withdrawalRatePerYearProjected = new Big(
         this.fireCalculation.projectedTotalAmount
       ).mul(this.user.settings.safeWithdrawalRate);
 
-      this.projectedWithdrawalRatePerMonth =
-        this.projectedWithdrawalRatePerYear.div(12);
+      this.withdrawalRatePerMonthProjected =
+        this.withdrawalRatePerYearProjected.div(12);
     }
   }
 }
