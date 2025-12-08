@@ -115,7 +115,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `OIDC_CLIENT_ID`           | `string`              |                                      | The OIDC client ID                                                                                          |
 | `OIDC_CLIENT_SECRET`       | `string`              |                                      | The OIDC client secret                                                                                      |
 | `OIDC_ISSUER`              | `string`              |                                      | The OIDC issuer URL, used to discover the OIDC configuration via `/.well-known/openid-configuration`        |
-| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                         | The OIDC scopes to request, e.g. `["email","openid","profile"]`                                             |
+| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                         | The OIDC scope to request, e.g. `["email","openid","profile"]`                                              |
 | `OIDC_TOKEN_URL`           | `string` (optional)   |                                      | Manual override for the OIDC token endpoint. If not provided, it will be discovered from the issuer         |
 | `OIDC_USER_INFO_URL`       | `string` (optional)   |                                      | Manual override for the OIDC user info endpoint. If not provided, it will be discovered from the issuer     |
 
