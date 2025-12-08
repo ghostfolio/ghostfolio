@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.222.0 - 2025-12-07
+
+### Added
+
+- Introduced data source transformation support in the import functionality for self-hosted environments
+- Added _OpenID Connect_ (`OIDC`) as a new login provider for self-hosted environments (experimental)
+- Added an optional 3D hover effect to the membership card component
+
+### Changed
+
+- Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
+- Upgraded `envalid` from version `8.1.0` to `8.1.1`
+- Upgraded `prettier` from version `3.7.3` to `3.7.4`
+
+## 2.221.0 - 2025-12-01
 
 ### Added
 
@@ -21,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the country weightings in the _Financial Modeling Prep_ service
+- Improved the search functionality by name in the _Financial Modeling Prep_ service
+- Resolved an issue in the user endpoint where the list was returning empty in the admin control panel’s users section
 
 ## 2.220.0 - 2025-11-29
 
@@ -2256,7 +2272,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the portfolio summary with the currency conversion of fees
-- Fixed an issue in the the search for a holding
+- Fixed an issue in the search for a holding
 - Removed the show condition of the experimental features setting in the user settings
 
 ## 2.95.0 - 2024-07-12

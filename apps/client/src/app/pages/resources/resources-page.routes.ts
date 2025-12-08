@@ -33,9 +33,9 @@ export const routes: Routes = [
       {
         path: publicRoutes.resources.subRoutes.personalFinanceTools.path,
         loadChildren: () =>
-          import(
-            './personal-finance-tools/personal-finance-tools-page.routes'
-          ).then((m) => m.routes)
+          import('./personal-finance-tools/personal-finance-tools-page.routes').then(
+            (m) => m.routes
+          )
       }
     ],
     path: '',
