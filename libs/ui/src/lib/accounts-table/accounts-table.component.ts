@@ -1,8 +1,7 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale } from '@ghostfolio/common/helper';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
