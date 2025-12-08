@@ -85,39 +85,39 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 ### Supported Environment Variables
 
-| Name                     | Type                  | Default Value | Description                                                                                                                         |
-| ------------------------ | --------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT`      | `string`              |               | A random string used as salt for access tokens                                                                                      |
-| `API_KEY_COINGECKO_DEMO` | `string` (optional)   |               | The _CoinGecko_ Demo API key                                                                                                        |
-| `API_KEY_COINGECKO_PRO`  | `string` (optional)   |               | The _CoinGecko_ Pro API key                                                                                                         |
-| `DATABASE_URL`           | `string`              |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
-| `HOST`                   | `string` (optional)   | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
-| `JWT_SECRET_KEY`         | `string`              |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
-| `LOG_LEVELS`             | `string[]` (optional) |               | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
-| `PORT`                   | `number` (optional)   | `3333`        | The port where the Ghostfolio application will run on                                                                               |
-| `POSTGRES_DB`            | `string`              |               | The name of the _PostgreSQL_ database                                                                                               |
-| `POSTGRES_PASSWORD`      | `string`              |               | The password of the _PostgreSQL_ database                                                                                           |
-| `POSTGRES_USER`          | `string`              |               | The user of the _PostgreSQL_ database                                                                                               |
-| `REDIS_DB`               | `number` (optional)   | `0`           | The database index of _Redis_                                                                                                       |
-| `REDIS_HOST`             | `string`              |               | The host where _Redis_ is running                                                                                                   |
-| `REDIS_PASSWORD`         | `string`              |               | The password of _Redis_                                                                                                             |
-| `REDIS_PORT`             | `number`              |               | The port where _Redis_ is running                                                                                                   |
-| `REQUEST_TIMEOUT`        | `number` (optional)   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
-| `ROOT_URL`               | `string` (optional)   |               | The root URL of the Ghostfolio application (e.g., `https://example.com`). Used for generating callback URLs and external links.     |
+| Name                     | Type                  | Default Value         | Description                                                                                                                         |
+| ------------------------ | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `ACCESS_TOKEN_SALT`      | `string`              |                       | A random string used as salt for access tokens                                                                                      |
+| `API_KEY_COINGECKO_DEMO` | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                        |
+| `API_KEY_COINGECKO_PRO`  | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                         |
+| `DATABASE_URL`           | `string`              |                       | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
+| `HOST`                   | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                               |
+| `JWT_SECRET_KEY`         | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
+| `LOG_LEVELS`             | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
+| `PORT`                   | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                               |
+| `POSTGRES_DB`            | `string`              |                       | The name of the _PostgreSQL_ database                                                                                               |
+| `POSTGRES_PASSWORD`      | `string`              |                       | The password of the _PostgreSQL_ database                                                                                           |
+| `POSTGRES_USER`          | `string`              |                       | The user of the _PostgreSQL_ database                                                                                               |
+| `REDIS_DB`               | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                       |
+| `REDIS_HOST`             | `string`              |                       | The host where _Redis_ is running                                                                                                   |
+| `REDIS_PASSWORD`         | `string`              |                       | The password of _Redis_                                                                                                             |
+| `REDIS_PORT`             | `number`              |                       | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`        | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                   |
+| `ROOT_URL`               | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                   |
 
-#### OpenID Connect (OIDC)
+#### OpenID Connect OIDC (Experimental)
 
-| Name                       | Type                  | Default Value                       | Description                                                                                                                      |
-| -------------------------- | --------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `ENABLE_FEATURE_AUTH_OIDC` | `boolean`             | `false`                             | Enables OpenID Connect authentication                                                                                            |
-| `OIDC_AUTHORIZATION_URL`   | `string` (optional)   |                                     | Manual override for the OIDC authorization endpoint. If not provided, it will be discovered from the issuer                      |
-| `OIDC_CLIENT_ID`           | `string`              |                                     | The OIDC client ID (required when OIDC is enabled)                                                                               |
-| `OIDC_CLIENT_SECRET`       | `string`              |                                     | The OIDC client secret (required when OIDC is enabled)                                                                           |
-| `OIDC_CALLBACK_URL`        | `string` (optional)   | `{ROOT_URL}/api/auth/oidc/callback` | The OIDC callback URL.                                                                                                           |
-| `OIDC_ISSUER`              | `string`              |                                     | The OIDC issuer URL (required when OIDC is enabled). Used to discover OIDC configuration via `/.well-known/openid-configuration` |
-| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                        | The OIDC scopes to request. Must be provided as a JSON array, e.g. `["openid", "profile", "email"]`                              |
-| `OIDC_TOKEN_URL`           | `string` (optional)   |                                     | Manual override for the OIDC token endpoint. If not provided, it will be discovered from the issuer                              |
-| `OIDC_USER_INFO_URL`       | `string` (optional)   |                                     | Manual override for the OIDC user info endpoint. If not provided, it will be discovered from the issuer                          |
+| Name                       | Type                  | Default Value                        | Description                                                                                                 |
+| -------------------------- | --------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `ENABLE_FEATURE_AUTH_OIDC` | `boolean` (optional)  | `false`                              | Enables _OpenID Connect_ authentication                                                                     |
+| `OIDC_AUTHORIZATION_URL`   | `string` (optional)   |                                      | Manual override for the OIDC authorization endpoint. If not provided, it will be discovered from the issuer |
+| `OIDC_CALLBACK_URL`        | `string` (optional)   | `${ROOT_URL}/api/auth/oidc/callback` | The OIDC callback URL                                                                                       |
+| `OIDC_CLIENT_ID`           | `string`              |                                      | The OIDC client ID                                                                                          |
+| `OIDC_CLIENT_SECRET`       | `string`              |                                      | The OIDC client secret                                                                                      |
+| `OIDC_ISSUER`              | `string`              |                                      | The OIDC issuer URL, used to discover the OIDC configuration via `/.well-known/openid-configuration`        |
+| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                         | The OIDC scopes to request, e.g. `["email","openid","profile"]`                                             |
+| `OIDC_TOKEN_URL`           | `string` (optional)   |                                      | Manual override for the OIDC token endpoint. If not provided, it will be discovered from the issuer         |
+| `OIDC_USER_INFO_URL`       | `string` (optional)   |                                      | Manual override for the OIDC user info endpoint. If not provided, it will be discovered from the issuer     |
 
 ### Run with Docker Compose
 
