@@ -1,10 +1,9 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { DATE_FORMAT, getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,

@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
 import {
@@ -7,6 +5,7 @@ import {
   Benchmark,
   User
 } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { CommonModule } from '@angular/common';
 import {

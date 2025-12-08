@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the notification module to `@ghostfolio/ui`
 - Improved the language localization for German (`de`)
 
 ## 2.222.0 - 2025-12-07
