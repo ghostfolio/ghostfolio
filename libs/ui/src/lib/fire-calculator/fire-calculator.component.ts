@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
+import { FireCalculation } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { CommonModule } from '@angular/common';
@@ -91,6 +92,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Output() projectedTotalAmountChanged = new EventEmitter<number>();
   @Output() retirementDateChanged = new EventEmitter<Date>();
   @Output() savingsRateChanged = new EventEmitter<number>();
+  @Output() calculationComplete = new EventEmitter<FireCalculation>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
@@ -129,6 +131,18 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.initialize();
+      });
+
+    this.calculatorForm.valueChanges
+      .pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        const { retirementDate, projectedTotalAmount } =
+          this.calculatorForm.getRawValue();
+        this.calculationComplete.emit({
+          retirementDate,
+          projectedTotalAmount,
+          annualInterestRate: this.getR()
+        });
       });
 
     this.calculatorForm
