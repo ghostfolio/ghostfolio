@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import {
   DEFAULT_PAGE_SIZE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
@@ -12,6 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';

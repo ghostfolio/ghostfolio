@@ -1,6 +1,5 @@
 import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -19,6 +18,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 

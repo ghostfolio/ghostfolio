@@ -7,10 +7,10 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { NotificationService } from 'apps/client/src/app/core/notification/notification.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo';
+import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
 import { GfAccountsTableComponent } from './accounts-table.component';
 
