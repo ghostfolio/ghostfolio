@@ -59,7 +59,9 @@ export class CronService {
   public async runEverySundayAtTwelvePm() {
     if (await this.isDataGatheringEnabled()) {
       const assetProfileIdentifiers =
-        await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
+        await this.dataGatheringService.getActiveAssetProfileIdentifiers({
+          maxAge: '60 days'
+        });
 
       await this.dataGatheringService.addJobsToQueue(
         assetProfileIdentifiers.map(({ dataSource, symbol }) => {

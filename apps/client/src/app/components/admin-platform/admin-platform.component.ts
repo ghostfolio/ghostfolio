@@ -1,10 +1,10 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
   ChangeDetectionStrategy,

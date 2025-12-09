@@ -1,4 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   KEY_STAY_SIGNED_IN,
@@ -12,6 +11,7 @@ import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
   ChangeDetectionStrategy,

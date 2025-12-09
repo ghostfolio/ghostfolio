@@ -17,6 +17,7 @@ export interface Environment extends CleanedEnvAccessors {
   DATA_SOURCES: string[];
   DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: string[];
   ENABLE_FEATURE_AUTH_GOOGLE: boolean;
+  ENABLE_FEATURE_AUTH_OIDC: boolean;
   ENABLE_FEATURE_AUTH_TOKEN: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
   ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: boolean;
@@ -32,6 +33,14 @@ export interface Environment extends CleanedEnvAccessors {
   JWT_SECRET_KEY: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_CHART_ITEMS: number;
+  OIDC_AUTHORIZATION_URL: string;
+  OIDC_CALLBACK_URL: string;
+  OIDC_CLIENT_ID: string;
+  OIDC_CLIENT_SECRET: string;
+  OIDC_ISSUER: string;
+  OIDC_SCOPE: string[];
+  OIDC_TOKEN_URL: string;
+  OIDC_USER_INFO_URL: string;
   PORT: number;
   PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: number;
   PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY: number;

@@ -3,8 +3,10 @@ import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 
 import { SearchMode } from '../enums/search-mode';
 
-export interface AccountSearchResultItem
-  extends Pick<AccountWithValue, 'id' | 'name'> {
+export interface AccountSearchResultItem extends Pick<
+  AccountWithValue,
+  'id' | 'name'
+> {
   mode: SearchMode.ACCOUNT;
   routerLink: string[];
 }

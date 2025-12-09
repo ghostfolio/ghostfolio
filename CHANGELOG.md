@@ -9,8 +9,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the notification module to `@ghostfolio/ui`
+- Improved the language localization for German (`de`)
+
+## 2.222.0 - 2025-12-07
+
+### Added
+
+- Introduced data source transformation support in the import functionality for self-hosted environments
+- Added _OpenID Connect_ (`OIDC`) as a new login provider for self-hosted environments (experimental)
+- Added an optional 3D hover effect to the membership card component
+
+### Changed
+
+- Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
+- Upgraded `envalid` from version `8.1.0` to `8.1.1`
+- Upgraded `prettier` from version `3.7.3` to `3.7.4`
+
+## 2.221.0 - 2025-12-01
+
+### Changed
+
+- Refactored the API query parameters in various data provider services
+- Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
+- Upgraded `@internationalized/number` from version `3.6.3` to `3.6.5`
+- Upgraded `prettier` from version `3.7.2` to `3.7.3`
+
+### Fixed
+
+- Improved the country weightings in the _Financial Modeling Prep_ service
+- Improved the search functionality by name in the _Financial Modeling Prep_ service
+- Resolved an issue in the user endpoint where the list was returning empty in the admin control panel’s users section
+
+## 2.220.0 - 2025-11-29
+
+### Changed
+
+- Restricted the asset profile data gathering on Sundays to only process outdated asset profiles
+- Removed the _Cypress_ testing setup
 - Eliminated `uuid` in favor of using `randomUUID` from `node:crypto`
 - Upgraded `color` from version `5.0.0` to `5.0.3`
+- Upgraded `prettier` from version `3.6.2` to `3.7.2`
 
 ### Fixed
 
@@ -2237,7 +2276,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the portfolio summary with the currency conversion of fees
-- Fixed an issue in the the search for a holding
+- Fixed an issue in the search for a holding
 - Removed the show condition of the experimental features setting in the user settings
 
 ## 2.95.0 - 2024-07-12

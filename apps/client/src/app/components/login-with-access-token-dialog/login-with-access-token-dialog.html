@@ -45,6 +45,17 @@
           >
         </div>
       }
+
+      @if (data.hasPermissionToUseAuthOidc) {
+        <div class="d-flex flex-column mt-2">
+          <a
+            class="px-4 rounded-pill"
+            href="../api/auth/oidc"
+            mat-stroked-button
+            ><ng-container i18n>Sign in with OpenID Connect</ng-container></a
+          >
+        </div>
+      }
     </form>
   </div>
 </div>
