@@ -193,6 +193,30 @@ export class GfPortfolioProportionChartComponent
       });
     }
 
+    // If data is in percent format and total is less than 100%,
+    // allocate the remaining percentage to UNKNOWN_KEY
+    if (this.isInPercent) {
+      let totalValue = new Big(0);
+
+      for (const symbol in chartData) {
+        totalValue = totalValue.plus(chartData[symbol].value);
+      }
+
+      const remainingPercentage = new Big(1).minus(totalValue);
+
+      if (remainingPercentage.gt(0)) {
+        if (chartData[UNKNOWN_KEY]) {
+          chartData[UNKNOWN_KEY].value =
+            chartData[UNKNOWN_KEY].value.plus(remainingPercentage);
+        } else {
+          chartData[UNKNOWN_KEY] = {
+            name: UNKNOWN_KEY,
+            value: remainingPercentage
+          };
+        }
+      }
+    }
+
     let chartDataSorted = Object.entries(chartData)
       .sort((a, b) => {
         return a[1].value.minus(b[1].value).toNumber();
