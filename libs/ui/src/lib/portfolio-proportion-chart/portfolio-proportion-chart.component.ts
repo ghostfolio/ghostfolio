@@ -1,6 +1,6 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getLocale, getTextColor } from '@ghostfolio/common/helper';
+import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -196,22 +196,23 @@ export class GfPortfolioProportionChartComponent
     // If data is in percent format and total is less than 100%,
     // allocate the remaining percentage to UNKNOWN_KEY
     if (this.isInPercent) {
-      let totalValue = new Big(0);
+      const totalValueInPercentage = getSum(
+        Object.values(chartData).map(({ value }) => {
+          return value;
+        })
+      );
 
-      for (const symbol in chartData) {
-        totalValue = totalValue.plus(chartData[symbol].value);
-      }
+      const unknownValueInPercentage = new Big(1).minus(totalValueInPercentage);
 
-      const remainingPercentage = new Big(1).minus(totalValue);
-
-      if (remainingPercentage.gt(0)) {
+      if (unknownValueInPercentage.gt(0)) {
         if (chartData[UNKNOWN_KEY]) {
-          chartData[UNKNOWN_KEY].value =
-            chartData[UNKNOWN_KEY].value.plus(remainingPercentage);
+          chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
+            unknownValueInPercentage
+          );
         } else {
           chartData[UNKNOWN_KEY] = {
             name: UNKNOWN_KEY,
-            value: remainingPercentage
+            value: unknownValueInPercentage
           };
         }
       }
