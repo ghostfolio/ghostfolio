@@ -261,6 +261,29 @@
           </button>
         </div>
       </div>
+      @if (canLinkOidc || hasOidcLinked) {
+        <div class="align-items-center d-flex mt-4 py-1">
+          <div class="pr-1 w-50">
+            <div i18n>OIDC Provider</div>
+            <div class="hint-text text-muted" i18n>
+              Link your account to sign in with OpenID Connect
+            </div>
+          </div>
+          <div class="pl-1 w-50">
+            @if (hasOidcLinked) {
+              <span class="badge badge-success" i18n>
+                <ion-icon class="mr-1" name="link-outline"></ion-icon>
+                Linked
+              </span>
+            } @else {
+              <button color="primary" mat-flat-button (click)="onLinkOidc()">
+                <ion-icon class="mr-2" name="link-outline"></ion-icon>
+                <span i18n>Link OIDC Provider</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
       @if (hasPermissionToDeleteOwnUser) {
         <hr class="mt-5" />
         <form

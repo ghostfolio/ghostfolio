@@ -113,7 +113,10 @@ import { OidcStrategy } from './oidc.strategy';
           clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
         };
 
-        return new OidcStrategy(authService, options);
+        // Pass JWT secret for link mode validation
+        const jwtSecret = configurationService.get('JWT_SECRET_KEY');
+
+        return new OidcStrategy(authService, { ...options, jwtSecret });
       }
     },
     WebAuthService

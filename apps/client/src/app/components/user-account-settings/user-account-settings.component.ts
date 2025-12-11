@@ -37,11 +37,11 @@ import {
   MatSlideToggleModule
 } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
-import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
+import { eyeOffOutline, eyeOutline, linkOutline } from 'ionicons/icons';
 import ms from 'ms';
 import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -68,10 +68,14 @@ import { catchError, takeUntil } from 'rxjs/operators';
 export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
+  public canLinkOidc: boolean = false;
   public currencies: string[] = [];
   public deleteOwnUserForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
   });
+  public hasOidcLinked: boolean = false;
+  public hasPermissionForAuthOidc: boolean = false;
+  public hasPermissionForAuthToken: boolean = false;
   public hasPermissionToDeleteOwnUser: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
@@ -100,6 +104,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private formBuilder: FormBuilder,
@@ -110,16 +115,41 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
-    const { baseCurrency, currencies } = this.dataService.fetchInfo();
+    const { baseCurrency, currencies, globalPermissions } =
+      this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
     this.currencies = currencies;
+
+    // Check global permissions for auth methods
+    this.hasPermissionForAuthOidc = hasPermission(
+      globalPermissions,
+      permissions.enableAuthOidc
+    );
+    this.hasPermissionForAuthToken = hasPermission(
+      globalPermissions,
+      permissions.enableAuthToken
+    );
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          // Check if user can link OIDC
+          // Both OIDC and Token auth must be enabled to show linking feature
+          // Only show for users with token auth (provider ANONYMOUS)
+          this.hasOidcLinked =
+            this.hasPermissionForAuthOidc &&
+            this.hasPermissionForAuthToken &&
+            this.user.provider === 'ANONYMOUS' &&
+            !!this.user.thirdPartyId;
+          this.canLinkOidc =
+            this.hasPermissionForAuthOidc &&
+            this.hasPermissionForAuthToken &&
+            this.user.provider === 'ANONYMOUS' &&
+            !this.user.thirdPartyId;
 
           this.hasPermissionToDeleteOwnUser = hasPermission(
             this.user.permissions,
@@ -143,11 +173,42 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
         }
       });
 
-    addIcons({ eyeOffOutline, eyeOutline });
+    addIcons({ eyeOffOutline, eyeOutline, linkOutline });
   }
 
   public ngOnInit() {
     this.update();
+
+    // Handle query params for link results
+    this.activatedRoute.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['linkSuccess'] === 'true') {
+          this.snackBar.open(
+            $localize`Your OIDC account has been successfully linked.`,
+            undefined,
+            { duration: ms('5 seconds') }
+          );
+          // Refresh user data
+          this.userService.get(true).subscribe();
+        } else if (params['linkError']) {
+          let errorMessage = $localize`Failed to link OIDC account.`;
+          switch (params['linkError']) {
+            case 'already-linked':
+              errorMessage = $localize`This OIDC account is already linked to another user.`;
+              break;
+            case 'invalid-session':
+              errorMessage = $localize`Your session is invalid. Please log in again.`;
+              break;
+            case 'invalid-provider':
+              errorMessage = $localize`Only token-authenticated users can link OIDC.`;
+              break;
+          }
+          this.snackBar.open(errorMessage, undefined, {
+            duration: ms('5 seconds')
+          });
+        }
+      });
   }
 
   public isCommunityLanguage() {
@@ -176,6 +237,29 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
             }
           });
       });
+  }
+
+  public onLinkOidc() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        // Get current JWT token and navigate to OIDC with linkMode
+        const token = this.tokenStorageService.getToken();
+        if (token) {
+          // Navigate to OIDC endpoint with linkMode and token
+          window.location.href = `../api/auth/oidc?linkMode=true&token=${encodeURIComponent(token)}`;
+        } else {
+          this.snackBar.open(
+            $localize`Unable to initiate linking. Please log in again.`,
+            undefined,
+            { duration: ms('3 seconds') }
+          );
+        }
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      discardLabel: $localize`Cancel`,
+      title: $localize`Link OIDC Provider`,
+      message: $localize`This will link your current account to an OIDC provider. After linking, you will be able to sign in using both your Security Token and OIDC. This action cannot be undone. Do you want to continue?`
+    });
   }
 
   public onCloseAccount() {

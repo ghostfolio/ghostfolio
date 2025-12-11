@@ -11,25 +11,45 @@ import {
   OidcParams,
   OidcProfile
 } from './interfaces/interfaces';
-import { OidcStateStore } from './oidc-state.store';
+import { OidcLinkState, OidcStateStore } from './oidc-state.store';
+
+export interface OidcValidationResult {
+  jwt?: string;
+  linkState?: OidcLinkState;
+  thirdPartyId: string;
+}
+
+export interface OidcStrategyOptions extends StrategyOptions {
+  jwtSecret?: string;
+}
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   private static readonly stateStore = new OidcStateStore();
 
+  public static getStateStore(): OidcStateStore {
+    return OidcStrategy.stateStore;
+  }
+
   public constructor(
     private readonly authService: AuthService,
-    options: StrategyOptions
+    options: OidcStrategyOptions
   ) {
     super({
       ...options,
       passReqToCallback: true,
       store: OidcStrategy.stateStore
     });
+
+    // Configure JWT secret for link mode validation
+    if (options.jwtSecret) {
+      OidcStrategy.stateStore.setJwtSecret(options.jwtSecret);
+      Logger.debug('JWT secret configured for OIDC link mode', 'OidcStrategy');
+    }
   }
 
   public async validate(
-    _request: Request,
+    request: Request,
     issuer: string,
     profile: OidcProfile,
     context: OidcContext,
@@ -46,11 +66,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         params?.sub ??
         context?.claims?.sub;
 
-      const jwt = await this.authService.validateOAuthLogin({
-        thirdPartyId,
-        provider: Provider.OIDC
-      });
-
       if (!thirdPartyId) {
         Logger.error(
           `Missing subject identifier in OIDC response from ${issuer}`,
@@ -60,7 +75,38 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         throw new Error('Missing subject identifier in OIDC response');
       }
 
-      return { jwt };
+      // Check if this is a link mode request
+      // The linkState is attached to the request by OidcStateStore.verify()
+      const linkState = (request as any).oidcLinkState as
+        | OidcLinkState
+        | undefined;
+
+      if (linkState?.linkMode) {
+        Logger.log(
+          `OidcStrategy: Link mode detected for user ${linkState.userId.substring(0, 8)}...`,
+          'OidcStrategy'
+        );
+
+        // In link mode, we don't validate OAuth login (which would create a new user)
+        // Instead, we return the thirdPartyId for the controller to link
+        return {
+          linkState,
+          thirdPartyId
+        } as OidcValidationResult;
+      }
+
+      // Normal OIDC login flow
+      Logger.debug(
+        `OidcStrategy: Normal login flow for thirdPartyId ${thirdPartyId.substring(0, 8)}...`,
+        'OidcStrategy'
+      );
+
+      const jwt = await this.authService.validateOAuthLogin({
+        thirdPartyId,
+        provider: Provider.OIDC
+      });
+
+      return { jwt, thirdPartyId } as OidcValidationResult;
     } catch (error) {
       Logger.error(error, 'OidcStrategy');
       throw error;
