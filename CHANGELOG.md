@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Upgraded `nx` from version `21.5.1` to `22.1.`
+- Upgraded `nx` from version `21.5.1` to `22.1.3`
 
 ### Changed
 
