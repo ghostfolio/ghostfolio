@@ -1,6 +1,7 @@
 import { locale } from '@ghostfolio/common/config';
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
+import { GfNotificationModule } from '@ghostfolio/ui/notifications';
 
 import { Platform } from '@angular/cdk/platform';
 import {
@@ -33,7 +34,6 @@ import { authInterceptorProviders } from './app/core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './app/core/http-response.interceptor';
 import { LanguageService } from './app/core/language.service';
 import { ModulePreloadService } from './app/core/module-preload.service';
-import { GfNotificationModule } from './app/core/notification/notification.module';
 import { PageTitleStrategy } from './app/services/page-title.strategy';
 import { environment } from './environments/environment';
 
