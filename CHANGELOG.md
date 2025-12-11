@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.221.0 - 2025-12-01
 
+### Added
+
+- Extended the holdings endpoint to include the performance with currency effect for cash
+
 ### Changed
 
 - Refactored the API query parameters in various data provider services
