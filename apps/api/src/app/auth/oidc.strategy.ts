@@ -44,7 +44,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
     // Configure JWT secret for link mode validation
     if (options.jwtSecret) {
       OidcStrategy.stateStore.setJwtSecret(options.jwtSecret);
-      Logger.debug('JWT secret configured for OIDC link mode', 'OidcStrategy');
     }
   }
 
@@ -82,11 +81,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         | undefined;
 
       if (linkState?.linkMode) {
-        Logger.log(
-          `OidcStrategy: Link mode detected for user ${linkState.userId.substring(0, 8)}...`,
-          'OidcStrategy'
-        );
-
         // In link mode, we don't validate OAuth login (which would create a new user)
         // Instead, we return the thirdPartyId for the controller to link
         return {
@@ -96,10 +90,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       }
 
       // Normal OIDC login flow
-      Logger.debug(
-        `OidcStrategy: Normal login flow for thirdPartyId ${thirdPartyId.substring(0, 8)}...`,
-        'OidcStrategy'
-      );
 
       const jwt = await this.authService.validateOAuthLogin({
         thirdPartyId,

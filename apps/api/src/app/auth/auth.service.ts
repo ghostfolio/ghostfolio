@@ -45,11 +45,6 @@ export class AuthService {
     thirdPartyId
   }: ValidateOAuthLoginParams): Promise<string> {
     try {
-      Logger.debug(
-        `validateOAuthLogin: Validating login for provider ${provider}, thirdPartyId ${thirdPartyId?.substring(0, 8)}...`,
-        'AuthService'
-      );
-
       // First, search by thirdPartyId only to support linked accounts
       // (users with provider ANONYMOUS but with thirdPartyId set)
       let [user] = await this.userService.users({
@@ -57,36 +52,19 @@ export class AuthService {
       });
 
       if (user) {
-        Logger.log(
-          `validateOAuthLogin: Found existing user ${user.id.substring(0, 8)}... with provider ${user.provider} for thirdPartyId`,
-          'AuthService'
-        );
         return this.jwtService.sign({
           id: user.id
         });
       }
 
-      Logger.debug(
-        `validateOAuthLogin: No user found with thirdPartyId, checking if signup is enabled`,
-        'AuthService'
-      );
-
       const isUserSignupEnabled =
         await this.propertyService.isUserSignupEnabled();
 
       if (!isUserSignupEnabled) {
-        Logger.warn(
-          `validateOAuthLogin: Sign up is disabled, rejecting new user`,
-          'AuthService'
-        );
         throw new Error('Sign up forbidden');
       }
 
       // Create new user if not found
-      Logger.log(
-        `validateOAuthLogin: Creating new user with provider ${provider}`,
-        'AuthService'
-      );
       user = await this.userService.createUser({
         data: {
           provider,
@@ -157,18 +135,10 @@ export class AuthService {
     const user = await this.userService.user({ id: userId });
 
     if (!user) {
-      Logger.error(
-        `linkOidcToUser: User ${userId.substring(0, 8)}... not found`,
-        'AuthService'
-      );
       throw new Error('User not found');
     }
 
     if (user.provider !== 'ANONYMOUS') {
-      Logger.error(
-        `linkOidcToUser: User ${userId.substring(0, 8)}... has provider ${user.provider}, expected ANONYMOUS`,
-        'AuthService'
-      );
       throw new Error('Only users with token authentication can link OIDC');
     }
 
@@ -177,11 +147,6 @@ export class AuthService {
       where: { id: userId },
       data: { thirdPartyId }
     });
-
-    Logger.log(
-      `linkOidcToUser: Successfully linked OIDC to user ${userId.substring(0, 8)}...`,
-      'AuthService'
-    );
 
     return this.jwtService.sign({ id: userId });
   }

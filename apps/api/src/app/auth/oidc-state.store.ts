@@ -84,10 +84,6 @@ export class OidcStateStore {
                   linkMode: true,
                   userId: decoded.id
                 };
-                Logger.log(
-                  `Link mode validated for user ${decoded.id.substring(0, 8)}... from request`,
-                  'OidcStateStore'
-                );
               }
             } catch (error) {
               Logger.warn(
@@ -103,12 +99,6 @@ export class OidcStateStore {
           }
         }
       }
-
-      const isLinkMode = linkState?.linkMode ?? false;
-      Logger.debug(
-        `Storing OIDC state with handle ${handle.substring(0, 8)}... (linkMode: ${isLinkMode})`,
-        'OidcStateStore'
-      );
 
       this.stateMap.set(handle, {
         appState,
@@ -146,19 +136,10 @@ export class OidcStateStore {
       const data = this.stateMap.get(handle);
 
       if (!data) {
-        Logger.debug(
-          `OIDC state not found for handle ${handle.substring(0, 8)}...`,
-          'OidcStateStore'
-        );
         return callback(null, undefined, undefined);
       }
 
       if (Date.now() - data.timestamp > this.STATE_EXPIRY_MS) {
-        // State has expired
-        Logger.debug(
-          `OIDC state expired for handle ${handle.substring(0, 8)}...`,
-          'OidcStateStore'
-        );
         this.stateMap.delete(handle);
         return callback(null, undefined, undefined);
       }
@@ -166,19 +147,9 @@ export class OidcStateStore {
       // Remove state after verification (one-time use)
       this.stateMap.delete(handle);
 
-      const isLinkMode = data.linkState?.linkMode ?? false;
-      Logger.debug(
-        `Verified OIDC state for handle ${handle.substring(0, 8)}... (linkMode: ${isLinkMode})`,
-        'OidcStateStore'
-      );
-
       // Attach linkState directly to request object for retrieval in validate()
       if (data.linkState) {
         (req as any).oidcLinkState = data.linkState;
-        Logger.log(
-          `Attached linkState to request for user ${data.linkState.userId.substring(0, 8)}...`,
-          'OidcStateStore'
-        );
       }
 
       callback(null, data.ctx, data.appState);
@@ -223,10 +194,6 @@ export class OidcStateStore {
    */
   public setLinkStateForNextStore(linkState: OidcLinkState) {
     this.pendingLinkState = linkState;
-    Logger.log(
-      `Link state prepared for user ${linkState.userId.substring(0, 8)}...`,
-      'OidcStateStore'
-    );
   }
 
   /**

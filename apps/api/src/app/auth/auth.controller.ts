@@ -16,7 +16,6 @@ import {
   Logger,
   Param,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -107,7 +106,7 @@ export class AuthController {
   @Get('oidc')
   @UseGuards(AuthGuard('oidc'))
   @Version(VERSION_NEUTRAL)
-  public oidcLogin(@Query('linkMode') linkMode: string) {
+  public oidcLogin() {
     if (!this.configurationService.get('ENABLE_FEATURE_AUTH_OIDC')) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -117,15 +116,6 @@ export class AuthController {
 
     // Link mode is handled automatically by OidcStateStore.store()
     // which extracts the token from query params and validates it
-    if (linkMode === 'true') {
-      Logger.log(
-        'OIDC link mode requested - token validation handled by OidcStateStore',
-        'AuthController'
-      );
-    } else {
-      Logger.debug('OIDC normal login flow initiated', 'AuthController');
-    }
-
     // The AuthGuard('oidc') handles the redirect to the OIDC provider
   }
 
@@ -141,21 +131,11 @@ export class AuthController {
 
     // Check if this is a link mode callback
     if (result.linkState?.linkMode) {
-      Logger.log(
-        `OIDC callback: Link mode detected for user ${result.linkState.userId.substring(0, 8)}...`,
-        'AuthController'
-      );
-
       try {
         // Link the OIDC account to the existing user
         await this.authService.linkOidcToUser(
           result.linkState.userId,
           result.thirdPartyId
-        );
-
-        Logger.log(
-          `OIDC callback: Successfully linked OIDC to user ${result.linkState.userId.substring(0, 8)}...`,
-          'AuthController'
         );
 
         // Redirect to account page with success message
@@ -188,7 +168,6 @@ export class AuthController {
     }
 
     // Normal OIDC login flow
-    Logger.debug('OIDC callback: Normal login flow', 'AuthController');
     const jwt: string = result.jwt;
 
     if (jwt) {
