@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the notification module to `@ghostfolio/ui`
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed an issue in the portfolio proportion chart component where percentages were incorrectly calculated when data is provided in percentage format
+
 ## 2.222.0 - 2025-12-07
 
 ### Added
