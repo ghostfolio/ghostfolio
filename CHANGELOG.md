@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue in the portfolio proportion chart component where percentages were incorrectly calculated when data is provided in percentage format
+- Fixed a calculation issue that resulted in the incorrect assignment of unknown data in the portfolio proportion chart component
 
 ## 2.222.0 - 2025-12-07
 
