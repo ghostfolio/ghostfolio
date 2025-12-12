@@ -137,10 +137,10 @@ export class AuthService {
       throw new Error('Only users with token authentication can link OIDC');
     }
 
-    // Update user with thirdPartyId (keeping provider as ANONYMOUS for dual auth)
+    // Update user with thirdPartyId and switch provider to OIDC
     await this.userService.updateUser({
       where: { id: userId },
-      data: { thirdPartyId }
+      data: { thirdPartyId, provider: 'OIDC' }
     });
 
     return this.jwtService.sign({ id: userId });
