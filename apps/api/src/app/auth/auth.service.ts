@@ -102,11 +102,6 @@ export class AuthService {
     userId: string,
     thirdPartyId: string
   ): Promise<string> {
-    Logger.log(
-      `linkOidcToUser: Starting link process for user ${userId.substring(0, 8)}... with thirdPartyId ${thirdPartyId.substring(0, 8)}...`,
-      'AuthService'
-    );
-
     // Check if thirdPartyId is already linked to another user
     const [existingUser] = await this.userService.users({
       where: { thirdPartyId }
