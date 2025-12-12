@@ -193,8 +193,6 @@ export class GfPortfolioProportionChartComponent
       });
     }
 
-    // If data is in percent format and total is less than 100%,
-    // allocate the remaining percentage to UNKNOWN_KEY
     if (this.isInPercent) {
       const totalValueInPercentage = getSum(
         Object.values(chartData).map(({ value }) => {
@@ -205,6 +203,7 @@ export class GfPortfolioProportionChartComponent
       const unknownValueInPercentage = new Big(1).minus(totalValueInPercentage);
 
       if (unknownValueInPercentage.gt(0)) {
+        // If total is below 100%, allocate the remaining percentage to UNKNOWN_KEY
         if (chartData[UNKNOWN_KEY]) {
           chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
             unknownValueInPercentage
