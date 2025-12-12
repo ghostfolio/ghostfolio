@@ -61,6 +61,8 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() isLoading = false;
   @Input() locale = getLocale();
   @Input() savingsRate = 0;
+  @Input() xMax: Date;
+  @Input() xMin: Date;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -241,7 +243,13 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 grid: {
                   display: false
                 },
+                max: this.xMax?.getTime(),
+                min: this.xMin?.getTime(),
                 type: 'time',
+                bounds: 'data',
+                ticks: {
+                  source: 'data'
+                },
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'

@@ -66,6 +66,8 @@ export class GfLineChartComponent
   @Input() yMaxLabel: string;
   @Input() yMin: number;
   @Input() yMinLabel: string;
+  @Input() xMax: Date;
+  @Input() xMin: Date;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -217,6 +219,12 @@ export class GfLineChartComponent
                 display: this.showXAxis,
                 grid: {
                   display: false
+                },
+                max: this.xMax?.getTime(),
+                min: this.xMin?.getTime(),
+                bounds: 'data',
+                ticks: {
+                  source: 'data'
                 },
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
