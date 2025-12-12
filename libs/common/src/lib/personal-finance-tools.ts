@@ -1021,9 +1021,11 @@ export const personalFinanceTools: Product[] = [
   },
   {
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'wallmine',
     languages: ['English'],
     name: 'wallmine',
+    note: 'wallmine was discontinued in 2024',
     origin: 'Czech Republic',
     pricingPerYear: '$600',
     slogan: 'Make Smarter Investments'
