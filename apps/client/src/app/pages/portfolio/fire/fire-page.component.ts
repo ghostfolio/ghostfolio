@@ -48,8 +48,8 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
-  public withdrawalRatePerYear: Big;
   public withdrawalRatePerMonthProjected: Big;
+  public withdrawalRatePerYear: Big;
   public withdrawalRatePerYearProjected: Big;
 
   private unsubscribeSubject = new Subject<void>();
@@ -145,6 +145,18 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onCalculationComplete({
+    projectedTotalAmount,
+    retirementDate
+  }: FireCalculationCompleteEvent) {
+    this.projectedTotalAmount = projectedTotalAmount;
+    this.retirementDate = retirementDate;
+
+    this.calculateWithdrawalRatesProjected();
+
+    this.isLoading = false;
+  }
+
   public onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
@@ -176,7 +188,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
             this.user = user;
 
             this.calculateWithdrawalRates();
-            this.calculateProjectedWithdrawalRates();
+            this.calculateWithdrawalRatesProjected();
 
             this.changeDetectorRef.markForCheck();
           });
@@ -218,18 +230,6 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCalculationComplete({
-    projectedTotalAmount,
-    retirementDate
-  }: FireCalculationCompleteEvent) {
-    this.projectedTotalAmount = projectedTotalAmount;
-    this.retirementDate = retirementDate;
-
-    this.calculateProjectedWithdrawalRates();
-
-    this.isLoading = false;
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -245,7 +245,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
     }
   }
 
-  private calculateProjectedWithdrawalRates() {
+  private calculateWithdrawalRatesProjected() {
     if (
       this.fireWealth &&
       this.projectedTotalAmount &&
