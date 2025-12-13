@@ -2519,7 +2519,7 @@
       </trans-unit>
       <trans-unit id="5211792611718918888" datatype="html">
         <source>annual interest rate</source>
-        <target state="new">annual interest rate</target>
+        <target state="translated"></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">187</context>
@@ -3791,7 +3791,7 @@
       </trans-unit>
       <trans-unit id="7702646444963497962" datatype="html">
         <source>By</source>
-        <target state="new">By</target>
+        <target state="translated">Bis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">140</context>
@@ -4583,7 +4583,7 @@
       </trans-unit>
       <trans-unit id="3004519800638083911" datatype="html">
         <source>this is projected to increase to</source>
-        <target state="new">this is projected to increase to</target>
+        <target state="translated">wird ein Anstieg prognostiziert auf</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">148</context>
@@ -6946,7 +6946,7 @@
       </trans-unit>
       <trans-unit id="75183370239496245" datatype="html">
         <source>assuming a</source>
-        <target state="new">assuming a</target>
+        <target state="translated">bei einem angenommenen Jahreszinssatz von</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">176</context>
