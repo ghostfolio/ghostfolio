@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Included wealth projection data calculated for the retirement date in the _FIRE_ section (experimental)
+
 #### Changed
 
 - Upgraded `envalid` from version `8.1.0` to `8.1.1`
