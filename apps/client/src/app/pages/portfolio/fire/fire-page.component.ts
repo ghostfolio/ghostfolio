@@ -86,8 +86,6 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
 
         this.calculateWithdrawalRates();
 
-        this.isLoading = false;
-
         this.changeDetectorRef.markForCheck();
       });
 
@@ -221,7 +219,10 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
 
   public onCalculationComplete(calculation: FireCalculation) {
     this.fireCalculation = calculation;
+
     this.calculateProjectedWithdrawalRates();
+
+    this.isLoading = false;
   }
 
   public ngOnDestroy() {
