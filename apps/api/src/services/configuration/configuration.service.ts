@@ -41,6 +41,7 @@ export class ConfigurationService {
         default: []
       }),
       ENABLE_FEATURE_AUTH_GOOGLE: bool({ default: false }),
+      ENABLE_FEATURE_AUTH_OIDC: bool({ default: false }),
       ENABLE_FEATURE_AUTH_TOKEN: bool({ default: true }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: bool({ default: true }),
@@ -54,9 +55,32 @@ export class ConfigurationService {
       GOOGLE_SHEETS_ID: str({ default: '' }),
       GOOGLE_SHEETS_PRIVATE_KEY: str({ default: '' }),
       HOST: host({ default: DEFAULT_HOST }),
-      JWT_SECRET_KEY: str({}),
+      JWT_SECRET_KEY: str(),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
+      OIDC_AUTHORIZATION_URL: str({ default: '' }),
+      OIDC_CALLBACK_URL: str({ default: '' }),
+      OIDC_CLIENT_ID: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_OIDC === true;
+        }
+      }),
+      OIDC_CLIENT_SECRET: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_OIDC === true;
+        }
+      }),
+      OIDC_ISSUER: str({
+        default: undefined,
+        requiredWhen: (env) => {
+          return env.ENABLE_FEATURE_AUTH_OIDC === true;
+        }
+      }),
+      OIDC_SCOPE: json({ default: ['openid'] }),
+      OIDC_TOKEN_URL: str({ default: '' }),
+      OIDC_USER_INFO_URL: str({ default: '' }),
       PORT: port({ default: DEFAULT_PORT }),
       PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: num({
         default: DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY

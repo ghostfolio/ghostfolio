@@ -1,6 +1,6 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getLocale, getTextColor } from '@ghostfolio/common/helper';
+import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -191,6 +191,30 @@ export class GfPortfolioProportionChartComponent
           value: new Big(this.data[symbol].value || 0)
         };
       });
+    }
+
+    if (this.isInPercent) {
+      const totalValueInPercentage = getSum(
+        Object.values(chartData).map(({ value }) => {
+          return value;
+        })
+      );
+
+      const unknownValueInPercentage = new Big(1).minus(totalValueInPercentage);
+
+      if (unknownValueInPercentage.gt(0)) {
+        // If total is below 100%, allocate the remaining percentage to UNKNOWN_KEY
+        if (chartData[UNKNOWN_KEY]) {
+          chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
+            unknownValueInPercentage
+          );
+        } else {
+          chartData[UNKNOWN_KEY] = {
+            name: UNKNOWN_KEY,
+            value: unknownValueInPercentage
+          };
+        }
+      }
     }
 
     let chartDataSorted = Object.entries(chartData)

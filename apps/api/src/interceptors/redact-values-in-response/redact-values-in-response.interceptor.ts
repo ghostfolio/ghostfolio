@@ -16,9 +16,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class RedactValuesInResponseInterceptor<T>
-  implements NestInterceptor<T, any>
-{
+export class RedactValuesInResponseInterceptor<T> implements NestInterceptor<
+  T,
+  any
+> {
   public intercept(
     context: ExecutionContext,
     next: CallHandler<T>
