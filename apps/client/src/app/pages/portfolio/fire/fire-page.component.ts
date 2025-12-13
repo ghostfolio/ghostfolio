@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  FireCalculation,
+  FireCalculationCompleteEvent,
   FireWealth,
   User
 } from '@ghostfolio/common/interfaces';
@@ -38,11 +38,12 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class GfFirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
-  public fireCalculation: FireCalculation;
   public fireWealth: FireWealth;
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
+  public projectedTotalAmount: number;
+  public retirementDate: Date;
   public safeWithdrawalRateControl = new FormControl<number>(undefined);
   public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
@@ -217,8 +218,12 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCalculationComplete(calculation: FireCalculation) {
-    this.fireCalculation = calculation;
+  public onCalculationComplete({
+    projectedTotalAmount,
+    retirementDate
+  }: FireCalculationCompleteEvent) {
+    this.projectedTotalAmount = projectedTotalAmount;
+    this.retirementDate = retirementDate;
 
     this.calculateProjectedWithdrawalRates();
 
@@ -243,11 +248,11 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   private calculateProjectedWithdrawalRates() {
     if (
       this.fireWealth &&
-      this.user?.settings?.safeWithdrawalRate &&
-      this.fireCalculation.projectedTotalAmount
+      this.projectedTotalAmount &&
+      this.user?.settings?.safeWithdrawalRate
     ) {
       this.withdrawalRatePerYearProjected = new Big(
-        this.fireCalculation.projectedTotalAmount
+        this.projectedTotalAmount
       ).mul(this.user.settings.safeWithdrawalRate);
 
       this.withdrawalRatePerMonthProjected =

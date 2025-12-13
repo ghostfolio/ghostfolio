@@ -1,5 +1,4 @@
-export interface FireCalculation {
-  retirementDate: Date;
+export interface FireCalculationCompleteEvent {
   projectedTotalAmount: number;
-  annualInterestRate: number;
+  retirementDate: Date;
 }
