@@ -151,7 +151,7 @@
               [isCurrency]="true"
               [locale]="user?.settings?.locale"
               [unit]="user?.settings?.baseCurrency"
-              [value]="projectedWithdrawalRatePerYear?.toNumber()"
+              [value]="withdrawalRatePerYearProjected?.toNumber()"
             />
             <ng-container>&nbsp;</ng-container>
             <ng-container i18n>per year</ng-container></span
@@ -165,7 +165,7 @@
               [isCurrency]="true"
               [locale]="user?.settings?.locale"
               [unit]="user?.settings?.baseCurrency"
-              [value]="projectedWithdrawalRatePerMonth?.toNumber()"
+              [value]="withdrawalRatePerMonthProjected?.toNumber()"
             />
             <ng-container>&nbsp;</ng-container>
             <ng-container i18n>per month</ng-container></span
