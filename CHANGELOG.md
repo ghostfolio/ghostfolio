@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Included calendar year boundaries in the chart data map
+
 ### Changed
 
 - Removed the deprecated _Angular CLI_ decorator (`decorate-angular-cli.js`)
