@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
+import { FireCalculationCompleteEvent } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { CommonModule } from '@angular/common';
@@ -88,6 +89,8 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() savingsRate: number;
 
   @Output() annualInterestRateChanged = new EventEmitter<number>();
+  @Output() calculationCompleted =
+    new EventEmitter<FireCalculationCompleteEvent>();
   @Output() projectedTotalAmountChanged = new EventEmitter<number>();
   @Output() retirementDateChanged = new EventEmitter<Date>();
   @Output() savingsRateChanged = new EventEmitter<number>();
@@ -131,6 +134,18 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
         this.initialize();
       });
 
+    this.calculatorForm.valueChanges
+      .pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        const { projectedTotalAmount, retirementDate } =
+          this.calculatorForm.getRawValue();
+
+        this.calculationCompleted.emit({
+          projectedTotalAmount,
+          retirementDate
+        });
+      });
+
     this.calculatorForm
       .get('annualInterestRate')
       .valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
@@ -161,10 +176,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(
         {
-          annualInterestRate: this.annualInterestRate ?? 5,
-          paymentPerPeriod: this.savingsRate ?? 0,
+          annualInterestRate: this.annualInterestRate,
+          paymentPerPeriod: this.savingsRate,
           principalInvestmentAmount: this.fireWealth,
-          projectedTotalAmount: this.projectedTotalAmount ?? 0,
+          projectedTotalAmount: this.projectedTotalAmount,
           retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
         },
         {
