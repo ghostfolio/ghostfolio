@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated Angular CLI decorator (`decorate-angular-cli.js`)
 - Moved the notification module to `@ghostfolio/ui`
 - Improved the language localization for German (`de`)
 
