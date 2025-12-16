@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated _Angular CLI_ decorator (`decorate-angular-cli.js`)
 - Refreshed the cryptocurrencies list
 
 ## 2.223.0 - 2025-12-14
