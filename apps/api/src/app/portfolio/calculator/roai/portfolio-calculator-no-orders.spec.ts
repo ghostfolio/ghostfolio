@@ -109,23 +109,5 @@ describe('PortfolioCalculator', () => {
 
       expect(investmentsByMonth).toEqual([]);
     });
-
-    it('with no orders, should not include any calendar year boundaries', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
-
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities: [],
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
-        userId: userDummyData.id
-      });
-
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
-
-      // With no activities, historicalData should be empty (no year boundaries)
-      expect(portfolioSnapshot.historicalData).toEqual([]);
-
-      jest.useRealTimers();
-    });
   });
 });

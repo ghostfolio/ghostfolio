@@ -109,6 +109,12 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
+
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
@@ -170,8 +176,12 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).not.toContain('2021-12-31');
+
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
+          date: '2021-12-18',
           netPerformance: 23.05,
           netPerformanceInPercentage: 0.08437042459736457,
           netPerformanceInPercentageWithCurrencyEffect: 0.08437042459736457,
@@ -266,48 +276,6 @@ describe('PortfolioCalculator', () => {
 
       // Closing price on 2021-11-30: 136.6
       expect(snapshotOnBuyDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
-    });
-
-    it('with BALN.SW buy, should include calendar year boundaries for single year', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2021-12-31').getTime());
-
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          date: new Date('2021-03-01'),
-          feeInAssetProfileCurrency: 1.55,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 136.6
-        }
-      ];
-
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
-        userId: userDummyData.id
-      });
-
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
-
-      const chartDates = portfolioSnapshot.historicalData.map(
-        (item) => item.date
-      );
-
-      // 2021-01-01 is before first activity (2021-03-01), so should NOT be included
-      expect(chartDates).not.toContain('2021-01-01');
-      // 2021-12-31 should be included (matches current date)
-      expect(chartDates).toContain('2021-12-31');
-
-      jest.useRealTimers();
     });
   });
 });

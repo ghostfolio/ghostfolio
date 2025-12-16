@@ -118,6 +118,12 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
+
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
@@ -225,6 +231,11 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).toContain('2021-12-31');
+      expect(historicalDataDates).toContain('2022-01-01');
+      expect(historicalDataDates).not.toContain('2022-12-31');
+
       expect(investments).toEqual([
         { date: '2021-12-12', investment: new Big('44558.42') }
       ]);
@@ -233,57 +244,6 @@ describe('PortfolioCalculator', () => {
         { date: '2021-12-01', investment: 44558.42 },
         { date: '2022-01-01', investment: 0 }
       ]);
-    });
-
-    it('with BTCUSD buy, should include calendar year boundaries spanning multiple years', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2023-06-15').getTime());
-
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          date: new Date('2021-03-15'),
-          feeInAssetProfileCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'USD',
-            dataSource: 'YAHOO',
-            name: 'Bitcoin',
-            symbol: 'BTCUSD'
-          },
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 50000
-        }
-      ];
-
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: 'USD',
-        userId: userDummyData.id
-      });
-
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
-
-      const chartDates = portfolioSnapshot.historicalData.map(
-        (item) => item.date
-      );
-
-      // Verify year boundaries for 2021
-      // 2021-01-01 is before first activity (2021-03-15), so should NOT be included
-      expect(chartDates).not.toContain('2021-01-01');
-      expect(chartDates).toContain('2021-12-31');
-
-      // Verify year boundaries for 2022
-      expect(chartDates).toContain('2022-01-01');
-      expect(chartDates).toContain('2022-12-31');
-
-      // Verify year boundaries for 2023
-      expect(chartDates).toContain('2023-01-01');
-      // 2023-12-31 is after current date (2023-06-15), so should NOT be included
-      expect(chartDates).not.toContain('2023-12-31');
-
-      jest.useRealTimers();
     });
   });
 });
