@@ -50,6 +50,7 @@ import {
   format,
   isAfter,
   isBefore,
+  isWithinInterval,
   min,
   startOfYear,
   subDays
@@ -893,19 +894,19 @@ export abstract class PortfolioCalculator {
     }
 
     // Make sure the first and last date of each calendar year is present
-    for (const date of eachYearOfInterval({
-      end: endDate,
-      start: startDate
-    })) {
-      // Add start of year (YYYY-01-01)
+    const interval = { start: startDate, end: endDate };
+
+    for (const date of eachYearOfInterval(interval)) {
       const yearStart = startOfYear(date);
-      if (!isBefore(yearStart, startDate) && !isAfter(yearStart, endDate)) {
+      const yearEnd = endOfYear(date);
+
+      if (isWithinInterval(yearStart, interval)) {
+        // Add start of year (YYYY-01-01)
         chartDateMap[format(yearStart, DATE_FORMAT)] = true;
       }
 
-      // Add end of year (YYYY-12-31)
-      const yearEnd = endOfYear(date);
-      if (!isBefore(yearEnd, startDate) && !isAfter(yearEnd, endDate)) {
+      if (isWithinInterval(yearEnd, interval)) {
+        // Add end of year (YYYY-12-31)
         chartDateMap[format(yearEnd, DATE_FORMAT)] = true;
       }
     }
