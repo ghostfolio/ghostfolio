@@ -68,14 +68,14 @@ import { catchError, takeUntil } from 'rxjs/operators';
 export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
-  public canLinkOidc: boolean = false;
+  public canLinkOidc = false;
   public currencies: string[] = [];
   public deleteOwnUserForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
   });
-  public hasOidcLinked: boolean = false;
-  public hasPermissionForAuthOidc: boolean = false;
-  public hasPermissionForAuthToken: boolean = false;
+  public hasOidcLinked = false;
+  public hasPermissionForAuthOidc = false;
+  public hasPermissionForAuthToken = false;
   public hasPermissionToDeleteOwnUser: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
@@ -209,6 +209,21 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
           });
         }
       });
+  }
+
+  public getAuthProviderDisplayName(): string {
+    switch (this.user?.provider) {
+      case 'ANONYMOUS':
+        return 'Security Token';
+      case 'GOOGLE':
+        return 'Google';
+      case 'INTERNET_IDENTITY':
+        return 'Internet Identity';
+      case 'OIDC':
+        return 'OpenID Connect (OIDC)';
+      default:
+        return this.user?.provider || 'Unknown';
+    }
   }
 
   public isCommunityLanguage() {
@@ -436,7 +451,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
             this.update();
             resolve();
           },
-          error: (error) => {
+          error: (error: Error) => {
             reject(error);
           }
         });
