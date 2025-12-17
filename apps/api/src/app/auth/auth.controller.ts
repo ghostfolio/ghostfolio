@@ -10,10 +10,12 @@ import {
 
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   HttpException,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Req,
@@ -126,17 +128,18 @@ export class AuthController {
     @Req() request: Request,
     @Res() response: Response
   ) {
-    const result = request.user as OidcValidationResult;
+    const { linkState, thirdPartyId, jwt } =
+      request.user as OidcValidationResult;
     const rootUrl = this.configurationService.get('ROOT_URL');
 
     // Check if this is a link mode callback
-    if (result.linkState?.linkMode) {
+    if (linkState?.linkMode) {
       try {
         // Link the OIDC account to the existing user
-        await this.authService.linkOidcToUser(
-          result.linkState.userId,
-          result.thirdPartyId
-        );
+        await this.authService.linkOidcToUser({
+          thirdPartyId,
+          userId: linkState.userId
+        });
 
         // Redirect to account page with success message
         response.redirect(
@@ -150,14 +153,14 @@ export class AuthController {
           'AuthController'
         );
 
-        // Determine error type for frontend
+        // Determine error type for frontend based on error type
         let errorCode = 'unknown';
-        if (errorMessage.includes('already linked')) {
-          errorCode = 'already-linked';
-        } else if (errorMessage.includes('not found')) {
+        if (error instanceof ConflictException) {
+          errorCode = error.message.includes('token authentication')
+            ? 'invalid-provider'
+            : 'already-linked';
+        } else if (error instanceof NotFoundException) {
           errorCode = 'invalid-session';
-        } else if (errorMessage.includes('token authentication')) {
-          errorCode = 'invalid-provider';
         }
 
         response.redirect(
@@ -168,8 +171,6 @@ export class AuthController {
     }
 
     // Normal OIDC login flow
-    const jwt: string = result.jwt;
-
     if (jwt) {
       response.redirect(`${rootUrl}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`);
     } else {

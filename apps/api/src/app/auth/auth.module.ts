@@ -17,6 +17,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { OidcStateStore } from './oidc-state.store';
 import { OidcStrategy } from './oidc.strategy';
 
 @Module({
@@ -39,11 +40,13 @@ import { OidcStrategy } from './oidc.strategy';
     AuthService,
     GoogleStrategy,
     JwtStrategy,
+    OidcStateStore,
     {
-      inject: [AuthService, ConfigurationService],
+      inject: [AuthService, OidcStateStore, ConfigurationService],
       provide: OidcStrategy,
       useFactory: async (
         authService: AuthService,
+        stateStore: OidcStateStore,
         configurationService: ConfigurationService
       ) => {
         const isOidcEnabled = configurationService.get(
@@ -113,10 +116,7 @@ import { OidcStrategy } from './oidc.strategy';
           clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
         };
 
-        // Pass JWT secret for link mode validation
-        const jwtSecret = configurationService.get('JWT_SECRET_KEY');
-
-        return new OidcStrategy(authService, { ...options, jwtSecret });
+        return new OidcStrategy(authService, stateStore, options);
       }
     },
     WebAuthService

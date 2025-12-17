@@ -25,6 +25,22 @@ export interface OidcProfile {
   sub?: string;
 }
 
+export interface LinkOidcToUserParams {
+  thirdPartyId: string;
+  userId: string;
+}
+
+export interface OidcLinkState {
+  linkMode: boolean;
+  userId: string;
+}
+
+export interface OidcValidationResult {
+  jwt?: string;
+  linkState?: OidcLinkState;
+  thirdPartyId: string;
+}
+
 export interface ValidateOAuthLoginParams {
   provider: Provider;
   thirdPartyId: string;

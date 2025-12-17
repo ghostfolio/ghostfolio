@@ -1,23 +1,19 @@
-import { Logger } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
+import { Injectable, Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import ms from 'ms';
 
-export interface OidcLinkState {
-  linkMode: boolean;
-  userId: string;
-}
+import { OidcLinkState } from './interfaces/interfaces';
 
 /**
  * Custom state store for OIDC authentication that doesn't rely on express-session.
  * This store manages OAuth2 state parameters in memory with automatic cleanup.
  * Supports link mode for linking existing token-authenticated users to OIDC.
  */
+@Injectable()
 export class OidcStateStore {
   private readonly STATE_EXPIRY_MS = ms('10 minutes');
 
   private pendingLinkState?: OidcLinkState;
-
-  private jwtSecret?: string;
 
   private stateMap = new Map<
     string,
@@ -30,11 +26,23 @@ export class OidcStateStore {
     }
   >();
 
+  public constructor(private readonly jwtService: JwtService) {}
+
   /**
-   * Set the JWT secret for token validation in link mode
+   * Get and clear pending link state (used internally by store)
    */
-  public setJwtSecret(secret: string) {
-    this.jwtSecret = secret;
+  public getPendingLinkState(): OidcLinkState | undefined {
+    const linkState = this.pendingLinkState;
+    this.pendingLinkState = undefined;
+    return linkState;
+  }
+
+  /**
+   * Set link state for an existing or upcoming state entry.
+   * This allows the controller to attach user information before the OIDC flow starts.
+   */
+  public setLinkStateForNextStore(linkState: OidcLinkState) {
+    this.pendingLinkState = linkState;
   }
 
   /**
@@ -74,11 +82,9 @@ export class OidcStateStore {
             token = request.headers.authorization.substring(7);
           }
 
-          if (token && this.jwtSecret) {
+          if (token) {
             try {
-              const decoded = jwt.verify(token, this.jwtSecret) as {
-                id: string;
-              };
+              const decoded = this.jwtService.verify<{ id: string }>(token);
               if (decoded?.id) {
                 linkState = {
                   linkMode: true,
@@ -186,22 +192,5 @@ export class OidcStateStore {
       Math.random().toString(36).substring(2, 15) +
       Date.now().toString(36)
     );
-  }
-
-  /**
-   * Set link state for an existing or upcoming state entry.
-   * This allows the controller to attach user information before the OIDC flow starts.
-   */
-  public setLinkStateForNextStore(linkState: OidcLinkState) {
-    this.pendingLinkState = linkState;
-  }
-
-  /**
-   * Get and clear pending link state (used internally by store)
-   */
-  public getPendingLinkState(): OidcLinkState | undefined {
-    const linkState = this.pendingLinkState;
-    this.pendingLinkState = undefined;
-    return linkState;
   }
 }

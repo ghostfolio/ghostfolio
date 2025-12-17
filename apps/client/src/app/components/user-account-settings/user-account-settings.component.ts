@@ -121,11 +121,11 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
     this.baseCurrency = baseCurrency;
     this.currencies = currencies;
 
-    // Check global permissions for auth methods
     this.hasPermissionForAuthOidc = hasPermission(
       globalPermissions,
       permissions.enableAuthOidc
     );
+
     this.hasPermissionForAuthToken = hasPermission(
       globalPermissions,
       permissions.enableAuthToken
@@ -145,6 +145,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
             this.hasPermissionForAuthToken &&
             this.user.provider === 'ANONYMOUS' &&
             !!this.user.thirdPartyId;
+
           this.canLinkOidc =
             this.hasPermissionForAuthOidc &&
             this.hasPermissionForAuthToken &&
@@ -217,8 +218,6 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
         return 'Security Token';
       case 'GOOGLE':
         return 'Google';
-      case 'INTERNET_IDENTITY':
-        return 'Internet Identity';
       case 'OIDC':
         return 'OpenID Connect (OIDC)';
       default:

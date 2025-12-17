@@ -8,43 +8,25 @@ import { AuthService } from './auth.service';
 import {
   OidcContext,
   OidcIdToken,
+  OidcLinkState,
   OidcParams,
-  OidcProfile
+  OidcProfile,
+  OidcValidationResult
 } from './interfaces/interfaces';
-import { OidcLinkState, OidcStateStore } from './oidc-state.store';
-
-export interface OidcValidationResult {
-  jwt?: string;
-  linkState?: OidcLinkState;
-  thirdPartyId: string;
-}
-
-export interface OidcStrategyOptions extends StrategyOptions {
-  jwtSecret?: string;
-}
+import { OidcStateStore } from './oidc-state.store';
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
-  private static readonly stateStore = new OidcStateStore();
-
-  public static getStateStore(): OidcStateStore {
-    return OidcStrategy.stateStore;
-  }
-
   public constructor(
     private readonly authService: AuthService,
-    options: OidcStrategyOptions
+    stateStore: OidcStateStore,
+    options: StrategyOptions
   ) {
     super({
       ...options,
       passReqToCallback: true,
-      store: OidcStrategy.stateStore
+      store: stateStore
     });
-
-    // Configure JWT secret for link mode validation
-    if (options.jwtSecret) {
-      OidcStrategy.stateStore.setJwtSecret(options.jwtSecret);
-    }
   }
 
   public async validate(
