@@ -29,7 +29,7 @@ import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
-import { OidcValidationResult } from './oidc.strategy';
+import { OidcValidationResult } from './interfaces/interfaces';
 
 @Controller('auth')
 export class AuthController {
