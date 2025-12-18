@@ -31,7 +31,6 @@ export interface LinkOidcToUserParams {
 }
 
 export interface OidcLinkState {
-  linkMode: boolean;
   userId: string;
 }
 

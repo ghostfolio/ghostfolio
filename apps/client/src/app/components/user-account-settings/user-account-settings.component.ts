@@ -137,9 +137,6 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          // Check if user can link OIDC
-          // Both OIDC and Token auth must be enabled to show linking feature
-          // Only show for users with token auth (provider ANONYMOUS)
           this.hasOidcLinked =
             this.hasPermissionForAuthOidc &&
             this.hasPermissionForAuthToken &&
@@ -256,11 +253,20 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public onLinkOidc() {
     this.notificationService.confirm({
       confirmFn: () => {
-        // Get current JWT token and navigate to OIDC with linkMode
         const token = this.tokenStorageService.getToken();
         if (token) {
-          // Navigate to OIDC endpoint with linkMode and token
-          window.location.href = `../api/auth/oidc?linkMode=true&token=${encodeURIComponent(token)}`;
+          const form = document.createElement('form');
+          form.method = 'GET';
+          form.action = '../api/auth/oidc';
+
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'linkToken';
+          input.value = token;
+          form.appendChild(input);
+
+          document.body.appendChild(form);
+          form.submit();
         } else {
           this.snackBar.open(
             $localize`Unable to initiate linking. Please log in again.`,

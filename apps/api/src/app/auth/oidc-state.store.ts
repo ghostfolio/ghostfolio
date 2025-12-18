@@ -1,54 +1,28 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import ms from 'ms';
-
-import { OidcLinkState } from './interfaces/interfaces';
 
 /**
  * Custom state store for OIDC authentication that doesn't rely on express-session.
  * This store manages OAuth2 state parameters in memory with automatic cleanup.
- * Supports link mode for linking existing token-authenticated users to OIDC.
  */
 @Injectable()
 export class OidcStateStore {
   private readonly STATE_EXPIRY_MS = ms('10 minutes');
-
-  private pendingLinkState?: OidcLinkState;
 
   private stateMap = new Map<
     string,
     {
       appState?: unknown;
       ctx: { issued?: string; maxAge?: number; nonce?: string };
-      linkState?: OidcLinkState;
+      linkToken?: string;
       meta?: unknown;
       timestamp: number;
     }
   >();
 
-  public constructor(private readonly jwtService: JwtService) {}
-
-  /**
-   * Get and clear pending link state (used internally by store)
-   */
-  public getPendingLinkState(): OidcLinkState | undefined {
-    const linkState = this.pendingLinkState;
-    this.pendingLinkState = undefined;
-    return linkState;
-  }
-
-  /**
-   * Set link state for an existing or upcoming state entry.
-   * This allows the controller to attach user information before the OIDC flow starts.
-   */
-  public setLinkStateForNextStore(linkState: OidcLinkState) {
-    this.pendingLinkState = linkState;
-  }
-
   /**
    * Store request state.
    * Signature matches passport-openidconnect SessionStore
-   * Automatically extracts linkMode from request query params and validates JWT token
    */
   public store(
     req: unknown,
@@ -58,63 +32,19 @@ export class OidcStateStore {
     callback: (err: Error | null, handle?: string) => void
   ) {
     try {
-      // Generate a unique handle for this state
       const handle = this.generateHandle();
 
-      // Check if there's a pending link state from the controller
-      // or extract from request query params
-      let linkState = this.getPendingLinkState();
-
-      // If no pending state, check request query params for linkMode
-      if (!linkState) {
-        const request = req as {
-          query?: { linkMode?: string; token?: string };
-          headers?: { authorization?: string };
-        };
-
-        if (request?.query?.linkMode === 'true') {
-          // Get token from query param or Authorization header
-          let token = request?.query?.token;
-          if (
-            !token &&
-            request?.headers?.authorization?.startsWith('Bearer ')
-          ) {
-            token = request.headers.authorization.substring(7);
-          }
-
-          if (token) {
-            try {
-              const decoded = this.jwtService.verify<{ id: string }>(token);
-              if (decoded?.id) {
-                linkState = {
-                  linkMode: true,
-                  userId: decoded.id
-                };
-              }
-            } catch (error) {
-              Logger.warn(
-                `Failed to validate JWT in link mode: ${error instanceof Error ? error.message : 'Unknown error'}`,
-                'OidcStateStore'
-              );
-            }
-          } else {
-            Logger.warn(
-              'Link mode requested but no valid token provided',
-              'OidcStateStore'
-            );
-          }
-        }
-      }
+      const request = req as { query?: { linkToken?: string } };
+      const linkToken = request?.query?.linkToken;
 
       this.stateMap.set(handle, {
         appState,
         ctx,
-        linkState,
+        linkToken,
         meta: _meta,
         timestamp: Date.now()
       });
 
-      // Clean up expired states
       this.cleanup();
 
       callback(null, handle);
@@ -127,7 +57,6 @@ export class OidcStateStore {
   /**
    * Verify request state.
    * Signature matches passport-openidconnect SessionStore
-   * Attaches linkState directly to request for retrieval in validate()
    */
   public verify(
     req: unknown,
@@ -150,12 +79,10 @@ export class OidcStateStore {
         return callback(null, undefined, undefined);
       }
 
-      // Remove state after verification (one-time use)
       this.stateMap.delete(handle);
 
-      // Attach linkState directly to request object for retrieval in validate()
-      if (data.linkState) {
-        (req as any).oidcLinkState = data.linkState;
+      if (data.linkToken) {
+        (req as any).oidcLinkToken = data.linkToken;
       }
 
       callback(null, data.ctx, data.appState);
