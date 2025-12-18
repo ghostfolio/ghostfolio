@@ -115,10 +115,6 @@ export class AuthController {
         StatusCodes.FORBIDDEN
       );
     }
-
-    // Link mode is handled automatically by OidcStateStore.store()
-    // which extracts the token from query params and validates it
-    // The AuthGuard('oidc') handles the redirect to the OIDC provider
   }
 
   @Get('oidc/callback')
@@ -132,16 +128,13 @@ export class AuthController {
       request.user as OidcValidationResult;
     const rootUrl = this.configurationService.get('ROOT_URL');
 
-    // Check if this is a link mode callback
-    if (linkState?.linkMode) {
+    if (linkState) {
       try {
-        // Link the OIDC account to the existing user
         await this.authService.linkOidcToUser({
           thirdPartyId,
           userId: linkState.userId
         });
 
-        // Redirect to account page with success message
         response.redirect(
           `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkSuccess=true`
         );
@@ -153,7 +146,6 @@ export class AuthController {
           'AuthController'
         );
 
-        // Determine error type for frontend based on error type
         let errorCode = 'unknown';
         if (error instanceof ConflictException) {
           errorCode = error.message.includes('token authentication')

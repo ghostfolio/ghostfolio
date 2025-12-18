@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
@@ -8,7 +9,6 @@ import { AuthService } from './auth.service';
 import {
   OidcContext,
   OidcIdToken,
-  OidcLinkState,
   OidcParams,
   OidcProfile,
   OidcValidationResult
@@ -19,6 +19,7 @@ import { OidcStateStore } from './oidc-state.store';
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   public constructor(
     private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
     stateStore: OidcStateStore,
     options: StrategyOptions
   ) {
@@ -56,23 +57,24 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         throw new Error('Missing subject identifier in OIDC response');
       }
 
-      // Check if this is a link mode request
-      // The linkState is attached to the request by OidcStateStore.verify()
-      const linkState = (request as any).oidcLinkState as
-        | OidcLinkState
-        | undefined;
+      // Check if user is already authenticated via JWT
+      // If authenticated, this is a link operation; otherwise, normal login
+      // The linkToken is attached by OidcStateStore.verify() from the OAuth state
+      const linkToken = (request as any).oidcLinkToken as string | undefined;
+      const authenticatedUserId = this.extractAuthenticatedUserId(linkToken);
 
-      if (linkState?.linkMode) {
-        // In link mode, we don't validate OAuth login (which would create a new user)
-        // Instead, we return the thirdPartyId for the controller to link
+      if (authenticatedUserId) {
+        // User is authenticated → Link mode
+        // Return linkState for controller to handle linking
         return {
-          linkState,
+          linkState: {
+            userId: authenticatedUserId
+          },
           thirdPartyId
         } as OidcValidationResult;
       }
 
-      // Normal OIDC login flow
-
+      // No authenticated user → Normal OIDC login flow
       const jwt = await this.authService.validateOAuthLogin({
         thirdPartyId,
         provider: Provider.OIDC
@@ -82,6 +84,22 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
     } catch (error) {
       Logger.error(error, 'OidcStrategy');
       throw error;
+    }
+  }
+
+  /**
+   * Extract authenticated user ID from linkToken passed via OAuth state
+   */
+  private extractAuthenticatedUserId(linkToken?: string): string | null {
+    if (!linkToken) {
+      return null;
+    }
+
+    try {
+      const decoded = this.jwtService.verify<{ id: string }>(linkToken);
+      return decoded?.id || null;
+    } catch {
+      return null;
     }
   }
 }
