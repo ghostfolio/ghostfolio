@@ -15,7 +15,6 @@ export class OidcStateStore {
       appState?: unknown;
       ctx: { issued?: string; maxAge?: number; nonce?: string };
       linkToken?: string;
-      meta?: unknown;
       timestamp: number;
     }
   >();
@@ -41,7 +40,6 @@ export class OidcStateStore {
         appState,
         ctx,
         linkToken,
-        meta: _meta,
         timestamp: Date.now()
       });
 
