@@ -267,19 +267,19 @@
         </div>
         <div class="pl-1 w-50">
           <div>{{ getAuthProviderDisplayName() }}</div>
-          @if (canLinkOidc) {
-            <button
-              class="mt-2"
-              color="primary"
-              mat-flat-button
-              (click)="onLinkOidc()"
-            >
+        </div>
+      </div>
+      @if (canLinkOidc) {
+        <div class="align-items-center d-flex py-1">
+          <div class="pr-1 w-50"></div>
+          <div class="pl-1 text-monospace w-50">
+            <button color="primary" mat-flat-button (click)="onLinkOidc()">
               <ion-icon class="mr-2" name="link-outline"></ion-icon>
               <span i18n>Link OIDC</span>
             </button>
-          }
+          </div>
         </div>
-      </div>
+      }
       @if (hasPermissionToDeleteOwnUser) {
         <hr class="mt-5" />
         <form
