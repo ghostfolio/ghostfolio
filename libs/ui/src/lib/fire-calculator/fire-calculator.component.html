@@ -32,8 +32,7 @@
           <mat-label i18n>Retirement Date</mat-label>
           <div>
             {{
-              calculatorForm.get('retirementDate')?.value
-                | date: 'MMMM yyyy' : undefined : locale
+              calculatorForm.get('retirementDate')?.value | date: 'MMMM yyyy'
             }}
           </div>
           <input
