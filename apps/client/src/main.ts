@@ -90,7 +90,7 @@ import { environment } from './environments/environment';
       },
       {
         provide: LOCALE_ID,
-        useValue: $localize.locale ?? 'en-US'
+        useValue: $localize.locale
       },
       {
         provide: MAT_DATE_FORMATS,
