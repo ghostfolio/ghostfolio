@@ -1,4 +1,3 @@
-import { locale } from '@ghostfolio/common/config';
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
@@ -91,7 +90,7 @@ import { environment } from './environments/environment';
       },
       {
         provide: LOCALE_ID,
-        useValue: locale
+        useValue: $localize.locale
       },
       {
         provide: MAT_DATE_FORMATS,
