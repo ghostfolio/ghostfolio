@@ -64,9 +64,9 @@ export class AuthGuard {
         .subscribe((user) => {
           const userLanguage = user?.settings?.language;
 
-          if (userLanguage && document.documentElement.lang !== userLanguage) {
+          if (userLanguage && $localize.locale !== userLanguage) {
             this.dataService
-              .putUserSetting({ language: document.documentElement.lang })
+              .putUserSetting({ language: $localize.locale })
               .subscribe(() => {
                 this.userService.remove();
 
