@@ -224,7 +224,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
                   this.tokenStorageService.signOut();
                   this.userService.remove();
 
-                  document.location.href = `/${$localize.locale}`;
+                  document.location.href = `/${document.documentElement.lang}`;
                 }
               },
               message: accessToken,

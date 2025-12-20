@@ -15,7 +15,7 @@ import { Subject } from 'rxjs';
   templateUrl: './self-hosting-page.html'
 })
 export class GfSelfHostingPageComponent implements OnDestroy {
-  public pricingUrl = `https://ghostfol.io/${$localize.locale}/${publicRoutes.pricing.path}`;
+  public pricingUrl = `https://ghostfol.io/${document.documentElement.lang}/${publicRoutes.pricing.path}`;
 
   private unsubscribeSubject = new Subject<void>();
 

@@ -78,8 +78,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public isAccessTokenHidden = true;
   public isFingerprintSupported = this.doesBrowserSupportAuthn();
   public isWebAuthnEnabled: boolean;
-  public language = $localize.locale;
-
+  public language = document.documentElement.lang;
   public locales = [
     'ca',
     'de',
@@ -200,7 +199,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
             this.tokenStorageService.signOut();
             this.userService.remove();
 
-            document.location.href = `/${this.language}`;
+            document.location.href = `/${document.documentElement.lang}`;
           });
       },
       confirmType: ConfirmationDialogType.Warn,
