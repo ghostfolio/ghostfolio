@@ -129,36 +129,12 @@ export class AuthController {
     const rootUrl = this.configurationService.get('ROOT_URL');
 
     if (linkState) {
-      try {
-        await this.authService.linkOidcToUser({
-          thirdPartyId,
-          userId: linkState.userId
-        });
-
-        response.redirect(
-          `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkSuccess=true`
-        );
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error';
-        Logger.error(
-          `OIDC callback: Link failed - ${errorMessage}`,
-          'AuthController'
-        );
-
-        let errorCode = 'unknown';
-        if (error instanceof ConflictException) {
-          errorCode = error.message.includes('token authentication')
-            ? 'invalid-provider'
-            : 'already-linked';
-        } else if (error instanceof NotFoundException) {
-          errorCode = 'invalid-session';
-        }
-
-        response.redirect(
-          `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkError=${errorCode}`
-        );
-      }
+      await this.handleOidcLinkFlow(
+        thirdPartyId,
+        linkState.userId,
+        rootUrl,
+        response
+      );
       return;
     }
 
@@ -205,6 +181,44 @@ export class AuthController {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
+      );
+    }
+  }
+
+  private async handleOidcLinkFlow(
+    thirdPartyId: string,
+    userId: string,
+    rootUrl: string,
+    response: Response
+  ): Promise<void> {
+    try {
+      await this.authService.linkOidcToUser({
+        thirdPartyId,
+        userId
+      });
+
+      response.redirect(
+        `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkSuccess=true`
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      Logger.error(
+        `OIDC callback: Link failed - ${errorMessage}`,
+        'AuthController'
+      );
+
+      let errorCode = 'unknown';
+      if (error instanceof ConflictException) {
+        errorCode = error.message.includes('token authentication')
+          ? 'invalid-provider'
+          : 'already-linked';
+      } else if (error instanceof NotFoundException) {
+        errorCode = 'invalid-session';
+      }
+
+      response.redirect(
+        `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkError=${errorCode}`
       );
     }
   }
