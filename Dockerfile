@@ -22,10 +22,6 @@ COPY ./prisma/schema.prisma prisma/
 
 RUN npm install
 
-# See https://github.com/nrwl/nx/issues/6586 for further details
-COPY ./decorate-angular-cli.js decorate-angular-cli.js
-RUN node decorate-angular-cli.js
-
 COPY ./apps apps/
 COPY ./libs libs/
 COPY ./jest.config.ts jest.config.ts

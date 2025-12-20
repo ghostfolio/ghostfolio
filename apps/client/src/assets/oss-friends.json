@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-11-21T00:00:00.000Z",
+  "createdAt": "2025-12-08T00:00:00.000Z",
   "data": [
     {
       "name": "Activepieces",
@@ -75,6 +75,11 @@
       "name": "Mockoon",
       "description": "Mockoon is the easiest and quickest way to design and run mock REST APIs.",
       "href": "https://mockoon.com"
+    },
+    {
+      "name": "Onyx",
+      "description": "Onyx is the open-source AI chat connected to your docs, apps, and people.",
+      "href": "https://onyx.app"
     },
     {
       "name": "OpenBB",

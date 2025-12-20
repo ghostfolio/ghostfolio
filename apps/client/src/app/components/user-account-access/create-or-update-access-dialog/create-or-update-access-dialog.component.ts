@@ -1,7 +1,7 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
   ChangeDetectionStrategy,
