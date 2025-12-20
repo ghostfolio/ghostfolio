@@ -18,6 +18,7 @@ import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
+import type { FireCalculationCompleteEvent } from './fire-calculation-complete-event.interface';
 import type { FireWealth } from './fire-wealth.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
 import type { HoldingWithParents } from './holding-with-parents.interface';
@@ -140,6 +141,7 @@ export {
   ExportResponse,
   Filter,
   FilterGroup,
+  FireCalculationCompleteEvent,
   FireWealth,
   HistoricalDataItem,
   HistoricalResponse,

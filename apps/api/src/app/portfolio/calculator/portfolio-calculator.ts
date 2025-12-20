@@ -44,11 +44,15 @@ import { plainToClass } from 'class-transformer';
 import {
   differenceInDays,
   eachDayOfInterval,
+  eachYearOfInterval,
   endOfDay,
+  endOfYear,
   format,
   isAfter,
   isBefore,
+  isWithinInterval,
   min,
+  startOfYear,
   subDays
 } from 'date-fns';
 import { isNumber, sortBy, sum, uniqBy } from 'lodash';
@@ -886,6 +890,24 @@ export abstract class PortfolioCalculator {
         !isAfter(dateRangeEnd, endDate)
       ) {
         chartDateMap[format(dateRangeEnd, DATE_FORMAT)] = true;
+      }
+    }
+
+    // Make sure the first and last date of each calendar year is present
+    const interval = { start: startDate, end: endDate };
+
+    for (const date of eachYearOfInterval(interval)) {
+      const yearStart = startOfYear(date);
+      const yearEnd = endOfYear(date);
+
+      if (isWithinInterval(yearStart, interval)) {
+        // Add start of year (YYYY-01-01)
+        chartDateMap[format(yearStart, DATE_FORMAT)] = true;
+      }
+
+      if (isWithinInterval(yearEnd, interval)) {
+        // Add end of year (YYYY-12-31)
+        chartDateMap[format(yearEnd, DATE_FORMAT)] = true;
       }
     }
 
