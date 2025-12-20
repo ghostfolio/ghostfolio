@@ -22,7 +22,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './faq-overview-page.html'
 })
 export class GfFaqOverviewPageComponent implements OnDestroy {
-  public pricingUrl = `https://ghostfol.io/${document.documentElement.lang}/${publicRoutes.pricing.path}`;
+  public pricingUrl = `https://ghostfol.io/${$localize.locale}/${publicRoutes.pricing.path}`;
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public user: User;
 

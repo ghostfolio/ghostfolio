@@ -335,7 +335,7 @@ export class GfHeaderComponent implements OnChanges {
       .subscribe((user) => {
         const userLanguage = user?.settings?.language;
 
-        if (userLanguage && document.documentElement.lang !== userLanguage) {
+        if (userLanguage && $localize.locale !== userLanguage) {
           window.location.href = `../${userLanguage}`;
         } else {
           this.router.navigate(['/']);
