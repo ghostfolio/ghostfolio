@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Included the calendar year boundaries in the portfolio calculations
-- Added ISIN number to the asset profile details dialog of the admin control panel
+- Added the ISIN number to the asset profile details dialog of the admin control panel
 
 ### Changed
 
