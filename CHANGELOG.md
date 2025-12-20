@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included the calendar year boundaries in the portfolio calculations
 - Added the ISIN number to the asset profile details dialog of the admin control panel
 
+### Added
+
+- Add Average Buy Price in holdings table
+
 ### Changed
 
 - Restored the support for specific calendar year date ranges (`2024`, `2023`, `2022`, etc.) in the assistant (experimental)
