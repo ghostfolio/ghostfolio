@@ -172,7 +172,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
               if (aValue) {
                 window.location.href = `../${aValue}/${internalRoutes.account.path}`;
               } else {
-                window.location.href = `../`;
+                window.location.href = '../';
               }
             }
           });
