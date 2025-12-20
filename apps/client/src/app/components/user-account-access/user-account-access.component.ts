@@ -164,7 +164,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
                 this.tokenStorageService.signOut();
                 this.userService.remove();
 
-                document.location.href = `/${$localize.locale}`;
+                document.location.href = `/${document.documentElement.lang}`;
               },
               message: accessToken,
               title: $localize`Security token`
