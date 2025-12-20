@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restored the support for specific calendar year date ranges (`2024`, `2023`, `2022`, etc.) in the assistant (experimental)
 - Removed the deprecated _Angular CLI_ decorator (`decorate-angular-cli.js`)
 - Refreshed the cryptocurrencies list
 
