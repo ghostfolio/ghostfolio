@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded `shx` from version `03..4` to `0.4.0`
+- Upgraded `shx` from version `0.3.4` to `0.4.0`
 
 ## 2.224.2 - 2025-12-20
 
