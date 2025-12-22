@@ -71,10 +71,10 @@
         type="button"
         [disabled]="
           !adminMarketDataService.hasPermissionToDeleteAssetProfile({
-            activitiesCount: assetProfile?.activitiesCount,
+            activitiesCount: assetProfile?.activitiesCount ?? 0,
             isBenchmark: isBenchmark,
             symbol: data.symbol,
-            watchedByCount: assetProfile?.watchedByCount
+            watchedByCount: assetProfile?.watchedByCount ?? 0
           })
         "
         (click)="
