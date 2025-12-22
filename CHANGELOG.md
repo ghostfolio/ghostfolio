@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `shx` from version `0.3.4` to `0.4.0`
 
+### Fixed
+
+- Fixed the delete button in the asset profile details dialog of the admin control panel (missing `watchedByCount` parameter)
+- Fixed the symbol identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
+
 ## 2.224.2 - 2025-12-20
 
 ### Added
