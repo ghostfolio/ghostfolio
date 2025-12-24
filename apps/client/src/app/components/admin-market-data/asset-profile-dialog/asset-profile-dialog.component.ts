@@ -39,8 +39,7 @@ import {
   Inject,
   OnDestroy,
   OnInit,
-  ViewChild,
-  signal
+  ViewChild
 } from '@angular/core';
 import {
   AbstractControl,
@@ -61,7 +60,6 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -108,7 +106,6 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatExpansionModule,
     MatInputModule,
     MatMenuModule,
     MatSelectModule,
@@ -234,8 +231,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       viewValue: $localize`Instant` + ' (' + $localize`real-time` + ')'
     }
   ];
-
-  public scraperConfiguationIsExpanded = signal(false);
 
   public sectors: {
     [name: string]: { name: string; value: number };
