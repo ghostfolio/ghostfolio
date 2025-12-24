@@ -187,9 +187,6 @@
                     mat-button
                     type="button"
                     [disabled]="!canSaveAssetProfileIdentifier"
-                    [ngClass]="{
-                      'd-none': !canEditAssetProfileIdentifier
-                    }"
                     (click)="onSetEditAssetProfileIdentifierMode()"
                   >
                     <ion-icon name="create-outline" />

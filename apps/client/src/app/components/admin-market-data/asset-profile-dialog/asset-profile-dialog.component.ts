@@ -260,10 +260,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     addIcons({ createOutline, ellipsisVertical, readerOutline, serverOutline });
   }
 
-  public get canEditAssetProfileIdentifier() {
-    return this.assetProfile?.assetClass;
-  }
-
   public get canSaveAssetProfileIdentifier() {
     return !this.assetProfileForm.dirty;
   }
