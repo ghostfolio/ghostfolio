@@ -391,130 +391,6 @@
               </mat-form-field>
             </div>
             @if (assetProfile?.dataSource === 'MANUAL') {
-              <div class="mb-3">
-                <mat-accordion class="my-3">
-                  <mat-expansion-panel
-                    class="shadow-none"
-                    [expanded]="
-                      assetProfileForm.controls.scraperConfiguration.controls
-                        .selector.value !== '' &&
-                      assetProfileForm.controls.scraperConfiguration.controls
-                        .url.value !== ''
-                    "
-                    (closed)="scraperConfiguationIsExpanded.set(false)"
-                    (opened)="scraperConfiguationIsExpanded.set(true)"
-                  >
-                    <mat-expansion-panel-header class="p-0 pr-3">
-                      <mat-panel-title class="font-weight-bold" i18n
-                        >Scraper Configuration</mat-panel-title
-                      >
-                    </mat-expansion-panel-header>
-                    <div formGroupName="scraperConfiguration">
-                      <div class="mt-3">
-                        <mat-form-field
-                          appearance="outline"
-                          class="w-100 without-hint"
-                        >
-                          <mat-label i18n>Default Market Price</mat-label>
-                          <input
-                            formControlName="defaultMarketPrice"
-                            matInput
-                            type="number"
-                          />
-                        </mat-form-field>
-                      </div>
-                      <div class="mt-3">
-                        <mat-form-field
-                          appearance="outline"
-                          class="w-100 without-hint"
-                        >
-                          <mat-label i18n>HTTP Request Headers</mat-label>
-                          <textarea
-                            cdkTextareaAutosize
-                            formControlName="headers"
-                            matInput
-                            type="text"
-                            [matAutocomplete]="auto"
-                          ></textarea>
-                        </mat-form-field>
-                      </div>
-                      <div class="mt-3">
-                        <mat-form-field
-                          appearance="outline"
-                          class="w-100 without-hint"
-                        >
-                          <mat-label i18n>Locale</mat-label>
-                          <input
-                            formControlName="locale"
-                            matInput
-                            type="text"
-                          />
-                        </mat-form-field>
-                      </div>
-                      <div class="mt-3">
-                        <mat-form-field
-                          appearance="outline"
-                          class="w-100 without-hint"
-                        >
-                          <mat-label i18n>Mode</mat-label>
-                          <mat-select formControlName="mode">
-                            @for (modeValue of modeValues; track modeValue) {
-                              <mat-option [value]="modeValue.value">{{
-                                modeValue.viewValue
-                              }}</mat-option>
-                            }
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
-                      <div class="mt-3">
-                        <mat-form-field
-                          appearance="outline"
-                          class="w-100 without-hint"
-                        >
-                          <mat-label>
-                            <ng-container i18n>Selector</ng-container>*
-                          </mat-label>
-                          <textarea
-                            cdkTextareaAutosize
-                            formControlName="selector"
-                            matInput
-                            type="text"
-                          ></textarea>
-                        </mat-form-field>
-                      </div>
-                      <div class="mt-3">
-                        <mat-form-field
-                          appearance="outline"
-                          class="w-100 without-hint"
-                        >
-                          <mat-label>
-                            <ng-container i18n>Url</ng-container>*
-                          </mat-label>
-                          <input formControlName="url" matInput type="text" />
-                        </mat-form-field>
-                      </div>
-                      <div class="my-3 text-right">
-                        <button
-                          color="accent"
-                          mat-flat-button
-                          type="button"
-                          [disabled]="
-                            assetProfileForm.controls.scraperConfiguration
-                              .controls.selector.value === '' ||
-                            assetProfileForm.controls.scraperConfiguration
-                              .controls.url.value === ''
-                          "
-                          (click)="onTestMarketData()"
-                        >
-                          <ng-container i18n>Test</ng-container>
-                        </button>
-                      </div>
-                    </div>
-                  </mat-expansion-panel>
-                </mat-accordion>
-              </div>
-            }
-            @if (assetProfile?.dataSource === 'MANUAL') {
               <div>
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label i18n>Sectors</mat-label>
@@ -588,6 +464,115 @@
           </div>
         </div>
       </mat-tab>
+      @if (assetProfile?.dataSource === 'MANUAL') {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <ion-icon name="reader-outline" />
+            <div class="d-none d-sm-block ml-2" i18n>Scraper Configuration</div>
+          </ng-template>
+          <div class="container mt-3 p-0">
+            <form [formGroup]="assetProfileForm">
+              <div formGroupName="scraperConfiguration">
+                <div class="mt-3">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100 without-hint"
+                  >
+                    <mat-label i18n>Default Market Price</mat-label>
+                    <input
+                      formControlName="defaultMarketPrice"
+                      matInput
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="mt-3">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100 without-hint"
+                  >
+                    <mat-label i18n>HTTP Request Headers</mat-label>
+                    <textarea
+                      cdkTextareaAutosize
+                      formControlName="headers"
+                      matInput
+                      type="text"
+                      [matAutocomplete]="auto"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
+                <div class="mt-3">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100 without-hint"
+                  >
+                    <mat-label i18n>Locale</mat-label>
+                    <input formControlName="locale" matInput type="text" />
+                  </mat-form-field>
+                </div>
+                <div class="mt-3">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100 without-hint"
+                  >
+                    <mat-label i18n>Mode</mat-label>
+                    <mat-select formControlName="mode">
+                      @for (modeValue of modeValues; track modeValue) {
+                        <mat-option [value]="modeValue.value">{{
+                          modeValue.viewValue
+                        }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="mt-3">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100 without-hint"
+                  >
+                    <mat-label>
+                      <ng-container i18n>Selector</ng-container>*
+                    </mat-label>
+                    <textarea
+                      cdkTextareaAutosize
+                      formControlName="selector"
+                      matInput
+                      type="text"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
+                <div class="mt-3">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100 without-hint"
+                  >
+                    <mat-label>
+                      <ng-container i18n>Url</ng-container>*
+                    </mat-label>
+                    <input formControlName="url" matInput type="text" />
+                  </mat-form-field>
+                </div>
+                <div class="my-3 text-right">
+                  <button
+                    color="accent"
+                    mat-flat-button
+                    type="button"
+                    [disabled]="
+                      assetProfileForm.controls.scraperConfiguration.controls
+                        .selector.value === '' ||
+                      assetProfileForm.controls.scraperConfiguration.controls
+                        .url.value === ''
+                    "
+                    (click)="onTestMarketData()"
+                  >
+                    <ng-container i18n>Test</ng-container>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </mat-tab>
+      }
     </mat-tab-group>
   </div>
 
