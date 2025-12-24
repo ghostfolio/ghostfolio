@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
 - Upgraded `shx` from version `0.3.4` to `0.4.0`
+- moved the scraper configuration to tab in asset profile dialog
 
 ### Fixed
 
