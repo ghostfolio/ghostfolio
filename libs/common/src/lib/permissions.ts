@@ -136,6 +136,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
         permissions.readMarketDataOfOwnAssetProfile,
+        permissions.readPlatforms,
         permissions.readWatchlist,
         permissions.updateAccount,
         permissions.updateAccess,
