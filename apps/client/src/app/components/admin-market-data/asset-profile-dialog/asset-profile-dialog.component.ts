@@ -78,6 +78,7 @@ import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import {
+  codeSlashOutline,
   createOutline,
   ellipsisVertical,
   readerOutline,
@@ -252,7 +253,13 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
-    addIcons({ createOutline, ellipsisVertical, readerOutline, serverOutline });
+    addIcons({
+      codeSlashOutline,
+      createOutline,
+      ellipsisVertical,
+      readerOutline,
+      serverOutline
+    });
   }
 
   public get canSaveAssetProfileIdentifier() {

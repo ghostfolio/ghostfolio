@@ -467,11 +467,11 @@
       @if (assetProfile?.dataSource === 'MANUAL') {
         <mat-tab>
           <ng-template mat-tab-label>
-            <ion-icon name="reader-outline" />
+            <ion-icon name="code-slash-outline" />
             <div class="d-none d-sm-block ml-2" i18n>Scraper Configuration</div>
           </ng-template>
           <div class="container mt-3 p-0">
-            <form [formGroup]="assetProfileForm">
+            <div [formGroup]="assetProfileForm">
               <div formGroupName="scraperConfiguration">
                 <div class="mt-3">
                   <mat-form-field
@@ -569,7 +569,7 @@
                   </button>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </mat-tab>
       }
