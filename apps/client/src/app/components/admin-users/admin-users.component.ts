@@ -136,10 +136,11 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.queryParams
+    this.route.params
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['userDetailDialog'] && params['userId']) {
+        if (params['userId']) {
+          // If data is already loaded, open dialog immediately
           this.openUserDetailDialog(params['userId']);
         }
       });
@@ -248,9 +249,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onOpenUserDetailDialog(userId: string) {
-    this.router.navigate([], {
-      queryParams: { userId, userDetailDialog: true }
-    });
+    this.router.navigate(['./', userId], { relativeTo: this.route });
   }
 
   public ngOnDestroy() {
@@ -301,7 +300,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.route });
       });
   }
 }
