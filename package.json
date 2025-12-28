@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.222.0",
+  "version": "2.224.2",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -192,7 +192,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "replace-in-file": "8.3.0",
-    "shx": "0.3.4",
+    "shx": "0.4.0",
     "storybook": "9.1.5",
     "ts-jest": "29.4.0",
     "ts-node": "10.9.2",

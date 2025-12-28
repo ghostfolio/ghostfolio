@@ -1,4 +1,3 @@
-import { locale } from '@ghostfolio/common/config';
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
@@ -8,7 +7,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from '@angular/common/http';
-import { enableProdMode, importProvidersFrom, LOCALE_ID } from '@angular/core';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -88,10 +87,6 @@ import { environment } from './environments/environment';
         deps: [LanguageService, MAT_DATE_LOCALE, Platform],
         provide: DateAdapter,
         useClass: CustomDateAdapter
-      },
-      {
-        provide: LOCALE_ID,
-        useValue: locale
       },
       {
         provide: MAT_DATE_FORMATS,

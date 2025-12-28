@@ -28,6 +28,7 @@
           [retirementDate]="user?.settings?.retirementDate"
           [savingsRate]="user?.settings?.savingsRate"
           (annualInterestRateChanged)="onAnnualInterestRateChange($event)"
+          (calculationCompleted)="onCalculationComplete($event)"
           (projectedTotalAmountChanged)="onProjectedTotalAmountChange($event)"
           (retirementDateChanged)="onRetirementDateChange($event)"
           (savingsRateChanged)="onSavingsRateChange($event)"
@@ -62,74 +63,127 @@
       </div>
     } @else {
       <div [ngClass]="{ 'text-muted': user?.subscription?.type === 'Basic' }">
-        <ng-container i18n
-          >If you retire today, you would be able to withdraw</ng-container
-        >
-        <ng-container>&nbsp;</ng-container>
-        <span class="font-weight-bold"
-          ><gf-value
-            class="d-inline-block"
-            [isCurrency]="true"
-            [locale]="user?.settings?.locale"
-            [unit]="user?.settings?.baseCurrency"
-            [value]="withdrawalRatePerYear?.toNumber()"
-          />
-          <ng-container>&nbsp;</ng-container>
-          <ng-container i18n>per year</ng-container></span
-        >
-        <ng-container>&nbsp;</ng-container>
-        <ng-container i18n>or</ng-container>
-        <ng-container>&nbsp;</ng-container>
-        <span class="font-weight-bold"
-          ><gf-value
-            class="d-inline-block"
-            [isCurrency]="true"
-            [locale]="user?.settings?.locale"
-            [unit]="user?.settings?.baseCurrency"
-            [value]="withdrawalRatePerMonth?.toNumber()"
-          />
-          <ng-container>&nbsp;</ng-container>
-          <ng-container i18n>per month</ng-container></span
-        ><ng-container i18n>,</ng-container>
-        <ng-container>&nbsp;</ng-container>
-        <ng-container i18n>based on your total assets of</ng-container>
-        <ng-container>&nbsp;</ng-container>
-        <span class="font-weight-bold"
-          ><gf-value
-            class="d-inline-block"
-            [isCurrency]="true"
-            [locale]="user?.settings?.locale"
-            [unit]="user?.settings?.baseCurrency"
-            [value]="fireWealth?.today.valueInBaseCurrency"
-          />
-        </span>
-        <ng-container>&nbsp;</ng-container>
-        <ng-container i18n>and a safe withdrawal rate (SWR) of</ng-container>
-        @if (
-          !hasImpersonationId &&
-          hasPermissionToUpdateUserSettings &&
-          user?.settings?.isExperimentalFeatures
-        ) {
-          <select
-            class="border-0 cursor-pointer d-inline-block font-weight-bold safe-withdrawal-rate-select"
-            [formControl]="safeWithdrawalRateControl"
+        <div class="mb-2">
+          <ng-container i18n
+            >If you retire today, you would be able to withdraw</ng-container
           >
-            @for (rate of safeWithdrawalRateOptions; track rate) {
-              <option [value]="rate">
-                {{ rate | percent: '1.1-1' }}
-              </option>
-            }</select
-          >.
-        } @else {
           <ng-container>&nbsp;</ng-container>
           <span class="font-weight-bold"
             ><gf-value
               class="d-inline-block"
-              [isPercent]="true"
+              [isCurrency]="true"
               [locale]="user?.settings?.locale"
-              [precision]="1"
-              [value]="user?.settings?.safeWithdrawalRate" /></span
-          >.
+              [unit]="user?.settings?.baseCurrency"
+              [value]="withdrawalRatePerYear?.toNumber()"
+            />
+            <ng-container>&nbsp;</ng-container>
+            <ng-container i18n>per year</ng-container></span
+          >
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>or</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <span class="font-weight-bold"
+            ><gf-value
+              class="d-inline-block"
+              [isCurrency]="true"
+              [locale]="user?.settings?.locale"
+              [unit]="user?.settings?.baseCurrency"
+              [value]="withdrawalRatePerMonth?.toNumber()"
+            />
+            <ng-container>&nbsp;</ng-container>
+            <ng-container i18n>per month</ng-container></span
+          >
+          <ng-container i18n>, based on your total assets of</ng-container>
+          <ng-container>&nbsp;</ng-container>
+          <span class="font-weight-bold"
+            ><gf-value
+              class="d-inline-block"
+              [isCurrency]="true"
+              [locale]="user?.settings?.locale"
+              [unit]="user?.settings?.baseCurrency"
+              [value]="fireWealth?.today.valueInBaseCurrency"
+            />
+          </span>
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n>and a safe withdrawal rate (SWR) of</ng-container>
+          @if (
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          ) {
+            <select
+              class="border-0 cursor-pointer d-inline-block font-weight-bold safe-withdrawal-rate-select"
+              [formControl]="safeWithdrawalRateControl"
+            >
+              @for (rate of safeWithdrawalRateOptions; track rate) {
+                <option [value]="rate">
+                  {{ rate | percent: '1.1-1' }}
+                </option>
+              }</select
+            >.
+          } @else {
+            <ng-container>&nbsp;</ng-container>
+            <span class="font-weight-bold"
+              ><gf-value
+                class="d-inline-block"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [precision]="1"
+                [value]="user?.settings?.safeWithdrawalRate" /></span
+            >.
+          }
+        </div>
+
+        @if (user?.settings?.isExperimentalFeatures) {
+          <div>
+            <ng-container i18n>By</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <span class="font-weight-bold">{{
+              user?.settings?.retirementDate ?? retirementDate
+                | date: 'MMMM yyyy'
+            }}</span>
+            <ng-container i18n="@@page.fire.projected.1">,</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <ng-container i18n>this is projected to increase to</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <span class="font-weight-bold"
+              ><gf-value
+                class="d-inline-block"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="withdrawalRatePerYearProjected?.toNumber()"
+              />
+              <ng-container>&nbsp;</ng-container>
+              <ng-container i18n>per year</ng-container></span
+            >
+            <ng-container>&nbsp;</ng-container>
+            <ng-container i18n>or</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <span class="font-weight-bold"
+              ><gf-value
+                class="d-inline-block"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="withdrawalRatePerMonthProjected?.toNumber()"
+              />
+              <ng-container>&nbsp;</ng-container>
+              <ng-container i18n>per month</ng-container></span
+            >
+            <ng-container i18n>, assuming a</ng-container>
+            <ng-container>&nbsp;</ng-container>
+            <span class="font-weight-bold"
+              ><gf-value
+                class="d-inline-block"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [precision]="2"
+                [value]="user?.settings?.annualInterestRate / 100"
+            /></span>
+            <ng-container>&nbsp;</ng-container>
+            <ng-container i18n>annual interest rate</ng-container>.
+          </div>
         }
       </div>
     }

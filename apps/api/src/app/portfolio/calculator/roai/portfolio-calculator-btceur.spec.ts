@@ -118,6 +118,12 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
+
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
@@ -224,6 +230,11 @@ describe('PortfolioCalculator', () => {
         totalInvestmentWithCurrencyEffect: new Big('44558.42'),
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
+
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).toContain('2021-12-31');
+      expect(historicalDataDates).toContain('2022-01-01');
+      expect(historicalDataDates).not.toContain('2022-12-31');
 
       expect(investments).toEqual([
         { date: '2021-12-12', investment: new Big('44558.42') }

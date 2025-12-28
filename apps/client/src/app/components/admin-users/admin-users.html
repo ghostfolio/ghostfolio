@@ -7,10 +7,9 @@
             <th
               *matHeaderCellDef
               class="mat-mdc-header-cell px-1 py-2"
-              i18n
               mat-header-cell
             >
-              User
+              <ng-container i18n>User</ng-container>
             </th>
             <td
               *matCellDef="let element"

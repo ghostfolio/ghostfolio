@@ -9,8 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
+- Upgraded `shx` from version `0.3.4` to `0.4.0`
+
+### Fixed
+
+- Added the missing currency suffix to the cash balance field in the create or update account dialog
+- Fixed the delete button in the asset profile details dialog of the admin control panel by providing the missing `watchedByCount` parameter
+
+## 2.224.2 - 2025-12-20
+
+### Added
+
+- Included the calendar year boundaries in the portfolio calculations
+- Added the ISIN number to the asset profile details dialog of the admin control panel
+
+### Changed
+
+- Restored the support for specific calendar year date ranges (`2024`, `2023`, `2022`, etc.) in the assistant (experimental)
+- Removed the deprecated _Angular CLI_ decorator (`decorate-angular-cli.js`)
+- Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Localized date formatting across the _FIRE_ section
+
+## 2.223.0 - 2025-12-14
+
+### Added
+
+- Included wealth projection data calculated for the retirement date in the _FIRE_ section (experimental)
+
+### Changed
+
 - Moved the notification module to `@ghostfolio/ui`
 - Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed a calculation issue that resulted in the incorrect assignment of unknown data in the portfolio proportion chart component
 
 ## 2.222.0 - 2025-12-07
 
