@@ -73,7 +73,8 @@
           !adminMarketDataService.hasPermissionToDeleteAssetProfile({
             activitiesCount: assetProfile?.activitiesCount,
             isBenchmark: isBenchmark,
-            symbol: data.symbol
+            symbol: data.symbol,
+            watchedByCount: assetProfile?.watchedByCount
           })
         "
         (click)="
@@ -186,9 +187,6 @@
                     mat-button
                     type="button"
                     [disabled]="!canSaveAssetProfileIdentifier"
-                    [ngClass]="{
-                      'd-none': !canEditAssetProfileIdentifier
-                    }"
                     (click)="onSetEditAssetProfileIdentifierMode()"
                   >
                     <ion-icon name="create-outline" />
