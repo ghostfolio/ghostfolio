@@ -108,6 +108,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
+    founded: 2024,
+    hasSelfHostingAbility: false,
+    key: 'bluebudget',
+    languages: ['Deutsch', 'English', 'Français', 'Italiano'],
+    name: 'BlueBudget',
+    origin: 'Switzerland',
+    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung'
+  },
+  {
     key: 'budgetpulse',
     name: 'BudgetPulse',
     origin: 'United States',
@@ -642,6 +651,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Dein smarter Finance Assistant'
   },
   {
+    founded: 2007,
+    key: 'moneyspire',
+    name: 'Moneyspire',
+    note: 'License is a perpetual license',
+    origin: 'United States',
+    pricingPerYear: '$59.99',
+    slogan: 'Have total control of your financial life'
+  },
+  {
     key: 'moneywiz',
     name: 'MoneyWiz',
     origin: 'United States',
@@ -715,6 +733,13 @@ export const personalFinanceTools: Product[] = [
     name: 'Peek',
     origin: 'Singapore',
     slogan: 'Feel in control of your money without spreadsheets or shame'
+  },
+  {
+    key: 'pennies',
+    name: 'Pennies',
+    origin: 'United States',
+    pricingPerYear: '$39.99',
+    slogan: 'Your money. Made simple.'
   },
   {
     founded: 2022,

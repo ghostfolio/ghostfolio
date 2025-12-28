@@ -11,6 +11,7 @@ import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
@@ -241,9 +242,9 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
 
             if (aKey === 'language') {
               if (aValue) {
-                window.location.href = `../${aValue}/account`;
+                window.location.href = `../${aValue}/${internalRoutes.account.path}`;
               } else {
-                window.location.href = `../`;
+                window.location.href = '../';
               }
             }
           });

@@ -11,11 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the feature to link an existing token-based user account to a OpenID Connect (`OIDC`) authentication provider
 
-## Unreleased
+### Changed
 
-### Added
+- Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
+- Upgraded `shx` from version `0.3.4` to `0.4.0`
 
-- Added the feature to link an existing token-based user account to a OpenID Connect (`OIDC`) authentication provider
+### Fixed
+
+- Added the missing currency suffix to the cash balance field in the create or update account dialog
+- Fixed the delete button in the asset profile details dialog of the admin control panel by providing the missing `watchedByCount` parameter
 
 ## 2.224.2 - 2025-12-20
 
