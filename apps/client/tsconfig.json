@@ -21,7 +21,6 @@
   "compilerOptions": {
     "lib": ["dom", "es2022"],
     "module": "preserve",
-    "moduleResolution": "bundler",
     "target": "es2020"
   }
 }

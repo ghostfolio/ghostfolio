@@ -16,7 +16,6 @@
   "compilerOptions": {
     "lib": ["dom", "es2022"],
     "module": "preserve",
-    "moduleResolution": "bundler",
     "target": "es2020",
     // TODO: Remove once solved in tsconfig.base.json
     "strict": false,

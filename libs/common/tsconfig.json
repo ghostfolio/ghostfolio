@@ -12,7 +12,6 @@
   ],
   "compilerOptions": {
     "module": "preserve",
-    "moduleResolution": "bundler",
     "lib": ["dom", "es2022"]
   }
 }
