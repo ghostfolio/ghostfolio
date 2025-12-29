@@ -6,6 +6,7 @@
     "declaration": false,
     "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es2015",
