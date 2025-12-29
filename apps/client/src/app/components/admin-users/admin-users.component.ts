@@ -142,7 +142,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         const userId = params.get('userId');
 
         if (userId) {
-          // If data is already loaded, open dialog immediately
           this.openUserDetailDialog(userId);
         }
       });
