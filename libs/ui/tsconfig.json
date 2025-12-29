@@ -14,7 +14,7 @@
     }
   ],
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2022",
     // TODO: Remove once solved in tsconfig.base.json
     "strict": false,
     "noImplicitReturns": true,
