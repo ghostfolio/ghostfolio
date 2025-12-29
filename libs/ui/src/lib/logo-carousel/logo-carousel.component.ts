@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { LogoItem } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   selector: 'gf-logo-carousel',
   styleUrls: ['./logo-carousel.component.scss'],
   templateUrl: './logo-carousel.component.html'

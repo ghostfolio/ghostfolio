@@ -3,7 +3,6 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -36,7 +35,6 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClipboardModule,
-    CommonModule,
     FormsModule,
     IonIcon,
     MatButtonModule,

@@ -29,7 +29,6 @@ import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplet
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -95,7 +94,6 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    CommonModule,
     FormsModule,
     GfCurrencySelectorComponent,
     GfEntityLogoComponent,
