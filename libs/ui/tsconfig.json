@@ -15,7 +15,7 @@
   ],
   "compilerOptions": {
     "moduleResolution": "bundler",
-    "target": "es2022",
+    "target": "es2020",
     // TODO: Remove once solved in tsconfig.base.json
     "strict": false,
     "noImplicitReturns": true,
