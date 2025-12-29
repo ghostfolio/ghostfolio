@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `20.2.4` to `20.3.9`
 - Upgraded `Nx` from version `21.5.1` to `22.1.3`
 - Upgraded `shx` from version `0.3.4` to `0.4.0`
-- Upgraded `Storybook` from version `9.1.5` to `10.1.10`
+- Upgraded `storybook` from version `9.1.5` to `10.1.10`
 
 ### Fixed
 
