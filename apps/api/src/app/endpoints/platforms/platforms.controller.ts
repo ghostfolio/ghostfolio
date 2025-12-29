@@ -1,6 +1,6 @@
+import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PlatformsResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
