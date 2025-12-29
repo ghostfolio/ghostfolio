@@ -19,7 +19,7 @@ import {
 import { isISIN } from 'class-validator';
 import { countries } from 'countries-list';
 import YahooFinance from 'yahoo-finance2';
-import type { Price } from 'yahoo-finance2/modules/quoteSummary-iface';
+import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
