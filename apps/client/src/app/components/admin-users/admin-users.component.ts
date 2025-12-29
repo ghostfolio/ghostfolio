@@ -136,12 +136,14 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.params
+    this.route.paramMap
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['userId']) {
+        const userId = params.get('userId');
+
+        if (userId) {
           // If data is already loaded, open dialog immediately
-          this.openUserDetailDialog(params['userId']);
+          this.openUserDetailDialog(userId);
         }
       });
 
