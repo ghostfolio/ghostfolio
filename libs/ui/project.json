@@ -31,12 +31,7 @@
         "browserTarget": "ui:build-storybook",
         "compodoc": false,
         "configDir": "libs/ui/.storybook",
-        "port": 4400,
-        "styles": [
-          "apps/client/src/assets/fonts/inter.css",
-          "apps/client/src/styles/theme.scss",
-          "apps/client/src/styles.scss"
-        ]
+        "port": 4400
       },
       "configurations": {
         "ci": {
