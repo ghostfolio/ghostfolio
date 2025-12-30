@@ -38,6 +38,11 @@ export const routes: Routes = [
         path: internalRoutes.adminControl.subRoutes.users.path,
         component: GfAdminUsersComponent,
         title: internalRoutes.adminControl.subRoutes.users.title
+      },
+      {
+        path: `${internalRoutes.adminControl.subRoutes.users.path}/:userId`,
+        component: GfAdminUsersComponent,
+        title: internalRoutes.adminControl.subRoutes.users.title
       }
     ],
     component: AdminPageComponent,

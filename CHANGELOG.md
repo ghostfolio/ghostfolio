@@ -7,17 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a new endpoint to get all platforms (`GET api/v1/platforms`)
+
 ### Changed
 
+- Improved the routing of the user detail dialog in the users section of the admin control panel
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
+- Improved the language localization for German (`de`)
 - Upgraded `angular` from version `20.2.4` to `20.3.9`
 - Upgraded `class-validator` from version `0.14.2` to `0.14.3`
-- Upgraded `Nx` from version `21.5.1` to `22.0.4`
+- Upgraded `ng-extract-i18n-merge` from `3.1.0` to `3.2.1`
+- Upgraded `Nx` from version `21.5.1` to `22.1.3`
 - Upgraded `shx` from version `0.3.4` to `0.4.0`
+- Upgraded `storybook` from version `9.1.5` to `10.1.10`
 
 ### Fixed
 
 - Added the missing currency suffix to the cash balance field in the create or update account dialog
+- Fixed the time in market display of the portfolio summary tab on the home page for the impersonation mode
 - Fixed the delete button in the asset profile details dialog of the admin control panel by providing the missing `watchedByCount` parameter
 
 ## 2.224.2 - 2025-12-20
