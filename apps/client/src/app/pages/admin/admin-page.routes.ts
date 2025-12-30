@@ -42,8 +42,7 @@ export const routes: Routes = [
       {
         path: `${internalRoutes.adminControl.subRoutes.users.path}/:userId`,
         component: GfAdminUsersComponent,
-        title: internalRoutes.adminControl.subRoutes.users.title,
-        runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+        title: internalRoutes.adminControl.subRoutes.users.title
       }
     ],
     component: AdminPageComponent,
