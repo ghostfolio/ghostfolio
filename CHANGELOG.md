@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the routing of the user detail dialog in the users section of the admin control panel
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `20.2.4` to `20.3.9`
