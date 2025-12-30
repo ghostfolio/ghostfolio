@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Added the missing currency suffix to the cash balance field in the create or update account dialog
+- Fixed the time in market display of the portfolio summary tab on the home page for the impersonation mode
 - Fixed the delete button in the asset profile details dialog of the admin control panel by providing the missing `watchedByCount` parameter
 
 ## 2.224.2 - 2025-12-20
