@@ -10,12 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a new endpoint to get all platforms (`GET api/v1/platforms`)
+- Added the session url to the endpoint response of the _Stripe_ checkout
 
 ### Changed
 
 - Improved the routing of the user detail dialog in the users section of the admin control panel
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
+- Deprecated the public _Stripe_ key
 - Improved the language localization for German (`de`)
+- Eliminated `ngx-stripe`
 - Upgraded `angular` from version `20.2.4` to `20.3.9`
 - Upgraded `ng-extract-i18n-merge` from `3.1.0` to `3.2.1`
 - Upgraded `Nx` from version `21.5.1` to `22.1.3`
