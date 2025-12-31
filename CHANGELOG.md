@@ -24,8 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
 - Deprecated the public _Stripe_ key
 - Improved the language localization for German (`de`)
-- Upgraded `angular` from version `20.2.4` to `20.3.9`
-- Upgraded `class-validator` from version `0.14.2` to `0.14.3`
 - Eliminated `ngx-stripe`
 - Upgraded `angular` from version `20.2.4` to `21.0.6`
 - Upgraded `marked` from version `15.0.4` to `17.0.1`
