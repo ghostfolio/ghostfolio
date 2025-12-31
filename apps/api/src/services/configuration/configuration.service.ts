@@ -102,7 +102,6 @@ export class ConfigurationService {
       ROOT_URL: url({
         default: environment.rootUrl
       }),
-      STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),

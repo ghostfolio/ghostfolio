@@ -93,7 +93,6 @@ export class InfoService {
         (await this.propertyService.getByKey<string[]>(
           PROPERTY_COUNTRIES_OF_SUBSCRIBERS
         )) ?? [];
-      info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SYSTEM_MESSAGE')) {
