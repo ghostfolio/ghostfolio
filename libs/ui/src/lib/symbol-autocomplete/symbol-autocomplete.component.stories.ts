@@ -9,7 +9,7 @@ import {
   NgControl,
   ReactiveFormsModule
 } from '@angular/forms';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 
 import { HttpClientMock } from '../mocks/httpClient.mock';
@@ -75,7 +75,7 @@ export default {
   decorators: [
     applicationConfig({
       providers: [
-        provideNoopAnimations(),
+        importProvidersFrom(NoopAnimationsModule),
         importProvidersFrom(CommonModule, FormsModule, ReactiveFormsModule),
         {
           provide: NgControl,
