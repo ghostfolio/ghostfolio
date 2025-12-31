@@ -96,7 +96,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
-  public platforms: { id: string; name: string }[];
   public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
@@ -127,11 +126,10 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
     this.dateAdapter.setLocale(this.locale);
 
-    const { currencies, platforms } = this.dataService.fetchInfo();
+    const { currencies } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
-    this.platforms = platforms;
 
     this.dataService
       .fetchPortfolioHoldings()
