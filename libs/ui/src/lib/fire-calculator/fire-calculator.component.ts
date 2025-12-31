@@ -77,16 +77,16 @@ import { FireCalculatorService } from './fire-calculator.service';
   templateUrl: './fire-calculator.component.html'
 })
 export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
-  @Input() annualInterestRate: number;
+  @Input() annualInterestRate = 0;
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() deviceType: string;
-  @Input() fireWealth: number;
+  @Input() fireWealth = 0;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() locale = getLocale();
-  @Input() projectedTotalAmount: number;
+  @Input() projectedTotalAmount = 0;
   @Input() retirementDate: Date;
-  @Input() savingsRate: number;
+  @Input() savingsRate = 0;
 
   @Output() annualInterestRateChanged = new EventEmitter<number>();
   @Output() calculationCompleted =
