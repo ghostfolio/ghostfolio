@@ -508,7 +508,17 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       if (!scraperConfiguration.selector || !scraperConfiguration.url) {
         scraperConfiguration = undefined;
       }
-    } catch {}
+    } catch (error) {
+      console.error('Error parsing scraper configuration:', error);
+      this.snackBar.open(
+        $localize`Invalid scraper configuration. Please check the HTTP Request Headers field contains valid JSON.`,
+        undefined,
+        {
+          duration: ms('5 seconds')
+        }
+      );
+      return;
+    }
 
     try {
       sectors = JSON.parse(this.assetProfileForm.get('sectors').value);
@@ -542,7 +552,14 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         object: assetProfile
       });
     } catch (error) {
-      console.error(error);
+      console.error('Validation error:', error);
+      this.snackBar.open(
+        $localize`Validation failed. Please check all required fields.`,
+        undefined,
+        {
+          duration: ms('5 seconds')
+        }
+      );
       return;
     }
 
@@ -554,8 +571,23 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         },
         assetProfile
       )
-      .subscribe(() => {
-        this.initialize();
+      .subscribe({
+        next: () => {
+          this.snackBar.open(
+            $localize`Asset profile saved successfully`,
+            undefined,
+            {
+              duration: ms('3 seconds')
+            }
+          );
+          this.initialize();
+        },
+        error: (error) => {
+          console.error('Error saving asset profile:', error);
+          this.snackBar.open($localize`Error saving asset profile`, undefined, {
+            duration: ms('5 seconds')
+          });
+        }
       });
   }
 
@@ -706,8 +738,8 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   }
 
   public onTriggerSubmitAssetProfileForm() {
-    if (this.assetProfileForm) {
-      this.assetProfileFormElement.nativeElement.requestSubmit();
+    if (this.assetProfileForm.valid) {
+      this.onSubmitAssetProfileForm();
     }
   }
 
