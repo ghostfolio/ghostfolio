@@ -100,7 +100,8 @@ export class SubscriptionService {
     );
 
     return {
-      sessionId: session.id
+      sessionId: session.id,
+      sessionUrl: session.url
     };
   }
 
