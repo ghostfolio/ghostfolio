@@ -564,6 +564,12 @@ export class DataService {
             }
           }
 
+          if (response.summary?.dateOfFirstActivity) {
+            response.summary.dateOfFirstActivity = parseISO(
+              response.summary.dateOfFirstActivity
+            );
+          }
+
           return response;
         })
       );
