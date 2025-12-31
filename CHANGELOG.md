@@ -19,13 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated the public _Stripe_ key
 - Improved the language localization for German (`de`)
 - Eliminated `ngx-stripe`
-- Upgraded `angular` from version `20.2.4` to `20.3.9`
-- Upgraded `marked` from version `15.0.4` to `16.4.2`
+- Upgraded `angular` from version `20.2.4` to `21.0.6`
+- Upgraded `marked` from version `15.0.4` to `17.0.1`
+- Upgraded `ngx-device-detector` from version `10.1.0` to `11.0.0`
 - Upgraded `ng-extract-i18n-merge` from `3.1.0` to `3.2.1`
-- Upgraded `ngx-markdown` from version `20.0.0` to `20.1.0`
-- Upgraded `Nx` from version `21.5.1` to `22.1.3`
+- Upgraded `ngx-markdown` from version `20.0.0` to `21.0.1`
+- Upgraded `Nx` from version `21.5.1` to `22.3.3`
 - Upgraded `shx` from version `0.3.4` to `0.4.0`
 - Upgraded `storybook` from version `9.1.5` to `10.1.10`
+- Upgraded `zone.js` from version `0.15.1` to `0.16.0`
 
 ### Fixed
 
