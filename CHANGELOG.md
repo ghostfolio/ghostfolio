@@ -10,7 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extracted the scraper configuration to a dedicated tab in the asset profile dialog of the admin control panel
+
+## 2.226.0 - 2026-01-01
+
+### Changed
+
 - Upgraded `class-validator` from version `0.14.2` to `0.14.3`
+- Upgraded `yahoo-finance2` from version `3.10.2` to `3.11.2`
 
 ## 2.225.0 - 2025-12-31
 
