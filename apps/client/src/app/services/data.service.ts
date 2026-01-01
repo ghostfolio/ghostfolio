@@ -42,6 +42,7 @@ import {
   MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
+  PlatformsResponse,
   PortfolioDetails,
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
@@ -195,6 +196,10 @@ export class DataService {
     return this.http.get<AccountBalancesResponse>(
       `/api/v1/account/${aAccountId}/balances`
     );
+  }
+
+  public fetchPlatforms(): Observable<PlatformsResponse> {
+    return this.http.get<PlatformsResponse>('/api/v1/platforms');
   }
 
   public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
