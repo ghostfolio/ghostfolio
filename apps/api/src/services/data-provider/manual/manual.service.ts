@@ -26,7 +26,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
-import * as jsonpath from 'jsonpath';
+import jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -38,6 +38,16 @@ export class ManualService implements DataProviderInterface {
 
   public canHandle() {
     return true;
+  }
+
+  public extractValueFromJson({
+    data,
+    pathExpression
+  }: {
+    data: object;
+    pathExpression: string;
+  }) {
+    return String(jsonpath.query(data, pathExpression)[0]);
   }
 
   public async getAssetProfile({
@@ -288,7 +298,10 @@ export class ManualService implements DataProviderInterface {
     if (response.headers.get('content-type')?.includes('application/json')) {
       const data = await response.json();
 
-      value = String(jsonpath.query(data, scraperConfiguration.selector)[0]);
+      value = this.extractValueFromJson({
+        data,
+        pathExpression: scraperConfiguration.selector
+      });
     } else {
       const $ = cheerio.load(await response.text());
 
