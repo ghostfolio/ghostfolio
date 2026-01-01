@@ -249,8 +249,6 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 | `type`       | `string`            | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `LIABILITY` \| `SELL` |
 | `unitPrice`  | `number`            | Price per unit of the activity                                      |
 
-[^1]: Available with [**Ghostfolio Premium**](https://ghostfol.io/en/pricing).
-
 #### Response
 
 ##### Success
@@ -336,3 +334,5 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
 © 2021 - 2025 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
+
+[^1]: Available with [**Ghostfolio Premium**](https://ghostfol.io/en/pricing).
