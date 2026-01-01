@@ -331,7 +331,7 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
 
 ## License
 
-© 2021 - 2025 [Ghostfolio](https://ghostfol.io)
+© 2021 - 2026 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
 
