@@ -241,7 +241,7 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 | `accountId`  | `string` (optional) | Id of the account                                                   |
 | `comment`    | `string` (optional) | Comment of the activity                                             |
 | `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                        |
-| `dataSource` | `string`            | `COINGECKO` \| `MANUAL` \| `YAHOO`                                  |
+| `dataSource` | `string`            | `COINGECKO` \| `GHOSTFOLIO` [^1] \| `MANUAL` \| `YAHOO`             |
 | `date`       | `string`            | Date in the format `ISO-8601`                                       |
 | `fee`        | `number`            | Fee of the activity                                                 |
 | `quantity`   | `number`            | Quantity of the activity                                            |
@@ -331,6 +331,8 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
 
 ## License
 
-© 2021 - 2025 [Ghostfolio](https://ghostfol.io)
+© 2021 - 2026 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
+
+[^1]: Available with [**Ghostfolio Premium**](https://ghostfol.io/en/pricing).
