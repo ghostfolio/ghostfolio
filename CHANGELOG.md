@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extracted the scraper configuration to a dedicated tab in the asset profile dialog of the admin control panel
+- Upgraded `class-validator` from version `0.14.2` to `0.14.3`
 
 ## 2.225.0 - 2025-12-31
 
