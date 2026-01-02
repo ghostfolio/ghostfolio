@@ -346,13 +346,14 @@ export class OrderService {
 
     for (const account of cashDetails.accounts) {
       const { balances } = await this.accountBalanceService.getAccountBalances({
-        filters: [{ id: account.id, type: 'ACCOUNT' }],
         userCurrency,
-        userId
+        userId,
+        filters: [{ id: account.id, type: 'ACCOUNT' }]
       });
 
       let currentBalance = 0;
       let currentBalanceInBaseCurrency = 0;
+
       for (const balanceItem of balances) {
         const syntheticActivityTemplate: Activity = {
           userId,
@@ -414,6 +415,7 @@ export class OrderService {
               currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
           });
         }
+
         currentBalance = balanceItem.value;
         currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
       }

@@ -136,15 +136,12 @@ export abstract class PortfolioCalculator {
           }
 
           return {
+            SymbolProfile,
             tags,
             type,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
             quantity: new Big(quantity),
-            SymbolProfile: {
-              ...SymbolProfile,
-              assetSubClass: SymbolProfile.assetSubClass
-            },
             unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
         }

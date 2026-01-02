@@ -298,9 +298,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       itemType: 'start',
       quantity: new Big(0),
       SymbolProfile: {
-        assetSubClass: isCash ? 'CASH' : undefined,
         dataSource,
-        symbol
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
       },
       type: 'BUY',
       unitPrice: unitPriceAtStartDate
@@ -312,9 +312,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       feeInBaseCurrency: new Big(0),
       itemType: 'end',
       SymbolProfile: {
-        assetSubClass: isCash ? 'CASH' : undefined,
         dataSource,
-        symbol
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
       },
       quantity: new Big(0),
       type: 'BUY',
@@ -353,9 +353,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           feeInBaseCurrency: new Big(0),
           quantity: new Big(0),
           SymbolProfile: {
-            assetSubClass: isCash ? 'CASH' : undefined,
             dataSource,
-            symbol
+            symbol,
+            assetSubClass: isCash ? 'CASH' : undefined
           },
           type: 'BUY',
           unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
