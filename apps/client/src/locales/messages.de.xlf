@@ -3475,7 +3475,7 @@
       </trans-unit>
       <trans-unit id="5499742151525073097" datatype="html">
         <source>Upgrade Plan</source>
-        <target state="translated">Abonnement abschliessen</target>
+        <target state="translated">Mitgliedschaft abschliessen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">193</context>
@@ -3747,7 +3747,7 @@
       </trans-unit>
       <trans-unit id="2030314101752312029" datatype="html">
         <source>Renew Plan</source>
-        <target state="translated">Abonnement erneuern</target>
+        <target state="translated">Mitgliedschaft erneuern</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">191</context>
@@ -6934,7 +6934,7 @@
       </trans-unit>
       <trans-unit id="7522916136412124285" datatype="html">
         <source>to use our referral link and get a Ghostfolio Premium membership for one year</source>
-        <target state="translated">um unseren Empfehlungslink zu verwenden und ein Ghostfolio Premium-Abonnement für ein Jahr zu erhalten</target>
+        <target state="translated">um unseren Empfehlungslink zu verwenden und eine Ghostfolio Premium-Mitgliedschaft für ein Jahr zu erhalten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">343</context>
