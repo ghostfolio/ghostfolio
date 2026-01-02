@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Enable filtering (by account, holdings, tag or asset class) in public access
+
 ### Changed
 
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
@@ -211,7 +215,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a close holding button to the holding detail dialog
 - Added the _Sponsors_ section to the about page
 - Extended the user detail dialog in the users section of the admin control panel
-- Enable filtering (by account, holdings, tag or asset class) in public access
 
 ### Changed
 
