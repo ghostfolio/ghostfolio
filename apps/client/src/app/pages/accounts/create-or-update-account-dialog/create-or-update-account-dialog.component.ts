@@ -59,7 +59,7 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
   public accountForm: FormGroup;
   public currencies: string[] = [];
   public filteredPlatforms: Observable<Platform[]>;
-  public platforms: Platform[];
+  public platforms: Platform[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -71,10 +71,8 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
   ) {}
 
   public ngOnInit() {
-    const { currencies, platforms } = this.dataService.fetchInfo();
-
+    const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
-    this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
@@ -83,23 +81,33 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
       currency: [this.data.account.currency, Validators.required],
       isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
-      platformId: [
-        this.platforms.find(({ id }) => {
-          return id === this.data.account.platformId;
-        }),
-        this.autocompleteObjectValidator()
-      ]
+      platformId: [null, this.autocompleteObjectValidator()]
     });
 
-    this.filteredPlatforms = this.accountForm
-      .get('platformId')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => {
-          const name = typeof value === 'string' ? value : value?.name;
-          return name ? this.filter(name as string) : this.platforms.slice();
-        })
+    this.dataService.fetchPlatforms().subscribe(({ platforms }) => {
+      this.platforms = platforms;
+
+      const selectedPlatform = this.platforms.find(({ id }) => {
+        return id === this.data.account.platformId;
+      });
+
+      this.accountForm.patchValue(
+        {
+          platformId: selectedPlatform
+        },
+        { emitEvent: false }
       );
+
+      this.filteredPlatforms = this.accountForm
+        .get('platformId')
+        .valueChanges.pipe(
+          startWith(''),
+          map((value) => {
+            const name = typeof value === 'string' ? value : value?.name;
+            return name ? this.filter(name as string) : this.platforms.slice();
+          })
+        );
+    });
   }
 
   public autoCompleteCheck() {
