@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.226.0 - 2026-01-01
 
+### Added
+
+- Extended the content of the _Self-Hosting_ section by information about additional data providers on the Frequently Asked Questions (FAQ) page
+
 ### Changed
 
 - Upgraded `class-validator` from version `0.14.2` to `0.14.3`
