@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Extended the holdings endpoint to include the performance with currency effect for cash
+
 ## 2.226.0 - 2026-01-01
 
 ### Added
@@ -93,10 +99,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `prettier` from version `3.7.3` to `3.7.4`
 
 ## 2.221.0 - 2025-12-01
-
-### Added
-
-- Extended the holdings endpoint to include the performance with currency effect for cash
 
 ### Changed
 
