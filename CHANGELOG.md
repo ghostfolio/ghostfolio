@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the holdings endpoint to include the performance with currency effect for cash
 
+### Changed
+
+- Initialized the input properties in the _FIRE_ calculator
+- Removed the deprecated public _Stripe_ key
+- Upgraded `stripe` from version `18.5.0` to `20.1.0`
+
+### Fixed
+
+- Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
+
 ## 2.226.0 - 2026-01-01
 
 ### Added
