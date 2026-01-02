@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
+
 ## 2.227.0 - 2026-01-02
 
 ### Changed
@@ -12,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initialized the input properties in the _FIRE_ calculator
 - Removed the deprecated public _Stripe_ key
 - Upgraded `stripe` from version `18.5.0` to `20.1.0`
-- Extracted the scraper configuration to a dedicated tab in the asset profile dialog of the admin control panel
 
 ### Fixed
 
