@@ -81,22 +81,23 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
       currency: [this.data.account.currency, Validators.required],
       isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
-      platformId: [null, this.autocompleteObjectValidator()] // Initialize as null
+      platformId: [null, this.autocompleteObjectValidator()]
     });
 
     this.dataService.fetchPlatforms().subscribe(({ platforms }) => {
       this.platforms = platforms;
 
-      // Update platformId after platforms are loaded
       const selectedPlatform = this.platforms.find(({ id }) => {
         return id === this.data.account.platformId;
       });
 
-      this.accountForm.patchValue({
-        platformId: selectedPlatform
-      });
+      this.accountForm.patchValue(
+        {
+          platformId: selectedPlatform
+        },
+        { emitEvent: false }
+      );
 
-      // Set up filteredPlatforms observable
       this.filteredPlatforms = this.accountForm
         .get('platformId')
         .valueChanges.pipe(

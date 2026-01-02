@@ -198,10 +198,6 @@ export class DataService {
     );
   }
 
-  public fetchPlatforms(): Observable<PlatformsResponse> {
-    return this.http.get<PlatformsResponse>('/api/v1/platforms');
-  }
-
   public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
@@ -524,6 +520,10 @@ export class DataService {
         return data;
       })
     );
+  }
+
+  public fetchPlatforms() {
+    return this.http.get<PlatformsResponse>('/api/v1/platforms');
   }
 
   public fetchPortfolioDetails({
