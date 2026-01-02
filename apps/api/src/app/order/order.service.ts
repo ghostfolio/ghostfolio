@@ -46,8 +46,8 @@ import { randomUUID } from 'node:crypto';
 @Injectable()
 export class OrderService {
   public constructor(
-    private readonly accountService: AccountService,
     private readonly accountBalanceService: AccountBalanceService,
+    private readonly accountService: AccountService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly eventEmitter: EventEmitter2,
@@ -381,6 +381,7 @@ export class OrderService {
             holdings: [],
             id: account.currency,
             isActive: true,
+            name: account.currency,
             sectors: [],
             symbol: account.currency,
             updatedAt: new Date(balanceItem.date)

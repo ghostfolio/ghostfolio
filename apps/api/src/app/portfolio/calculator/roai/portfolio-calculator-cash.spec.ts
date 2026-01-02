@@ -1,6 +1,5 @@
 import {
   activityDummyData,
-  loadExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -11,17 +10,14 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import {
-  Activity,
-  ExportResponse,
-  HistoricalDataItem
-} from '@ghostfolio/common/interfaces';
+import { Activity, HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -30,6 +26,17 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
     })
   };
 });
+
+jest.mock(
+  '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service',
+  () => {
+    return {
+      ExchangeRateDataService: jest.fn().mockImplementation(() => {
+        return ExchangeRateDataServiceMock;
+      })
+    };
+  }
+);
 
 jest.mock(
   '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service',
@@ -51,20 +58,12 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let exportResponse: ExportResponse;
-
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
-
-  beforeAll(() => {
-    exportResponse = loadExportFile(
-      join(__dirname, '../../../../../../../test/import/ok/sample.json')
-    );
-  });
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
@@ -93,15 +92,9 @@ describe('PortfolioCalculator', () => {
 
   describe('Cash Performance', () => {
     it('should calculate performance for cash assets in CHF default currency', async () => {
-      // Mock Date
       jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
 
-      // Override activities with synthetic cash orders
-      // Scenario from User:
-      // 2023-12-31T00:00:00.000Z: 1000
-      // 2024-12-31T00:00:00.000Z: 2000
-
-      const accountId = exportResponse.accounts[0].id; // Use exportResponse to simulate tying to real account
+      const accountId = randomUUID();
 
       const syntheticActivities: Activity[] = [
         {
@@ -118,7 +111,7 @@ describe('PortfolioCalculator', () => {
             assetSubClass: 'CASH',
             currency: 'USD',
             dataSource: 'MANUAL',
-            name: 'US Dollar',
+            name: 'USD',
             symbol: 'USD'
           },
           unitPriceInAssetProfileCurrency: 1
@@ -137,47 +130,36 @@ describe('PortfolioCalculator', () => {
             assetSubClass: 'CASH',
             currency: 'USD',
             dataSource: 'MANUAL',
-            name: 'US Dollar',
+            name: 'USD',
             symbol: 'USD'
           },
           unitPriceInAssetProfileCurrency: 1
         }
       ];
 
-      jest
-        .spyOn(exchangeRateDataService, 'getExchangeRatesByCurrency')
-        .mockResolvedValue({
-          USDCHF: {
-            '2023-12-31': 0.85,
-            '2024-01-01': 0.86,
-            '2024-12-31': 0.9,
-            '2025-01-01': 0.91
-          }
-        });
-
       jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
         dataProviderInfos: [],
-        values: [],
-        errors: []
+        errors: [],
+        values: []
       });
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities: syntheticActivities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF', // User default currency overridden to CHF
+        currency: 'CHF',
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
       const historicalData20231231 = portfolioSnapshot.historicalData.find(
-        (d) => d.date === '2023-12-31'
+        ({ date }) => date === '2023-12-31'
       );
       const historicalData20240101 = portfolioSnapshot.historicalData.find(
-        (d) => d.date === '2024-01-01'
+        ({ date }) => date === '2024-01-01'
       );
       const historicalData20241231 = portfolioSnapshot.historicalData.find(
-        (d) => d.date === '2024-12-31'
+        ({ date }) => date === '2024-12-31'
       );
 
       /**
