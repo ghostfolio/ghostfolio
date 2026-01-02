@@ -52,7 +52,6 @@ export interface Environment extends CleanedEnvAccessors {
   REDIS_PORT: number;
   REQUEST_TIMEOUT: number;
   ROOT_URL: string;
-  STRIPE_PUBLIC_KEY: string;
   STRIPE_SECRET_KEY: string;
   TWITTER_ACCESS_TOKEN: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;
