@@ -35,7 +35,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2025-08-27.basil'
+          apiVersion: '2025-12-15.clover'
         }
       );
     }
