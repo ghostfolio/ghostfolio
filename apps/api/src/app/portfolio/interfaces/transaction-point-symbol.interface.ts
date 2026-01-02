@@ -2,6 +2,7 @@ import { DataSource, Tag } from '@prisma/client';
 import { Big } from 'big.js';
 
 export interface TransactionPointSymbol {
+  assetSubClass?: string;
   averagePrice: Big;
   currency: string;
   dataSource: DataSource;

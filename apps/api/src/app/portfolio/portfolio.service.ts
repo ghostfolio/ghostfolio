@@ -487,7 +487,7 @@ export class PortfolioService {
       (user.settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
-    // Activities for non-cash assets
+    // Activities for cash and non-cash assets
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
@@ -495,7 +495,6 @@ export class PortfolioService {
         userId
       });
 
-    // Synthetic activities for cash
     const cashDetails = await this.accountService.getCashDetails({
       filters,
       userId,

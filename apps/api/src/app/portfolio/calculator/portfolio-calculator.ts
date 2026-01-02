@@ -136,12 +136,15 @@ export abstract class PortfolioCalculator {
           }
 
           return {
-            SymbolProfile,
             tags,
             type,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
             quantity: new Big(quantity),
+            SymbolProfile: {
+              ...SymbolProfile,
+              assetSubClass: SymbolProfile.assetSubClass
+            },
             unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
         }
@@ -203,13 +206,19 @@ export abstract class PortfolioCalculator {
     let totalInterestWithCurrencyEffect = new Big(0);
     let totalLiabilitiesWithCurrencyEffect = new Big(0);
 
-    for (const { currency, dataSource, symbol } of transactionPoints[
-      firstIndex - 1
-    ].items) {
-      dataGatheringItems.push({
-        dataSource,
-        symbol
-      });
+    for (const {
+      assetSubClass,
+      currency,
+      dataSource,
+      symbol
+    } of transactionPoints[firstIndex - 1].items) {
+      // Gather data for all assets except CASH
+      if (assetSubClass !== 'CASH') {
+        dataGatheringItems.push({
+          dataSource,
+          symbol
+        });
+      }
 
       currencies[symbol] = currency;
     }
@@ -933,6 +942,7 @@ export abstract class PortfolioCalculator {
     } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
 
+      const assetSubClass = SymbolProfile.assetSubClass;
       const currency = SymbolProfile.currency;
       const dataSource = SymbolProfile.dataSource;
       const factor = getFactor(type);
@@ -977,6 +987,7 @@ export abstract class PortfolioCalculator {
         }
 
         currentTransactionPointItem = {
+          assetSubClass,
           currency,
           dataSource,
           investment,
@@ -995,6 +1006,7 @@ export abstract class PortfolioCalculator {
         };
       } else {
         currentTransactionPointItem = {
+          assetSubClass,
           currency,
           dataSource,
           fee,

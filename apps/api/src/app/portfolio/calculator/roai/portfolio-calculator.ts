@@ -188,6 +188,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       })
     );
 
+    const isCash = orders[0]?.SymbolProfile?.assetSubClass === 'CASH';
+
     if (orders.length <= 0) {
       return {
         currentValues: {},
@@ -244,6 +246,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       // For BUY / SELL activities with a MANUAL data source where no historical market price is available,
       // the calculation should fall back to using the activity’s unit price.
       unitPriceAtEndDate = latestActivity.unitPrice;
+    } else if (isCash) {
+      unitPriceAtEndDate = new Big(1);
     }
 
     if (
@@ -294,6 +298,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       itemType: 'start',
       quantity: new Big(0),
       SymbolProfile: {
+        assetSubClass: isCash ? 'CASH' : undefined,
         dataSource,
         symbol
       },
@@ -307,6 +312,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       feeInBaseCurrency: new Big(0),
       itemType: 'end',
       SymbolProfile: {
+        assetSubClass: isCash ? 'CASH' : undefined,
         dataSource,
         symbol
       },
@@ -347,6 +353,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           feeInBaseCurrency: new Big(0),
           quantity: new Big(0),
           SymbolProfile: {
+            assetSubClass: isCash ? 'CASH' : undefined,
             dataSource,
             symbol
           },
