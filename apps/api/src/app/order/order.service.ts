@@ -323,6 +323,16 @@ export class OrderService {
     return count;
   }
 
+  /**
+   * Generates synthetic orders for cash holdings based on account balance history.
+   * Treat currencies as assets with a fixed unit price of 1.0 (in their own currency) to allow
+   * performance tracking based on exchange rate fluctuations.
+   *
+   * @param cashDetails - The cash balance details.
+   * @param userCurrency - The base currency of the user.
+   * @param userId - The ID of the user.
+   * @returns A response containing the list of synthetic cash activities.
+   */
   public async getCashOrders({
     cashDetails,
     userCurrency,
@@ -708,6 +718,15 @@ export class OrderService {
     return { activities, count };
   }
 
+  /**
+   * Retrieves all orders required for the portfolio calculator, including both standard asset orders
+   * and synthetic orders representing cash activities.
+   *
+   * @param filters - Optional filters to apply to the orders.
+   * @param userCurrency - The base currency of the user.
+   * @param userId - The ID of the user.
+   * @returns An object containing the combined list of activities and the total count.
+   */
   @LogPerformance
   public async getOrdersForPortfolioCalculator({
     filters,
