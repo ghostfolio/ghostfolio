@@ -4,7 +4,6 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,7 +35,6 @@ import ms from 'ms';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClipboardModule,
-    CommonModule,
     IonIcon,
     MatButtonModule,
     MatMenuModule,
