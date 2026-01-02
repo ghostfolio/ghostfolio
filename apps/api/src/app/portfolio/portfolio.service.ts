@@ -487,19 +487,12 @@ export class PortfolioService {
       (user.settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
-    // Activities for cash and non-cash assets
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
         userCurrency,
         userId
       });
-
-    const cashDetails = await this.accountService.getCashDetails({
-      filters,
-      userId,
-      currency: userCurrency
-    });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
@@ -511,6 +504,12 @@ export class PortfolioService {
 
     const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
       await portfolioCalculator.getSnapshot();
+
+    const cashDetails = await this.accountService.getCashDetails({
+      filters,
+      userId,
+      currency: userCurrency
+    });
 
     const holdings: PortfolioDetails['holdings'] = {};
 

@@ -737,22 +737,23 @@ export class OrderService {
     userCurrency: string;
     userId: string;
   }) {
-    const cashDetails = await this.accountService.getCashDetails({
-      filters,
-      userId,
-      currency: userCurrency
-    });
-    const cashOrders = await this.getCashOrders({
-      cashDetails,
-      userCurrency,
-      userId
-    });
-
     const nonCashOrders = await this.getOrders({
       filters,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
+    });
+
+    const cashDetails = await this.accountService.getCashDetails({
+      filters,
+      userId,
+      currency: userCurrency
+    });
+
+    const cashOrders = await this.getCashOrders({
+      cashDetails,
+      userCurrency,
+      userId
     });
 
     return {
