@@ -1,3 +1,4 @@
+import { query } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
@@ -26,7 +27,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
-import jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -38,16 +38,6 @@ export class ManualService implements DataProviderInterface {
 
   public canHandle() {
     return true;
-  }
-
-  public extractValueFromJson({
-    data,
-    pathExpression
-  }: {
-    data: object;
-    pathExpression: string;
-  }) {
-    return String(jsonpath.query(data, pathExpression)[0]);
   }
 
   public async getAssetProfile({
@@ -296,12 +286,14 @@ export class ManualService implements DataProviderInterface {
     let value: string;
 
     if (response.headers.get('content-type')?.includes('application/json')) {
-      const data = await response.json();
+      const object = await response.json();
 
-      value = this.extractValueFromJson({
-        data,
-        pathExpression: scraperConfiguration.selector
-      });
+      value = String(
+        query({
+          object,
+          pathExpression: scraperConfiguration.selector
+        })[0]
+      );
     } else {
       const $ = cheerio.load(await response.text());
 
