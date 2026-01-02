@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
 
 ### Changed
 
+- Initialized the input properties in the _FIRE_ calculator
+- Removed the deprecated public _Stripe_ key
+- Upgraded `stripe` from version `18.5.0` to `20.1.0`
 - Extracted the scraper configuration to a dedicated tab in the asset profile dialog of the admin control panel
+
+### Fixed
+
+- Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
 
 ## 2.226.0 - 2026-01-01
 
