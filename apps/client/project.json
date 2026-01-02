@@ -14,6 +14,10 @@
         "baseHref": "/de/",
         "translation": "apps/client/src/locales/messages.de.xlf"
       },
+      "ko": {
+        "baseHref": "/ko/",
+        "translation": "apps/client/src/locales/messages.ko.xlf"
+      },
       "es": {
         "baseHref": "/es/",
         "translation": "apps/client/src/locales/messages.es.xlf"
@@ -109,6 +113,10 @@
         "development-it": {
           "baseHref": "/it/",
           "localize": ["it"]
+        },
+        "development-ko": {
+          "baseHref": "/ko/",
+          "localize": ["ko"]
         },
         "development-nl": {
           "baseHref": "/nl/",
@@ -213,6 +221,9 @@
         "sslKey": "apps/client/localhost.pem"
       },
       "configurations": {
+        "development-ca": {
+          "buildTarget": "client:build:development-ca"
+        },
         "development-de": {
           "buildTarget": "client:build:development-de"
         },
@@ -227,6 +238,9 @@
         },
         "development-it": {
           "buildTarget": "client:build:development-it"
+        },
+        "development-ko": {
+          "buildTarget": "client:build:development-ko"
         },
         "development-nl": {
           "buildTarget": "client:build:development-nl"
@@ -269,7 +283,8 @@
           "messages.pt.xlf",
           "messages.tr.xlf",
           "messages.uk.xlf",
-          "messages.zh.xlf"
+          "messages.zh.xlf",
+          "messages.ko.xlf"
         ],
         "trim": true
       }

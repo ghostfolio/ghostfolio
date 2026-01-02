@@ -44,6 +44,7 @@ export class GfProductPageComponent implements OnInit {
       key: 'ghostfolio',
       languages: [
         'Deutsch',
+        '한국어',
         'English',
         'Español',
         'Français',
