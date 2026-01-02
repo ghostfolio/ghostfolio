@@ -1,4 +1,5 @@
 import { Big } from 'big.js';
+import jsonpath from 'jsonpath';
 import { cloneDeep, isArray, isObject } from 'lodash';
 
 export function hasNotDefinedValuesInObject(aObject: Object): boolean {
@@ -29,6 +30,16 @@ export function nullifyValuesInObjects<T>(aObjects: T[], keys: string[]): T[] {
   return aObjects.map((object) => {
     return nullifyValuesInObject(object, keys);
   });
+}
+
+export function query({
+  object,
+  pathExpression
+}: {
+  object: object;
+  pathExpression: string;
+}) {
+  return jsonpath.query(object, pathExpression);
 }
 
 export function redactAttributes({

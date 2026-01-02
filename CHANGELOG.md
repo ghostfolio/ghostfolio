@@ -5,22 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.227.0 - 2026-01-02
+
+### Changed
+
+- Initialized the input properties in the _FIRE_ calculator
+- Removed the deprecated public _Stripe_ key
+- Upgraded `stripe` from version `18.5.0` to `20.1.0`
+
+### Fixed
+
+- Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
+
+## 2.226.0 - 2026-01-01
+
+### Added
+
+- Extended the content of the _Self-Hosting_ section by information about additional data providers on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Upgraded `class-validator` from version `0.14.2` to `0.14.3`
+- Upgraded `yahoo-finance2` from version `3.10.2` to `3.11.2`
+
+## 2.225.0 - 2025-12-31
 
 ### Added
 
 - Added a new endpoint to get all platforms (`GET api/v1/platforms`)
+- Added the session url to the endpoint response of the _Stripe_ checkout
 
 ### Changed
 
 - Improved the routing of the user detail dialog in the users section of the admin control panel
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
+- Deprecated the public _Stripe_ key
 - Improved the language localization for German (`de`)
-- Upgraded `angular` from version `20.2.4` to `20.3.9`
+- Eliminated `ngx-stripe`
+- Upgraded `angular` from version `20.2.4` to `21.0.6`
+- Upgraded `marked` from version `15.0.4` to `17.0.1`
+- Upgraded `ngx-device-detector` from version `10.1.0` to `11.0.0`
 - Upgraded `ng-extract-i18n-merge` from `3.1.0` to `3.2.1`
-- Upgraded `Nx` from version `21.5.1` to `22.1.3`
+- Upgraded `ngx-markdown` from version `20.0.0` to `21.0.1`
+- Upgraded `Nx` from version `21.5.1` to `22.3.3`
 - Upgraded `shx` from version `0.3.4` to `0.4.0`
 - Upgraded `storybook` from version `9.1.5` to `10.1.10`
+- Upgraded `zone.js` from version `0.15.1` to `0.16.0`
 
 ### Fixed
 

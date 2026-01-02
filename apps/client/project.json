@@ -75,7 +75,6 @@
         "ngswConfigPath": "apps/client/ngsw-config.json",
         "optimization": false,
         "polyfills": "apps/client/src/polyfills.ts",
-        "scripts": ["node_modules/marked/marked.min.js"],
         "serviceWorker": true,
         "sourceMap": true,
         "styles": [
