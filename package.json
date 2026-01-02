@@ -168,6 +168,7 @@
     "@types/big.js": "6.2.2",
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "30.0.0",
+    "@types/jsonpath": "0.2.4",
     "@types/lodash": "4.17.20",
     "@types/node": "22.15.17",
     "@types/papaparse": "5.3.7",
