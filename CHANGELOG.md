@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Initialized the input properties in the _FIRE_ calculator
+
 ### Fixed
 
 - Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
