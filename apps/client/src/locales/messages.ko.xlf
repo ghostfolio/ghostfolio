@@ -2365,7 +2365,7 @@
       </trans-unit>
       <trans-unit id="4558422042251216201" datatype="html">
         <source>Zen Mode</source>
-        <target state="translated">젠 모드</target>
+        <target state="translated">프라이버시 모드</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">201</context>
@@ -2501,7 +2501,7 @@
       </trans-unit>
       <trans-unit id="1726363342938046830" datatype="html">
         <source>About</source>
-        <target state="translated">에 대한</target>
+        <target state="translated">소개</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/footer/footer.component.html</context>
           <context context-type="linenumber">20</context>
@@ -4806,7 +4806,7 @@
       </trans-unit>
       <trans-unit id="2446117790692479672" datatype="html">
         <source>Resources</source>
-        <target state="translated">자원</target>
+        <target state="translated">리소스</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/footer/footer.component.html</context>
           <context context-type="linenumber">14</context>
@@ -4830,7 +4830,7 @@
       </trans-unit>
       <trans-unit id="3737711445155929474" datatype="html">
         <source>Membership</source>
-        <target state="translated">회원</target>
+        <target state="translated">멤버십</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">48</context>
@@ -7071,7 +7071,7 @@
       </trans-unit>
       <trans-unit id="5020357869062357338" datatype="html">
         <source>Glossary</source>
-        <target state="translated">어휘</target>
+        <target state="translated">용어집</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/glossary/resources-glossary.component.html</context>
           <context context-type="linenumber">4</context>
