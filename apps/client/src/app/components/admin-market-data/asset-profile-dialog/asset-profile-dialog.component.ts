@@ -507,14 +507,16 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         scraperConfiguration = undefined;
       }
     } catch (error) {
-      console.error('Error parsing scraper configuration:', error);
+      console.error($localize`Could not parse scraper configuration`, error);
+
       this.snackBar.open(
-        $localize`Invalid scraper configuration. Please check the HTTP Request Headers field contains valid JSON.`,
+        '😞 ' + $localize`Could not parse scraper configuration`,
         undefined,
         {
-          duration: ms('5 seconds')
+          duration: ms('3 seconds')
         }
       );
+
       return;
     }
 
@@ -550,14 +552,16 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         object: assetProfile
       });
     } catch (error) {
-      console.error('Validation error:', error);
+      console.error($localize`Could not validate form`, error);
+
       this.snackBar.open(
-        $localize`Validation failed. Please check all required fields.`,
+        '😞 ' + $localize`Could not validate form`,
         undefined,
         {
-          duration: ms('5 seconds')
+          duration: ms('3 seconds')
         }
       );
+
       return;
     }
 
@@ -572,19 +576,25 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       .subscribe({
         next: () => {
           this.snackBar.open(
-            $localize`Asset profile saved successfully`,
+            '✅ ' + $localize`Asset profile has been saved`,
             undefined,
             {
               duration: ms('3 seconds')
             }
           );
+
           this.initialize();
         },
         error: (error) => {
-          console.error('Error saving asset profile:', error);
-          this.snackBar.open($localize`Error saving asset profile`, undefined, {
-            duration: ms('5 seconds')
-          });
+          console.error($localize`Could not save asset profile`, error);
+
+          this.snackBar.open(
+            '😞 ' + $localize`Could not save asset profile`,
+            undefined,
+            {
+              duration: ms('3 seconds')
+            }
+          );
         }
       });
   }
