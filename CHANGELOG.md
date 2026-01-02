@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `stripe` from version `18.5.0` to `20.1.0`
+
 ### Fixed
 
 - Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
