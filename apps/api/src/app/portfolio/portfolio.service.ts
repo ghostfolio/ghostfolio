@@ -642,9 +642,7 @@ export class PortfolioService {
           }) ?? [],
         investment: investment.toNumber(),
         name:
-          assetSubClass === AssetSubClass.CASH
-            ? `${symbol} (Cash)`
-            : assetProfile?.name,
+          assetSubClass === AssetSubClass.CASH ? currency : assetProfile?.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
