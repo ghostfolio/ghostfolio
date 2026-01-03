@@ -371,8 +371,8 @@ export class OrderService {
           quantity: 1,
           SymbolProfile: {
             activitiesCount: 0,
-            assetClass: 'LIQUIDITY',
-            assetSubClass: 'CASH',
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
             countries: [],
             createdAt: new Date(balanceItem.date),
             currency: account.currency,
@@ -387,7 +387,7 @@ export class OrderService {
             updatedAt: new Date(balanceItem.date)
           },
           symbolProfileId: account.currency,
-          type: 'BUY',
+          type: ActivityType.BUY,
           unitPrice: 1,
           unitPriceInAssetProfileCurrency: 1,
           updatedAt: new Date(balanceItem.date),
@@ -400,7 +400,7 @@ export class OrderService {
           activities.push({
             ...syntheticActivityTemplate,
             quantity: balanceItem.value - currentBalance,
-            type: 'BUY',
+            type: ActivityType.BUY,
             value: balanceItem.value - currentBalance,
             valueInBaseCurrency:
               balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
@@ -410,7 +410,7 @@ export class OrderService {
           activities.push({
             ...syntheticActivityTemplate,
             quantity: currentBalance - balanceItem.value,
-            type: 'SELL',
+            type: ActivityType.SELL,
             value: currentBalance - balanceItem.value,
             valueInBaseCurrency:
               currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
