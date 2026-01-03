@@ -632,8 +632,8 @@ export class PortfolioService {
           grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
-        holdings:
-          assetProfile.holdings.map(({ allocationInPercentage, name }) => {
+        holdings: assetProfile.holdings.map(
+          ({ allocationInPercentage, name }) => {
             return {
               allocationInPercentage,
               name,
@@ -641,7 +641,8 @@ export class PortfolioService {
                 .mul(allocationInPercentage)
                 .toNumber()
             };
-          }) ?? [],
+          }
+        ),
         investment: investment.toNumber(),
         name: assetProfile.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
