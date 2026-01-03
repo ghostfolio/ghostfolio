@@ -553,6 +553,9 @@ export class PortfolioService {
       assetProfileIdentifiers
     );
 
+    const cashSymbolProfiles = this.getCashSymbolProfiles(cashDetails);
+    symbolProfiles.push(...cashSymbolProfiles);
+
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
     for (const symbolProfile of symbolProfiles) {
       symbolProfileMap[symbolProfile.symbol] = symbolProfile;
@@ -564,7 +567,6 @@ export class PortfolioService {
     }
 
     for (const {
-      assetSubClass,
       currency,
       dividend,
       firstBuyDate,
@@ -608,7 +610,6 @@ export class PortfolioService {
       }
 
       holdings[symbol] = {
-        assetSubClass,
         currency,
         markets,
         marketsAdvanced,
@@ -619,9 +620,10 @@ export class PortfolioService {
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
-        assetClass: assetProfile?.assetClass,
-        countries: assetProfile?.countries,
-        dataSource: assetProfile?.dataSource,
+        assetClass: assetProfile.assetClass,
+        assetSubClass: assetProfile.assetSubClass,
+        countries: assetProfile.countries,
+        dataSource: assetProfile.dataSource,
         dateOfFirstActivity: parseDate(firstBuyDate),
         dividend: dividend?.toNumber() ?? 0,
         grossPerformance: grossPerformance?.toNumber() ?? 0,
@@ -631,7 +633,7 @@ export class PortfolioService {
         grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         holdings:
-          assetProfile?.holdings.map(({ allocationInPercentage, name }) => {
+          assetProfile.holdings.map(({ allocationInPercentage, name }) => {
             return {
               allocationInPercentage,
               name,
@@ -641,8 +643,7 @@ export class PortfolioService {
             };
           }) ?? [],
         investment: investment.toNumber(),
-        name:
-          assetSubClass === AssetSubClass.CASH ? currency : assetProfile?.name,
+        name: assetProfile.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
@@ -652,8 +653,8 @@ export class PortfolioService {
         netPerformanceWithCurrencyEffect:
           netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ?? 0,
         quantity: quantity.toNumber(),
-        sectors: assetProfile?.sectors,
-        url: assetProfile?.url,
+        sectors: assetProfile.sectors,
+        url: assetProfile.url,
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
@@ -1531,6 +1532,35 @@ export class PortfolioService {
     }
 
     return cashPositions;
+  }
+
+  private getCashSymbolProfiles(cashDetails: CashDetails) {
+    const cashSymbols = [
+      ...new Set(cashDetails.accounts.map(({ currency }) => currency))
+    ];
+
+    return cashSymbols.map<EnhancedSymbolProfile>((currency) => {
+      const account = cashDetails.accounts.find(
+        ({ currency: accountCurrency }) => accountCurrency === currency
+      );
+
+      return {
+        currency,
+        activitiesCount: 0,
+        assetClass: AssetClass.LIQUIDITY,
+        assetSubClass: AssetSubClass.CASH,
+        countries: [],
+        createdAt: account.createdAt,
+        dataSource: DataSource.MANUAL,
+        holdings: [],
+        id: currency,
+        isActive: true,
+        name: currency,
+        sectors: [],
+        symbol: currency,
+        updatedAt: account.updatedAt
+      };
+    });
   }
 
   private getDividendsByGroup({
