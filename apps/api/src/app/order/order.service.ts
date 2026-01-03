@@ -335,14 +335,16 @@ export class OrderService {
    */
   public async getCashOrders({
     cashDetails,
+    filters = [],
     userCurrency,
     userId
   }: {
     cashDetails: CashDetails;
+    filters?: Filter[];
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
-    const activities: Activity[] = [];
+    let activities: Activity[] = [];
 
     for (const account of cashDetails.accounts) {
       const { balances } = await this.accountBalanceService.getAccountBalances({
@@ -421,6 +423,18 @@ export class OrderService {
         currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
       }
     }
+
+    activities = activities.filter(({ SymbolProfile }) => {
+      for (const { id, type } of filters) {
+        if (type === 'ASSET_CLASS') {
+          if (id !== SymbolProfile.assetClass) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    });
 
     return {
       activities,
@@ -755,6 +769,7 @@ export class OrderService {
 
     const cashOrders = await this.getCashOrders({
       cashDetails,
+      filters,
       userCurrency,
       userId
     });
