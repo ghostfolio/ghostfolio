@@ -1542,7 +1542,9 @@ export class PortfolioService {
 
     return cashSymbols.map<EnhancedSymbolProfile>((currency) => {
       const account = cashDetails.accounts.find(
-        ({ currency: accountCurrency }) => accountCurrency === currency
+        ({ currency: accountCurrency }) => {
+          return accountCurrency === currency;
+        }
       );
 
       return {

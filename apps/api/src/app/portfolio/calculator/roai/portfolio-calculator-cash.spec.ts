@@ -207,20 +207,19 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const { historicalData } = await portfolioCalculator.computeSnapshot();
 
-      const historicalData20231231 = portfolioSnapshot.historicalData.find(
-        ({ date }) => date === '2023-12-31'
-      );
-      const historicalData20240101 = portfolioSnapshot.historicalData.find(
-        ({ date }) => date === '2024-01-01'
-      );
-      const historicalData20241231 = portfolioSnapshot.historicalData.find(
-        ({ date }) => date === '2024-12-31'
-      );
+      const historicalData20231231 = historicalData.find(({ date }) => {
+        return date === '2023-12-31';
+      });
+      const historicalData20240101 = historicalData.find(({ date }) => {
+        return date === '2024-01-01';
+      });
+      const historicalData20241231 = historicalData.find(({ date }) => {
+        return date === '2024-12-31';
+      });
 
       /**
-       * Expected logic:
        * Investment value with currency effect: 1000 USD * 0.85 = 850 CHF
        * Total investment: 1000 USD * 0.91 = 910 CHF
        * Value (current): 1000 USD * 0.91 = 910 CHF
@@ -242,7 +241,6 @@ describe('PortfolioCalculator', () => {
       });
 
       /**
-       * Expected logic:
        * Net performance with currency effect: (1000 * 0.86) - (1000 * 0.85) = 10 CHF
        * Total investment: 1000 USD * 0.91 = 910 CHF
        * Total investment value with currency effect: 1000 USD * 0.85 = 850 CHF
@@ -265,7 +263,6 @@ describe('PortfolioCalculator', () => {
       });
 
       /**
-       * Expected logic:
        * Investment value with currency effect: 1000 USD * 0.90 = 900 CHF
        * Net performance: (1000 USD * 1.0) - (1000 USD * 1.0) = 0 CHF
        * Net performance with currency effect: (1000 USD * 0.9) - (1000 USD * 0.85) = 50 CHF
