@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the portfolio holdings to include performance with currency effects for cash positions
+
 ### Changed
 
 - Integrated the endpoint to get all platforms (`GET api/v1/platforms`) into the create or update account dialog
