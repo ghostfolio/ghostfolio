@@ -18,9 +18,5 @@ export interface InfoItem {
   platforms: Platform[];
 
   statistics: Statistics;
-
-  /** @deprecated */
-  stripePublicKey?: string;
-
   subscriptionOffer?: SubscriptionOffer;
 }
