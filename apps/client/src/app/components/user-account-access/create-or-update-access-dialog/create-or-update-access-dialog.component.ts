@@ -1,7 +1,18 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import {
+  AssetProfileIdentifier,
+  Filter,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import {
+  GfPortfolioFilterFormComponent,
+  PortfolioFilterFormValue
+} from '@ghostfolio/ui/portfolio-filter-form';
 
 import {
   ChangeDetectionStrategy,
@@ -12,6 +23,7 @@ import {
   OnInit
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -27,6 +39,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
@@ -37,6 +50,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    GfPortfolioFilterFormComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -53,16 +67,23 @@ export class GfCreateOrUpdateAccessDialogComponent
 {
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
+  public showFilterPanel = false;
+
+  public accounts: AccountWithPlatform[] = [];
+  public assetClasses: Filter[] = [];
+  public holdings: PortfolioPosition[] = [];
+  public tags: Filter[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private dataService: DataService,
+    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private formBuilder: FormBuilder,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private userService: UserService
   ) {
     this.mode = this.data.access?.id ? 'update' : 'create';
   }
@@ -72,14 +93,20 @@ export class GfCreateOrUpdateAccessDialogComponent
 
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
+      filters: [null],
       granteeUserId: [
         this.data.access.grantee,
-        isPublic ? null : Validators.required
+        isPublic
+          ? null
+          : [(control: AbstractControl) => Validators.required(control)]
       ],
-      permissions: [this.data.access.permissions[0], Validators.required],
+      permissions: [
+        this.data.access.permissions[0],
+        [(control: AbstractControl) => Validators.required(control)]
+      ],
       type: [
         { disabled: this.mode === 'update', value: this.data.access.type },
-        Validators.required
+        [(control: AbstractControl) => Validators.required(control)]
       ]
     });
 
@@ -88,17 +115,28 @@ export class GfCreateOrUpdateAccessDialogComponent
       const permissionsControl = this.accessForm.get('permissions');
 
       if (accessType === 'PRIVATE') {
-        granteeUserIdControl.setValidators(Validators.required);
+        granteeUserIdControl.setValidators([
+          (control: AbstractControl) => Validators.required(control)
+        ]);
+        this.showFilterPanel = false;
+        this.accessForm.get('filters')?.setValue(null);
       } else {
         granteeUserIdControl.clearValidators();
         granteeUserIdControl.setValue(null);
         permissionsControl.setValue(this.data.access.permissions[0]);
+        this.showFilterPanel = true;
+        this.loadFilterData();
       }
 
       granteeUserIdControl.updateValueAndValidity();
 
       this.changeDetectorRef.markForCheck();
     });
+
+    if (isPublic) {
+      this.showFilterPanel = true;
+      this.loadFilterData();
+    }
   }
 
   public onCancel() {
@@ -118,11 +156,157 @@ export class GfCreateOrUpdateAccessDialogComponent
     this.unsubscribeSubject.complete();
   }
 
+  private buildFilterObject():
+    | {
+        accountIds?: string[];
+        assetClasses?: string[];
+        holdings?: AssetProfileIdentifier[];
+        tagIds?: string[];
+      }
+    | undefined {
+    const filterValue = this.accessForm.get('filters')
+      ?.value as PortfolioFilterFormValue | null;
+
+    if (
+      !filterValue ||
+      (!filterValue.account &&
+        !filterValue.assetClass &&
+        !filterValue.holding &&
+        !filterValue.tag)
+    ) {
+      return undefined;
+    }
+
+    const filter: {
+      accountIds?: string[];
+      assetClasses?: string[];
+      holdings?: AssetProfileIdentifier[];
+      tagIds?: string[];
+    } = {};
+
+    if (filterValue.account) {
+      filter.accountIds = [filterValue.account];
+    }
+
+    if (filterValue.assetClass) {
+      filter.assetClasses = [filterValue.assetClass];
+    }
+
+    if (filterValue.holding) {
+      filter.holdings = [
+        {
+          dataSource: filterValue.holding.dataSource,
+          symbol: filterValue.holding.symbol
+        }
+      ];
+    }
+
+    if (filterValue.tag) {
+      filter.tagIds = [filterValue.tag];
+    }
+
+    return filter;
+  }
+
+  private loadFilterData() {
+    const existingFilter = this.data.access.settings?.filter;
+
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.accounts = user.accounts;
+        this.tags = user.tags
+          .filter(({ isUsed }) => isUsed)
+          .map(({ id, name }) => ({
+            id,
+            label: name,
+            type: 'TAG' as const
+          }));
+        this.updateFiltersFormControl(existingFilter);
+      });
+
+    this.dataService
+      .fetchPortfolioDetails({})
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        if (response.holdings) {
+          this.holdings = Object.values(response.holdings);
+
+          const assetClassesSet = new Set<string>();
+          Object.values(response.holdings).forEach((holding) => {
+            if (holding.assetClass) {
+              assetClassesSet.add(holding.assetClass);
+            }
+          });
+          this.assetClasses = Array.from(assetClassesSet).map((ac) => ({
+            id: ac,
+            label: ac,
+            type: 'ASSET_CLASS' as const
+          }));
+
+          this.updateFiltersFormControl(existingFilter);
+        }
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private updateFiltersFormControl(
+    existingFilter:
+      | {
+          accountIds?: string[];
+          assetClasses?: string[];
+          holdings?: AssetProfileIdentifier[];
+          tagIds?: string[];
+        }
+      | undefined
+  ) {
+    if (!existingFilter) {
+      return;
+    }
+
+    const filterValue: Partial<PortfolioFilterFormValue> = {};
+
+    if (existingFilter.accountIds?.[0] && this.accounts.length > 0) {
+      filterValue.account = existingFilter.accountIds[0];
+    }
+
+    if (existingFilter.assetClasses?.[0] && this.assetClasses.length > 0) {
+      filterValue.assetClass = existingFilter.assetClasses[0];
+    }
+
+    if (existingFilter.holdings?.[0] && this.holdings.length > 0) {
+      const holdingData = existingFilter.holdings[0];
+      const holding = this.holdings.find(
+        (h) =>
+          h.dataSource === holdingData.dataSource &&
+          h.symbol === holdingData.symbol
+      );
+      if (holding) {
+        filterValue.holding = holding;
+      }
+    }
+
+    if (existingFilter.tagIds?.[0] && this.tags.length > 0) {
+      filterValue.tag = existingFilter.tagIds[0];
+    }
+
+    if (Object.keys(filterValue).length > 0) {
+      this.accessForm.get('filters')?.setValue(filterValue);
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
   private async createAccess() {
+    const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
+
     const access: CreateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
-      permissions: [this.accessForm.get('permissions').value]
+      filter,
+      alias: this.accessForm.get('alias')?.value as string,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
+      permissions: [
+        this.accessForm.get('permissions')?.value as AccessPermission
+      ]
     };
 
     try {
@@ -135,8 +319,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .postAccess(access)
         .pipe(
-          catchError((error) => {
-            if (error.status === StatusCodes.BAD_REQUEST) {
+          catchError((error: { status?: number }) => {
+            if (error.status === (StatusCodes.BAD_REQUEST as number)) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not grant access.`
               });
@@ -155,11 +339,16 @@ export class GfCreateOrUpdateAccessDialogComponent
   }
 
   private async updateAccess() {
+    const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
+
     const access: UpdateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
+      alias: this.accessForm.get('alias')?.value as string,
+      filter,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
       id: this.data.access.id,
-      permissions: [this.accessForm.get('permissions').value]
+      permissions: [
+        this.accessForm.get('permissions')?.value as AccessPermission
+      ]
     };
 
     try {
@@ -172,8 +361,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .putAccess(access)
         .pipe(
-          catchError(({ status }) => {
-            if (status.status === StatusCodes.BAD_REQUEST) {
+          catchError((error: { status?: number }) => {
+            if (error.status === (StatusCodes.BAD_REQUEST as number)) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });

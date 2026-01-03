@@ -60,6 +60,29 @@
       </div>
     }
   </div>
+  <span>
+    @if (showFilterPanel) {
+      <h1 class="filter-settings-title" i18n mat-dialog-title>
+        Filter Settings (Optional)
+      </h1>
+      <div class="flex-grow-1 py-0" mat-dialog-content>
+        <p class="filter-settings-description text-muted" i18n>
+          Configure which accounts, holdings, tags, and asset classes will be
+          visible in this public access. Leave empty to show all data.
+        </p>
+
+        <gf-portfolio-filter-form
+          appearance="outline"
+          class="w-100"
+          formControlName="filters"
+          [accounts]="accounts"
+          [assetClasses]="assetClasses"
+          [holdings]="holdings"
+          [tags]="tags"
+        />
+      </div>
+    }
+  </span>
   <div class="justify-content-end" mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">
       @if (accessForm.dirty) {
