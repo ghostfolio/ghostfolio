@@ -28,11 +28,13 @@ export const permissions = {
   deleteTag: 'deleteTag',
   deleteUser: 'deleteUser',
   deleteWatchlistItem: 'deleteWatchlistItem',
+  enableAuthGoogle: 'enableAuthGoogle',
+  enableAuthOidc: 'enableAuthOidc',
+  enableAuthToken: 'enableAuthToken',
   enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
   enableBlog: 'enableBlog',
-  enableSocialLogin: 'enableSocialLogin',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
   enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
@@ -43,12 +45,14 @@ export const permissions = {
   readMarketDataOfMarkets: 'readMarketDataOfMarkets',
   readMarketDataOfOwnAssetProfile: 'readMarketDataOfOwnAssetProfile',
   readPlatforms: 'readPlatforms',
+  readPlatformsWithAccountCount: 'readPlatformsWithAccountCount',
   readTags: 'readTags',
   readWatchlist: 'readWatchlist',
   reportDataGlitch: 'reportDataGlitch',
   syncDemoUserAccount: 'syncDemoUserAccount',
   toggleReadOnlyMode: 'toggleReadOnlyMode',
   updateAccount: 'updateAccount',
+  updateAccess: 'updateAccess',
   updateAuthDevice: 'updateAuthDevice',
   updateMarketData: 'updateMarketData',
   updateMarketDataOfOwnAssetProfile: 'updateMarketDataOfOwnAssetProfile',
@@ -90,9 +94,11 @@ export function getPermissions(aRole: Role): string[] {
         permissions.readMarketData,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.readPlatforms,
+        permissions.readPlatformsWithAccountCount,
         permissions.readTags,
         permissions.readWatchlist,
         permissions.updateAccount,
+        permissions.updateAccess,
         permissions.updateAuthDevice,
         permissions.updateMarketData,
         permissions.updateMarketDataOfOwnAssetProfile,
@@ -131,8 +137,10 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
         permissions.readMarketDataOfOwnAssetProfile,
+        permissions.readPlatforms,
         permissions.readWatchlist,
         permissions.updateAccount,
+        permissions.updateAccess,
         permissions.updateAuthDevice,
         permissions.updateMarketDataOfOwnAssetProfile,
         permissions.updateOrder,
@@ -154,7 +162,8 @@ export function filterGlobalPermissions(
   if (aUtmSource === 'ios') {
     return globalPermissions.filter((permission) => {
       return (
-        permission !== permissions.enableSocialLogin &&
+        permission !== permissions.enableAuthGoogle &&
+        permission !== permissions.enableAuthOidc &&
         permission !== permissions.enableSubscription
       );
     });
@@ -197,5 +206,9 @@ export function hasRole(aUser: UserWithSettings, aRole: Role) {
 }
 
 export function isRestrictedView(aUser: UserWithSettings) {
-  return aUser.settings.settings.isRestrictedView ?? false;
+  if (!aUser) {
+    return true;
+  }
+
+  return aUser?.settings?.settings?.isRestrictedView ?? false;
 }

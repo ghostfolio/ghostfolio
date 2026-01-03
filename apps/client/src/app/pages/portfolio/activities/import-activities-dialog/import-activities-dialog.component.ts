@@ -1,20 +1,22 @@
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
-import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
-import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  CreateAccountWithBalancesDto,
+  CreateAssetProfileWithMarketDataDto,
+  CreateTagDto
+} from '@ghostfolio/common/dtos';
+import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
+import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 
 import {
   StepperOrientation,
   StepperSelectionEvent
 } from '@angular/cdk/stepper';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -36,6 +38,7 @@ import {
 } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -56,12 +59,14 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'd-flex flex-column h-100' },
   imports: [
+    CommonModule,
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
-    GfFileDropModule,
-    GfSymbolModule,
+    GfFileDropDirective,
+    GfSymbolPipe,
     IonIcon,
     MatButtonModule,
     MatDialogModule,
@@ -76,7 +81,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   styleUrls: ['./import-activities-dialog.scss'],
   templateUrl: 'import-activities-dialog.html'
 })
-export class GfImportActivitiesDialog implements OnDestroy {
+export class GfImportActivitiesDialogComponent implements OnDestroy {
   public accounts: CreateAccountWithBalancesDto[] = [];
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
@@ -89,8 +94,9 @@ export class GfImportActivitiesDialog implements OnDestroy {
   public holdings: PortfolioPosition[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
   public isLoading = false;
-  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
+  public pageIndex = 0;
+  public pageSize = 8;
   public selectedActivities: Activity[] = [];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
@@ -106,7 +112,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<GfImportActivitiesDialog>,
+    public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
   ) {
@@ -235,6 +241,7 @@ export class GfImportActivitiesDialog implements OnDestroy {
       .subscribe(({ activities }) => {
         this.activities = activities;
         this.dataSource = new MatTableDataSource(activities.reverse());
+        this.pageIndex = 0;
         this.totalItems = activities.length;
 
         aStepper.next();
@@ -243,10 +250,15 @@ export class GfImportActivitiesDialog implements OnDestroy {
       });
   }
 
+  public onPageChanged({ pageIndex }: PageEvent) {
+    this.pageIndex = pageIndex;
+  }
+
   public onReset(aStepper: MatStepper) {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
+    this.pageIndex = 0;
     this.assetProfileForm.get('assetProfileIdentifier').enable();
 
     aStepper.reset();
@@ -335,8 +347,10 @@ export class GfImportActivitiesDialog implements OnDestroy {
                 isDryRun: true,
                 tags: content.tags
               });
+
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
+            this.pageIndex = 0;
             this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
@@ -348,14 +362,18 @@ export class GfImportActivitiesDialog implements OnDestroy {
           const content = fileContent.split('\n').slice(1);
 
           try {
-            const data = await this.importActivitiesService.importCsv({
-              fileContent,
-              isDryRun: true,
-              userAccounts: this.data.user.accounts
-            });
-            this.activities = data.activities;
-            this.dataSource = new MatTableDataSource(data.activities.reverse());
-            this.totalItems = data.activities.length;
+            const { activities, assetProfiles } =
+              await this.importActivitiesService.importCsv({
+                fileContent,
+                isDryRun: true,
+                userAccounts: this.data.user.accounts
+              });
+
+            this.activities = activities;
+            this.assetProfiles = assetProfiles;
+            this.dataSource = new MatTableDataSource(activities.reverse());
+            this.pageIndex = 0;
+            this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({

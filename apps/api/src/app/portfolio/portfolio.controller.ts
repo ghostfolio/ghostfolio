@@ -19,10 +19,10 @@ import {
 } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
-  PortfolioDividends,
+  PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
-  PortfolioInvestments,
+  PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioReportResponse
 } from '@ghostfolio/common/interfaces';
@@ -195,10 +195,9 @@ export class PortfolioController {
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
-        'fireWealth',
         'grossPerformance',
         'grossPerformanceWithCurrencyEffect',
-        'interest',
+        'interestInBaseCurrency',
         'items',
         'liabilities',
         'netPerformance',
@@ -306,7 +305,7 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
-  ): Promise<PortfolioDividends> {
+  ): Promise<PortfolioDividendsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -440,7 +439,7 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
-  ): Promise<PortfolioInvestments> {
+  ): Promise<PortfolioInvestmentsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -611,36 +610,6 @@ export class PortfolioController {
     return performanceInformation;
   }
 
-  /**
-   * @deprecated
-   */
-  @Get('position/:dataSource/:symbol')
-  @UseInterceptors(RedactValuesInResponseInterceptor)
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getPosition(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<PortfolioHoldingResponse> {
-    const holding = await this.portfolioService.getHolding({
-      dataSource,
-      impersonationId,
-      symbol,
-      userId: this.request.user.id
-    });
-
-    if (!holding) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    return holding;
-  }
-
   @Get('report')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getReport(
@@ -655,8 +624,8 @@ export class PortfolioController {
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === 'Basic'
     ) {
-      for (const rule in report.xRay.rules) {
-        report.xRay.rules[rule] = null;
+      for (const category of report.xRay.categories) {
+        category.rules = null;
       }
 
       report.xRay.statistics = {
@@ -673,42 +642,6 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateHoldingTags(
-    @Body() data: UpdateHoldingTagsDto,
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<void> {
-    const holding = await this.portfolioService.getHolding({
-      dataSource,
-      impersonationId,
-      symbol,
-      userId: this.request.user.id
-    });
-
-    if (!holding) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    await this.portfolioService.updateTags({
-      dataSource,
-      impersonationId,
-      symbol,
-      tags: data.tags,
-      userId: this.request.user.id
-    });
-  }
-
-  /**
-   * @deprecated
-   */
-  @HasPermission(permissions.updateOrder)
-  @Put('position/:dataSource/:symbol/tags')
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async updatePositionTags(
     @Body() data: UpdateHoldingTagsDto,
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource: DataSource,

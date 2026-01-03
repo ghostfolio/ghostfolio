@@ -8,9 +8,11 @@
       @if (rules !== null && rules !== undefined) {
         @for (rule of rules; track rule.key) {
           <gf-rule
+            [categoryName]="categoryName"
             [hasPermissionToUpdateUserSettings]="
               hasPermissionToUpdateUserSettings
             "
+            [locale]="locale"
             [rule]="rule"
             [settings]="settings?.[rule.key]"
             (ruleUpdated)="onRuleUpdated($event)"

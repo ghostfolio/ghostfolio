@@ -4,24 +4,30 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
-import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
+import {
+  UpdateAssetProfileDto,
+  UpdatePropertyDto
+} from '@ghostfolio/common/dtos';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
-  AdminUsers,
+  AdminUserResponse,
+  AdminUsersResponse,
   EnhancedSymbolProfile,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type {
+  DateRange,
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
@@ -49,7 +55,6 @@ import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
-import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -88,7 +93,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMax(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
+      await this.dataGatheringService.getActiveAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
       assetProfileIdentifiers.map(({ dataSource, symbol }) => {
@@ -115,7 +120,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
+      await this.dataGatheringService.getActiveAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
       assetProfileIdentifiers.map(({ dataSource, symbol }) => {
@@ -161,9 +166,21 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   public async gatherSymbol(
     @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
+    @Param('symbol') symbol: string,
+    @Query('range') dateRange: DateRange
   ): Promise<void> {
-    this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    let date: Date;
+
+    if (dateRange) {
+      const { startDate } = getIntervalFromDateRange(dateRange);
+      date = startDate;
+    }
+
+    this.dataGatheringService.gatherSymbol({
+      dataSource,
+      date,
+      symbol
+    });
 
     return;
   }
@@ -290,7 +307,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateProperty(
     @Param('key') key: string,
-    @Body() data: PropertyDto
+    @Body() data: UpdatePropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);
   }
@@ -301,10 +318,17 @@ export class AdminController {
   public async getUsers(
     @Query('skip') skip?: number,
     @Query('take') take?: number
-  ): Promise<AdminUsers> {
+  ): Promise<AdminUsersResponse> {
     return this.adminService.getUsers({
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take
     });
+  }
+
+  @Get('user/:id')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getUser(@Param('id') id: string): Promise<AdminUserResponse> {
+    return this.adminService.getUser(id);
   }
 }

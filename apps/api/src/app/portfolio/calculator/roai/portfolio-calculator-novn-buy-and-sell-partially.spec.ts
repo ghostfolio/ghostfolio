@@ -1,8 +1,6 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
-  loadActivityExportFile,
+  loadExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -16,15 +14,14 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { Activity, ExportResponse } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
-import { join } from 'path';
+import { join } from 'node:path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     CurrentRateService: jest.fn().mockImplementation(() => {
       return CurrentRateServiceMock;
     })
@@ -35,7 +32,6 @@ jest.mock(
   '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service',
   () => {
     return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       PortfolioSnapshotService: jest.fn().mockImplementation(() => {
         return PortfolioSnapshotServiceMock;
       })
@@ -45,7 +41,6 @@ jest.mock(
 
 jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     RedisCacheService: jest.fn().mockImplementation(() => {
       return RedisCacheServiceMock;
     })
@@ -53,7 +48,7 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let activityDtos: CreateOrderDto[];
+  let exportResponse: ExportResponse;
 
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
@@ -63,7 +58,7 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeAll(() => {
-    activityDtos = loadActivityExportFile(
+    exportResponse = loadExportFile(
       join(
         __dirname,
         '../../../../../../../test/import/ok/novn-buy-and-sell-partially.json'
@@ -100,28 +95,27 @@ describe('PortfolioCalculator', () => {
     it.only('with NOVN.SW buy and sell partially', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
-      const activities: Activity[] = activityDtos.map((activity) => ({
-        ...activityDummyData,
-        ...activity,
-        date: parseDate(activity.date),
-        feeInAssetProfileCurrency: activity.fee,
-        SymbolProfile: {
-          ...symbolProfileDummyData,
-          currency: activity.currency,
-          dataSource: activity.dataSource,
-          name: 'Novartis AG',
-          symbol: activity.symbol
-        },
-        tags: activity.tags?.map((id) => {
-          return { id } as Tag;
-        }),
-        unitPriceInAssetProfileCurrency: activity.unitPrice
-      }));
+      const activities: Activity[] = exportResponse.activities.map(
+        (activity) => ({
+          ...activityDummyData,
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: activity.currency,
+            dataSource: activity.dataSource,
+            name: 'Novartis AG',
+            symbol: activity.symbol
+          },
+          unitPriceInAssetProfileCurrency: activity.unitPrice
+        })
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: exportResponse.user.settings.currency,
         userId: userDummyData.id
       });
 

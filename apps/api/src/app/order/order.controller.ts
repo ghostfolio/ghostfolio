@@ -11,6 +11,11 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
+import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
+import {
+  ActivitiesResponse,
+  ActivityResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
@@ -35,10 +40,7 @@ import { Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { CreateOrderDto } from './create-order.dto';
-import { Activities, Activity } from './interfaces/activities.interface';
 import { OrderService } from './order.service';
-import { UpdateOrderDto } from './update-order.dto';
 
 @Controller('order')
 export class OrderController {
@@ -113,7 +115,7 @@ export class OrderController {
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
-  ): Promise<Activities> {
+  ): Promise<ActivitiesResponse> {
     let endDate: Date;
     let startDate: Date;
 
@@ -157,13 +159,14 @@ export class OrderController {
   public async getOrderById(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
-  ): Promise<Activity> {
+  ): Promise<ActivityResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
+      includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });

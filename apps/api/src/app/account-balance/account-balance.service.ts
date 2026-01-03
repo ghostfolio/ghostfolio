@@ -2,6 +2,7 @@ import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, getSum, resetHours } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
@@ -14,8 +15,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
-
-import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
 @Injectable()
 export class AccountBalanceService {

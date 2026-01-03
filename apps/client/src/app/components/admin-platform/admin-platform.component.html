@@ -45,7 +45,7 @@
   <ng-container matColumnDef="accounts">
     <th
       *matHeaderCellDef
-      class="px-1"
+      class="justify-content-end px-1"
       mat-header-cell
       mat-sort-header="accountCount"
     >
@@ -57,7 +57,7 @@
   </ng-container>
 
   <ng-container matColumnDef="actions" stickyEnd>
-    <th *matHeaderCellDef class="px-1 text-center" i18n mat-header-cell></th>
+    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
     <td *matCellDef="let element" class="px-1 text-center" mat-cell>
       <button
         class="mx-1 no-min-width px-2"
@@ -71,7 +71,7 @@
         <button mat-menu-item (click)="onUpdatePlatform(element)">
           <span class="align-items-center d-flex">
             <ion-icon class="mr-2" name="create-outline" />
-            <span i18n>Edit</span>
+            <span><ng-container i18n>Edit</ng-container>...</span>
           </span>
         </button>
         <hr class="m-0" />

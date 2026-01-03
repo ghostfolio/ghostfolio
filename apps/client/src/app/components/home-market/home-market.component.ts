@@ -1,4 +1,4 @@
-import { GfFearAndGreedIndexModule } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.module';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   imports: [
     GfBenchmarkComponent,
-    GfFearAndGreedIndexModule,
+    GfFearAndGreedIndexComponent,
     GfLineChartComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -35,7 +35,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-market.scss'],
   templateUrl: './home-market.html'
 })
-export class HomeMarketComponent implements OnDestroy, OnInit {
+export class GfHomeMarketComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;

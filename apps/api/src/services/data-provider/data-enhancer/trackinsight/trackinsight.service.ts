@@ -4,7 +4,7 @@ import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { countries } from 'countries-list';
 
@@ -202,7 +202,12 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
         return undefined;
       })
-      .catch(() => {
+      .catch(({ message }) => {
+        Logger.error(
+          `Failed to search Trackinsight symbol for ${symbol} (${message})`,
+          'TrackinsightDataEnhancerService'
+        );
+
         return undefined;
       });
   }

@@ -77,6 +77,14 @@
             [keys]="['symbol']"
             [showLabels]="deviceType !== 'mobile'"
           />
+          <gf-holdings-table
+            [deviceType]="deviceType"
+            [hasPermissionToOpenDetails]="false"
+            [hasPermissionToShowQuantities]="false"
+            [hasPermissionToShowValues]="false"
+            [holdings]="holdings"
+            [pageSize]="7"
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -195,16 +203,29 @@
       </div>
     </div>
   }
-  <div class="row">
-    <div class="col-lg">
-      <gf-holdings-table
-        [data]="holdings"
-        [deviceType]="deviceType"
-        [hasPermissionToOpenDetails]="false"
-        [hasPermissionToShowQuantities]="false"
-        [hasPermissionToShowValues]="false"
-        [pageSize]="7"
-      />
+  <div class="row" [ngClass]="{ 'd-none': hasPermissionForSubscription }">
+    <div class="col-md-12">
+      <mat-card appearance="outlined">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n
+            >Latest activities</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <gf-activities-table
+            [dataSource]="latestActivitiesDataSource"
+            [deviceType]="deviceType"
+            [hasPermissionToCreateActivity]="false"
+            [hasPermissionToDeleteActivity]="false"
+            [hasPermissionToExportActivities]="false"
+            [hasPermissionToOpenDetails]="false"
+            [pageSize]="pageSize"
+            [showAccountColumn]="false"
+            [showActions]="false"
+            [sortDisabled]="true"
+          />
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
   <div class="row my-5">

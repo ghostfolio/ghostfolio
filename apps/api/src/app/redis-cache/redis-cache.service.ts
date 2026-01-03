@@ -4,9 +4,9 @@ import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { createHash } from 'crypto';
 import Keyv from 'keyv';
 import ms from 'ms';
+import { createHash } from 'node:crypto';
 
 @Injectable()
 export class RedisCacheService {

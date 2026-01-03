@@ -76,7 +76,9 @@ export class GfProductPageComponent implements OnInit {
 
     this.tags = [
       this.product1.name,
+      this.product1.origin,
       this.product2.name,
+      this.product2.origin,
       $localize`Alternative`,
       $localize`App`,
       $localize`Budgeting`,
@@ -96,8 +98,12 @@ export class GfProductPageComponent implements OnInit {
       $localize`Wealth`,
       $localize`Wealth Management`,
       `WealthTech`
-    ].sort((a, b) => {
-      return a.localeCompare(b, undefined, { sensitivity: 'base' });
-    });
+    ]
+      .filter((item) => {
+        return !!item;
+      })
+      .sort((a, b) => {
+        return a.localeCompare(b, undefined, { sensitivity: 'base' });
+      });
   }
 }

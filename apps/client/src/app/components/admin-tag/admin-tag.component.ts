@@ -1,9 +1,8 @@
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
   ChangeDetectionStrategy,
@@ -32,6 +31,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
 import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
+import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,7 +47,7 @@ import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialo
   styleUrls: ['./admin-tag.component.scss'],
   templateUrl: './admin-tag.component.html'
 })
-export class GfAdminTagComponent implements OnInit, OnDestroy {
+export class GfAdminTagComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Tag>();
@@ -149,9 +149,13 @@ export class GfAdminTagComponent implements OnInit, OnDestroy {
   }
 
   private openCreateTagDialog() {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateTagDialogComponent,
+      CreateOrUpdateTagDialogParams
+    >(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
+          id: null,
           name: null
         }
       },
@@ -183,8 +187,11 @@ export class GfAdminTagComponent implements OnInit, OnDestroy {
       });
   }
 
-  private openUpdateTagDialog({ id, name }) {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateTagDialogComponent, {
+  private openUpdateTagDialog({ id, name }: { id: string; name: string }) {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateTagDialogComponent,
+      CreateOrUpdateTagDialogParams
+    >(GfCreateOrUpdateTagDialogComponent, {
       data: {
         tag: {
           id,

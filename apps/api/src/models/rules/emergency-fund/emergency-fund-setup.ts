@@ -1,8 +1,7 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { UserSettings } from '@ghostfolio/common/interfaces';
+import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class EmergencyFundSetup extends Rule<Settings> {
   private emergencyFund: number;
@@ -59,9 +58,14 @@ export class EmergencyFundSetup extends Rule<Settings> {
     });
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
+      locale,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true
     };
   }

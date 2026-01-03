@@ -1,8 +1,6 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
-  loadActivityExportFile,
+  loadExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -16,15 +14,14 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { Activity, ExportResponse } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
-import { join } from 'path';
+import { join } from 'node:path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     CurrentRateService: jest.fn().mockImplementation(() => {
       return CurrentRateServiceMock;
     })
@@ -35,7 +32,6 @@ jest.mock(
   '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service',
   () => {
     return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       PortfolioSnapshotService: jest.fn().mockImplementation(() => {
         return PortfolioSnapshotServiceMock;
       })
@@ -45,7 +41,6 @@ jest.mock(
 
 jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     RedisCacheService: jest.fn().mockImplementation(() => {
       return RedisCacheServiceMock;
     })
@@ -53,7 +48,7 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let activityDtos: CreateOrderDto[];
+  let exportResponse: ExportResponse;
 
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
@@ -63,7 +58,7 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeAll(() => {
-    activityDtos = loadActivityExportFile(
+    exportResponse = loadExportFile(
       join(__dirname, '../../../../../../../test/import/ok/btcusd.json')
     );
   });
@@ -97,32 +92,37 @@ describe('PortfolioCalculator', () => {
     it.only('with BTCUSD buy (in USD)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
 
-      const activities: Activity[] = activityDtos.map((activity) => ({
-        ...activityDummyData,
-        ...activity,
-        date: parseDate(activity.date),
-        feeInAssetProfileCurrency: 4.46,
-        SymbolProfile: {
-          ...symbolProfileDummyData,
-          currency: 'USD',
-          dataSource: activity.dataSource,
-          name: 'Bitcoin',
-          symbol: activity.symbol
-        },
-        tags: activity.tags?.map((id) => {
-          return { id } as Tag;
-        }),
-        unitPriceInAssetProfileCurrency: 44558.42
-      }));
+      const activities: Activity[] = exportResponse.activities.map(
+        (activity) => ({
+          ...activityDummyData,
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: 4.46,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: activity.dataSource,
+            name: 'Bitcoin',
+            symbol: activity.symbol
+          },
+          unitPriceInAssetProfileCurrency: 44558.42
+        })
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'USD',
+        currency: exportResponse.user.settings.currency,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -230,6 +230,11 @@ describe('PortfolioCalculator', () => {
         totalInvestmentWithCurrencyEffect: new Big('44558.42'),
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
+
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).toContain('2021-12-31');
+      expect(historicalDataDates).toContain('2022-01-01');
+      expect(historicalDataDates).not.toContain('2022-12-31');
 
       expect(investments).toEqual([
         { date: '2021-12-12', investment: new Big('44558.42') }

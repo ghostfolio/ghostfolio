@@ -3,6 +3,10 @@
     <h2 class="text-center">Status</h2>
     <div>{{ status$ | async | json }}</div>
   </div>
+  <div class="mb-3">
+    <h2 class="text-center">Asset Profile</h2>
+    <div>{{ assetProfile$ | async | json }}</div>
+  </div>
   <div>
     <h2 class="text-center">Lookup</h2>
     @if (lookupItems$) {

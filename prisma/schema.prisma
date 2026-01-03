@@ -16,6 +16,7 @@ model Access {
   granteeUserId String?
   id            String             @id @default(uuid())
   permissions   AccessPermission[] @default([READ_RESTRICTED])
+  settings      Json               @default("{}")
   updatedAt     DateTime           @updatedAt
   userId        String
   user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
@@ -86,6 +87,20 @@ model ApiKey {
   userId    String
 
   @@index([userId])
+}
+
+model AssetProfileResolution {
+  createdAt        DateTime   @default(now())
+  currency         String
+  dataSourceOrigin DataSource
+  dataSourceTarget DataSource
+  id               String     @id @default(uuid())
+  requestCount     Int        @default(1)
+  symbolOrigin     String
+  symbolTarget     String
+  updatedAt        DateTime   @updatedAt
+
+  @@unique([dataSourceOrigin, symbolOrigin])
 }
 
 model AuthDevice {
@@ -320,6 +335,7 @@ enum Provider {
   ANONYMOUS
   GOOGLE
   INTERNET_IDENTITY
+  OIDC
 }
 
 enum Role {
@@ -334,7 +350,6 @@ enum Type {
   DIVIDEND
   FEE
   INTEREST
-  ITEM
   LIABILITY
   SELL
 }

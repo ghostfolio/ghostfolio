@@ -7,10 +7,10 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { NotificationService } from 'apps/client/src/app/core/notification/notification.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo';
+import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
 import { GfAccountsTableComponent } from './accounts-table.component';
 
@@ -107,11 +107,29 @@ export default {
 
 type Story = StoryObj<GfAccountsTableComponent>;
 
+export const Loading: Story = {
+  args: {
+    accounts: undefined,
+    baseCurrency: 'USD',
+    deviceType: 'desktop',
+    hasPermissionToOpenDetails: false,
+    locale: 'en-US',
+    showActions: false,
+    showAllocationInPercentage: false,
+    showBalance: true,
+    showFooter: true,
+    showTransactions: true,
+    showValue: true,
+    showValueInBaseCurrency: true
+  }
+};
+
 export const Default: Story = {
   args: {
     accounts,
     baseCurrency: 'USD',
     deviceType: 'desktop',
+    hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
     showAllocationInPercentage: false,
@@ -131,6 +149,7 @@ export const WithoutFooter: Story = {
     accounts,
     baseCurrency: 'USD',
     deviceType: 'desktop',
+    hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
     showAllocationInPercentage: false,

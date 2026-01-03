@@ -1,4 +1,4 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export interface Settings extends RuleSettings {
   baseCurrency: string;
