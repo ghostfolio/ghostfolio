@@ -405,6 +405,7 @@ export abstract class PortfolioCalculator {
         feeInBaseCurrency,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
+        assetSubClass: item.assetSubClass,
         dividend: totalDividend,
         dividendInBaseCurrency: totalDividendInBaseCurrency,
         averagePrice: item.averagePrice,

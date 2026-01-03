@@ -564,6 +564,7 @@ export class PortfolioService {
     }
 
     for (const {
+      assetSubClass,
       currency,
       dividend,
       firstBuyDate,
@@ -607,6 +608,7 @@ export class PortfolioService {
       }
 
       holdings[symbol] = {
+        assetSubClass,
         currency,
         markets,
         marketsAdvanced,
@@ -618,7 +620,6 @@ export class PortfolioService {
           ? 0
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
         assetClass: assetProfile?.assetClass,
-        assetSubClass: assetProfile?.assetSubClass,
         countries: assetProfile?.countries,
         dataSource: assetProfile?.dataSource,
         dateOfFirstActivity: parseDate(firstBuyDate),
@@ -640,7 +641,10 @@ export class PortfolioService {
             };
           }) ?? [],
         investment: investment.toNumber(),
-        name: assetProfile?.name,
+        name:
+          assetSubClass === AssetSubClass.CASH
+            ? `${symbol} (Cash)`
+            : assetProfile?.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:

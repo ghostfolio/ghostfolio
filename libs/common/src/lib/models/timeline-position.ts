@@ -4,11 +4,13 @@ import {
 } from '@ghostfolio/common/class-transformer';
 import { DateRange } from '@ghostfolio/common/types';
 
-import { DataSource, Tag } from '@prisma/client';
+import { AssetSubClass, DataSource, Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
 export class TimelinePosition {
+  assetSubClass: AssetSubClass;
+
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   averagePrice: Big;
