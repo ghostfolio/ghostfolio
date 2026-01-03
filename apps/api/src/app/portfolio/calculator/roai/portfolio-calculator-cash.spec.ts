@@ -1,22 +1,23 @@
-import {
-  activityDummyData,
-  symbolProfileDummyData,
-  userDummyData
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity, HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
+import { DataSource } from '@prisma/client';
 import { randomUUID } from 'node:crypto';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -58,17 +59,19 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
+  let accountBalanceService: AccountBalanceService;
+  let accountService: AccountService;
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
+  let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let orderService: OrderService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
-
-    currentRateService = new CurrentRateService(null, null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -77,9 +80,49 @@ describe('PortfolioCalculator', () => {
       null
     );
 
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    accountBalanceService = new AccountBalanceService(
+      null,
+      exchangeRateDataService,
+      null
+    );
 
-    redisCacheService = new RedisCacheService(null, null);
+    accountService = new AccountService(
+      accountBalanceService,
+      null,
+      exchangeRateDataService,
+      null
+    );
+
+    redisCacheService = new RedisCacheService(null, configurationService);
+
+    dataProviderService = new DataProviderService(
+      configurationService,
+      null,
+      null,
+      null,
+      null,
+      redisCacheService
+    );
+
+    currentRateService = new CurrentRateService(
+      dataProviderService,
+      null,
+      null,
+      null
+    );
+
+    orderService = new OrderService(
+      accountBalanceService,
+      accountService,
+      null,
+      dataProviderService,
+      null,
+      exchangeRateDataService,
+      null,
+      null
+    );
+
+    portfolioSnapshotService = new PortfolioSnapshotService(null);
 
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
@@ -96,46 +139,60 @@ describe('PortfolioCalculator', () => {
 
       const accountId = randomUUID();
 
-      const syntheticActivities: Activity[] = [
-        {
-          ...activityDummyData,
-          accountId,
-          comment: 'Synthetic Cash Start',
-          currency: 'USD',
-          date: parseDate('2023-12-31'),
-          feeInAssetProfileCurrency: 0,
-          quantity: 1000,
-          type: 'BUY',
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            assetSubClass: 'CASH',
+      jest
+        .spyOn(accountBalanceService, 'getAccountBalances')
+        .mockResolvedValue({
+          balances: [
+            {
+              accountId,
+              id: randomUUID(),
+              date: parseDate('2023-12-31'),
+              value: 1000,
+              valueInBaseCurrency: 850
+            },
+            {
+              accountId,
+              id: randomUUID(),
+              date: parseDate('2024-12-31'),
+              value: 2000,
+              valueInBaseCurrency: 1800
+            }
+          ]
+        });
+
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [
+          {
+            balance: 2000,
+            comment: null,
+            createdAt: parseDate('2023-12-31'),
             currency: 'USD',
-            dataSource: 'MANUAL',
+            id: accountId,
+            isExcluded: false,
             name: 'USD',
-            symbol: 'USD'
-          },
-          unitPriceInAssetProfileCurrency: 1
-        },
+            platformId: null,
+            updatedAt: parseDate('2023-12-31'),
+            userId: userDummyData.id
+          }
+        ],
+        balanceInBaseCurrency: 1820
+      });
+
+      jest
+        .spyOn(dataProviderService, 'getDataSourceForExchangeRates')
+        .mockReturnValue(DataSource.YAHOO);
+
+      jest.spyOn(orderService, 'getOrders').mockResolvedValue({
+        activities: [],
+        count: 0
+      });
+
+      const { activities } = await orderService.getOrdersForPortfolioCalculator(
         {
-          ...activityDummyData,
-          accountId,
-          comment: 'Synthetic Cash Increment',
-          currency: 'USD',
-          date: parseDate('2024-12-31'),
-          feeInAssetProfileCurrency: 0,
-          quantity: 1000, // +1000 to reach 2000 total
-          type: 'BUY',
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            assetSubClass: 'CASH',
-            currency: 'USD',
-            dataSource: 'MANUAL',
-            name: 'USD',
-            symbol: 'USD'
-          },
-          unitPriceInAssetProfileCurrency: 1
+          userCurrency: 'CHF',
+          userId: userDummyData.id
         }
-      ];
+      );
 
       jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
         dataProviderInfos: [],
@@ -144,7 +201,7 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities: syntheticActivities,
+        activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
         userId: userDummyData.id
