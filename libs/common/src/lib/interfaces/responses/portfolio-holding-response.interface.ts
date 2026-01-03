@@ -10,7 +10,7 @@ import { Tag } from '@prisma/client';
 
 export interface PortfolioHoldingResponse {
   /** @deprecated */
-  activities?: Activity[];
+  activities: Activity[];
 
   activitiesCount: number;
   averagePrice: number;
