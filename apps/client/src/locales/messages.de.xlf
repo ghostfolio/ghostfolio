@@ -2659,7 +2659,7 @@
       </trans-unit>
       <trans-unit id="7341990227686441824" datatype="html">
         <source>Could not validate form</source>
-        <target state="new">Could not validate form</target>
+        <target state="translated">Das Formular konnte nicht validiert werden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">555</context>
@@ -3615,7 +3615,7 @@
       </trans-unit>
       <trans-unit id="7498591289549626867" datatype="html">
         <source>Could not save asset profile</source>
-        <target state="new">Could not save asset profile</target>
+        <target state="translated">Das Anlageprofil konnte nicht gespeichert werden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">589</context>
@@ -3879,7 +3879,7 @@
       </trans-unit>
       <trans-unit id="8319378030525016917" datatype="html">
         <source>Asset profile has been saved</source>
-        <target state="new">Asset profile has been saved</target>
+        <target state="translated">Das Anlageprofil wurde gespeichert</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">579</context>
@@ -4787,7 +4787,7 @@
       </trans-unit>
       <trans-unit id="5134951682994822188" datatype="html">
         <source>Could not parse scraper configuration</source>
-        <target state="new">Could not parse scraper configuration</target>
+        <target state="translated">Die Scraper Konfiguration konnte nicht geparsed werden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">510</context>
