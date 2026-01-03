@@ -6,7 +6,7 @@ export interface PortfolioOrder extends Pick<Activity, 'tags' | 'type'> {
   quantity: Big;
   SymbolProfile: Pick<
     Activity['SymbolProfile'],
-    'currency' | 'dataSource' | 'name' | 'symbol' | 'userId'
+    'assetSubClass' | 'currency' | 'dataSource' | 'name' | 'symbol' | 'userId'
   >;
   unitPrice: Big;
 }
