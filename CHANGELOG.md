@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integrated the endpoint to get all platforms (`GET api/v1/platforms`) into the create or update account dialog
 - Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
 - Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.19.0` to `7.2.0`
 
 ## 2.227.0 - 2026-01-02
 
@@ -115,7 +116,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
 - Upgraded `envalid` from version `8.1.0` to `8.1.1`
 - Upgraded `prettier` from version `3.7.3` to `3.7.4`
-- Upgraded `prisma` from version `6.19.0` to `7.0.1`
 
 ## 2.221.0 - 2025-12-01
 
