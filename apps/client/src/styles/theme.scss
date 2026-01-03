@@ -171,6 +171,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     )
   );
 
+  @include mat.button-toggle-overrides(
+    (
+      selected-state-background-color: rgba(var(--dark-dividers)),
+      selected-state-text-color: var(--dark-primary-text)
+    )
+  );
+
   @include mat.card-overrides(
     (
       outlined-container-color: var(--light-background),
@@ -200,6 +207,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   @include mat.select-overrides(
     (
       panel-background-color: var(--light-background)
+    )
+  );
+
+  @include mat.slide-toggle-overrides(
+    (
+      selected-track-outline-color: rgba(var(--dark-dividers)),
+      track-outline-color: rgba(var(--dark-dividers))
     )
   );
 
@@ -234,11 +248,25 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     )
   );
 
+  @include mat.button-toggle-overrides(
+    (
+      selected-state-background-color: rgba(var(--light-dividers)),
+      selected-state-text-color: var(--light-primary-text)
+    )
+  );
+
   @include mat.card-overrides(
     (
       outlined-container-color: var(--dark-background),
       outlined-outline-color: rgba(var(--light-dividers)),
       title-text-line-height: 1.2
+    )
+  );
+
+  @include mat.slide-toggle-overrides(
+    (
+      selected-track-outline-color: rgba(var(--light-dividers)),
+      track-outline-color: rgba(var(--light-dividers))
     )
   );
 
@@ -318,6 +346,27 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     (
       outlined-focus-label-text-color: var(--gf-theme-primary-500),
       outlined-focus-outline-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.slide-toggle-overrides(
+    (
+      selected-focus-handle-color: var(--gf-theme-primary-500),
+      selected-focus-track-color: transparent,
+      selected-handle-color: var(--gf-theme-primary-500),
+      selected-hover-handle-color: var(--gf-theme-primary-500),
+      selected-hover-track-color: transparent,
+      selected-pressed-handle-color: var(--gf-theme-primary-500),
+      selected-pressed-track-color: transparent,
+      selected-track-color: transparent,
+      unselected-hover-track-color: transparent,
+      unselected-track-color: transparent
     )
   );
 
