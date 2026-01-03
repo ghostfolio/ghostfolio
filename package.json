@@ -66,7 +66,7 @@
     "@angular/router": "21.0.6",
     "@angular/service-worker": "21.0.6",
     "@codewithdan/observable-store": "2.2.15",
-    "@date-fns/utc": "2.1.0",
+    "@date-fns/utc": "2.1.1",
     "@internationalized/number": "3.6.5",
     "@ionic/angular": "8.7.8",
     "@keyv/redis": "4.4.0",
