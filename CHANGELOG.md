@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the holdings endpoint to include the performance with currency effect for cash
+- Extended the portfolio holdings to include performance with currency effects for cash positions
 
 ### Changed
 
