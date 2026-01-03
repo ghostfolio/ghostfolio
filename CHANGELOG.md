@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
 
-## Unreleased
+## 2.228.0 - 2026-01-03
 
 ### Added
 
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integrated the endpoint to get all platforms (`GET api/v1/platforms`) into the create or update account dialog
 - Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
 - Improved the language localization for German (`de`)
+- Upgraded `@date-fns/utc` from version `2.1.0` to `2.1.1`
 
 ### Fixed
 
