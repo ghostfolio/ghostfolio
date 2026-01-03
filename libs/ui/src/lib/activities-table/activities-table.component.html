@@ -6,7 +6,7 @@
       (click)="onImport()"
     >
       <ion-icon class="mr-2" name="cloud-upload-outline" />
-      <ng-container i18n>Import Activities</ng-container>...
+      <span><ng-container i18n>Import Activities</ng-container>...</span>
     </button>
     @if (hasPermissionToExportActivities) {
       <button
@@ -18,7 +18,7 @@
         <ion-icon name="ellipsis-vertical" />
       </button>
     }
-    <mat-menu #activitiesMenu="matMenu" xPosition="before">
+    <mat-menu #activitiesMenu="matMenu" class="no-max-width" xPosition="before">
       <button
         mat-menu-item
         [disabled]="dataSource?.data.length === 0"
@@ -26,7 +26,7 @@
       >
         <span class="align-items-center d-flex">
           <ion-icon class="mr-2" name="color-wand-outline" />
-          <ng-container i18n>Import Dividends</ng-container>...
+          <span><ng-container i18n>Import Dividends</ng-container>...</span>
         </span>
       </button>
       @if (hasPermissionToExportActivities) {
@@ -59,7 +59,9 @@
       <button
         class="align-items-center d-flex"
         mat-menu-item
-        [disabled]="!hasPermissionToDeleteActivity"
+        [disabled]="
+          dataSource?.data.length === 0 || !hasPermissionToDeleteActivity
+        "
         (click)="onDeleteActivities()"
       >
         <span class="align-items-center d-flex">
@@ -105,9 +107,7 @@
     </ng-container>
 
     <ng-container matColumnDef="importStatus">
-      <th *matHeaderCellDef class="px-1" mat-header-cell>
-        <ng-container i18n></ng-container>
-      </th>
+      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         @if (element.error) {
           <div
@@ -129,7 +129,6 @@
           [symbol]="element.SymbolProfile?.symbol"
           [tooltip]="element.SymbolProfile?.name"
         />
-        <div>{{ element.dataSource }}</div>
       </td>
     </ng-container>
 
@@ -146,7 +145,10 @@
             }
           </div>
         </div>
-        @if (!isUUID(element.SymbolProfile?.symbol)) {
+        @if (
+          element.SymbolProfile?.dataSource !== 'MANUAL' &&
+          !isUUID(element.SymbolProfile?.symbol)
+        ) {
           <div>
             <small class="text-muted">{{
               element.SymbolProfile?.symbol | gfSymbol
@@ -256,7 +258,7 @@
     <ng-container matColumnDef="value">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell justify-content-end px-1"
+        class="d-none d-lg-table-cell px-1 text-right"
         mat-header-cell
       >
         <ng-container i18n>Value</ng-container>
@@ -292,7 +294,7 @@
     <ng-container matColumnDef="valueInBaseCurrency">
       <th
         *matHeaderCellDef
-        class="d-lg-none d-xl-none justify-content-end px-1"
+        class="d-lg-none d-xl-none px-1 text-right"
         mat-header-cell
       >
         <ng-container i18n>Value</ng-container>
@@ -364,7 +366,11 @@
             <ion-icon name="ellipsis-vertical" />
           </button>
         }
-        <mat-menu #activitiesMenu="matMenu" xPosition="before">
+        <mat-menu
+          #activitiesMenu="matMenu"
+          class="no-max-width"
+          xPosition="before"
+        >
           @if (hasPermissionToCreateActivity) {
             <button
               class="align-items-center d-flex"
@@ -373,7 +379,9 @@
             >
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="cloud-upload-outline" />
-                <ng-container i18n>Import Activities</ng-container>...
+                <span
+                  ><ng-container i18n>Import Activities</ng-container>...</span
+                >
               </span>
             </button>
           }
@@ -385,7 +393,9 @@
             >
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="color-wand-outline" />
-                <ng-container i18n>Import Dividends</ng-container>...
+                <span
+                  ><ng-container i18n>Import Dividends</ng-container>...</span
+                >
               </span>
             </button>
           }
@@ -428,17 +438,29 @@
             <ion-icon name="ellipsis-horizontal" />
           </button>
         }
-        <mat-menu #activityMenu="matMenu" xPosition="before">
+        <mat-menu
+          #activityMenu="matMenu"
+          class="no-max-width"
+          xPosition="before"
+        >
+          @if (canClickActivity(element)) {
+            <button mat-menu-item (click)="onClickActivity(element)">
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="tablet-landscape-outline" />
+                <span><ng-container i18n>View Holding</ng-container>...</span>
+              </span>
+            </button>
+          }
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
-              <span i18n>Edit</span>
+              <span><ng-container i18n>Edit</ng-container>...</span>
             </span>
           </button>
           <button mat-menu-item (click)="onCloneActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="copy-outline" />
-              <span i18n>Clone</span>
+              <span><ng-container i18n>Clone</ng-container>...</span>
             </span>
           </button>
           <button
@@ -471,11 +493,7 @@
       *matRowDef="let row; columns: displayedColumns"
       mat-row
       [ngClass]="{
-        'cursor-pointer':
-          hasPermissionToOpenDetails &&
-          isExcludedFromAnalysis(row) === false &&
-          row.isDraft === false &&
-          ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
+        'cursor-pointer': canClickActivity(row)
       }"
       (click)="onClickActivity(row)"
     ></tr>

@@ -1,11 +1,11 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Benchmark,
   User
 } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -62,6 +62,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() deviceType: string;
   @Input() hasPermissionToDeleteItem: boolean;
   @Input() locale = getLocale();
+  @Input() showSymbol = true;
   @Input() user: User;
 
   @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
@@ -154,14 +155,17 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    const dialogRef = this.dialog.open(GfBenchmarkDetailDialogComponent, {
+    const dialogRef = this.dialog.open<
+      GfBenchmarkDetailDialogComponent,
+      BenchmarkDetailDialogParams
+    >(GfBenchmarkDetailDialogComponent, {
       data: {
         dataSource,
         symbol,
         colorScheme: this.user?.settings?.colorScheme,
         deviceType: this.deviceType,
         locale: this.locale
-      } as BenchmarkDetailDialogParams,
+      },
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });

@@ -8,14 +8,17 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
+  CreateAccountDto,
+  TransferBalanceDto,
+  UpdateAccountDto
+} from '@ghostfolio/common/dtos';
+import {
   AccountBalancesResponse,
+  AccountResponse,
   AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type {
-  AccountWithValue,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -38,9 +41,6 @@ import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
-import { CreateAccountDto } from './create-account.dto';
-import { TransferBalanceDto } from './transfer-balance.dto';
-import { UpdateAccountDto } from './update-account.dto';
 
 @Controller('account')
 export class AccountController {
@@ -114,7 +114,7 @@ export class AccountController {
   public async getAccountById(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
-  ): Promise<AccountWithValue> {
+  ): Promise<AccountResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
 

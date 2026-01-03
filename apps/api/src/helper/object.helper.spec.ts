@@ -1,4 +1,24 @@
-import { redactAttributes } from './object.helper';
+import { query, redactAttributes } from './object.helper';
+
+describe('query', () => {
+  it('should get market price from stock API response', () => {
+    const object = {
+      currency: 'USD',
+      market: {
+        previousClose: 273.04,
+        price: 271.86
+      },
+      symbol: 'AAPL'
+    };
+
+    const result = query({
+      object,
+      pathExpression: '$.market.price'
+    })[0];
+
+    expect(result).toBe(271.86);
+  });
+});
 
 describe('redactAttributes', () => {
   it('should redact provided attributes', () => {
@@ -1536,7 +1556,7 @@ describe('redactAttributes', () => {
             fireWealth: null,
             grossPerformance: null,
             grossPerformanceWithCurrencyEffect: null,
-            interest: null,
+            interestInBaseCurrency: null,
             items: null,
             liabilities: null,
             totalInvestment: null,
@@ -3039,7 +3059,7 @@ describe('redactAttributes', () => {
         fireWealth: null,
         grossPerformance: null,
         grossPerformanceWithCurrencyEffect: null,
-        interest: null,
+        interestInBaseCurrency: null,
         items: null,
         liabilities: null,
         totalInvestment: null,

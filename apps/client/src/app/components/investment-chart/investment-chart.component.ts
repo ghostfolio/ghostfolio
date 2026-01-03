@@ -16,6 +16,7 @@ import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -40,15 +41,16 @@ import {
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-investment-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './investment-chart.component.html',
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  selector: 'gf-investment-chart',
   styleUrls: ['./investment-chart.component.scss'],
-  standalone: false
+  templateUrl: './investment-chart.component.html'
 })
-export class InvestmentChartComponent implements OnChanges, OnDestroy {
+export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
   @Input() benchmarkDataLabel = '';
   @Input() colorScheme: ColorScheme;

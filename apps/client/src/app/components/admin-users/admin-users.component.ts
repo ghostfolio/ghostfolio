@@ -1,12 +1,25 @@
+import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
+import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   getDateFnsLocale,
   getDateFormatString,
   getEmojiFlag
 } from '@ghostfolio/common/helper';
-import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  AdminUsersResponse,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -19,6 +32,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   MatPaginator,
@@ -26,6 +40,7 @@ import {
   PageEvent
 } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
   differenceInSeconds,
@@ -37,18 +52,13 @@ import {
   contractOutline,
   ellipsisHorizontal,
   keyOutline,
+  personOutline,
   trashOutline
 } from 'ionicons/icons';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '../../core/notification/notification.service';
-import { AdminService } from '../../services/admin.service';
-import { DataService } from '../../services/data.service';
-import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
-import { UserService } from '../../services/user/user.service';
 
 @Component({
   imports: [
@@ -60,7 +70,8 @@ import { UserService } from '../../services/user/user.service';
     MatMenuModule,
     MatPaginatorModule,
     MatTableModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    RouterModule
   ],
   selector: 'gf-admin-users',
   styleUrls: ['./admin-users.scss'],
@@ -69,8 +80,9 @@ import { UserService } from '../../services/user/user.service';
 export class GfAdminUsersComponent implements OnDestroy, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
+  public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
   public defaultDateFormat: string;
+  public deviceType: string;
   public displayedColumns: string[] = [];
   public getEmojiFlag = getEmojiFlag;
   public hasPermissionForSubscription: boolean;
@@ -78,6 +90,8 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public info: InfoItem;
   public isLoading = false;
   public pageSize = DEFAULT_PAGE_SIZE;
+  public routerLinkAdminControlUsers =
+    internalRoutes.adminControl.subRoutes.users.routerLink;
   public totalItems = 0;
   public user: User;
 
@@ -87,11 +101,16 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private notificationService: NotificationService,
+    private route: ActivatedRoute,
+    private router: Router,
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
@@ -121,6 +140,16 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
+    this.route.paramMap
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        const userId = params.get('userId');
+
+        if (userId) {
+          this.openUserDetailDialog(userId);
+        }
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -138,7 +167,13 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         }
       });
 
-    addIcons({ contractOutline, ellipsisHorizontal, keyOutline, trashOutline });
+    addIcons({
+      contractOutline,
+      ellipsisHorizontal,
+      keyOutline,
+      personOutline,
+      trashOutline
+    });
   }
 
   public ngOnInit() {
@@ -159,6 +194,12 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     }
 
     return '';
+  }
+
+  public onChangePage(page: PageEvent) {
+    this.fetchUsers({
+      pageIndex: page.pageIndex
+    });
   }
 
   public onDeleteUser(aId: string) {
@@ -212,10 +253,10 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     window.location.reload();
   }
 
-  public onChangePage(page: PageEvent) {
-    this.fetchUsers({
-      pageIndex: page.pageIndex
-    });
+  public onOpenUserDetailDialog(userId: string) {
+    this.router.navigate(
+      internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
+    );
   }
 
   public ngOnDestroy() {
@@ -243,6 +284,32 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private openUserDetailDialog(aUserId: string) {
+    const dialogRef = this.dialog.open<
+      GfUserDetailDialogComponent,
+      UserDetailDialogParams
+    >(GfUserDetailDialogComponent, {
+      autoFocus: false,
+      data: {
+        deviceType: this.deviceType,
+        hasPermissionForSubscription: this.hasPermissionForSubscription,
+        locale: this.user?.settings?.locale,
+        userId: aUserId
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : '60vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(
+          internalRoutes.adminControl.subRoutes.users.routerLink
+        );
       });
   }
 }

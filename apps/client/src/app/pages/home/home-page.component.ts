@@ -16,11 +16,11 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  albumsOutline,
   analyticsOutline,
   bookmarkOutline,
   newspaperOutline,
-  readerOutline,
-  walletOutline
+  readerOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -61,7 +61,7 @@ export class GfHomePageComponent implements OnDestroy, OnInit {
               routerLink: internalRoutes.home.routerLink
             },
             {
-              iconName: 'wallet-outline',
+              iconName: 'albums-outline',
               label: internalRoutes.home.subRoutes.holdings.title,
               routerLink: internalRoutes.home.subRoutes.holdings.routerLink
             },
@@ -97,11 +97,11 @@ export class GfHomePageComponent implements OnDestroy, OnInit {
       });
 
     addIcons({
+      albumsOutline,
       analyticsOutline,
       bookmarkOutline,
       newspaperOutline,
-      readerOutline,
-      walletOutline
+      readerOutline
     });
   }
 

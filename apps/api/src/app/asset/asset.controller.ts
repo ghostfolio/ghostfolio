@@ -1,7 +1,7 @@
 import { AdminService } from '@ghostfolio/api/app/admin/admin.service';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import type { AdminMarketDataDetails } from '@ghostfolio/common/interfaces';
+import type { AssetResponse } from '@ghostfolio/common/interfaces';
 
 import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -17,7 +17,7 @@ export class AssetController {
   public async getAsset(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<AdminMarketDataDetails> {
+  ): Promise<AssetResponse> {
     const { assetProfile, marketData } =
       await this.adminService.getMarketDataBySymbol({ dataSource, symbol });
 

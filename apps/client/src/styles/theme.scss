@@ -1,9 +1,6 @@
 @use '@angular/material' as mat;
 @use 'sass:map';
 
-$dark-primary-text: rgba(black, 0.87);
-$light-primary-text: white;
-
 $_palettes: (
   primary: (
     0: #000000,

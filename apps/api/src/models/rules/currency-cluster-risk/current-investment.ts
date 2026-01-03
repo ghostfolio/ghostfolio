@@ -1,8 +1,11 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPosition,
+  RuleSettings,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 
 export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   private holdings: PortfolioPosition[];
@@ -98,9 +101,14 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     });
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
+      locale,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.5
     };

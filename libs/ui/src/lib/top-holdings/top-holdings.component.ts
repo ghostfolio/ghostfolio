@@ -1,9 +1,9 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents
 } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import {
   animate,
@@ -46,7 +46,7 @@ import { GfValueComponent } from '../value/value.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    GfSymbolModule,
+    GfSymbolPipe,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,

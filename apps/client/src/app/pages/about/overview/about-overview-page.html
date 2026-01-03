@@ -11,8 +11,9 @@
             individuals to keep track of stocks, ETFs or cryptocurrencies and
             make solid, data-driven investment decisions.</ng-container
           >
-          <ng-container i18n>
-            The source code is fully available as
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n
+            >The source code is fully available as
             <a
               href="https://github.com/ghostfolio/ghostfolio"
               title="Find Ghostfolio on GitHub"
@@ -26,8 +27,9 @@
             ></ng-container
           >
           @if (hasPermissionForStatistics) {
-            <ng-container i18n>
-              and we share aggregated
+            <ng-container>&nbsp;</ng-container>
+            <ng-container i18n
+              >and we share aggregated
               <a title="Open Startup" [routerLink]="routerLinkOpenStartup"
                 >key metrics</a
               >
@@ -173,7 +175,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="mb-5 row">
     <div
       class="col-md-6 col-xs-12 my-2"
       [ngClass]="{ 'offset-md-3': hasPermissionForSubscription === false }"
@@ -199,4 +201,28 @@
       </div>
     }
   </div>
+
+  @if (user?.subscription?.type !== 'Premium') {
+    <div class="row">
+      <div class="col-12">
+        <h2 class="h4 mb-3">Sponsors</h2>
+        <div class="text-center">
+          <small>Browser testing via</small>
+          <br />
+          <a
+            href="https://www.lambdatest.com?utm_medium=sponsor&utm_source=ghostfolio"
+            target="_blank"
+            title="LambdaTest - AI Powered Testing Tool"
+          >
+            <img
+              alt="LambdaTest Logo"
+              height="45"
+              src="../assets/images/sponsors/logo-lambdatest.png"
+              width="250"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  }
 </div>

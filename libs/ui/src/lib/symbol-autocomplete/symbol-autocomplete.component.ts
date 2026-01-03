@@ -1,6 +1,7 @@
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { LookupItem } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
@@ -57,7 +58,7 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   imports: [
     FormsModule,
     GfPremiumIndicatorComponent,
-    GfSymbolModule,
+    GfSymbolPipe,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,

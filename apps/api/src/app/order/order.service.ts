@@ -1,6 +1,10 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
+import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
@@ -14,6 +18,8 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
+  ActivitiesResponse,
+  Activity,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -35,15 +41,15 @@ import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
-
-import { Activities } from './interfaces/activities.interface';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class OrderService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly dataProviderService: DataProviderService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
@@ -129,7 +135,7 @@ export class OrderService {
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
 
-      let name: string;
+      let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
       if (
@@ -142,8 +148,8 @@ export class OrderService {
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
       } else {
         // Create custom asset profile
-        name = data.SymbolProfile.connectOrCreate.create.symbol;
-        symbol = uuidv4();
+        name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
+        symbol = randomUUID();
       }
 
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
@@ -227,6 +233,15 @@ export class OrderService {
     }
 
     this.eventEmitter.emit(
+      AssetProfileChangedEvent.getName(),
+      new AssetProfileChangedEvent({
+        currency: order.SymbolProfile.currency,
+        dataSource: order.SymbolProfile.dataSource,
+        symbol: order.SymbolProfile.symbol
+      })
+    );
+
+    this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
         userId: order.userId
@@ -308,6 +323,111 @@ export class OrderService {
     return count;
   }
 
+  /**
+   * Generates synthetic orders for cash holdings based on account balance history.
+   * Treat currencies as assets with a fixed unit price of 1.0 (in their own currency) to allow
+   * performance tracking based on exchange rate fluctuations.
+   *
+   * @param cashDetails - The cash balance details.
+   * @param userCurrency - The base currency of the user.
+   * @param userId - The ID of the user.
+   * @returns A response containing the list of synthetic cash activities.
+   */
+  public async getCashOrders({
+    cashDetails,
+    userCurrency,
+    userId
+  }: {
+    cashDetails: CashDetails;
+    userCurrency: string;
+    userId: string;
+  }): Promise<ActivitiesResponse> {
+    const activities: Activity[] = [];
+
+    for (const account of cashDetails.accounts) {
+      const { balances } = await this.accountBalanceService.getAccountBalances({
+        userCurrency,
+        userId,
+        filters: [{ id: account.id, type: 'ACCOUNT' }]
+      });
+
+      let currentBalance = 0;
+      let currentBalanceInBaseCurrency = 0;
+
+      for (const balanceItem of balances) {
+        const syntheticActivityTemplate: Activity = {
+          userId,
+          accountId: account.id,
+          accountUserId: account.userId,
+          comment: account.name,
+          createdAt: new Date(balanceItem.date),
+          currency: account.currency,
+          date: new Date(balanceItem.date),
+          fee: 0,
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          id: balanceItem.id,
+          isDraft: false,
+          quantity: 1,
+          SymbolProfile: {
+            activitiesCount: 0,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countries: [],
+            createdAt: new Date(balanceItem.date),
+            currency: account.currency,
+            dataSource:
+              this.dataProviderService.getDataSourceForExchangeRates(),
+            holdings: [],
+            id: account.currency,
+            isActive: true,
+            name: account.currency,
+            sectors: [],
+            symbol: account.currency,
+            updatedAt: new Date(balanceItem.date)
+          },
+          symbolProfileId: account.currency,
+          type: ActivityType.BUY,
+          unitPrice: 1,
+          unitPriceInAssetProfileCurrency: 1,
+          updatedAt: new Date(balanceItem.date),
+          valueInBaseCurrency: 0,
+          value: 0
+        };
+
+        if (currentBalance < balanceItem.value) {
+          // BUY
+          activities.push({
+            ...syntheticActivityTemplate,
+            quantity: balanceItem.value - currentBalance,
+            type: ActivityType.BUY,
+            value: balanceItem.value - currentBalance,
+            valueInBaseCurrency:
+              balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
+          });
+        } else if (currentBalance > balanceItem.value) {
+          // SELL
+          activities.push({
+            ...syntheticActivityTemplate,
+            quantity: currentBalance - balanceItem.value,
+            type: ActivityType.SELL,
+            value: currentBalance - balanceItem.value,
+            valueInBaseCurrency:
+              currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
+          });
+        }
+
+        currentBalance = balanceItem.value;
+        currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
+      }
+    }
+
+    return {
+      activities,
+      count: activities.length
+    };
+  }
+
   public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.order.findFirst({
       orderBy: {
@@ -325,7 +445,7 @@ export class OrderService {
     includeDrafts = false,
     skip,
     sortColumn,
-    sortDirection,
+    sortDirection = 'asc',
     startDate,
     take = Number.MAX_SAFE_INTEGER,
     types,
@@ -345,11 +465,11 @@ export class OrderService {
     userCurrency: string;
     userId: string;
     withExcludedAccountsAndActivities?: boolean;
-  }): Promise<Activities> {
+  }): Promise<ActivitiesResponse> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
-      { date: 'asc' },
-      { id: 'asc' }
+      { date: 'asc' }
     ];
+
     const where: Prisma.OrderWhereInput = { userId };
 
     if (endDate || startDate) {
@@ -483,7 +603,7 @@ export class OrderService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }];
     }
 
     if (types) {
@@ -506,7 +626,6 @@ export class OrderService {
 
     const [orders, count] = await Promise.all([
       this.orders({
-        orderBy,
         skip,
         take,
         where,
@@ -519,7 +638,8 @@ export class OrderService {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           SymbolProfile: true,
           tags: true
-        }
+        },
+        orderBy: [...orderBy, { id: sortDirection }]
       }),
       this.prismaService.order.count({ where })
     ]);
@@ -601,6 +721,15 @@ export class OrderService {
     return { activities, count };
   }
 
+  /**
+   * Retrieves all orders required for the portfolio calculator, including both standard asset orders
+   * and synthetic orders representing cash activities.
+   *
+   * @param filters - Optional filters to apply to the orders.
+   * @param userCurrency - The base currency of the user.
+   * @param userId - The ID of the user.
+   * @returns An object containing the combined list of activities and the total count.
+   */
   @LogPerformance
   public async getOrdersForPortfolioCalculator({
     filters,
@@ -611,12 +740,29 @@ export class OrderService {
     userCurrency: string;
     userId: string;
   }) {
-    return this.getOrders({
+    const nonCashOrders = await this.getOrders({
       filters,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
     });
+
+    const cashDetails = await this.accountService.getCashDetails({
+      filters,
+      userId,
+      currency: userCurrency
+    });
+
+    const cashOrders = await this.getCashOrders({
+      cashDetails,
+      userCurrency,
+      userId
+    });
+
+    return {
+      activities: [...nonCashOrders.activities, ...cashOrders.activities],
+      count: nonCashOrders.count + cashOrders.count
+    };
   }
 
   public async getStatisticsByCurrency(

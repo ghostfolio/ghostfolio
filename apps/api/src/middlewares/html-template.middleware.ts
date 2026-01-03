@@ -10,8 +10,8 @@ import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
-import * as fs from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const title = 'Ghostfolio';
 
@@ -75,6 +75,14 @@ const locales = {
   '/en/blog/2024/11/black-weeks-2024': {
     featureGraphicPath: 'assets/images/blog/black-weeks-2024.jpg',
     title: `Black Weeks 2024 - ${title}`
+  },
+  '/en/blog/2025/09/hacktoberfest-2025': {
+    featureGraphicPath: 'assets/images/blog/hacktoberfest-2025.png',
+    title: `Hacktoberfest 2025 - ${title}`
+  },
+  '/en/blog/2025/11/black-weeks-2025': {
+    featureGraphicPath: 'assets/images/blog/black-weeks-2025.jpg',
+    title: `Black Weeks 2025 - ${title}`
   }
 };
 
@@ -87,7 +95,7 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
       this.indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce(
         (map, languageCode) => ({
           ...map,
-          [languageCode]: fs.readFileSync(
+          [languageCode]: readFileSync(
             join(__dirname, '..', 'client', languageCode, 'index.html'),
             'utf8'
           )

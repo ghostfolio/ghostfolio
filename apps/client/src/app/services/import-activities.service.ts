@@ -1,9 +1,11 @@
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
-import { CreateAccountWithBalancesDto } from '@ghostfolio/api/app/import/create-account-with-balances.dto';
-import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/api/app/import/create-asset-profile-with-market-data.dto';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  CreateAccountWithBalancesDto,
+  CreateAssetProfileWithMarketDataDto,
+  CreateOrderDto,
+  CreateTagDto
+} from '@ghostfolio/common/dtos';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
+import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -45,6 +47,7 @@ export class ImportActivitiesService {
     userAccounts: Account[];
   }): Promise<{
     activities: Activity[];
+    assetProfiles: CreateAssetProfileWithMarketDataDto[];
   }> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
@@ -53,23 +56,61 @@ export class ImportActivitiesService {
     }).data;
 
     const activities: CreateOrderDto[] = [];
+    const assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+
     for (const [index, item] of content.entries()) {
+      const currency = this.parseCurrency({ content, index, item });
+      const dataSource = this.parseDataSource({ item });
+      const symbol = this.parseSymbol({ content, index, item });
+      const type = this.parseType({ content, index, item });
+
       activities.push({
+        currency,
+        dataSource,
+        symbol,
+        type,
         accountId: this.parseAccount({ item, userAccounts }),
         comment: this.parseComment({ item }),
-        currency: this.parseCurrency({ content, index, item }),
-        dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
-        symbol: this.parseSymbol({ content, index, item }),
-        type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
+
+      if (dataSource === DataSource.MANUAL) {
+        // Create synthetic asset profile for MANUAL data source
+        assetProfiles.push({
+          currency,
+          symbol,
+          assetClass: null,
+          assetSubClass: null,
+          comment: null,
+          countries: [],
+          cusip: null,
+          dataSource: DataSource.MANUAL,
+          figi: null,
+          figiComposite: null,
+          figiShareClass: null,
+          holdings: [],
+          isActive: true,
+          isin: null,
+          marketData: [],
+          name: symbol,
+          scraperConfiguration: null,
+          sectors: [],
+          symbolMapping: {},
+          url: null
+        });
+      }
     }
 
-    return await this.importJson({ activities, isDryRun });
+    const result = await this.importJson({
+      activities,
+      assetProfiles,
+      isDryRun
+    });
+    return { ...result, assetProfiles };
   }
 
   public importJson({

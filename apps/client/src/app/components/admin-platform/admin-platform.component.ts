@@ -1,11 +1,10 @@
-import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
-import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import {
   ChangeDetectionStrategy,
@@ -34,6 +33,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
 import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
+import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +50,7 @@ import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-plat
   styleUrls: ['./admin-platform.component.scss'],
   templateUrl: './admin-platform.component.html'
 })
-export class GfAdminPlatformComponent implements OnInit, OnDestroy {
+export class GfAdminPlatformComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Platform>();
@@ -153,19 +153,20 @@ export class GfAdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   private openCreatePlatformDialog() {
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<
       GfCreateOrUpdatePlatformDialogComponent,
-      {
-        data: {
-          platform: {
-            name: null,
-            url: null
-          }
-        },
-        height: this.deviceType === 'mobile' ? '98vh' : undefined,
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      CreateOrUpdatePlatformDialogParams
+    >(GfCreateOrUpdatePlatformDialogComponent, {
+      data: {
+        platform: {
+          id: null,
+          name: null,
+          url: null
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()
@@ -191,21 +192,29 @@ export class GfAdminPlatformComponent implements OnInit, OnDestroy {
       });
   }
 
-  private openUpdatePlatformDialog({ id, name, url }) {
-    const dialogRef = this.dialog.open(
+  private openUpdatePlatformDialog({
+    id,
+    name,
+    url
+  }: {
+    id: string;
+    name: string;
+    url: string;
+  }) {
+    const dialogRef = this.dialog.open<
       GfCreateOrUpdatePlatformDialogComponent,
-      {
-        data: {
-          platform: {
-            id,
-            name,
-            url
-          }
-        },
-        height: this.deviceType === 'mobile' ? '98vh' : undefined,
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      CreateOrUpdatePlatformDialogParams
+    >(GfCreateOrUpdatePlatformDialogComponent, {
+      data: {
+        platform: {
+          id,
+          name,
+          url
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()

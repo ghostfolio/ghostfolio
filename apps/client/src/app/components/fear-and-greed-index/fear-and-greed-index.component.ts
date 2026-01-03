@@ -7,15 +7,16 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-fear-and-greed-index',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './fear-and-greed-index.component.html',
+  imports: [NgxSkeletonLoaderModule],
+  selector: 'gf-fear-and-greed-index',
   styleUrls: ['./fear-and-greed-index.component.scss'],
-  standalone: false
+  templateUrl: './fear-and-greed-index.component.html'
 })
-export class FearAndGreedIndexComponent implements OnChanges {
+export class GfFearAndGreedIndexComponent implements OnChanges {
   @Input() fearAndGreedIndex: number;
 
   public fearAndGreedIndexEmoji: string;

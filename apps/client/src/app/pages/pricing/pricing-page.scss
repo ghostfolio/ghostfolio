@@ -14,6 +14,10 @@
   }
 
   .mat-mdc-card {
+    transition:
+      border-color 0.5s ease,
+      box-shadow 0.5s ease;
+
     &:hover,
     &.active {
       border-color: rgba(var(--palette-primary-500), 1);

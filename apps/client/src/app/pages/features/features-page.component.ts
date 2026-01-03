@@ -25,6 +25,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class GfFeaturesPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
+  public hasPermissionToCreateUser: boolean;
   public info: InfoItem;
   public routerLinkRegister = publicRoutes.register.routerLink;
   public routerLinkResources = publicRoutes.resources.routerLink;
@@ -54,6 +55,11 @@ export class GfFeaturesPageComponent implements OnDestroy {
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,
       permissions.enableSubscription
+    );
+
+    this.hasPermissionToCreateUser = hasPermission(
+      this.info?.globalPermissions,
+      permissions.createUserAccount
     );
   }
 

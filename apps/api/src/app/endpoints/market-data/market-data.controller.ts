@@ -10,6 +10,7 @@ import {
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks
 } from '@ghostfolio/common/config';
+import { UpdateBulkMarketDataDto } from '@ghostfolio/common/dtos';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import {
   MarketDataDetailsResponse,
@@ -34,8 +35,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { DataSource, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-
-import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 
 @Controller('market-data')
 export class MarketDataController {
