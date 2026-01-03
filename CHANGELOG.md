@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Improved the table headers’ alignment of the accounts table on mobile
+
 ## 2.227.0 - 2026-01-02
 
 ### Changed
