@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Integrated the endpoint to get all platforms (`GET api/v1/platforms`) into the create or update account dialog
+- Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
+
+## 2.227.0 - 2026-01-02
+
+### Changed
+
 - Initialized the input properties in the _FIRE_ calculator
 - Removed the deprecated public _Stripe_ key
 - Upgraded `stripe` from version `18.5.0` to `20.1.0`
