@@ -329,6 +329,7 @@ export class OrderService {
    * performance tracking based on exchange rate fluctuations.
    *
    * @param cashDetails - The cash balance details.
+   * @param filters - Optional filters to apply to the orders.
    * @param userCurrency - The base currency of the user.
    * @param userId - The ID of the user.
    * @returns A response containing the list of synthetic cash activities.
