@@ -10,6 +10,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -48,7 +49,6 @@ import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
-import { DataService } from '../../../../services/data.service';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
 
