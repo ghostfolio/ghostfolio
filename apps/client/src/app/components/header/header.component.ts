@@ -1,7 +1,6 @@
 import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
 import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   KEY_STAY_SIGNED_IN,
@@ -18,6 +17,7 @@ import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.compone
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {
