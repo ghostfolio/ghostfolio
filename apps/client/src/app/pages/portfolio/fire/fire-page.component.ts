@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -9,6 +8,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule, NgStyle } from '@angular/common';

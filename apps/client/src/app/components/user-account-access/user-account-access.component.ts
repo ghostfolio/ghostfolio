@@ -1,5 +1,4 @@
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto } from '@ghostfolio/common/dtos';
@@ -8,6 +7,7 @@ import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,

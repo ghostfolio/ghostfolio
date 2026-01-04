@@ -1,5 +1,5 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnDestroy } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
