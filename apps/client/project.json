@@ -14,10 +14,6 @@
         "baseHref": "/de/",
         "translation": "apps/client/src/locales/messages.de.xlf"
       },
-      "ko": {
-        "baseHref": "/ko/",
-        "translation": "apps/client/src/locales/messages.ko.xlf"
-      },
       "es": {
         "baseHref": "/es/",
         "translation": "apps/client/src/locales/messages.es.xlf"
@@ -29,6 +25,10 @@
       "it": {
         "baseHref": "/it/",
         "translation": "apps/client/src/locales/messages.it.xlf"
+      },
+      "ko": {
+        "baseHref": "/ko/",
+        "translation": "apps/client/src/locales/messages.ko.xlf"
       },
       "nl": {
         "baseHref": "/nl/",
@@ -278,13 +278,13 @@
           "messages.es.xlf",
           "messages.fr.xlf",
           "messages.it.xlf",
+          "messages.ko.xlf",
           "messages.nl.xlf",
           "messages.pl.xlf",
           "messages.pt.xlf",
           "messages.tr.xlf",
           "messages.uk.xlf",
-          "messages.zh.xlf",
-          "messages.ko.xlf"
+          "messages.zh.xlf"
         ],
         "trim": true
       }
