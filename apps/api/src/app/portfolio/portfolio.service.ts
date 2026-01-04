@@ -920,7 +920,6 @@ export class PortfolioService {
       marketPriceMin,
       SymbolProfile,
       tags,
-      activities: activitiesOfHolding,
       activitiesCount: transactionCount,
       averagePrice: averagePrice.toNumber(),
       dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
