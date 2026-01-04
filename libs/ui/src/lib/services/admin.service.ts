@@ -22,14 +22,13 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { DataService } from '@ghostfolio/ui/services';
+import { GfEnvironment, GF_ENVIRONMENT } from '@ghostfolio/ui/tokens';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
-
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +36,8 @@ import { environment } from '../../environments/environment';
 export class AdminService {
   public constructor(
     private dataService: DataService,
-    private http: HttpClient
+    private http: HttpClient,
+    @Inject(GF_ENVIRONMENT) private environment: GfEnvironment
   ) {}
 
   public addAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -124,7 +124,7 @@ export class AdminService {
     });
 
     return this.http.get<DataProviderGhostfolioStatusResponse>(
-      `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+      `${this.environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
       { headers }
     );
   }
