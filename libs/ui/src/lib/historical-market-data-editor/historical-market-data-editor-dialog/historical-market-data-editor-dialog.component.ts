@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,

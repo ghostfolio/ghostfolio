@@ -1,8 +1,8 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule, NgClass } from '@angular/common';
 import {
