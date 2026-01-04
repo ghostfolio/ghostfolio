@@ -9,7 +9,6 @@ import {
   NgControl,
   ReactiveFormsModule
 } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 
 import { HttpClientMock } from '../mocks/httpClient.mock';
