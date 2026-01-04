@@ -11,7 +11,20 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { ca, de, es, fr, it, ko, nl, pl, pt, tr, uk, zhCN } from 'date-fns/locale';
+import {
+  ca,
+  de,
+  es,
+  fr,
+  it,
+  ko,
+  nl,
+  pl,
+  pt,
+  tr,
+  uk,
+  zhCN
+} from 'date-fns/locale';
 
 import {
   DEFAULT_CURRENCY,

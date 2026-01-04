@@ -11,6 +11,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for Korean (`ko`)
 
+### Changed
+
+- Deprecated `activities` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+
+## 2.228.0 - 2026-01-03
+
+### Added
+
+- Extended the portfolio holdings to include performance with currency effects for cash positions
+
+### Changed
+
+- Integrated the endpoint to get all platforms (`GET api/v1/platforms`) into the create or update account dialog
+- Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
+- Improved the language localization for German (`de`)
+- Upgraded `@date-fns/utc` from version `2.1.0` to `2.1.1`
+
+### Fixed
+
+- Improved the table headers’ alignment of the accounts table on mobile
+
 ## 2.227.0 - 2026-01-02
 
 ### Changed

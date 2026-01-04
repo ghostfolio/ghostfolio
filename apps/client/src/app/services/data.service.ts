@@ -42,6 +42,7 @@ import {
   MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
+  PlatformsResponse,
   PortfolioDetails,
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
@@ -519,6 +520,10 @@ export class DataService {
         return data;
       })
     );
+  }
+
+  public fetchPlatforms() {
+    return this.http.get<PlatformsResponse>('/api/v1/platforms');
   }
 
   public fetchPortfolioDetails({
