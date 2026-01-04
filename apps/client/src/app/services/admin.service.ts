@@ -21,6 +21,7 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -29,7 +30,6 @@ import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 
 import { environment } from '../../environments/environment';
-import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
