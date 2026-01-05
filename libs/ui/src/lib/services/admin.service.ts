@@ -36,8 +36,8 @@ import { JobStatus } from 'bull';
 export class AdminService {
   public constructor(
     private dataService: DataService,
-    private http: HttpClient,
-    @Inject(GF_ENVIRONMENT) private environment: GfEnvironment
+    @Inject(GF_ENVIRONMENT) private environment: GfEnvironment,
+    private http: HttpClient
   ) {}
 
   public addAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
