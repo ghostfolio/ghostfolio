@@ -21,8 +21,8 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import { GF_ENVIRONMENT, GfEnvironment } from '@ghostfolio/ui/environment';
 import { DataService } from '@ghostfolio/ui/services';
-import { GfEnvironment, GF_ENVIRONMENT } from '@ghostfolio/ui/tokens';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';

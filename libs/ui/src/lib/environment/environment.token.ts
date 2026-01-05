@@ -1,10 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
-export interface GfEnvironment {
-  lastPublish: string | null;
-  production: boolean;
-  stripePublicKey: string;
-}
+import { GfEnvironment } from './environment.interface';
 
 export const GF_ENVIRONMENT = new InjectionToken<GfEnvironment>(
   'GF_ENVIRONMENT'

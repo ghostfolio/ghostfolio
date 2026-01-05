@@ -1,7 +1,7 @@
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
+import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
-import { GF_ENVIRONMENT } from '@ghostfolio/ui/tokens';
 
 import { Platform } from '@angular/cdk/platform';
 import {
