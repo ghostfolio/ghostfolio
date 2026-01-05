@@ -1,7 +1,7 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
+import { AdminService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {

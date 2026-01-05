@@ -1,4 +1,3 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
@@ -17,7 +16,7 @@ import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
-import { DataService } from '@ghostfolio/ui/services';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';

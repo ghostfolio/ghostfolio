@@ -1,5 +1,6 @@
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
+import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
 
 import { Platform } from '@angular/cdk/platform';
@@ -88,6 +89,10 @@ import { environment } from './environments/environment';
         deps: [LanguageService, MAT_DATE_LOCALE, Platform],
         provide: DateAdapter,
         useClass: CustomDateAdapter
+      },
+      {
+        provide: GF_ENVIRONMENT,
+        useValue: environment
       },
       {
         provide: MAT_DATE_FORMATS,

@@ -1,10 +1,9 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import {
   DEFAULT_CURRENCY,
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
-import { DataService } from '@ghostfolio/ui/services';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import {
