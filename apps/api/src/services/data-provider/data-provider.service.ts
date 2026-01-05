@@ -1,10 +1,6 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -23,6 +19,8 @@ import {
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  DataProviderHistoricalResponse,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
@@ -34,6 +32,8 @@ import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
+
+import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
 
 @Injectable()
 export class DataProviderService implements OnModuleInit {
@@ -106,9 +106,9 @@ export class DataProviderService implements OnModuleInit {
         );
 
         promises.push(
-          promise.then((symbolProfile) => {
-            if (symbolProfile) {
-              response[symbol] = symbolProfile;
+          promise.then((assetProfile) => {
+            if (isCurrency(assetProfile?.currency)) {
+              response[symbol] = assetProfile;
             }
           })
         );
@@ -117,6 +117,12 @@ export class DataProviderService implements OnModuleInit {
 
     try {
       await Promise.all(promises);
+
+      if (isEmpty(response)) {
+        throw new AssetProfileInvalidError(
+          'No valid asset profiles have been found'
+        );
+      }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
 
@@ -207,10 +213,10 @@ export class DataProviderService implements OnModuleInit {
     from: Date,
     to: Date
   ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     let response: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {};
 
     if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
@@ -276,7 +282,7 @@ export class DataProviderService implements OnModuleInit {
     from: Date;
     to: Date;
   }): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
@@ -309,11 +315,11 @@ export class DataProviderService implements OnModuleInit {
     );
 
     const result: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
     } = {};
 
     const promises: Promise<{
-      data: { [date: string]: IDataProviderHistoricalResponse };
+      data: { [date: string]: DataProviderHistoricalResponse };
       symbol: string;
     }>[] = [];
     for (const { dataSource, symbol } of assetProfileIdentifiers) {
@@ -321,7 +327,7 @@ export class DataProviderService implements OnModuleInit {
       if (dataProvider.canHandle(symbol)) {
         if (symbol === `${DEFAULT_CURRENCY}USX`) {
           const data: {
-            [date: string]: IDataProviderHistoricalResponse;
+            [date: string]: DataProviderHistoricalResponse;
           } = {};
 
           for (const date of eachDayOfInterval({ end: to, start: from })) {
@@ -391,10 +397,10 @@ export class DataProviderService implements OnModuleInit {
     useCache?: boolean;
     user?: UserWithSettings;
   }): Promise<{
-    [symbol: string]: IDataProviderResponse;
+    [symbol: string]: DataProviderResponse;
   }> {
     const response: {
-      [symbol: string]: IDataProviderResponse;
+      [symbol: string]: DataProviderResponse;
     } = {};
     const startTimeTotal = performance.now();
 
@@ -645,8 +651,11 @@ export class DataProviderService implements OnModuleInit {
 
     const filteredItems = lookupItems
       .filter(({ currency }) => {
-        // Only allow symbols with supported currency
-        return currency ? true : false;
+        if (includeIndices) {
+          return true;
+        }
+
+        return currency ? isCurrency(currency) : false;
       })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -705,7 +714,7 @@ export class DataProviderService implements OnModuleInit {
   }: {
     allData: {
       data: {
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       };
       symbol: string;
     }[];
@@ -717,7 +726,7 @@ export class DataProviderService implements OnModuleInit {
     })?.data;
 
     const data: {
-      [date: string]: IDataProviderHistoricalResponse;
+      [date: string]: DataProviderHistoricalResponse;
     } = {};
 
     for (const date in rootData) {

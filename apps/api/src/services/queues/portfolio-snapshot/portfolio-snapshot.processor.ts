@@ -16,7 +16,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { addMilliseconds } from 'date-fns';
 
-import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
+import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 @Injectable()
 @Processor(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
@@ -37,9 +37,7 @@ export class PortfolioSnapshotProcessor {
     ),
     name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME
   })
-  public async calculatePortfolioSnapshot(
-    job: Job<IPortfolioSnapshotQueueJob>
-  ) {
+  public async calculatePortfolioSnapshot(job: Job<PortfolioSnapshotQueueJob>) {
     try {
       const startTime = performance.now();
 

@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import { randomBytes } from 'node:crypto';
 
 export function getRandomString(length: number) {
   const bytes = randomBytes(length);

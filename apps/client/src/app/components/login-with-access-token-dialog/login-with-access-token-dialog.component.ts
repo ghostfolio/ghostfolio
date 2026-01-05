@@ -1,26 +1,46 @@
-import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import {
   KEY_STAY_SIGNED_IN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule
+} from '@angular/material/checkbox';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 
+import { LoginWithAccessTokenDialogParams } from './interfaces/interfaces';
+
 @Component({
-  selector: 'gf-login-with-access-token-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    GfDialogHeaderComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
+  selector: 'gf-login-with-access-token-dialog',
   styleUrls: ['./login-with-access-token-dialog.scss'],
-  templateUrl: 'login-with-access-token-dialog.html',
-  standalone: false
+  templateUrl: './login-with-access-token-dialog.html'
 })
-export class LoginWithAccessTokenDialog {
+export class GfLoginWithAccessTokenDialogComponent {
   public accessTokenFormControl = new FormControl(
     this.data.accessToken,
     Validators.required
@@ -28,12 +48,9 @@ export class LoginWithAccessTokenDialog {
   public isAccessTokenHidden = true;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<LoginWithAccessTokenDialog>,
-    private internetIdentityService: InternetIdentityService,
-    private router: Router,
-    private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    @Inject(MAT_DIALOG_DATA) public data: LoginWithAccessTokenDialogParams,
+    public dialogRef: MatDialogRef<GfLoginWithAccessTokenDialogComponent>,
+    private settingsStorageService: SettingsStorageService
   ) {
     addIcons({ eyeOffOutline, eyeOutline });
   }
@@ -55,15 +72,5 @@ export class LoginWithAccessTokenDialog {
         accessToken: this.accessTokenFormControl.value
       });
     }
-  }
-
-  public async onLoginWithInternetIdentity() {
-    try {
-      const { authToken } = await this.internetIdentityService.login();
-
-      this.tokenStorageService.saveToken(authToken);
-      this.dialogRef.close();
-      this.router.navigate(['/']);
-    } catch {}
   }
 }

@@ -4,8 +4,14 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  DeleteOwnUserDto,
+  UpdateOwnAccessTokenDto,
+  UpdateUserSettingDto
+} from '@ghostfolio/common/dtos';
+import {
   AccessTokenResponse,
   User,
+  UserItem,
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -31,10 +37,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash';
 
-import { DeleteOwnUserDto } from './delete-own-user.dto';
-import { UserItem } from './interfaces/user-item.interface';
-import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
-import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -126,11 +128,7 @@ export class UserController {
       );
     }
 
-    const hasAdmin = await this.userService.hasAdmin();
-
-    const { accessToken, id, role } = await this.userService.createUser({
-      data: { role: hasAdmin ? 'USER' : 'ADMIN' }
-    });
+    const { accessToken, id, role } = await this.userService.createUser();
 
     return {
       accessToken,

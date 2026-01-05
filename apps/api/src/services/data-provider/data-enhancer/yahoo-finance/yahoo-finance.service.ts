@@ -317,7 +317,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     return { assetClass, assetSubClass };
   }
 
-  private parseSector(aString: string): string {
+  private parseSector(aString: string) {
     let sector = UNKNOWN_KEY;
 
     switch (aString) {

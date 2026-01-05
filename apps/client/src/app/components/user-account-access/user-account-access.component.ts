@@ -1,13 +1,13 @@
-import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { CreateAccessDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,
@@ -30,15 +30,14 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
-import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-dialog/create-or-update-access-dialog.module';
+import { GfCreateOrUpdateAccessDialogComponent } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
+import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'has-fab' },
   imports: [
     GfAccessTableComponent,
-    GfCreateOrUpdateAccessDialogModule,
     GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,
@@ -117,6 +116,8 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       .subscribe((params) => {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
+        } else if (params['editDialog'] && params['accessId']) {
+          this.openUpdateAccessDialog(params['accessId']);
         }
       });
 
@@ -175,16 +176,27 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     });
   }
 
+  public onUpdateAccess(aId: string) {
+    this.router.navigate([], {
+      queryParams: { accessId: aId, editDialog: true }
+    });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
 
   private openCreateAccessDialog() {
-    const dialogRef = this.dialog.open(CreateOrUpdateAccessDialog, {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccessDialogComponent,
+      CreateOrUpdateAccessDialogParams
+    >(GfCreateOrUpdateAccessDialogComponent, {
       data: {
         access: {
           alias: '',
+          grantee: null,
+          id: null,
           permissions: ['READ_RESTRICTED'],
           type: 'PRIVATE'
         }
@@ -195,6 +207,43 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
 
     dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
       if (access) {
+        this.update();
+      }
+
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });
+  }
+
+  private openUpdateAccessDialog(accessId: string) {
+    const access = this.accessesGive?.find(({ id }) => {
+      return id === accessId;
+    });
+
+    if (!access) {
+      console.log('Could not find access.');
+
+      return;
+    }
+
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateAccessDialogComponent,
+      CreateOrUpdateAccessDialogParams
+    >(GfCreateOrUpdateAccessDialogComponent, {
+      data: {
+        access: {
+          alias: access.alias,
+          grantee: access.grantee === 'Public' ? null : access.grantee,
+          id: access.id,
+          permissions: access.permissions,
+          type: access.type
+        }
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
         this.update();
       }
 

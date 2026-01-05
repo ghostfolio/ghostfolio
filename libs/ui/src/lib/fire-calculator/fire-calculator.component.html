@@ -40,6 +40,7 @@
             formControlName="retirementDate"
             matInput
             [matDatepicker]="datepicker"
+            [min]="minDate"
           />
           <mat-datepicker-toggle
             matIconSuffix
@@ -51,8 +52,7 @@
             startView="multi-year"
             [disabled]="hasPermissionToUpdateUserSettings !== true"
             (monthSelected)="setMonthAndYear($event, datepicker)"
-          >
-          </mat-datepicker>
+          />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">

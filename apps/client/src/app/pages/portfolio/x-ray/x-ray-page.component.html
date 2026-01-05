@@ -59,182 +59,30 @@
           </div>
         }
       </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': liquidityRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Liquidity</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="liquidityRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': emergencyFundRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Emergency Fund</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="emergencyFundRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': currencyClusterRiskRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Currency Cluster Risks</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="currencyClusterRiskRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': assetClassClusterRiskRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Asset Class Cluster Risks</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="assetClassClusterRiskRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': accountClusterRiskRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Account Cluster Risks</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="accountClusterRiskRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': economicMarketClusterRiskRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Economic Market Cluster Risks</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="economicMarketClusterRiskRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': regionalMarketClusterRiskRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Regional Market Cluster Risks</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="regionalMarketClusterRiskRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
-      <div
-        class="mb-4"
-        [ngClass]="{
-          'd-none': feeRules?.length === 0
-        }"
-      >
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Fees</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        <gf-rules
-          [hasPermissionToUpdateUserSettings]="
-            !hasImpersonationId && hasPermissionToUpdateUserSettings
-          "
-          [isLoading]="isLoading"
-          [rules]="feeRules"
-          [settings]="user?.settings?.xRayRules"
-          (rulesUpdated)="onRulesUpdated($event)"
-        />
-      </div>
+      @for (category of categories; track category.key) {
+        <div
+          class="mb-4"
+          [ngClass]="{ 'd-none': category.rules?.length === 0 }"
+        >
+          <h4 class="align-items-center d-flex m-0">
+            <span>{{ category.name }}</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
+          </h4>
+          <gf-rules
+            [categoryName]="category.name"
+            [hasPermissionToUpdateUserSettings]="
+              !hasImpersonationId && hasPermissionToUpdateUserSettings
+            "
+            [isLoading]="isLoading"
+            [locale]="user?.settings?.locale"
+            [rules]="category.rules"
+            [settings]="user?.settings?.xRayRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        </div>
+      }
       @if (inactiveRules?.length > 0) {
         <div>
           <h4 class="m-0" i18n>Inactive</h4>
@@ -243,6 +91,7 @@
               !hasImpersonationId && hasPermissionToUpdateUserSettings
             "
             [isLoading]="isLoading"
+            [locale]="user?.settings?.locale"
             [rules]="inactiveRules"
             [settings]="user?.settings?.xRayRules"
             (rulesUpdated)="onRulesUpdated($event)"

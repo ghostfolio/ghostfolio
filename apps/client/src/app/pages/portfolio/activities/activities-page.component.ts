@@ -1,15 +1,17 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  AssetProfileIdentifier,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,8 +29,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { GfCreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
-import { GfImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
+import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
+import { CreateOrUpdateActivityDialogParams } from './create-or-update-activity-dialog/interfaces/interfaces';
+import { GfImportActivitiesDialogComponent } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
@@ -245,11 +248,15 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    const dialogRef = this.dialog.open(GfImportActivitiesDialog, {
+    const dialogRef = this.dialog.open<
+      GfImportActivitiesDialogComponent,
+      ImportActivitiesDialogParams
+    >(GfImportActivitiesDialogComponent, {
       data: {
         deviceType: this.deviceType,
         user: this.user
-      } as ImportActivitiesDialogParams,
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -267,12 +274,16 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImportDividends() {
-    const dialogRef = this.dialog.open(GfImportActivitiesDialog, {
+    const dialogRef = this.dialog.open<
+      GfImportActivitiesDialogComponent,
+      ImportActivitiesDialogParams
+    >(GfImportActivitiesDialogComponent, {
       data: {
         activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
         user: this.user
-      } as ImportActivitiesDialogParams,
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -303,10 +314,13 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateActivityDialog(activity: Activity) {
-    const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
+  public openUpdateActivityDialog(aActivity: Activity) {
+    const dialogRef = this.dialog.open<
+      GfCreateOrUpdateActivityDialogComponent,
+      CreateOrUpdateActivityDialogParams
+    >(GfCreateOrUpdateActivityDialogComponent, {
       data: {
-        activity,
+        activity: aActivity,
         accounts: this.user?.accounts,
         user: this.user
       },
@@ -317,10 +331,10 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((transaction: UpdateOrderDto | null) => {
-        if (transaction) {
+      .subscribe((activity: UpdateOrderDto) => {
+        if (activity) {
           this.dataService
-            .putOrder(transaction)
+            .putOrder(activity)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
@@ -345,7 +359,10 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(GfCreateOrUpdateActivityDialog, {
+        const dialogRef = this.dialog.open<
+          GfCreateOrUpdateActivityDialogComponent,
+          CreateOrUpdateActivityDialogParams
+        >(GfCreateOrUpdateActivityDialogComponent, {
           data: {
             accounts: this.user?.accounts,
             activity: {

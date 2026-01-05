@@ -12,7 +12,7 @@ import { throwError } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 
 import { SubscriptionInterstitialDialogParams } from '../../components/subscription-interstitial-dialog/interfaces/interfaces';
-import { SubscriptionInterstitialDialog } from '../../components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
+import { GfSubscriptionInterstitialDialogComponent } from '../../components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { UserStoreActions } from './user-store.actions';
 import { UserStoreState } from './user-store.state';
 
@@ -116,11 +116,14 @@ export class UserService extends ObservableStore<UserStoreState> {
             permissions.enableSubscriptionInterstitial
           )
         ) {
-          const dialogRef = this.dialog.open(SubscriptionInterstitialDialog, {
+          const dialogRef = this.dialog.open<
+            GfSubscriptionInterstitialDialogComponent,
+            SubscriptionInterstitialDialogParams
+          >(GfSubscriptionInterstitialDialogComponent, {
             autoFocus: false,
             data: {
               user
-            } as SubscriptionInterstitialDialogParams,
+            },
             disableClose: true,
             height: this.deviceType === 'mobile' ? '98vh' : '80vh',
             width: this.deviceType === 'mobile' ? '100vw' : '50rem'

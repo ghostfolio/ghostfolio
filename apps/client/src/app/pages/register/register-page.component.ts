@@ -1,9 +1,8 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   Component,
@@ -18,18 +17,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ShowAccessTokenDialogParams } from './show-access-token-dialog/interfaces/interfaces';
-import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
-import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-access-token-dialog.module';
+import { UserAccountRegistrationDialogParams } from './user-account-registration-dialog/interfaces/interfaces';
+import { GfUserAccountRegistrationDialogComponent } from './user-account-registration-dialog/user-account-registration-dialog.component';
 
 @Component({
   host: { class: 'page' },
-  imports: [
-    GfLogoComponent,
-    MatButtonModule,
-    RouterModule,
-    ShowAccessTokenDialogModule
-  ],
+  imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
@@ -37,7 +30,8 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
 })
 export class GfRegisterPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
-  public hasPermissionForSocialLogin: boolean;
+  public hasPermissionForAuthGoogle: boolean;
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
   public historicalDataItems: LineChartItem[];
@@ -49,7 +43,6 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
-    private internetIdentityService: InternetIdentityService,
     private router: Router,
     private tokenStorageService: TokenStorageService
   ) {
@@ -63,9 +56,14 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
 
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
-    this.hasPermissionForSocialLogin = hasPermission(
+    this.hasPermissionForAuthGoogle = hasPermission(
       globalPermissions,
-      permissions.enableSocialLogin
+      permissions.enableAuthGoogle
+    );
+
+    this.hasPermissionForAuthToken = hasPermission(
+      globalPermissions,
+      permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
@@ -79,22 +77,15 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
     );
   }
 
-  public async onLoginWithInternetIdentity() {
-    try {
-      const { authToken } = await this.internetIdentityService.login();
-
-      this.tokenStorageService.saveToken(authToken);
-
-      await this.router.navigate(['/']);
-    } catch {}
-  }
-
   public openShowAccessTokenDialog() {
-    const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
+    const dialogRef = this.dialog.open<
+      GfUserAccountRegistrationDialogComponent,
+      UserAccountRegistrationDialogParams
+    >(GfUserAccountRegistrationDialogComponent, {
       data: {
         deviceType: this.deviceType,
         needsToAcceptTermsOfService: this.hasPermissionForSubscription
-      } as ShowAccessTokenDialogParams,
+      },
       disableClose: true,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '30rem'

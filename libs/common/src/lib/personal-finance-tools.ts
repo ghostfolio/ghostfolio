@@ -34,6 +34,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    founded: 2023,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'amsflow',
+    name: 'Amsflow Portfolio',
+    origin: 'Singapore',
+    pricingPerYear: '$228',
+    slogan: 'Portfolio Visualizer'
+  },
+  {
     founded: 2018,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -96,6 +106,21 @@ export const personalFinanceTools: Product[] = [
     origin: 'France',
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors'
+  },
+  {
+    founded: 2024,
+    hasSelfHostingAbility: false,
+    key: 'bluebudget',
+    languages: ['Deutsch', 'English', 'Français', 'Italiano'],
+    name: 'BlueBudget',
+    origin: 'Switzerland',
+    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung'
+  },
+  {
+    key: 'budgetpulse',
+    name: 'BudgetPulse',
+    origin: 'United States',
+    slogan: 'Giving life to your finance!'
   },
   {
     founded: 2007,
@@ -179,6 +204,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$95',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    founded: 2014,
+    hasFreePlan: false,
+    key: 'countabout',
+    name: 'CountAbout',
+    origin: 'United States',
+    pricingPerYear: '$9.99',
+    slogan: 'Customizable and Secure Personal Finance App'
   },
   {
     founded: 2023,
@@ -428,6 +462,14 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    founded: 2017,
+    hasSelfHostingAbility: false,
+    key: 'honeydue',
+    name: 'Honeydue',
+    origin: 'United States',
+    slogan: 'Finance App for Couples'
+  },
+  {
     founded: 2022,
     key: 'income-reign',
     languages: ['English'],
@@ -609,6 +651,22 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Dein smarter Finance Assistant'
   },
   {
+    founded: 2007,
+    key: 'moneyspire',
+    name: 'Moneyspire',
+    note: 'License is a perpetual license',
+    origin: 'United States',
+    pricingPerYear: '$59.99',
+    slogan: 'Have total control of your financial life'
+  },
+  {
+    key: 'moneywiz',
+    name: 'MoneyWiz',
+    origin: 'United States',
+    pricingPerYear: '$29.99',
+    slogan: 'Get money management superpowers'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'monse',
@@ -675,6 +733,13 @@ export const personalFinanceTools: Product[] = [
     name: 'Peek',
     origin: 'Singapore',
     slogan: 'Feel in control of your money without spreadsheets or shame'
+  },
+  {
+    key: 'pennies',
+    name: 'Pennies',
+    origin: 'United States',
+    pricingPerYear: '$39.99',
+    slogan: 'Your money. Made simple.'
   },
   {
     founded: 2022,
@@ -860,6 +925,12 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simple and powerful portfolio tracker'
   },
   {
+    key: 'splashmoney',
+    name: 'SplashMoney',
+    origin: 'United States',
+    slogan: 'Manage your money anytime, anywhere.'
+  },
+  {
     founded: 2019,
     hasSelfHostingAbility: false,
     key: 'stock-events',
@@ -975,9 +1046,11 @@ export const personalFinanceTools: Product[] = [
   },
   {
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'wallmine',
     languages: ['English'],
     name: 'wallmine',
+    note: 'wallmine was discontinued in 2024',
     origin: 'Czech Republic',
     pricingPerYear: '$600',
     slogan: 'Make Smarter Investments'

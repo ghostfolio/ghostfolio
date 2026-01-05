@@ -5,6 +5,7 @@
         <gf-membership-card
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
           [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
+          [hover3d]="true"
           [name]="user?.subscription?.type"
           (generateApiKeyClicked)="onGenerateApiKey()"
         />
@@ -37,8 +38,11 @@
                   <div
                     class="badge badge-pill badge-warning font-weight-normal px-2 py-1"
                   >
-                    <strong>Limited Offer!</strong> Get
-                    {{ durationExtension }} extra
+                    <strong i18n>Limited Offer!</strong>
+                    <ng-container>&nbsp;</ng-container>
+                    <ng-container i18n
+                      >Get {{ durationExtension }} extra</ng-container
+                    >
                   </div>
                 </div>
               }
@@ -67,7 +71,7 @@
           </div>
         } @else {
           <div class="mt-3 text-muted">
-            <small i18n>No auto-renewal.</small>
+            <small i18n>No auto-renewal on membership.</small>
           </div>
         }
       </div>

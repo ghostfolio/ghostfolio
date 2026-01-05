@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 
 import {
@@ -17,16 +18,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { Platform } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { CreatePlatformDto } from './create-platform.dto';
 import { PlatformService } from './platform.service';
-import { UpdatePlatformDto } from './update-platform.dto';
 
 @Controller('platform')
 export class PlatformController {
   public constructor(private readonly platformService: PlatformService) {}
 
   @Get()
-  @HasPermission(permissions.readPlatforms)
+  @HasPermission(permissions.readPlatformsWithAccountCount)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPlatforms() {
     return this.platformService.getPlatformsWithAccountCount();

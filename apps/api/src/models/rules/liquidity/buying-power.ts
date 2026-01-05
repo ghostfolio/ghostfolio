@@ -1,8 +1,7 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { UserSettings } from '@ghostfolio/common/interfaces';
+import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class BuyingPower extends Rule<Settings> {
   private buyingPower: number;
@@ -22,14 +21,27 @@ export class BuyingPower extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings: Settings) {
-    if (this.buyingPower < ruleSettings.thresholdMin) {
+    if (this.buyingPower === 0) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.liquidityBuyingPower.false',
+          id: 'rule.liquidityBuyingPower.false.zero',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            baseCurrency: ruleSettings.baseCurrency
+          }
+        }),
+        value: false
+      };
+    } else if (this.buyingPower < ruleSettings.thresholdMin) {
+      return {
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.liquidityBuyingPower.false.min',
           languageCode: this.getLanguageCode(),
           placeholders: {
             baseCurrency: ruleSettings.baseCurrency,
-            thresholdMin: ruleSettings.thresholdMin
+            thresholdMin: ruleSettings.thresholdMin.toLocaleString(
+              ruleSettings.locale
+            )
           }
         }),
         value: false
@@ -42,7 +54,9 @@ export class BuyingPower extends Rule<Settings> {
         languageCode: this.getLanguageCode(),
         placeholders: {
           baseCurrency: ruleSettings.baseCurrency,
-          thresholdMin: ruleSettings.thresholdMin
+          thresholdMin: ruleSettings.thresholdMin.toLocaleString(
+            ruleSettings.locale
+          )
         }
       }),
       value: true
@@ -75,9 +89,14 @@ export class BuyingPower extends Rule<Settings> {
     });
   }
 
-  public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
+  public getSettings({
+    baseCurrency,
+    locale,
+    xRayRules
+  }: UserSettings): Settings {
     return {
       baseCurrency,
+      locale,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
       thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0
     };

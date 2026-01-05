@@ -1,8 +1,6 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
+import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   KEY_STAY_SIGNED_IN,
@@ -10,15 +8,22 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
   HostListener,
   Input,
@@ -26,9 +31,13 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   closeOutline,
@@ -43,13 +52,25 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'gf-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfAssistantComponent,
+    GfLogoComponent,
+    GfPremiumIndicatorComponent,
+    IonIcon,
+    MatBadgeModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatToolbarModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  standalone: false
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnChanges {
+export class GfHeaderComponent implements OnChanges {
   @HostListener('window:keydown', ['$event'])
   openAssistantWithHotKey(event: KeyboardEvent) {
     if (
@@ -83,7 +104,9 @@ export class HeaderComponent implements OnChanges {
 
   public hasFilters: boolean;
   public hasImpersonationId: boolean;
-  public hasPermissionForSocialLogin: boolean;
+  public hasPermissionForAuthGoogle: boolean;
+  public hasPermissionForAuthOidc: boolean;
+  public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionToAccessAssistant: boolean;
@@ -143,9 +166,19 @@ export class HeaderComponent implements OnChanges {
   public ngOnChanges() {
     this.hasFilters = this.userService.hasFilters();
 
-    this.hasPermissionForSocialLogin = hasPermission(
+    this.hasPermissionForAuthGoogle = hasPermission(
       this.info?.globalPermissions,
-      permissions.enableSocialLogin
+      permissions.enableAuthGoogle
+    );
+
+    this.hasPermissionForAuthOidc = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableAuthOidc
+    );
+
+    this.hasPermissionForAuthToken = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
@@ -251,11 +284,16 @@ export class HeaderComponent implements OnChanges {
   }
 
   public openLoginDialog() {
-    const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
+    const dialogRef = this.dialog.open<
+      GfLoginWithAccessTokenDialogComponent,
+      LoginWithAccessTokenDialogParams
+    >(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        hasPermissionToUseAuthGoogle: this.hasPermissionForAuthGoogle,
+        hasPermissionToUseAuthOidc: this.hasPermissionForAuthOidc,
+        hasPermissionToUseAuthToken: this.hasPermissionForAuthToken,
         title: $localize`Sign in`
       },
       width: '30rem'

@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-07-28T00:00:00.000Z",
+  "createdAt": "2025-12-08T00:00:00.000Z",
   "data": [
     {
       "name": "Activepieces",
@@ -17,9 +17,19 @@
       "href": "https://argos-ci.com"
     },
     {
+      "name": "Bifrost",
+      "description": "Fastest LLM gateway with adaptive load balancer, cluster mode, guardrails, 1000+ models support & <100 µs overhead at 5k RPS.",
+      "href": "https://www.getmaxim.ai/bifrost"
+    },
+    {
       "name": "Cal.com",
       "description": "Cal.com is a scheduling tool that helps you schedule meetings without the back-and-forth emails.",
       "href": "https://cal.com"
+    },
+    {
+      "name": "Cap",
+      "description": "Cap is the open source alternative to Loom. Lightweight, powerful, and cross-platform. Record and share securely in seconds.",
+      "href": "https://cap.so"
     },
     {
       "name": "ClassroomIO.com",
@@ -52,11 +62,6 @@
       "href": "https://getinboxzero.com"
     },
     {
-      "name": "Infisical",
-      "description": "Open source, end-to-end encrypted platform that lets you securely manage secrets and configs across your team, devices, and infrastructure.",
-      "href": "https://infisical.com"
-    },
-    {
       "name": "KeepHQ",
       "description": "Keep is an open-source AIOps (AI for IT operations) platform",
       "href": "https://www.keephq.dev"
@@ -70,6 +75,11 @@
       "name": "Mockoon",
       "description": "Mockoon is the easiest and quickest way to design and run mock REST APIs.",
       "href": "https://mockoon.com"
+    },
+    {
+      "name": "Onyx",
+      "description": "Onyx is the open-source AI chat connected to your docs, apps, and people.",
+      "href": "https://onyx.app"
     },
     {
       "name": "OpenBB",
@@ -105,6 +115,11 @@
       "name": "Rivet",
       "description": "Open-source solution to deploy, scale, and operate your multiplayer game.",
       "href": "https://rivet.gg"
+    },
+    {
+      "name": "Rybbit",
+      "description": "Next-gen, open source, lightweight, cookieless web & product analytics for everyone.",
+      "href": "https://rybbit.com"
     },
     {
       "name": "Shelf.nu",

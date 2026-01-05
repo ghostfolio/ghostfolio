@@ -1,5 +1,4 @@
-import { GfFearAndGreedIndexModule } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.module';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
@@ -12,6 +11,7 @@ import {
 import { FearAndGreedIndexMode } from '@ghostfolio/common/types';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 
 import {
@@ -30,7 +30,7 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComponent,
-    GfFearAndGreedIndexModule,
+    GfFearAndGreedIndexComponent,
     GfLineChartComponent,
     GfToggleComponent
   ],
@@ -39,7 +39,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./markets.scss'],
   templateUrl: './markets.html'
 })
-export class MarketsComponent implements OnDestroy, OnInit {
+export class GfMarketsComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;

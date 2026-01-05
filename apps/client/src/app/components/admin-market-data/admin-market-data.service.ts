@@ -1,7 +1,5 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   getCurrencyFromSymbol,
   isDerivedCurrency,
@@ -11,6 +9,8 @@ import {
   AssetProfileIdentifier,
   AdminMarketDataItem
 } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { AdminService } from '@ghostfolio/ui/services';
 
 import { Injectable } from '@angular/core';
 import { EMPTY, catchError, finalize, forkJoin } from 'rxjs';

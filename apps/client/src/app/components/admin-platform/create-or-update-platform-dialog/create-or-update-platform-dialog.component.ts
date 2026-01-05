@@ -1,6 +1,5 @@
-import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
-import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import {

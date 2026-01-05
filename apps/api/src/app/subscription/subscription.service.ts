@@ -5,13 +5,16 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { parseDate } from '@ghostfolio/common/helper';
-import { SubscriptionOffer } from '@ghostfolio/common/interfaces';
+import {
+  CreateStripeCheckoutSessionResponse,
+  SubscriptionOffer
+} from '@ghostfolio/common/interfaces';
 import {
   SubscriptionOfferKey,
   UserWithSettings
 } from '@ghostfolio/common/types';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
@@ -32,13 +35,13 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2025-08-27.basil'
+          apiVersion: '2025-12-15.clover'
         }
       );
     }
   }
 
-  public async createCheckoutSession({
+  public async createStripeCheckoutSession({
     couponId,
     priceId,
     user
@@ -46,7 +49,7 @@ export class SubscriptionService {
     couponId?: string;
     priceId: string;
     user: UserWithSettings;
-  }) {
+  }): Promise<CreateStripeCheckoutSessionResponse> {
     const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
@@ -58,33 +61,34 @@ export class SubscriptionService {
       }
     );
 
-    const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
-      cancel_url: `${this.configurationService.get('ROOT_URL')}/${
-        user.settings.settings.language
-      }/account`,
-      client_reference_id: user.id,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1
-        }
-      ],
-      locale:
-        (user.settings?.settings
-          ?.language as Stripe.Checkout.SessionCreateParams.Locale) ??
-        DEFAULT_LANGUAGE_CODE,
-      metadata: subscriptionOffer
-        ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
-        : {},
-      mode: 'payment',
-      payment_method_types: ['card'],
-      success_url: `${this.configurationService.get(
-        'ROOT_URL'
-      )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
-    };
+    const stripeCheckoutSessionCreateParams: Stripe.Checkout.SessionCreateParams =
+      {
+        cancel_url: `${this.configurationService.get('ROOT_URL')}/${
+          user.settings.settings.language
+        }/account`,
+        client_reference_id: user.id,
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1
+          }
+        ],
+        locale:
+          (user.settings?.settings
+            ?.language as Stripe.Checkout.SessionCreateParams.Locale) ??
+          DEFAULT_LANGUAGE_CODE,
+        metadata: subscriptionOffer
+          ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
+          : {},
+        mode: 'payment',
+        payment_method_types: ['card'],
+        success_url: `${this.configurationService.get(
+          'ROOT_URL'
+        )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
+      };
 
     if (couponId) {
-      checkoutSessionCreateParams.discounts = [
+      stripeCheckoutSessionCreateParams.discounts = [
         {
           coupon: couponId
         }
@@ -92,11 +96,12 @@ export class SubscriptionService {
     }
 
     const session = await this.stripe.checkout.sessions.create(
-      checkoutSessionCreateParams
+      stripeCheckoutSessionCreateParams
     );
 
     return {
-      sessionId: session.id
+      sessionId: session.id,
+      sessionUrl: session.url
     };
   }
 
@@ -175,6 +180,8 @@ export class SubscriptionService {
         offerKey = 'renewal-early-bird-2023';
       } else if (isBefore(createdAt, parseDate('2024-01-01'))) {
         offerKey = 'renewal-early-bird-2024';
+      } else if (isBefore(createdAt, parseDate('2025-12-01'))) {
+        offerKey = 'renewal-early-bird-2025';
       }
 
       const offer = await this.getSubscriptionOffer({

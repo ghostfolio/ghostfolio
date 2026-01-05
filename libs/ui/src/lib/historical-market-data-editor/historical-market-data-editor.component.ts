@@ -1,11 +1,11 @@
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -199,21 +199,21 @@ export class GfHistoricalMarketDataEditorComponent
   }) {
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
-    const dialogRef = this.dialog.open(
+    const dialogRef = this.dialog.open<
       GfHistoricalMarketDataEditorDialogComponent,
-      {
-        data: {
-          marketPrice,
-          currency: this.currency,
-          dataSource: this.dataSource,
-          dateString: `${yearMonth}-${day}`,
-          symbol: this.symbol,
-          user: this.user
-        } as HistoricalMarketDataEditorDialogParams,
-        height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+      HistoricalMarketDataEditorDialogParams
+    >(GfHistoricalMarketDataEditorDialogComponent, {
+      data: {
+        marketPrice,
+        currency: this.currency,
+        dataSource: this.dataSource,
+        dateString: `${yearMonth}-${day}`,
+        symbol: this.symbol,
+        user: this.user
+      },
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
     dialogRef
       .afterClosed()

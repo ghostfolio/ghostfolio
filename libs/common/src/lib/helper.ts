@@ -1,7 +1,7 @@
-import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
 import { Type as ActivityType, DataSource, MarketData } from '@prisma/client';
 import { Big } from 'big.js';
+import { isISO4217CurrencyCode } from 'class-validator';
 import {
   getDate,
   getMonth,
@@ -340,8 +340,12 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isCurrency(aCurrency = '') {
-  return currencies[aCurrency] || isDerivedCurrency(aCurrency);
+export function isCurrency(aCurrency: string) {
+  if (!aCurrency) {
+    return false;
+  }
+
+  return isISO4217CurrencyCode(aCurrency) || isDerivedCurrency(aCurrency);
 }
 
 export function isDerivedCurrency(aCurrency: string) {
@@ -371,7 +375,7 @@ export function parseDate(date: string): Date {
 
   // Transform 'yyyyMMdd' format to supported format by parse function
   if (date?.length === 8) {
-    const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
+    const match = /^(\d{4})(\d{2})(\d{2})$/.exec(date);
 
     if (match) {
       const [, year, month, day] = match;

@@ -8,7 +8,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -18,6 +17,7 @@ import {
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   DataProviderGhostfolioAssetProfileResponse,
+  DataProviderHistoricalResponse,
   DataProviderInfo,
   DividendsResponse,
   HistoricalResponse,
@@ -40,10 +40,7 @@ export class GhostfolioService {
     private readonly propertyService: PropertyService
   ) {}
 
-  public async getAssetProfile({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
-    symbol
-  }: GetAssetProfileParams) {
+  public async getAssetProfile({ symbol }: GetAssetProfileParams) {
     let result: DataProviderGhostfolioAssetProfileResponse = {};
 
     try {
@@ -51,16 +48,44 @@ export class GhostfolioService {
 
       for (const dataProviderService of this.getDataProviderServices()) {
         promises.push(
-          dataProviderService
-            .getAssetProfile({
-              requestTimeout,
-              symbol
-            })
-            .then((assetProfile) => {
+          this.dataProviderService
+            .getAssetProfiles([
+              {
+                symbol,
+                dataSource: dataProviderService.getName()
+              }
+            ])
+            .then(async (assetProfiles) => {
+              const assetProfile = assetProfiles[symbol];
+              const dataSourceOrigin = DataSource.GHOSTFOLIO;
+
+              if (assetProfile) {
+                await this.prismaService.assetProfileResolution.upsert({
+                  create: {
+                    dataSourceOrigin,
+                    currency: assetProfile.currency,
+                    dataSourceTarget: assetProfile.dataSource,
+                    symbolOrigin: symbol,
+                    symbolTarget: assetProfile.symbol
+                  },
+                  update: {
+                    requestCount: {
+                      increment: 1
+                    }
+                  },
+                  where: {
+                    dataSourceOrigin_symbolOrigin: {
+                      dataSourceOrigin,
+                      symbolOrigin: symbol
+                    }
+                  }
+                });
+              }
+
               result = {
                 ...result,
                 ...assetProfile,
-                dataSource: DataSource.GHOSTFOLIO
+                dataSource: dataSourceOrigin
               };
 
               return assetProfile;
@@ -89,7 +114,7 @@ export class GhostfolioService {
 
     try {
       const promises: Promise<{
-        [date: string]: IDataProviderHistoricalResponse;
+        [date: string]: DataProviderHistoricalResponse;
       }>[] = [];
 
       for (const dataProviderService of this.getDataProviderServices()) {
@@ -131,7 +156,7 @@ export class GhostfolioService {
 
     try {
       const promises: Promise<{
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
       }>[] = [];
 
       for (const dataProviderService of this.getDataProviderServices()) {

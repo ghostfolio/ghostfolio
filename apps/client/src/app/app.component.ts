@@ -1,10 +1,10 @@
-import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
-import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,
@@ -22,7 +22,9 @@ import {
   ActivatedRoute,
   NavigationEnd,
   PRIMARY_OUTLET,
-  Router
+  Router,
+  RouterLink,
+  RouterOutlet
 } from '@angular/router';
 import { DataSource } from '@prisma/client';
 import { addIcons } from 'ionicons';
@@ -31,20 +33,22 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { NotificationService } from './core/notification/notification.service';
-import { DataService } from './services/data.service';
+import { GfFooterComponent } from './components/footer/footer.component';
+import { GfHeaderComponent } from './components/header/header.component';
+import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogParams } from './components/holding-detail-dialog/interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
 
 @Component({
-  selector: 'gf-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './app.component.html',
+  imports: [GfFooterComponent, GfHeaderComponent, RouterLink, RouterOutlet],
+  selector: 'gf-root',
   styleUrls: ['./app.component.scss'],
-  standalone: false
+  templateUrl: './app.component.html'
 })
-export class AppComponent implements OnDestroy, OnInit {
+export class GfAppComponent implements OnDestroy, OnInit {
   @HostBinding('class.has-info-message') get getHasMessage() {
     return this.hasInfoMessage;
   }
@@ -52,36 +56,16 @@ export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentSubRoute: string;
-  public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
-  public hasPermissionForStatistics: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = publicRoutes.about.routerLink;
-  public routerLinkAboutChangelog =
-    publicRoutes.about.subRoutes.changelog.routerLink;
-  public routerLinkAboutLicense =
-    publicRoutes.about.subRoutes.license.routerLink;
-  public routerLinkAboutPrivacyPolicy =
-    publicRoutes.about.subRoutes.privacyPolicy.routerLink;
-  public routerLinkAboutTermsOfService =
-    publicRoutes.about.subRoutes.termsOfService.routerLink;
-  public routerLinkBlog = publicRoutes.blog.routerLink;
-  public routerLinkFaq = publicRoutes.faq.routerLink;
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = publicRoutes.markets.routerLink;
-  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
-  public routerLinkResources = publicRoutes.resources.routerLink;
   public showFooter = false;
   public user: User;
 
@@ -125,25 +109,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
-
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
-
-    this.hasPermissionForStatistics = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableStatistics
-    );
-
-    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableFearAndGreedIndex
-    );
-
-    this.hasPromotion =
-      !!this.info?.subscriptionOffer?.coupon ||
-      !!this.info?.subscriptionOffer?.durationExtension;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -248,9 +213,11 @@ export class AppComponent implements OnDestroy, OnInit {
         this.hasInfoMessage =
           this.canCreateAccount || !!this.user?.systemMessage;
 
-        this.hasPromotion =
-          !!this.user?.subscription?.offer?.coupon ||
-          !!this.user?.subscription?.offer?.durationExtension;
+        this.hasPromotion = this.user
+          ? !!this.user.subscription?.offer?.coupon ||
+            !!this.user.subscription?.offer?.durationExtension
+          : !!this.info?.subscriptionOffer?.coupon ||
+            !!this.info?.subscriptionOffer?.durationExtension;
 
         this.initializeTheme(this.user?.settings.colorScheme);
 
@@ -311,7 +278,10 @@ export class AppComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
+        const dialogRef = this.dialog.open<
+          GfHoldingDetailDialogComponent,
+          HoldingDetailDialogParams
+        >(GfHoldingDetailDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -337,7 +307,7 @@ export class AppComponent implements OnDestroy, OnInit {
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
-          } as HoldingDetailDialogParams,
+          },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });

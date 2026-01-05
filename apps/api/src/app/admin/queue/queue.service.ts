@@ -71,7 +71,7 @@ export class QueueService {
         .slice(0, limit)
         .map(async (job) => {
           return {
-            attemptsMade: job.attemptsMade + 1,
+            attemptsMade: job.attemptsMade,
             data: job.data,
             finishedOn: job.finishedOn,
             id: job.id,

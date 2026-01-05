@@ -1,8 +1,8 @@
+import { NotificationService } from '@ghostfolio/ui/notifications';
+
 import { Injectable } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable, Subject } from 'rxjs';
-
-import { NotificationService } from './notification/notification.service';
 
 @Injectable({
   providedIn: 'root'

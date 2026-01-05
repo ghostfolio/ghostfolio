@@ -1,8 +1,7 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { GfRulesModule } from '@ghostfolio/client/components/rules/rules.module';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
 import {
   PortfolioReportResponse,
   PortfolioReportRule
@@ -10,6 +9,7 @@ import {
 import { User } from '@ghostfolio/common/interfaces/user.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
@@ -26,7 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   imports: [
     GfPremiumIndicatorComponent,
-    GfRulesModule,
+    GfRulesComponent,
     IonIcon,
     NgClass,
     NgxSkeletonLoaderModule
@@ -36,18 +36,15 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './x-ray-page.component.html'
 })
 export class GfXRayPageComponent {
-  public accountClusterRiskRules: PortfolioReportRule[];
-  public assetClassClusterRiskRules: PortfolioReportRule[];
-  public currencyClusterRiskRules: PortfolioReportRule[];
-  public economicMarketClusterRiskRules: PortfolioReportRule[];
-  public emergencyFundRules: PortfolioReportRule[];
-  public feeRules: PortfolioReportRule[];
+  public categories: {
+    key: string;
+    name: string;
+    rules: PortfolioReportRule[];
+  }[];
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
-  public liquidityRules: PortfolioReportRule[];
-  public regionalMarketClusterRiskRules: PortfolioReportRule[];
   public statistics: PortfolioReportResponse['xRay']['statistics'];
   public user: User;
 
@@ -116,49 +113,10 @@ export class GfXRayPageComponent {
     this.dataService
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ xRay: { rules, statistics } }) => {
-        this.inactiveRules = this.mergeInactiveRules(rules);
+      .subscribe(({ xRay: { categories, statistics } }) => {
+        this.categories = categories;
+        this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
-
-        this.accountClusterRiskRules =
-          rules['accountClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.assetClassClusterRiskRules =
-          rules['assetClassClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.currencyClusterRiskRules =
-          rules['currencyClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.economicMarketClusterRiskRules =
-          rules['economicMarketClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.emergencyFundRules =
-          rules['emergencyFund']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.feeRules =
-          rules['fees']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.liquidityRules =
-          rules['liquidity']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.regionalMarketClusterRiskRules =
-          rules['regionalMarketClusterRisk']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
 
         this.isLoading = false;
 
@@ -167,20 +125,14 @@ export class GfXRayPageComponent {
   }
 
   private mergeInactiveRules(
-    rules: PortfolioReportResponse['xRay']['rules']
+    categories: PortfolioReportResponse['xRay']['categories']
   ): PortfolioReportRule[] {
-    let inactiveRules: PortfolioReportRule[] = [];
-
-    for (const category in rules) {
-      const rulesArray = rules[category] || [];
-
-      inactiveRules = inactiveRules.concat(
-        rulesArray.filter(({ isActive }) => {
+    return categories.flatMap(({ rules }) => {
+      return (
+        rules?.filter(({ isActive }) => {
           return !isActive;
-        })
+        }) ?? []
       );
-    }
-
-    return inactiveRules;
+    });
   }
 }
