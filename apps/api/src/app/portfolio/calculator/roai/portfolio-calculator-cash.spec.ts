@@ -18,6 +18,7 @@ import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { DataSource } from '@prisma/client';
+import { Big } from 'big.js';
 import { randomUUID } from 'node:crypto';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -207,17 +208,23 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const { historicalData } = await portfolioCalculator.computeSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const historicalData20231231 = historicalData.find(({ date }) => {
-        return date === '2023-12-31';
-      });
-      const historicalData20240101 = historicalData.find(({ date }) => {
-        return date === '2024-01-01';
-      });
-      const historicalData20241231 = historicalData.find(({ date }) => {
-        return date === '2024-12-31';
-      });
+      const historicalData20231231 = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2023-12-31';
+        }
+      );
+      const historicalData20240101 = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2024-01-01';
+        }
+      );
+      const historicalData20241231 = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2024-12-31';
+        }
+      );
 
       /**
        * Investment value with currency effect: 1000 USD * 0.85 = 850 CHF
@@ -284,6 +291,13 @@ describe('PortfolioCalculator', () => {
         totalInvestmentValueWithCurrencyEffect: 1750,
         value: 1820,
         valueWithCurrencyEffect: 1800
+      });
+
+      expect(portfolioSnapshot).toMatchObject({
+        hasErrors: false,
+        totalFeesWithCurrencyEffect: new Big('0'),
+        totalInterestWithCurrencyEffect: new Big('0'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
     });
   });
