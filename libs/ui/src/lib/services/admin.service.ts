@@ -276,7 +276,7 @@ export class AdminService {
     scraperConfiguration,
     symbol
   }: AssetProfileIdentifier & UpdateAssetProfileDto['scraperConfiguration']) {
-    return this.http.post<any>(
+    return this.http.post<{ price: number }>(
       `/api/v1/admin/market-data/${dataSource}/${symbol}/test`,
       {
         scraperConfiguration
