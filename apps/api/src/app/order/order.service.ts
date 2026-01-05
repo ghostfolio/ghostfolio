@@ -329,19 +329,39 @@ export class OrderService {
    * performance tracking based on exchange rate fluctuations.
    *
    * @param cashDetails - The cash balance details.
+   * @param filters - Optional filters to apply.
    * @param userCurrency - The base currency of the user.
    * @param userId - The ID of the user.
    * @returns A response containing the list of synthetic cash activities.
    */
   public async getCashOrders({
     cashDetails,
+    filters = [],
     userCurrency,
     userId
   }: {
     cashDetails: CashDetails;
+    filters?: Filter[];
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
+    const filtersByAssetClass = filters.filter(({ type }) => {
+      return type === 'ASSET_CLASS';
+    });
+
+    if (
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.find(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      })
+    ) {
+      // If asset class filters are present and none of them is liquidity, return an empty response
+      return {
+        activities: [],
+        count: 0
+      };
+    }
+
     const activities: Activity[] = [];
 
     for (const account of cashDetails.accounts) {
@@ -755,6 +775,7 @@ export class OrderService {
 
     const cashOrders = await this.getCashOrders({
       cashDetails,
+      filters,
       userCurrency,
       userId
     });
