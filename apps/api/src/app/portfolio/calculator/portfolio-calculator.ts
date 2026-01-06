@@ -605,9 +605,7 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        netWorth: totalCurrentValueWithCurrencyEffect
-          .plus(totalAccountBalanceWithCurrencyEffect)
-          .toNumber(),
+        netWorth: totalCurrentValueWithCurrencyEffect.toNumber(),
         totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:
