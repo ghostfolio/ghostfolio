@@ -386,8 +386,11 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.tabs-overrides(
     (
+      active-focus-indicator-color: var(--gf-theme-primary-500),
       active-focus-label-text-color: var(--gf-theme-primary-500),
+      active-hover-indicator-color: var(--gf-theme-primary-500),
       active-hover-label-text-color: var(--gf-theme-primary-500),
+      active-indicator-color: var(--gf-theme-primary-500),
       active-label-text-color: var(--gf-theme-primary-500),
       active-ripple-color: var(--gf-theme-primary-500),
       inactive-ripple-color: var(--gf-theme-primary-500)
