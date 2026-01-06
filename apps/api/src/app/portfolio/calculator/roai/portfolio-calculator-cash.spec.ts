@@ -201,7 +201,14 @@ describe('PortfolioCalculator', () => {
         values: []
       });
 
+      const accountBalanceItems =
+        await accountBalanceService.getAccountBalanceItems({
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        accountBalanceItems,
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
@@ -228,6 +235,7 @@ describe('PortfolioCalculator', () => {
 
       /**
        * Investment value with currency effect: 1000 USD * 0.85 = 850 CHF
+       * Total account balance: 1000 USD * 0.85 = 850 CHF (using the exchange rate on 2023-12-31)
        * Total investment: 1000 USD * 0.91 = 910 CHF
        * Value (current): 1000 USD * 0.91 = 910 CHF
        * Value with currency effect: 1000 USD * 0.85 = 850 CHF
@@ -240,7 +248,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 0,
         netWorth: 850,
-        totalAccountBalance: 0,
+        totalAccountBalance: 850,
         totalInvestment: 910,
         totalInvestmentValueWithCurrencyEffect: 850,
         value: 910,
@@ -249,6 +257,7 @@ describe('PortfolioCalculator', () => {
 
       /**
        * Net performance with currency effect: (1000 * 0.86) - (1000 * 0.85) = 10 CHF
+       * Total account balance: 1000 USD * 0.85 = 850 CHF (using the exchange rate on 2023-12-31)
        * Total investment: 1000 USD * 0.91 = 910 CHF
        * Total investment value with currency effect: 1000 USD * 0.85 = 850 CHF
        * Value (current): 1000 USD * 0.91 = 910 CHF
@@ -262,7 +271,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.011764705882352941,
         netPerformanceWithCurrencyEffect: 10,
         netWorth: 860,
-        totalAccountBalance: 0,
+        totalAccountBalance: 850,
         totalInvestment: 910,
         totalInvestmentValueWithCurrencyEffect: 850,
         value: 910,
@@ -273,6 +282,7 @@ describe('PortfolioCalculator', () => {
        * Investment value with currency effect: 1000 USD * 0.90 = 900 CHF
        * Net performance: (1000 USD * 1.0) - (1000 USD * 1.0) = 0 CHF
        * Net performance with currency effect: (1000 USD * 0.9) - (1000 USD * 0.85) = 50 CHF
+       * Total account balance: 2000 USD * 0.85 = 1700 CHF (using the exchange rate on 2024-12-31)
        * Total investment: 2000 USD * 0.91 = 1820 CHF
        * Total investment value with currency effect: (1000 USD * 0.85) + (1000 USD * 0.90) = 1750 CHF
        * Value (current): 2000 USD * 0.91 = 1820 CHF
@@ -286,7 +296,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.058823529411764705,
         netPerformanceWithCurrencyEffect: 50,
         netWorth: 1800,
-        totalAccountBalance: 0,
+        totalAccountBalance: 1800,
         totalInvestment: 1820,
         totalInvestmentValueWithCurrencyEffect: 1750,
         value: 1820,
