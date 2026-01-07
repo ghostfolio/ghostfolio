@@ -1934,7 +1934,8 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth = currentValueInBaseCurrency
+    const netWorth = new Big(balanceInBaseCurrency)
+      .plus(currentValueInBaseCurrency)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
       .toNumber();
