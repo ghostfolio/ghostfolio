@@ -277,6 +277,15 @@ export class PortfolioService {
       });
     }
 
+    accounts = [...accounts].sort((a, b) => {
+      const nameA = (a.name || '').trim().toLowerCase();
+      const nameB = (b.name || '').trim().toLowerCase();
+      return nameA.localeCompare(nameB, undefined, {
+        numeric: true,
+        sensitivity: 'base'
+      });
+    });
+
     let totalBalanceInBaseCurrency = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
     let totalInterestInBaseCurrency = new Big(0);
