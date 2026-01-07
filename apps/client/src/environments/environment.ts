@@ -6,8 +6,7 @@ import type { GfEnvironment } from '@ghostfolio/ui/environment';
 
 export const environment: GfEnvironment = {
   lastPublish: null,
-  production: false,
-  stripePublicKey: ''
+  production: false
 };
 
 /*
