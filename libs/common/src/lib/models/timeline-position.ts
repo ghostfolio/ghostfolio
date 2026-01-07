@@ -50,6 +50,7 @@ export class TimelinePosition {
   @Type(() => Big)
   grossPerformanceWithCurrencyEffect: Big;
 
+  includeInHoldings?: boolean;
   includeInTotalAssetValue?: boolean;
 
   @Transform(transformToBig, { toClassOnly: true })
