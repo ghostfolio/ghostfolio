@@ -302,7 +302,9 @@ export abstract class PortfolioCalculator {
     const errors: ResponseError['errors'] = [];
     let hasAnySymbolMetricsErrors = false;
 
-    const positions: TimelinePosition[] = [];
+    const positions: (TimelinePosition & {
+      includeInHoldings: boolean;
+    })[] = [];
 
     const accumulatedValuesByDate: {
       [date: string]: {
