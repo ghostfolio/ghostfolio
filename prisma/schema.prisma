@@ -324,6 +324,7 @@ enum DataSource {
   MANUAL
   RAPID_API
   YAHOO
+  MOEX
 }
 
 enum MarketDataState {
