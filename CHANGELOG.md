@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the admin service to `@ghostfolio/ui/services`
 - Moved the data service to `@ghostfolio/ui/services`
 - Refactored the dividend import
+- Refreshed the cryptocurrencies list
 
 ### Fixed
 
