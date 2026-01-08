@@ -567,6 +567,7 @@ export class PortfolioService {
     }
 
     for (const {
+      averagePrice,
       currency,
       dividend,
       firstBuyDate,
@@ -622,6 +623,7 @@ export class PortfolioService {
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
         assetClass: assetProfile.assetClass,
         assetSubClass: assetProfile.assetSubClass,
+        averagePrice: averagePrice?.toNumber(),
         countries: assetProfile.countries,
         dataSource: assetProfile.dataSource,
         dateOfFirstActivity: parseDate(firstBuyDate),
