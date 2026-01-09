@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the data service to `@ghostfolio/ui/services`
 - Refactored the dividend import
 - Refreshed the cryptocurrencies list
+- Upgraded `prisma` from version `6.19.0` to `7.2.0`
 
 ### Fixed
 
