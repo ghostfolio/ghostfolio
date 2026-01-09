@@ -51,7 +51,8 @@ export class GfProductPageComponent implements OnInit {
         'Nederlands',
         'Português',
         'Türkçe',
-        '简体中文'
+        '简体中文',
+        '한국어'
       ],
       name: 'Ghostfolio',
       origin: $localize`Switzerland`,

@@ -89,6 +89,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
     'es',
     'fr',
     'it',
+    'ko',
     'nl',
     'pl',
     'pt',
