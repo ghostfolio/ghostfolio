@@ -13,7 +13,14 @@
 }
 
 <div class="overflow-x-auto">
-  <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    [dataSource]="dataSource"
+  >
     <ng-container matColumnDef="status">
       <th
         *matHeaderCellDef
@@ -199,7 +206,7 @@
     <ng-container matColumnDef="valueInBaseCurrency">
       <th
         *matHeaderCellDef
-        class="d-lg-none d-xl-none px-1 text-right"
+        class="d-lg-none d-xl-none justify-content-end px-1"
         mat-header-cell
         mat-sort-header
       >
