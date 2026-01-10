@@ -50,7 +50,8 @@ export class PortfolioSnapshotProcessor {
         await this.orderService.getOrdersForPortfolioCalculator({
           filters: job.data.filters,
           userCurrency: job.data.userCurrency,
-          userId: job.data.userId
+          userId: job.data.userId,
+          withCash: true
         });
 
       const accountBalanceItems =
