@@ -14,10 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the admin service to `@ghostfolio/ui/services`
 - Moved the data service to `@ghostfolio/ui/services`
 - Refactored the dividend import
+- Refreshed the cryptocurrencies list
 
 ### Fixed
 
 - Fixed the filtering by asset class in the endpoint `GET api/v1/portfolio/holdings`
+- Fixed the case-insensitive sorting in the accounts table component
 
 ## 2.228.0 - 2026-01-03
 
