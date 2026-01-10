@@ -9,7 +9,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 
 import { Logger, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import type { StrategyOptions } from 'passport-openidconnect';
 
 import { ApiKeyStrategy } from './api-key.strategy';
@@ -17,6 +17,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { OidcStateStore } from './oidc-state.store';
 import { OidcStrategy } from './oidc.strategy';
 
 @Module({
@@ -39,11 +40,14 @@ import { OidcStrategy } from './oidc.strategy';
     AuthService,
     GoogleStrategy,
     JwtStrategy,
+    OidcStateStore,
     {
-      inject: [AuthService, ConfigurationService],
+      inject: [AuthService, JwtService, OidcStateStore, ConfigurationService],
       provide: OidcStrategy,
       useFactory: async (
         authService: AuthService,
+        jwtService: JwtService,
+        stateStore: OidcStateStore,
         configurationService: ConfigurationService
       ) => {
         const isOidcEnabled = configurationService.get(
@@ -74,12 +78,10 @@ import { OidcStrategy } from './oidc.strategy';
         let userInfoURL: string;
 
         if (manualAuthorizationUrl && manualTokenUrl && manualUserInfoUrl) {
-          // Use manual URLs
           authorizationURL = manualAuthorizationUrl;
           tokenURL = manualTokenUrl;
           userInfoURL = manualUserInfoUrl;
         } else {
-          // Fetch OIDC configuration from discovery endpoint
           try {
             const response = await fetch(
               `${issuer}/.well-known/openid-configuration`
@@ -91,7 +93,6 @@ import { OidcStrategy } from './oidc.strategy';
               userinfo_endpoint: string;
             };
 
-            // Manual URLs take priority over discovered ones
             authorizationURL =
               manualAuthorizationUrl || config.authorization_endpoint;
             tokenURL = manualTokenUrl || config.token_endpoint;
@@ -113,7 +114,7 @@ import { OidcStrategy } from './oidc.strategy';
           clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
         };
 
-        return new OidcStrategy(authService, options);
+        return new OidcStrategy(authService, jwtService, stateStore, options);
       }
     },
     WebAuthService
