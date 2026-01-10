@@ -1,109 +1,427 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
 
-@use './variables.scss' as variables;
+$dark-primary-text: rgba(black, 0.87);
+$light-primary-text: white;
 
-$gf-primary: (
-  50: var(--gf-theme-primary-50),
-  100: var(--gf-theme-primary-100),
-  200: var(--gf-theme-primary-200),
-  300: var(--gf-theme-primary-300),
-  400: var(--gf-theme-primary-400),
-  500: var(--gf-theme-primary-500),
-  600: var(--gf-theme-primary-600),
-  700: var(--gf-theme-primary-700),
-  800: var(--gf-theme-primary-800),
-  900: var(--gf-theme-primary-900),
-  A100: var(--gf-theme-primary-A100),
-  A200: var(--gf-theme-primary-A200),
-  A400: var(--gf-theme-primary-A400),
-  A700: var(--gf-theme-primary-A700),
-  contrast: (
-    50: variables.$dark-primary-text,
-    100: variables.$dark-primary-text,
-    200: variables.$dark-primary-text,
-    300: variables.$light-primary-text,
-    400: variables.$light-primary-text,
-    500: variables.$light-primary-text,
-    600: variables.$light-primary-text,
-    700: variables.$light-primary-text,
-    800: variables.$light-primary-text,
-    900: variables.$light-primary-text,
-    A100: variables.$dark-primary-text,
-    A200: variables.$light-primary-text,
-    A400: variables.$light-primary-text,
-    A700: variables.$light-primary-text
+$_palettes: (
+  primary: (
+    0: #000000,
+    10: #00201f,
+    20: #003736,
+    25: #004342,
+    30: #00504e,
+    35: #005d5b,
+    40: #006a68,
+    50: #008583,
+    60: #00a19f,
+    70: #11bebc,
+    80: #47dbd7,
+    90: #6bf7f4,
+    95: #affffc,
+    98: #e3fffd,
+    99: #f2fffe,
+    100: #ffffff
+  ),
+  secondary: (
+    0: #000000,
+    10: #001d36,
+    20: #003258,
+    25: #003d6a,
+    30: #00497c,
+    35: #00558f,
+    40: #0061a3,
+    50: #267bc3,
+    60: #4895df,
+    70: #66b0fb,
+    80: #9ecaff,
+    90: #d1e4ff,
+    95: #e9f1ff,
+    98: #f8f9ff,
+    99: #fdfcff,
+    100: #ffffff
+  ),
+  tertiary: (
+    0: #000000,
+    10: #031d35,
+    20: #1b324b,
+    25: #273d57,
+    30: #324863,
+    35: #3e546f,
+    40: #4a607b,
+    50: #637995,
+    60: #7c92b0,
+    70: #97adcc,
+    80: #b2c8e8,
+    90: #d2e4ff,
+    95: #eaf1ff,
+    98: #f8f9ff,
+    99: #fdfcff,
+    100: #ffffff
+  ),
+  neutral: (
+    0: #000000,
+    10: #191c1c,
+    20: #2d3131,
+    25: #383c3c,
+    30: #444747,
+    35: #4f5353,
+    40: #5b5f5e,
+    50: #747877,
+    60: #8e9191,
+    70: #a9acab,
+    80: #c4c7c6,
+    90: #e0e3e2,
+    95: #eff1f0,
+    98: #f7faf9,
+    99: #fafdfc,
+    100: #ffffff,
+    4: #0b0f0f,
+    6: #101414,
+    12: #1d2020,
+    17: #272b2a,
+    22: #323535,
+    24: #363a39,
+    87: #d8dada,
+    92: #e6e9e8,
+    94: #eceeed,
+    96: #f2f4f3
+  ),
+  neutral-variant: (
+    0: #000000,
+    10: #141d1d,
+    20: #293232,
+    25: #343d3d,
+    30: #3f4948,
+    35: #4a5454,
+    40: #566060,
+    50: #6f7978,
+    60: #889392,
+    70: #a3adac,
+    80: #bec9c7,
+    90: #dae5e3,
+    95: #e8f3f2,
+    98: #f1fbfa,
+    99: #f4fefd,
+    100: #ffffff
+  ),
+  error: (
+    0: #000000,
+    10: #410002,
+    20: #690005,
+    25: #7e0007,
+    30: #93000a,
+    35: #a80710,
+    40: #ba1a1a,
+    50: #de3730,
+    60: #ff5449,
+    70: #ff897d,
+    80: #ffb4ab,
+    90: #ffdad6,
+    95: #ffedea,
+    98: #fff8f7,
+    99: #fffbff,
+    100: #ffffff
   )
 );
 
-$gf-secondary: (
-  50: var(--gf-theme-secondary-50),
-  100: var(--gf-theme-secondary-100),
-  200: var(--gf-theme-secondary-200),
-  300: var(--gf-theme-secondary-300),
-  400: var(--gf-theme-secondary-400),
-  500: var(--gf-theme-secondary-500),
-  600: var(--gf-theme-secondary-600),
-  700: var(--gf-theme-secondary-700),
-  800: var(--gf-theme-secondary-800),
-  900: var(--gf-theme-secondary-900),
-  A100: var(--gf-theme-secondary-A100),
-  A200: var(--gf-theme-secondary-A200),
-  A400: var(--gf-theme-secondary-A400),
-  A700: var(--gf-theme-secondary-A700),
-  contrast: (
-    50: variables.$dark-primary-text,
-    100: variables.$dark-primary-text,
-    200: variables.$dark-primary-text,
-    300: variables.$light-primary-text,
-    400: variables.$light-primary-text,
-    500: variables.$light-primary-text,
-    600: variables.$light-primary-text,
-    700: variables.$light-primary-text,
-    800: variables.$light-primary-text,
-    900: variables.$light-primary-text,
-    A100: variables.$dark-primary-text,
-    A200: variables.$light-primary-text,
-    A400: variables.$light-primary-text,
-    A700: variables.$light-primary-text
-  )
+$_rest: (
+  secondary: map.get($_palettes, secondary),
+  neutral: map.get($_palettes, neutral),
+  neutral-variant: map.get($_palettes, neutral-variant),
+  error: map.get($_palettes, error)
 );
+$_primary: map.merge(map.get($_palettes, primary), $_rest);
+$_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
-$gf-typography: mat.m2-define-typography-config();
-
-// Create default theme
-$gf-theme-default: mat.m2-define-light-theme(
-  (
-    color: (
-      accent: mat.m2-define-palette($gf-secondary, 500, 900, A100),
-      primary: mat.m2-define-palette($gf-primary)
-    ),
-    density: -3,
-    typography: $gf-typography
-  )
-);
-
-@include mat.all-component-themes($gf-theme-default);
-
-// Create dark theme
-$gf-theme-dark: mat.m2-define-dark-theme(
-  (
-    color: (
-      accent: mat.m2-define-palette($gf-secondary, 500, 900, A100),
-      primary: mat.m2-define-palette($gf-primary)
-    ),
-    density: -3,
-    typography: $gf-typography
-  )
-);
-
-.theme-dark {
-  @include mat.all-component-colors($gf-theme-dark);
-}
-
+@include mat.app-background();
 @include mat.button-density(0);
 @include mat.elevation-classes();
-@include mat.app-background();
 @include mat.table-density(-1);
+
+// $gf-typography: mat.m2-define-typography-config();
+
+.theme-light {
+  $gf-theme-default: mat.define-theme(
+    (
+      color: (
+        primary: $_primary,
+        theme-type: light,
+        tertiary: $_tertiary
+      ),
+      density: (
+        scale: -3
+      ),
+      // typography: $gf-typography
+    )
+  );
+
+  @include mat.all-component-themes($gf-theme-default);
+
+  @include mat.autocomplete-overrides(
+    (
+      background-color: var(--light-background)
+    )
+  );
+
+  @include mat.button-overrides(
+    (
+      outlined-label-text-color: var(--dark-primary-text),
+      text-label-text-color: var(--dark-primary-text)
+    )
+  );
+
+  @include mat.button-toggle-overrides(
+    (
+      selected-state-background-color: rgba(var(--dark-dividers)),
+      selected-state-text-color: var(--dark-primary-text)
+    )
+  );
+
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--light-background),
+      outlined-outline-color: rgba(var(--dark-dividers)),
+      title-text-line-height: 1.2
+    )
+  );
+
+  @include mat.datepicker-overrides(
+    (
+      calendar-container-background-color: var(--light-background)
+    )
+  );
+
+  @include mat.dialog-overrides(
+    (
+      container-color: var(--light-background)
+    )
+  );
+
+  @include mat.menu-overrides(
+    (
+      container-color: var(--light-background)
+    )
+  );
+
+  @include mat.select-overrides(
+    (
+      panel-background-color: var(--light-background)
+    )
+  );
+
+  @include mat.slide-toggle-overrides(
+    (
+      selected-track-outline-color: rgba(var(--dark-dividers)),
+      track-outline-color: rgba(var(--dark-dividers))
+    )
+  );
+
+  @include mat.table-overrides(
+    (
+      row-item-outline-color: rgba(var(--dark-dividers))
+    )
+  );
+}
+
+.theme-dark {
+  $gf-theme-dark: mat.define-theme(
+    (
+      color: (
+        primary: $_primary,
+        theme-type: dark,
+        tertiary: $_tertiary
+      ),
+      density: (
+        scale: -3
+      ),
+      // typography: $gf-typography
+    )
+  );
+
+  @include mat.all-component-themes($gf-theme-dark);
+
+  @include mat.button-overrides(
+    (
+      outlined-label-text-color: var(--light-primary-text),
+      text-label-text-color: var(--light-primary-text)
+    )
+  );
+
+  @include mat.button-toggle-overrides(
+    (
+      selected-state-background-color: rgba(var(--light-dividers)),
+      selected-state-text-color: var(--light-primary-text)
+    )
+  );
+
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--dark-background),
+      outlined-outline-color: rgba(var(--light-dividers)),
+      title-text-line-height: 1.2
+    )
+  );
+
+  @include mat.slide-toggle-overrides(
+    (
+      selected-track-outline-color: rgba(var(--light-dividers)),
+      track-outline-color: rgba(var(--light-dividers))
+    )
+  );
+
+  @include mat.table-overrides(
+    (
+      row-item-outline-color: rgba(var(--light-dividers))
+    )
+  );
+}
+
+.theme-dark,
+.theme-light {
+  @media (max-width: 575.98px) {
+    @include mat.dialog-overrides(
+      (
+        container-shape: 4px
+      )
+    );
+
+    .page.has-tabs {
+      @include mat.tabs-overrides(
+        (
+          container-height: 3rem
+        )
+      );
+    }
+  }
+
+  @media (min-width: 576px) {
+    .page.has-tabs {
+      @include mat.tabs-overrides(
+        (
+          container-height: 2rem
+        )
+      );
+    }
+  }
+
+  @include mat.button-overrides(
+    (
+      filled-container-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.checkbox-overrides(
+    (
+      selected-icon-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.datepicker-overrides(
+    (
+      calendar-container-elevation-shadow: var(
+          --mat-select-container-elevation-shadow
+        ),
+      calendar-date-selected-state-background-color: var(--gf-theme-primary-500),
+      calendar-date-today-selected-state-outline-color: var(
+          --gf-theme-primary-500
+        )
+    )
+  );
+
+  @include mat.dialog-overrides(
+    (
+      container-max-width: 80vw,
+      container-small-max-width: 96vw
+    )
+  );
+
+  @include mat.fab-overrides(
+    (
+      container-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-focus-label-text-color: var(--gf-theme-primary-500),
+      outlined-focus-outline-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.slide-toggle-overrides(
+    (
+      selected-focus-handle-color: var(--gf-theme-primary-500),
+      selected-focus-track-color: transparent,
+      selected-handle-color: var(--gf-theme-primary-500),
+      selected-hover-handle-color: var(--gf-theme-primary-500),
+      selected-hover-track-color: transparent,
+      selected-pressed-handle-color: var(--gf-theme-primary-500),
+      selected-pressed-track-color: transparent,
+      selected-track-color: transparent,
+      unselected-hover-track-color: transparent,
+      unselected-track-color: transparent
+    )
+  );
+
+  @include mat.slider-overrides(
+    (
+      active-track-color: var(--gf-theme-primary-500),
+      focus-handle-color: var(--gf-theme-primary-500),
+      handle-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.stepper-overrides(
+    (
+      header-selected-state-icon-background-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  @include mat.tabs-overrides(
+    (
+      active-focus-label-text-color: var(--gf-theme-primary-500),
+      active-hover-label-text-color: var(--gf-theme-primary-500),
+      active-label-text-color: var(--gf-theme-primary-500),
+      active-ripple-color: var(--gf-theme-primary-500),
+      inactive-ripple-color: var(--gf-theme-primary-500)
+    )
+  );
+
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        filled-container-color: var(--gf-theme-secondary-500),
+        outlined-label-text-color: var(--gf-theme-secondary-500)
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        filled-container-color: #f44336,
+        filled-label-text-color: white,
+        outlined-label-text-color: #f44336
+      )
+    );
+  }
+
+  .page.has-tabs {
+    @include mat.tabs-overrides(
+      (
+        active-indicator-height: 0,
+        label-text-tracking: normal
+      )
+    );
+  }
+}
 
 :root {
   --gf-theme-alpha-hover: 0.04;

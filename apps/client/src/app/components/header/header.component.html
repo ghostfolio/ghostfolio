@@ -2,7 +2,7 @@
   @if (user) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
-        class="align-items-center justify-content-start rounded-0"
+        class="align-items-center h-100 justify-content-start rounded-0"
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
@@ -15,9 +15,9 @@
     <ul class="align-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold':
               currentRoute === internalRoutes.home.path ||
@@ -32,9 +32,9 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
             'text-decoration-underline':
@@ -46,9 +46,9 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === internalRoutes.accounts.path,
             'text-decoration-underline':
@@ -61,9 +61,9 @@
       @if (hasPermissionToAccessAdminControl) {
         <li class="list-inline-item">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block rounded"
             i18n
-            mat-flat-button
+            mat-button
             [ngClass]="{
               'font-weight-bold':
                 currentRoute === internalRoutes.adminControl.path,
@@ -77,9 +77,9 @@
       }
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeResources,
             'text-decoration-underline': currentRoute === routeResources
@@ -93,8 +93,8 @@
       ) {
         <li class="list-inline-item">
           <a
-            class="d-none d-sm-block"
-            mat-flat-button
+            class="d-none d-sm-block rounded"
+            mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
@@ -112,9 +112,9 @@
       }
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeAbout,
             'text-decoration-underline': currentRoute === routeAbout
@@ -164,7 +164,7 @@
       <li class="list-inline-item">
         <button
           class="no-min-width px-1"
-          mat-flat-button
+          mat-button
           [matMenuTriggerFor]="accountMenu"
           (menuClosed)="onMenuClosed()"
           (menuOpened)="onMenuOpened()"
@@ -334,7 +334,7 @@
   @if (user === null) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
-        class="align-items-center justify-content-start rounded-0"
+        class="align-items-center h-100 justify-content-start rounded-0"
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
@@ -350,9 +350,9 @@
     <ul class="align-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeFeatures,
             'text-decoration-underline': currentRoute === routeFeatures
@@ -363,9 +363,9 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block"
+          class="d-none d-sm-block rounded"
           i18n
-          mat-flat-button
+          mat-button
           [ngClass]="{
             'font-weight-bold': currentRoute === routeAbout,
             'text-decoration-underline': currentRoute === routeAbout
@@ -377,8 +377,8 @@
       @if (hasPermissionForSubscription) {
         <li class="list-inline-item">
           <a
-            class="d-sm-block"
-            mat-flat-button
+            class="d-sm-block rounded"
+            mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
@@ -397,9 +397,9 @@
       @if (hasPermissionToAccessFearAndGreedIndex) {
         <li class="list-inline-item">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block rounded"
             i18n
-            mat-flat-button
+            mat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routeMarkets,
               'text-decoration-underline': currentRoute === routeMarkets
@@ -413,19 +413,23 @@
         <a
           class="d-none d-sm-block no-min-width p-1"
           href="https://github.com/ghostfolio/ghostfolio"
-          mat-flat-button
+          mat-button
           ><ion-icon name="logo-github"
         /></a>
       </li>
       <li class="list-inline-item">
-        <button class="d-sm-block" mat-flat-button (click)="openLoginDialog()">
+        <button
+          class="d-sm-block rounded"
+          mat-button
+          (click)="openLoginDialog()"
+        >
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
       @if (currentRoute !== 'register' && hasPermissionToCreateUser) {
         <li class="list-inline-item ml-1">
           <a
-            class="d-none d-sm-block"
+            class="d-none d-sm-block px-3 rounded"
             color="primary"
             i18n
             mat-flat-button
