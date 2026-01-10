@@ -13,7 +13,14 @@
 }
 
 <div class="overflow-x-auto">
-  <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    [dataSource]="dataSource"
+  >
     <ng-container matColumnDef="status">
       <th
         *matHeaderCellDef

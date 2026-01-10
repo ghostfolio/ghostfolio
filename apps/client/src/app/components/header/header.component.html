@@ -124,15 +124,15 @@
         >
       </li>
       @if (hasPermissionToAccessAssistant) {
-        <li class="list-inline-item">
+        <li class="d-inline-flex list-inline-item">
           <button
             #assistantTrigger="matMenuTrigger"
             class="h-100 no-min-width px-2"
-            mat-button
-            matBadge="✓"
+            matBadge="&NoBreak;"
             matBadgeSize="small"
-            [mat-menu-trigger-for]="assistantMenu"
+            matButton
             [matBadgeHidden]="!hasFilters || !hasPermissionToChangeFilters"
+            [matMenuTriggerFor]="assistantMenu"
             [matMenuTriggerRestoreFocus]="false"
             (menuOpened)="onOpenAssistant()"
           >

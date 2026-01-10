@@ -305,6 +305,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     }
   }
 
+  @include mat.badge-overrides(
+    (
+      background-color: var(--gf-theme-primary-500)
+    )
+  );
+
   @include mat.button-overrides(
     (
       filled-container-color: var(--gf-theme-primary-500)
