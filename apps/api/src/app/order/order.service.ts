@@ -329,19 +329,39 @@ export class OrderService {
    * performance tracking based on exchange rate fluctuations.
    *
    * @param cashDetails - The cash balance details.
+   * @param filters - Optional filters to apply.
    * @param userCurrency - The base currency of the user.
    * @param userId - The ID of the user.
    * @returns A response containing the list of synthetic cash activities.
    */
   public async getCashOrders({
     cashDetails,
+    filters = [],
     userCurrency,
     userId
   }: {
     cashDetails: CashDetails;
+    filters?: Filter[];
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
+    const filtersByAssetClass = filters.filter(({ type }) => {
+      return type === 'ASSET_CLASS';
+    });
+
+    if (
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.find(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      })
+    ) {
+      // If asset class filters are present and none of them is liquidity, return an empty response
+      return {
+        activities: [],
+        count: 0
+      };
+    }
+
     const activities: Activity[] = [];
 
     for (const account of cashDetails.accounts) {
@@ -723,46 +743,50 @@ export class OrderService {
 
   /**
    * Retrieves all orders required for the portfolio calculator, including both standard asset orders
-   * and synthetic orders representing cash activities.
-   *
-   * @param filters - Optional filters to apply to the orders.
-   * @param userCurrency - The base currency of the user.
-   * @param userId - The ID of the user.
-   * @returns An object containing the combined list of activities and the total count.
+   * and optional synthetic orders representing cash activities.
    */
   @LogPerformance
   public async getOrdersForPortfolioCalculator({
     filters,
     userCurrency,
-    userId
+    userId,
+    withCash = false
   }: {
+    /** Optional filters to apply to the orders. */
     filters?: Filter[];
+    /** The base currency of the user. */
     userCurrency: string;
+    /** The ID of the user. */
     userId: string;
+    /** Whether to include cash activities in the result. */
+    withCash?: boolean;
   }) {
-    const nonCashOrders = await this.getOrders({
+    const orders = await this.getOrders({
       filters,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
     });
 
-    const cashDetails = await this.accountService.getCashDetails({
-      filters,
-      userId,
-      currency: userCurrency
-    });
+    if (withCash) {
+      const cashDetails = await this.accountService.getCashDetails({
+        filters,
+        userId,
+        currency: userCurrency
+      });
 
-    const cashOrders = await this.getCashOrders({
-      cashDetails,
-      userCurrency,
-      userId
-    });
+      const cashOrders = await this.getCashOrders({
+        cashDetails,
+        filters,
+        userCurrency,
+        userId
+      });
 
-    return {
-      activities: [...nonCashOrders.activities, ...cashOrders.activities],
-      count: nonCashOrders.count + cashOrders.count
-    };
+      orders.activities.push(...cashOrders.activities);
+      orders.count += cashOrders.count;
+    }
+
+    return orders;
   }
 
   public async getStatisticsByCurrency(

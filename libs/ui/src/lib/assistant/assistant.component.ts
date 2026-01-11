@@ -1,11 +1,9 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
-import { DataService } from '@ghostfolio/ui/services';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {

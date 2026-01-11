@@ -21,15 +21,14 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import { GF_ENVIRONMENT, GfEnvironment } from '@ghostfolio/ui/environment';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
-
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +36,7 @@ import { environment } from '../../environments/environment';
 export class AdminService {
   public constructor(
     private dataService: DataService,
+    @Inject(GF_ENVIRONMENT) private environment: GfEnvironment,
     private http: HttpClient
   ) {}
 
@@ -124,7 +124,7 @@ export class AdminService {
     });
 
     return this.http.get<DataProviderGhostfolioStatusResponse>(
-      `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+      `${this.environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
       { headers }
     );
   }
@@ -276,7 +276,7 @@ export class AdminService {
     scraperConfiguration,
     symbol
   }: AssetProfileIdentifier & UpdateAssetProfileDto['scraperConfiguration']) {
-    return this.http.post<any>(
+    return this.http.post<{ price: number }>(
       `/api/v1/admin/market-data/${dataSource}/${symbol}/test`,
       {
         scraperConfiguration
