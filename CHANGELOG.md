@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the net worth calculation to prevent the double counting of cash positions
 - Fixed the filtering by asset class in the endpoint `GET api/v1/portfolio/holdings`
 - Fixed the case-insensitive sorting in the accounts table component
 - Fixed the case-insensitive sorting in the benchmark component
