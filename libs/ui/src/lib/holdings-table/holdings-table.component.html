@@ -19,12 +19,7 @@
     </ng-container>
 
     <ng-container matColumnDef="nameWithSymbol">
-      <th
-        *matHeaderCellDef
-        class="px-1"
-        mat-header-cell
-        mat-sort-header="symbol"
-      >
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
