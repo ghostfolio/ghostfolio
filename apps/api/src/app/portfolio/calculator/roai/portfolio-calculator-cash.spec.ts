@@ -14,10 +14,11 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { DataSource } from '@prisma/client';
+import { Big } from 'big.js';
 import { randomUUID } from 'node:crypto';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -190,7 +191,8 @@ describe('PortfolioCalculator', () => {
       const { activities } = await orderService.getOrdersForPortfolioCalculator(
         {
           userCurrency: 'CHF',
-          userId: userDummyData.id
+          userId: userDummyData.id,
+          withCash: true
         }
       );
 
@@ -200,90 +202,88 @@ describe('PortfolioCalculator', () => {
         values: []
       });
 
+      const accountBalanceItems =
+        await accountBalanceService.getAccountBalanceItems({
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        accountBalanceItems,
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
         userId: userDummyData.id
       });
 
-      const { historicalData } = await portfolioCalculator.computeSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const historicalData20231231 = historicalData.find(({ date }) => {
-        return date === '2023-12-31';
-      });
-      const historicalData20240101 = historicalData.find(({ date }) => {
-        return date === '2024-01-01';
-      });
-      const historicalData20241231 = historicalData.find(({ date }) => {
-        return date === '2024-12-31';
+      const position = portfolioSnapshot.positions.find(({ symbol }) => {
+        return symbol === 'USD';
       });
 
       /**
-       * Investment value with currency effect: 1000 USD * 0.85 = 850 CHF
-       * Total investment: 1000 USD * 0.91 = 910 CHF
-       * Value (current): 1000 USD * 0.91 = 910 CHF
-       * Value with currency effect: 1000 USD * 0.85 = 850 CHF
-       */
-      expect(historicalData20231231).toMatchObject({
-        date: '2023-12-31',
-        investmentValueWithCurrencyEffect: 850,
-        netPerformance: 0,
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0,
-        netPerformanceWithCurrencyEffect: 0,
-        netWorth: 850,
-        totalAccountBalance: 0,
-        totalInvestment: 910,
-        totalInvestmentValueWithCurrencyEffect: 850,
-        value: 910,
-        valueWithCurrencyEffect: 850
-      });
-
-      /**
-       * Net performance with currency effect: (1000 * 0.86) - (1000 * 0.85) = 10 CHF
-       * Total investment: 1000 USD * 0.91 = 910 CHF
-       * Total investment value with currency effect: 1000 USD * 0.85 = 850 CHF
-       * Value (current): 1000 USD * 0.91 = 910 CHF
-       * Value with currency effect: 1000 USD * 0.86 = 860 CHF
-       */
-      expect(historicalData20240101).toMatchObject({
-        date: '2024-01-01',
-        investmentValueWithCurrencyEffect: 0,
-        netPerformance: 0,
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0.011764705882352941,
-        netPerformanceWithCurrencyEffect: 10,
-        netWorth: 860,
-        totalAccountBalance: 0,
-        totalInvestment: 910,
-        totalInvestmentValueWithCurrencyEffect: 850,
-        value: 910,
-        valueWithCurrencyEffect: 860
-      });
-
-      /**
-       * Investment value with currency effect: 1000 USD * 0.90 = 900 CHF
+       * Investment: 2000 USD * 0.91 = 1820 CHF
+       * Investment value with currency effect: (1000 USD * 0.85) + (1000 USD * 0.90) = 1750 CHF
        * Net performance: (1000 USD * 1.0) - (1000 USD * 1.0) = 0 CHF
-       * Net performance with currency effect: (1000 USD * 0.9) - (1000 USD * 0.85) = 50 CHF
-       * Total investment: 2000 USD * 0.91 = 1820 CHF
-       * Total investment value with currency effect: (1000 USD * 0.85) + (1000 USD * 0.90) = 1750 CHF
-       * Value (current): 2000 USD * 0.91 = 1820 CHF
-       * Value with currency effect: 2000 USD * 0.9 = 1800 CHF
+       * Total account balance: 2000 USD * 0.85 = 1700 CHF (using the exchange rate on 2024-12-31)
+       * Value in base currency: 2000 USD * 0.91 = 1820 CHF
        */
-      expect(historicalData20241231).toMatchObject<HistoricalDataItem>({
-        date: '2024-12-31',
-        investmentValueWithCurrencyEffect: 900,
-        netPerformance: 0,
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0.058823529411764705,
-        netPerformanceWithCurrencyEffect: 50,
-        netWorth: 1800,
-        totalAccountBalance: 0,
-        totalInvestment: 1820,
-        totalInvestmentValueWithCurrencyEffect: 1750,
-        value: 1820,
-        valueWithCurrencyEffect: 1800
+      expect(position).toMatchObject<TimelinePosition>({
+        averagePrice: new Big(1),
+        currency: 'USD',
+        dataSource: DataSource.YAHOO,
+        dividend: new Big(0),
+        dividendInBaseCurrency: new Big(0),
+        fee: new Big(0),
+        feeInBaseCurrency: new Big(0),
+        firstBuyDate: '2023-12-31',
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0),
+        grossPerformancePercentageWithCurrencyEffect: new Big(
+          '0.08211603004634809014'
+        ),
+        grossPerformanceWithCurrencyEffect: new Big(70),
+        includeInTotalAssetValue: false,
+        investment: new Big(1820),
+        investmentWithCurrencyEffect: new Big(1750),
+        marketPrice: null,
+        marketPriceInBaseCurrency: 0.91,
+        netPerformance: new Big(0),
+        netPerformancePercentage: new Big(0),
+        netPerformancePercentageWithCurrencyEffectMap: {
+          '1d': new Big('0.01111111111111111111'),
+          '1y': new Big('0.06937181021989792704'),
+          '5y': new Big('0.0818817546090273363'),
+          max: new Big('0.0818817546090273363'),
+          mtd: new Big('0.01111111111111111111'),
+          wtd: new Big('-0.05517241379310344828'),
+          ytd: new Big('0.01111111111111111111')
+        },
+        netPerformanceWithCurrencyEffectMap: {
+          '1d': new Big(20),
+          '1y': new Big(60),
+          '5y': new Big(70),
+          max: new Big(70),
+          mtd: new Big(20),
+          wtd: new Big(-80),
+          ytd: new Big(20)
+        },
+        quantity: new Big(2000),
+        symbol: 'USD',
+        timeWeightedInvestment: new Big('912.47956403269754768392'),
+        timeWeightedInvestmentWithCurrencyEffect: new Big(
+          '852.45231607629427792916'
+        ),
+        transactionCount: 2,
+        valueInBaseCurrency: new Big(1820)
+      });
+
+      expect(portfolioSnapshot).toMatchObject({
+        hasErrors: false,
+        totalFeesWithCurrencyEffect: new Big(0),
+        totalInterestWithCurrencyEffect: new Big(0),
+        totalLiabilitiesWithCurrencyEffect: new Big(0)
       });
     });
   });

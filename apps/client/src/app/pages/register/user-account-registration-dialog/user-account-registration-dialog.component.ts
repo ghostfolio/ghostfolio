@@ -1,5 +1,5 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { TextFieldModule } from '@angular/cdk/text-field';

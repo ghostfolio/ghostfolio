@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.229.0 - 2026-01-11
 
 ### Added
 
@@ -13,7 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the active sort column in the accounts table component
 - Deprecated `activities` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+- Moved the admin service to `@ghostfolio/ui/services`
+- Moved the data service to `@ghostfolio/ui/services`
+- Refactored the dividend import
+- Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Fixed the net worth calculation to prevent the double counting of cash positions
+- Fixed the filtering by asset class in the endpoint `GET api/v1/portfolio/holdings`
+- Fixed the case-insensitive sorting in the accounts table component
+- Fixed the case-insensitive sorting in the benchmark component
+- Fixed the case-insensitive sorting in the holdings table component
 
 ## 2.228.0 - 2026-01-03
 

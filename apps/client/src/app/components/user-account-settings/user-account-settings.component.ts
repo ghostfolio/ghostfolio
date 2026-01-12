@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   KEY_STAY_SIGNED_IN,
   KEY_TOKEN,
@@ -13,6 +12,7 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,

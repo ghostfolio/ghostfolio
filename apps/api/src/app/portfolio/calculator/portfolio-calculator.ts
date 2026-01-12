@@ -39,6 +39,7 @@ import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
+import { AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
@@ -389,27 +390,33 @@ export abstract class PortfolioCalculator {
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
 
-      valuesBySymbol[item.symbol] = {
-        currentValues,
-        currentValuesWithCurrencyEffect,
-        investmentValuesAccumulated,
-        investmentValuesAccumulatedWithCurrencyEffect,
-        investmentValuesWithCurrencyEffect,
-        netPerformanceValues,
-        netPerformanceValuesWithCurrencyEffect,
-        timeWeightedInvestmentValues,
-        timeWeightedInvestmentValuesWithCurrencyEffect
-      };
+      const includeInTotalAssetValue =
+        item.assetSubClass !== AssetSubClass.CASH;
+
+      if (includeInTotalAssetValue) {
+        valuesBySymbol[item.symbol] = {
+          currentValues,
+          currentValuesWithCurrencyEffect,
+          investmentValuesAccumulated,
+          investmentValuesAccumulatedWithCurrencyEffect,
+          investmentValuesWithCurrencyEffect,
+          netPerformanceValues,
+          netPerformanceValuesWithCurrencyEffect,
+          timeWeightedInvestmentValues,
+          timeWeightedInvestmentValuesWithCurrencyEffect
+        };
+      }
 
       positions.push({
         feeInBaseCurrency,
+        includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
-        dividend: totalDividend,
-        dividendInBaseCurrency: totalDividendInBaseCurrency,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
+        dividend: totalDividend,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
