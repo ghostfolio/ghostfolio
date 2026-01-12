@@ -107,17 +107,18 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 #### OpenID Connect OIDC (Experimental)
 
-| Name                       | Type                  | Default Value                        | Description                                                                                          |
-| -------------------------- | --------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `ENABLE_FEATURE_AUTH_OIDC` | `boolean` (optional)  | `false`                              | Enables _OpenID Connect_ authentication                                                              |
-| `OIDC_AUTHORIZATION_URL`   | `string` (optional)   |                                      | Manual override for the OIDC authorization endpoint (falls back to the discovery from the issuer)    |
-| `OIDC_CALLBACK_URL`        | `string` (optional)   | `${ROOT_URL}/api/auth/oidc/callback` | The OIDC callback URL                                                                                |
-| `OIDC_CLIENT_ID`           | `string`              |                                      | The OIDC client ID                                                                                   |
-| `OIDC_CLIENT_SECRET`       | `string`              |                                      | The OIDC client secret                                                                               |
-| `OIDC_ISSUER`              | `string`              |                                      | The OIDC issuer URL, used to discover the OIDC configuration via `/.well-known/openid-configuration` |
-| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                         | The OIDC scope to request, e.g. `["email","openid","profile"]`                                       |
-| `OIDC_TOKEN_URL`           | `string` (optional)   |                                      | Manual override for the OIDC token endpoint (falls back to the discovery from the issuer)            |
-| `OIDC_USER_INFO_URL`       | `string` (optional)   |                                      | Manual override for the OIDC user info endpoint (falls back to the discovery from the issuer)        |
+| Name                        | Type                  | Default Value                        | Description                                                                                            |
+| --------------------------- | --------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `ENABLE_FEATURE_AUTH_OIDC`  | `boolean` (optional)  | `false`                              | Enables _OpenID Connect_ authentication                                                                |
+| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                               | Enables auth token login and might be disabled with OIDC authentication enabled                        |
+| `OIDC_AUTHORIZATION_URL`    | `string` (optional)   |                                      | Manual override for the OIDC authorization endpoint (falls back to the discovery from the issuer)      |
+| `OIDC_CALLBACK_URL`         | `string` (optional)   | `${ROOT_URL}/api/auth/oidc/callback` | The OIDC callback URL                                                                                  |
+| `OIDC_CLIENT_ID`            | `string`              |                                      | The OIDC client ID                                                                                     |
+| `OIDC_CLIENT_SECRET`        | `string`              |                                      | The OIDC client secret                                                                                 |
+| `OIDC_ISSUER`               | `string`              |                                      | The OIDC issuer URL, used to discover the OIDC configuration via `/.well-known/openid-configuration`   |
+| `OIDC_SCOPE`                | `string[]` (optional) | `["openid"]`                         | The OIDC scope to request, e.g. `["email","openid","profile"]`                                         |
+| `OIDC_TOKEN_URL`            | `string` (optional)   |                                      | Manual override for the OIDC token endpoint (falls back to the discovery from the issuer)              |
+| `OIDC_USER_INFO_URL`        | `string` (optional)   |                                      | Manual override for the OIDC user info endpoint (falls back to the discovery from the issuer)          |
 
 ### Run with Docker Compose
 
