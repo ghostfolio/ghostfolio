@@ -11,7 +11,20 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { ca, de, es, fr, it, nl, pl, pt, tr, uk, zhCN } from 'date-fns/locale';
+import {
+  ca,
+  de,
+  es,
+  fr,
+  it,
+  ko,
+  nl,
+  pl,
+  pt,
+  tr,
+  uk,
+  zhCN
+} from 'date-fns/locale';
 import { get, isNil, isString } from 'lodash';
 
 import {
@@ -185,6 +198,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return fr;
   } else if (aLanguageCode === 'it') {
     return it;
+  } else if (aLanguageCode === 'ko') {
+    return ko;
   } else if (aLanguageCode === 'nl') {
     return nl;
   } else if (aLanguageCode === 'pl') {
