@@ -1,16 +1,13 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfDialogFooterComponent } from '@ghostfolio/client/components/dialog-footer/dialog-footer.component';
-import { GfDialogHeaderComponent } from '@ghostfolio/client/components/dialog-header/dialog-header.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_5_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  Activity,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,
@@ -22,10 +19,13 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
+import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
+import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -411,10 +411,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
           } else if (SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
-            if (this.quantity < 1) {
-              this.quantityPrecision = 7;
+            if (this.quantity < 10) {
+              this.quantityPrecision = 8;
             } else if (this.quantity < 1000) {
-              this.quantityPrecision = 5;
+              this.quantityPrecision = 6;
             } else if (this.quantity >= 10000000) {
               this.quantityPrecision = 0;
             }

@@ -1,4 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import {
   getLocale,
   getNumberFormatDecimal,
@@ -8,6 +7,7 @@ import {
   PortfolioPerformance,
   ResponseError
 } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';

@@ -28,11 +28,13 @@ export const permissions = {
   deleteTag: 'deleteTag',
   deleteUser: 'deleteUser',
   deleteWatchlistItem: 'deleteWatchlistItem',
+  enableAuthGoogle: 'enableAuthGoogle',
+  enableAuthOidc: 'enableAuthOidc',
+  enableAuthToken: 'enableAuthToken',
   enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
   enableBlog: 'enableBlog',
-  enableSocialLogin: 'enableSocialLogin',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
   enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
@@ -43,6 +45,7 @@ export const permissions = {
   readMarketDataOfMarkets: 'readMarketDataOfMarkets',
   readMarketDataOfOwnAssetProfile: 'readMarketDataOfOwnAssetProfile',
   readPlatforms: 'readPlatforms',
+  readPlatformsWithAccountCount: 'readPlatformsWithAccountCount',
   readTags: 'readTags',
   readWatchlist: 'readWatchlist',
   reportDataGlitch: 'reportDataGlitch',
@@ -91,6 +94,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.readMarketData,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.readPlatforms,
+        permissions.readPlatformsWithAccountCount,
         permissions.readTags,
         permissions.readWatchlist,
         permissions.updateAccount,
@@ -133,6 +137,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
         permissions.readMarketDataOfOwnAssetProfile,
+        permissions.readPlatforms,
         permissions.readWatchlist,
         permissions.updateAccount,
         permissions.updateAccess,
@@ -157,7 +162,8 @@ export function filterGlobalPermissions(
   if (aUtmSource === 'ios') {
     return globalPermissions.filter((permission) => {
       return (
-        permission !== permissions.enableSocialLogin &&
+        permission !== permissions.enableAuthGoogle &&
+        permission !== permissions.enableAuthOidc &&
         permission !== permissions.enableSubscription
       );
     });

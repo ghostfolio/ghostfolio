@@ -1,11 +1,11 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -27,9 +27,8 @@ import {
   informationCircleOutline
 } from 'ionicons/icons';
 import { StringValue } from 'ms';
-import { StripeService } from 'ngx-stripe';
-import { Subject } from 'rxjs';
-import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -52,24 +51,32 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public durationExtension: StringValue;
+  public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
   );
+
   public importAndExportTooltipOSS = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
   );
+
   public importAndExportTooltipPremium = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM'
   );
+
   public isLoggedIn: boolean;
   public label: string;
   public price: number;
   public priceId: string;
+
   public professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
+
   public referralBrokers = [
+    'Alpian',
     'DEGIRO',
     'finpension',
     'frankly',
@@ -79,6 +86,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     'VIAC',
     'Zak'
   ];
+
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
@@ -89,7 +97,6 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private stripeService: StripeService,
     private userService: UserService
   ) {
     addIcons({
@@ -100,11 +107,18 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { baseCurrency, subscriptionOffer } = this.dataService.fetchInfo();
-    this.baseCurrency = baseCurrency;
+    const { baseCurrency, globalPermissions, subscriptionOffer } =
+      this.dataService.fetchInfo();
 
+    this.baseCurrency = baseCurrency;
     this.coupon = subscriptionOffer?.coupon;
     this.durationExtension = subscriptionOffer?.durationExtension;
+
+    this.hasPermissionToCreateUser = hasPermission(
+      globalPermissions,
+      permissions.createUserAccount
+    );
+
     this.label = subscriptionOffer?.label;
     this.price = subscriptionOffer?.price;
 
@@ -139,23 +153,17 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
         priceId: this.priceId
       })
       .pipe(
-        switchMap(({ sessionId }) => {
-          return this.stripeService.redirectToCheckout({ sessionId });
-        }),
-        catchError((error) => {
+        catchError((error: Error) => {
           this.notificationService.alert({
             title: error.message
           });
 
-          throw error;
-        })
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
       )
-      .subscribe((result) => {
-        if (result.error) {
-          this.notificationService.alert({
-            title: result.error.message
-          });
-        }
+      .subscribe(({ sessionUrl }) => {
+        window.location.href = sessionUrl;
       });
   }
 

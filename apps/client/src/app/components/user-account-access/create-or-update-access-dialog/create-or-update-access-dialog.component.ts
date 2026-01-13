@@ -1,8 +1,7 @@
-import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
-import { UpdateAccessDto } from '@ghostfolio/api/app/access/update-access.dto';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import { validateObjectForForm } from '@ghostfolio/common/utils';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,

@@ -260,8 +260,9 @@
                 <p class="m-0">
                   Use Ghostfolio in multiple languages: English,
                   <!-- Català, -->
-                  Chinese, Dutch, French, German, Italian, Polish, Portuguese,
-                  Spanish and Turkish
+                  Chinese, Dutch, French, German, Italian,
+                  <!-- Korean, -->
+                  Polish, Portuguese, Spanish and Turkish
                   <!-- and Ukrainian -->
                   are currently supported.
                 </p>
@@ -309,7 +310,7 @@
       </div>
     </div>
   </div>
-  @if (!user) {
+  @if (hasPermissionToCreateUser && !user) {
     <div class="row">
       <div class="col mt-3 text-center">
         <a

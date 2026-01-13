@@ -8,10 +8,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   HEADER_KEY_TOKEN,
@@ -20,7 +16,9 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioAssetProfileResponse,
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   DividendsResponse,
   HistoricalResponse,
   LookupResponse,
@@ -118,11 +116,14 @@ export class GhostfolioService implements DataProviderInterface {
     } = {};
 
     try {
+      const queryParams = new URLSearchParams({
+        granularity,
+        from: format(from, DATE_FORMAT),
+        to: format(to, DATE_FORMAT)
+      });
+
       const response = await fetch(
-        `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
-          to,
-          DATE_FORMAT
-        )}`,
+        `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
@@ -167,11 +168,14 @@ export class GhostfolioService implements DataProviderInterface {
     [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
+      const queryParams = new URLSearchParams({
+        granularity,
+        from: format(from, DATE_FORMAT),
+        to: format(to, DATE_FORMAT)
+      });
+
       const response = await fetch(
-        `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
-          to,
-          DATE_FORMAT
-        )}`,
+        `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
@@ -237,8 +241,12 @@ export class GhostfolioService implements DataProviderInterface {
     }
 
     try {
+      const queryParams = new URLSearchParams({
+        symbols: symbols.join(',')
+      });
+
       const response = await fetch(
-        `${this.URL}/v2/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
+        `${this.URL}/v2/data-providers/ghostfolio/quotes?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)
@@ -290,8 +298,12 @@ export class GhostfolioService implements DataProviderInterface {
     let searchResult: LookupResponse = { items: [] };
 
     try {
+      const queryParams = new URLSearchParams({
+        query
+      });
+
       const response = await fetch(
-        `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
+        `${this.URL}/v2/data-providers/ghostfolio/lookup?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
           signal: AbortSignal.timeout(requestTimeout)

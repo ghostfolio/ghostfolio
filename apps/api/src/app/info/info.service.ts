@@ -51,6 +51,18 @@ export class InfoService {
 
     const globalPermissions: string[] = [];
 
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_GOOGLE')) {
+      globalPermissions.push(permissions.enableAuthGoogle);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_OIDC')) {
+      globalPermissions.push(permissions.enableAuthOidc);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_AUTH_TOKEN')) {
+      globalPermissions.push(permissions.enableAuthToken);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
@@ -70,10 +82,6 @@ export class InfoService {
       );
     }
 
-    if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
-      globalPermissions.push(permissions.enableSocialLogin);
-    }
-
     if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
       globalPermissions.push(permissions.enableStatistics);
     }
@@ -85,7 +93,6 @@ export class InfoService {
         (await this.propertyService.getByKey<string[]>(
           PROPERTY_COUNTRIES_OF_SUBSCRIBERS
         )) ?? [];
-      info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SYSTEM_MESSAGE')) {

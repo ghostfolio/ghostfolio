@@ -1,6 +1,6 @@
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { LookupItem } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {

@@ -16,9 +16,12 @@ export interface Environment extends CleanedEnvAccessors {
   DATA_SOURCE_IMPORT: string;
   DATA_SOURCES: string[];
   DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: string[];
+  ENABLE_FEATURE_AUTH_GOOGLE: boolean;
+  ENABLE_FEATURE_AUTH_OIDC: boolean;
+  ENABLE_FEATURE_AUTH_TOKEN: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
+  ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: boolean;
   ENABLE_FEATURE_READ_ONLY_MODE: boolean;
-  ENABLE_FEATURE_SOCIAL_LOGIN: boolean;
   ENABLE_FEATURE_STATISTICS: boolean;
   ENABLE_FEATURE_SUBSCRIPTION: boolean;
   ENABLE_FEATURE_SYSTEM_MESSAGE: boolean;
@@ -30,6 +33,14 @@ export interface Environment extends CleanedEnvAccessors {
   JWT_SECRET_KEY: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_CHART_ITEMS: number;
+  OIDC_AUTHORIZATION_URL: string;
+  OIDC_CALLBACK_URL: string;
+  OIDC_CLIENT_ID: string;
+  OIDC_CLIENT_SECRET: string;
+  OIDC_ISSUER: string;
+  OIDC_SCOPE: string[];
+  OIDC_TOKEN_URL: string;
+  OIDC_USER_INFO_URL: string;
   PORT: number;
   PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: number;
   PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY: number;
@@ -41,7 +52,6 @@ export interface Environment extends CleanedEnvAccessors {
   REDIS_PORT: number;
   REQUEST_TIMEOUT: number;
   ROOT_URL: string;
-  STRIPE_PUBLIC_KEY: string;
   STRIPE_SECRET_KEY: string;
   TWITTER_ACCESS_TOKEN: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;

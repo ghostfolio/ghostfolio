@@ -26,6 +26,10 @@
         "baseHref": "/it/",
         "translation": "apps/client/src/locales/messages.it.xlf"
       },
+      "ko": {
+        "baseHref": "/ko/",
+        "translation": "apps/client/src/locales/messages.ko.xlf"
+      },
       "nl": {
         "baseHref": "/nl/",
         "translation": "apps/client/src/locales/messages.nl.xlf"
@@ -75,7 +79,6 @@
         "ngswConfigPath": "apps/client/ngsw-config.json",
         "optimization": false,
         "polyfills": "apps/client/src/polyfills.ts",
-        "scripts": ["node_modules/marked/marked.min.js"],
         "serviceWorker": true,
         "sourceMap": true,
         "styles": [
@@ -110,6 +113,10 @@
         "development-it": {
           "baseHref": "/it/",
           "localize": ["it"]
+        },
+        "development-ko": {
+          "baseHref": "/ko/",
+          "localize": ["ko"]
         },
         "development-nl": {
           "baseHref": "/nl/",
@@ -214,6 +221,9 @@
         "sslKey": "apps/client/localhost.pem"
       },
       "configurations": {
+        "development-ca": {
+          "buildTarget": "client:build:development-ca"
+        },
         "development-de": {
           "buildTarget": "client:build:development-de"
         },
@@ -228,6 +238,9 @@
         },
         "development-it": {
           "buildTarget": "client:build:development-it"
+        },
+        "development-ko": {
+          "buildTarget": "client:build:development-ko"
         },
         "development-nl": {
           "buildTarget": "client:build:development-nl"
@@ -265,6 +278,7 @@
           "messages.es.xlf",
           "messages.fr.xlf",
           "messages.it.xlf",
+          "messages.ko.xlf",
           "messages.nl.xlf",
           "messages.pl.xlf",
           "messages.pt.xlf",

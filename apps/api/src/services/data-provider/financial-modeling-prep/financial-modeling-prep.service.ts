@@ -8,10 +8,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   DEFAULT_CURRENCY,
@@ -19,7 +15,9 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency, parseDate } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
@@ -43,9 +41,16 @@ import {
   isSameDay,
   parseISO
 } from 'date-fns';
+import { uniqBy } from 'lodash';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
+  private static countriesMapping = {
+    'Korea (the Republic of)': 'South Korea',
+    'Russian Federation': 'Russia',
+    'Taiwan (Province of China)': 'Taiwan'
+  };
+
   private apiKey: string;
 
   public constructor(
@@ -81,8 +86,13 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           symbol.length - DEFAULT_CURRENCY.length
         );
       } else if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
+        const queryParams = new URLSearchParams({
+          symbol,
+          apikey: this.apiKey
+        });
+
         const [quote] = await fetch(
-          `${this.getUrl({ version: 'stable' })}/quote?symbol=${symbol}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/quote?${queryParams.toString()}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -95,8 +105,13 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         );
         response.name = quote.name;
       } else {
+        const queryParams = new URLSearchParams({
+          symbol,
+          apikey: this.apiKey
+        });
+
         const [assetProfile] = await fetch(
-          `${this.getUrl({ version: 'stable' })}/profile?symbol=${symbol}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/profile?${queryParams.toString()}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -116,19 +131,31 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           assetSubClass === AssetSubClass.ETF ||
           assetSubClass === AssetSubClass.MUTUALFUND
         ) {
+          const queryParams = new URLSearchParams({
+            symbol,
+            apikey: this.apiKey
+          });
+
           const etfCountryWeightings = await fetch(
-            `${this.getUrl({ version: 'stable' })}/etf/country-weightings?symbol=${symbol}&apikey=${this.apiKey}`,
+            `${this.getUrl({ version: 'stable' })}/etf/country-weightings?${queryParams.toString()}`,
             {
               signal: AbortSignal.timeout(requestTimeout)
             }
           ).then((res) => res.json());
 
-          response.countries = etfCountryWeightings.map(
-            ({ country: countryName, weightPercentage }) => {
+          response.countries = etfCountryWeightings
+            .filter(({ country: countryName }) => {
+              return countryName.toLowerCase() !== 'other';
+            })
+            .map(({ country: countryName, weightPercentage }) => {
               let countryCode: string;
 
               for (const [code, country] of Object.entries(countries)) {
-                if (country.name === countryName) {
+                if (
+                  country.name === countryName ||
+                  country.name ===
+                    FinancialModelingPrepService.countriesMapping[countryName]
+                ) {
                   countryCode = code;
                   break;
                 }
@@ -138,11 +165,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
                 code: countryCode,
                 weight: parseFloat(weightPercentage.slice(0, -1)) / 100
               };
-            }
-          );
+            });
 
           const etfHoldings = await fetch(
-            `${this.getUrl({ version: 'stable' })}/etf/holdings?symbol=${symbol}&apikey=${this.apiKey}`,
+            `${this.getUrl({ version: 'stable' })}/etf/holdings?${queryParams.toString()}`,
             {
               signal: AbortSignal.timeout(requestTimeout)
             }
@@ -161,7 +187,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           );
 
           const [etfInformation] = await fetch(
-            `${this.getUrl({ version: 'stable' })}/etf/info?symbol=${symbol}&apikey=${this.apiKey}`,
+            `${this.getUrl({ version: 'stable' })}/etf/info?${queryParams.toString()}`,
             {
               signal: AbortSignal.timeout(requestTimeout)
             }
@@ -172,7 +198,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
 
           const etfSectorWeightings = await fetch(
-            `${this.getUrl({ version: 'stable' })}/etf/sector-weightings?symbol=${symbol}&apikey=${this.apiKey}`,
+            `${this.getUrl({ version: 'stable' })}/etf/sector-weightings?${queryParams.toString()}`,
             {
               signal: AbortSignal.timeout(requestTimeout)
             }
@@ -244,12 +270,17 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
+      const queryParams = new URLSearchParams({
+        symbol,
+        apikey: this.apiKey
+      });
+
       const response: {
         [date: string]: DataProviderHistoricalResponse;
       } = {};
 
       const dividends = await fetch(
-        `${this.getUrl({ version: 'stable' })}/dividends?symbol=${symbol}&apikey=${this.apiKey}`,
+        `${this.getUrl({ version: 'stable' })}/dividends?${queryParams.toString()}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -309,8 +340,15 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           ? addYears(currentFrom, MAX_YEARS_PER_REQUEST)
           : to;
 
+        const queryParams = new URLSearchParams({
+          symbol,
+          apikey: this.apiKey,
+          from: format(currentFrom, DATE_FORMAT),
+          to: format(currentTo, DATE_FORMAT)
+        });
+
         const historical = await fetch(
-          `${this.getUrl({ version: 'stable' })}/historical-price-eod/full?symbol=${symbol}&apikey=${this.apiKey}&from=${format(currentFrom, DATE_FORMAT)}&to=${format(currentTo, DATE_FORMAT)}`,
+          `${this.getUrl({ version: 'stable' })}/historical-price-eod/full?${queryParams.toString()}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -365,6 +403,11 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         [symbol: string]: Pick<SymbolProfile, 'currency'>;
       } = {};
 
+      const queryParams = new URLSearchParams({
+        symbols: symbols.join(','),
+        apikey: this.apiKey
+      });
+
       const [assetProfileResolutions, quotes] = await Promise.all([
         this.prismaService.assetProfileResolution.findMany({
           where: {
@@ -373,7 +416,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
         }),
         fetch(
-          `${this.getUrl({ version: 'stable' })}/batch-quote-short?symbols=${symbols.join(',')}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/batch-quote-short?${queryParams.toString()}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -465,12 +508,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     const assetProfileBySymbolMap: {
       [symbol: string]: Partial<SymbolProfile>;
     } = {};
+
     let items: LookupItem[] = [];
 
     try {
       if (isISIN(query?.toUpperCase())) {
+        const queryParams = new URLSearchParams({
+          apikey: this.apiKey,
+          isin: query.toUpperCase()
+        });
+
         const result = await fetch(
-          `${this.getUrl({ version: 'stable' })}/search-isin?isin=${query.toUpperCase()}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/search-isin?${queryParams.toString()}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
           }
@@ -496,18 +545,39 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           };
         });
       } else {
-        const result = await fetch(
-          `${this.getUrl({ version: 'stable' })}/search-symbol?query=${query}&apikey=${this.apiKey}`,
-          {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
+        const queryParams = new URLSearchParams({
+          query,
+          apikey: this.apiKey
+        });
+
+        const [nameResults, symbolResults] = await Promise.all([
+          fetch(
+            `${this.getUrl({ version: 'stable' })}/search-name?${queryParams.toString()}`,
+            {
+              signal: AbortSignal.timeout(requestTimeout)
+            }
+          ).then((res) => res.json()),
+          fetch(
+            `${this.getUrl({ version: 'stable' })}/search-symbol?${queryParams.toString()}`,
+            {
+              signal: AbortSignal.timeout(requestTimeout)
+            }
+          ).then((res) => res.json())
+        ]);
+
+        const result = uniqBy(
+          [...nameResults, ...symbolResults],
+          ({ exchange, symbol }) => {
+            return `${exchange}-${symbol}`;
           }
-        ).then((res) => res.json());
+        );
 
         items = result
-          .filter(({ symbol }) => {
-            if (includeIndices === false && symbol.startsWith('^')) {
+          .filter(({ exchange, symbol }) => {
+            if (
+              exchange === 'FOREX' ||
+              (includeIndices === false && symbol.startsWith('^'))
+            ) {
               return false;
             }
 

@@ -1,7 +1,7 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import {
   PortfolioReportRule,
+  RuleSettings,
   UserSettings
 } from '@ghostfolio/common/interfaces';
 

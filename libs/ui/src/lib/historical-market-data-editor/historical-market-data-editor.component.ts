@@ -1,11 +1,11 @@
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {

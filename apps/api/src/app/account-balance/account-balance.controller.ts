@@ -1,6 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -20,7 +21,6 @@ import { AccountBalance } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountBalanceService } from './account-balance.service';
-import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
 @Controller('account-balance')
 export class AccountBalanceController {

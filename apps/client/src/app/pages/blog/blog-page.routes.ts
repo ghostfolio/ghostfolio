@@ -34,117 +34,117 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     path: '2022/01/ghostfolio-first-months-in-open-source',
     loadComponent: () =>
-      import(
-        './2022/01/first-months-in-open-source/first-months-in-open-source-page.component'
-      ).then((c) => c.FirstMonthsInOpenSourcePageComponent),
+      import('./2022/01/first-months-in-open-source/first-months-in-open-source-page.component').then(
+        (c) => c.FirstMonthsInOpenSourcePageComponent
+      ),
     title: 'First months in Open Source'
   },
   {
     canActivate: [AuthGuard],
     path: '2022/07/ghostfolio-meets-internet-identity',
     loadComponent: () =>
-      import(
-        './2022/07/ghostfolio-meets-internet-identity/ghostfolio-meets-internet-identity-page.component'
-      ).then((c) => c.GhostfolioMeetsInternetIdentityPageComponent),
+      import('./2022/07/ghostfolio-meets-internet-identity/ghostfolio-meets-internet-identity-page.component').then(
+        (c) => c.GhostfolioMeetsInternetIdentityPageComponent
+      ),
     title: 'Ghostfolio meets Internet Identity'
   },
   {
     canActivate: [AuthGuard],
     path: '2022/07/how-do-i-get-my-finances-in-order',
     loadComponent: () =>
-      import(
-        './2022/07/how-do-i-get-my-finances-in-order/how-do-i-get-my-finances-in-order-page.component'
-      ).then((c) => c.HowDoIGetMyFinancesInOrderPageComponent),
+      import('./2022/07/how-do-i-get-my-finances-in-order/how-do-i-get-my-finances-in-order-page.component').then(
+        (c) => c.HowDoIGetMyFinancesInOrderPageComponent
+      ),
     title: 'How do I get my finances in order?'
   },
   {
     canActivate: [AuthGuard],
     path: '2022/08/500-stars-on-github',
     loadComponent: () =>
-      import(
-        './2022/08/500-stars-on-github/500-stars-on-github-page.component'
-      ).then((c) => c.FiveHundredStarsOnGitHubPageComponent),
+      import('./2022/08/500-stars-on-github/500-stars-on-github-page.component').then(
+        (c) => c.FiveHundredStarsOnGitHubPageComponent
+      ),
     title: '500 Stars on GitHub'
   },
   {
     canActivate: [AuthGuard],
     path: '2022/10/hacktoberfest-2022',
     loadComponent: () =>
-      import(
-        './2022/10/hacktoberfest-2022/hacktoberfest-2022-page.component'
-      ).then((c) => c.Hacktoberfest2022PageComponent),
+      import('./2022/10/hacktoberfest-2022/hacktoberfest-2022-page.component').then(
+        (c) => c.Hacktoberfest2022PageComponent
+      ),
     title: 'Hacktoberfest 2022'
   },
   {
     canActivate: [AuthGuard],
     path: '2022/11/black-friday-2022',
     loadComponent: () =>
-      import(
-        './2022/11/black-friday-2022/black-friday-2022-page.component'
-      ).then((c) => c.BlackFriday2022PageComponent),
+      import('./2022/11/black-friday-2022/black-friday-2022-page.component').then(
+        (c) => c.BlackFriday2022PageComponent
+      ),
     title: 'Black Friday 2022'
   },
   {
     canActivate: [AuthGuard],
     path: '2022/12/the-importance-of-tracking-your-personal-finances',
     loadComponent: () =>
-      import(
-        './2022/12/the-importance-of-tracking-your-personal-finances/the-importance-of-tracking-your-personal-finances-page.component'
-      ).then((c) => c.TheImportanceOfTrackingYourPersonalFinancesPageComponent),
+      import('./2022/12/the-importance-of-tracking-your-personal-finances/the-importance-of-tracking-your-personal-finances-page.component').then(
+        (c) => c.TheImportanceOfTrackingYourPersonalFinancesPageComponent
+      ),
     title: 'The importance of tracking your personal finances'
   },
   {
     canActivate: [AuthGuard],
     path: '2023/01/ghostfolio-auf-sackgeld-vorgestellt',
     loadComponent: () =>
-      import(
-        './2023/01/ghostfolio-auf-sackgeld-vorgestellt/ghostfolio-auf-sackgeld-vorgestellt-page.component'
-      ).then((c) => c.GhostfolioAufSackgeldVorgestelltPageComponent),
+      import('./2023/01/ghostfolio-auf-sackgeld-vorgestellt/ghostfolio-auf-sackgeld-vorgestellt-page.component').then(
+        (c) => c.GhostfolioAufSackgeldVorgestelltPageComponent
+      ),
     title: 'Ghostfolio auf Sackgeld.com vorgestellt'
   },
   {
     canActivate: [AuthGuard],
     path: '2023/02/ghostfolio-meets-umbrel',
     loadComponent: () =>
-      import(
-        './2023/02/ghostfolio-meets-umbrel/ghostfolio-meets-umbrel-page.component'
-      ).then((c) => c.GhostfolioMeetsUmbrelPageComponent),
+      import('./2023/02/ghostfolio-meets-umbrel/ghostfolio-meets-umbrel-page.component').then(
+        (c) => c.GhostfolioMeetsUmbrelPageComponent
+      ),
     title: 'Ghostfolio meets Umbrel'
   },
   {
     canActivate: [AuthGuard],
     path: '2023/03/ghostfolio-reaches-1000-stars-on-github',
     loadComponent: () =>
-      import(
-        './2023/03/1000-stars-on-github/1000-stars-on-github-page.component'
-      ).then((c) => c.ThousandStarsOnGitHubPageComponent),
+      import('./2023/03/1000-stars-on-github/1000-stars-on-github-page.component').then(
+        (c) => c.ThousandStarsOnGitHubPageComponent
+      ),
     title: 'Ghostfolio reaches 1’000 Stars on GitHub'
   },
   {
     canActivate: [AuthGuard],
     path: '2023/05/unlock-your-financial-potential-with-ghostfolio',
     loadComponent: () =>
-      import(
-        './2023/05/unlock-your-financial-potential-with-ghostfolio/unlock-your-financial-potential-with-ghostfolio-page.component'
-      ).then((c) => c.UnlockYourFinancialPotentialWithGhostfolioPageComponent),
+      import('./2023/05/unlock-your-financial-potential-with-ghostfolio/unlock-your-financial-potential-with-ghostfolio-page.component').then(
+        (c) => c.UnlockYourFinancialPotentialWithGhostfolioPageComponent
+      ),
     title: 'Unlock your Financial Potential with Ghostfolio'
   },
   {
     canActivate: [AuthGuard],
     path: '2023/07/exploring-the-path-to-fire',
     loadComponent: () =>
-      import(
-        './2023/07/exploring-the-path-to-fire/exploring-the-path-to-fire-page.component'
-      ).then((c) => c.ExploringThePathToFirePageComponent),
+      import('./2023/07/exploring-the-path-to-fire/exploring-the-path-to-fire-page.component').then(
+        (c) => c.ExploringThePathToFirePageComponent
+      ),
     title: 'Exploring the Path to FIRE'
   },
   {
     canActivate: [AuthGuard],
     path: '2023/08/ghostfolio-joins-oss-friends',
     loadComponent: () =>
-      import(
-        './2023/08/ghostfolio-joins-oss-friends/ghostfolio-joins-oss-friends-page.component'
-      ).then((c) => c.GhostfolioJoinsOssFriendsPageComponent),
+      import('./2023/08/ghostfolio-joins-oss-friends/ghostfolio-joins-oss-friends-page.component').then(
+        (c) => c.GhostfolioJoinsOssFriendsPageComponent
+      ),
     title: 'Ghostfolio joins OSS Friends'
   },
   {
@@ -160,9 +160,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     path: '2023/09/hacktoberfest-2023',
     loadComponent: () =>
-      import(
-        './2023/09/hacktoberfest-2023/hacktoberfest-2023-page.component'
-      ).then((c) => c.Hacktoberfest2023PageComponent),
+      import('./2023/09/hacktoberfest-2023/hacktoberfest-2023-page.component').then(
+        (c) => c.Hacktoberfest2023PageComponent
+      ),
     title: 'Hacktoberfest 2023'
   },
   {
@@ -178,18 +178,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     path: '2023/11/hacktoberfest-2023-debriefing',
     loadComponent: () =>
-      import(
-        './2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.component'
-      ).then((c) => c.Hacktoberfest2023DebriefingPageComponent),
+      import('./2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.component').then(
+        (c) => c.Hacktoberfest2023DebriefingPageComponent
+      ),
     title: 'Hacktoberfest 2023 Debriefing'
   },
   {
     canActivate: [AuthGuard],
     path: '2024/09/hacktoberfest-2024',
     loadComponent: () =>
-      import(
-        './2024/09/hacktoberfest-2024/hacktoberfest-2024-page.component'
-      ).then((c) => c.Hacktoberfest2024PageComponent),
+      import('./2024/09/hacktoberfest-2024/hacktoberfest-2024-page.component').then(
+        (c) => c.Hacktoberfest2024PageComponent
+      ),
     title: 'Hacktoberfest 2024'
   },
   {
@@ -205,9 +205,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     path: '2025/09/hacktoberfest-2025',
     loadComponent: () =>
-      import(
-        './2025/09/hacktoberfest-2025/hacktoberfest-2025-page.component'
-      ).then((c) => c.Hacktoberfest2025PageComponent),
+      import('./2025/09/hacktoberfest-2025/hacktoberfest-2025-page.component').then(
+        (c) => c.Hacktoberfest2025PageComponent
+      ),
     title: 'Hacktoberfest 2025'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2025/11/black-weeks-2025',
+    loadComponent: () =>
+      import('./2025/11/black-weeks-2025/black-weeks-2025-page.component').then(
+        (c) => c.BlackWeeks2025PageComponent
+      ),
+    title: 'Black Weeks 2025'
   }
 ];

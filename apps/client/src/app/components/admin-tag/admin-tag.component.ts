@@ -1,9 +1,8 @@
-import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,
@@ -48,7 +47,7 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
   styleUrls: ['./admin-tag.component.scss'],
   templateUrl: './admin-tag.component.html'
 })
-export class GfAdminTagComponent implements OnInit, OnDestroy {
+export class GfAdminTagComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Tag>();

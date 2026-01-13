@@ -5,6 +5,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   CreateStripeCheckoutSessionResponse,
@@ -14,7 +15,6 @@ import {
   SubscriptionOfferKey,
   UserWithSettings
 } from '@ghostfolio/common/types';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
@@ -35,7 +35,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2025-08-27.basil'
+          apiVersion: '2025-12-15.clover'
         }
       );
     }
@@ -100,7 +100,8 @@ export class SubscriptionService {
     );
 
     return {
-      sessionId: session.id
+      sessionId: session.id,
+      sessionUrl: session.url
     };
   }
 
@@ -179,6 +180,8 @@ export class SubscriptionService {
         offerKey = 'renewal-early-bird-2023';
       } else if (isBefore(createdAt, parseDate('2024-01-01'))) {
         offerKey = 'renewal-early-bird-2024';
+      } else if (isBefore(createdAt, parseDate('2025-12-01'))) {
+        offerKey = 'renewal-early-bird-2025';
       }
 
       const offer = await this.getSubscriptionOffer({

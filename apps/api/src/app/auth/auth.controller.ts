@@ -2,7 +2,11 @@ import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { OAuthResponse } from '@ghostfolio/common/interfaces';
+import {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON,
+  OAuthResponse
+} from '@ghostfolio/common/interfaces';
 
 import {
   Body,
@@ -22,10 +26,6 @@ import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
-import {
-  AssertionCredentialJSON,
-  AttestationCredentialJSON
-} from './interfaces/simplewebauthn';
 
 @Controller('auth')
 export class AuthController {
@@ -84,7 +84,6 @@ export class AuthController {
     @Req() request: Request,
     @Res() response: Response
   ) {
-    // Handles the Google OAuth2 callback
     const jwt: string = (request.user as any).jwt;
 
     if (jwt) {
@@ -102,6 +101,46 @@ export class AuthController {
     }
   }
 
+  @Get('oidc')
+  @UseGuards(AuthGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLogin() {
+    if (!this.configurationService.get('ENABLE_FEATURE_AUTH_OIDC')) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+  }
+
+  @Get('oidc/callback')
+  @UseGuards(AuthGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
+    const jwt: string = (request.user as any).jwt;
+
+    if (jwt) {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
+      );
+    } else {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth`
+      );
+    }
+  }
+
+  @Post('webauthn/generate-authentication-options')
+  public async generateAuthenticationOptions(
+    @Body() body: { deviceId: string }
+  ) {
+    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
+  }
+
   @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async generateRegistrationOptions() {
@@ -114,13 +153,6 @@ export class AuthController {
     @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
   ) {
     return this.webAuthService.verifyAttestation(body.credential);
-  }
-
-  @Post('webauthn/generate-authentication-options')
-  public async generateAuthenticationOptions(
-    @Body() body: { deviceId: string }
-  ) {
-    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
   @Post('webauthn/verify-authentication')

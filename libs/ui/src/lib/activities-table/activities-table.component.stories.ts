@@ -1,5 +1,5 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfSymbolPipe } from '@ghostfolio/client/pipes/symbol/symbol.pipe';
+import { Activity } from '@ghostfolio/common/interfaces';
+import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,12 +13,12 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
-import { NotificationService } from 'apps/client/src/app/core/notification/notification.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo';
 import { GfNoTransactionsInfoComponent } from '../no-transactions-info/no-transactions-info.component';
+import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
 import { GfActivitiesTableComponent } from './activities-table.component';
 

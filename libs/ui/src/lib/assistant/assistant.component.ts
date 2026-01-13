@@ -1,10 +1,9 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
@@ -32,7 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { AssetClass, DataSource } from '@prisma/client';
-import { differenceInYears } from 'date-fns';
+import { differenceInYears, eachYearOfInterval, format } from 'date-fns';
 import Fuse from 'fuse.js';
 import { addIcons } from 'ionicons';
 import {
@@ -388,20 +387,19 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       });
     }
 
-    // TODO
-    // if (this.user?.settings?.isExperimentalFeatures) {
-    //   this.dateRangeOptions = this.dateRangeOptions.concat(
-    //     eachYearOfInterval({
-    //       end: new Date(),
-    //       start: this.user?.dateOfFirstActivity ?? new Date()
-    //     })
-    //       .map((date) => {
-    //         return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
-    //       })
-    //       .slice(0, -1)
-    //       .reverse()
-    //   );
-    // }
+    if (this.user?.settings?.isExperimentalFeatures) {
+      this.dateRangeOptions = this.dateRangeOptions.concat(
+        eachYearOfInterval({
+          end: new Date(),
+          start: this.user?.dateOfFirstActivity ?? new Date()
+        })
+          .map((date) => {
+            return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
+          })
+          .slice(0, -1)
+          .reverse()
+      );
+    }
 
     if (
       this.user?.dateOfFirstActivity &&

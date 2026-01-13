@@ -1,3 +1,4 @@
+import { query } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
@@ -7,10 +8,6 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  DataProviderHistoricalResponse,
-  DataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -19,7 +16,9 @@ import {
   getYesterday
 } from '@ghostfolio/common/helper';
 import {
+  DataProviderHistoricalResponse,
   DataProviderInfo,
+  DataProviderResponse,
   LookupResponse,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
@@ -28,7 +27,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
-import * as jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -288,9 +286,14 @@ export class ManualService implements DataProviderInterface {
     let value: string;
 
     if (response.headers.get('content-type')?.includes('application/json')) {
-      const data = await response.json();
+      const object = await response.json();
 
-      value = String(jsonpath.query(data, scraperConfiguration.selector)[0]);
+      value = String(
+        query({
+          object,
+          pathExpression: scraperConfiguration.selector
+        })[0]
+      );
     } else {
       const $ = cheerio.load(await response.text());
 

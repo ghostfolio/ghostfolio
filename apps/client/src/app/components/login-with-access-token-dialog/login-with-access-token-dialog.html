@@ -3,28 +3,35 @@
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
     <form class="w-100">
-      <mat-form-field appearance="outline" class="without-hint w-100">
-        <mat-label i18n>Security Token</mat-label>
-        <input
-          matInput
-          [formControl]="accessTokenFormControl"
-          [type]="isAccessTokenHidden ? 'password' : 'text'"
-          (keydown.enter)="onLoginWithAccessToken(); $event.preventDefault()"
-        />
-        <button
-          mat-button
-          matSuffix
-          type="button"
-          (click)="isAccessTokenHidden = !isAccessTokenHidden"
-        >
-          <ion-icon
-            [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+      @if (data.hasPermissionToUseAuthToken) {
+        <mat-form-field appearance="outline" class="without-hint w-100">
+          <mat-label i18n>Security Token</mat-label>
+          <input
+            matInput
+            [formControl]="accessTokenFormControl"
+            [type]="isAccessTokenHidden ? 'password' : 'text'"
+            (keydown.enter)="onLoginWithAccessToken(); $event.preventDefault()"
           />
-        </button>
-      </mat-form-field>
+          <button
+            mat-button
+            matSuffix
+            type="button"
+            (click)="isAccessTokenHidden = !isAccessTokenHidden"
+          >
+            <ion-icon
+              [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+            />
+          </button>
+        </mat-form-field>
+      }
 
-      @if (data.hasPermissionToUseSocialLogin) {
+      @if (
+        data.hasPermissionToUseAuthGoogle && data.hasPermissionToUseAuthToken
+      ) {
         <div class="my-3 text-center text-muted" i18n>or</div>
+      }
+
+      @if (data.hasPermissionToUseAuthGoogle) {
         <div class="d-flex flex-column">
           <a
             class="px-4 rounded-pill"
@@ -35,6 +42,17 @@
               src="../assets/icons/google.svg"
               style="height: 1rem"
             /><span i18n>Sign in with Google</span></a
+          >
+        </div>
+      }
+
+      @if (data.hasPermissionToUseAuthOidc) {
+        <div class="d-flex flex-column mt-2">
+          <a
+            class="px-4 rounded-pill"
+            href="../api/auth/oidc"
+            mat-stroked-button
+            ><ng-container i18n>Sign in with OpenID Connect</ng-container></a
           >
         </div>
       }
@@ -49,15 +67,17 @@
     >
   </div>
   <div>
-    <button
-      color="primary"
-      mat-flat-button
-      [disabled]="
-        !(accessTokenFormControl.dirty && accessTokenFormControl.valid)
-      "
-      (click)="onLoginWithAccessToken()"
-    >
-      <ng-container i18n>Sign in</ng-container>
-    </button>
+    @if (data.hasPermissionToUseAuthToken) {
+      <button
+        color="primary"
+        mat-flat-button
+        [disabled]="
+          !(accessTokenFormControl.dirty && accessTokenFormControl.valid)
+        "
+        (click)="onLoginWithAccessToken()"
+      >
+        <ng-container i18n>Sign in</ng-container>
+      </button>
+    }
   </div>
 </div>

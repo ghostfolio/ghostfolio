@@ -532,12 +532,7 @@ export class AdminService {
       this.countUsersWithAnalytics(),
       this.getUsersWithAnalytics({
         skip,
-        take,
-        where: {
-          NOT: {
-            analytics: null
-          }
-        }
+        take
       })
     ]);
 
@@ -855,6 +850,20 @@ export class AdminService {
           }
         }
       ];
+
+      const noAnalyticsCondition: Prisma.UserWhereInput['NOT'] = {
+        analytics: null
+      };
+
+      if (where) {
+        if (where.NOT) {
+          where.NOT = { ...where.NOT, ...noAnalyticsCondition };
+        } else {
+          where.NOT = noAnalyticsCondition;
+        }
+      } else {
+        where = { NOT: noAnalyticsCondition };
+      }
     }
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
@@ -876,6 +885,7 @@ export class AdminService {
         },
         createdAt: true,
         id: true,
+        provider: true,
         role: true,
         subscriptions: {
           orderBy: {
@@ -892,7 +902,7 @@ export class AdminService {
     });
 
     return usersWithAnalytics.map(
-      ({ _count, analytics, createdAt, id, role, subscriptions }) => {
+      ({ _count, analytics, createdAt, id, provider, role, subscriptions }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
         const engagement = analytics
@@ -909,6 +919,7 @@ export class AdminService {
           createdAt,
           engagement,
           id,
+          provider,
           role,
           subscription,
           accountCount: _count.accounts || 0,

@@ -11,6 +11,7 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
+import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import {
   ActivitiesResponse,
   ActivityResponse
@@ -39,9 +40,7 @@ import { Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { CreateOrderDto } from './create-order.dto';
 import { OrderService } from './order.service';
-import { UpdateOrderDto } from './update-order.dto';
 
 @Controller('order')
 export class OrderController {
@@ -167,6 +166,7 @@ export class OrderController {
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
+      includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });

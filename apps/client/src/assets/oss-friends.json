@@ -1,5 +1,5 @@
 {
-  "createdAt": "2025-10-31T00:00:00.000Z",
+  "createdAt": "2025-12-08T00:00:00.000Z",
   "data": [
     {
       "name": "Activepieces",
@@ -77,6 +77,11 @@
       "href": "https://mockoon.com"
     },
     {
+      "name": "Onyx",
+      "description": "Onyx is the open-source AI chat connected to your docs, apps, and people.",
+      "href": "https://onyx.app"
+    },
+    {
       "name": "OpenBB",
       "description": "Democratizing investment research through an open source financial ecosystem. The OpenBB Terminal allows everyone to perform investment research, from everywhere.",
       "href": "https://openbb.co"
@@ -110,6 +115,11 @@
       "name": "Rivet",
       "description": "Open-source solution to deploy, scale, and operate your multiplayer game.",
       "href": "https://rivet.gg"
+    },
+    {
+      "name": "Rybbit",
+      "description": "Next-gen, open source, lightweight, cookieless web & product analytics for everyone.",
+      "href": "https://rybbit.com"
     },
     {
       "name": "Shelf.nu",

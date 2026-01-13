@@ -16,7 +16,7 @@
         other {activities}
       }</ng-container>
       <span
-        class="align-items-center d-flex ml-1"
+        class="align-items-center d-none d-sm-flex ml-1"
         matTooltipPosition="above"
         [matTooltip]="buyAndSellActivitiesTooltip"
       >
@@ -34,6 +34,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalBuy"
       />
@@ -46,6 +47,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalSell"
       />
@@ -61,6 +63,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.committedFunds"
       />
@@ -73,6 +76,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="
           isLoading ? undefined : summary?.grossPerformanceWithCurrencyEffect
@@ -90,6 +94,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.fees"
       />
@@ -105,6 +110,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="
           isLoading ? undefined : summary?.netPerformanceWithCurrencyEffect
@@ -116,7 +122,7 @@
     <div class="flex-grow-1 text-truncate ml-3">
       <ng-container i18n>Net Performance</ng-container>
       <abbr
-        class="initialism ml-2 text-muted"
+        class="d-none d-sm-inline-block initialism ml-2 text-muted"
         title="Return on Average Investment"
         >(ROAI)</abbr
       >
@@ -147,13 +153,28 @@
         position="end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentValueInBaseCurrency"
       />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Emergency Fund</div>
+    <div class="align-items-center d-flex flex-grow-1">
+      <ng-container i18n>Emergency Fund</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : emergencyFundPercentage"
+        />
+      }
+    </div>
     <div
       class="align-items-center d-flex justify-content-end"
       [ngClass]="{
@@ -181,6 +202,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.total"
       />
@@ -194,6 +216,7 @@
         position="end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.cash"
       />
@@ -207,30 +230,59 @@
         position="end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
       />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Buying Power</div>
-    <div class="justify-content-end">
+    <div class="align-items-center d-flex flex-grow-1">
+      <ng-container i18n>Buying Power</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : buyingPowerPercentage"
+        />
+      }
+    </div>
+    <div class="align-items-center d-flex justify-content-end">
       <gf-value
-        class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.cash"
       />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Excluded from Analysis</div>
-    <div class="justify-content-end">
+    <div class="align-items-center d-flex flex-grow-1">
+      <ng-container i18n>Excluded from Analysis</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : excludedFromAnalysisPercentage"
+        />
+      }
+    </div>
+    <div class="align-items-center d-flex justify-content-end">
       <gf-value
-        class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.excludedAccountsAndActivities"
       />
@@ -252,6 +304,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.liabilitiesInBaseCurrency"
       />
@@ -267,14 +320,15 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalValueInBaseCurrency"
       />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>
-      Annualized Performance
+    <div class="flex-grow-1 ml-3 text-truncate">
+      <ng-container i18n>Annualized Performance</ng-container>
     </div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value
@@ -301,6 +355,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.interestInBaseCurrency"
       />
@@ -313,6 +368,7 @@
         class="justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
+        [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.dividendInBaseCurrency"
       />

@@ -1,4 +1,4 @@
-import { DataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderResponse } from '@ghostfolio/common/interfaces';
 
 export interface QuotesResponse {
   quotes: { [symbol: string]: DataProviderResponse };
