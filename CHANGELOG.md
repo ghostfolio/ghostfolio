@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for Korean (`ko`)
 
+### Fixed
+
+- Fixed the total fee calculation in the holding detail dialog related to activities in a custom currency
+- Fixed the total fee calculation in the summary related to activities in a custom currency
+
 ## 2.229.0 - 2026-01-11
 
 ### Changed
