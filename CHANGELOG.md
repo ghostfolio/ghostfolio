@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for Korean (`ko`)
 
+### Changed
+
+- Restored the support for specific calendar year date ranges (`2024`, `2023`, `2022`, etc.) in the holdings table (experimental)
+
 ### Fixed
 
 - Fixed the total fee calculation in the holding detail dialog related to activities in a custom currency

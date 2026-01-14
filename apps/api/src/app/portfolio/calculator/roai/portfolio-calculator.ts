@@ -13,7 +13,14 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
-import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
+import {
+  addMilliseconds,
+  differenceInDays,
+  eachYearOfInterval,
+  format,
+  isBefore,
+  isThisYear
+} from 'date-fns';
 import { cloneDeep, sortBy } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
@@ -837,15 +844,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       'max',
       'mtd',
       'wtd',
-      'ytd'
-      // TODO:
-      // ...eachYearOfInterval({ end, start })
-      //   .filter((date) => {
-      //     return !isThisYear(date);
-      //   })
-      //   .map((date) => {
-      //     return format(date, 'yyyy');
-      //   })
+      'ytd',
+      ...eachYearOfInterval({ end, start })
+        .filter((date) => {
+          return !isThisYear(date);
+        })
+        .map((date) => {
+          return format(date, 'yyyy');
+        })
     ] as DateRange[]) {
       const dateInterval = getIntervalFromDateRange(dateRange);
       const endDate = dateInterval.endDate;
