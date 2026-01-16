@@ -247,7 +247,7 @@ describe('PortfolioCalculator', () => {
         includeInTotalAssetValue: false,
         investment: new Big(1820),
         investmentWithCurrencyEffect: new Big(1750),
-        marketPrice: null,
+        marketPrice: 1,
         marketPriceInBaseCurrency: 0.91,
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
