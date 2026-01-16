@@ -1,4 +1,4 @@
-import { Platform, SymbolProfile } from '@prisma/client';
+import { SymbolProfile } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
@@ -13,10 +13,6 @@ export interface InfoItem {
   globalPermissions: string[];
   isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;
-
-  /** @deprecated */
-  platforms: Platform[];
-
   statistics: Statistics;
   subscriptionOffer?: SubscriptionOffer;
 }

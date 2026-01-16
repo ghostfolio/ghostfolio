@@ -82,6 +82,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     'frankly',
     'Interactive Brokers',
     'Mintos',
+    'Monefit SmartSaver',
     'Swissquote',
     'VIAC',
     'Zak'

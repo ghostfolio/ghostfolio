@@ -792,7 +792,7 @@ export class PortfolioService {
       averagePrice,
       currency,
       dividendInBaseCurrency,
-      fee,
+      feeInBaseCurrency,
       firstBuyDate,
       grossPerformance,
       grossPerformancePercentage,
@@ -927,11 +927,7 @@ export class PortfolioService {
       dividendYieldPercent: dividendYieldPercent.toNumber(),
       dividendYieldPercentWithCurrencyEffect:
         dividendYieldPercentWithCurrencyEffect.toNumber(),
-      feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-        fee.toNumber(),
-        SymbolProfile.currency,
-        userCurrency
-      ),
+      feeInBaseCurrency: feeInBaseCurrency.toNumber(),
       grossPerformance: grossPerformance?.toNumber(),
       grossPerformancePercent: grossPerformancePercentage?.toNumber(),
       grossPerformancePercentWithCurrencyEffect:
