@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated platforms from the info service
 - Removed the deprecated activities from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 
+### Fixed
+
+- Fixed the total fee calculation in the holding detail dialog related to activities in a custom currency
+- Fixed the total fee calculation in the summary related to activities in a custom currency
+
 ## 2.230.0 - 2026-01-14
 
 ### Added
