@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the deprecated platforms from the info service
+- Removed the deprecated activities from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 
 ## 2.230.0 - 2026-01-14
 

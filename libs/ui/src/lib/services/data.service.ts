@@ -424,22 +424,9 @@ export class DataService {
     dataSource: DataSource;
     symbol: string;
   }) {
-    return this.http
-      .get<PortfolioHoldingResponse>(
-        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
-      )
-      .pipe(
-        map((data) => {
-          if (data.activities) {
-            for (const order of data.activities) {
-              order.createdAt = parseISO(order.createdAt as unknown as string);
-              order.date = parseISO(order.date as unknown as string);
-            }
-          }
-
-          return data;
-        })
-      );
+    return this.http.get<PortfolioHoldingResponse>(
+      `/api/v1/portfolio/holding/${dataSource}/${symbol}`
+    );
   }
 
   public fetchInfo(): InfoItem {

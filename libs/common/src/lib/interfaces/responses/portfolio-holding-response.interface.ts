@@ -1,5 +1,4 @@
 import {
-  Activity,
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
@@ -9,9 +8,6 @@ import {
 import { Tag } from '@prisma/client';
 
 export interface PortfolioHoldingResponse {
-  /** @deprecated */
-  activities: Activity[];
-
   activitiesCount: number;
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
