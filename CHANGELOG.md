@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a numeric parsing error related to cash positions on the _X-ray_ page
+- Fixed the total fee calculation in the holding detail dialog related to activities in a custom currency
+- Fixed the total fee calculation in the summary related to activities in a custom currency
 
 ## 2.230.0 - 2026-01-14
 

@@ -120,6 +120,7 @@ export abstract class PortfolioCalculator {
         ({
           date,
           feeInAssetProfileCurrency,
+          feeInBaseCurrency,
           quantity,
           SymbolProfile,
           tags = [],
@@ -142,6 +143,7 @@ export abstract class PortfolioCalculator {
             type,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
+            feeInBaseCurrency: new Big(feeInBaseCurrency),
             quantity: new Big(quantity),
             unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
@@ -336,12 +338,6 @@ export abstract class PortfolioCalculator {
     } = {};
 
     for (const item of lastTransactionPoint.items) {
-      const feeInBaseCurrency = item.fee.mul(
-        exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
-          lastTransactionPoint.date
-        ] ?? 1
-      );
-
       const marketPriceInBaseCurrency = (
         marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
       ).mul(
@@ -408,7 +404,6 @@ export abstract class PortfolioCalculator {
       }
 
       positions.push({
-        feeInBaseCurrency,
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
@@ -418,6 +413,7 @@ export abstract class PortfolioCalculator {
         dividend: totalDividend,
         dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
+        feeInBaseCurrency: item.feeInBaseCurrency,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
@@ -937,6 +933,7 @@ export abstract class PortfolioCalculator {
     for (const {
       date,
       fee,
+      feeInBaseCurrency,
       quantity,
       SymbolProfile,
       tags,
@@ -1001,6 +998,8 @@ export abstract class PortfolioCalculator {
             : investment.div(newQuantity).abs(),
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
+          feeInBaseCurrency:
+            oldAccumulatedSymbol.feeInBaseCurrency.plus(feeInBaseCurrency),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
@@ -1013,6 +1012,7 @@ export abstract class PortfolioCalculator {
           currency,
           dataSource,
           fee,
+          feeInBaseCurrency,
           skipErrors,
           symbol,
           tags,

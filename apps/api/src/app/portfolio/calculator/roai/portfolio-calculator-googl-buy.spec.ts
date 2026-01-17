@@ -99,6 +99,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2023-01-03'),
           feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 0.9238,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
