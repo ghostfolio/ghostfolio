@@ -74,8 +74,9 @@
       </div>
     </div>
   }
+
   <div class="mb-5 row">
-    <div class="col-md-4 mb-3 mb-md-0">
+    <div class="col-lg-4 mb-3 mb-lg-0">
       <mat-card appearance="outlined">
         <mat-card-content>
           <gf-value
@@ -83,18 +84,19 @@
             size="large"
             [isCurrency]="true"
             [locale]="user?.settings?.locale"
+            [precision]="precision"
             [unit]="user?.settings?.baseCurrency"
             [value]="
               isLoadingInvestmentChart
                 ? undefined
                 : performance?.currentValueInBaseCurrency
             "
-            >Value</gf-value
+            >Total amount</gf-value
           >
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-4 mb-3 mb-md-0">
+    <div class="col-lg-4 mb-3 mb-lg-0">
       <mat-card appearance="outlined">
         <mat-card-content>
           <gf-value
@@ -103,18 +105,19 @@
             [colorizeSign]="true"
             [isCurrency]="true"
             [locale]="user?.settings?.locale"
+            [precision]="precision"
             [unit]="user?.settings?.baseCurrency"
             [value]="
               isLoadingInvestmentChart
                 ? undefined
                 : performance?.netPerformanceWithCurrencyEffect
             "
-            >Change with Currency Effect</gf-value
+            >Change with currency effect</gf-value
           >
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-4">
       <mat-card appearance="outlined">
         <mat-card-content>
           <gf-value
@@ -128,7 +131,7 @@
                 ? undefined
                 : performance?.netPerformancePercentageWithCurrencyEffect
             "
-            >Performance with Currency Effect</gf-value
+            >Performance with currency effect</gf-value
           >
         </mat-card-content>
       </mat-card>
