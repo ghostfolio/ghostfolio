@@ -292,7 +292,7 @@
       </trans-unit>
       <trans-unit id="9153520284278555926" datatype="html">
         <source>please</source>
-        <target state="new">please</target>
+        <target state="translated">부탁드립니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">336</context>
