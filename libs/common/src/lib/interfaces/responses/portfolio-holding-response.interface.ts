@@ -11,11 +11,15 @@ export interface PortfolioHoldingResponse {
   activitiesCount: number;
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
+  dateOfFirstActivity: string;
   dividendInBaseCurrency: number;
   dividendYieldPercent: number;
   dividendYieldPercentWithCurrencyEffect: number;
   feeInBaseCurrency: number;
+
+  /** @deprecated use dateOfFirstActivity */
   firstBuyDate: string;
+
   grossPerformance: number;
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;
