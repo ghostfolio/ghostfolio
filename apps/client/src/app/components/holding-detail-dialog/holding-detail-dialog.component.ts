@@ -120,7 +120,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
-  public firstBuyDate: string;
+  public dateOfFirstActivity: string;
   public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
@@ -267,10 +267,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           activitiesCount,
           averagePrice,
           dataProviderInfo,
+          dateOfFirstActivity,
           dividendInBaseCurrency,
           dividendYieldPercentWithCurrencyEffect,
           feeInBaseCurrency,
-          firstBuyDate,
           historicalData,
           investmentInBaseCurrencyWithCurrencyEffect,
           marketPrice,
@@ -298,6 +298,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
+          this.dateOfFirstActivity = dateOfFirstActivity;
           this.dividendInBaseCurrency = dividendInBaseCurrency;
 
           if (
@@ -312,7 +313,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             dividendYieldPercentWithCurrencyEffect;
 
           this.feeInBaseCurrency = feeInBaseCurrency;
-          this.firstBuyDate = firstBuyDate;
 
           this.hasPermissionToReadMarketDataOfOwnAssetProfile =
             hasPermission(
@@ -461,16 +461,16 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             }
           }
 
-          if (isToday(parseISO(this.firstBuyDate))) {
+          if (isToday(parseISO(this.dateOfFirstActivity))) {
             // Add average price
             this.historicalDataItems.push({
-              date: this.firstBuyDate,
+              date: this.dateOfFirstActivity,
               value: this.averagePrice
             });
 
             // Add benchmark 1
             this.benchmarkDataItems.push({
-              date: this.firstBuyDate,
+              date: this.dateOfFirstActivity,
               value: averagePrice
             });
 
@@ -501,7 +501,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           if (
             this.benchmarkDataItems[0]?.value === undefined &&
-            isSameMonth(parseISO(this.firstBuyDate), new Date())
+            isSameMonth(parseISO(this.dateOfFirstActivity), new Date())
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
