@@ -75,6 +75,67 @@
     </div>
   }
   <div class="mb-5 row">
+    <div class="col-md-4 mb-3 mb-md-0">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="
+              isLoadingInvestmentChart
+                ? undefined
+                : performance?.currentValueInBaseCurrency
+            "
+            >Value</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4 mb-3 mb-md-0">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="
+              isLoadingInvestmentChart
+                ? undefined
+                : performance?.netPerformanceWithCurrencyEffect
+            "
+            >Change with Currency Effect</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="user?.settings?.locale"
+            [value]="
+              isLoadingInvestmentChart
+                ? undefined
+                : performance?.netPerformancePercentageWithCurrencyEffect
+            "
+            >Performance with Currency Effect</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
         class="h-100"
