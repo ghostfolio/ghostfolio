@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added value, change with currency effect and performance with currency effect to the analysis page
+- Extended the analysis page to include the total amount, change and performance with currency effects
 
 ### Changed
 
