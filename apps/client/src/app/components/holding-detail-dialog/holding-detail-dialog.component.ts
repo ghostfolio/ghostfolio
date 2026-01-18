@@ -116,11 +116,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   };
   public dataProviderInfo: DataProviderInfo;
   public dataSource: MatTableDataSource<Activity>;
+  public dateOfFirstActivity: string;
   public dividendInBaseCurrency: number;
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
-  public dateOfFirstActivity: string;
   public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
