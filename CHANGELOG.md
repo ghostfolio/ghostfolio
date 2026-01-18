@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
 
+## Unreleased
+
+### Changed
+
+- Upgraded `countries-list` from version `3.2.0` to `3.2.2`
+
 ## 2.231.0 - 2026-01-17
 
 ### Changed
