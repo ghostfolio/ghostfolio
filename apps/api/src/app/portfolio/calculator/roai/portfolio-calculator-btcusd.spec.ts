@@ -98,6 +98,7 @@ describe('PortfolioCalculator', () => {
           ...activity,
           date: parseDate(activity.date),
           feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 4.46,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',

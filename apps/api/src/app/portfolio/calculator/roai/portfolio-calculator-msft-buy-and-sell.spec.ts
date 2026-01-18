@@ -80,6 +80,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2024-03-08'),
           feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
           quantity: 0.3333333333333333,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -94,8 +95,9 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2024-03-13'),
-          quantity: 0.6666666666666666,
           feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.6666666666666666,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
@@ -109,8 +111,9 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2024-03-14'),
-          quantity: 1,
           feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
