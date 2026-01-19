@@ -8,6 +8,7 @@ export interface TransactionPointSymbol {
   dataSource: DataSource;
   dividend: Big;
   fee: Big;
+  feeInBaseCurrency: Big;
   firstBuyDate: string;
   includeInHoldings: boolean;
   investment: Big;

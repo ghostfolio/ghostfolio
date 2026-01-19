@@ -82,7 +82,7 @@ export class ImportService {
         filterBySymbol: symbol
       });
 
-      const { firstBuyDate, historicalData } = holding;
+      const { dateOfFirstActivity, historicalData } = holding;
 
       const [{ accounts }, { activities }, [assetProfile], dividends] =
         await Promise.all([
@@ -95,7 +95,7 @@ export class ImportService {
             filters,
             userCurrency,
             userId,
-            startDate: parseDate(firstBuyDate)
+            startDate: parseDate(dateOfFirstActivity)
           }),
           this.symbolProfileService.getSymbolProfiles([
             {
@@ -106,7 +106,7 @@ export class ImportService {
           await this.dataProviderService.getDividends({
             dataSource,
             symbol,
-            from: parseDate(firstBuyDate),
+            from: parseDate(dateOfFirstActivity),
             granularity: 'day',
             to: new Date()
           })

@@ -43,15 +43,16 @@ export class GfProductPageComponent implements OnInit {
       isOpenSource: true,
       key: 'ghostfolio',
       languages: [
+        'Chinese (简体中文)',
         'Deutsch',
         'English',
         'Español',
         'Français',
         'Italiano',
+        'Korean (한국어)',
         'Nederlands',
         'Português',
-        'Türkçe',
-        '简体中文'
+        'Türkçe'
       ],
       name: 'Ghostfolio',
       origin: $localize`Switzerland`,
