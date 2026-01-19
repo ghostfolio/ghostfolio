@@ -1,5 +1,4 @@
 import {
-  Activity,
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
@@ -9,17 +8,18 @@ import {
 import { Tag } from '@prisma/client';
 
 export interface PortfolioHoldingResponse {
-  /** @deprecated */
-  activities: Activity[];
-
   activitiesCount: number;
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
+  dateOfFirstActivity: string;
   dividendInBaseCurrency: number;
   dividendYieldPercent: number;
   dividendYieldPercentWithCurrencyEffect: number;
   feeInBaseCurrency: number;
+
+  /** @deprecated use dateOfFirstActivity */
   firstBuyDate: string;
+
   grossPerformance: number;
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;

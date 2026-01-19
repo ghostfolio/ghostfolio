@@ -215,7 +215,7 @@
                 [deviceType]="data.deviceType"
                 [isDate]="true"
                 [locale]="data.locale"
-                [value]="firstBuyDate"
+                [value]="dateOfFirstActivity"
                 >First Activity</gf-value
               >
             </div>
@@ -400,7 +400,7 @@
           <gf-historical-market-data-editor
             [currency]="SymbolProfile?.currency"
             [dataSource]="SymbolProfile?.dataSource"
-            [dateOfFirstActivity]="firstBuyDate"
+            [dateOfFirstActivity]="dateOfFirstActivity"
             [locale]="data.locale"
             [marketData]="marketDataItems"
             [symbol]="SymbolProfile?.symbol"

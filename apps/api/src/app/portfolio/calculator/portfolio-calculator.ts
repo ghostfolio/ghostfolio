@@ -39,6 +39,7 @@ import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
+import { AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
@@ -119,6 +120,7 @@ export abstract class PortfolioCalculator {
         ({
           date,
           feeInAssetProfileCurrency,
+          feeInBaseCurrency,
           quantity,
           SymbolProfile,
           tags = [],
@@ -141,6 +143,7 @@ export abstract class PortfolioCalculator {
             type,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
+            feeInBaseCurrency: new Big(feeInBaseCurrency),
             quantity: new Big(quantity),
             unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
@@ -335,12 +338,6 @@ export abstract class PortfolioCalculator {
     } = {};
 
     for (const item of lastTransactionPoint.items) {
-      const feeInBaseCurrency = item.fee.mul(
-        exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
-          lastTransactionPoint.date
-        ] ?? 1
-      );
-
       const marketPriceInBaseCurrency = (
         marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
       ).mul(
@@ -389,28 +386,34 @@ export abstract class PortfolioCalculator {
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
 
-      valuesBySymbol[item.symbol] = {
-        currentValues,
-        currentValuesWithCurrencyEffect,
-        investmentValuesAccumulated,
-        investmentValuesAccumulatedWithCurrencyEffect,
-        investmentValuesWithCurrencyEffect,
-        netPerformanceValues,
-        netPerformanceValuesWithCurrencyEffect,
-        timeWeightedInvestmentValues,
-        timeWeightedInvestmentValuesWithCurrencyEffect
-      };
+      const includeInTotalAssetValue =
+        item.assetSubClass !== AssetSubClass.CASH;
+
+      if (includeInTotalAssetValue) {
+        valuesBySymbol[item.symbol] = {
+          currentValues,
+          currentValuesWithCurrencyEffect,
+          investmentValuesAccumulated,
+          investmentValuesAccumulatedWithCurrencyEffect,
+          investmentValuesWithCurrencyEffect,
+          netPerformanceValues,
+          netPerformanceValuesWithCurrencyEffect,
+          timeWeightedInvestmentValues,
+          timeWeightedInvestmentValuesWithCurrencyEffect
+        };
+      }
 
       positions.push({
-        feeInBaseCurrency,
+        includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
-        dividend: totalDividend,
-        dividendInBaseCurrency: totalDividendInBaseCurrency,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
+        dividend: totalDividend,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
+        feeInBaseCurrency: item.feeInBaseCurrency,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
@@ -426,9 +429,8 @@ export abstract class PortfolioCalculator {
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
         marketPrice:
-          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? null,
-        marketPriceInBaseCurrency:
-          marketPriceInBaseCurrency?.toNumber() ?? null,
+          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? 1,
+        marketPriceInBaseCurrency: marketPriceInBaseCurrency?.toNumber() ?? 1,
         netPerformance: !hasErrors ? (netPerformance ?? null) : null,
         netPerformancePercentage: !hasErrors
           ? (netPerformancePercentage ?? null)
@@ -931,6 +933,7 @@ export abstract class PortfolioCalculator {
     for (const {
       date,
       fee,
+      feeInBaseCurrency,
       quantity,
       SymbolProfile,
       tags,
@@ -995,6 +998,8 @@ export abstract class PortfolioCalculator {
             : investment.div(newQuantity).abs(),
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
+          feeInBaseCurrency:
+            oldAccumulatedSymbol.feeInBaseCurrency.plus(feeInBaseCurrency),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
@@ -1007,6 +1012,7 @@ export abstract class PortfolioCalculator {
           currency,
           dataSource,
           fee,
+          feeInBaseCurrency,
           skipErrors,
           symbol,
           tags,

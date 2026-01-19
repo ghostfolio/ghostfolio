@@ -74,6 +74,70 @@
       </div>
     </div>
   }
+
+  <div class="mb-5 row">
+    <div class="col-lg-4 mb-3 mb-lg-0">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [precision]="precision"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="
+              isLoadingInvestmentChart
+                ? undefined
+                : performance?.currentValueInBaseCurrency
+            "
+            >Total amount</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-4 mb-3 mb-lg-0">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [precision]="precision"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="
+              isLoadingInvestmentChart
+                ? undefined
+                : performance?.netPerformanceWithCurrencyEffect
+            "
+            >Change with currency effect</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-4">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="user?.settings?.locale"
+            [value]="
+              isLoadingInvestmentChart
+                ? undefined
+                : performance?.netPerformancePercentageWithCurrencyEffect
+            "
+            >Performance with currency effect</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
