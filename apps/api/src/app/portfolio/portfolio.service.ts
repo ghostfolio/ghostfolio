@@ -914,7 +914,6 @@ export class PortfolioService {
       );
 
     return {
-      firstBuyDate,
       marketPrice,
       marketPriceMax,
       marketPriceMin,
