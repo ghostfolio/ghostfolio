@@ -16,10 +16,6 @@ export interface PortfolioHoldingResponse {
   dividendYieldPercent: number;
   dividendYieldPercentWithCurrencyEffect: number;
   feeInBaseCurrency: number;
-
-  /** @deprecated use dateOfFirstActivity */
-  firstBuyDate: string;
-
   grossPerformance: number;
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;
