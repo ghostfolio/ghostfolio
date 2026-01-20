@@ -116,6 +116,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 1,
             averagePrice: new Big('500000'),
             currency: 'USD',
             dataSource: 'MANUAL',

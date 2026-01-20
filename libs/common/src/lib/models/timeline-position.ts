@@ -9,6 +9,8 @@ import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
 export class TimelinePosition {
+  activitiesCount: number;
+
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   averagePrice: Big;
@@ -92,6 +94,7 @@ export class TimelinePosition {
   @Type(() => Big)
   timeWeightedInvestmentWithCurrencyEffect: Big;
 
+  /** @deprecated use activitiesCount instead */
   transactionCount: number;
 
   @Transform(transformToBig, { toClassOnly: true })
