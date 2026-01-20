@@ -12,6 +12,7 @@ export interface PortfolioPosition {
   assetClassLabel?: string;
   assetSubClass?: AssetSubClass;
   assetSubClassLabel?: string;
+  averagePrice?: number;
   countries: Country[];
   currency: string;
   dataSource: DataSource;
