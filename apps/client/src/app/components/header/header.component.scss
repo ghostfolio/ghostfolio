@@ -32,17 +32,6 @@
         text-underline-offset: 0.25rem;
       }
 
-      &.mat-badge {
-        ::ng-deep {
-          .mat-badge-content {
-            --mat-badge-small-size-container-overlap-offset: -0.9rem;
-            --mat-badge-small-size-text-size: 0;
-
-            transform: scale(0.45);
-          }
-        }
-      }
-
       ion-icon {
         font-size: 1.5rem;
 
