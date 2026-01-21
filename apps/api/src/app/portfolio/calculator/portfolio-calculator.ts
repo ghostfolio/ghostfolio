@@ -407,6 +407,7 @@ export abstract class PortfolioCalculator {
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
+        activitiesCount: item.activitiesCount,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
@@ -993,6 +994,7 @@ export abstract class PortfolioCalculator {
           investment,
           skipErrors,
           symbol,
+          activitiesCount: oldAccumulatedSymbol.activitiesCount + 1,
           averagePrice: newQuantity.eq(0)
             ? new Big(0)
             : investment.div(newQuantity).abs(),
@@ -1016,6 +1018,7 @@ export abstract class PortfolioCalculator {
           skipErrors,
           symbol,
           tags,
+          activitiesCount: 1,
           averagePrice: unitPrice,
           dividend: new Big(0),
           firstBuyDate: date,

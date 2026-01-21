@@ -188,6 +188,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 2,
             averagePrice: new Big('0'),
             currency: 'CHF',
             dataSource: 'YAHOO',
