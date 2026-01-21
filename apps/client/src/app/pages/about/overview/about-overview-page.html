@@ -207,18 +207,20 @@
       <div class="col-12">
         <h2 class="h4 mb-3">Sponsors</h2>
         <div class="text-center">
-          <small>Browser testing via</small>
-          <br />
+          <div class="mb-2 small">Browser testing via</div>
           <a
-            href="https://www.lambdatest.com?utm_medium=sponsor&utm_source=ghostfolio"
+            href="https://www.testmu.ai?utm_medium=sponsor&utm_source=ghostfolio"
             target="_blank"
-            title="LambdaTest - AI Powered Testing Tool"
+            title="TestMu AI - AI Powered Testing Tool"
           >
             <img
-              alt="LambdaTest Logo"
-              height="45"
-              src="../assets/images/sponsors/logo-lambdatest.png"
-              width="250"
+              alt="TestMu AI Logo"
+              height="32"
+              [src]="
+                user?.settings?.colorScheme === 'LIGHT'
+                  ? '../assets/images/sponsors/logo-testmu-dark.svg'
+                  : '../assets/images/sponsors/logo-testmu-light.svg'
+              "
             />
           </a>
         </div>
