@@ -79,7 +79,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with BALN.SW buy and sell', async () => {
+    it('with BALN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
@@ -200,6 +200,91 @@ describe('PortfolioCalculator', () => {
         { date: '2021-11-01', investment: 0 },
         { date: '2021-12-01', investment: 0 }
       ]);
+    });
+
+    it('with COIN multiple round-trip trades', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2024-12-01').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2024-10-31'),
+          feeInAssetProfileCurrency: 16,
+          feeInBaseCurrency: 16,
+          quantity: 20,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            name: 'Coinbase Global, Inc.',
+            symbol: 'COIN'
+          },
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 218
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2024-11-13'),
+          feeInAssetProfileCurrency: 16.18,
+          feeInBaseCurrency: 16.18,
+          quantity: 20,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            name: 'Coinbase Global, Inc.',
+            symbol: 'COIN'
+          },
+          type: 'SELL',
+          unitPriceInAssetProfileCurrency: 320
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2024-11-19'),
+          feeInAssetProfileCurrency: 16,
+          feeInBaseCurrency: 16,
+          quantity: 30,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            name: 'Coinbase Global, Inc.',
+            symbol: 'COIN'
+          },
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 290
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2024-11-20'),
+          feeInAssetProfileCurrency: 16.27,
+          feeInBaseCurrency: 16.27,
+          quantity: 30,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            name: 'Coinbase Global, Inc.',
+            symbol: 'COIN'
+          },
+          type: 'SELL',
+          unitPriceInAssetProfileCurrency: 321
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const coinPosition = portfolioSnapshot.positions.find((p) => p.symbol === 'COIN');
+
+      expect(coinPosition).toBeDefined();
+      expect(coinPosition.netPerformance).not.toBeNull();
+      expect(coinPosition.netPerformance.toNumber()).toBeCloseTo(2905.55, 2);
     });
   });
 });
