@@ -10,7 +10,7 @@ import {
   InfoItem,
   User
 } from '@ghostfolio/common/interfaces';
-import { AdminMarketData, AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
@@ -62,8 +62,8 @@ import {
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
 import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
@@ -416,6 +416,26 @@ export class GfAdminMarketDataComponent
       });
   }
 
+  private refreshTable() {
+    this.isLoading = true;
+    this.changeDetectorRef.markForCheck();
+
+    this.adminService
+      .fetchAdminMarketData({
+        filters: this.activeFilters,
+        take: this.pageSize
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ marketData }) => {
+        this.dataSource = new MatTableDataSource(marketData);
+        this.dataSource.sort = this.sort;
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private openAssetProfileDialog({
     dataSource,
     symbol
@@ -482,42 +502,23 @@ export class GfAdminMarketDataComponent
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(({ addAssetProfile, dataSource, symbol } = {}) => {
-            this.isLoading = true;
-            this.changeDetectorRef.markForCheck();
-            
-            let observable: Observable<AdminMarketData>;
-
-            if (!addAssetProfile) {
-              this.openAssetProfileDialog({ dataSource, symbol });
-              observable = this.adminService.fetchAdminMarketData({
-                filters: this.activeFilters,
-                take: this.pageSize
-              });
+          .subscribe((result) => {
+            if (!result) {
+              return;
             }
+
+            const { addAssetProfile, dataSource, symbol } = result;
 
             if (addAssetProfile && dataSource && symbol) {
-              observable = this.adminService
+              this.adminService
                 .addAssetProfile({ dataSource, symbol })
-                .pipe(
-                  switchMap(() => {
-                    return this.adminService.fetchAdminMarketData({
-                      filters: this.activeFilters,
-                      take: this.pageSize
-                    });
-                  })
-                );
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe(() => {
+                  this.refreshTable();
+                });
+            } else {
+              this.refreshTable();
             }
-
-            observable.pipe(
-              takeUntil(this.unsubscribeSubject)
-            ).subscribe(({ marketData }) => {
-              this.dataSource = new MatTableDataSource(marketData);
-              this.dataSource.sort = this.sort;
-              this.isLoading = false;
-
-              this.changeDetectorRef.markForCheck();
-            });
 
             this.router.navigate(['.'], { relativeTo: this.route });
           });

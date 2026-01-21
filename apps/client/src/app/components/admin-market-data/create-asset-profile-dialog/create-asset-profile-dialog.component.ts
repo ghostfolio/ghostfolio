@@ -101,10 +101,10 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onSubmit() {
     if (this.mode === 'auto') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource:
           this.createAssetProfileForm.get('searchSymbol').value.dataSource,
-        symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol,
-        addAssetProfile: true
+        symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
       });
     } else if (this.mode === 'currency') {
       const currency = this.createAssetProfileForm.get('addCurrency')
@@ -122,23 +122,23 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
           switchMap(() => {
             return this.adminService.gatherSymbol({
               dataSource: this.dataSourceForExchangeRates,
-              symbol: `${DEFAULT_CURRENCY}${currency}`,
+              symbol: `${DEFAULT_CURRENCY}${currency}`
             });
           }),
           takeUntil(this.unsubscribeSubject)
         )
         .subscribe(() => {
           this.dialogRef.close({
+            addAssetProfile: false,
             dataSource: this.dataSourceForExchangeRates,
-            symbol: `${DEFAULT_CURRENCY}${currency}`,
-            addAssetProfile: false
+            symbol: `${DEFAULT_CURRENCY}${currency}`
           });
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource: 'MANUAL',
-        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`,
-        addAssetProfile: true
+        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`
       });
     }
   }

@@ -121,7 +121,7 @@ export class GfSymbolAutocompleteComponent
     this.control.valueChanges
       .pipe(
         filter((query) => {
-          if (query && query.length === 0) {
+          if (query?.length === 0) {
             this.showDefaultOptions();
 
             return false;
