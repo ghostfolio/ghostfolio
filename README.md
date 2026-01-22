@@ -321,7 +321,7 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
   <p>
     Browser testing via<br />
     <a href="https://www.testmu.ai?utm_medium=sponsor&utm_source=ghostfolio" target="_blank" title="TestMu AI - AI Powered Testing Tool">
-      <img alt="TestMu AI Logo" height="45" src="https://assets.testmu.ai/resources/images/logos/logo.svg" style="margin-top: 10px;" />
+      <img alt="TestMu AI Logo" height="45" src="https://assets.testmu.ai/resources/images/logos/logo.svg" />
     </a>
   </p>
 </div>
