@@ -317,14 +317,9 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
 
 ## Sponsors
 
-<div align="center">
-  <p>
-    Browser testing via<br />
-    <a href="https://www.testmu.ai?utm_medium=sponsor&utm_source=ghostfolio" target="_blank" title="TestMu AI - AI Powered Testing Tool">
-      <img alt="TestMu AI Logo" height="45" src="https://assets.testmu.ai/resources/images/logos/logo.svg" style="margin-top: 10px;" />
-    </a>
-  </p>
-</div>
+<a href="https://www.testmu.ai?utm_medium=sponsor&utm_source=ghostfolio" target="_blank" title="TestMu AI - AI Powered Testing Tool">
+  <img alt="TestMu AI Logo" height="45" src="https://assets.testmu.ai/resources/images/logos/logo.svg" style="margin-top: 10px;" />
+</a>
 
 ## Analytics
 
