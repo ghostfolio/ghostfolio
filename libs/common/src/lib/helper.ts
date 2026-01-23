@@ -11,7 +11,21 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { ca, de, es, fr, it, nl, pl, pt, tr, uk, zhCN } from 'date-fns/locale';
+import {
+  ca,
+  de,
+  es,
+  fr,
+  it,
+  ko,
+  nl,
+  pl,
+  pt,
+  tr,
+  uk,
+  zhCN
+} from 'date-fns/locale';
+import { get, isNil, isString } from 'lodash';
 
 import {
   DEFAULT_CURRENCY,
@@ -184,6 +198,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return fr;
   } else if (aLanguageCode === 'it') {
     return it;
+  } else if (aLanguageCode === 'ko') {
+    return ko;
   } else if (aLanguageCode === 'nl') {
     return nl;
   } else if (aLanguageCode === 'pl') {
@@ -240,6 +256,16 @@ export function getEmojiFlag(aCountryCode: string) {
 
 export function getLocale() {
   return navigator.language ?? locale;
+}
+
+export function getLowercase(object: object, path: string) {
+  const value = get(object, path);
+
+  if (isNil(value)) {
+    return '';
+  }
+
+  return isString(value) ? value.toLocaleLowerCase() : value;
 }
 
 export function getNumberFormatDecimal(aLocale?: string) {

@@ -1,8 +1,5 @@
 import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -19,7 +16,10 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -39,7 +39,7 @@ import {
   PageEvent
 } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
   differenceInSeconds,
@@ -69,7 +69,8 @@ import { takeUntil } from 'rxjs/operators';
     MatMenuModule,
     MatPaginatorModule,
     MatTableModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    RouterModule
   ],
   selector: 'gf-admin-users',
   styleUrls: ['./admin-users.scss'],
@@ -88,6 +89,8 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public info: InfoItem;
   public isLoading = false;
   public pageSize = DEFAULT_PAGE_SIZE;
+  public routerLinkAdminControlUsers =
+    internalRoutes.adminControl.subRoutes.users.routerLink;
   public totalItems = 0;
   public user: User;
 
@@ -136,11 +139,13 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.queryParams
+    this.route.paramMap
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['userDetailDialog'] && params['userId']) {
-          this.openUserDetailDialog(params['userId']);
+        const userId = params.get('userId');
+
+        if (userId) {
+          this.openUserDetailDialog(userId);
         }
       });
 
@@ -248,9 +253,9 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onOpenUserDetailDialog(userId: string) {
-    this.router.navigate([], {
-      queryParams: { userId, userDetailDialog: true }
-    });
+    this.router.navigate(
+      internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
+    );
   }
 
   public ngOnDestroy() {
@@ -301,7 +306,9 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
+        this.router.navigate(
+          internalRoutes.adminControl.subRoutes.users.routerLink
+        );
       });
   }
 }

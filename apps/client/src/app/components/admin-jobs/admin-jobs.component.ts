@@ -1,5 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
@@ -9,6 +7,8 @@ import {
 } from '@ghostfolio/common/config';
 import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
 import { AdminJobs, User } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { AdminService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {

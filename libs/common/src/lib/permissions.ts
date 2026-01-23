@@ -29,6 +29,7 @@ export const permissions = {
   deleteUser: 'deleteUser',
   deleteWatchlistItem: 'deleteWatchlistItem',
   enableAuthGoogle: 'enableAuthGoogle',
+  enableAuthOidc: 'enableAuthOidc',
   enableAuthToken: 'enableAuthToken',
   enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
@@ -44,6 +45,7 @@ export const permissions = {
   readMarketDataOfMarkets: 'readMarketDataOfMarkets',
   readMarketDataOfOwnAssetProfile: 'readMarketDataOfOwnAssetProfile',
   readPlatforms: 'readPlatforms',
+  readPlatformsWithAccountCount: 'readPlatformsWithAccountCount',
   readTags: 'readTags',
   readWatchlist: 'readWatchlist',
   reportDataGlitch: 'reportDataGlitch',
@@ -92,6 +94,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.readMarketData,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.readPlatforms,
+        permissions.readPlatformsWithAccountCount,
         permissions.readTags,
         permissions.readWatchlist,
         permissions.updateAccount,
@@ -134,6 +137,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
         permissions.readMarketDataOfOwnAssetProfile,
+        permissions.readPlatforms,
         permissions.readWatchlist,
         permissions.updateAccount,
         permissions.updateAccess,
@@ -159,6 +163,7 @@ export function filterGlobalPermissions(
     return globalPermissions.filter((permission) => {
       return (
         permission !== permissions.enableAuthGoogle &&
+        permission !== permissions.enableAuthOidc &&
         permission !== permissions.enableSubscription
       );
     });

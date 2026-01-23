@@ -166,6 +166,7 @@ export class OrderController {
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
+      includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });

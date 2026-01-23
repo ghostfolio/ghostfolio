@@ -1,10 +1,14 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { FireWealth, User } from '@ghostfolio/common/interfaces';
+import {
+  FireCalculationCompleteEvent,
+  FireWealth,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule, NgStyle } from '@angular/common';
@@ -38,11 +42,15 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
+  public projectedTotalAmount: number;
+  public retirementDate: Date;
   public safeWithdrawalRateControl = new FormControl<number>(undefined);
   public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
+  public withdrawalRatePerMonthProjected: Big;
   public withdrawalRatePerYear: Big;
+  public withdrawalRatePerYearProjected: Big;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -78,8 +86,6 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
         }
 
         this.calculateWithdrawalRates();
-
-        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -139,6 +145,18 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onCalculationComplete({
+    projectedTotalAmount,
+    retirementDate
+  }: FireCalculationCompleteEvent) {
+    this.projectedTotalAmount = projectedTotalAmount;
+    this.retirementDate = retirementDate;
+
+    this.calculateWithdrawalRatesProjected();
+
+    this.isLoading = false;
+  }
+
   public onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
@@ -170,6 +188,7 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
             this.user = user;
 
             this.calculateWithdrawalRates();
+            this.calculateWithdrawalRatesProjected();
 
             this.changeDetectorRef.markForCheck();
           });
@@ -223,6 +242,21 @@ export class GfFirePageComponent implements OnDestroy, OnInit {
       ).mul(this.user.settings.safeWithdrawalRate);
 
       this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
+    }
+  }
+
+  private calculateWithdrawalRatesProjected() {
+    if (
+      this.fireWealth &&
+      this.projectedTotalAmount &&
+      this.user?.settings?.safeWithdrawalRate
+    ) {
+      this.withdrawalRatePerYearProjected = new Big(
+        this.projectedTotalAmount
+      ).mul(this.user.settings.safeWithdrawalRate);
+
+      this.withdrawalRatePerMonthProjected =
+        this.withdrawalRatePerYearProjected.div(12);
     }
   }
 }

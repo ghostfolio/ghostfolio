@@ -87,6 +87,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2021-11-30'),
           feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -109,11 +110,22 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
+
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
         data: portfolioSnapshot.historicalData,
         groupBy: 'month'
+      });
+
+      const investmentsByYear = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
       });
 
       expect(portfolioSnapshot).toMatchObject({
@@ -122,9 +134,11 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 1,
             averagePrice: new Big('136.6'),
             currency: 'CHF',
             dataSource: 'YAHOO',
+            dateOfFirstActivity: '2021-11-30',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('1.55'),
@@ -170,8 +184,12 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).not.toContain('2021-12-31');
+
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
+          date: '2021-12-18',
           netPerformance: 23.05,
           netPerformanceInPercentage: 0.08437042459736457,
           netPerformanceInPercentageWithCurrencyEffect: 0.08437042459736457,
@@ -188,6 +206,10 @@ describe('PortfolioCalculator', () => {
         { date: '2021-11-01', investment: 273.2 },
         { date: '2021-12-01', investment: 0 }
       ]);
+
+      expect(investmentsByYear).toEqual([
+        { date: '2021-01-01', investment: 273.2 }
+      ]);
     });
 
     it.only('with BALN.SW buy (with unit price lower than closing price)', async () => {
@@ -198,6 +220,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2021-11-30'),
           feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -237,6 +260,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2021-11-30'),
           feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,

@@ -1,12 +1,15 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  getLowercase,
+  resolveMarketCondition
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Benchmark,
   User
 } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -29,7 +32,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
-import { get, isNumber } from 'lodash';
+import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -112,8 +115,9 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   public ngOnChanges() {
     if (this.benchmarks) {
       this.dataSource.data = this.benchmarks;
+      this.dataSource.sortingDataAccessor = getLowercase;
+
       this.dataSource.sort = this.sort;
-      this.dataSource.sortingDataAccessor = get;
 
       this.isLoading = false;
     }

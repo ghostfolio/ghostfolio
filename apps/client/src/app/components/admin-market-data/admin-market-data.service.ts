@@ -1,5 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
@@ -11,6 +9,8 @@ import {
   AssetProfileIdentifier,
   AdminMarketDataItem
 } from '@ghostfolio/common/interfaces';
+import { NotificationService } from '@ghostfolio/ui/notifications';
+import { AdminService } from '@ghostfolio/ui/services';
 
 import { Injectable } from '@angular/core';
 import { EMPTY, catchError, finalize, forkJoin } from 'rxjs';

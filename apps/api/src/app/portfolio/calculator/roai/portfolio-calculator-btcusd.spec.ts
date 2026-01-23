@@ -98,6 +98,7 @@ describe('PortfolioCalculator', () => {
           ...activity,
           date: parseDate(activity.date),
           feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 4.46,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
@@ -118,11 +119,22 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
+
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
         data: portfolioSnapshot.historicalData,
         groupBy: 'month'
+      });
+
+      const investmentsByYear = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
       });
 
       expect(portfolioSnapshot.historicalData[0]).toEqual({
@@ -183,9 +195,11 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 1,
             averagePrice: new Big('44558.42'),
             currency: 'USD',
             dataSource: 'YAHOO',
+            dateOfFirstActivity: '2021-12-12',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('4.46'),
@@ -225,12 +239,22 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).toContain('2021-12-31');
+      expect(historicalDataDates).toContain('2022-01-01');
+      expect(historicalDataDates).not.toContain('2022-12-31');
+
       expect(investments).toEqual([
         { date: '2021-12-12', investment: new Big('44558.42') }
       ]);
 
       expect(investmentsByMonth).toEqual([
         { date: '2021-12-01', investment: 44558.42 },
+        { date: '2022-01-01', investment: 0 }
+      ]);
+
+      expect(investmentsByYear).toEqual([
+        { date: '2021-01-01', investment: 44558.42 },
         { date: '2022-01-01', investment: 0 }
       ]);
     });

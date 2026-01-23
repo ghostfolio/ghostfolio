@@ -110,6 +110,7 @@ describe('PortfolioCalculator', () => {
           ...activity,
           date: parseDate(activity.date),
           feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 3.94,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
@@ -129,6 +130,17 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const historicalDataDates = portfolioSnapshot.historicalData.map(
+        ({ date }) => {
+          return date;
+        }
+      );
+
+      expect(historicalDataDates).not.toContain('2021-01-01');
+      expect(historicalDataDates).toContain('2021-12-31');
+      expect(historicalDataDates).toContain('2022-01-01');
+      expect(historicalDataDates).not.toContain('2022-12-31');
 
       expect(portfolioSnapshot.positions[0].fee).toEqual(new Big(4.46));
       expect(

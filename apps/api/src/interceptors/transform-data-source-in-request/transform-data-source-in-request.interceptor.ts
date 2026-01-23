@@ -11,9 +11,9 @@ import { DataSource } from '@prisma/client';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class TransformDataSourceInRequestInterceptor<T>
-  implements NestInterceptor<T, any>
-{
+export class TransformDataSourceInRequestInterceptor<
+  T
+> implements NestInterceptor<T, any> {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {}
@@ -27,9 +27,23 @@ export class TransformDataSourceInRequestInterceptor<T>
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       if (request.body?.activities) {
+        const dataSourceGhostfolioDataProvider = this.configurationService.get(
+          'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
+        )?.[0];
+
         request.body.activities = request.body.activities.map((activity) => {
           if (DataSource[activity.dataSource]) {
-            return activity;
+            if (
+              activity.dataSource === 'GHOSTFOLIO' &&
+              dataSourceGhostfolioDataProvider
+            ) {
+              return {
+                ...activity,
+                dataSource: dataSourceGhostfolioDataProvider
+              };
+            } else {
+              return activity;
+            }
           } else {
             return {
               ...activity,
@@ -54,6 +68,19 @@ export class TransformDataSourceInRequestInterceptor<T>
             writable: true
           });
         }
+      }
+    } else {
+      if (request.body?.activities) {
+        request.body.activities = request.body.activities.map((activity) => {
+          if (DataSource[activity.dataSource]) {
+            return activity;
+          } else {
+            return {
+              ...activity,
+              dataSource: decodeDataSource(activity.dataSource)
+            };
+          }
+        });
       }
     }
 

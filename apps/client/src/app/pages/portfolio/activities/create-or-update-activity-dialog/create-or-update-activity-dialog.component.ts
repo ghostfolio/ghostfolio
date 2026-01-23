@@ -10,6 +10,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -48,7 +49,6 @@ import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
-import { DataService } from '../../../../services/data.service';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
 
@@ -96,7 +96,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
-  public platforms: { id: string; name: string }[];
   public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
@@ -127,11 +126,10 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
     this.dateAdapter.setLocale(this.locale);
 
-    const { currencies, platforms } = this.dataService.fetchInfo();
+    const { currencies } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
-    this.platforms = platforms;
 
     this.dataService
       .fetchPortfolioHoldings()

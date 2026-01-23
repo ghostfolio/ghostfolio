@@ -1,4 +1,4 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {

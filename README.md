@@ -85,24 +85,40 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 ### Supported Environment Variables
 
-| Name                     | Type                  | Default Value | Description                                                                                                                         |
-| ------------------------ | --------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT`      | `string`              |               | A random string used as salt for access tokens                                                                                      |
-| `API_KEY_COINGECKO_DEMO` | `string` (optional)   |               | The _CoinGecko_ Demo API key                                                                                                        |
-| `API_KEY_COINGECKO_PRO`  | `string` (optional)   |               | The _CoinGecko_ Pro API key                                                                                                         |
-| `DATABASE_URL`           | `string`              |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
-| `HOST`                   | `string` (optional)   | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
-| `JWT_SECRET_KEY`         | `string`              |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
-| `LOG_LEVELS`             | `string[]` (optional) |               | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
-| `PORT`                   | `number` (optional)   | `3333`        | The port where the Ghostfolio application will run on                                                                               |
-| `POSTGRES_DB`            | `string`              |               | The name of the _PostgreSQL_ database                                                                                               |
-| `POSTGRES_PASSWORD`      | `string`              |               | The password of the _PostgreSQL_ database                                                                                           |
-| `POSTGRES_USER`          | `string`              |               | The user of the _PostgreSQL_ database                                                                                               |
-| `REDIS_DB`               | `number` (optional)   | `0`           | The database index of _Redis_                                                                                                       |
-| `REDIS_HOST`             | `string`              |               | The host where _Redis_ is running                                                                                                   |
-| `REDIS_PASSWORD`         | `string`              |               | The password of _Redis_                                                                                                             |
-| `REDIS_PORT`             | `number`              |               | The port where _Redis_ is running                                                                                                   |
-| `REQUEST_TIMEOUT`        | `number` (optional)   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
+| Name                        | Type                  | Default Value         | Description                                                                                                                         |
+| --------------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `ACCESS_TOKEN_SALT`         | `string`              |                       | A random string used as salt for access tokens                                                                                      |
+| `API_KEY_COINGECKO_DEMO`    | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                        |
+| `API_KEY_COINGECKO_PRO`     | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                         |
+| `DATABASE_URL`              | `string`              |                       | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
+| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                           |
+| `HOST`                      | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                               |
+| `JWT_SECRET_KEY`            | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
+| `LOG_LEVELS`                | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
+| `PORT`                      | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                               |
+| `POSTGRES_DB`               | `string`              |                       | The name of the _PostgreSQL_ database                                                                                               |
+| `POSTGRES_PASSWORD`         | `string`              |                       | The password of the _PostgreSQL_ database                                                                                           |
+| `POSTGRES_USER`             | `string`              |                       | The user of the _PostgreSQL_ database                                                                                               |
+| `REDIS_DB`                  | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                       |
+| `REDIS_HOST`                | `string`              |                       | The host where _Redis_ is running                                                                                                   |
+| `REDIS_PASSWORD`            | `string`              |                       | The password of _Redis_                                                                                                             |
+| `REDIS_PORT`                | `number`              |                       | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                   |
+| `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                   |
+
+#### OpenID Connect OIDC (Experimental)
+
+| Name                       | Type                  | Default Value                        | Description                                                                                          |
+| -------------------------- | --------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `ENABLE_FEATURE_AUTH_OIDC` | `boolean` (optional)  | `false`                              | Enables authentication via _OpenID Connect_                                                          |
+| `OIDC_AUTHORIZATION_URL`   | `string` (optional)   |                                      | Manual override for the OIDC authorization endpoint (falls back to the discovery from the issuer)    |
+| `OIDC_CALLBACK_URL`        | `string` (optional)   | `${ROOT_URL}/api/auth/oidc/callback` | The OIDC callback URL                                                                                |
+| `OIDC_CLIENT_ID`           | `string`              |                                      | The OIDC client ID                                                                                   |
+| `OIDC_CLIENT_SECRET`       | `string`              |                                      | The OIDC client secret                                                                               |
+| `OIDC_ISSUER`              | `string`              |                                      | The OIDC issuer URL, used to discover the OIDC configuration via `/.well-known/openid-configuration` |
+| `OIDC_SCOPE`               | `string[]` (optional) | `["openid"]`                         | The OIDC scope to request, e.g. `["email","openid","profile"]`                                       |
+| `OIDC_TOKEN_URL`           | `string` (optional)   |                                      | Manual override for the OIDC token endpoint (falls back to the discovery from the issuer)            |
+| `OIDC_USER_INFO_URL`       | `string` (optional)   |                                      | Manual override for the OIDC user info endpoint (falls back to the discovery from the issuer)        |
 
 ### Run with Docker Compose
 
@@ -226,7 +242,7 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 | `accountId`  | `string` (optional) | Id of the account                                                   |
 | `comment`    | `string` (optional) | Comment of the activity                                             |
 | `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                        |
-| `dataSource` | `string`            | `COINGECKO` \| `MANUAL` \| `YAHOO`                                  |
+| `dataSource` | `string`            | `COINGECKO` \| `GHOSTFOLIO` [^1] \| `MANUAL` \| `YAHOO`             |
 | `date`       | `string`            | Date in the format `ISO-8601`                                       |
 | `fee`        | `number`            | Fee of the activity                                                 |
 | `quantity`   | `number`            | Quantity of the activity                                            |
@@ -302,12 +318,9 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
 ## Sponsors
 
 <div align="center">
-  <p>
-    Browser testing via<br />
-    <a href="https://www.lambdatest.com?utm_medium=sponsor&utm_source=ghostfolio" target="_blank" title="LambdaTest - AI Powered Testing Tool">
-      <img alt="LambdaTest Logo" height="45" width="250" src="https://www.lambdatest.com/blue-logo.png" />
-    </a>
-  </p>
+  <a href="https://www.testmu.ai?utm_medium=sponsor&utm_source=ghostfolio" target="_blank" title="TestMu AI - AI Powered Testing Tool">
+    <img alt="TestMu AI Logo" height="45" src="https://assets.testmu.ai/resources/images/logos/logo.svg" />
+  </a>
 </div>
 
 ## Analytics
@@ -316,6 +329,8 @@ If you like to support this project, become a [**Sponsor**](https://github.com/s
 
 ## License
 
-© 2021 - 2025 [Ghostfolio](https://ghostfol.io)
+© 2021 - 2026 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
+
+[^1]: Available with [**Ghostfolio Premium**](https://ghostfol.io/en/pricing).

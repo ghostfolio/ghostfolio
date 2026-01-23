@@ -116,9 +116,7 @@ export class CoinGeckoService implements DataProviderInterface {
     [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
-      let url = `${this.apiUrl}/coins/${symbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
-        from
-      )}&to=${getUnixTime(to)}`;
+      let url: string;
       let field = 'prices';
 
       if (symbol.startsWith('nft:')) {
@@ -128,6 +126,14 @@ export class CoinGeckoService implements DataProviderInterface {
           ''
         )}/market_chart?days=max`;
         field = 'floor_prices_usd';
+      } else {
+        const queryParams = new URLSearchParams({
+          from: getUnixTime(from).toString(),
+          to: getUnixTime(to).toString(),
+          vs_currency: DEFAULT_CURRENCY.toLowerCase()
+        });
+
+        url = `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`;
       }
 
       const { error, status, ...data } = await fetch(url, {
@@ -192,10 +198,13 @@ export class CoinGeckoService implements DataProviderInterface {
 
     try {
       // note: simple price endpoint does not currently support nft ids
+      const queryParams = new URLSearchParams({
+        ids: symbols.filter((s) => !s.startsWith('nft:')).join(','),
+        vs_currencies: DEFAULT_CURRENCY.toLowerCase()
+      });
+
       const quotes = await fetch(
-        `${this.apiUrl}/simple/price?ids=${symbols
-          .filter((s) => !s.startsWith('nft:'))
-          .join(',')}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
+        `${this.apiUrl}/simple/price?${queryParams.toString()}`,
         {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)
@@ -260,8 +269,12 @@ export class CoinGeckoService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
+      const queryParams = new URLSearchParams({
+        query
+      });
+
       const { coins, nfts } = await fetch(
-        `${this.apiUrl}/search?query=${query}`,
+        `${this.apiUrl}/search?${queryParams.toString()}`,
         {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)

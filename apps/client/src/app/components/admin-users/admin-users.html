@@ -7,10 +7,9 @@
             <th
               *matHeaderCellDef
               class="mat-mdc-header-cell px-1 py-2"
-              i18n
               mat-header-cell
             >
-              User
+              <ng-container i18n>User</ng-container>
             </th>
             <td
               *matCellDef="let element"
@@ -216,15 +215,17 @@
                 <ion-icon name="ellipsis-horizontal" />
               </button>
               <mat-menu #userMenu="matMenu" xPosition="before">
-                <button
+                <a
                   mat-menu-item
-                  (click)="onOpenUserDetailDialog(element.id)"
+                  [routerLink]="routerLinkAdminControlUsers.concat(element.id)"
                 >
                   <span class="align-items-center d-flex">
                     <ion-icon class="mr-2" name="person-outline" />
-                    <span i18n>View Details</span>
+                    <span
+                      ><ng-container i18n>View Details</ng-container>...</span
+                    >
                   </span>
-                </button>
+                </a>
                 @if (hasPermissionToImpersonateAllUsers) {
                   <button mat-menu-item (click)="onImpersonateUser(element.id)">
                     <span class="align-items-center d-flex">

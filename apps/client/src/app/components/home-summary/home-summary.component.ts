@@ -1,5 +1,4 @@
 import { GfPortfolioSummaryComponent } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -8,6 +7,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectorRef,
@@ -18,6 +18,7 @@ import {
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -29,6 +30,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-summary.html'
 })
 export class GfHomeSummaryComponent implements OnDestroy, OnInit {
+  public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
@@ -43,6 +45,7 @@ export class GfHomeSummaryComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
@@ -70,6 +73,8 @@ export class GfHomeSummaryComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))

@@ -2,6 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -25,7 +26,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
-  AccountWithPlatform,
+  AccountWithValue,
   OrderWithAccount,
   UserWithSettings
 } from '@ghostfolio/common/types';
@@ -35,7 +36,7 @@ import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
 
@@ -43,6 +44,7 @@ import { ImportDataDto } from './import-data.dto';
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
@@ -57,8 +59,12 @@ export class ImportService {
   public async getDividends({
     dataSource,
     symbol,
+    userCurrency,
     userId
-  }: AssetProfileIdentifier & { userId: string }): Promise<Activity[]> {
+  }: AssetProfileIdentifier & {
+    userCurrency: string;
+    userId: string;
+  }): Promise<Activity[]> {
     try {
       const holding = await this.portfolioService.getHolding({
         dataSource,
@@ -71,36 +77,45 @@ export class ImportService {
         return [];
       }
 
-      const { activities, firstBuyDate, historicalData } = holding;
+      const filters = this.apiService.buildFiltersFromQueryParams({
+        filterByDataSource: dataSource,
+        filterBySymbol: symbol
+      });
 
-      const [[assetProfile], dividends] = await Promise.all([
-        this.symbolProfileService.getSymbolProfiles([
-          {
+      const { dateOfFirstActivity, historicalData } = holding;
+
+      const [{ accounts }, { activities }, [assetProfile], dividends] =
+        await Promise.all([
+          this.portfolioService.getAccountsWithAggregations({
+            filters,
+            userId,
+            withExcludedAccounts: true
+          }),
+          this.orderService.getOrders({
+            filters,
+            userCurrency,
+            userId,
+            startDate: parseDate(dateOfFirstActivity)
+          }),
+          this.symbolProfileService.getSymbolProfiles([
+            {
+              dataSource,
+              symbol
+            }
+          ]),
+          await this.dataProviderService.getDividends({
             dataSource,
-            symbol
-          }
-        ]),
-        await this.dataProviderService.getDividends({
-          dataSource,
-          symbol,
-          from: parseDate(firstBuyDate),
-          granularity: 'day',
-          to: new Date()
-        })
-      ]);
-
-      const accounts = activities
-        .filter(({ account }) => {
-          return !!account;
-        })
-        .map(({ account }) => {
-          return account;
-        });
+            symbol,
+            from: parseDate(dateOfFirstActivity),
+            granularity: 'day',
+            to: new Date()
+          })
+        ]);
 
       const account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
       return await Promise.all(
-        Object.entries(dividends).map(async ([dateString, { marketPrice }]) => {
+        Object.entries(dividends).map(([dateString, { marketPrice }]) => {
           const quantity =
             historicalData.find((historicalDataItem) => {
               return historicalDataItem.date === dateString;
@@ -277,7 +292,7 @@ export class ImportService {
 
           // Asset profile belongs to a different user
           if (existingAssetProfile) {
-            const symbol = uuidv4();
+            const symbol = randomUUID();
             assetProfileSymbolMapping[assetProfile.symbol] = symbol;
             assetProfile.symbol = symbol;
           }
@@ -496,7 +511,7 @@ export class ImportService {
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
-          id: uuidv4(),
+          id: randomUUID(),
           isDraft: isAfter(date, endOfToday()),
           SymbolProfile: {
             assetClass,
@@ -695,11 +710,11 @@ export class ImportService {
     );
   }
 
-  private isUniqueAccount(accounts: AccountWithPlatform[]) {
+  private isUniqueAccount(accounts: AccountWithValue[]) {
     const uniqueAccountIds = new Set<string>();
 
-    for (const account of accounts) {
-      uniqueAccountIds.add(account.id);
+    for (const { id } of accounts) {
+      uniqueAccountIds.add(id);
     }
 
     return uniqueAccountIds.size === 1;

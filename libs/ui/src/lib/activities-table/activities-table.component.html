@@ -6,7 +6,7 @@
       (click)="onImport()"
     >
       <ion-icon class="mr-2" name="cloud-upload-outline" />
-      <ng-container i18n>Import Activities</ng-container>...
+      <span><ng-container i18n>Import Activities</ng-container>...</span>
     </button>
     @if (hasPermissionToExportActivities) {
       <button
@@ -26,7 +26,7 @@
       >
         <span class="align-items-center d-flex">
           <ion-icon class="mr-2" name="color-wand-outline" />
-          <ng-container i18n>Import Dividends</ng-container>...
+          <span><ng-container i18n>Import Dividends</ng-container>...</span>
         </span>
       </button>
       @if (hasPermissionToExportActivities) {
@@ -59,7 +59,9 @@
       <button
         class="align-items-center d-flex"
         mat-menu-item
-        [disabled]="!hasPermissionToDeleteActivity"
+        [disabled]="
+          dataSource?.data.length === 0 || !hasPermissionToDeleteActivity
+        "
         (click)="onDeleteActivities()"
       >
         <span class="align-items-center d-flex">
@@ -377,7 +379,9 @@
             >
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="cloud-upload-outline" />
-                <ng-container i18n>Import Activities</ng-container>...
+                <span
+                  ><ng-container i18n>Import Activities</ng-container>...</span
+                >
               </span>
             </button>
           }
@@ -389,7 +393,9 @@
             >
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="color-wand-outline" />
-                <ng-container i18n>Import Dividends</ng-container>...
+                <span
+                  ><ng-container i18n>Import Dividends</ng-container>...</span
+                >
               </span>
             </button>
           }
@@ -441,20 +447,20 @@
             <button mat-menu-item (click)="onClickActivity(element)">
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="tablet-landscape-outline" />
-                <span i18n>View Holding</span>
+                <span><ng-container i18n>View Holding</ng-container>...</span>
               </span>
             </button>
           }
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
-              <span i18n>Edit</span>
+              <span><ng-container i18n>Edit</ng-container>...</span>
             </span>
           </button>
           <button mat-menu-item (click)="onCloneActivity(element)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="copy-outline" />
-              <span i18n>Clone</span>
+              <span><ng-container i18n>Clone</ng-container>...</span>
             </span>
           </button>
           <button

@@ -1,7 +1,10 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
@@ -16,6 +19,7 @@ import {
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
+  Activity,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -37,13 +41,15 @@ import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class OrderService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly dataProviderService: DataProviderService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
@@ -143,7 +149,7 @@ export class OrderService {
       } else {
         // Create custom asset profile
         name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
-        symbol = uuidv4();
+        symbol = randomUUID();
       }
 
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
@@ -315,6 +321,131 @@ export class OrderService {
     );
 
     return count;
+  }
+
+  /**
+   * Generates synthetic orders for cash holdings based on account balance history.
+   * Treat currencies as assets with a fixed unit price of 1.0 (in their own currency) to allow
+   * performance tracking based on exchange rate fluctuations.
+   *
+   * @param cashDetails - The cash balance details.
+   * @param filters - Optional filters to apply.
+   * @param userCurrency - The base currency of the user.
+   * @param userId - The ID of the user.
+   * @returns A response containing the list of synthetic cash activities.
+   */
+  public async getCashOrders({
+    cashDetails,
+    filters = [],
+    userCurrency,
+    userId
+  }: {
+    cashDetails: CashDetails;
+    filters?: Filter[];
+    userCurrency: string;
+    userId: string;
+  }): Promise<ActivitiesResponse> {
+    const filtersByAssetClass = filters.filter(({ type }) => {
+      return type === 'ASSET_CLASS';
+    });
+
+    if (
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.find(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      })
+    ) {
+      // If asset class filters are present and none of them is liquidity, return an empty response
+      return {
+        activities: [],
+        count: 0
+      };
+    }
+
+    const activities: Activity[] = [];
+
+    for (const account of cashDetails.accounts) {
+      const { balances } = await this.accountBalanceService.getAccountBalances({
+        userCurrency,
+        userId,
+        filters: [{ id: account.id, type: 'ACCOUNT' }]
+      });
+
+      let currentBalance = 0;
+      let currentBalanceInBaseCurrency = 0;
+
+      for (const balanceItem of balances) {
+        const syntheticActivityTemplate: Activity = {
+          userId,
+          accountId: account.id,
+          accountUserId: account.userId,
+          comment: account.name,
+          createdAt: new Date(balanceItem.date),
+          currency: account.currency,
+          date: new Date(balanceItem.date),
+          fee: 0,
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          id: balanceItem.id,
+          isDraft: false,
+          quantity: 1,
+          SymbolProfile: {
+            activitiesCount: 0,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countries: [],
+            createdAt: new Date(balanceItem.date),
+            currency: account.currency,
+            dataSource:
+              this.dataProviderService.getDataSourceForExchangeRates(),
+            holdings: [],
+            id: account.currency,
+            isActive: true,
+            name: account.currency,
+            sectors: [],
+            symbol: account.currency,
+            updatedAt: new Date(balanceItem.date)
+          },
+          symbolProfileId: account.currency,
+          type: ActivityType.BUY,
+          unitPrice: 1,
+          unitPriceInAssetProfileCurrency: 1,
+          updatedAt: new Date(balanceItem.date),
+          valueInBaseCurrency: 0,
+          value: 0
+        };
+
+        if (currentBalance < balanceItem.value) {
+          // BUY
+          activities.push({
+            ...syntheticActivityTemplate,
+            quantity: balanceItem.value - currentBalance,
+            type: ActivityType.BUY,
+            value: balanceItem.value - currentBalance,
+            valueInBaseCurrency:
+              balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
+          });
+        } else if (currentBalance > balanceItem.value) {
+          // SELL
+          activities.push({
+            ...syntheticActivityTemplate,
+            quantity: currentBalance - balanceItem.value,
+            type: ActivityType.SELL,
+            value: currentBalance - balanceItem.value,
+            valueInBaseCurrency:
+              currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
+          });
+        }
+
+        currentBalance = balanceItem.value;
+        currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
+      }
+    }
+
+    return {
+      activities,
+      count: activities.length
+    };
   }
 
   public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -610,22 +741,52 @@ export class OrderService {
     return { activities, count };
   }
 
+  /**
+   * Retrieves all orders required for the portfolio calculator, including both standard asset orders
+   * and optional synthetic orders representing cash activities.
+   */
   @LogPerformance
   public async getOrdersForPortfolioCalculator({
     filters,
     userCurrency,
-    userId
+    userId,
+    withCash = false
   }: {
+    /** Optional filters to apply to the orders. */
     filters?: Filter[];
+    /** The base currency of the user. */
     userCurrency: string;
+    /** The ID of the user. */
     userId: string;
+    /** Whether to include cash activities in the result. */
+    withCash?: boolean;
   }) {
-    return this.getOrders({
+    const orders = await this.getOrders({
       filters,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
     });
+
+    if (withCash) {
+      const cashDetails = await this.accountService.getCashDetails({
+        filters,
+        userId,
+        currency: userCurrency
+      });
+
+      const cashOrders = await this.getCashOrders({
+        cashDetails,
+        filters,
+        userCurrency,
+        userId
+      });
+
+      orders.activities.push(...cashOrders.activities);
+      orders.count += cashOrders.count;
+    }
+
+    return orders;
   }
 
   public async getStatisticsByCurrency(
