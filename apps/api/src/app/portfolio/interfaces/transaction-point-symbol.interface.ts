@@ -7,10 +7,14 @@ export interface TransactionPointSymbol {
   averagePrice: Big;
   currency: string;
   dataSource: DataSource;
+  dateOfFirstActivity: string;
   dividend: Big;
   fee: Big;
   feeInBaseCurrency: Big;
+
+  /** @deprecated use dateOfFirstActivity instead */
   firstBuyDate: string;
+
   includeInHoldings: boolean;
   investment: Big;
   quantity: Big;

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deprecated `firstBuyDate` in favor of `dateOfFirstActivity` in the portfolio calculator
 - Deprecated `transactionCount` in favor of `activitiesCount` in the portfolio calculator and service
 - Removed the deprecated `firstBuyDate` from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Upgraded `prettier` from version `3.7.4` to `3.8.0`

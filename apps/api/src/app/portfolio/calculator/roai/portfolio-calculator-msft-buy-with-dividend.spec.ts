@@ -135,6 +135,7 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('298.58'),
             currency: 'USD',
             dataSource: 'YAHOO',
+            dateOfFirstActivity: '2021-09-16',
             dividend: new Big('0.62'),
             dividendInBaseCurrency: new Big('0.62'),
             fee: new Big('19'),
