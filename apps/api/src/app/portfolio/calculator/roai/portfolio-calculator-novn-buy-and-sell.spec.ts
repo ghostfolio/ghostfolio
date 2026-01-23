@@ -7,6 +7,7 @@ import {
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
+import { getChartByYear } from '@ghostfolio/api/app/portfolio/portfolio-chart.helper';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -89,6 +90,10 @@ describe('PortfolioCalculator', () => {
       portfolioSnapshotService,
       redisCacheService
     );
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   describe('get current positions', () => {
@@ -259,6 +264,58 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2022-01-01', investment: 0 }
       ]);
+    });
+
+    it.only('with NOVN.SW buy and sell - performance grouped by year', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
+
+      const activities: Activity[] = exportResponse.activities.map(
+        (activity) => ({
+          ...activityDummyData,
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          feeInBaseCurrency: activity.fee,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: activity.currency,
+            dataSource: activity.dataSource,
+            name: 'Novartis AG',
+            symbol: activity.symbol
+          },
+          unitPriceInAssetProfileCurrency: activity.unitPrice
+        })
+      );
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: exportResponse.user.settings.currency,
+        userId: userDummyData.id
+      });
+
+      await portfolioCalculator.computeSnapshot();
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: parseDate('2022-04-11'),
+        start: parseDate('2022-03-06')
+      });
+
+      const chartByYear = getChartByYear(chart);
+
+      // All data is within 2022, so should only have one year entry
+      expect(chartByYear).toHaveLength(1);
+
+      // Should have the last data point of 2022 (2022-04-11) with normalized date
+      expect(chartByYear[0].date).toEqual('2022-01-01');
+      expect(chartByYear[0]).toMatchObject(
+        expect.objectContaining({
+          date: '2022-01-01',
+          netPerformance: 19.86,
+          netPerformanceInPercentage: 0.13100263852242744,
+          totalInvestmentValueWithCurrencyEffect: 0
+        })
+      );
     });
   });
 });

@@ -6,6 +6,7 @@ import {
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
+import { getChartByYear } from '@ghostfolio/api/app/portfolio/portfolio-chart.helper';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -88,6 +89,10 @@ describe('PortfolioCalculator', () => {
       portfolioSnapshotService,
       redisCacheService
     );
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   describe('get current positions', () => {
@@ -228,6 +233,58 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2023-01-01', investment: 82.329056 }
       ]);
+    });
+
+    it.only('with GOOGL buy - performance grouped by year', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2023-01-03'),
+          feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 0.9238,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
+          },
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 89.12
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      await portfolioCalculator.computeSnapshot();
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: parseDate('2023-07-10'),
+        start: parseDate('2023-01-03')
+      });
+
+      const chartByYear = getChartByYear(chart);
+
+      // All data is within 2023, so should only have one year entry
+      expect(chartByYear).toHaveLength(1);
+
+      // Should have the last data point of 2023 (2023-07-10) with normalized date
+      expect(chartByYear[0].date).toEqual('2023-01-01');
+      expect(chartByYear[0]).toMatchObject(
+        expect.objectContaining({
+          date: '2023-01-01',
+          netPerformance: new Big('26.33').mul(0.8854).toNumber(),
+          totalInvestmentValueWithCurrencyEffect: 82.329056
+        })
+      );
     });
   });
 });

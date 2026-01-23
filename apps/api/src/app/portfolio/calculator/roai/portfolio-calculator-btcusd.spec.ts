@@ -7,6 +7,7 @@ import {
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
+import { getChartByYear } from '@ghostfolio/api/app/portfolio/portfolio-chart.helper';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -86,6 +87,10 @@ describe('PortfolioCalculator', () => {
       portfolioSnapshotService,
       redisCacheService
     );
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   describe('get current positions', () => {
@@ -256,6 +261,66 @@ describe('PortfolioCalculator', () => {
         { date: '2021-01-01', investment: 44558.42 },
         { date: '2022-01-01', investment: 0 }
       ]);
+    });
+
+    it.only('with BTCUSD buy - performance grouped by year', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
+
+      const activities: Activity[] = exportResponse.activities.map(
+        (activity) => ({
+          ...activityDummyData,
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 4.46,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: activity.dataSource,
+            name: 'Bitcoin',
+            symbol: activity.symbol
+          },
+          unitPriceInAssetProfileCurrency: 44558.42
+        })
+      );
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: exportResponse.user.settings.currency,
+        userId: userDummyData.id
+      });
+
+      await portfolioCalculator.computeSnapshot();
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: parseDate('2022-01-14'),
+        start: parseDate('2021-12-11')
+      });
+
+      const chartByYear = getChartByYear(chart);
+
+      // Chart spans from 2021-12-11 to 2022-01-14, covering two years
+      expect(chartByYear).toHaveLength(2);
+
+      // First year (2021) - should have the last data point from 2021-12-31
+      expect(chartByYear[0].date).toEqual('2021-01-01');
+      expect(chartByYear[0]).toMatchObject(
+        expect.objectContaining({
+          date: '2021-01-01',
+          totalInvestmentValueWithCurrencyEffect: 44558.42
+        })
+      );
+
+      // Second year (2022) - should have the last data point from 2022-01-14
+      expect(chartByYear[1].date).toEqual('2022-01-01');
+      expect(chartByYear[1]).toMatchObject(
+        expect.objectContaining({
+          date: '2022-01-01',
+          netPerformance: -1463.18,
+          totalInvestmentValueWithCurrencyEffect: 44558.42
+        })
+      );
     });
   });
 });
