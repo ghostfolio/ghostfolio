@@ -129,6 +129,11 @@ describe('PortfolioCalculator', () => {
         groupBy: 'month'
       });
 
+      const investmentsByYear = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
+      });
+
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
@@ -219,6 +224,10 @@ describe('PortfolioCalculator', () => {
           date: '2023-07-01',
           investment: 0
         }
+      ]);
+
+      expect(investmentsByYear).toEqual([
+        { date: '2023-01-01', investment: 82.329056 }
       ]);
     });
   });
