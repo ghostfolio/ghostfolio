@@ -7,6 +7,7 @@ import { Holding } from './holding.interface';
 import { Sector } from './sector.interface';
 
 export interface PortfolioPosition {
+  activitiesCount: number;
   allocationInPercentage: number;
   assetClass?: AssetClass;
   assetClassLabel?: string;
@@ -38,7 +39,10 @@ export interface PortfolioPosition {
   sectors: Sector[];
   symbol: string;
   tags?: Tag[];
+
+  /** @deprecated use activitiesCount instead */
   transactionCount: number;
+
   type?: string;
   url?: string;
   valueInBaseCurrency?: number;

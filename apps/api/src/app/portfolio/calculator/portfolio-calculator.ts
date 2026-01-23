@@ -407,9 +407,11 @@ export abstract class PortfolioCalculator {
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
+        activitiesCount: item.activitiesCount,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
+        dateOfFirstActivity: item.dateOfFirstActivity,
         dividend: totalDividend,
         dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
@@ -993,9 +995,11 @@ export abstract class PortfolioCalculator {
           investment,
           skipErrors,
           symbol,
+          activitiesCount: oldAccumulatedSymbol.activitiesCount + 1,
           averagePrice: newQuantity.eq(0)
             ? new Big(0)
             : investment.div(newQuantity).abs(),
+          dateOfFirstActivity: oldAccumulatedSymbol.dateOfFirstActivity,
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
           feeInBaseCurrency:
@@ -1016,7 +1020,9 @@ export abstract class PortfolioCalculator {
           skipErrors,
           symbol,
           tags,
+          activitiesCount: 1,
           averagePrice: unitPrice,
+          dateOfFirstActivity: date,
           dividend: new Big(0),
           firstBuyDate: date,
           includeInHoldings: INVESTMENT_ACTIVITY_TYPES.includes(type),

@@ -179,9 +179,9 @@ export class PortfolioService {
 
     return Promise.all(
       accounts.map(async (account) => {
+        let activitiesCount = 0;
         let dividendInBaseCurrency = 0;
         let interestInBaseCurrency = 0;
-        let transactionCount = 0;
 
         for (const {
           currency,
@@ -214,7 +214,7 @@ export class PortfolioService {
           }
 
           if (!isDraft) {
-            transactionCount += 1;
+            activitiesCount += 1;
           }
         }
 
@@ -223,9 +223,9 @@ export class PortfolioService {
 
         const result = {
           ...account,
+          activitiesCount,
           dividendInBaseCurrency,
           interestInBaseCurrency,
-          transactionCount,
           valueInBaseCurrency,
           allocationInPercentage: 0,
           balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
@@ -233,6 +233,7 @@ export class PortfolioService {
             account.currency,
             userCurrency
           ),
+          transactionCount: activitiesCount,
           value: this.exchangeRateDataService.toCurrency(
             valueInBaseCurrency,
             userCurrency,
@@ -262,6 +263,8 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
+    let activitiesCount = 0;
+
     const searchQuery = filters.find(({ type }) => {
       return type === 'SEARCH_QUERY';
     })?.id;
@@ -284,6 +287,8 @@ export class PortfolioService {
     let transactionCount = 0;
 
     for (const account of accounts) {
+      activitiesCount += account.activitiesCount;
+
       totalBalanceInBaseCurrency = totalBalanceInBaseCurrency.plus(
         account.balanceInBaseCurrency
       );
@@ -296,6 +301,7 @@ export class PortfolioService {
       totalValueInBaseCurrency = totalValueInBaseCurrency.plus(
         account.valueInBaseCurrency
       );
+
       transactionCount += account.transactionCount;
     }
 
@@ -310,6 +316,7 @@ export class PortfolioService {
 
     return {
       accounts,
+      activitiesCount,
       transactionCount,
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
       totalDividendInBaseCurrency: totalDividendInBaseCurrency.toNumber(),
@@ -567,6 +574,7 @@ export class PortfolioService {
     }
 
     for (const {
+      activitiesCount,
       currency,
       dividend,
       firstBuyDate,
@@ -610,6 +618,7 @@ export class PortfolioService {
       }
 
       holdings[symbol] = {
+        activitiesCount,
         currency,
         markets,
         marketsAdvanced,
@@ -789,6 +798,7 @@ export class PortfolioService {
     }
 
     const {
+      activitiesCount,
       averagePrice,
       currency,
       dividendInBaseCurrency,
@@ -807,8 +817,7 @@ export class PortfolioService {
       quantity,
       tags,
       timeWeightedInvestment,
-      timeWeightedInvestmentWithCurrencyEffect,
-      transactionCount
+      timeWeightedInvestmentWithCurrencyEffect
     } = holding;
 
     const activitiesOfHolding = activities.filter(({ SymbolProfile }) => {
@@ -914,15 +923,15 @@ export class PortfolioService {
       );
 
     return {
-      firstBuyDate,
+      activitiesCount,
       marketPrice,
       marketPriceMax,
       marketPriceMin,
       SymbolProfile,
       tags,
-      activitiesCount: transactionCount,
       averagePrice: averagePrice.toNumber(),
       dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
+      dateOfFirstActivity: firstBuyDate,
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       dividendYieldPercent: dividendYieldPercent.toNumber(),
       dividendYieldPercentWithCurrencyEffect:
@@ -1657,6 +1666,7 @@ export class PortfolioService {
   }): PortfolioPosition {
     return {
       currency,
+      activitiesCount: 0,
       allocationInPercentage: 0,
       assetClass: AssetClass.LIQUIDITY,
       assetSubClass: AssetSubClass.CASH,
