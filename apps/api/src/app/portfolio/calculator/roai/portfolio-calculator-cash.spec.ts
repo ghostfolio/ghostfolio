@@ -234,6 +234,7 @@ describe('PortfolioCalculator', () => {
         averagePrice: new Big(1),
         currency: 'USD',
         dataSource: DataSource.YAHOO,
+        dateOfFirstActivity: '2023-12-31',
         dividend: new Big(0),
         dividendInBaseCurrency: new Big(0),
         fee: new Big(0),

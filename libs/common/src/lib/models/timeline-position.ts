@@ -17,6 +17,7 @@ export class TimelinePosition {
 
   currency: string;
   dataSource: DataSource;
+  dateOfFirstActivity: string;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
@@ -34,6 +35,7 @@ export class TimelinePosition {
   @Type(() => Big)
   feeInBaseCurrency: Big;
 
+  /** @deprecated use dateOfFirstActivity instead */
   firstBuyDate: string;
 
   @Transform(transformToBig, { toClassOnly: true })
