@@ -31,9 +31,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Retirement Date</mat-label>
           <div>
-            {{
-              calculatorForm.get('retirementDate')?.value | date: 'MMMM yyyy'
-            }}
+            {{ getFormattedRetirementDate() }}
           </div>
           <input
             class="d-none"
