@@ -202,7 +202,6 @@ describe('PortfolioCalculator', () => {
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('0'),
             feeInBaseCurrency: new Big('0'),
-            firstBuyDate: '2022-03-07',
             grossPerformance: new Big('19.86'),
             grossPerformancePercentage: new Big('0.13100263852242744063'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
