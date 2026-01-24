@@ -35,9 +35,6 @@ export class TimelinePosition {
   @Type(() => Big)
   feeInBaseCurrency: Big;
 
-  /** @deprecated use dateOfFirstActivity instead */
-  firstBuyDate: string;
-
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   grossPerformance: Big;

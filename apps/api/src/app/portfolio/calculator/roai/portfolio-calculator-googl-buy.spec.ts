@@ -149,7 +149,6 @@ describe('PortfolioCalculator', () => {
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('1'),
             feeInBaseCurrency: new Big('0.9238'),
-            firstBuyDate: '2023-01-03',
             grossPerformance: new Big('27.33').mul(0.8854),
             grossPerformancePercentage: new Big('0.3066651705565529623'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
