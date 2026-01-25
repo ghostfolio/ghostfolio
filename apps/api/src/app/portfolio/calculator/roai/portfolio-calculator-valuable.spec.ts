@@ -87,6 +87,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2022-01-01'),
           feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -115,9 +116,11 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 1,
             averagePrice: new Big('500000'),
             currency: 'USD',
             dataSource: 'MANUAL',
+            dateOfFirstActivity: '2022-01-01',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('0'),
@@ -129,7 +132,7 @@ describe('PortfolioCalculator', () => {
             grossPerformanceWithCurrencyEffect: new Big('0'),
             investment: new Big('500000'),
             investmentWithCurrencyEffect: new Big('500000'),
-            marketPrice: null,
+            marketPrice: 1,
             marketPriceInBaseCurrency: 500000,
             netPerformance: new Big('0'),
             netPerformancePercentage: new Big('0'),

@@ -24,7 +24,7 @@
     }
 
     .mdc-button {
-      height: 100%;
+      color: var(--mdc-text-button-label-text-color);
 
       &:not(.mat-primary) {
         background-color: transparent;

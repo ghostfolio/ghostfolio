@@ -1,5 +1,7 @@
-export const ExchangeRateDataServiceMock = {
-  getExchangeRatesByCurrency: ({ targetCurrency }): Promise<any> => {
+import { ExchangeRateDataService } from './exchange-rate-data.service';
+
+export const ExchangeRateDataServiceMock: Partial<ExchangeRateDataService> = {
+  getExchangeRatesByCurrency: ({ targetCurrency }) => {
     if (targetCurrency === 'CHF') {
       return Promise.resolve({
         CHFCHF: {
