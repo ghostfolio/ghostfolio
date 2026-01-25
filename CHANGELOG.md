@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Chinese (`zh`)
+- Improved the language localization for German (`de`)
 - Upgraded `prettier` from version `3.8.0` to `3.8.1`
 
 ## 2.233.0 - 2026-01-23
