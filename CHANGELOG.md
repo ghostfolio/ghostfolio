@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Update `DATABASE_URL` in `.env`: `sslmode=prefer` is no longer supported. Use `sslmode=require` if SSL is enabled, otherwise remove the `sslmode` parameter.
+- **Breaking Change**: The `sslmode=prefer` parameter in `DATABASE_URL` is no longer supported. Please update your environment variables (see `.env`) to use `sslmode=require` if _SSL_ is enabled or remove the `sslmode` parameter entirely if _SSL_ is not used.
 
 ## 2.233.0 - 2026-01-23
 
