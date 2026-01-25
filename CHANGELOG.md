@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for German (`de`)
+- Upgraded `angular` from version `21.0.6` to `21.1.1`
+- Upgraded `Nx` from version `22.3.3` to `22.4.1`
 - Upgraded `prettier` from version `3.8.0` to `3.8.1`
 
 ## 2.233.0 - 2026-01-23
