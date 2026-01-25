@@ -3345,7 +3345,7 @@
       </trans-unit>
       <trans-unit id="1010951358972351140" datatype="html">
         <source>Everything in <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Basic<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, plus:</source>
-        <target state="translated">包含 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>基础版<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>所有功能，以及:</target>
+        <target state="translated">包含 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Basic<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 所有功能，以及:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">199</context>
@@ -4361,7 +4361,7 @@
       </trans-unit>
       <trans-unit id="5891064527381218201" datatype="html">
         <source>Free</source>
-        <target state="translated">自由的</target>
+        <target state="translated">免费</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">86</context>
