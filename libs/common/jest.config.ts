@@ -2,6 +2,7 @@
 export default {
   displayName: 'common',
 
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {},
   transform: {
     '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
