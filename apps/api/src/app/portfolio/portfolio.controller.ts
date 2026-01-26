@@ -329,7 +329,7 @@ export class PortfolioController {
       types: ['DIVIDEND']
     });
 
-    let dividends = await this.portfolioService.getDividends({
+    let dividends = this.portfolioService.getDividends({
       activities,
       groupBy
     });

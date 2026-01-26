@@ -144,7 +144,7 @@ export function extractNumberFromString({
 }: {
   locale?: string;
   value: string;
-}): number {
+}): number | undefined {
   try {
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
@@ -273,7 +273,7 @@ export function getNumberFormatDecimal(aLocale?: string) {
 
   return formatObject.find((object) => {
     return object.type === 'decimal';
-  }).value;
+  })?.value;
 }
 
 export function getNumberFormatGroup(aLocale = getLocale()) {
@@ -283,7 +283,7 @@ export function getNumberFormatGroup(aLocale = getLocale()) {
 
   return formatObject.find((object) => {
     return object.type === 'group';
-  }).value;
+  })?.value;
 }
 
 export function getStartOfUtcDate(aDate: Date) {
@@ -394,7 +394,7 @@ export function isRootCurrency(aCurrency: string) {
   });
 }
 
-export function parseDate(date: string): Date {
+export function parseDate(date: string): Date | undefined {
   if (!date) {
     return undefined;
   }

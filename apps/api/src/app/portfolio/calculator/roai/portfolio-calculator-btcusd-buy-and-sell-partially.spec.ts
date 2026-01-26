@@ -146,6 +146,11 @@ describe('PortfolioCalculator', () => {
         groupBy: 'month'
       });
 
+      const investmentsByYear = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
+      });
+
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('13298.425356'),
         errors: [],
@@ -153,9 +158,11 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 2,
             averagePrice: new Big('320.43'),
             currency: 'USD',
             dataSource: 'YAHOO',
+            dateOfFirstActivity: '2015-01-01',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('0'),
@@ -251,6 +258,13 @@ describe('PortfolioCalculator', () => {
         { date: '2017-10-01', investment: 0 },
         { date: '2017-11-01', investment: 0 },
         { date: '2017-12-01', investment: -318.54266729999995 },
+        { date: '2018-01-01', investment: 0 }
+      ]);
+
+      expect(investmentsByYear).toEqual([
+        { date: '2015-01-01', investment: 637.0853345999999 },
+        { date: '2016-01-01', investment: 0 },
+        { date: '2017-01-01', investment: -318.54266729999995 },
         { date: '2018-01-01', investment: 0 }
       ]);
     });

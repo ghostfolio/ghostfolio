@@ -116,9 +116,11 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
+            activitiesCount: 1,
             averagePrice: new Big('500000'),
             currency: 'USD',
             dataSource: 'MANUAL',
+            dateOfFirstActivity: '2022-01-01',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('0'),
