@@ -217,6 +217,15 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
             });
           }
         }
+
+        response.holdings = [];
+
+        for (const holding of assetProfile.topHoldings.holdings) {
+          response.holdings.push({
+            name: holding.holdingName,
+            weight: holding.holdingPercent
+          });
+        }
       } else if (
         assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country
