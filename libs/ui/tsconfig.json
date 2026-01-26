@@ -19,6 +19,7 @@
     "target": "es2020",
     // TODO: Remove once solved in tsconfig.base.json
     "strict": false,
+    "strictNullChecks": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
