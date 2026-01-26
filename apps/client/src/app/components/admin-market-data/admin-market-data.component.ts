@@ -416,26 +416,6 @@ export class GfAdminMarketDataComponent
       });
   }
 
-  private refreshTable() {
-    this.isLoading = true;
-    this.changeDetectorRef.markForCheck();
-
-    this.adminService
-      .fetchAdminMarketData({
-        filters: this.activeFilters,
-        take: this.pageSize
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketData }) => {
-        this.dataSource = new MatTableDataSource(marketData);
-        this.dataSource.sort = this.sort;
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
   private openAssetProfileDialog({
     dataSource,
     symbol
@@ -504,6 +484,8 @@ export class GfAdminMarketDataComponent
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((result) => {
             if (!result) {
+              this.router.navigate(['.'], { relativeTo: this.route });
+
               return;
             }
 
@@ -514,13 +496,13 @@ export class GfAdminMarketDataComponent
                 .addAssetProfile({ dataSource, symbol })
                 .pipe(takeUntil(this.unsubscribeSubject))
                 .subscribe(() => {
-                  this.refreshTable();
+                  this.loadData();
                 });
             } else {
-              this.refreshTable();
+              this.loadData();
             }
 
-            this.router.navigate(['.'], { relativeTo: this.route });
+            this.onOpenAssetProfileDialog({ dataSource, symbol });
           });
       });
   }
