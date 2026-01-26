@@ -135,7 +135,7 @@ export class GfPortfolioProportionChartComponent
 
             if (
               chartData[this.data[symbol][this.keys[0]].toUpperCase()]
-                .subCategory[this.data[symbol][this.keys[1]]]
+                ?.subCategory?.[this.data[symbol][this.keys[1]]]
             ) {
               chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()

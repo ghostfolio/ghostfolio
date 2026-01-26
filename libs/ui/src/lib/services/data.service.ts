@@ -89,7 +89,7 @@ export class DataService {
   public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();
 
-    if (filters?.length > 0) {
+    if (filters && filters.length > 0) {
       const {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,

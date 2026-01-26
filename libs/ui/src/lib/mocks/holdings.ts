@@ -162,7 +162,7 @@ export const holdings: PortfolioPosition[] = [
     symbol: 'bitcoin',
     tags: [],
     transactionCount: 1,
-    url: null,
+    url: undefined,
     valueInBaseCurrency: 54666.7898248
   },
   {

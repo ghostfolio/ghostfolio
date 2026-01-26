@@ -27,11 +27,11 @@ export class GfPromptDialogComponent {
   public constructor(public dialogRef: MatDialogRef<GfPromptDialogComponent>) {}
 
   public initialize(aParams: {
-    confirmLabel?: string;
-    defaultValue?: string;
-    discardLabel?: string;
+    confirmLabel: string;
+    defaultValue: string;
+    discardLabel: string;
     title: string;
-    valueLabel?: string;
+    valueLabel: string;
   }) {
     this.confirmLabel = aParams.confirmLabel;
     this.defaultValue = aParams.defaultValue;

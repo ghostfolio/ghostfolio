@@ -24,5 +24,5 @@ export class GfNoTransactionsInfoComponent {
   @HostBinding('class.has-border') @Input() hasBorder = true;
 
   public routerLinkPortfolioActivities =
-    internalRoutes.portfolio.subRoutes.activities.routerLink;
+    internalRoutes.portfolio.subRoutes?.activities.routerLink;
 }
