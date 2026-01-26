@@ -3,4 +3,5 @@ export interface UserDetailDialogParams {
   hasPermissionForSubscription: boolean;
   locale: string;
   userId: string;
+  currentUserId: string;
 }
