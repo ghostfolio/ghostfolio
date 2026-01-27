@@ -98,6 +98,7 @@ export class UserService {
 
   public async getUser(
     { accounts, id, permissions, settings, subscription }: UserWithSettings,
+    impersonationUserId: string,
     aLocale = locale
   ): Promise<IUser> {
     const userData = await Promise.all([
@@ -107,6 +108,14 @@ export class UserService {
         },
         orderBy: { alias: 'asc' },
         where: { granteeUserId: id }
+      }),
+      this.prismaService.account.findMany({
+        orderBy: {
+          name: 'asc'
+        },
+        where: {
+          userId: impersonationUserId
+        }
       }),
       this.prismaService.order.count({
         where: { userId: id }
@@ -121,9 +130,10 @@ export class UserService {
     ]);
 
     const access = userData[0];
-    const activitiesCount = userData[1];
-    const firstActivity = userData[2];
-    let tags = userData[3].filter((tag) => {
+    const impersonationAccounts = userData[1];
+    const activitiesCount = userData[2];
+    const firstActivity = userData[3];
+    let tags = userData[4].filter((tag) => {
       return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
     });
 
@@ -146,7 +156,6 @@ export class UserService {
     }
 
     return {
-      accounts,
       activitiesCount,
       id,
       permissions,
@@ -160,6 +169,7 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
+      accounts: impersonationUserId ? impersonationAccounts : accounts,
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
