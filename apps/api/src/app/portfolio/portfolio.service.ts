@@ -1868,8 +1868,11 @@ export class PortfolioService {
       }
     }
 
-    const { currentValueInBaseCurrency, totalInvestment } =
-      await portfolioCalculator.getSnapshot();
+    const {
+      annualizedDividendYield,
+      currentValueInBaseCurrency,
+      totalInvestment
+    } = await portfolioCalculator.getSnapshot();
 
     const { performance } = await this.getPerformance({
       impersonationId,
@@ -1967,6 +1970,7 @@ export class PortfolioService {
       })?.toNumber();
 
     return {
+      annualizedDividendYield,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
