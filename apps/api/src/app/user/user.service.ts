@@ -97,7 +97,15 @@ export class UserService {
   }
 
   public async getUser(
-    { accounts, id, permissions, settings, subscription }: UserWithSettings,
+    {
+      accounts,
+      id,
+      permissions,
+      provider,
+      settings,
+      subscription,
+      thirdPartyId
+    }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
     const userData = await Promise.all([
@@ -150,9 +158,11 @@ export class UserService {
       activitiesCount,
       id,
       permissions,
+      provider,
       subscription,
       systemMessage,
       tags,
+      thirdPartyId,
       access: access.map((accessItem) => {
         return {
           alias: accessItem.alias,
