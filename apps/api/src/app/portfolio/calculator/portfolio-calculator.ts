@@ -48,6 +48,7 @@ import {
   eachYearOfInterval,
   endOfDay,
   endOfYear,
+  subYears,
   format,
   isAfter,
   isBefore,
@@ -186,6 +187,7 @@ export abstract class PortfolioCalculator {
     if (!transactionPoints.length) {
       return {
         activitiesCount: 0,
+        annualizedDividendYield: 0,
         createdAt: new Date(),
         currentValueInBaseCurrency: new Big(0),
         errors: [],
@@ -404,11 +406,38 @@ export abstract class PortfolioCalculator {
         };
       }
 
+      // Calculate annualized dividend yield based on investment (cost basis)
+      const twelveMonthsAgo = subYears(this.endDate, 1);
+      const dividendsLast12Months = this.activities
+        .filter(({ SymbolProfile, type, date }) => {
+          return (
+            SymbolProfile.symbol === item.symbol &&
+            type === 'DIVIDEND' &&
+            new Date(date) >= twelveMonthsAgo &&
+            new Date(date) <= this.endDate
+          );
+        })
+        .reduce((sum, activity) => {
+          const exchangeRate =
+            exchangeRatesByCurrency[
+              `${activity.SymbolProfile.currency}${this.currency}`
+            ]?.[format(new Date(activity.date), DATE_FORMAT)] ?? 1;
+          const dividendAmount = activity.quantity.mul(activity.unitPrice);
+          return sum.plus(dividendAmount.mul(exchangeRate));
+        }, new Big(0));
+
+      const annualizedDividendYield = totalInvestmentWithCurrencyEffect.gt(0)
+        ? dividendsLast12Months
+            .div(totalInvestmentWithCurrencyEffect)
+            .toNumber()
+        : 0;
+
       positions.push({
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         activitiesCount: item.activitiesCount,
+        annualizedDividendYield,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,

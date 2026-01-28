@@ -75,6 +75,15 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'IBM':
+      if (isSameDay(parseDate('2021-10-01'), date)) {
+        return { marketPrice: 140.5 };
+      } else if (isSameDay(parseDate('2023-07-10'), date)) {
+        return { marketPrice: 145.2 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'MSFT':
       if (isSameDay(parseDate('2021-09-16'), date)) {
         return { marketPrice: 89.12 };
