@@ -1870,6 +1870,14 @@
           <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="2480205436092170223" datatype="html">
+        <source>Annualized Dividend Yield</source>
+        <target state="translated">Yıllık Temettü Getirisi</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">379</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="2486744036183712016" datatype="html">
         <source>Professional Data Provider</source>
         <target state="translated">Profesyonel Veri Sağlayıcı</target>
