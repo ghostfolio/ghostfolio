@@ -81,6 +81,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.234.0 - 2026-01-30
 
+### Added
+
+- Added the annualized dividend yield to the portfolio summary (experimental)
+
 ### Changed
 
 - Improved the usability of the create asset profile dialog in the market data section of the admin control panel
