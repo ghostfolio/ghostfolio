@@ -1,77 +1,176 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import {
+  activityDummyData,
+  symbolProfileDummyData,
+  userDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import { Activity } from '@ghostfolio/common/interfaces';
+import { RequestWithUser } from '@ghostfolio/common/types';
+
+import { Type as ActivityType } from '@prisma/client';
+import { Big } from 'big.js';
+
+import { PortfolioService } from './portfolio.service';
 
 describe('PortfolioService', () => {
   describe('getSummary', () => {
-    it('should include annualizedDividendYield from calculator snapshot', async () => {
-      // This test verifies that getSummary() correctly extracts
-      // annualizedDividendYield from the calculator snapshot
-      // and includes it in the returned PortfolioSummary
-
-      // Mock calculator with annualizedDividendYield in snapshot
-      const mockSnapshot = {
-        annualizedDividendYield: 0.0184, // 1.84%
-        currentValueInBaseCurrency: { toNumber: () => 500 },
-        totalInvestment: { toNumber: () => 500 },
-        totalInvestmentWithCurrencyEffect: { toNumber: () => 500 }
-      };
-
-      const mockCalculator = {
-        getSnapshot: jest.fn().mockResolvedValue(mockSnapshot)
-      } as unknown as PortfolioCalculator;
-
-      // Verify that the snapshot has the annualizedDividendYield
-      const snapshot = await mockCalculator.getSnapshot();
-      expect(snapshot).toHaveProperty('annualizedDividendYield');
-      expect(snapshot.annualizedDividendYield).toBe(0.0184);
-
-      // The actual PortfolioService.getSummary() implementation should:
-      // 1. Call portfolioCalculator.getSnapshot()
-      // 2. Extract annualizedDividendYield from the snapshot
-      // 3. Include it in the returned PortfolioSummary
-      //
-      // Implementation in portfolio.service.ts:1867-1869:
-      //   const { annualizedDividendYield, ... } = await portfolioCalculator.getSnapshot();
-      //
-      // And in the return statement at line 1965:
-      //   return { annualizedDividendYield, ... }
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2023-07-10'));
     });
 
-    it('should handle zero annualizedDividendYield for portfolios without dividends', async () => {
-      const mockSnapshot = {
-        annualizedDividendYield: 0,
-        currentValueInBaseCurrency: { toNumber: () => 1000 },
-        totalInvestment: { toNumber: () => 1000 },
-        totalInvestmentWithCurrencyEffect: { toNumber: () => 1000 }
-      };
-
-      const mockCalculator = {
-        getSnapshot: jest.fn().mockResolvedValue(mockSnapshot)
-      } as unknown as PortfolioCalculator;
-
-      const snapshot = await mockCalculator.getSnapshot();
-      expect(snapshot.annualizedDividendYield).toBe(0);
+    afterEach(() => {
+      jest.useRealTimers();
+      jest.restoreAllMocks();
     });
 
-    it('should verify the data flow from Calculator to Service', () => {
-      // This test documents the expected data flow:
-      //
-      // 1. Calculator Level (portfolio-calculator.ts):
-      //    - Calculates annualizedDividendYield for each position
-      //    - Aggregates to portfolio-wide annualizedDividendYield in snapshot
-      //
-      // 2. Service Level (portfolio.service.ts:getSummary):
-      //    - Calls: const { annualizedDividendYield } = await portfolioCalculator.getSnapshot()
-      //    - Returns: { annualizedDividendYield, ...otherFields }
-      //
-      // 3. API Response (PortfolioSummary interface):
-      //    - Client receives annualizedDividendYield as part of the summary
-      //
-      // This flow is verified by:
-      // - Calculator tests: portfolio-calculator-msft-buy-with-dividend.spec.ts
-      // - This service test: verifies extraction from snapshot
-      // - Integration would be tested via E2E tests (if they existed)
+    it('returns annualizedDividendYield from the calculator snapshot', async () => {
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          currency: 'USD',
+          date: new Date('2023-06-01'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: ActivityType.BUY,
+          unitPrice: 50,
+          unitPriceInAssetProfileCurrency: 50,
+          value: 100,
+          valueInBaseCurrency: 100
+        },
+        {
+          ...activityDummyData,
+          currency: 'USD',
+          date: new Date('2023-06-02'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: ActivityType.SELL,
+          unitPrice: 40,
+          unitPriceInAssetProfileCurrency: 40,
+          value: 40,
+          valueInBaseCurrency: 40
+        }
+      ];
 
-      expect(true).toBe(true); // Documentation test
+      const exchangeRateDataService = {
+        toCurrency: jest.fn((value: number) => value)
+      };
+
+      const orderService = {
+        getOrders: jest.fn().mockResolvedValue({ activities })
+      };
+
+      const userService = {
+        user: jest.fn().mockResolvedValue({
+          id: userDummyData.id,
+          settings: {
+            settings: {
+              baseCurrency: DEFAULT_CURRENCY,
+              emergencyFund: 0
+            }
+          }
+        })
+      };
+
+      const accountService = {
+        getCashDetails: jest.fn().mockResolvedValue({
+          balanceInBaseCurrency: 1000
+        })
+      };
+
+      const impersonationService = {
+        validateImpersonationId: jest.fn().mockResolvedValue(undefined)
+      };
+
+      const request = {
+        user: {
+          id: userDummyData.id,
+          settings: { settings: { baseCurrency: DEFAULT_CURRENCY } }
+        }
+      } as RequestWithUser;
+
+      const portfolioCalculator = {
+        getDividendInBaseCurrency: jest.fn().mockResolvedValue(new Big(12)),
+        getFeesInBaseCurrency: jest.fn().mockResolvedValue(new Big(4)),
+        getInterestInBaseCurrency: jest.fn().mockResolvedValue(new Big(1)),
+        getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(6)),
+        getSnapshot: jest.fn().mockResolvedValue({
+          annualizedDividendYield: 0.0123,
+          currentValueInBaseCurrency: new Big(500),
+          totalInvestment: new Big(400)
+        }),
+        getStartDate: jest.fn().mockReturnValue(new Date('2023-01-01'))
+      } as unknown as PortfolioCalculator;
+
+      const service = new PortfolioService(
+        {} as any,
+        accountService as any,
+        {} as any,
+        {} as any,
+        {} as any,
+        exchangeRateDataService as any,
+        {} as any,
+        impersonationService as any,
+        orderService as any,
+        request,
+        {} as any,
+        {} as any,
+        userService as any
+      );
+
+      jest.spyOn(service, 'getPerformance').mockResolvedValue({
+        performance: {
+          netPerformance: 20,
+          netPerformancePercentage: 0.05,
+          netPerformancePercentageWithCurrencyEffect: 0.05,
+          netPerformanceWithCurrencyEffect: 20
+        }
+      } as any);
+
+      const summary = await (service as any).getSummary({
+        balanceInBaseCurrency: 1000,
+        emergencyFundHoldingsValueInBaseCurrency: 0,
+        filteredValueInBaseCurrency: new Big(200),
+        impersonationId: userDummyData.id,
+        portfolioCalculator,
+        userCurrency: DEFAULT_CURRENCY,
+        userId: userDummyData.id
+      });
+
+      expect(portfolioCalculator.getSnapshot).toHaveBeenCalledTimes(1);
+      expect(summary).toMatchObject({
+        annualizedDividendYield: 0.0123,
+        cash: 1000,
+        committedFunds: 60,
+        dividendInBaseCurrency: 12,
+        fees: 4,
+        grossPerformance: 24,
+        grossPerformanceWithCurrencyEffect: 24,
+        interestInBaseCurrency: 1,
+        liabilitiesInBaseCurrency: 6,
+        totalBuy: 100,
+        totalInvestment: 400,
+        totalSell: 40,
+        totalValueInBaseCurrency: 1494
+      });
+      expect(summary.activityCount).toBe(2);
+      expect(summary.dateOfFirstActivity).toEqual(new Date('2023-01-01'));
     });
   });
 });
