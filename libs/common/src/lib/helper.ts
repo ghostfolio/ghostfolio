@@ -223,8 +223,8 @@ export function getDateFormatString(aLocale?: string) {
   );
 
   return formatObject
-    .map((object) => {
-      switch (object.type) {
+    .map(({ type, value }) => {
+      switch (type) {
         case 'day':
           return 'dd';
         case 'month':
@@ -232,7 +232,7 @@ export function getDateFormatString(aLocale?: string) {
         case 'year':
           return 'yyyy';
         default:
-          return object.value;
+          return value;
       }
     })
     .join('');
@@ -271,8 +271,8 @@ export function getLowercase(object: object, path: string) {
 export function getNumberFormatDecimal(aLocale?: string) {
   const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
 
-  return formatObject.find((object) => {
-    return object.type === 'decimal';
+  return formatObject.find(({ type }) => {
+    return type === 'decimal';
   })?.value;
 }
 
@@ -281,8 +281,8 @@ export function getNumberFormatGroup(aLocale = getLocale()) {
     useGrouping: true
   }).formatToParts(9999.99);
 
-  return formatObject.find((object) => {
-    return object.type === 'group';
+  return formatObject.find(({ type }) => {
+    return type === 'group';
   })?.value;
 }
 

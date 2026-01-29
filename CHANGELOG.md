@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the create asset profile dialog in the market data section of the admin control panel
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `21.0.6` to `21.1.1`
