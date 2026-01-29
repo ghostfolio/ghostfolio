@@ -101,6 +101,7 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onSubmit() {
     if (this.mode === 'auto') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource:
           this.createAssetProfileForm.get('searchSymbol').value.dataSource,
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
@@ -127,10 +128,15 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
           takeUntil(this.unsubscribeSubject)
         )
         .subscribe(() => {
-          this.dialogRef.close();
+          this.dialogRef.close({
+            addAssetProfile: false,
+            dataSource: this.dataSourceForExchangeRates,
+            symbol: `${DEFAULT_CURRENCY}${currency}`
+          });
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource: 'MANUAL',
         symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`
       });
