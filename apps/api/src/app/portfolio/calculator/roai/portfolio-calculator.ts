@@ -34,7 +34,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
-    let totalDividendsInBaseCurrency = new Big(0);
+    let totalDividendsLast12MonthsInBaseCurrency = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
     const totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
@@ -47,10 +47,13 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         return includeInTotalAssetValue;
       }
     )) {
-      if (currentPosition.dividendInBaseCurrency) {
-        totalDividendsInBaseCurrency = totalDividendsInBaseCurrency.plus(
-          currentPosition.dividendInBaseCurrency
-        );
+      if (currentPosition.investmentWithCurrencyEffect) {
+        totalDividendsLast12MonthsInBaseCurrency =
+          totalDividendsLast12MonthsInBaseCurrency.plus(
+            new Big(currentPosition.annualizedDividendYield ?? 0).mul(
+              currentPosition.investmentWithCurrencyEffect
+            )
+          );
       }
 
       if (currentPosition.feeInBaseCurrency) {
@@ -114,7 +117,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     // Calculate annualized dividend yield for the entire portfolio
     const annualizedDividendYield = totalInvestmentWithCurrencyEffect.gt(0)
-      ? totalDividendsInBaseCurrency
+      ? totalDividendsLast12MonthsInBaseCurrency
           .div(totalInvestmentWithCurrencyEffect)
           .toNumber()
       : 0;
