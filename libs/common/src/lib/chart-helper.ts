@@ -1,4 +1,10 @@
-import { Chart, TooltipPosition } from 'chart.js';
+import type { ElementRef } from '@angular/core';
+import type {
+  Chart,
+  ChartTypeRegistry,
+  Plugin,
+  TooltipPosition
+} from 'chart.js';
 import { format } from 'date-fns';
 
 import {
@@ -34,12 +40,12 @@ export function getTooltipOptions({
   locale = getLocale(),
   unit = ''
 }: {
-  colorScheme?: ColorScheme;
+  colorScheme: ColorScheme;
   currency?: string;
   groupBy?: GroupBy;
   locale?: string;
   unit?: string;
-} = {}) {
+}) {
   return {
     backgroundColor: getBackgroundColor(colorScheme),
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
@@ -47,7 +53,7 @@ export function getTooltipOptions({
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
     callbacks: {
       label: (context) => {
-        let label = context.dataset.label || '';
+        let label = context.dataset.label ?? '';
         if (label) {
           label += ': ';
         }
@@ -98,10 +104,10 @@ export function getTooltipPositionerMapTop(
   };
 }
 
-export function getVerticalHoverLinePlugin(
-  chartCanvas,
-  colorScheme?: ColorScheme
-) {
+export function getVerticalHoverLinePlugin<T extends keyof ChartTypeRegistry>(
+  chartCanvas: ElementRef,
+  colorScheme: ColorScheme
+): Plugin<T> {
   return {
     afterDatasetsDraw: (chart, _, options) => {
       const active = chart.getActiveElements();
@@ -110,8 +116,8 @@ export function getVerticalHoverLinePlugin(
         return;
       }
 
-      const color = options.color || `rgb(${getTextColor(colorScheme)})`;
-      const width = options.width || 1;
+      const color = options.color ?? `rgb(${getTextColor(colorScheme)})`;
+      const width = options.width ?? 1;
 
       const {
         chartArea: { bottom, top }
