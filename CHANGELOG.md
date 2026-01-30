@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Spanish (`es`)
 - Improved the usability of the create asset profile dialog in the market data section of the admin control panel
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for German (`de`)
