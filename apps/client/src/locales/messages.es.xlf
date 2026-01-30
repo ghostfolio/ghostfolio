@@ -6175,7 +6175,7 @@
       </trans-unit>
       <trans-unit id="7309206099560156141" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {activity} other {activities}}</source>
-        <target state="new">{VAR_PLURAL, plural, =1 {activity} other {activities}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {actividad} other {actividades}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">14</context>
@@ -6855,7 +6855,7 @@
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="@if ( SymbolProfile?.currency &amp;&amp; data.baseCurrency !== SymbolProfile?.currency ) {"/> Performance with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Performance <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="new"><x id="START_BLOCK_IF" equiv-text="@if ( SymbolProfile?.currency &amp;&amp; data.baseCurrency !== SymbolProfile?.currency ) {"/> Performance with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Performance <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target state="translated"><x id="START_BLOCK_IF" equiv-text="@if ( SymbolProfile?.currency &amp;&amp; data.baseCurrency !== SymbolProfile?.currency ) {"/> Rendimiento con cambio de divisa <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Rendimiento <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">83</context>
@@ -8266,7 +8266,7 @@
       </trans-unit>
       <trans-unit id="187187500641108332" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/></source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/></target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ `Expira ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">39</context>
