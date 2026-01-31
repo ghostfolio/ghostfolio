@@ -73,6 +73,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class GfAdminOverviewComponent implements OnDestroy, OnInit {
+  public activitiesCount: number;
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
   public hasPermissionForSubscription: boolean;
@@ -83,7 +84,6 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
   public isDataGatheringEnabled: boolean;
   public permissions = permissions;
   public systemMessage: SystemMessage;
-  public transactionCount: number;
   public userCount: number;
   public user: User;
   public version: string;
@@ -289,12 +289,12 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ settings, transactionCount, userCount, version }) => {
+      .subscribe(({ activitiesCount, settings, userCount, version }) => {
+        this.activitiesCount = activitiesCount;
         this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
         this.isDataGatheringEnabled =
           settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
         this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
-        this.transactionCount = transactionCount;
         this.userCount = userCount;
         this.version = version;
 

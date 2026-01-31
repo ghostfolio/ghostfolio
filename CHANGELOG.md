@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored `showTransactions` in favor of `showActivitiesCount` in the accounts table component
 - Refactored `transactionCount` in favor of `activitiesCount` in the accounts table component
+- Deprecated `transactionCount` in favor of `activitiesCount` in the endpoint `GET api/v1/admin`
 - Removed the deprecated `firstBuyDate` in the portfolio calculator
 
 ## 2.234.0 - 2026-01-30
