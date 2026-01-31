@@ -218,12 +218,14 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           }
         }
 
-        response.holdings = assetProfile.topHoldings.holdings.map((holding) => {
-          return {
-            name: holding.holdingName,
-            weight: holding.holdingPercent
-          };
-        });
+        response.holdings = assetProfile.topHoldings.holdings.map(
+          ({ holdingName, holdingPercent }) => {
+            return {
+              name: this.formatName({ longName: holdingName }),
+              weight: holdingPercent
+            };
+          }
+        );
       } else if (
         assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country
