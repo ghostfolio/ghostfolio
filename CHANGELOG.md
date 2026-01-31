@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the ability to fetch top holdings for ETF and mutual fund assets from _Yahoo Finance_
 
+### Changed
+
+- Removed the deprecated `firstBuyDate` in the portfolio calculator
+
 ## 2.234.0 - 2026-01-30
 
 ### Changed
