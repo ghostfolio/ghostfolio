@@ -26,7 +26,6 @@ import {
 } from '@angular/core';
 import {
   Chart,
-  ChartTypeRegistry,
   Filler,
   LinearScale,
   LineController,
@@ -34,8 +33,8 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
-  TooltipOptions,
-  TooltipPosition
+  type TooltipOptions,
+  type TooltipPosition
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -320,9 +319,7 @@ export class GfLineChartComponent
     };
   }
 
-  private getTooltipPluginConfiguration<
-    T extends keyof ChartTypeRegistry
-  >(): Partial<TooltipOptions<T>> {
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,

@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import { ChartConfiguration } from 'chart.js';
+import type { ChartConfiguration, TooltipOptions } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
@@ -294,8 +294,13 @@ export class GfTreemapChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+
+        if (!this.chart.options.plugins) {
+          this.chart.options.plugins = {};
+        }
+
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
+          this.getTooltipPluginConfiguration();
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -329,7 +334,7 @@ export class GfTreemapChartComponent
             plugins: {
               tooltip: this.getTooltipPluginConfiguration()
             }
-          } as unknown,
+          },
           type: 'treemap'
         });
       }
@@ -338,7 +343,7 @@ export class GfTreemapChartComponent
     this.isLoading = false;
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'treemap'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
