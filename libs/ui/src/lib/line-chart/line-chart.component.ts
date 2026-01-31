@@ -26,6 +26,7 @@ import {
 } from '@angular/core';
 import {
   Chart,
+  ChartTypeRegistry,
   Filler,
   LinearScale,
   LineController,
@@ -33,6 +34,7 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
+  TooltipOptions,
   TooltipPosition
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
@@ -117,9 +119,9 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices = [];
+    const benchmarkPrices: number[] = [];
     const labels: string[] = [];
-    const marketPrices = [];
+    const marketPrices: number[] = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
       benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
@@ -171,25 +173,26 @@ export class GfLineChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+
+        if (!this.chart.options.plugins) {
+          this.chart.options.plugins = {};
+        }
+
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
-        this.chart.options.animation =
-          this.isAnimated &&
-          ({
-            x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
-            y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
-          } as unknown);
+          this.getTooltipPluginConfiguration();
+        this.chart.options.animation = this.isAnimated && {
+          x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
+          y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
+        };
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            animation:
-              this.isAnimated &&
-              ({
-                x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
-                y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
-              } as unknown),
+            animation: this.isAnimated && {
+              x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
+              y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
+            },
             aspectRatio: 16 / 9,
             elements: {
               point: {
@@ -208,7 +211,7 @@ export class GfLineChartComponent
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            } as unknown,
+            },
             scales: {
               x: {
                 border: {
@@ -317,7 +320,9 @@ export class GfLineChartComponent
     };
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration<
+    T extends keyof ChartTypeRegistry
+  >(): Partial<TooltipOptions<T>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
@@ -326,7 +331,7 @@ export class GfLineChartComponent
         unit: this.unit
       }),
       mode: 'index',
-      position: 'top' as unknown,
+      position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'
     };
