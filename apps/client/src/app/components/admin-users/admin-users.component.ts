@@ -57,7 +57,7 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -139,30 +139,30 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.paramMap
-      .pipe(takeUntil(this.unsubscribeSubject))
+    this.userService.stateChanged
+      .pipe(
+        takeUntil(this.unsubscribeSubject),
+        tap((state) => {
+          if (state?.user) {
+            this.user = state.user;
+
+            this.defaultDateFormat = getDateFormatString(
+              this.user.settings.locale
+            );
+
+            this.hasPermissionToImpersonateAllUsers = hasPermission(
+              this.user.permissions,
+              permissions.impersonateAllUsers
+            );
+          }
+        }),
+        switchMap(() => this.route.paramMap)
+      )
       .subscribe((params) => {
         const userId = params.get('userId');
 
         if (userId) {
           this.openUserDetailDialog(userId);
-        }
-      });
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-
-          this.defaultDateFormat = getDateFormatString(
-            this.user.settings.locale
-          );
-
-          this.hasPermissionToImpersonateAllUsers = hasPermission(
-            this.user.permissions,
-            permissions.impersonateAllUsers
-          );
         }
       });
 
@@ -296,7 +296,8 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale,
-        userId: aUserId
+        userId: aUserId,
+        currentUserId: this.user?.id
       },
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -305,10 +306,14 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(
-          internalRoutes.adminControl.subRoutes.users.routerLink
-        );
+      .subscribe((data) => {
+        if (data?.userId) {
+          this.onDeleteUser(data.userId);
+        } else {
+          this.router.navigate(
+            internalRoutes.adminControl.subRoutes.users.routerLink
+          );
+        }
       });
   }
 }
