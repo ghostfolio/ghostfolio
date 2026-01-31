@@ -135,10 +135,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     shortName,
     symbol
   }: {
-    longName: Price['longName'];
-    quoteType: Price['quoteType'];
-    shortName: Price['shortName'];
-    symbol: Price['symbol'];
+    longName?: Price['longName'];
+    quoteType?: Price['quoteType'];
+    shortName?: Price['shortName'];
+    symbol?: Price['symbol'];
   }) {
     let name = longName;
 
