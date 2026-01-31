@@ -138,11 +138,11 @@ export class AdminService {
   public async get(): Promise<AdminData> {
     const dataSources = Object.values(DataSource);
 
-    const [enabledDataSources, settings, transactionCount, userCount] =
+    const [activitiesCount, enabledDataSources, settings, userCount] =
       await Promise.all([
+        this.prismaService.order.count(),
         this.dataProviderService.getDataSources(),
         this.propertyService.get(),
-        this.prismaService.order.count(),
         this.countUsersWithAnalytics()
       ]);
 
@@ -182,10 +182,11 @@ export class AdminService {
     ).filter(Boolean);
 
     return {
+      activitiesCount,
       dataProviders,
       settings,
-      transactionCount,
       userCount,
+      transactionCount: activitiesCount,
       version: environment.version
     };
   }
