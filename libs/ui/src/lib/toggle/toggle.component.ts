@@ -26,13 +26,15 @@ export class GfToggleComponent implements OnChanges {
 
   @Output() valueChange = new EventEmitter<Pick<ToggleOption, 'value'>>();
 
-  public optionFormControl = new FormControl<string>(undefined);
+  public optionFormControl = new FormControl<string | null>(null);
 
   public ngOnChanges() {
     this.optionFormControl.setValue(this.defaultValue);
   }
 
   public onValueChange() {
-    this.valueChange.emit({ value: this.optionFormControl.value });
+    if (this.optionFormControl.value !== null) {
+      this.valueChange.emit({ value: this.optionFormControl.value });
+    }
   }
 }

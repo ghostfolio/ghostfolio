@@ -8,7 +8,7 @@ export interface Activity extends Order {
   error?: ActivityError;
   feeInAssetProfileCurrency: number;
   feeInBaseCurrency: number;
-  SymbolProfile?: EnhancedSymbolProfile;
+  SymbolProfile: EnhancedSymbolProfile;
   tagIds?: string[];
   tags?: Tag[];
   unitPriceInAssetProfileCurrency: number;

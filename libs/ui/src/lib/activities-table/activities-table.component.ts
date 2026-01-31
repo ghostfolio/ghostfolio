@@ -132,7 +132,7 @@ export class GfActivitiesTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns = [];
+  public displayedColumns: string[] = [];
   public endOfToday = endOfToday();
   public hasDrafts = false;
   public hasErrors = false;
