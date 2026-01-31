@@ -115,10 +115,10 @@ export const Loading: Story = {
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
+    showActivitiesCount: true,
     showAllocationInPercentage: false,
     showBalance: true,
     showFooter: true,
-    showTransactions: true,
     showValue: true,
     showValueInBaseCurrency: true
   }
@@ -127,39 +127,39 @@ export const Loading: Story = {
 export const Default: Story = {
   args: {
     accounts,
+    activitiesCount: 12,
     baseCurrency: 'USD',
     deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
+    showActivitiesCount: true,
     showAllocationInPercentage: false,
     showBalance: true,
     showFooter: true,
-    showTransactions: true,
     showValue: true,
     showValueInBaseCurrency: true,
     totalBalanceInBaseCurrency: 12428.2,
-    totalValueInBaseCurrency: 107971.70321466809,
-    transactionCount: 12
+    totalValueInBaseCurrency: 107971.70321466809
   }
 };
 
 export const WithoutFooter: Story = {
   args: {
     accounts,
+    activitiesCount: 12,
     baseCurrency: 'USD',
     deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
+    showActivitiesCount: true,
     showAllocationInPercentage: false,
     showBalance: true,
     showFooter: false,
-    showTransactions: true,
     showValue: true,
     showValueInBaseCurrency: true,
     totalBalanceInBaseCurrency: 12428.2,
-    totalValueInBaseCurrency: 107971.70321466809,
-    transactionCount: 12
+    totalValueInBaseCurrency: 107971.70321466809
   }
 };

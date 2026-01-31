@@ -55,20 +55,20 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Input() accounts: Account[];
+  @Input() activitiesCount: number;
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() showActions: boolean;
+  @Input() showActivitiesCount = true;
   @Input() showAllocationInPercentage: boolean;
   @Input() showBalance = true;
   @Input() showFooter = true;
-  @Input() showTransactions = true;
   @Input() showValue = true;
   @Input() showValueInBaseCurrency = true;
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
-  @Input() transactionCount: number;
 
   @Output() accountDeleted = new EventEmitter<string>();
   @Output() accountToUpdate = new EventEmitter<Account>();
@@ -101,8 +101,8 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public ngOnChanges() {
     this.displayedColumns = ['status', 'account', 'platform'];
 
-    if (this.showTransactions) {
-      this.displayedColumns.push('transactions');
+    if (this.showActivitiesCount) {
+      this.displayedColumns.push('activitiesCount');
     }
 
     if (this.showBalance) {
