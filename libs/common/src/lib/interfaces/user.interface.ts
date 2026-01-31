@@ -1,7 +1,7 @@
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 
-import { Access, Tag } from '@prisma/client';
+import { Access, Provider, Tag } from '@prisma/client';
 
 import { SubscriptionOffer } from './subscription-offer.interface';
 import { SystemMessage } from './system-message.interface';
@@ -15,6 +15,7 @@ export interface User {
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
+  provider: Provider;
   settings: UserSettings;
   systemMessage?: SystemMessage;
   subscription: {
@@ -23,4 +24,5 @@ export interface User {
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];
+  thirdPartyId?: string;
 }
