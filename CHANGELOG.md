@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the ability to fetch top holdings for ETF and mutual fund assets from Yahoo Finance
+- Added the ability to fetch top holdings for ETF and mutual fund assets from _Yahoo Finance_
 
 ## 2.234.0 - 2026-01-30
 
