@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the value redaction interceptor for the impersonation mode by introducing `fast-redact`
 - Refactored `showTransactions` in favor of `showActivitiesCount` in the accounts table component
 - Refactored `transactionCount` in favor of `activitiesCount` in the accounts table component
 - Deprecated `transactionCount` in favor of `activitiesCount` in the endpoint `GET api/v1/admin`
