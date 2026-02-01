@@ -11,8 +11,8 @@ import { AlertDialogParams } from './interfaces/interfaces';
   templateUrl: './alert-dialog.html'
 })
 export class GfAlertDialogComponent {
-  public discardLabel: string;
-  public message: string;
+  public discardLabel?: string;
+  public message?: string;
   public title: string;
 
   public constructor(public dialogRef: MatDialogRef<GfAlertDialogComponent>) {}

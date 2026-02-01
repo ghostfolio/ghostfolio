@@ -139,7 +139,7 @@ export class GfValueComponent implements OnChanges {
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
-    this.precision = this.precision >= 0 ? this.precision : undefined;
+    this.precision = this.precision >= 0 ? this.precision : 0;
     this.useAbsoluteValue = false;
   }
 }
