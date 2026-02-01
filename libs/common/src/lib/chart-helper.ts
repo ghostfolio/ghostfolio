@@ -1,11 +1,5 @@
 import type { ElementRef } from '@angular/core';
-import type {
-  Chart,
-  ChartTypeRegistry,
-  Plugin,
-  TooltipOptions,
-  TooltipPosition
-} from 'chart.js';
+import type { Chart, Plugin, TooltipOptions, TooltipPosition } from 'chart.js';
 import { format } from 'date-fns';
 
 import {
@@ -98,8 +92,8 @@ export function getTooltipOptions({
   };
 }
 
-export function getTooltipPositionerMapTop(
-  chart: Chart,
+export function getTooltipPositionerMapTop<T extends 'line' | 'bar'>(
+  chart: Chart<T>,
   position: TooltipPosition
 ) {
   if (!position || !chart?.chartArea) {
@@ -111,7 +105,7 @@ export function getTooltipPositionerMapTop(
   };
 }
 
-export function getVerticalHoverLinePlugin<T extends keyof ChartTypeRegistry>(
+export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
   chartCanvas: ElementRef,
   colorScheme: ColorScheme
 ): Plugin<T> {
