@@ -135,10 +135,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     shortName,
     symbol
   }: {
-    longName: Price['longName'];
-    quoteType: Price['quoteType'];
-    shortName: Price['shortName'];
-    symbol: Price['symbol'];
+    longName?: Price['longName'];
+    quoteType?: Price['quoteType'];
+    shortName?: Price['shortName'];
+    symbol?: Price['symbol'];
   }) {
     let name = longName;
 
@@ -217,6 +217,15 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
             });
           }
         }
+
+        response.holdings = assetProfile.topHoldings.holdings.map(
+          ({ holdingName, holdingPercent }) => {
+            return {
+              name: this.formatName({ longName: holdingName }),
+              weight: holdingPercent
+            };
+          }
+        );
       } else if (
         assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country

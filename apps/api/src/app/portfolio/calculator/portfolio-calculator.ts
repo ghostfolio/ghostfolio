@@ -416,7 +416,6 @@ export abstract class PortfolioCalculator {
         dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
         feeInBaseCurrency: item.feeInBaseCurrency,
-        firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
           ? (grossPerformancePercentage ?? null)
@@ -1004,7 +1003,6 @@ export abstract class PortfolioCalculator {
           fee: oldAccumulatedSymbol.fee.plus(fee),
           feeInBaseCurrency:
             oldAccumulatedSymbol.feeInBaseCurrency.plus(feeInBaseCurrency),
-          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
           tags: oldAccumulatedSymbol.tags.concat(tags),
@@ -1024,7 +1022,6 @@ export abstract class PortfolioCalculator {
           averagePrice: unitPrice,
           dateOfFirstActivity: date,
           dividend: new Big(0),
-          firstBuyDate: date,
           includeInHoldings: INVESTMENT_ACTIVITY_TYPES.includes(type),
           investment: unitPrice.mul(quantity).mul(factor),
           quantity: quantity.mul(factor),
