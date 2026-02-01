@@ -19,12 +19,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  type ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   ViewChild
 } from '@angular/core';
 import {
+  type AnimationSpec,
   Chart,
   Filler,
   LinearScale,
@@ -68,7 +70,7 @@ export class GfLineChartComponent
   @Input() yMin: number;
   @Input() yMinLabel: string;
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart<'line'>;
   public isLoading = true;
@@ -130,10 +132,11 @@ export class GfLineChartComponent
 
     const gradient = this.chartCanvas?.nativeElement
       ?.getContext('2d')
-      .createLinearGradient(
+      ?.createLinearGradient(
         0,
         0,
         0,
+        // @ts-ignore
         (this.chartCanvas.nativeElement.parentNode.offsetHeight * 4) / 5
       );
 
@@ -180,6 +183,7 @@ export class GfLineChartComponent
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
         this.chart.options.animation = this.isAnimated && {
+          // @ts-ignore
           x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
           y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
         };
@@ -189,6 +193,7 @@ export class GfLineChartComponent
           data,
           options: {
             animation: this.isAnimated && {
+              // @ts-ignore
               x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
               y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
             },
@@ -207,6 +212,7 @@ export class GfLineChartComponent
                 position: 'bottom'
               },
               tooltip: this.getTooltipPluginConfiguration(),
+              // @ts-ignore
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
@@ -300,7 +306,7 @@ export class GfLineChartComponent
   }: {
     axis: 'x' | 'y';
     labels: string[];
-  }) {
+  }): AnimationSpec<'line'> {
     const delayBetweenPoints = this.ANIMATION_DURATION / labels.length;
 
     return {
@@ -310,11 +316,14 @@ export class GfLineChartComponent
         }
 
         context[`${axis}Started`] = true;
+        // @ts-ignore
         return context.index * delayBetweenPoints;
       },
       duration: delayBetweenPoints,
       easing: 'linear',
+      // @ts-ignore
       from: NaN,
+      // @ts-ignore
       type: 'number'
     };
   }
@@ -328,6 +337,7 @@ export class GfLineChartComponent
         unit: this.unit
       }),
       mode: 'index',
+      // @ts-ignore
       position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'

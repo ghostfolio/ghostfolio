@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import type { ChartConfiguration, TooltipOptions } from 'chart.js';
+import type { ChartData, TooltipOptions } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
@@ -35,7 +35,10 @@ import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
-import { GetColorParams } from './interfaces/interfaces';
+import {
+  GetColorParams,
+  GfTreemapChartTooltipContext
+} from './interfaces/interfaces';
 
 const { gray, green, red } = OpenColor;
 
@@ -198,10 +201,10 @@ export class GfTreemapChartComponent
       min: Math.min(...negativeNetPerformancePercents)
     };
 
-    const data: ChartConfiguration<'treemap'>['data'] = {
+    const data: ChartData<'treemap'> = {
       datasets: [
         {
-          backgroundColor: (context) => {
+          backgroundColor: (context: GfTreemapChartTooltipContext) => {
             let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
@@ -232,7 +235,7 @@ export class GfTreemapChartComponent
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: (context) => {
+            color: (context: GfTreemapChartTooltipContext) => {
               let annualizedNetPerformancePercent =
                 getAnnualizedPerformancePercent({
                   daysInMarket: differenceInDays(
@@ -261,7 +264,7 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: ({ raw }) => {
+            formatter: ({ raw }: GfTreemapChartTooltipContext) => {
               // Round to 4 decimal places
               let netPerformancePercentWithCurrencyEffect =
                 Math.round(
@@ -286,10 +289,11 @@ export class GfTreemapChartComponent
             position: 'top'
           },
           spacing: 1,
+          // @ts-ignore
           tree: this.holdings
         }
       ]
-    } as any;
+    };
 
     if (this.chartCanvas) {
       if (this.chart) {
@@ -303,7 +307,7 @@ export class GfTreemapChartComponent
           this.getTooltipPluginConfiguration();
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'treemap'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animation: false,
@@ -313,6 +317,7 @@ export class GfTreemapChartComponent
                 const datasetIndex = activeElements[0].datasetIndex;
 
                 const dataset = orderBy(
+                  // @ts-ignore
                   event.chart.data.datasets[datasetIndex].tree,
                   ['allocationInPercentage'],
                   ['desc']
@@ -326,6 +331,7 @@ export class GfTreemapChartComponent
             },
             onHover: (event, chartElement) => {
               if (this.cursor) {
+                // @ts-ignore
                 event.native.target.style.cursor = chartElement[0]
                   ? this.cursor
                   : 'default';
@@ -351,8 +357,9 @@ export class GfTreemapChartComponent
         locale: this.locale
       }),
       callbacks: {
-        label: ({ raw }) => {
-          const allocationInPercentage = `${((raw._data.allocationInPercentage as number) * 100).toFixed(2)}%`;
+        // @ts-ignore
+        label: ({ raw }: GfTreemapChartTooltipContext) => {
+          const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = raw._data.name;
           const sign =
             raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
@@ -361,11 +368,11 @@ export class GfTreemapChartComponent
           const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
-            const value = raw._data.valueInBaseCurrency as number;
+            const value = raw._data.valueInBaseCurrency;
 
             return [
               `${name ?? symbol} (${allocationInPercentage})`,
-              `${value.toLocaleString(this.locale, {
+              `${value?.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
               })} ${this.baseCurrency}`,

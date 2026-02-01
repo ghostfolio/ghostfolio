@@ -3,6 +3,7 @@ import type {
   Chart,
   ChartTypeRegistry,
   Plugin,
+  TooltipOptions,
   TooltipPosition
 } from 'chart.js';
 import { format } from 'date-fns';
@@ -21,7 +22,7 @@ export function formatGroupedDate({
   date,
   groupBy
 }: {
-  date: Date;
+  date: number;
   groupBy: GroupBy;
 }) {
   if (groupBy === 'month') {
@@ -45,34 +46,51 @@ export function getTooltipOptions({
   groupBy?: GroupBy;
   locale?: string;
   unit?: string;
-}) {
+}): Partial<TooltipOptions> {
   return {
     backgroundColor: getBackgroundColor(colorScheme),
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
     callbacks: {
+      afterBody: () => '',
+      afterFooter: () => '',
+      afterLabel: () => '',
+      afterTitle: () => '',
+      beforeBody: () => '',
+      beforeFooter: () => '',
+      beforeLabel: () => '',
+      beforeTitle: () => '',
+      footer: () => '',
       label: (context) => {
         let label = context.dataset.label ?? '';
         if (label) {
           label += ': ';
         }
+        // @ts-ignore
         if (context.parsed.y !== null) {
           if (currency) {
+            // @ts-ignore
             label += `${context.parsed.y.toLocaleString(locale, {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2
             })} ${currency}`;
           } else if (unit) {
+            // @ts-ignore
             label += `${context.parsed.y.toFixed(2)} ${unit}`;
           } else {
+            // @ts-ignore
             label += context.parsed.y.toFixed(2);
           }
         }
         return label;
       },
+      labelColor: () => {},
+      labelPointStyle: () => {},
+      labelTextColor: () => {},
       title: (contexts) => {
         if (groupBy) {
+          // @ts-ignore
           return formatGroupedDate({ groupBy, date: contexts[0].parsed.x });
         }
 

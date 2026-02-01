@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  type ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -42,7 +43,8 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
-  TooltipPosition
+  type TooltipOptions,
+  type TooltipPosition
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -78,7 +80,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @Output() benchmarkChanged = new EventEmitter<string>();
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart<'line'>;
   public hasPermissionToAccessAdminControl: boolean;
@@ -158,7 +160,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
+          this.getTooltipPluginConfiguration();
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -193,10 +195,11 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 display: false
               },
               tooltip: this.getTooltipPluginConfiguration(),
+              // @ts-ignore
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            } as unknown,
+            },
             responsive: true,
             scales: {
               x: {
@@ -253,7 +256,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
@@ -261,7 +264,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
         unit: '%'
       }),
       mode: 'index',
-      position: 'top' as unknown,
+      // @ts-ignore
+      position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'
     };

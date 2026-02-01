@@ -22,11 +22,16 @@ import {
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import { ChartConfiguration, Tooltip } from 'chart.js';
-import { LinearScale } from 'chart.js';
-import { ArcElement } from 'chart.js';
-import { DoughnutController } from 'chart.js';
-import { Chart } from 'chart.js';
+import {
+  ArcElement,
+  Chart,
+  type ChartData,
+  type ChartDataset,
+  DoughnutController,
+  LinearScale,
+  Tooltip,
+  type TooltipItem
+} from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { isUUID } from 'class-validator';
 import Color from 'color';
@@ -137,14 +142,16 @@ export class GfPortfolioProportionChartComponent
               chartData[this.data[symbol][this.keys[0]].toUpperCase()]
                 ?.subCategory?.[this.data[symbol][this.keys[1]]]
             ) {
+              // @ts-ignore
               chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()
               ].subCategory[this.data[symbol][this.keys[1]]].value = chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]]].value.plus(
+              ].subCategory?.[this.data[symbol][this.keys[1]]].value.plus(
                 this.data[symbol].value || 0
               );
             } else {
+              // @ts-ignore
               chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()
               ].subCategory[this.data[symbol][this.keys[1]] ?? UNKNOWN_KEY] = {
@@ -273,12 +280,14 @@ export class GfPortfolioProportionChartComponent
 
       Object.keys(item.subCategory ?? {}).forEach((subCategory) => {
         if (item.name === UNKNOWN_KEY) {
+          // @ts-ignore
           backgroundColorSubCategory.push(item.color);
         } else {
           backgroundColorSubCategory.push(
             Color(item.color).lighten(lightnessRatio).hex()
           );
         }
+        // @ts-ignore
         dataSubCategory.push(item.subCategory[subCategory].value.toNumber());
         labelSubCategory.push(subCategory);
 
@@ -286,7 +295,7 @@ export class GfPortfolioProportionChartComponent
       });
     });
 
-    const datasets: ChartConfiguration<'doughnut'>['data']['datasets'] = [
+    const datasets: ChartDataset<'doughnut'>[] = [
       {
         backgroundColor: chartDataSorted.map(([, item]) => {
           return item.color;
@@ -324,7 +333,7 @@ export class GfPortfolioProportionChartComponent
       datasets[1].data[1] = Number.MAX_SAFE_INTEGER;
     }
 
-    const data: ChartConfiguration<'doughnut'>['data'] = {
+    const data: ChartData<'doughnut'> = {
       datasets,
       labels
     };
@@ -332,9 +341,13 @@ export class GfPortfolioProportionChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip = this.getTooltipPluginConfiguration(
-          data
-        ) as unknown;
+
+        if (!this.chart.options.plugins) {
+          this.chart.options.plugins = {};
+        }
+
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration(data);
         this.chart.update();
       } else {
         this.chart = new Chart<'doughnut'>(this.chartCanvas.nativeElement, {
@@ -348,15 +361,17 @@ export class GfPortfolioProportionChartComponent
             onClick: (event, activeElements) => {
               try {
                 const dataIndex = activeElements[0].index;
+                // @ts-ignore
                 const symbol: string = event.chart.data.labels[dataIndex];
 
-                const dataSource = this.data[symbol]?.dataSource;
+                const dataSource = this.data[symbol]?.dataSource!;
 
                 this.proportionChartClicked.emit({ dataSource, symbol });
               } catch {}
             },
             onHover: (event, chartElement) => {
               if (this.cursor) {
+                // @ts-ignore
                 event.native.target.style.cursor = chartElement[0]
                   ? this.cursor
                   : 'default';
@@ -392,7 +407,7 @@ export class GfPortfolioProportionChartComponent
               legend: { display: false },
               tooltip: this.getTooltipPluginConfiguration(data)
             }
-          } as unknown,
+          },
           plugins: [ChartDataLabels],
           type: 'doughnut'
         });
@@ -419,7 +434,7 @@ export class GfPortfolioProportionChartComponent
     ];
   }
 
-  private getTooltipPluginConfiguration(data: ChartConfiguration['data']) {
+  private getTooltipPluginConfiguration(data: ChartData<'doughnut'>) {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
@@ -427,7 +442,7 @@ export class GfPortfolioProportionChartComponent
         locale: this.locale
       }),
       callbacks: {
-        label: (context) => {
+        label: (context: TooltipItem<'doughnut'>) => {
           const labelIndex =
             (data.datasets[context.datasetIndex - 1]?.data?.length ?? 0) +
             context.dataIndex;
