@@ -29,8 +29,10 @@ import {
   type ChartDataset,
   DoughnutController,
   LinearScale,
+  type Plugin,
   Tooltip,
-  type TooltipItem
+  type TooltipItem,
+  type TooltipOptions
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { isUUID } from 'class-validator';
@@ -408,7 +410,7 @@ export class GfPortfolioProportionChartComponent
               tooltip: this.getTooltipPluginConfiguration(data)
             }
           },
-          plugins: [ChartDataLabels],
+          plugins: [ChartDataLabels as Plugin<'doughnut'>],
           type: 'doughnut'
         });
       }
@@ -434,13 +436,16 @@ export class GfPortfolioProportionChartComponent
     ];
   }
 
-  private getTooltipPluginConfiguration(data: ChartData<'doughnut'>) {
+  private getTooltipPluginConfiguration(
+    data: ChartData<'doughnut'>
+  ): Partial<TooltipOptions<'doughnut'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
         currency: this.baseCurrency,
         locale: this.locale
       }),
+      // @ts-ignore
       callbacks: {
         label: (context: TooltipItem<'doughnut'>) => {
           const labelIndex =

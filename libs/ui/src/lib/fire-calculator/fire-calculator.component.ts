@@ -38,8 +38,11 @@ import {
   BarElement,
   CategoryScale,
   Chart,
+  type ChartData,
+  type ChartDataset,
   LinearScale,
-  Tooltip
+  Tooltip,
+  type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import Color from 'color';
@@ -320,7 +323,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     return label;
                   }
                 }
-              }
+              } as TooltipOptions<'bar'>
             },
             responsive: true,
             scales: {
@@ -353,7 +356,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     this.isLoading = false;
   }
 
-  private getChartData() {
+  private getChartData(): ChartData<'bar'> {
     const currentYear = new Date().getFullYear();
     const labels: number[] = [];
 
@@ -380,29 +383,29 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       labels.push(year);
     }
 
-    const datasetDeposit = {
+    const datasetDeposit: ChartDataset<'bar'> = {
       backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-      data: [] as number[],
+      data: [],
       label: $localize`Deposit`
     };
 
-    const datasetInterest = {
+    const datasetInterest: ChartDataset<'bar'> = {
       backgroundColor: Color(
         `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`
       )
         .lighten(0.5)
         .hex(),
-      data: [] as number[],
+      data: [],
       label: $localize`Interest`
     };
 
-    const datasetSavings = {
+    const datasetSavings: ChartDataset<'bar'> = {
       backgroundColor: Color(
         `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`
       )
         .lighten(0.25)
         .hex(),
-      data: [] as number[],
+      data: [],
       label: $localize`Savings`
     };
 
