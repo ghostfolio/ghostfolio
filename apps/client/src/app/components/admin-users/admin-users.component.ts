@@ -208,7 +208,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
           .deleteUser(aId)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(() => {
-            this.fetchUsers();
+            this.router.navigate(['..'], { relativeTo: this.route });
           });
       },
       confirmType: ConfirmationDialogType.Warn,
@@ -293,11 +293,11 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
+        currentUserId: this.user?.id,
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale,
-        userId: aUserId,
-        currentUserId: this.user?.id
+        userId: aUserId
       },
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -307,7 +307,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
-        if (data?.userId) {
+        if (data?.action === 'delete' && data?.userId) {
           this.onDeleteUser(data.userId);
         } else {
           this.router.navigate(
