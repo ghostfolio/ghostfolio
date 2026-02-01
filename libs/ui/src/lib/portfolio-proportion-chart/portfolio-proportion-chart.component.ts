@@ -364,7 +364,7 @@ export class GfPortfolioProportionChartComponent
                 // @ts-ignore
                 const symbol: string = event.chart.data.labels[dataIndex];
 
-                const dataSource = this.data[symbol]?.dataSource!;
+                const dataSource = this.data[symbol].dataSource!;
 
                 this.proportionChartClicked.emit({ dataSource, symbol });
               } catch {}

@@ -52,16 +52,8 @@ export function getTooltipOptions({
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
+    // @ts-ignore
     callbacks: {
-      afterBody: () => '',
-      afterFooter: () => '',
-      afterLabel: () => '',
-      afterTitle: () => '',
-      beforeBody: () => '',
-      beforeFooter: () => '',
-      beforeLabel: () => '',
-      beforeTitle: () => '',
-      footer: () => '',
       label: (context) => {
         let label = context.dataset.label ?? '';
         if (label) {
@@ -85,9 +77,6 @@ export function getTooltipOptions({
         }
         return label;
       },
-      labelColor: () => {},
-      labelPointStyle: () => {},
-      labelTextColor: () => {},
       title: (contexts) => {
         if (groupBy) {
           // @ts-ignore
