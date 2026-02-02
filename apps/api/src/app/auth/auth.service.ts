@@ -2,10 +2,20 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { ValidateOAuthLoginParams } from './interfaces/interfaces';
+import {
+  LinkOidcToUserParams,
+  ValidateOAuthLoginParams
+} from './interfaces/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -40,35 +50,107 @@ export class AuthService {
     thirdPartyId
   }: ValidateOAuthLoginParams): Promise<string> {
     try {
+      // First, search by thirdPartyId only to support linked accounts
+      // (users with provider ANONYMOUS but with thirdPartyId set)
       let [user] = await this.userService.users({
-        where: { provider, thirdPartyId }
+        where: { thirdPartyId }
       });
 
-      if (!user) {
-        const isUserSignupEnabled =
-          await this.propertyService.isUserSignupEnabled();
-
-        if (!isUserSignupEnabled) {
-          throw new Error('Sign up forbidden');
-        }
-
-        // Create new user if not found
-        user = await this.userService.createUser({
-          data: {
-            provider,
-            thirdPartyId
-          }
+      if (user) {
+        return this.jwtService.sign({
+          id: user.id
         });
       }
+
+      const isUserSignupEnabled =
+        await this.propertyService.isUserSignupEnabled();
+
+      if (!isUserSignupEnabled) {
+        throw new ForbiddenException('Sign up forbidden');
+      }
+
+      // Create new user if not found
+      user = await this.userService.createUser({
+        data: {
+          provider,
+          thirdPartyId
+        }
+      });
 
       return this.jwtService.sign({
         id: user.id
       });
     } catch (error) {
+      Logger.error(
+        `validateOAuthLogin: Error - ${error instanceof Error ? error.message : 'Unknown error'}`,
+        'AuthService'
+      );
       throw new InternalServerErrorException(
         'validateOAuthLogin',
         error instanceof Error ? error.message : 'Unknown error'
       );
     }
+  }
+
+  /**
+   * Links an OIDC provider to an existing user account.
+   * The user must have provider ANONYMOUS (token-based auth).
+   * The thirdPartyId must not be already linked to another user.
+   *
+   * @param params - Parameters for linking OIDC to user
+   * @param params.userId - The ID of the user to link
+   * @param params.thirdPartyId - The OIDC subject identifier
+   * @returns JWT token for the linked user
+   * @throws ConflictException if thirdPartyId is already linked to another user
+   * @throws Error if user not found or has invalid provider
+   */
+  public async linkOidcToUser({
+    thirdPartyId,
+    userId
+  }: LinkOidcToUserParams): Promise<string> {
+    // Check if thirdPartyId is already linked to another user
+    const [existingUser] = await this.userService.users({
+      where: { thirdPartyId }
+    });
+
+    if (existingUser) {
+      if (existingUser.id === userId) {
+        Logger.warn(
+          `linkOidcToUser: User ${userId.substring(0, 8)}... is already linked to this thirdPartyId`,
+          'AuthService'
+        );
+        // Already linked to the same user, just return token
+        return this.jwtService.sign({ id: userId });
+      }
+
+      Logger.warn(
+        `linkOidcToUser: thirdPartyId already linked to another user ${existingUser.id.substring(0, 8)}...`,
+        'AuthService'
+      );
+      throw new ConflictException(
+        'This OIDC account is already linked to another user'
+      );
+    }
+
+    // Get the current user
+    const user = await this.userService.user({ id: userId });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.provider !== 'ANONYMOUS') {
+      throw new ConflictException(
+        'Only users with token authentication can link OIDC'
+      );
+    }
+
+    // Update user with thirdPartyId and switch provider to OIDC
+    await this.userService.updateUser({
+      data: { thirdPartyId, provider: 'OIDC' },
+      where: { id: userId }
+    });
+
+    return this.jwtService.sign({ id: userId });
   }
 }
