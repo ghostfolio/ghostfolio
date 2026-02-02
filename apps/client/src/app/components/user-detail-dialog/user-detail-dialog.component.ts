@@ -74,8 +74,8 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
 
   public deleteUser() {
     this.dialogRef.close({
-      userId: this.data.userId,
-      action: 'delete'
+      action: 'delete',
+      userId: this.data.userId
     });
   }
 
