@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an action menu to the user detail dialog in the users section of the admin control panel
+
 ### Changed
 
 - Improved the language localization for Chinese (`zh`)
@@ -14,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `21.0.6` to `21.1.1`
 - Upgraded `Nx` from version `22.3.3` to `22.4.1`
 - Upgraded `prettier` from version `3.8.0` to `3.8.1`
-- Extended the user detail dialog with an actions menu
 
 ## 2.233.0 - 2026-01-23
 
