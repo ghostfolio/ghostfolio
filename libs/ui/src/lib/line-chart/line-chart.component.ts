@@ -168,6 +168,11 @@ export class GfLineChartComponent
     };
 
     if (this.chartCanvas) {
+      const animations = {
+        x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
+        y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
+      };
+
       if (this.chart) {
         this.chart.data = data;
 
@@ -177,21 +182,15 @@ export class GfLineChartComponent
 
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
-        this.chart.options.animation = this.isAnimated && {
-          // @ts-ignore
-          x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
-          y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
-        };
+        this.chart.options.animations = this.isAnimated
+          ? animations
+          : undefined;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            animation: this.isAnimated && {
-              // @ts-ignore
-              x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
-              y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
-            },
+            animations: this.isAnimated ? animations : undefined,
             aspectRatio: 16 / 9,
             elements: {
               point: {
