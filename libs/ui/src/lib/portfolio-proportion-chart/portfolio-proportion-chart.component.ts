@@ -343,13 +343,10 @@ export class GfPortfolioProportionChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-
-        if (!this.chart.options.plugins) {
-          this.chart.options.plugins = {};
-        }
-
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration(data);
+
         this.chart.update();
       } else {
         this.chart = new Chart<'doughnut'>(this.chartCanvas.nativeElement, {

@@ -298,13 +298,10 @@ export class GfTreemapChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-
-        if (!this.chart.options.plugins) {
-          this.chart.options.plugins = {};
-        }
-
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+
         this.chart.update();
       } else {
         this.chart = new Chart<'treemap'>(this.chartCanvas.nativeElement, {
