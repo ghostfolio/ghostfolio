@@ -132,12 +132,16 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
   ): Promise<AccountBalancesResponse> {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(impersonationId);
+
     return this.accountBalanceService.getAccountBalances({
       filters: [{ id, type: 'ACCOUNT' }],
       userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: this.request.user.id
+      userId: impersonationUserId || this.request.user.id
     });
   }
 
