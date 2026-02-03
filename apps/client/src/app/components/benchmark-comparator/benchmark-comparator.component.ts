@@ -190,7 +190,6 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 display: false
               },
               tooltip: this.getTooltipPluginConfiguration(),
-              // @ts-ignore
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }

@@ -106,9 +106,9 @@ export function getTooltipPositionerMapTop(
 }
 
 export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
-  chartCanvas: ElementRef,
+  chartCanvas: ElementRef<HTMLCanvasElement>,
   colorScheme: ColorScheme
-): Plugin<T> {
+): Plugin<T, { color: string; width: number }> {
   return {
     afterDatasetsDraw: (chart, _, options) => {
       const active = chart.getActiveElements();
@@ -126,13 +126,15 @@ export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
       const xValue = active[0].element.x;
 
       const context = chartCanvas.nativeElement.getContext('2d');
-      context.lineWidth = width;
-      context.strokeStyle = color;
+      if (context) {
+        context.lineWidth = width;
+        context.strokeStyle = color;
 
-      context.beginPath();
-      context.moveTo(xValue, top);
-      context.lineTo(xValue, bottom);
-      context.stroke();
+        context.beginPath();
+        context.moveTo(xValue, top);
+        context.lineTo(xValue, bottom);
+        context.stroke();
+      }
     },
     id: 'verticalHoverLine'
   };

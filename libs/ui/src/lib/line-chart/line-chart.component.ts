@@ -207,7 +207,6 @@ export class GfLineChartComponent
                 position: 'bottom'
               },
               tooltip: this.getTooltipPluginConfiguration(),
-              // @ts-ignore
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
