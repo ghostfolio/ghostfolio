@@ -212,6 +212,9 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
           });
       },
       confirmType: ConfirmationDialogType.Warn,
+      discardFn: () => {
+        this.router.navigate(['..'], { relativeTo: this.route });
+      },
       title: $localize`Do you really want to delete this user?`
     });
   }
