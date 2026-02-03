@@ -1,5 +1,13 @@
 import type { ElementRef } from '@angular/core';
-import type { Chart, Plugin, TooltipOptions, TooltipPosition } from 'chart.js';
+import type {
+  Chart,
+  ChartType,
+  ControllerDatasetOptions,
+  Plugin,
+  Point,
+  TooltipOptions,
+  TooltipPosition
+} from 'chart.js';
 import { format } from 'date-fns';
 
 import {
@@ -28,7 +36,7 @@ export function formatGroupedDate({
   return format(date, DATE_FORMAT);
 }
 
-export function getTooltipOptions({
+export function getTooltipOptions<T extends ChartType>({
   colorScheme,
   currency = '',
   groupBy,
@@ -40,41 +48,39 @@ export function getTooltipOptions({
   groupBy?: GroupBy;
   locale?: string;
   unit?: string;
-}): Partial<TooltipOptions> {
+}): Partial<TooltipOptions<T>> {
   return {
     backgroundColor: getBackgroundColor(colorScheme),
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
-    // @ts-ignore
+    // @ts-expect-error: no need to set all attributes in callbacks.
     callbacks: {
       label: (context) => {
-        let label = context.dataset.label ?? '';
+        let label = (context.dataset as ControllerDatasetOptions).label ?? '';
         if (label) {
           label += ': ';
         }
-        // @ts-ignore
-        if (context.parsed.y !== null) {
+
+        const yPoint = (context.parsed as Point).y;
+        if (yPoint !== null) {
           if (currency) {
-            // @ts-ignore
-            label += `${context.parsed.y.toLocaleString(locale, {
+            label += `${yPoint.toLocaleString(locale, {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2
             })} ${currency}`;
           } else if (unit) {
-            // @ts-ignore
-            label += `${context.parsed.y.toFixed(2)} ${unit}`;
+            label += `${yPoint.toFixed(2)} ${unit}`;
           } else {
-            // @ts-ignore
-            label += context.parsed.y.toFixed(2);
+            label += yPoint.toFixed(2);
           }
         }
         return label;
       },
       title: (contexts) => {
-        if (groupBy) {
-          // @ts-ignore
-          return formatGroupedDate({ groupBy, date: contexts[0].parsed.x });
+        const xPoint = (contexts[0].parsed as Point).x;
+        if (groupBy && xPoint !== null) {
+          return formatGroupedDate({ groupBy, date: xPoint });
         }
 
         return contexts[0].label;
