@@ -1,6 +1,5 @@
 import {
   getTooltipOptions,
-  getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
@@ -35,8 +34,7 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
-  type TooltipOptions,
-  type TooltipPosition
+  type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -87,9 +85,6 @@ export class GfLineChartComponent
       TimeScale,
       Tooltip
     );
-
-    Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
-      getTooltipPositionerMapTop(this.chart, position);
   }
 
   public ngAfterViewInit() {
@@ -337,7 +332,6 @@ export class GfLineChartComponent
         unit: this.unit
       }),
       mode: 'index',
-      // @ts-ignore
       position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'

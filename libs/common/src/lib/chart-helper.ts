@@ -92,8 +92,8 @@ export function getTooltipOptions({
   };
 }
 
-export function getTooltipPositionerMapTop<T extends 'line' | 'bar'>(
-  chart: Chart<T>,
+export function getTooltipPositionerMapTop(
+  chart: Chart,
   position: TooltipPosition
 ) {
   if (!position || !chart?.chartArea) {
