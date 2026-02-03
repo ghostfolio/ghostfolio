@@ -1,4 +1,6 @@
-import { query, redactAttributes } from './object.helper';
+import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
+
+import { query, redactPaths } from './object.helper';
 
 describe('query', () => {
   it('should get market price from stock API response', () => {
@@ -22,46 +24,38 @@ describe('query', () => {
 
 describe('redactAttributes', () => {
   it('should redact provided attributes', () => {
-    expect(redactAttributes({ object: {}, options: [] })).toStrictEqual({});
+    expect(redactPaths({ object: {}, paths: [] })).toStrictEqual({});
+
+    expect(redactPaths({ object: { value: 1000 }, paths: [] })).toStrictEqual({
+      value: 1000
+    });
 
     expect(
-      redactAttributes({ object: { value: 1000 }, options: [] })
-    ).toStrictEqual({ value: 1000 });
-
-    expect(
-      redactAttributes({
+      redactPaths({
         object: { value: 1000 },
-        options: [{ attribute: 'value', valueMap: { '*': null } }]
+        paths: ['value']
       })
     ).toStrictEqual({ value: null });
 
     expect(
-      redactAttributes({
+      redactPaths({
         object: { value: 'abc' },
-        options: [{ attribute: 'value', valueMap: { abc: 'xyz' } }]
+        paths: ['value'],
+        valueMap: { abc: 'xyz' }
       })
     ).toStrictEqual({ value: 'xyz' });
 
     expect(
-      redactAttributes({
+      redactPaths({
         object: { data: [{ value: 'a' }, { value: 'b' }] },
-        options: [{ attribute: 'value', valueMap: { a: 1, b: 2 } }]
+        paths: ['data[*].value'],
+        valueMap: { a: 1, b: 2 }
       })
     ).toStrictEqual({ data: [{ value: 1 }, { value: 2 }] });
 
-    expect(
-      redactAttributes({
-        object: { value1: 'a', value2: 'b' },
-        options: [
-          { attribute: 'value1', valueMap: { a: 'x' } },
-          { attribute: 'value2', valueMap: { '*': 'y' } }
-        ]
-      })
-    ).toStrictEqual({ value1: 'x', value2: 'y' });
-
     console.time('redactAttributes execution time');
     expect(
-      redactAttributes({
+      redactPaths({
         object: {
           accounts: {
             '2e937c05-657c-4de9-8fb3-0813a2245f26': {
@@ -1564,34 +1558,7 @@ describe('redactAttributes', () => {
             currentNetWorth: null
           }
         },
-        options: [
-          'balance',
-          'balanceInBaseCurrency',
-          'comment',
-          'convertedBalance',
-          'dividendInBaseCurrency',
-          'fee',
-          'feeInBaseCurrency',
-          'grossPerformance',
-          'grossPerformanceWithCurrencyEffect',
-          'investment',
-          'netPerformance',
-          'netPerformanceWithCurrencyEffect',
-          'quantity',
-          'symbolMapping',
-          'totalBalanceInBaseCurrency',
-          'totalValueInBaseCurrency',
-          'unitPrice',
-          'value',
-          'valueInBaseCurrency'
-        ].map((attribute) => {
-          return {
-            attribute,
-            valueMap: {
-              '*': null
-            }
-          };
-        })
+        paths: DEFAULT_REDACTED_PATHS
       })
     ).toStrictEqual({
       accounts: {
@@ -1681,7 +1648,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'EOD_HISTORICAL_DATA',
           dateOfFirstActivity: '2021-11-30T23:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.3183066634822068,
           grossPerformancePercentWithCurrencyEffect: 0.3183066634822068,
@@ -1728,7 +1695,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2021-04-22T22:00:00.000Z',
-          dividend: 192,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.3719230057375532,
           grossPerformancePercentWithCurrencyEffect: 0.2650716044872953,
@@ -1780,7 +1747,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2018-09-30T22:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.8594552890963852,
           grossPerformancePercentWithCurrencyEffect: 0.8594552890963852,
@@ -1831,7 +1798,7 @@ describe('redactAttributes', () => {
           countries: [],
           dataSource: 'COINGECKO',
           dateOfFirstActivity: '2017-08-15T22:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 17.4925166352,
           grossPerformancePercentWithCurrencyEffect: 17.4925166352,
@@ -1882,7 +1849,7 @@ describe('redactAttributes', () => {
           countries: [],
           dataSource: 'MANUAL',
           dateOfFirstActivity: '2021-01-31T23:00:00.000Z',
-          dividend: 11.45,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0,
           grossPerformancePercentWithCurrencyEffect: -0.06153834320225245,
@@ -1986,7 +1953,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'MANUAL',
           dateOfFirstActivity: '2021-03-31T22:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.27579517683678895,
           grossPerformancePercentWithCurrencyEffect: 0.458553421589667,
@@ -2038,7 +2005,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2023-01-02T23:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.7865431171216295,
           grossPerformancePercentWithCurrencyEffect: 0.7865431171216295,
@@ -2090,7 +2057,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2017-01-02T23:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 17.184314638161936,
           grossPerformancePercentWithCurrencyEffect: 17.184314638161936,
@@ -2172,7 +2139,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2019-02-28T23:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.8832083851170418,
           grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
@@ -2567,7 +2534,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2018-02-28T23:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.3683200415015591,
           grossPerformancePercentWithCurrencyEffect: 0.5806366182968891,
@@ -2846,7 +2813,7 @@ describe('redactAttributes', () => {
           ],
           dataSource: 'YAHOO',
           dateOfFirstActivity: '2021-08-18T22:00:00.000Z',
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0.3474381850624522,
           grossPerformancePercentWithCurrencyEffect: 0.28744846894552306,
@@ -2964,7 +2931,7 @@ describe('redactAttributes', () => {
           assetClass: 'LIQUIDITY',
           assetSubClass: 'CASH',
           countries: [],
-          dividend: 0,
+          dividend: null,
           grossPerformance: null,
           grossPerformancePercent: 0,
           grossPerformancePercentWithCurrencyEffect: 0,
