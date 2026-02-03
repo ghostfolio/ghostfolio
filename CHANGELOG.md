@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the ability to fetch top holdings for ETF and mutual fund assets from _Yahoo Finance_
+- Added support for the impersonation mode in the endpoint `GET api/v1/account/:id/balances`
 
 ### Changed
 
