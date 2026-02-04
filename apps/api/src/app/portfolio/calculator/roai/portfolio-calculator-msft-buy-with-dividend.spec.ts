@@ -288,7 +288,6 @@ describe('PortfolioCalculator', () => {
             dividend: new Big('2.66'),
             dividendInBaseCurrency: new Big('2.66'),
             fee: new Big('19'),
-            firstBuyDate: '2021-09-16',
             quantity: new Big('1'),
             symbol: 'MSFT',
             tags: [],
