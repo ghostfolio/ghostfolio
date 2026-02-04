@@ -434,7 +434,7 @@ export class GfPortfolioProportionChartComponent
         currency: this.baseCurrency,
         locale: this.locale
       }),
-      // @ts-expect-error: no need to set all attributes in callbacks.
+      // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
         label: (context) => {
           const labelIndex =

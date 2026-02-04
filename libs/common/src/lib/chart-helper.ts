@@ -54,7 +54,7 @@ export function getTooltipOptions<T extends ChartType>({
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
-    // @ts-expect-error: no need to set all attributes in callbacks.
+    // @ts-expect-error: no need to set all attributes in callbacks
     callbacks: {
       label: (context) => {
         let label = (context.dataset as ControllerDatasetOptions).label ?? '';
