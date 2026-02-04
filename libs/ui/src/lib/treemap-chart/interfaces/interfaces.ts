@@ -9,13 +9,13 @@ export interface GetColorParams {
   positiveNetPerformancePercentsRange: { max: number; min: number };
 }
 
+interface GfTreemapDataPoint extends TreemapDataPoint {
+  _data: PortfolioPosition;
+}
+
 export interface GfTreemapScriptableContext extends ScriptableContext<'treemap'> {
-  raw: TreemapDataPoint & {
-    _data: PortfolioPosition;
-  };
+  raw: GfTreemapDataPoint;
 }
 export interface GfTreemapTooltipItem extends TooltipItem<'treemap'> {
-  raw: TreemapDataPoint & {
-    _data: PortfolioPosition;
-  };
+  raw: GfTreemapDataPoint;
 }
