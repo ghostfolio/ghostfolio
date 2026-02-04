@@ -1,8 +1,11 @@
 import type { ElementRef } from '@angular/core';
 import type {
   Chart,
-  ChartTypeRegistry,
+  ChartType,
+  ControllerDatasetOptions,
   Plugin,
+  Point,
+  TooltipOptions,
   TooltipPosition
 } from 'chart.js';
 import { format } from 'date-fns';
@@ -21,7 +24,7 @@ export function formatGroupedDate({
   date,
   groupBy
 }: {
-  date: Date;
+  date: number;
   groupBy: GroupBy;
 }) {
   if (groupBy === 'month') {
@@ -33,7 +36,7 @@ export function formatGroupedDate({
   return format(date, DATE_FORMAT);
 }
 
-export function getTooltipOptions({
+export function getTooltipOptions<T extends ChartType>({
   colorScheme,
   currency = '',
   groupBy,
@@ -45,35 +48,39 @@ export function getTooltipOptions({
   groupBy?: GroupBy;
   locale?: string;
   unit?: string;
-}) {
+}): Partial<TooltipOptions<T>> {
   return {
     backgroundColor: getBackgroundColor(colorScheme),
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
+    // @ts-expect-error: no need to set all attributes in callbacks.
     callbacks: {
       label: (context) => {
-        let label = context.dataset.label ?? '';
+        let label = (context.dataset as ControllerDatasetOptions).label ?? '';
         if (label) {
           label += ': ';
         }
-        if (context.parsed.y !== null) {
+
+        const yPoint = (context.parsed as Point).y;
+        if (yPoint !== null) {
           if (currency) {
-            label += `${context.parsed.y.toLocaleString(locale, {
+            label += `${yPoint.toLocaleString(locale, {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2
             })} ${currency}`;
           } else if (unit) {
-            label += `${context.parsed.y.toFixed(2)} ${unit}`;
+            label += `${yPoint.toFixed(2)} ${unit}`;
           } else {
-            label += context.parsed.y.toFixed(2);
+            label += yPoint.toFixed(2);
           }
         }
         return label;
       },
       title: (contexts) => {
-        if (groupBy) {
-          return formatGroupedDate({ groupBy, date: contexts[0].parsed.x });
+        const xPoint = (contexts[0].parsed as Point).x;
+        if (groupBy && xPoint !== null) {
+          return formatGroupedDate({ groupBy, date: xPoint });
         }
 
         return contexts[0].label;
@@ -104,10 +111,10 @@ export function getTooltipPositionerMapTop(
   };
 }
 
-export function getVerticalHoverLinePlugin<T extends keyof ChartTypeRegistry>(
-  chartCanvas: ElementRef,
+export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
+  chartCanvas: ElementRef<HTMLCanvasElement>,
   colorScheme: ColorScheme
-): Plugin<T> {
+): Plugin<T, { color: string; width: number }> {
   return {
     afterDatasetsDraw: (chart, _, options) => {
       const active = chart.getActiveElements();
@@ -125,13 +132,15 @@ export function getVerticalHoverLinePlugin<T extends keyof ChartTypeRegistry>(
       const xValue = active[0].element.x;
 
       const context = chartCanvas.nativeElement.getContext('2d');
-      context.lineWidth = width;
-      context.strokeStyle = color;
+      if (context) {
+        context.lineWidth = width;
+        context.strokeStyle = color;
 
-      context.beginPath();
-      context.moveTo(xValue, top);
-      context.lineTo(xValue, bottom);
-      context.stroke();
+        context.beginPath();
+        context.moveTo(xValue, top);
+        context.lineTo(xValue, bottom);
+        context.stroke();
+      }
     },
     id: 'verticalHoverLine'
   };
