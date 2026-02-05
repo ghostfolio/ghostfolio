@@ -3,10 +3,7 @@ import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { registerChartConfiguration } from '../chart';
 import { GfLineChartComponent } from './line-chart.component';
-
-registerChartConfiguration();
 
 export default {
   title: 'Line Chart',

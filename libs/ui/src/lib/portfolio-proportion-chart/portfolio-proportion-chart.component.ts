@@ -30,6 +30,7 @@ import {
   DoughnutController,
   LinearScale,
   Tooltip,
+  type TooltipItem,
   type TooltipOptions
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
