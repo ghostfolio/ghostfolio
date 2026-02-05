@@ -186,7 +186,6 @@ export class AdminService {
       dataProviders,
       settings,
       userCount,
-      transactionCount: activitiesCount,
       version: environment.version
     };
   }

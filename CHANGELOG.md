@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated `transactionCount` in the endpoint `GET api/v1/admin`
 - Upgraded `stripe` from version `20.1.0` to `20.3.0`
 
 ### Fixed
