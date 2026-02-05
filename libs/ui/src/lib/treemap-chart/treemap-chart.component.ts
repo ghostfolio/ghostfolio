@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import { ChartConfiguration } from 'chart.js';
+import type { TooltipOptions, ChartData } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
@@ -35,7 +35,11 @@ import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
-import { GetColorParams } from './interfaces/interfaces';
+import type {
+  GetColorParams,
+  GfTreemapScriptableContext,
+  GfTreemapTooltipItem
+} from './interfaces/interfaces';
 
 const { gray, green, red } = OpenColor;
 
@@ -198,10 +202,10 @@ export class GfTreemapChartComponent
       min: Math.min(...negativeNetPerformancePercents)
     };
 
-    const data: ChartConfiguration<'treemap'>['data'] = {
+    const data: ChartData<'treemap'> = {
       datasets: [
         {
-          backgroundColor: (context) => {
+          backgroundColor: (context: GfTreemapScriptableContext) => {
             let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
@@ -232,7 +236,7 @@ export class GfTreemapChartComponent
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: (context) => {
+            color: (context: GfTreemapScriptableContext) => {
               let annualizedNetPerformancePercent =
                 getAnnualizedPerformancePercent({
                   daysInMarket: differenceInDays(
@@ -261,7 +265,7 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: ({ raw }) => {
+            formatter: ({ raw }: GfTreemapScriptableContext) => {
               // Round to 4 decimal places
               let netPerformancePercentWithCurrencyEffect =
                 Math.round(
@@ -286,32 +290,35 @@ export class GfTreemapChartComponent
             position: 'top'
           },
           spacing: 1,
+          // @ts-expect-error: should be PortfolioPosition[]
           tree: this.holdings
         }
       ]
-    } as any;
+    };
 
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
+          this.getTooltipPluginConfiguration();
+
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'treemap'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animation: false,
-            onClick: (event, activeElements) => {
+            onClick: (_, activeElements, chart: Chart<'treemap'>) => {
               try {
                 const dataIndex = activeElements[0].index;
                 const datasetIndex = activeElements[0].datasetIndex;
 
                 const dataset = orderBy(
-                  event.chart.data.datasets[datasetIndex].tree,
+                  chart.data.datasets[datasetIndex].tree,
                   ['allocationInPercentage'],
                   ['desc']
-                );
+                ) as PortfolioPosition[];
 
                 const dataSource: DataSource = dataset[dataIndex].dataSource;
                 const symbol: string = dataset[dataIndex].symbol;
@@ -321,15 +328,14 @@ export class GfTreemapChartComponent
             },
             onHover: (event, chartElement) => {
               if (this.cursor) {
-                event.native.target.style.cursor = chartElement[0]
-                  ? this.cursor
-                  : 'default';
+                (event.native?.target as HTMLElement).style.cursor =
+                  chartElement[0] ? this.cursor : 'default';
               }
             },
             plugins: {
               tooltip: this.getTooltipPluginConfiguration()
             }
-          } as unknown,
+          },
           type: 'treemap'
         });
       }
@@ -338,16 +344,17 @@ export class GfTreemapChartComponent
     this.isLoading = false;
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'treemap'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
         currency: this.baseCurrency,
         locale: this.locale
       }),
+      // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
-        label: ({ raw }) => {
-          const allocationInPercentage = `${((raw._data.allocationInPercentage as number) * 100).toFixed(2)}%`;
+        label: ({ raw }: GfTreemapTooltipItem) => {
+          const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = raw._data.name;
           const sign =
             raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
@@ -356,11 +363,11 @@ export class GfTreemapChartComponent
           const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
-            const value = raw._data.valueInBaseCurrency as number;
+            const value = raw._data.valueInBaseCurrency;
 
             return [
               `${name ?? symbol} (${allocationInPercentage})`,
-              `${value.toLocaleString(this.locale, {
+              `${value?.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
               })} ${this.baseCurrency}`,
