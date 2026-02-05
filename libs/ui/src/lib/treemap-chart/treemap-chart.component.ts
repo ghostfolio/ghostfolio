@@ -302,6 +302,7 @@ export class GfTreemapChartComponent
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+
         this.chart.update();
       } else {
         this.chart = new Chart<'treemap'>(this.chartCanvas.nativeElement, {

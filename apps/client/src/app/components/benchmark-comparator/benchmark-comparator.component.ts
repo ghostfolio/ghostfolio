@@ -160,6 +160,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {

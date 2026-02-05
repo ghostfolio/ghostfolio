@@ -187,6 +187,7 @@ export class GfLineChartComponent
         this.chart.options.animations = this.isAnimated
           ? animations
           : undefined;
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {

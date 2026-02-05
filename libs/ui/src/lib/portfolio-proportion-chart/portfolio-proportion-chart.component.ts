@@ -340,6 +340,7 @@ export class GfPortfolioProportionChartComponent
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration(data);
+
         this.chart.update();
       } else {
         this.chart = new Chart<'doughnut'>(this.chartCanvas.nativeElement, {
@@ -440,6 +441,7 @@ export class GfPortfolioProportionChartComponent
           const labelIndex =
             (data.datasets[context.datasetIndex - 1]?.data?.length ?? 0) +
             context.dataIndex;
+
           let symbol =
             (context.chart.data.labels?.[labelIndex] as string) ?? '';
 
@@ -452,6 +454,7 @@ export class GfPortfolioProportionChartComponent
           const name = translate(this.data[symbol]?.name);
 
           let sum = 0;
+
           for (const item of context.dataset.data) {
             sum += item;
           }
@@ -464,6 +467,7 @@ export class GfPortfolioProportionChartComponent
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
             const value = context.raw as number;
+
             return [
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {
