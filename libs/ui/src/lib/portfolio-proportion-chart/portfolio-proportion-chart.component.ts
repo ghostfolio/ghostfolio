@@ -30,7 +30,6 @@ import {
   DoughnutController,
   LinearScale,
   Tooltip,
-  type TooltipItem,
   type TooltipOptions
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -442,7 +441,7 @@ export class GfPortfolioProportionChartComponent
       }),
       // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
-        label: (context: TooltipItem<'doughnut'>) => {
+        label: (context) => {
           const labelIndex =
             (data.datasets[context.datasetIndex - 1]?.data?.length ?? 0) +
             context.dataIndex;

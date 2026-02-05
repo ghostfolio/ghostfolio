@@ -41,8 +41,7 @@ import {
   type ChartData,
   type ChartDataset,
   LinearScale,
-  Tooltip,
-  type TooltipOptions
+  Tooltip
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import Color from 'color';
@@ -320,7 +319,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     return label;
                   }
                 }
-              } as TooltipOptions<'bar'>
+              }
             },
             responsive: true,
             scales: {
