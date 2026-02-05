@@ -14,6 +14,7 @@ import {
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
+import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -34,12 +35,15 @@ import {
   LineController,
   LineElement,
   PointElement,
+  type ScriptableLineSegmentContext,
   TimeScale,
   Tooltip,
   type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import annotationPlugin from 'chartjs-plugin-annotation';
+import annotationPlugin, {
+  type AnnotationOptions
+} from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -80,6 +84,8 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       TimeScale,
       Tooltip
     );
+
+    registerChartConfiguration();
   }
 
   public ngOnChanges() {
@@ -154,17 +160,14 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = chartData;
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
 
-        if (
-          this.savingsRate &&
-          // @ts-ignore
-          this.chart.options.plugins.annotation.annotations.savingsRate
-        ) {
-          // @ts-ignore
-          this.chart.options.plugins.annotation.annotations.savingsRate.value =
-            this.savingsRate;
+        const annotations = this.chart.options.plugins.annotation
+          .annotations as Record<string, AnnotationOptions<'line'>>;
+        if (this.savingsRate && annotations.savingsRate) {
+          annotations.savingsRate.value = this.savingsRate;
         }
 
         this.chart.update();
@@ -301,7 +304,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     };
   }
 
-  private isInFuture<T>(aContext: any, aValue: T) {
+  private isInFuture<T>(aContext: ScriptableLineSegmentContext, aValue: T) {
     return isAfter(new Date(aContext?.p1?.parsed?.x), new Date())
       ? aValue
       : undefined;

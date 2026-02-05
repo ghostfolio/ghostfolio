@@ -290,8 +290,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                 callbacks: {
                   footer: (items) => {
                     const totalAmount = items.reduce(
-                      // @ts-ignore
-                      (a, b) => a + b.parsed.y,
+                      (a, b) => a + (b.parsed.y ?? 0),
                       0
                     );
 
@@ -313,8 +312,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     if (context.parsed.y !== null) {
                       label += new Intl.NumberFormat(this.locale, {
                         currency: this.currency,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore: Only supported from ES2020 or later
                         currencyDisplay: 'code',
                         style: 'currency'
                       }).format(context.parsed.y);

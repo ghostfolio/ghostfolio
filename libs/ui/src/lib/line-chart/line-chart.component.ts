@@ -25,7 +25,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  type AnimationSpec,
+  type AnimationsSpec,
   Chart,
   Filler,
   LinearScale,
@@ -38,6 +38,8 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { registerChartConfiguration } from '../chart';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,6 +87,8 @@ export class GfLineChartComponent
       TimeScale,
       Tooltip
     );
+
+    registerChartConfiguration();
   }
 
   public ngAfterViewInit() {
@@ -131,8 +135,10 @@ export class GfLineChartComponent
         0,
         0,
         0,
-        // @ts-ignore
-        (this.chartCanvas.nativeElement.parentNode.offsetHeight * 4) / 5
+        ((this.chartCanvas.nativeElement.parentNode as HTMLElement)
+          .offsetHeight *
+          4) /
+          5
       );
 
     if (gradient && this.showGradient) {
@@ -175,12 +181,12 @@ export class GfLineChartComponent
 
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.animations = this.isAnimated
-          ? animations
-          : undefined;
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+        this.chart.options.animations = this.isAnimated
+          ? animations
+          : undefined;
 
         this.chart.update();
       } else {
@@ -296,7 +302,7 @@ export class GfLineChartComponent
   }: {
     axis: 'x' | 'y';
     labels: string[];
-  }): AnimationSpec<'line'> {
+  }): Partial<AnimationsSpec<'line'>[string]> {
     const delayBetweenPoints = this.ANIMATION_DURATION / labels.length;
 
     return {
@@ -306,8 +312,7 @@ export class GfLineChartComponent
         }
 
         context[`${axis}Started`] = true;
-        // @ts-ignore
-        return context.index * delayBetweenPoints;
+        return context.dataIndex * delayBetweenPoints;
       },
       duration: delayBetweenPoints,
       easing: 'linear',

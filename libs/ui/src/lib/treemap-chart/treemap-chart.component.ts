@@ -35,9 +35,10 @@ import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
-import {
+import type {
   GetColorParams,
-  GfTreemapChartTooltipContext
+  GfTreemapScriptableContext,
+  GfTreemapTooltipItem
 } from './interfaces/interfaces';
 
 const { gray, green, red } = OpenColor;
@@ -204,7 +205,7 @@ export class GfTreemapChartComponent
     const data: ChartData<'treemap'> = {
       datasets: [
         {
-          backgroundColor: (context: GfTreemapChartTooltipContext) => {
+          backgroundColor: (context: GfTreemapScriptableContext) => {
             let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
@@ -235,7 +236,7 @@ export class GfTreemapChartComponent
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: (context: GfTreemapChartTooltipContext) => {
+            color: (context: GfTreemapScriptableContext) => {
               let annualizedNetPerformancePercent =
                 getAnnualizedPerformancePercent({
                   daysInMarket: differenceInDays(
@@ -264,7 +265,7 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: ({ raw }: GfTreemapChartTooltipContext) => {
+            formatter: ({ raw }: GfTreemapScriptableContext) => {
               // Round to 4 decimal places
               let netPerformancePercentWithCurrencyEffect =
                 Math.round(
@@ -289,7 +290,7 @@ export class GfTreemapChartComponent
             position: 'top'
           },
           spacing: 1,
-          // @ts-ignore
+          // @ts-expect-error: should be PortfolioPosition[]
           tree: this.holdings
         }
       ]
@@ -308,17 +309,16 @@ export class GfTreemapChartComponent
           data,
           options: {
             animation: false,
-            onClick: (event, activeElements) => {
+            onClick: (_, activeElements, chart: Chart<'treemap'>) => {
               try {
                 const dataIndex = activeElements[0].index;
                 const datasetIndex = activeElements[0].datasetIndex;
 
                 const dataset = orderBy(
-                  // @ts-ignore
-                  event.chart.data.datasets[datasetIndex].tree,
+                  chart.data.datasets[datasetIndex].tree,
                   ['allocationInPercentage'],
                   ['desc']
-                );
+                ) as PortfolioPosition[];
 
                 const dataSource: DataSource = dataset[dataIndex].dataSource;
                 const symbol: string = dataset[dataIndex].symbol;
@@ -328,10 +328,8 @@ export class GfTreemapChartComponent
             },
             onHover: (event, chartElement) => {
               if (this.cursor) {
-                // @ts-ignore
-                event.native.target.style.cursor = chartElement[0]
-                  ? this.cursor
-                  : 'default';
+                (event.native?.target as HTMLElement).style.cursor =
+                  chartElement[0] ? this.cursor : 'default';
               }
             },
             plugins: {
@@ -353,9 +351,9 @@ export class GfTreemapChartComponent
         currency: this.baseCurrency,
         locale: this.locale
       }),
+      // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
-        // @ts-ignore
-        label: ({ raw }: GfTreemapChartTooltipContext) => {
+        label: ({ raw }: GfTreemapTooltipItem) => {
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = raw._data.name;
           const sign =

@@ -54,15 +54,17 @@ export function getTooltipOptions<T extends ChartType>({
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
     borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
-    // @ts-expect-error: no need to set all attributes in callbacks.
+    // @ts-expect-error: no need to set all attributes in callbacks
     callbacks: {
       label: (context) => {
         let label = (context.dataset as ControllerDatasetOptions).label ?? '';
+
         if (label) {
           label += ': ';
         }
 
         const yPoint = (context.parsed as Point).y;
+
         if (yPoint !== null) {
           if (currency) {
             label += `${yPoint.toLocaleString(locale, {
@@ -75,10 +77,12 @@ export function getTooltipOptions<T extends ChartType>({
             label += yPoint.toFixed(2);
           }
         }
+
         return label;
       },
       title: (contexts) => {
         const xPoint = (contexts[0].parsed as Point).x;
+
         if (groupBy && xPoint !== null) {
           return formatGroupedDate({ groupBy, date: xPoint });
         }
@@ -105,6 +109,7 @@ export function getTooltipPositionerMapTop(
   if (!position || !chart?.chartArea) {
     return false;
   }
+
   return {
     x: position.x,
     y: chart.chartArea.top
@@ -132,6 +137,7 @@ export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
       const xValue = active[0].element.x;
 
       const context = chartCanvas.nativeElement.getContext('2d');
+
       if (context) {
         context.lineWidth = width;
         context.strokeStyle = color;

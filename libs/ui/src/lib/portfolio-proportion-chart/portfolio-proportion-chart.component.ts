@@ -29,9 +29,7 @@ import {
   type ChartDataset,
   DoughnutController,
   LinearScale,
-  type Plugin,
   Tooltip,
-  type TooltipItem,
   type TooltipOptions
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -357,23 +355,22 @@ export class GfPortfolioProportionChartComponent
             layout: {
               padding: this.showLabels === true ? 100 : 0
             },
-            onClick: (event, activeElements) => {
+            onClick: (_, activeElements, chart) => {
               try {
                 const dataIndex = activeElements[0].index;
-                // @ts-ignore
-                const symbol: string = event.chart.data.labels[dataIndex];
+                const symbol = chart.data.labels?.[dataIndex] as string;
 
-                const dataSource = this.data[symbol].dataSource!;
+                const dataSource = this.data[symbol].dataSource;
 
-                this.proportionChartClicked.emit({ dataSource, symbol });
+                if (dataSource) {
+                  this.proportionChartClicked.emit({ dataSource, symbol });
+                }
               } catch {}
             },
             onHover: (event, chartElement) => {
               if (this.cursor) {
-                // @ts-ignore
-                event.native.target.style.cursor = chartElement[0]
-                  ? this.cursor
-                  : 'default';
+                (event.native?.target as HTMLElement).style.cursor =
+                  chartElement[0] ? this.cursor : 'default';
               }
             },
             plugins: {
@@ -407,7 +404,7 @@ export class GfPortfolioProportionChartComponent
               tooltip: this.getTooltipPluginConfiguration(data)
             }
           },
-          plugins: [ChartDataLabels as Plugin<'doughnut'>],
+          plugins: [ChartDataLabels],
           type: 'doughnut'
         });
       }
@@ -442,13 +439,15 @@ export class GfPortfolioProportionChartComponent
         currency: this.baseCurrency,
         locale: this.locale
       }),
-      // @ts-ignore
+      // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
         label: (context: TooltipItem<'doughnut'>) => {
           const labelIndex =
             (data.datasets[context.datasetIndex - 1]?.data?.length ?? 0) +
             context.dataIndex;
-          let symbol = context.chart.data.labels?.[labelIndex] ?? '';
+
+          let symbol =
+            (context.chart.data.labels?.[labelIndex] as string) ?? '';
 
           if (symbol === this.OTHER_KEY) {
             symbol = $localize`Other`;
@@ -456,9 +455,10 @@ export class GfPortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = translate(this.data[symbol as string]?.name);
+          const name = translate(this.data[symbol]?.name);
 
           let sum = 0;
+
           for (const item of context.dataset.data) {
             sum += item;
           }
@@ -471,6 +471,7 @@ export class GfPortfolioProportionChartComponent
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
             const value = context.raw as number;
+
             return [
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {

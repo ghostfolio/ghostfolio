@@ -14,6 +14,7 @@ import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
@@ -96,6 +97,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
+    registerChartConfiguration();
+
     addIcons({ arrowForwardOutline });
   }
 
@@ -154,8 +157,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
