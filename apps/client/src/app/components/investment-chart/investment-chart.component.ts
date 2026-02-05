@@ -41,7 +41,9 @@ import {
   type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import annotationPlugin from 'chartjs-plugin-annotation';
+import annotationPlugin, {
+  type AnnotationOptions
+} from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -162,14 +164,10 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
 
-        if (
-          this.savingsRate &&
-          // @ts-ignore
-          this.chart.options.plugins.annotation.annotations.savingsRate
-        ) {
-          // @ts-ignore
-          this.chart.options.plugins.annotation.annotations.savingsRate.value =
-            this.savingsRate;
+        const annotations = this.chart.options.plugins.annotation
+          .annotations as Record<string, AnnotationOptions<'line'>>;
+        if (this.savingsRate && annotations.savingsRate) {
+          annotations.savingsRate.value = this.savingsRate;
         }
 
         this.chart.update();
