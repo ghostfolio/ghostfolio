@@ -140,16 +140,18 @@ export class GfPortfolioProportionChartComponent
 
             if (
               chartData[this.data[symbol][this.keys[0]].toUpperCase()]
-                .subCategory[this.data[symbol][this.keys[1]]]
+                ?.subCategory?.[this.data[symbol][this.keys[1]]]
             ) {
+              // @ts-ignore
               chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()
               ].subCategory[this.data[symbol][this.keys[1]]].value = chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]]].value.plus(
+              ].subCategory?.[this.data[symbol][this.keys[1]]].value.plus(
                 this.data[symbol].value || 0
               );
             } else {
+              // @ts-ignore
               chartData[
                 this.data[symbol][this.keys[0]].toUpperCase()
               ].subCategory[this.data[symbol][this.keys[1]] ?? UNKNOWN_KEY] = {
@@ -278,12 +280,14 @@ export class GfPortfolioProportionChartComponent
 
       Object.keys(item.subCategory ?? {}).forEach((subCategory) => {
         if (item.name === UNKNOWN_KEY) {
+          // @ts-ignore
           backgroundColorSubCategory.push(item.color);
         } else {
           backgroundColorSubCategory.push(
             Color(item.color).lighten(lightnessRatio).hex()
           );
         }
+        // @ts-ignore
         dataSubCategory.push(item.subCategory[subCategory].value.toNumber());
         labelSubCategory.push(subCategory);
 

@@ -77,7 +77,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Account>();
-  public displayedColumns = [];
+  public displayedColumns: string[] = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
 
