@@ -54,7 +54,8 @@ import {
   isWithinInterval,
   min,
   startOfYear,
-  subDays
+  subDays,
+  subYears
 } from 'date-fns';
 import { isNumber, sortBy, sum, uniqBy } from 'lodash';
 
@@ -118,6 +119,7 @@ export abstract class PortfolioCalculator {
     this.activities = activities
       .map(
         ({
+          currency,
           date,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
@@ -138,6 +140,7 @@ export abstract class PortfolioCalculator {
           }
 
           return {
+            currency,
             SymbolProfile,
             tags,
             type,
@@ -185,6 +188,7 @@ export abstract class PortfolioCalculator {
     if (!transactionPoints.length) {
       return {
         activitiesCount: 0,
+        dividendYieldTrailingTwelveMonths: 0,
         createdAt: new Date(),
         currentValueInBaseCurrency: new Big(0),
         errors: [],
@@ -403,11 +407,43 @@ export abstract class PortfolioCalculator {
         };
       }
 
+      // Calculate dividend yield based on trailing twelve months of dividends and investment (cost basis)
+      const twelveMonthsAgo = subYears(this.endDate, 1);
+      const dividendsLast12Months = this.activities
+        .filter(({ SymbolProfile, type, date }) => {
+          return (
+            SymbolProfile.symbol === item.symbol &&
+            type === 'DIVIDEND' &&
+            isWithinInterval(new Date(date), {
+              start: twelveMonthsAgo,
+              end: this.endDate
+            })
+          );
+        })
+        .reduce((sum, activity) => {
+          const activityCurrency =
+            activity.currency ?? activity.SymbolProfile.currency;
+          const exchangeRate =
+            exchangeRatesByCurrency[`${activityCurrency}${this.currency}`]?.[
+              format(new Date(activity.date), DATE_FORMAT)
+            ] ?? 1;
+          const dividendAmount = activity.quantity.mul(activity.unitPrice);
+          return sum.plus(dividendAmount.mul(exchangeRate));
+        }, new Big(0));
+
+      const dividendYieldTrailingTwelveMonths =
+        totalInvestmentWithCurrencyEffect.gt(0)
+          ? dividendsLast12Months
+              .div(totalInvestmentWithCurrencyEffect)
+              .toNumber()
+          : 0;
+
       positions.push({
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         activitiesCount: item.activitiesCount,
+        dividendYieldTrailingTwelveMonths,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,

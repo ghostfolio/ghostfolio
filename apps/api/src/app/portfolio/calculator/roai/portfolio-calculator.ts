@@ -34,6 +34,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
+    let totalDividendsTrailingTwelveMonthsInBaseCurrency = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
     const totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
@@ -46,6 +47,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         return includeInTotalAssetValue;
       }
     )) {
+      if (currentPosition.investmentWithCurrencyEffect) {
+        totalDividendsTrailingTwelveMonthsInBaseCurrency =
+          totalDividendsTrailingTwelveMonthsInBaseCurrency.plus(
+            new Big(currentPosition.dividendYieldTrailingTwelveMonths ?? 0).mul(
+              currentPosition.investmentWithCurrencyEffect
+            )
+          );
+      }
+
       if (currentPosition.feeInBaseCurrency) {
         totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
           currentPosition.feeInBaseCurrency
@@ -105,6 +115,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
     }
 
+    // Calculate dividend yield for the entire portfolio based on trailing twelve months
+    const dividendYieldTrailingTwelveMonths =
+      totalInvestmentWithCurrencyEffect.gt(0)
+        ? totalDividendsTrailingTwelveMonthsInBaseCurrency
+            .div(totalInvestmentWithCurrencyEffect)
+            .toNumber()
+        : 0;
+
     return {
       currentValueInBaseCurrency,
       hasErrors,
@@ -116,6 +134,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       activitiesCount: this.activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,
+      dividendYieldTrailingTwelveMonths,
       createdAt: new Date(),
       errors: [],
       historicalData: [],
