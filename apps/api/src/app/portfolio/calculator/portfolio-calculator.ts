@@ -48,14 +48,14 @@ import {
   eachYearOfInterval,
   endOfDay,
   endOfYear,
-  subYears,
   format,
   isAfter,
   isBefore,
   isWithinInterval,
   min,
   startOfYear,
-  subDays
+  subDays,
+  subYears
 } from 'date-fns';
 import { isNumber, sortBy, sum, uniqBy } from 'lodash';
 
