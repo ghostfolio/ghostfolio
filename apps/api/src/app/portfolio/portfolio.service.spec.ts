@@ -24,7 +24,7 @@ describe('PortfolioService', () => {
       jest.restoreAllMocks();
     });
 
-    it('returns annualizedDividendYield from the calculator snapshot', async () => {
+    it('returns dividendYieldTrailingTwelveMonths from the calculator snapshot', async () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
@@ -111,7 +111,7 @@ describe('PortfolioService', () => {
         getInterestInBaseCurrency: jest.fn().mockResolvedValue(new Big(1)),
         getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(6)),
         getSnapshot: jest.fn().mockResolvedValue({
-          annualizedDividendYield: 0.0123,
+          dividendYieldTrailingTwelveMonths: 0.0123,
           currentValueInBaseCurrency: new Big(500),
           totalInvestment: new Big(400)
         }),
@@ -155,7 +155,7 @@ describe('PortfolioService', () => {
 
       expect(portfolioCalculator.getSnapshot).toHaveBeenCalledTimes(1);
       expect(summary).toMatchObject({
-        annualizedDividendYield: 0.0123,
+        dividendYieldTrailingTwelveMonths: 0.0123,
         cash: 1000,
         committedFunds: 60,
         dividendInBaseCurrency: 12,

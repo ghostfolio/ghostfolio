@@ -10,7 +10,7 @@ import { Transform, Type } from 'class-transformer';
 
 export class PortfolioSnapshot {
   activitiesCount: number;
-  annualizedDividendYield: number;
+  dividendYieldTrailingTwelveMonths: number;
 
   createdAt: Date;
 

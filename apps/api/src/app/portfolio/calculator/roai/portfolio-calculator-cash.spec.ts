@@ -231,7 +231,7 @@ describe('PortfolioCalculator', () => {
        */
       expect(position).toMatchObject<TimelinePosition>({
         activitiesCount: 2,
-        annualizedDividendYield: 0,
+        dividendYieldTrailingTwelveMonths: 0,
         averagePrice: new Big(1),
         currency: 'USD',
         dataSource: DataSource.YAHOO,

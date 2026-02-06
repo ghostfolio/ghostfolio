@@ -1869,7 +1869,7 @@ export class PortfolioService {
     }
 
     const {
-      annualizedDividendYield,
+      dividendYieldTrailingTwelveMonths,
       currentValueInBaseCurrency,
       totalInvestment
     } = await portfolioCalculator.getSnapshot();
@@ -1970,7 +1970,7 @@ export class PortfolioService {
       })?.toNumber();
 
     return {
-      annualizedDividendYield,
+      dividendYieldTrailingTwelveMonths,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
