@@ -1872,7 +1872,7 @@ export class PortfolioService {
     }
 
     const {
-      annualizedDividendYield,
+      dividendYieldTrailingTwelveMonths,
       currentValueInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect
@@ -1974,7 +1974,7 @@ export class PortfolioService {
       })?.toNumber();
 
     return {
-      annualizedDividendYield,
+      dividendYieldTrailingTwelveMonths,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,

@@ -380,8 +380,10 @@
   </div>
   @if (user?.settings?.isExperimentalFeatures) {
     <div class="flex-nowrap px-3 py-1 row">
-      <div class="flex-grow-1 ml-3 text-truncate" i18n>
-        Annualized Dividend Yield
+      <div class="flex-grow-1 ml-3 text-truncate">
+        <ng-container i18n>Dividend Yield</ng-container> (<ng-container i18n
+          >Trailing Twelve Months</ng-container
+        >)
       </div>
       <div class="flex-column flex-wrap justify-content-end">
         <gf-value
@@ -390,7 +392,9 @@
           [colorizeSign]="true"
           [isPercent]="true"
           [locale]="locale"
-          [value]="isLoading ? undefined : summary?.annualizedDividendYield"
+          [value]="
+            isLoading ? undefined : summary?.dividendYieldTrailingTwelveMonths
+          "
         />
       </div>
     </div>

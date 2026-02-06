@@ -120,6 +120,7 @@ export abstract class PortfolioCalculator {
     this.activities = activities
       .map(
         ({
+          currency,
           date,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
@@ -140,6 +141,7 @@ export abstract class PortfolioCalculator {
           }
 
           return {
+            currency,
             SymbolProfile,
             tags,
             type,
@@ -187,7 +189,7 @@ export abstract class PortfolioCalculator {
     if (!transactionPoints.length) {
       return {
         activitiesCount: 0,
-        annualizedDividendYield: 0,
+        dividendYieldTrailingTwelveMonths: 0,
         createdAt: new Date(),
         currentValueInBaseCurrency: new Big(0),
         errors: [],
@@ -406,38 +408,43 @@ export abstract class PortfolioCalculator {
         };
       }
 
-      // Calculate annualized dividend yield based on investment (cost basis)
+      // Calculate dividend yield based on trailing twelve months of dividends and investment (cost basis)
       const twelveMonthsAgo = subYears(this.endDate, 1);
       const dividendsLast12Months = this.activities
         .filter(({ SymbolProfile, type, date }) => {
           return (
             SymbolProfile.symbol === item.symbol &&
             type === 'DIVIDEND' &&
-            new Date(date) >= twelveMonthsAgo &&
-            new Date(date) <= this.endDate
+            isWithinInterval(new Date(date), {
+              start: twelveMonthsAgo,
+              end: this.endDate
+            })
           );
         })
         .reduce((sum, activity) => {
+          const activityCurrency =
+            activity.currency ?? activity.SymbolProfile.currency;
           const exchangeRate =
-            exchangeRatesByCurrency[
-              `${activity.SymbolProfile.currency}${this.currency}`
-            ]?.[format(new Date(activity.date), DATE_FORMAT)] ?? 1;
+            exchangeRatesByCurrency[`${activityCurrency}${this.currency}`]?.[
+              format(new Date(activity.date), DATE_FORMAT)
+            ] ?? 1;
           const dividendAmount = activity.quantity.mul(activity.unitPrice);
           return sum.plus(dividendAmount.mul(exchangeRate));
         }, new Big(0));
 
-      const annualizedDividendYield = totalInvestmentWithCurrencyEffect.gt(0)
-        ? dividendsLast12Months
-            .div(totalInvestmentWithCurrencyEffect)
-            .toNumber()
-        : 0;
+      const dividendYieldTrailingTwelveMonths =
+        totalInvestmentWithCurrencyEffect.gt(0)
+          ? dividendsLast12Months
+              .div(totalInvestmentWithCurrencyEffect)
+              .toNumber()
+          : 0;
 
       positions.push({
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         activitiesCount: item.activitiesCount,
-        annualizedDividendYield,
+        dividendYieldTrailingTwelveMonths,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,

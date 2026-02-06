@@ -297,8 +297,8 @@ describe('PortfolioCalculator', () => {
       });
 
       const position = portfolioSnapshot.positions[0];
-      expect(position).toHaveProperty('annualizedDividendYield');
-      expect(position.annualizedDividendYield).toBeGreaterThan(0);
+      expect(position).toHaveProperty('dividendYieldTrailingTwelveMonths');
+      expect(position.dividendYieldTrailingTwelveMonths).toBeGreaterThan(0);
 
       // Verify that the snapshot data is sufficient for portfolio summary calculation
       // Portfolio summary annualized dividend yield = totalDividend / totalInvestment
@@ -306,7 +306,7 @@ describe('PortfolioCalculator', () => {
         .div(position.investmentWithCurrencyEffect)
         .toNumber();
 
-      expect(position.annualizedDividendYield).toBeCloseTo(
+      expect(position.dividendYieldTrailingTwelveMonths).toBeCloseTo(
         expectedPortfolioYield,
         10
       );
@@ -502,12 +502,18 @@ describe('PortfolioCalculator', () => {
       // MSFT: 2.60 dividends / 300 investment = 0.00867 (0.867%)
       expect(msftPosition.dividendInBaseCurrency).toEqual(new Big('2.6'));
       expect(msftPosition.investmentWithCurrencyEffect).toEqual(new Big('300'));
-      expect(msftPosition.annualizedDividendYield).toBeCloseTo(2.6 / 300, 5);
+      expect(msftPosition.dividendYieldTrailingTwelveMonths).toBeCloseTo(
+        2.6 / 300,
+        5
+      );
 
       // IBM: 6.60 dividends / 200 investment = 0.033 (3.3%)
       expect(ibmPosition.dividendInBaseCurrency).toEqual(new Big('6.6'));
       expect(ibmPosition.investmentWithCurrencyEffect).toEqual(new Big('200'));
-      expect(ibmPosition.annualizedDividendYield).toBeCloseTo(6.6 / 200, 5);
+      expect(ibmPosition.dividendYieldTrailingTwelveMonths).toBeCloseTo(
+        6.6 / 200,
+        5
+      );
 
       // Portfolio-wide: (2.60 + 6.60) / (300 + 200) = 9.20 / 500 = 0.0184 (1.84%)
       const totalDividends = new Big(msftPosition.dividendInBaseCurrency).plus(
@@ -520,9 +526,14 @@ describe('PortfolioCalculator', () => {
       expect(totalDividends.toNumber()).toBe(9.2);
       expect(totalInvestment.toNumber()).toBe(500);
 
-      // Test that portfolioSnapshot has aggregated annualizedDividendYield
-      expect(portfolioSnapshot).toHaveProperty('annualizedDividendYield');
-      expect(portfolioSnapshot.annualizedDividendYield).toBeCloseTo(0.0184, 4);
+      // Test that portfolioSnapshot has aggregated dividendYieldTrailingTwelveMonths
+      expect(portfolioSnapshot).toHaveProperty(
+        'dividendYieldTrailingTwelveMonths'
+      );
+      expect(portfolioSnapshot.dividendYieldTrailingTwelveMonths).toBeCloseTo(
+        0.0184,
+        4
+      );
     });
 
     it('ignores dividends older than 12 months when aggregating portfolio yield', async () => {
@@ -668,11 +679,11 @@ describe('PortfolioCalculator', () => {
       const ibmDividendLast12Months = new Big('1.65');
       const totalInvestment = new Big('500');
 
-      expect(msftPosition.annualizedDividendYield).toBeCloseTo(
+      expect(msftPosition.dividendYieldTrailingTwelveMonths).toBeCloseTo(
         msftDividendLast12Months.div(new Big('300')).toNumber(),
         6
       );
-      expect(ibmPosition.annualizedDividendYield).toBeCloseTo(
+      expect(ibmPosition.dividendYieldTrailingTwelveMonths).toBeCloseTo(
         ibmDividendLast12Months.div(new Big('200')).toNumber(),
         6
       );
@@ -682,7 +693,7 @@ describe('PortfolioCalculator', () => {
         .div(totalInvestment)
         .toNumber();
 
-      expect(portfolioSnapshot.annualizedDividendYield).toBeCloseTo(
+      expect(portfolioSnapshot.dividendYieldTrailingTwelveMonths).toBeCloseTo(
         expectedAnnualizedDividendYield,
         6
       );
