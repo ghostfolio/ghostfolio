@@ -150,7 +150,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
-    countries: '',
+    countries: ['', this.jsonValidator()],
     currency: '',
     historicalData: this.formBuilder.group({
       csvString: ''
@@ -159,14 +159,14 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
       defaultMarketPrice: null,
-      headers: JSON.stringify({}),
+      headers: [JSON.stringify({}), this.jsonValidator()],
       locale: '',
       mode: '',
       selector: '',
       url: ''
     }),
-    sectors: '',
-    symbolMapping: '',
+    sectors: ['', this.jsonValidator()],
+    symbolMapping: ['', this.jsonValidator()],
     url: ''
   });
 
@@ -721,5 +721,18 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         equalsPreviousProfileIdentifier: true
       };
     }
+  }
+
+  private jsonValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+      try {
+        if (control.value) {
+          JSON.parse(control.value);
+        }
+        return null;
+      } catch {
+        return { invalidJson: true };
+      }
+    };
   }
 }

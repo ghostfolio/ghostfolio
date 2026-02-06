@@ -514,30 +514,28 @@
                 </mat-accordion>
               </div>
             }
-            @if (assetProfile?.dataSource === 'MANUAL') {
-              <div>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label i18n>Sectors</mat-label>
-                  <textarea
-                    cdkTextareaAutosize
-                    formControlName="sectors"
-                    matInput
-                    type="text"
-                  ></textarea>
-                </mat-form-field>
-              </div>
-              <div>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label i18n>Countries</mat-label>
-                  <textarea
-                    cdkTextareaAutosize
-                    formControlName="countries"
-                    matInput
-                    type="text"
-                  ></textarea>
-                </mat-form-field>
-              </div>
-            }
+            <div>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label i18n>Sectors</mat-label>
+                <textarea
+                  cdkTextareaAutosize
+                  formControlName="sectors"
+                  matInput
+                  type="text"
+                ></textarea>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label i18n>Countries</mat-label>
+                <textarea
+                  cdkTextareaAutosize
+                  formControlName="countries"
+                  matInput
+                  type="text"
+                ></textarea>
+              </mat-form-field>
+            </div>
             <div>
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-label i18n>Url</mat-label>
