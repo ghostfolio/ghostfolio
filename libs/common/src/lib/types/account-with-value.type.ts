@@ -7,10 +7,6 @@ export type AccountWithValue = AccountModel & {
   dividendInBaseCurrency: number;
   interestInBaseCurrency: number;
   platform?: Platform;
-
-  /** @deprecated use activitiesCount instead */
-  transactionCount: number;
-
   value: number;
   valueInBaseCurrency: number;
 };
