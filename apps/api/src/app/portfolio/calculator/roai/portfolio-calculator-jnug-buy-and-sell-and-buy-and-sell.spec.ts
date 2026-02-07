@@ -162,7 +162,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('0'),
             symbol: 'JNUG',
             tags: [],
-            transactionCount: 4,
             valueInBaseCurrency: new Big('0')
           }
         ],
