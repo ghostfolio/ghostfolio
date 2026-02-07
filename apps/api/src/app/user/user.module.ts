@@ -1,5 +1,6 @@
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
+import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
@@ -27,6 +28,7 @@ import { UserService } from './user.service';
     OrderModule,
     PrismaModule,
     PropertyModule,
+    RedactValuesInResponseModule,
     SubscriptionModule,
     TagModule
   ],

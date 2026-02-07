@@ -30,7 +30,7 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
-  locale
+  locale as defaultLocale
 } from '@ghostfolio/common/config';
 import {
   User as IUser,
@@ -96,11 +96,17 @@ export class UserService {
     return { accessToken, hashedAccessToken };
   }
 
-  public async getUser(
-    { accounts, id, permissions, settings, subscription }: UserWithSettings,
-    impersonationUserId: string,
-    aLocale = locale
-  ): Promise<IUser> {
+  public async getUser({
+    impersonationUserId,
+    locale = defaultLocale,
+    user
+  }: {
+    impersonationUserId: string;
+    locale?: string;
+    user: UserWithSettings;
+  }): Promise<IUser> {
+    const { id, permissions, settings, subscription } = user;
+
     const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
@@ -114,23 +120,23 @@ export class UserService {
           name: 'asc'
         },
         where: {
-          userId: impersonationUserId
+          userId: impersonationUserId || user.id
         }
       }),
       this.prismaService.order.count({
-        where: { userId: id }
+        where: { userId: impersonationUserId || user.id }
       }),
       this.prismaService.order.findFirst({
         orderBy: {
           date: 'asc'
         },
-        where: { userId: id }
+        where: { userId: impersonationUserId || user.id }
       }),
-      this.tagService.getTagsForUser(id)
+      this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
     const access = userData[0];
-    const impersonationAccounts = userData[1];
+    const accounts = userData[1];
     const activitiesCount = userData[2];
     const firstActivity = userData[3];
     let tags = userData[4].filter((tag) => {
@@ -169,11 +175,13 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
-      accounts: impersonationUserId ? impersonationAccounts : accounts,
+      accounts: sortBy(accounts, ({ name }) => {
+        return name.toLowerCase();
+      }),
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
-        locale: (settings.settings as UserSettings)?.locale ?? aLocale
+        locale: (settings.settings as UserSettings)?.locale ?? locale
       }
     };
   }
