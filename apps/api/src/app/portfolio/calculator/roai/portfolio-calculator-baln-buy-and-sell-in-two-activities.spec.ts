@@ -192,7 +192,6 @@ describe('PortfolioCalculator', () => {
             timeWeightedInvestmentWithCurrencyEffect: new Big(
               '285.80000000000000396627'
             ),
-            transactionCount: 3,
             valueInBaseCurrency: new Big('0')
           }
         ],

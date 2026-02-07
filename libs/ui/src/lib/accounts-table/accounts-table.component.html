@@ -120,13 +120,13 @@
         *matHeaderCellDef
         class="justify-content-end px-1"
         mat-header-cell
-        mat-sort-header="transactionCount"
+        mat-sort-header="activitiesCount"
       >
         <span class="d-block d-sm-none">#</span>
         <span class="d-none d-sm-block" i18n>Activities</span>
       </th>
       <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-        {{ element.transactionCount }}
+        {{ element.activitiesCount }}
       </td>
       <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
         {{ activitiesCount }}
@@ -323,7 +323,7 @@
           <hr class="m-0" />
           <button
             mat-menu-item
-            [disabled]="element.transactionCount > 0"
+            [disabled]="element.activitiesCount > 0"
             (click)="onDeleteAccount(element.id)"
           >
             <span class="align-items-center d-flex">
