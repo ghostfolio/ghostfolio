@@ -233,38 +233,6 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2023-01-01', investment: 82.329056 }
       ]);
-    });
-
-    it.only('with GOOGL buy - performance grouped by year', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
-
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          date: new Date('2023-01-03'),
-          feeInAssetProfileCurrency: 1,
-          feeInBaseCurrency: 0.9238,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'USD',
-            dataSource: 'YAHOO',
-            name: 'Alphabet Inc.',
-            symbol: 'GOOGL'
-          },
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 89.12
-        }
-      ];
-
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
-        userId: userDummyData.id
-      });
-
-      await portfolioCalculator.computeSnapshot();
 
       const { chart } = await portfolioCalculator.getPerformance({
         end: parseDate('2023-07-10'),

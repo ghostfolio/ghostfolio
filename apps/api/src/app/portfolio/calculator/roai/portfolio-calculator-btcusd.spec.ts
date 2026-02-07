@@ -261,37 +261,6 @@ describe('PortfolioCalculator', () => {
         { date: '2021-01-01', investment: 44558.42 },
         { date: '2022-01-01', investment: 0 }
       ]);
-    });
-
-    it.only('with BTCUSD buy - performance grouped by year', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
-
-      const activities: Activity[] = exportResponse.activities.map(
-        (activity) => ({
-          ...activityDummyData,
-          ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: 4.46,
-          feeInBaseCurrency: 4.46,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'USD',
-            dataSource: activity.dataSource,
-            name: 'Bitcoin',
-            symbol: activity.symbol
-          },
-          unitPriceInAssetProfileCurrency: 44558.42
-        })
-      );
-
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: exportResponse.user.settings.currency,
-        userId: userDummyData.id
-      });
-
-      await portfolioCalculator.computeSnapshot();
 
       const { chart } = await portfolioCalculator.getPerformance({
         end: parseDate('2022-01-14'),

@@ -264,37 +264,6 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2022-01-01', investment: 0 }
       ]);
-    });
-
-    it.only('with NOVN.SW buy and sell - performance grouped by year', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
-
-      const activities: Activity[] = exportResponse.activities.map(
-        (activity) => ({
-          ...activityDummyData,
-          ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: activity.fee,
-          feeInBaseCurrency: activity.fee,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: activity.currency,
-            dataSource: activity.dataSource,
-            name: 'Novartis AG',
-            symbol: activity.symbol
-          },
-          unitPriceInAssetProfileCurrency: activity.unitPrice
-        })
-      );
-
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: exportResponse.user.settings.currency,
-        userId: userDummyData.id
-      });
-
-      await portfolioCalculator.computeSnapshot();
 
       const { chart } = await portfolioCalculator.getPerformance({
         end: parseDate('2022-04-11'),
