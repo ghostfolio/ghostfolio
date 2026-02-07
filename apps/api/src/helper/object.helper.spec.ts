@@ -111,6 +111,7 @@ describe('redactAttributes', () => {
           hasError: false,
           holdings: {
             'AAPL.US': {
+              activitiesCount: 1,
               currency: 'USD',
               markets: {
                 UNKNOWN: 0,
@@ -130,7 +131,6 @@ describe('redactAttributes', () => {
               marketPrice: 220.79,
               symbol: 'AAPL.US',
               tags: [],
-              transactionCount: 1,
               allocationInPercentage: 0.044900865255793135,
               assetClass: 'EQUITY',
               assetSubClass: 'STOCK',
@@ -163,6 +163,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.0694356974830054
             },
             'ALV.DE': {
+              activitiesCount: 2,
               currency: 'EUR',
               markets: {
                 UNKNOWN: 0,
@@ -182,7 +183,6 @@ describe('redactAttributes', () => {
               marketPrice: 296.5,
               symbol: 'ALV.DE',
               tags: [],
-              transactionCount: 2,
               allocationInPercentage: 0.026912563036519527,
               assetClass: 'EQUITY',
               assetSubClass: 'STOCK',
@@ -210,6 +210,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.04161818652826481
             },
             AMZN: {
+              activitiesCount: 1,
               currency: 'USD',
               markets: {
                 UNKNOWN: 0,
@@ -229,7 +230,6 @@ describe('redactAttributes', () => {
               marketPrice: 187.99,
               symbol: 'AMZN',
               tags: [],
-              transactionCount: 1,
               allocationInPercentage: 0.07646101417126275,
               assetClass: 'EQUITY',
               assetSubClass: 'STOCK',
@@ -262,6 +262,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.11824101426541227
             },
             bitcoin: {
+              activitiesCount: 1,
               currency: 'USD',
               markets: {
                 UNKNOWN: 36985.0332704,
@@ -287,7 +288,6 @@ describe('redactAttributes', () => {
                   userId: null
                 }
               ],
-              transactionCount: 1,
               allocationInPercentage: 0.15042891393226654,
               assetClass: 'LIQUIDITY',
               assetSubClass: 'CRYPTOCURRENCY',
@@ -313,6 +313,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.232626620912395
             },
             BONDORA_GO_AND_GROW: {
+              activitiesCount: 5,
               currency: 'EUR',
               markets: {
                 UNKNOWN: 2231.644722160232,
@@ -338,7 +339,6 @@ describe('redactAttributes', () => {
                   userId: null
                 }
               ],
-              transactionCount: 5,
               allocationInPercentage: 0.009076749759365777,
               assetClass: 'FIXED_INCOME',
               assetSubClass: 'BOND',
@@ -364,6 +364,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.014036487867880205
             },
             FRANKLY95P: {
+              activitiesCount: 6,
               currency: 'CHF',
               markets: {
                 UNKNOWN: 0,
@@ -389,7 +390,6 @@ describe('redactAttributes', () => {
                   userId: null
                 }
               ],
-              transactionCount: 6,
               allocationInPercentage: 0.09095764645669335,
               assetClass: 'EQUITY',
               assetSubClass: 'ETF',
@@ -488,6 +488,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.14065892911313693
             },
             MSFT: {
+              activitiesCount: 1,
               currency: 'USD',
               markets: {
                 UNKNOWN: 0,
@@ -507,7 +508,6 @@ describe('redactAttributes', () => {
               marketPrice: 428.02,
               symbol: 'MSFT',
               tags: [],
-              transactionCount: 1,
               allocationInPercentage: 0.05222646409742627,
               assetClass: 'EQUITY',
               assetSubClass: 'STOCK',
@@ -540,6 +540,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.08076416659271518
             },
             TSLA: {
+              activitiesCount: 1,
               currency: 'USD',
               markets: {
                 UNKNOWN: 0,
@@ -559,7 +560,6 @@ describe('redactAttributes', () => {
               marketPrice: 260.46,
               symbol: 'TSLA',
               tags: [],
-              transactionCount: 1,
               allocationInPercentage: 0.1589050142378352,
               assetClass: 'EQUITY',
               assetSubClass: 'STOCK',
@@ -592,6 +592,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.2457342510950259
             },
             VTI: {
+              activitiesCount: 5,
               currency: 'USD',
               markets: {
                 UNKNOWN: 0,
@@ -611,7 +612,6 @@ describe('redactAttributes', () => {
               marketPrice: 282.05,
               symbol: 'VTI',
               tags: [],
-              transactionCount: 5,
               allocationInPercentage: 0.057358979326040366,
               assetClass: 'EQUITY',
               assetSubClass: 'ETF',
@@ -764,6 +764,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.08870120238725339
             },
             'VWRL.SW': {
+              activitiesCount: 5,
               currency: 'CHF',
               markets: {
                 UNKNOWN: 0,
@@ -783,7 +784,6 @@ describe('redactAttributes', () => {
               marketPrice: 117.62,
               symbol: 'VWRL.SW',
               tags: [],
-              transactionCount: 5,
               allocationInPercentage: 0.09386983901959013,
               assetClass: 'EQUITY',
               assetSubClass: 'ETF',
@@ -1172,6 +1172,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.145162408515095
             },
             'XDWD.DE': {
+              activitiesCount: 1,
               currency: 'EUR',
               markets: {
                 UNKNOWN: 0,
@@ -1191,7 +1192,6 @@ describe('redactAttributes', () => {
               marketPrice: 105.72,
               symbol: 'XDWD.DE',
               tags: [],
-              transactionCount: 1,
               allocationInPercentage: 0.03598477442100562,
               assetClass: 'EQUITY',
               assetSubClass: 'ETF',
@@ -1450,6 +1450,7 @@ describe('redactAttributes', () => {
               valueInPercentage: 0.055647656152211074
             },
             USD: {
+              activitiesCount: 0,
               currency: 'USD',
               allocationInPercentage: 0.20291717628620132,
               assetClass: 'LIQUIDITY',
@@ -1472,7 +1473,6 @@ describe('redactAttributes', () => {
               sectors: [],
               symbol: 'USD',
               tags: [],
-              transactionCount: 0,
               valueInBaseCurrency: 49890,
               valueInPercentage: 0.3137956381563603
             }
@@ -1615,6 +1615,7 @@ describe('redactAttributes', () => {
       hasError: false,
       holdings: {
         'AAPL.US': {
+          activitiesCount: 1,
           currency: 'USD',
           markets: {
             UNKNOWN: 0,
@@ -1634,7 +1635,6 @@ describe('redactAttributes', () => {
           marketPrice: 220.79,
           symbol: 'AAPL.US',
           tags: [],
-          transactionCount: 1,
           allocationInPercentage: 0.044900865255793135,
           assetClass: 'EQUITY',
           assetSubClass: 'STOCK',
@@ -1667,6 +1667,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.0694356974830054
         },
         'ALV.DE': {
+          activitiesCount: 2,
           currency: 'EUR',
           markets: {
             UNKNOWN: 0,
@@ -1686,7 +1687,6 @@ describe('redactAttributes', () => {
           marketPrice: 296.5,
           symbol: 'ALV.DE',
           tags: [],
-          transactionCount: 2,
           allocationInPercentage: 0.026912563036519527,
           assetClass: 'EQUITY',
           assetSubClass: 'STOCK',
@@ -1714,6 +1714,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.04161818652826481
         },
         AMZN: {
+          activitiesCount: 1,
           currency: 'USD',
           markets: {
             UNKNOWN: 0,
@@ -1733,7 +1734,6 @@ describe('redactAttributes', () => {
           marketPrice: 187.99,
           symbol: 'AMZN',
           tags: [],
-          transactionCount: 1,
           allocationInPercentage: 0.07646101417126275,
           assetClass: 'EQUITY',
           assetSubClass: 'STOCK',
@@ -1766,6 +1766,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.11824101426541227
         },
         bitcoin: {
+          activitiesCount: 1,
           currency: 'USD',
           markets: {
             UNKNOWN: 36985.0332704,
@@ -1791,7 +1792,6 @@ describe('redactAttributes', () => {
               userId: null
             }
           ],
-          transactionCount: 1,
           allocationInPercentage: 0.15042891393226654,
           assetClass: 'LIQUIDITY',
           assetSubClass: 'CRYPTOCURRENCY',
@@ -1817,6 +1817,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.232626620912395
         },
         BONDORA_GO_AND_GROW: {
+          activitiesCount: 5,
           currency: 'EUR',
           markets: {
             UNKNOWN: 2231.644722160232,
@@ -1842,7 +1843,6 @@ describe('redactAttributes', () => {
               userId: null
             }
           ],
-          transactionCount: 5,
           allocationInPercentage: 0.009076749759365777,
           assetClass: 'FIXED_INCOME',
           assetSubClass: 'BOND',
@@ -1868,6 +1868,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.014036487867880205
         },
         FRANKLY95P: {
+          activitiesCount: 6,
           currency: 'CHF',
           markets: {
             UNKNOWN: 0,
@@ -1893,7 +1894,6 @@ describe('redactAttributes', () => {
               userId: null
             }
           ],
-          transactionCount: 6,
           allocationInPercentage: 0.09095764645669335,
           assetClass: 'EQUITY',
           assetSubClass: 'ETF',
@@ -1972,6 +1972,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.14065892911313693
         },
         MSFT: {
+          activitiesCount: 1,
           currency: 'USD',
           markets: {
             UNKNOWN: 0,
@@ -1991,7 +1992,6 @@ describe('redactAttributes', () => {
           marketPrice: 428.02,
           symbol: 'MSFT',
           tags: [],
-          transactionCount: 1,
           allocationInPercentage: 0.05222646409742627,
           assetClass: 'EQUITY',
           assetSubClass: 'STOCK',
@@ -2024,6 +2024,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.08076416659271518
         },
         TSLA: {
+          activitiesCount: 1,
           currency: 'USD',
           markets: {
             UNKNOWN: 0,
@@ -2043,7 +2044,6 @@ describe('redactAttributes', () => {
           marketPrice: 260.46,
           symbol: 'TSLA',
           tags: [],
-          transactionCount: 1,
           allocationInPercentage: 0.1589050142378352,
           assetClass: 'EQUITY',
           assetSubClass: 'STOCK',
@@ -2076,6 +2076,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.2457342510950259
         },
         VTI: {
+          activitiesCount: 5,
           currency: 'USD',
           markets: {
             UNKNOWN: 0,
@@ -2095,7 +2096,6 @@ describe('redactAttributes', () => {
           marketPrice: 282.05,
           symbol: 'VTI',
           tags: [],
-          transactionCount: 5,
           allocationInPercentage: 0.057358979326040366,
           assetClass: 'EQUITY',
           assetSubClass: 'ETF',
@@ -2248,6 +2248,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.08870120238725339
         },
         'VWRL.SW': {
+          activitiesCount: 5,
           currency: 'CHF',
           markets: {
             UNKNOWN: 0,
@@ -2267,7 +2268,6 @@ describe('redactAttributes', () => {
           marketPrice: 117.62,
           symbol: 'VWRL.SW',
           tags: [],
-          transactionCount: 5,
           allocationInPercentage: 0.09386983901959013,
           assetClass: 'EQUITY',
           assetSubClass: 'ETF',
@@ -2648,6 +2648,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.145162408515095
         },
         'XDWD.DE': {
+          activitiesCount: 1,
           currency: 'EUR',
           markets: {
             UNKNOWN: 0,
@@ -2667,7 +2668,6 @@ describe('redactAttributes', () => {
           marketPrice: 105.72,
           symbol: 'XDWD.DE',
           tags: [],
-          transactionCount: 1,
           allocationInPercentage: 0.03598477442100562,
           assetClass: 'EQUITY',
           assetSubClass: 'ETF',
@@ -2926,6 +2926,7 @@ describe('redactAttributes', () => {
           valueInPercentage: 0.055647656152211074
         },
         USD: {
+          activitiesCount: 0,
           currency: 'USD',
           allocationInPercentage: 0.20291717628620132,
           assetClass: 'LIQUIDITY',
@@ -2948,7 +2949,6 @@ describe('redactAttributes', () => {
           sectors: [],
           symbol: 'USD',
           tags: [],
-          transactionCount: 0,
           valueInBaseCurrency: null,
           valueInPercentage: 0.3137956381563603
         }
