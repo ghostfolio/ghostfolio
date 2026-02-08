@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the `transactionCount` in the portfolio calculator and service
+- Refreshed the cryptocurrencies list
 
 ## 2.236.0 - 2026-02-05
 
