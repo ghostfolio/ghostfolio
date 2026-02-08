@@ -49,7 +49,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { sortBy, without } from 'lodash';
+import { without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
 @Injectable()
@@ -175,8 +175,8 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
-      accounts: sortBy(accounts, ({ name }) => {
-        return name.toLowerCase();
+      accounts: accounts.sort((a, b) => {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       }),
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
@@ -534,9 +534,10 @@ export class UserService {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.accounts = sortBy(user.accounts, ({ name }) => {
-      return name.toLowerCase();
+    user.accounts = user.accounts.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
     });
+
     user.permissions = currentPermissions.sort();
 
     return user;
