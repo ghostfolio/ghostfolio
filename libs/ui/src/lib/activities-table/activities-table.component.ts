@@ -26,6 +26,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  computed,
   inject,
   input
 } from '@angular/core';
@@ -138,12 +139,15 @@ export class GfActivitiesTableComponent
   public hasDrafts = false;
   public hasErrors = false;
   public isAfter = isAfter;
-  public isLoading = true;
   public isUUID = isUUID;
   public routeQueryParams: Subscription;
   public selectedRows = new SelectionModel<Activity>(true, []);
 
   public readonly dataSource = input.required<MatTableDataSource<Activity>>();
+
+  public readonly isLoading = computed(() => {
+    return !this.dataSource();
+  });
 
   private readonly notificationService = inject(NotificationService);
   private readonly unsubscribeSubject = new Subject<void>();
@@ -219,10 +223,6 @@ export class GfActivitiesTableComponent
       this.displayedColumns = this.displayedColumns.filter((column) => {
         return column !== 'nameWithSymbol';
       });
-    }
-
-    if (this.dataSource()) {
-      this.isLoading = false;
     }
   }
 
