@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the `transactionCount` in the portfolio calculator and service
 - Refreshed the cryptocurrencies list
 
+### Fixed
+
+- Fixed the accounts of the assistant for the impersonation mode
+- Fixed the tags of the assistant for the impersonation mode
+
 ## 2.236.0 - 2026-02-05
 
 ### Changed
