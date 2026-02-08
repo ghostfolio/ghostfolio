@@ -48,7 +48,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
 import { isUUID } from 'class-validator';
-import { endOfToday, isAfter } from 'date-fns';
+import { isAfter } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   alertCircleOutline,
@@ -135,7 +135,6 @@ export class GfActivitiesTableComponent
   @ViewChild(MatSort) sort: MatSort;
 
   public displayedColumns: string[] = [];
-  public endOfToday = endOfToday();
   public hasDrafts = false;
   public hasErrors = false;
   public isAfter = isAfter;
