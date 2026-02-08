@@ -167,7 +167,6 @@ describe('PortfolioCalculator', () => {
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('0'),
             feeInBaseCurrency: new Big('0'),
-            firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74').mul(0.97373),
             grossPerformancePercentage: new Big('0.4241983590271396608571'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
@@ -195,7 +194,6 @@ describe('PortfolioCalculator', () => {
             timeWeightedInvestmentWithCurrencyEffect: new Big(
               '636.79389574611155533947'
             ),
-            transactionCount: 2,
             valueInBaseCurrency: new Big('13298.425356')
           }
         ],

@@ -416,7 +416,6 @@ export abstract class PortfolioCalculator {
         dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
         feeInBaseCurrency: item.feeInBaseCurrency,
-        firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
           ? (grossPerformancePercentage ?? null)
@@ -446,7 +445,6 @@ export abstract class PortfolioCalculator {
         quantity: item.quantity,
         symbol: item.symbol,
         tags: item.tags,
-        transactionCount: item.transactionCount,
         valueInBaseCurrency: new Big(marketPriceInBaseCurrency).mul(
           item.quantity
         )
@@ -1004,11 +1002,9 @@ export abstract class PortfolioCalculator {
           fee: oldAccumulatedSymbol.fee.plus(fee),
           feeInBaseCurrency:
             oldAccumulatedSymbol.feeInBaseCurrency.plus(feeInBaseCurrency),
-          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
-          tags: oldAccumulatedSymbol.tags.concat(tags),
-          transactionCount: oldAccumulatedSymbol.transactionCount + 1
+          tags: oldAccumulatedSymbol.tags.concat(tags)
         };
       } else {
         currentTransactionPointItem = {
@@ -1024,11 +1020,9 @@ export abstract class PortfolioCalculator {
           averagePrice: unitPrice,
           dateOfFirstActivity: date,
           dividend: new Big(0),
-          firstBuyDate: date,
           includeInHoldings: INVESTMENT_ACTIVITY_TYPES.includes(type),
           investment: unitPrice.mul(quantity).mul(factor),
-          quantity: quantity.mul(factor),
-          transactionCount: 1
+          quantity: quantity.mul(factor)
         };
       }
 

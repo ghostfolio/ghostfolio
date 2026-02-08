@@ -1,9 +1,28 @@
-<gf-dialog-header
-  position="center"
-  [deviceType]="data.deviceType"
-  (closeButtonClicked)="onClose()"
-/>
-
+<div class="d-flex justify-content-end">
+  <button
+    class="mx-1 no-min-width px-2"
+    mat-button
+    type="button"
+    [matMenuTriggerFor]="userDetailActionsMenu"
+    (click)="$event.stopPropagation()"
+  >
+    <ion-icon name="ellipsis-vertical" />
+  </button>
+  <mat-menu
+    #userDetailActionsMenu="matMenu"
+    class="no-max-width"
+    xPosition="before"
+  >
+    <button
+      mat-menu-item
+      type="button"
+      [disabled]="this.data.currentUserId === this.data.userId"
+      (click)="deleteUser()"
+    >
+      <ng-container i18n>Delete</ng-container>
+    </button>
+  </mat-menu>
+</div>
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
     <div class="mb-3 row">
@@ -103,7 +122,8 @@
   </div>
 </div>
 
-<gf-dialog-footer
-  [deviceType]="data.deviceType"
-  (closeButtonClicked)="onClose()"
-/>
+<div class="justify-content-end" mat-dialog-actions>
+  <button mat-button type="button" (click)="onClose()">
+    <ng-container i18n>Close</ng-container>
+  </button>
+</div>
