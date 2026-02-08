@@ -21,7 +21,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -96,7 +95,7 @@ import { GfValueComponent } from '../value/value.component';
   templateUrl: './activities-table.component.html'
 })
 export class GfActivitiesTableComponent
-  implements AfterViewInit, OnChanges, OnDestroy, OnInit
+  implements AfterViewInit, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -108,10 +107,7 @@ export class GfActivitiesTableComponent
   @Input() locale = getLocale();
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
-  @Input() showAccountColumn = true;
   @Input() showActions = true;
-  @Input() showCheckbox = false;
-  @Input() showNameColumn = true;
   @Input() sortColumn: string;
   @Input() sortDirection: SortDirection;
   @Input() sortDisabled = false;
@@ -133,15 +129,56 @@ export class GfActivitiesTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns: string[] = [];
   public hasDrafts = false;
   public hasErrors = false;
   public isUUID = isUUID;
   public selectedRows = new SelectionModel<Activity>(true, []);
 
   public readonly dataSource = input.required<MatTableDataSource<Activity>>();
+  public readonly showAccountColumn = input(true);
+  public readonly showCheckbox = input(false);
+  public readonly showNameColumn = input(true);
 
-  public readonly isLoading = computed(() => {
+  protected readonly displayedColumns = computed(() => {
+    let columns = [
+      'select',
+      'importStatus',
+      'icon',
+      'nameWithSymbol',
+      'type',
+      'date',
+      'quantity',
+      'unitPrice',
+      'fee',
+      'value',
+      'currency',
+      'valueInBaseCurrency',
+      'account',
+      'comment',
+      'actions'
+    ];
+
+    if (!this.showAccountColumn()) {
+      columns = columns.filter((column) => {
+        return column !== 'account';
+      });
+    }
+
+    if (!this.showCheckbox()) {
+      columns = columns.filter((column) => {
+        return column !== 'importStatus' && column !== 'select';
+      });
+    }
+
+    if (!this.showNameColumn()) {
+      columns = columns.filter((column) => {
+        return column !== 'nameWithSymbol';
+      });
+    }
+    return columns;
+  });
+
+  protected readonly isLoading = computed(() => {
     return !this.dataSource();
   });
 
@@ -166,7 +203,7 @@ export class GfActivitiesTableComponent
   }
 
   public ngOnInit() {
-    if (this.showCheckbox) {
+    if (this.showCheckbox()) {
       this.toggleAllRows();
       this.selectedRows.changed
         .pipe(takeUntil(this.unsubscribeSubject))
@@ -182,44 +219,6 @@ export class GfActivitiesTableComponent
     this.sort.sortChange.subscribe((value: Sort) => {
       this.sortChanged.emit(value);
     });
-  }
-
-  public ngOnChanges() {
-    this.displayedColumns = [
-      'select',
-      'importStatus',
-      'icon',
-      'nameWithSymbol',
-      'type',
-      'date',
-      'quantity',
-      'unitPrice',
-      'fee',
-      'value',
-      'currency',
-      'valueInBaseCurrency',
-      'account',
-      'comment',
-      'actions'
-    ];
-
-    if (!this.showAccountColumn) {
-      this.displayedColumns = this.displayedColumns.filter((column) => {
-        return column !== 'account';
-      });
-    }
-
-    if (!this.showCheckbox) {
-      this.displayedColumns = this.displayedColumns.filter((column) => {
-        return column !== 'importStatus' && column !== 'select';
-      });
-    }
-
-    if (!this.showNameColumn) {
-      this.displayedColumns = this.displayedColumns.filter((column) => {
-        return column !== 'nameWithSymbol';
-      });
-    }
   }
 
   public areAllRowsSelected() {
@@ -251,7 +250,7 @@ export class GfActivitiesTableComponent
   }
 
   public onClickActivity(activity: Activity) {
-    if (this.showCheckbox) {
+    if (this.showCheckbox()) {
       if (!activity.error) {
         this.selectedRows.toggle(activity);
       }
