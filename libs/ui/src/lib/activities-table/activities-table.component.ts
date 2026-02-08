@@ -177,6 +177,7 @@ export class GfActivitiesTableComponent
         return column !== 'nameWithSymbol';
       });
     }
+
     return columns;
   });
 
@@ -217,6 +218,7 @@ export class GfActivitiesTableComponent
 
   public ngAfterViewInit() {
     const dataSource = this.dataSource();
+
     if (dataSource) {
       dataSource.paginator = this.paginator;
     }
