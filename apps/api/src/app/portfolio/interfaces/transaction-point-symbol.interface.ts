@@ -11,17 +11,10 @@ export interface TransactionPointSymbol {
   dividend: Big;
   fee: Big;
   feeInBaseCurrency: Big;
-
-  /** @deprecated use dateOfFirstActivity instead */
-  firstBuyDate: string;
-
   includeInHoldings: boolean;
   investment: Big;
   quantity: Big;
   skipErrors: boolean;
   symbol: string;
   tags?: Tag[];
-
-  /** @deprecated use activitiesCount instead */
-  transactionCount: number;
 }

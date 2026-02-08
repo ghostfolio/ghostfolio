@@ -139,7 +139,6 @@ describe('PortfolioCalculator', () => {
             dividend: new Big('0.62'),
             dividendInBaseCurrency: new Big('0.62'),
             fee: new Big('19'),
-            firstBuyDate: '2021-09-16',
             grossPerformance: new Big('33.25'),
             grossPerformancePercentage: new Big('0.11136043941322258691'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
@@ -163,8 +162,7 @@ describe('PortfolioCalculator', () => {
             },
             quantity: new Big('1'),
             symbol: 'MSFT',
-            tags: [],
-            transactionCount: 2
+            tags: []
           }
         ],
         totalFeesWithCurrencyEffect: new Big('19'),
