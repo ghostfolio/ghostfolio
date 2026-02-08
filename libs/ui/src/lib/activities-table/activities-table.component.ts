@@ -48,7 +48,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
 import { isUUID } from 'class-validator';
-import { isAfter } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   alertCircleOutline,
@@ -137,7 +136,6 @@ export class GfActivitiesTableComponent
   public displayedColumns: string[] = [];
   public hasDrafts = false;
   public hasErrors = false;
-  public isAfter = isAfter;
   public isUUID = isUUID;
   public routeQueryParams: Subscription;
   public selectedRows = new SelectionModel<Activity>(true, []);
