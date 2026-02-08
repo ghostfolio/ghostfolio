@@ -28,7 +28,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
-import { JobStatus } from 'bull';
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +50,7 @@ export class AdminService {
     return this.http.delete<void>(`/api/v1/admin/queue/job/${aId}`);
   }
 
-  public deleteJobs({ status }: { status: JobStatus[] }) {
+  public deleteJobs({ status }: { status: string[] }) {
     let params = new HttpParams();
 
     if (status?.length > 0) {
@@ -129,7 +128,7 @@ export class AdminService {
     );
   }
 
-  public fetchJobs({ status }: { status?: JobStatus[] }) {
+  public fetchJobs({ status }: { status?: string[] }) {
     let params = new HttpParams();
 
     if (status?.length > 0) {

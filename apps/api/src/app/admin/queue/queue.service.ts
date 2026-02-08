@@ -1,13 +1,14 @@
 import {
   DATA_GATHERING_QUEUE,
+  JobStatusType,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
   QUEUE_JOB_STATUS_LIST
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
 
-import { InjectQueue } from '@nestjs/bull';
+import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
-import { JobStatus, Queue } from 'bull';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class QueueService {
@@ -29,15 +30,15 @@ export class QueueService {
   }
 
   public async deleteJobs({
-    status = QUEUE_JOB_STATUS_LIST
+    status = [...QUEUE_JOB_STATUS_LIST]
   }: {
-    status?: JobStatus[];
+    status?: JobStatusType[];
   }) {
     for (const statusItem of status) {
       const queueStatus = statusItem === 'waiting' ? 'wait' : statusItem;
 
-      await this.dataGatheringQueue.clean(300, queueStatus);
-      await this.portfolioSnapshotQueue.clean(300, queueStatus);
+      await this.dataGatheringQueue.clean(300, 0, queueStatus);
+      await this.portfolioSnapshotQueue.clean(300, 0, queueStatus);
     }
   }
 
@@ -53,10 +54,10 @@ export class QueueService {
 
   public async getJobs({
     limit = 1000,
-    status = QUEUE_JOB_STATUS_LIST
+    status = [...QUEUE_JOB_STATUS_LIST]
   }: {
     limit?: number;
-    status?: JobStatus[];
+    status?: JobStatusType[];
   }): Promise<AdminJobs> {
     const [dataGatheringJobs, portfolioSnapshotJobs] = await Promise.all([
       this.dataGatheringQueue.getJobs(status),

@@ -14,7 +14,7 @@ import {
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -70,7 +70,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     BenchmarksModule,
     BullModule.forRoot({
-      redis: {
+      connection: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
         host: process.env.REDIS_HOST,
         password: process.env.REDIS_PASSWORD,

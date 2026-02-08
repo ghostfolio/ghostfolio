@@ -5,18 +5,16 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
-  DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY,
-  DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
-import { Process, Processor } from '@nestjs/bull';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Job } from 'bull';
+import { Job, UnrecoverableError } from 'bullmq';
 import {
   addDays,
   format,
@@ -26,28 +24,45 @@ import {
   isBefore,
   parseISO
 } from 'date-fns';
+import ms from 'ms';
 
 import { DataGatheringService } from './data-gathering.service';
 
 @Injectable()
-@Processor(DATA_GATHERING_QUEUE)
-export class DataGatheringProcessor {
+@Processor(DATA_GATHERING_QUEUE, {
+  concurrency: parseInt(
+    process.env.PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY ??
+      process.env.PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY ??
+      '1',
+    10
+  ),
+  limiter: {
+    max: 1,
+    duration: ms('4 seconds')
+  }
+})
+export class DataGatheringProcessor extends WorkerHost {
   public constructor(
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
     private readonly symbolProfileService: SymbolProfileService
-  ) {}
+  ) {
+    super();
+  }
 
-  @Process({
-    concurrency: parseInt(
-      process.env.PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY ??
-        DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY.toString(),
-      10
-    ),
-    name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME
-  })
-  public async gatherAssetProfile(job: Job<AssetProfileIdentifier>) {
+  public async process(job: Job): Promise<any> {
+    switch (job.name) {
+      case GATHER_ASSET_PROFILE_PROCESS_JOB_NAME:
+        return this.gatherAssetProfile(job);
+      case GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME:
+        return this.gatherHistoricalMarketData(job);
+      default:
+        throw new Error(`Unknown job name: ${job.name}`);
+    }
+  }
+
+  private async gatherAssetProfile(job: Job<AssetProfileIdentifier>) {
     const { dataSource, symbol } = job.data;
 
     try {
@@ -79,7 +94,9 @@ export class DataGatheringProcessor {
           `DataGatheringProcessor (${GATHER_ASSET_PROFILE_PROCESS_JOB_NAME})`
         );
 
-        return job.discard();
+        throw new UnrecoverableError(
+          `Asset ${symbol} (${dataSource}) has been delisted`
+        );
       }
 
       Logger.error(
@@ -91,15 +108,7 @@ export class DataGatheringProcessor {
     }
   }
 
-  @Process({
-    concurrency: parseInt(
-      process.env.PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY ??
-        DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY.toString(),
-      10
-    ),
-    name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
-  })
-  public async gatherHistoricalMarketData(job: Job<DataGatheringItem>) {
+  private async gatherHistoricalMarketData(job: Job<DataGatheringItem>) {
     const { dataSource, date, force, symbol } = job.data;
 
     try {
@@ -191,7 +200,9 @@ export class DataGatheringProcessor {
           `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
         );
 
-        return job.discard();
+        throw new UnrecoverableError(
+          `Asset ${symbol} (${dataSource}) has been delisted`
+        );
       }
 
       Logger.error(

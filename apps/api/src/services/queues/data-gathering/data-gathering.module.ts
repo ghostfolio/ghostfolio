@@ -9,19 +9,14 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { DATA_GATHERING_QUEUE } from '@ghostfolio/common/config';
 
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import ms from 'ms';
 
 import { DataGatheringProcessor } from './data-gathering.processor';
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      limiter: {
-        duration: ms('4 seconds'),
-        max: 1
-      },
       name: DATA_GATHERING_QUEUE
     }),
     ConfigurationModule,

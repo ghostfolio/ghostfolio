@@ -1163,7 +1163,9 @@ export abstract class PortfolioCalculator {
       const job = await this.portfolioSnapshotService.getJob(jobId);
 
       if (job) {
-        await job.finished();
+        await job.waitUntilFinished(
+          this.portfolioSnapshotService.getQueueEvents()
+        );
       }
 
       await this.initialize();
