@@ -134,7 +134,9 @@ export class GfActivitiesTableComponent
   public isUUID = isUUID;
   public selectedRows = new SelectionModel<Activity>(true, []);
 
-  public readonly dataSource = input.required<MatTableDataSource<Activity>>();
+  public readonly dataSource = input.required<
+    MatTableDataSource<Activity> | undefined
+  >();
   public readonly showAccountColumn = input(true);
   public readonly showCheckbox = input(false);
   public readonly showNameColumn = input(true);
@@ -214,7 +216,10 @@ export class GfActivitiesTableComponent
   }
 
   public ngAfterViewInit() {
-    this.dataSource().paginator = this.paginator;
+    const dataSource = this.dataSource();
+    if (dataSource) {
+      dataSource.paginator = this.paginator;
+    }
 
     this.sort.sortChange.subscribe((value: Sort) => {
       this.sortChanged.emit(value);
@@ -223,7 +228,7 @@ export class GfActivitiesTableComponent
 
   public areAllRowsSelected() {
     const numSelectedRows = this.selectedRows.selected.length;
-    const numTotalRows = this.dataSource().data.length;
+    const numTotalRows = this.dataSource()?.data.length;
     return numSelectedRows === numTotalRows;
   }
 
@@ -297,7 +302,7 @@ export class GfActivitiesTableComponent
   public onExportDrafts() {
     this.exportDrafts.emit(
       this.dataSource()
-        .filteredData.filter((activity) => {
+        ?.filteredData.filter((activity) => {
           return activity.isDraft;
         })
         .map((activity) => {
@@ -328,7 +333,7 @@ export class GfActivitiesTableComponent
     if (this.areAllRowsSelected()) {
       this.selectedRows.clear();
     } else {
-      this.dataSource().data.forEach((row) => {
+      this.dataSource()?.data.forEach((row) => {
         this.selectedRows.select(row);
       });
     }

@@ -21,7 +21,7 @@
     <mat-menu #activitiesMenu="matMenu" class="no-max-width" xPosition="before">
       <button
         mat-menu-item
-        [disabled]="dataSource().data.length === 0"
+        [disabled]="dataSource()?.data.length === 0"
         (click)="onImportDividends()"
       >
         <span class="align-items-center d-flex">
@@ -33,7 +33,7 @@
         <button
           class="align-items-center d-flex"
           mat-menu-item
-          [disabled]="dataSource().data.length === 0"
+          [disabled]="dataSource()?.data.length === 0"
           (click)="onExport()"
         >
           <span class="align-items-center d-flex">
@@ -60,7 +60,7 @@
         class="align-items-center d-flex"
         mat-menu-item
         [disabled]="
-          dataSource().data.length === 0 || !hasPermissionToDeleteActivity
+          dataSource()?.data.length === 0 || !hasPermissionToDeleteActivity
         "
         (click)="onDeleteActivities()"
       >
@@ -388,7 +388,7 @@
           @if (hasPermissionToCreateActivity) {
             <button
               mat-menu-item
-              [disabled]="dataSource().data.length === 0"
+              [disabled]="dataSource()?.data.length === 0"
               (click)="onImportDividends()"
             >
               <span class="align-items-center d-flex">
@@ -403,7 +403,7 @@
             <button
               class="align-items-center d-flex"
               mat-menu-item
-              [disabled]="dataSource().data.length === 0"
+              [disabled]="dataSource()?.data.length === 0"
               (click)="onExport()"
             >
               <span class="align-items-center d-flex">
@@ -524,7 +524,7 @@
 
 @if (
   !hasActivities &&
-  dataSource().data.length === 0 &&
+  dataSource()?.data.length === 0 &&
   hasPermissionToCreateActivity &&
   !isLoading()
 ) {
