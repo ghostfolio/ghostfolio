@@ -6,7 +6,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnChanges
+  OnChanges,
+  input
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { isNumber } from 'lodash';
@@ -30,7 +31,6 @@ export class GfValueComponent implements OnChanges {
   @Input() isPercent = false;
   @Input() locale: string;
   @Input() position = '';
-  @Input() precision?: number;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
   @Input() unit = '';
@@ -42,8 +42,11 @@ export class GfValueComponent implements OnChanges {
   public isString = false;
   public useAbsoluteValue = false;
 
+  protected readonly precision = input<number>();
+
   private get hasPrecision(): boolean {
-    return this.precision !== undefined && this.precision >= 0;
+    const precision = this.precision();
+    return precision !== undefined && precision >= 0;
   }
 
   public ngOnChanges() {
@@ -127,7 +130,7 @@ export class GfValueComponent implements OnChanges {
   }
 
   private getFormatOptions(): Intl.NumberFormatOptions {
-    const digits = this.hasPrecision ? this.precision : 2;
+    const digits = this.hasPrecision ? this.precision() : 2;
 
     return {
       maximumFractionDigits: digits,
@@ -141,7 +144,6 @@ export class GfValueComponent implements OnChanges {
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
-    this.precision = this.hasPrecision ? this.precision : undefined;
     this.useAbsoluteValue = false;
   }
 }
