@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the `transactionCount` in the portfolio calculator and service
 - Refreshed the cryptocurrencies list
+- Upgraded `Nx` from version `22.4.1` to `22.4.5`
 
 ### Fixed
 
