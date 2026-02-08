@@ -26,7 +26,8 @@ import {
   OnInit,
   Output,
   ViewChild,
-  inject
+  inject,
+  input
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -98,7 +99,6 @@ export class GfActivitiesTableComponent
   implements AfterViewInit, OnChanges, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
-  @Input() dataSource: MatTableDataSource<Activity>;
   @Input() deviceType: string;
   @Input() hasActivities: boolean;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -143,9 +143,10 @@ export class GfActivitiesTableComponent
   public routeQueryParams: Subscription;
   public selectedRows = new SelectionModel<Activity>(true, []);
 
-  private readonly notificationService = inject(NotificationService);
+  public readonly dataSource = input.required<MatTableDataSource<Activity>>();
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly notificationService = inject(NotificationService);
+  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor() {
     addIcons({
@@ -176,9 +177,7 @@ export class GfActivitiesTableComponent
   }
 
   public ngAfterViewInit() {
-    if (this.dataSource) {
-      this.dataSource.paginator = this.paginator;
-    }
+    this.dataSource().paginator = this.paginator;
 
     this.sort.sortChange.subscribe((value: Sort) => {
       this.sortChanged.emit(value);
@@ -222,14 +221,14 @@ export class GfActivitiesTableComponent
       });
     }
 
-    if (this.dataSource) {
+    if (this.dataSource()) {
       this.isLoading = false;
     }
   }
 
   public areAllRowsSelected() {
     const numSelectedRows = this.selectedRows.selected.length;
-    const numTotalRows = this.dataSource.data.length;
+    const numTotalRows = this.dataSource().data.length;
     return numSelectedRows === numTotalRows;
   }
 
@@ -302,8 +301,8 @@ export class GfActivitiesTableComponent
 
   public onExportDrafts() {
     this.exportDrafts.emit(
-      this.dataSource.filteredData
-        .filter((activity) => {
+      this.dataSource()
+        .filteredData.filter((activity) => {
           return activity.isDraft;
         })
         .map((activity) => {
@@ -334,7 +333,7 @@ export class GfActivitiesTableComponent
     if (this.areAllRowsSelected()) {
       this.selectedRows.clear();
     } else {
-      this.dataSource.data.forEach((row) => {
+      this.dataSource().data.forEach((row) => {
         this.selectedRows.select(row);
       });
     }
