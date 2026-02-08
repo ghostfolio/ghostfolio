@@ -25,7 +25,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -142,9 +143,11 @@ export class GfActivitiesTableComponent
   public routeQueryParams: Subscription;
   public selectedRows = new SelectionModel<Activity>(true, []);
 
+  private readonly notificationService = inject(NotificationService);
+
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private notificationService: NotificationService) {
+  public constructor() {
     addIcons({
       alertCircleOutline,
       calendarClearOutline,
