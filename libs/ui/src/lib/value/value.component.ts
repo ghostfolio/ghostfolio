@@ -7,6 +7,7 @@ import {
   Component,
   Input,
   OnChanges,
+  computed,
   input
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -44,6 +45,15 @@ export class GfValueComponent implements OnChanges {
 
   public readonly precision = input<number>();
 
+  private readonly formatOptions = computed<Intl.NumberFormatOptions>(() => {
+    const digits = this.hasPrecision ? this.precision() : 2;
+
+    return {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits
+    };
+  });
+
   private get hasPrecision(): boolean {
     const precision = this.precision();
     return precision !== undefined && precision >= 0;
@@ -58,21 +68,19 @@ export class GfValueComponent implements OnChanges {
         this.isString = false;
         this.absoluteValue = Math.abs(this.value);
 
-        const options = this.getFormatOptions();
-
         if (this.colorizeSign) {
           if (this.isCurrency) {
             try {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
-                options
+                this.formatOptions()
               );
             } catch {}
           } else if (this.isPercent) {
             try {
               this.formattedValue = (this.absoluteValue * 100).toLocaleString(
                 this.locale,
-                options
+                this.formatOptions()
               );
             } catch {}
           }
@@ -80,21 +88,21 @@ export class GfValueComponent implements OnChanges {
           try {
             this.formattedValue = this.value?.toLocaleString(
               this.locale,
-              options
+              this.formatOptions()
             );
           } catch {}
         } else if (this.isPercent) {
           try {
             this.formattedValue = (this.value * 100).toLocaleString(
               this.locale,
-              options
+              this.formatOptions()
             );
           } catch {}
         } else if (this.hasPrecision) {
           try {
             this.formattedValue = this.value?.toLocaleString(
               this.locale,
-              options
+              this.formatOptions()
             );
           } catch {}
         } else {
@@ -127,15 +135,6 @@ export class GfValueComponent implements OnChanges {
     if (this.formattedValue === '0.00') {
       this.useAbsoluteValue = true;
     }
-  }
-
-  private getFormatOptions(): Intl.NumberFormatOptions {
-    const digits = this.hasPrecision ? this.precision() : 2;
-
-    return {
-      maximumFractionDigits: digits,
-      minimumFractionDigits: digits
-    };
   }
 
   private initializeVariables() {
