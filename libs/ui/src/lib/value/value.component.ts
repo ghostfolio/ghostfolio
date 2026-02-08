@@ -6,7 +6,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnChanges
+  OnChanges,
+  computed,
+  input
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { isNumber } from 'lodash';
@@ -30,7 +32,6 @@ export class GfValueComponent implements OnChanges {
   @Input() isPercent = false;
   @Input() locale: string;
   @Input() position = '';
-  @Input() precision?: number;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
   @Input() unit = '';
@@ -42,12 +43,20 @@ export class GfValueComponent implements OnChanges {
   public isString = false;
   public useAbsoluteValue = false;
 
-  get hasPrecision(): boolean {
-    return (
-      this.precision !== undefined &&
-      this.precision !== null &&
-      this.precision >= 0
-    );
+  public readonly precision = input<number>();
+
+  private readonly formatOptions = computed<Intl.NumberFormatOptions>(() => {
+    const digits = this.hasPrecision ? this.precision() : 2;
+
+    return {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits
+    };
+  });
+
+  private get hasPrecision() {
+    const precision = this.precision();
+    return precision !== undefined && precision >= 0;
   }
 
   public ngOnChanges() {
@@ -59,21 +68,19 @@ export class GfValueComponent implements OnChanges {
         this.isString = false;
         this.absoluteValue = Math.abs(this.value);
 
-        const options = this.getFormatOptions();
-
         if (this.colorizeSign) {
           if (this.isCurrency) {
             try {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
-                options
+                this.formatOptions()
               );
             } catch {}
           } else if (this.isPercent) {
             try {
               this.formattedValue = (this.absoluteValue * 100).toLocaleString(
                 this.locale,
-                options
+                this.formatOptions()
               );
             } catch {}
           }
@@ -81,21 +88,21 @@ export class GfValueComponent implements OnChanges {
           try {
             this.formattedValue = this.value?.toLocaleString(
               this.locale,
-              options
+              this.formatOptions()
             );
           } catch {}
         } else if (this.isPercent) {
           try {
             this.formattedValue = (this.value * 100).toLocaleString(
               this.locale,
-              options
+              this.formatOptions()
             );
           } catch {}
         } else if (this.hasPrecision) {
           try {
             this.formattedValue = this.value?.toLocaleString(
               this.locale,
-              options
+              this.formatOptions()
             );
           } catch {}
         } else {
@@ -130,22 +137,12 @@ export class GfValueComponent implements OnChanges {
     }
   }
 
-  private getFormatOptions(): Intl.NumberFormatOptions {
-    const digits = this.hasPrecision ? this.precision : 2;
-
-    return {
-      maximumFractionDigits: digits,
-      minimumFractionDigits: digits
-    };
-  }
-
   private initializeVariables() {
     this.absoluteValue = 0;
     this.formattedValue = '';
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
-    this.precision = this.hasPrecision ? this.precision : undefined;
     this.useAbsoluteValue = false;
   }
 }

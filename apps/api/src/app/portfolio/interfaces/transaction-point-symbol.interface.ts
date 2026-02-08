@@ -17,7 +17,4 @@ export interface TransactionPointSymbol {
   skipErrors: boolean;
   symbol: string;
   tags?: Tag[];
-
-  /** @deprecated use activitiesCount instead */
-  transactionCount: number;
 }

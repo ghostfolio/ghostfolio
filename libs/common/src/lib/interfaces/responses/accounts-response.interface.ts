@@ -7,7 +7,4 @@ export interface AccountsResponse {
   totalDividendInBaseCurrency: number;
   totalInterestInBaseCurrency: number;
   totalValueInBaseCurrency: number;
-
-  /** @deprecated use activitiesCount instead */
-  transactionCount: number;
 }

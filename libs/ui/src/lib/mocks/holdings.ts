@@ -41,7 +41,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'AAPL',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.apple.com',
     valueInBaseCurrency: 12230
   },
@@ -85,7 +84,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'ALV.DE',
     tags: [],
-    transactionCount: 2,
     url: 'https://www.allianz.com',
     valueInBaseCurrency: 6763.224181360202
   },
@@ -129,7 +127,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'AMZN',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.aboutamazon.com',
     valueInBaseCurrency: 22868
   },
@@ -161,7 +158,6 @@ export const holdings: PortfolioPosition[] = [
     sectors: [],
     symbol: 'bitcoin',
     tags: [],
-    transactionCount: 1,
     url: undefined,
     valueInBaseCurrency: 54666.7898248
   },
@@ -205,7 +201,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'MSFT',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.microsoft.com',
     valueInBaseCurrency: 12252.9
   },
@@ -249,7 +244,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'TSLA',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.tesla.com',
     valueInBaseCurrency: 53376
   },
@@ -293,7 +287,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'VTI',
     tags: [],
-    transactionCount: 5,
     url: 'https://www.vanguard.com',
     valueInBaseCurrency: 15092
   }

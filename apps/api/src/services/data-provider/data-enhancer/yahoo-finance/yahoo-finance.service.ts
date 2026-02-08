@@ -206,26 +206,26 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       );
 
       if (['ETF', 'MUTUALFUND'].includes(assetSubClass)) {
-        response.sectors = [];
+        response.holdings =
+          assetProfile.topHoldings?.holdings?.map(
+            ({ holdingName, holdingPercent }) => {
+              return {
+                name: this.formatName({ longName: holdingName }),
+                weight: holdingPercent
+              };
+            }
+          ) ?? [];
 
-        for (const sectorWeighting of assetProfile.topHoldings
-          ?.sectorWeightings ?? []) {
-          for (const [sector, weight] of Object.entries(sectorWeighting)) {
-            response.sectors.push({
+        response.sectors = (
+          assetProfile.topHoldings?.sectorWeightings ?? []
+        ).flatMap((sectorWeighting) => {
+          return Object.entries(sectorWeighting).map(([sector, weight]) => {
+            return {
               name: this.parseSector(sector),
               weight: weight as number
-            });
-          }
-        }
-
-        response.holdings = assetProfile.topHoldings.holdings.map(
-          ({ holdingName, holdingPercent }) => {
-            return {
-              name: this.formatName({ longName: holdingName }),
-              weight: holdingPercent
             };
-          }
-        );
+          });
+        });
       } else if (
         assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country
