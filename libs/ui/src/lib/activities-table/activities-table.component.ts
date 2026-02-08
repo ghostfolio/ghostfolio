@@ -64,7 +64,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -137,7 +137,6 @@ export class GfActivitiesTableComponent
   public hasDrafts = false;
   public hasErrors = false;
   public isUUID = isUUID;
-  public routeQueryParams: Subscription;
   public selectedRows = new SelectionModel<Activity>(true, []);
 
   public readonly dataSource = input.required<MatTableDataSource<Activity>>();
