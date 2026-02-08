@@ -42,7 +42,7 @@ export class GfValueComponent implements OnChanges {
   public isString = false;
   public useAbsoluteValue = false;
 
-  protected readonly precision = input<number>();
+  public readonly precision = input<number>();
 
   private get hasPrecision(): boolean {
     const precision = this.precision();
