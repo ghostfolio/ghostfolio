@@ -132,7 +132,7 @@ export class GfActivitiesTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns = [];
+  public displayedColumns: string[] = [];
   public endOfToday = endOfToday();
   public hasDrafts = false;
   public hasErrors = false;
@@ -241,7 +241,7 @@ export class GfActivitiesTableComponent
 
   public isExcludedFromAnalysis(activity: Activity) {
     return (
-      activity.account?.isExcluded ||
+      activity.account?.isExcluded ??
       activity.tags?.some(({ id }) => {
         return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
       })
