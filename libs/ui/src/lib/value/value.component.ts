@@ -54,7 +54,7 @@ export class GfValueComponent implements OnChanges {
     };
   });
 
-  private get hasPrecision(): boolean {
+  private get hasPrecision() {
     const precision = this.precision();
     return precision !== undefined && precision >= 0;
   }
