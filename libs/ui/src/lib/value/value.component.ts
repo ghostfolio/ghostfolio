@@ -42,12 +42,8 @@ export class GfValueComponent implements OnChanges {
   public isString = false;
   public useAbsoluteValue = false;
 
-  get hasPrecision(): boolean {
-    return (
-      this.precision !== undefined &&
-      this.precision !== null &&
-      this.precision >= 0
-    );
+  private get hasPrecision(): boolean {
+    return this.precision !== undefined && this.precision >= 0;
   }
 
   public ngOnChanges() {
