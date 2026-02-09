@@ -189,9 +189,9 @@ export abstract class PortfolioCalculator {
     if (!transactionPoints.length) {
       return {
         activitiesCount: 0,
-        dividendYieldTrailingTwelveMonths: 0,
         createdAt: new Date(),
         currentValueInBaseCurrency: new Big(0),
+        dividendYieldTrailingTwelveMonths: 0,
         errors: [],
         hasErrors: false,
         historicalData: [],
@@ -440,11 +440,11 @@ export abstract class PortfolioCalculator {
           : 0;
 
       positions.push({
+        dividendYieldTrailingTwelveMonths,
         includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         activitiesCount: item.activitiesCount,
-        dividendYieldTrailingTwelveMonths,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,

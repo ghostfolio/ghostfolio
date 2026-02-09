@@ -290,8 +290,7 @@ describe('PortfolioCalculator', () => {
             fee: new Big('19'),
             quantity: new Big('1'),
             symbol: 'MSFT',
-            tags: [],
-            transactionCount: 5
+            tags: []
           }
         ],
         totalFeesWithCurrencyEffect: new Big('19'),

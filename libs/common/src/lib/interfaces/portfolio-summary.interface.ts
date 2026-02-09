@@ -3,7 +3,6 @@ import { PortfolioPerformance } from './portfolio-performance.interface';
 
 export interface PortfolioSummary extends PortfolioPerformance {
   activityCount: number;
-  dividendYieldTrailingTwelveMonths: number;
   annualizedPerformancePercent: number;
   annualizedPerformancePercentWithCurrencyEffect: number;
   cash: number;
@@ -13,6 +12,7 @@ export interface PortfolioSummary extends PortfolioPerformance {
 
   dateOfFirstActivity: Date;
   dividendInBaseCurrency: number;
+  dividendYieldTrailingTwelveMonths: number;
   emergencyFund: {
     assets: number;
     cash: number;

@@ -125,6 +125,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     return {
       currentValueInBaseCurrency,
+      dividendYieldTrailingTwelveMonths,
       hasErrors,
       positions,
       totalFeesWithCurrencyEffect,
@@ -134,7 +135,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       activitiesCount: this.activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,
-      dividendYieldTrailingTwelveMonths,
       createdAt: new Date(),
       errors: [],
       historicalData: [],

@@ -10,7 +10,6 @@ import { Transform, Type } from 'class-transformer';
 
 export class TimelinePosition {
   activitiesCount: number;
-  dividendYieldTrailingTwelveMonths: number;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
@@ -27,6 +26,8 @@ export class TimelinePosition {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   dividendInBaseCurrency: Big;
+
+  dividendYieldTrailingTwelveMonths: number;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the dividend yield (trailing twelve months) to the portfolio summary (experimental)
 - Added a new static portfolio analysis rule based on the total investment volume: _Fees_ (Fee Ratio)
 - Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page with information on derived currencies
 
@@ -80,10 +81,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `yahoo-finance2` from version `3.11.2` to `3.13.0`
 
 ## 2.234.0 - 2026-01-30
-
-### Added
-
-- Added the annualized dividend yield to the portfolio summary (experimental)
 
 ### Changed
 
