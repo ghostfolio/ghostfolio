@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the missing `valueInBaseCurrency` in the import endpoint (`POST api/v1/import`)
 - Fixed the accounts of the assistant for the impersonation mode
 - Fixed the tags of the assistant for the impersonation mode
 

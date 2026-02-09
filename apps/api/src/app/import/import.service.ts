@@ -5,6 +5,7 @@ import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.servic
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -48,6 +49,7 @@ export class ImportService {
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
@@ -590,10 +592,18 @@ export class ImportService {
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
+      const valueInBaseCurrency = this.exchangeRateDataService.toCurrencyAtDate(
+        value,
+        currency ?? assetProfile.currency,
+        userCurrency,
+        date
+      );
+
       activities.push({
         ...order,
         error,
         value,
+        valueInBaseCurrency: await valueInBaseCurrency,
         // @ts-ignore
         SymbolProfile: assetProfile
       });
