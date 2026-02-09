@@ -322,6 +322,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     // Add a synthetic order at the start and the end date
     orders.push({
+      currency: undefined,
       date: startDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
@@ -337,6 +338,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     });
 
     orders.push({
+      currency: undefined,
       date: endDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
@@ -378,6 +380,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
       } else {
         orders.push({
+          currency: undefined,
           date: dateString,
           fee: new Big(0),
           feeInBaseCurrency: new Big(0),
