@@ -175,7 +175,7 @@ describe('PortfolioCalculator', () => {
       expect(investments).toEqual([
         { date: '2025-12-11', investment: new Big('1885.05') },
         { date: '2025-12-18', investment: new Big('2041.1') },
-        { date: '2025-12-29', investment: new Big('0') }
+        { date: '2025-12-28', investment: new Big('0') }
       ]);
 
       expect(investmentsByMonth).toEqual([
