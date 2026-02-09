@@ -90,6 +90,10 @@ describe('PortfolioCalculator', () => {
     );
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   describe('get current positions', () => {
     it.only('with GOOGL buy', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
@@ -121,6 +125,10 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      // Make getPerformance() usable (see btcusd test for full explanation)
+      (portfolioCalculator as any).snapshot = portfolioSnapshot;
+      (portfolioCalculator as any).snapshotPromise = Promise.resolve();
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -228,6 +236,23 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2023-01-01', investment: 82.329056 }
       ]);
+
+      // Performance grouped by year: single year (2023-01-03 to 2023-07-10)
+      const { chart: chart2023 } = await portfolioCalculator.getPerformance({
+        end: parseDate('2023-07-10'),
+        start: parseDate('2023-01-03')
+      });
+
+      expect(chart2023.length).toBeGreaterThan(0);
+
+      // Verify independent baseline: netPerformance starts at 0
+      expect(chart2023[0].netPerformance).toEqual(0);
+
+      expect(chart2023.at(-1)).toMatchObject(
+        expect.objectContaining({
+          totalInvestmentValueWithCurrencyEffect: 82.329056
+        })
+      );
     });
   });
 });
