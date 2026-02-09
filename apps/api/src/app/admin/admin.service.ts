@@ -618,7 +618,9 @@ export class AdminService {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,
         name: name as string,
-        url: url as string
+        countries: countries as Prisma.JsonArray,
+        url: url as string,
+        sectors: sectors as Prisma.JsonArray
       };
 
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
