@@ -73,7 +73,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Account>();
-  public isLoading = true;
   public routeQueryParams: Subscription;
 
   public readonly accounts = input.required<Account[] | undefined>();
@@ -118,6 +117,8 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
     return columns;
   });
 
+  protected readonly isLoading = computed(() => !this.accounts());
+
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly unsubscribeSubject = new Subject<void>();
@@ -135,16 +136,10 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    this.isLoading = true;
-
     this.dataSource = new MatTableDataSource(this.accounts());
     this.dataSource.sortingDataAccessor = getLowercase;
 
     this.dataSource.sort = this.sort;
-
-    if (this.accounts()) {
-      this.isLoading = false;
-    }
   }
 
   public onDeleteAccount(aId: string) {

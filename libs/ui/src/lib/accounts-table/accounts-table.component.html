@@ -348,12 +348,12 @@
     <tr
       *matFooterRowDef="displayedColumns()"
       mat-footer-row
-      [ngClass]="{ 'd-none': isLoading || !showFooter }"
+      [ngClass]="{ 'd-none': isLoading() || !showFooter }"
     ></tr>
   </table>
 </div>
 
-@if (isLoading) {
+@if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
     class="px-4 py-3"
