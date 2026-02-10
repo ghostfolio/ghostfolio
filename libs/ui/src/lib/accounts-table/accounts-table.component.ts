@@ -13,7 +13,9 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  ViewChild,
+  inject,
+  input
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -60,13 +62,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
-  @Input() showActions: boolean;
-  @Input() showActivitiesCount = true;
-  @Input() showAllocationInPercentage: boolean;
-  @Input() showBalance = true;
   @Input() showFooter = true;
-  @Input() showValue = true;
-  @Input() showValueInBaseCurrency = true;
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
 
@@ -80,6 +76,13 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
+
+  public readonly showActions = input<boolean>();
+  public readonly showActivitiesCount = input(true);
+  public readonly showAllocationInPercentage = input<boolean>();
+  public readonly showBalance = input(true);
+  public readonly showValue = input(true);
+  public readonly showValueInBaseCurrency = input(false);
 
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
@@ -100,31 +103,31 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public ngOnChanges() {
     this.displayedColumns = ['status', 'account', 'platform'];
 
-    if (this.showActivitiesCount) {
+    if (this.showActivitiesCount()) {
       this.displayedColumns.push('activitiesCount');
     }
 
-    if (this.showBalance) {
+    if (this.showBalance()) {
       this.displayedColumns.push('balance');
     }
 
-    if (this.showValue) {
+    if (this.showValue()) {
       this.displayedColumns.push('value');
     }
 
     this.displayedColumns.push('currency');
 
-    if (this.showValueInBaseCurrency) {
+    if (this.showValueInBaseCurrency()) {
       this.displayedColumns.push('valueInBaseCurrency');
     }
 
-    if (this.showAllocationInPercentage) {
+    if (this.showAllocationInPercentage()) {
       this.displayedColumns.push('allocation');
     }
 
     this.displayedColumns.push('comment');
 
-    if (this.showActions) {
+    if (this.showActions()) {
       this.displayedColumns.push('actions');
     }
 
