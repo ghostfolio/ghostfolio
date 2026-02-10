@@ -14,6 +14,7 @@ import {
   OnDestroy,
   Output,
   ViewChild,
+  computed,
   inject,
   input
 } from '@angular/core';
@@ -73,7 +74,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Account>();
-  public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
 
@@ -83,6 +83,40 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public readonly showBalance = input(true);
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
+
+  protected readonly displayedColumns = computed(() => {
+    const columns = ['status', 'account', 'platform'];
+
+    if (this.showActivitiesCount()) {
+      columns.push('activitiesCount');
+    }
+
+    if (this.showBalance()) {
+      columns.push('balance');
+    }
+
+    if (this.showValue()) {
+      columns.push('value');
+    }
+
+    columns.push('currency');
+
+    if (this.showValueInBaseCurrency()) {
+      columns.push('valueInBaseCurrency');
+    }
+
+    if (this.showAllocationInPercentage()) {
+      columns.push('allocation');
+    }
+
+    columns.push('comment');
+
+    if (this.showActions()) {
+      columns.push('actions');
+    }
+
+    return columns;
+  });
 
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
@@ -101,36 +135,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    this.displayedColumns = ['status', 'account', 'platform'];
-
-    if (this.showActivitiesCount()) {
-      this.displayedColumns.push('activitiesCount');
-    }
-
-    if (this.showBalance()) {
-      this.displayedColumns.push('balance');
-    }
-
-    if (this.showValue()) {
-      this.displayedColumns.push('value');
-    }
-
-    this.displayedColumns.push('currency');
-
-    if (this.showValueInBaseCurrency()) {
-      this.displayedColumns.push('valueInBaseCurrency');
-    }
-
-    if (this.showAllocationInPercentage()) {
-      this.displayedColumns.push('allocation');
-    }
-
-    this.displayedColumns.push('comment');
-
-    if (this.showActions()) {
-      this.displayedColumns.push('actions');
-    }
-
     this.isLoading = true;
 
     this.dataSource = new MatTableDataSource(this.accounts);

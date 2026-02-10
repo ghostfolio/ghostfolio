@@ -336,9 +336,9 @@
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns()"
       mat-row
       [ngClass]="{
         'cursor-pointer': hasPermissionToOpenDetails
@@ -346,7 +346,7 @@
       (click)="onOpenAccountDetailDialog(row.id)"
     ></tr>
     <tr
-      *matFooterRowDef="displayedColumns"
+      *matFooterRowDef="displayedColumns()"
       mat-footer-row
       [ngClass]="{ 'd-none': isLoading || !showFooter }"
     ></tr>
