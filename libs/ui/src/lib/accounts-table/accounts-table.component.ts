@@ -13,10 +13,10 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild,
   computed,
   inject,
-  input
+  input,
+  viewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -70,8 +70,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Output() accountToUpdate = new EventEmitter<Account>();
   @Output() transferBalance = new EventEmitter<void>();
 
-  @ViewChild(MatSort) sort: MatSort;
-
   public dataSource = new MatTableDataSource<Account>();
 
   public readonly accounts = input.required<Account[] | undefined>();
@@ -81,6 +79,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public readonly showBalance = input(true);
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
+  public readonly sort = viewChild.required(MatSort);
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['status', 'account', 'platform'];
@@ -138,7 +137,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
     this.dataSource = new MatTableDataSource(this.accounts());
     this.dataSource.sortingDataAccessor = getLowercase;
 
-    this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort();
   }
 
   public onDeleteAccount(aId: string) {
