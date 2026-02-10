@@ -57,7 +57,6 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent implements OnChanges, OnDestroy {
-  @Input() accounts: Account[];
   @Input() activitiesCount: number;
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -77,6 +76,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public isLoading = true;
   public routeQueryParams: Subscription;
 
+  public readonly accounts = input.required<Account[] | undefined>();
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);
   public readonly showAllocationInPercentage = input<boolean>();
@@ -137,12 +137,12 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public ngOnChanges() {
     this.isLoading = true;
 
-    this.dataSource = new MatTableDataSource(this.accounts);
+    this.dataSource = new MatTableDataSource(this.accounts());
     this.dataSource.sortingDataAccessor = getLowercase;
 
     this.dataSource.sort = this.sort;
 
-    if (this.accounts) {
+    if (this.accounts()) {
       this.isLoading = false;
     }
   }
