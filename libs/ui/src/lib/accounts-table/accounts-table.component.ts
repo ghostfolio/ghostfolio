@@ -36,7 +36,7 @@ import {
   walletOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,7 +73,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Account>();
-  public routeQueryParams: Subscription;
 
   public readonly accounts = input.required<Account[] | undefined>();
   public readonly showActions = input<boolean>();
