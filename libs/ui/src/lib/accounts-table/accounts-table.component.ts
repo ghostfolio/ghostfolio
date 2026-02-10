@@ -70,8 +70,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   @Output() accountToUpdate = new EventEmitter<Account>();
   @Output() transferBalance = new EventEmitter<void>();
 
-  public dataSource = new MatTableDataSource<Account>();
-
   public readonly accounts = input.required<Account[] | undefined>();
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);
@@ -80,6 +78,13 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
   public readonly sort = viewChild.required(MatSort);
+
+  protected readonly dataSource = computed(() => {
+    const dataSource = new MatTableDataSource<Account>(this.accounts());
+    dataSource.sortingDataAccessor = getLowercase;
+    dataSource.sort = this.sort();
+    return dataSource;
+  });
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['status', 'account', 'platform'];
@@ -134,10 +139,7 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.accounts());
-    this.dataSource.sortingDataAccessor = getLowercase;
-
-    this.dataSource.sort = this.sort();
+    return;
   }
 
   public onDeleteAccount(aId: string) {
