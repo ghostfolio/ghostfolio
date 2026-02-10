@@ -81,12 +81,11 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
   public isLoading = true;
   public routeQueryParams: Subscription;
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly notificationService = inject(NotificationService);
+  private readonly router = inject(Router);
+  private readonly unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private notificationService: NotificationService,
-    private router: Router
-  ) {
+  public constructor() {
     addIcons({
       arrowRedoOutline,
       createOutline,
