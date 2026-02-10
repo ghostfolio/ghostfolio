@@ -10,7 +10,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   Output,
   computed,
@@ -56,7 +55,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./accounts-table.component.scss'],
   templateUrl: './accounts-table.component.html'
 })
-export class GfAccountsTableComponent implements OnChanges, OnDestroy {
+export class GfAccountsTableComponent implements OnDestroy {
   @Input() activitiesCount: number;
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -136,10 +135,6 @@ export class GfAccountsTableComponent implements OnChanges, OnDestroy {
       trashOutline,
       walletOutline
     });
-  }
-
-  public ngOnChanges() {
-    return;
   }
 
   public onDeleteAccount(aId: string) {
