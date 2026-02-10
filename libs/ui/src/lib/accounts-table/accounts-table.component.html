@@ -1,9 +1,9 @@
-@if (showActions) {
+@if (showActions()) {
   <div class="d-flex justify-content-end">
     <button
       class="align-items-center d-flex"
       mat-stroked-button
-      [disabled]="dataSource?.data.length < 2"
+      [disabled]="dataSource()?.data.length < 2"
       (click)="onTransferBalance()"
     >
       <ion-icon class="mr-2" name="arrow-redo-outline" />
@@ -19,7 +19,7 @@
     matSort
     matSortActive="name"
     matSortDirection="asc"
-    [dataSource]="dataSource"
+    [dataSource]="dataSource()"
   >
     <ng-container matColumnDef="status">
       <th
@@ -336,9 +336,9 @@
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns()"
       mat-row
       [ngClass]="{
         'cursor-pointer': hasPermissionToOpenDetails
@@ -346,14 +346,14 @@
       (click)="onOpenAccountDetailDialog(row.id)"
     ></tr>
     <tr
-      *matFooterRowDef="displayedColumns"
+      *matFooterRowDef="displayedColumns()"
       mat-footer-row
-      [ngClass]="{ 'd-none': isLoading || !showFooter }"
+      [ngClass]="{ 'd-none': isLoading() || !showFooter }"
     ></tr>
   </table>
 </div>
 
-@if (isLoading) {
+@if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
     class="px-4 py-3"
