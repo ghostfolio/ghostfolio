@@ -5,6 +5,8 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { PromptDialogParams } from './interfaces/interfaces';
+
 @Component({
   imports: [
     MatButtonModule,
@@ -18,25 +20,19 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class GfPromptDialogComponent {
   public confirmLabel: string;
-  public defaultValue: string;
+  public defaultValue?: string;
   public discardLabel: string;
   public formControl = new FormControl('');
   public title: string;
-  public valueLabel: string;
+  public valueLabel?: string;
 
   public constructor(public dialogRef: MatDialogRef<GfPromptDialogComponent>) {}
 
-  public initialize(aParams: {
-    confirmLabel?: string;
-    defaultValue?: string;
-    discardLabel?: string;
-    title: string;
-    valueLabel?: string;
-  }) {
+  public initialize(aParams: PromptDialogParams) {
     this.confirmLabel = aParams.confirmLabel;
     this.defaultValue = aParams.defaultValue;
     this.discardLabel = aParams.discardLabel;
-    this.formControl.setValue(aParams.defaultValue);
+    this.formControl.setValue(aParams.defaultValue ?? null);
     this.title = aParams.title;
     this.valueLabel = aParams.valueLabel;
   }

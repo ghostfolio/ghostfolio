@@ -22,9 +22,7 @@ export class NotificationService {
   public constructor(private matDialog: MatDialog) {}
 
   public alert(aParams: AlertParams) {
-    if (!aParams.discardLabel) {
-      aParams.discardLabel = translate('CLOSE');
-    }
+    aParams.discardLabel ??= translate('CLOSE');
 
     const dialog = this.matDialog.open(GfAlertDialogComponent, {
       autoFocus: false,
@@ -46,24 +44,19 @@ export class NotificationService {
   }
 
   public confirm(aParams: ConfirmParams) {
-    if (!aParams.confirmLabel) {
-      aParams.confirmLabel = translate('YES');
-    }
-
-    if (!aParams.discardLabel) {
-      aParams.discardLabel = translate('CANCEL');
-    }
+    aParams.confirmLabel ??= translate('YES');
+    aParams.discardLabel ??= translate('CANCEL');
 
     const dialog = this.matDialog.open(GfConfirmationDialogComponent, {
       autoFocus: false,
-      disableClose: aParams.disableClose || false,
+      disableClose: aParams.disableClose ?? false,
       maxWidth: this.dialogMaxWidth,
       width: this.dialogWidth
     });
 
     dialog.componentInstance.initialize({
       confirmLabel: aParams.confirmLabel,
-      confirmType: aParams.confirmType || ConfirmationDialogType.Primary,
+      confirmType: aParams.confirmType ?? ConfirmationDialogType.Primary,
       discardLabel: aParams.discardLabel,
       message: aParams.message,
       title: aParams.title
@@ -79,13 +72,8 @@ export class NotificationService {
   }
 
   public prompt(aParams: PromptParams) {
-    if (!aParams.confirmLabel) {
-      aParams.confirmLabel = translate('OK');
-    }
-
-    if (!aParams.discardLabel) {
-      aParams.discardLabel = translate('CANCEL');
-    }
+    aParams.confirmLabel ??= translate('OK');
+    aParams.discardLabel ??= translate('CANCEL');
 
     const dialog = this.matDialog.open(GfPromptDialogComponent, {
       autoFocus: true,

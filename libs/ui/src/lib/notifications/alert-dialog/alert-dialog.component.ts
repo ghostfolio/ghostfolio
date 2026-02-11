@@ -12,7 +12,7 @@ import { AlertDialogParams } from './interfaces/interfaces';
 })
 export class GfAlertDialogComponent {
   public discardLabel: string;
-  public message: string;
+  public message?: string;
   public title: string;
 
   public constructor(public dialogRef: MatDialogRef<GfAlertDialogComponent>) {}
