@@ -62,7 +62,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<PortfolioPosition>();
-  public displayedColumns = [];
+  public displayedColumns: string[] = [];
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public isLoading = true;
   public routeQueryParams: Subscription;
