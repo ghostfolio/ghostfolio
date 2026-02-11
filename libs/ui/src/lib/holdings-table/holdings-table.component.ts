@@ -11,7 +11,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   Output,
   computed,
   effect,
@@ -25,7 +24,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfValueComponent } from '../value/value.component';
@@ -48,7 +46,7 @@ import { GfValueComponent } from '../value/value.component';
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })
-export class GfHoldingsTableComponent implements OnDestroy {
+export class GfHoldingsTableComponent {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale = getLocale();
@@ -90,8 +88,6 @@ export class GfHoldingsTableComponent implements OnDestroy {
 
   protected readonly isLoading = computed(() => !this.holdings());
 
-  private readonly unsubscribeSubject = new Subject<void>();
-
   constructor() {
     this.dataSource.sortingDataAccessor = getLowercase;
 
@@ -119,10 +115,5 @@ export class GfHoldingsTableComponent implements OnDestroy {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator();
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
