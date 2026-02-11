@@ -29,12 +29,18 @@ export class GfPromptDialogComponent {
   protected readonly dialogRef =
     inject<MatDialogRef<GfPromptDialogComponent>>(MatDialogRef);
 
-  public initialize(aParams: PromptDialogParams) {
-    this.confirmLabel = aParams.confirmLabel;
-    this.defaultValue = aParams.defaultValue;
-    this.discardLabel = aParams.discardLabel;
-    this.formControl.setValue(aParams.defaultValue ?? null);
-    this.title = aParams.title;
-    this.valueLabel = aParams.valueLabel;
+  public initialize({
+    confirmLabel,
+    defaultValue,
+    discardLabel,
+    title,
+    valueLabel
+  }: PromptDialogParams) {
+    this.confirmLabel = confirmLabel;
+    this.defaultValue = defaultValue;
+    this.discardLabel = discardLabel;
+    this.formControl.setValue(defaultValue ?? null);
+    this.title = title;
+    this.valueLabel = valueLabel;
   }
 }
