@@ -84,7 +84,10 @@ export class GfHoldingsTableComponent {
     return columns;
   });
 
-  protected readonly ignoreAssetSubClasses = [AssetSubClass.CASH];
+  protected readonly ignoreAssetSubClasses: AssetSubClass[] = [
+    AssetSubClass.CASH
+  ];
+
   protected readonly isLoading = computed(() => !this.holdings());
 
   constructor() {
@@ -102,13 +105,21 @@ export class GfHoldingsTableComponent {
     });
   }
 
-  public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
-    if (this.hasPermissionToOpenDetails()) {
-      this.holdingClicked.emit({ dataSource, symbol });
-    }
+  protected canShowDetails(holding: PortfolioPosition): boolean {
+    return (
+      this.hasPermissionToOpenDetails() &&
+      !this.ignoreAssetSubClasses.includes(holding.assetSubClass)
+    );
   }
 
-  public onShowAllHoldings() {
+  protected onOpenHoldingDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    this.holdingClicked.emit({ dataSource, symbol });
+  }
+
+  protected onShowAllHoldings() {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {
