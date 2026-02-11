@@ -626,11 +626,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             totalQuantityFromBuyTransactions
           );
 
-      // Reset tracking variables when position is fully closed
       if (totalUnits.eq(0)) {
-        totalQuantityFromBuyTransactions = new Big(0);
+        // Reset tracking variables when position is fully closed
         totalInvestmentFromBuyTransactions = new Big(0);
         totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
+        totalQuantityFromBuyTransactions = new Big(0);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
