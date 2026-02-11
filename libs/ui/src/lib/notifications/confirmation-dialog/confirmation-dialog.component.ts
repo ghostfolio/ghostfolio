@@ -29,11 +29,17 @@ export class GfConfirmationDialogComponent {
     }
   }
 
-  public initialize(aParams: ConfirmDialogParams) {
-    this.confirmLabel = aParams.confirmLabel;
-    this.confirmType = aParams.confirmType;
-    this.discardLabel = aParams.discardLabel;
-    this.message = aParams.message;
-    this.title = aParams.title;
+  public initialize({
+    confirmLabel,
+    confirmType,
+    discardLabel,
+    message,
+    title
+  }: ConfirmDialogParams) {
+    this.confirmLabel = confirmLabel;
+    this.confirmType = confirmType;
+    this.discardLabel = discardLabel;
+    this.message = message;
+    this.title = title;
   }
 }

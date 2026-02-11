@@ -18,9 +18,9 @@ export class GfAlertDialogComponent {
   protected readonly dialogRef =
     inject<MatDialogRef<GfAlertDialogComponent>>(MatDialogRef);
 
-  public initialize(aParams: AlertDialogParams) {
-    this.discardLabel = aParams.discardLabel;
-    this.message = aParams.message;
-    this.title = aParams.title;
+  public initialize({ discardLabel, message, title }: AlertDialogParams) {
+    this.discardLabel = discardLabel;
+    this.message = message;
+    this.title = title;
   }
 }
