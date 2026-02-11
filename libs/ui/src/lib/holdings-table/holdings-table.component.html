@@ -5,7 +5,7 @@
     matSort
     matSortActive="allocationInPercentage"
     matSortDirection="desc"
-    [dataSource]="dataSource()"
+    [dataSource]="dataSource"
   >
     <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
@@ -210,7 +210,7 @@
   />
 }
 
-@if (dataSource().data.length > pageSize && !isLoading) {
+@if (dataSource.data.length > pageSize && !isLoading) {
   <div class="my-3 text-center">
     <button mat-stroked-button (click)="onShowAllHoldings()">
       <ng-container i18n>Show all</ng-container>
