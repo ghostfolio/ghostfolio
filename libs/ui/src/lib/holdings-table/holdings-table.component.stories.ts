@@ -38,8 +38,6 @@ type Story = StoryObj<GfHoldingsTableComponent>;
 export const Loading: Story = {
   args: {
     holdings: undefined,
-    baseCurrency: 'USD',
-    deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     hasPermissionToShowQuantities: true,
     hasPermissionToShowValues: true,
@@ -51,8 +49,6 @@ export const Loading: Story = {
 export const Default: Story = {
   args: {
     holdings,
-    baseCurrency: 'USD',
-    deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     hasPermissionToShowQuantities: true,
     hasPermissionToShowValues: true,
