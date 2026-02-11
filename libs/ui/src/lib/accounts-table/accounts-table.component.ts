@@ -8,13 +8,11 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
   computed,
+  effect,
   inject,
   input,
+  output,
   viewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -35,7 +33,6 @@ import {
   walletOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,35 +52,29 @@ import { Subject } from 'rxjs';
   styleUrls: ['./accounts-table.component.scss'],
   templateUrl: './accounts-table.component.html'
 })
-export class GfAccountsTableComponent implements OnDestroy {
-  @Input() activitiesCount: number;
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
-  @Input() hasPermissionToOpenDetails = true;
-  @Input() locale = getLocale();
-  @Input() showFooter = true;
-  @Input() totalBalanceInBaseCurrency: number;
-  @Input() totalValueInBaseCurrency: number;
-
-  @Output() accountDeleted = new EventEmitter<string>();
-  @Output() accountToUpdate = new EventEmitter<Account>();
-  @Output() transferBalance = new EventEmitter<void>();
-
+export class GfAccountsTableComponent {
   public readonly accounts = input.required<Account[] | undefined>();
+  public readonly activitiesCount = input<number>();
+  public readonly baseCurrency = input<string>();
+  public readonly hasPermissionToOpenDetails = input(true);
+  public readonly locale = input(getLocale());
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);
   public readonly showAllocationInPercentage = input<boolean>();
   public readonly showBalance = input(true);
+  public readonly showFooter = input(true);
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
+  public readonly totalBalanceInBaseCurrency = input<number>();
+  public readonly totalValueInBaseCurrency = input<number>();
+
+  public readonly accountDeleted = output<string>();
+  public readonly accountToUpdate = output<Account>();
+  public readonly transferBalance = output<void>();
+
   public readonly sort = viewChild.required(MatSort);
 
-  protected readonly dataSource = computed(() => {
-    const dataSource = new MatTableDataSource<Account>(this.accounts());
-    dataSource.sortingDataAccessor = getLowercase;
-    dataSource.sort = this.sort();
-    return dataSource;
-  });
+  protected readonly dataSource = new MatTableDataSource<Account>([]);
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['status', 'account', 'platform'];
@@ -123,7 +114,6 @@ export class GfAccountsTableComponent implements OnDestroy {
 
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
-  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor() {
     addIcons({
@@ -135,9 +125,21 @@ export class GfAccountsTableComponent implements OnDestroy {
       trashOutline,
       walletOutline
     });
+
+    this.dataSource.sortingDataAccessor = getLowercase;
+
+    // Reactive data update
+    effect(() => {
+      this.dataSource.data = this.accounts();
+    });
+
+    // Reactive view connection
+    effect(() => {
+      this.dataSource.sort = this.sort();
+    });
   }
 
-  public onDeleteAccount(aId: string) {
+  protected onDeleteAccount(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.accountDeleted.emit(aId);
@@ -147,30 +149,25 @@ export class GfAccountsTableComponent implements OnDestroy {
     });
   }
 
-  public onOpenAccountDetailDialog(accountId: string) {
-    if (this.hasPermissionToOpenDetails) {
+  protected onOpenAccountDetailDialog(accountId: string) {
+    if (this.hasPermissionToOpenDetails()) {
       this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
       });
     }
   }
 
-  public onOpenComment(aComment: string) {
+  protected onOpenComment(aComment: string) {
     this.notificationService.alert({
       title: aComment
     });
   }
 
-  public onTransferBalance() {
+  protected onTransferBalance() {
     this.transferBalance.emit();
   }
 
-  public onUpdateAccount(aAccount: Account) {
+  protected onUpdateAccount(aAccount: Account) {
     this.accountToUpdate.emit(aAccount);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
