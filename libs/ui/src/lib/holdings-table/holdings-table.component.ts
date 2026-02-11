@@ -51,9 +51,6 @@ import { GfValueComponent } from '../value/value.component';
 export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
-  @Input() hasPermissionToOpenDetails = true;
-  @Input() hasPermissionToShowQuantities = true;
-  @Input() hasPermissionToShowValues = true;
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
@@ -63,6 +60,9 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public routeQueryParams: Subscription;
 
+  public readonly hasPermissionToOpenDetails = input(true);
+  public readonly hasPermissionToShowQuantities = input(true);
+  public readonly hasPermissionToShowValues = input(true);
   public readonly holdings = input.required<PortfolioPosition[]>();
   public readonly paginator = viewChild.required(MatPaginator);
   public readonly sort = viewChild.required(MatSort);
@@ -82,17 +82,17 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 
-    if (this.hasPermissionToShowQuantities) {
+    if (this.hasPermissionToShowQuantities()) {
       this.displayedColumns.push('quantity');
     }
 
-    if (this.hasPermissionToShowValues) {
+    if (this.hasPermissionToShowValues()) {
       this.displayedColumns.push('valueInBaseCurrency');
     }
 
     this.displayedColumns.push('allocationInPercentage');
 
-    if (this.hasPermissionToShowValues) {
+    if (this.hasPermissionToShowValues()) {
       this.displayedColumns.push('performance');
     }
 
@@ -100,7 +100,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   }
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
-    if (this.hasPermissionToOpenDetails) {
+    if (this.hasPermissionToOpenDetails()) {
       this.holdingClicked.emit({ dataSource, symbol });
     }
   }

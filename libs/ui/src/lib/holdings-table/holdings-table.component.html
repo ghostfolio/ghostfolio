@@ -183,7 +183,7 @@
       mat-row
       [ngClass]="{
         'cursor-pointer':
-          hasPermissionToOpenDetails &&
+          hasPermissionToOpenDetails() &&
           !ignoreAssetSubClasses.includes(row.assetSubClass)
       }"
       (click)="
