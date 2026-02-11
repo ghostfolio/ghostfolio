@@ -55,7 +55,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent {
-  @Input() baseCurrency: string;
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
 
@@ -65,6 +64,7 @@ export class GfAccountsTableComponent {
 
   public readonly accounts = input.required<Account[] | undefined>();
   public readonly activitiesCount = input<number>();
+  public readonly baseCurrency = input<string>();
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly locale = input(getLocale());
   public readonly showActions = input<boolean>();
