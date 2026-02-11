@@ -1,7 +1,7 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { isFunction } from 'lodash';
 
@@ -19,7 +19,7 @@ export class NotificationService {
   private dialogMaxWidth: string;
   private dialogWidth: string;
 
-  public constructor(private matDialog: MatDialog) {}
+  private readonly matDialog = inject(MatDialog);
 
   public alert(aParams: AlertParams) {
     aParams.discardLabel ??= translate('CLOSE');

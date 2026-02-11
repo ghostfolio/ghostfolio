@@ -1,6 +1,6 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -19,9 +19,8 @@ export class GfConfirmationDialogComponent {
   public message?: string;
   public title: string;
 
-  public constructor(
-    public dialogRef: MatDialogRef<GfConfirmationDialogComponent>
-  ) {}
+  protected readonly dialogRef =
+    inject<MatDialogRef<GfConfirmationDialogComponent>>(MatDialogRef);
 
   @HostListener('window:keyup', ['$event'])
   public keyEvent(event: KeyboardEvent) {

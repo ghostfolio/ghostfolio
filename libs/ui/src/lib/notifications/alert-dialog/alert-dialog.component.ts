@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -15,7 +15,8 @@ export class GfAlertDialogComponent {
   public message?: string;
   public title: string;
 
-  public constructor(public dialogRef: MatDialogRef<GfAlertDialogComponent>) {}
+  protected readonly dialogRef =
+    inject<MatDialogRef<GfAlertDialogComponent>>(MatDialogRef);
 
   public initialize(aParams: AlertDialogParams) {
     this.discardLabel = aParams.discardLabel;
