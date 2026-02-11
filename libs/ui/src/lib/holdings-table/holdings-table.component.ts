@@ -56,7 +56,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  public displayedColumns: string[] = [];
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public routeQueryParams: Subscription;
 
@@ -75,28 +74,33 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     return dataSource;
   });
 
+  protected readonly displayedColumns = computed(() => {
+    const columns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
+
+    if (this.hasPermissionToShowQuantities()) {
+      columns.push('quantity');
+    }
+
+    if (this.hasPermissionToShowValues()) {
+      columns.push('valueInBaseCurrency');
+    }
+
+    columns.push('allocationInPercentage');
+
+    if (this.hasPermissionToShowValues()) {
+      columns.push('performance');
+    }
+
+    columns.push('performanceInPercentage');
+    return columns;
+  });
+
   protected readonly isLoading = computed(() => !this.holdings());
 
   private readonly unsubscribeSubject = new Subject<void>();
 
   public ngOnChanges() {
-    this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
-
-    if (this.hasPermissionToShowQuantities()) {
-      this.displayedColumns.push('quantity');
-    }
-
-    if (this.hasPermissionToShowValues()) {
-      this.displayedColumns.push('valueInBaseCurrency');
-    }
-
-    this.displayedColumns.push('allocationInPercentage');
-
-    if (this.hasPermissionToShowValues()) {
-      this.displayedColumns.push('performance');
-    }
-
-    this.displayedColumns.push('performanceInPercentage');
+    return;
   }
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
