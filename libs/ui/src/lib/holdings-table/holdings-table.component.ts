@@ -47,8 +47,6 @@ import { GfValueComponent } from '../value/value.component';
   templateUrl: './holdings-table.component.html'
 })
 export class GfHoldingsTableComponent {
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
