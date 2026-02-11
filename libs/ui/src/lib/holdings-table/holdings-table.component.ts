@@ -49,7 +49,6 @@ import { GfValueComponent } from '../value/value.component';
 export class GfHoldingsTableComponent {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
-  @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
@@ -60,6 +59,7 @@ export class GfHoldingsTableComponent {
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
   public readonly holdings = input.required<PortfolioPosition[]>();
+  public readonly locale = input(getLocale());
   public readonly paginator = viewChild.required(MatPaginator);
   public readonly sort = viewChild.required(MatSort);
 
