@@ -59,7 +59,6 @@ export class GfAccountsTableComponent {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
-  @Input() locale = getLocale();
   @Input() showFooter = true;
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
@@ -69,6 +68,7 @@ export class GfAccountsTableComponent {
   @Output() transferBalance = new EventEmitter<void>();
 
   public readonly accounts = input.required<Account[] | undefined>();
+  public readonly locale = input(getLocale());
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);
   public readonly showAllocationInPercentage = input<boolean>();
