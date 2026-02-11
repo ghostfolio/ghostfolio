@@ -142,7 +142,7 @@ export class GfAccountsTableComponent {
     });
   }
 
-  public onDeleteAccount(aId: string) {
+  protected onDeleteAccount(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.accountDeleted.emit(aId);
@@ -152,7 +152,7 @@ export class GfAccountsTableComponent {
     });
   }
 
-  public onOpenAccountDetailDialog(accountId: string) {
+  protected onOpenAccountDetailDialog(accountId: string) {
     if (this.hasPermissionToOpenDetails) {
       this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
@@ -160,17 +160,17 @@ export class GfAccountsTableComponent {
     }
   }
 
-  public onOpenComment(aComment: string) {
+  protected onOpenComment(aComment: string) {
     this.notificationService.alert({
       title: aComment
     });
   }
 
-  public onTransferBalance() {
+  protected onTransferBalance() {
     this.transferBalance.emit();
   }
 
-  public onUpdateAccount(aAccount: Account) {
+  protected onUpdateAccount(aAccount: Account) {
     this.accountToUpdate.emit(aAccount);
   }
 }
