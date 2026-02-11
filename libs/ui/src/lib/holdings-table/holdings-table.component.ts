@@ -24,7 +24,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfValueComponent } from '../value/value.component';
@@ -56,7 +56,6 @@ export class GfHoldingsTableComponent implements OnDestroy {
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
-  public routeQueryParams: Subscription;
 
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToShowQuantities = input(true);
