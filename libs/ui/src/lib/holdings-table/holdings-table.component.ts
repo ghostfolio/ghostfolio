@@ -59,7 +59,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  public dataSource = new MatTableDataSource<PortfolioPosition>();
   public displayedColumns: string[] = [];
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public routeQueryParams: Subscription;
@@ -67,6 +66,14 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public readonly holdings = input.required<PortfolioPosition[]>();
   public readonly paginator = viewChild.required(MatPaginator);
   public readonly sort = viewChild.required(MatSort);
+
+  protected readonly dataSource = computed(() => {
+    const dataSource = new MatTableDataSource(this.holdings());
+    dataSource.paginator = this.paginator();
+    dataSource.sortingDataAccessor = getLowercase;
+    dataSource.sort = this.sort();
+    return dataSource;
+  });
 
   protected readonly isLoading = computed(() => !this.holdings());
 
@@ -90,12 +97,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     }
 
     this.displayedColumns.push('performanceInPercentage');
-
-    this.dataSource = new MatTableDataSource(this.holdings());
-    this.dataSource.paginator = this.paginator();
-    this.dataSource.sortingDataAccessor = getLowercase;
-
-    this.dataSource.sort = this.sort();
   }
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -108,7 +109,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {
-      this.dataSource.paginator = this.paginator();
+      this.dataSource().paginator = this.paginator();
     });
   }
 
