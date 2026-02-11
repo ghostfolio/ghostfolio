@@ -10,7 +10,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   Output,
   computed,
   effect,
@@ -36,7 +35,6 @@ import {
   walletOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,7 +54,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./accounts-table.component.scss'],
   templateUrl: './accounts-table.component.html'
 })
-export class GfAccountsTableComponent implements OnDestroy {
+export class GfAccountsTableComponent {
   @Input() activitiesCount: number;
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -119,7 +117,6 @@ export class GfAccountsTableComponent implements OnDestroy {
 
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
-  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor() {
     addIcons({
@@ -175,10 +172,5 @@ export class GfAccountsTableComponent implements OnDestroy {
 
   public onUpdateAccount(aAccount: Account) {
     this.accountToUpdate.emit(aAccount);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
