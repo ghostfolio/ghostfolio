@@ -55,7 +55,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent {
-  @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
 
   @Output() accountDeleted = new EventEmitter<string>();
@@ -74,6 +73,8 @@ export class GfAccountsTableComponent {
   public readonly showFooter = input(true);
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
+  public readonly totalBalanceInBaseCurrency = input<number>();
+
   public readonly sort = viewChild.required(MatSort);
 
   protected readonly dataSource = new MatTableDataSource<Account>([]);
