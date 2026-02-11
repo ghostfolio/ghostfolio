@@ -8,12 +8,11 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   computed,
   effect,
   inject,
   input,
+  output,
   viewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -54,10 +53,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent {
-  @Output() accountDeleted = new EventEmitter<string>();
-  @Output() accountToUpdate = new EventEmitter<Account>();
-  @Output() transferBalance = new EventEmitter<void>();
-
   public readonly accounts = input.required<Account[] | undefined>();
   public readonly activitiesCount = input<number>();
   public readonly baseCurrency = input<string>();
@@ -72,6 +67,10 @@ export class GfAccountsTableComponent {
   public readonly showValueInBaseCurrency = input(false);
   public readonly totalBalanceInBaseCurrency = input<number>();
   public readonly totalValueInBaseCurrency = input<number>();
+
+  public readonly accountDeleted = output<string>();
+  public readonly accountToUpdate = output<Account>();
+  public readonly transferBalance = output<void>();
 
   public readonly sort = viewChild.required(MatSort);
 
