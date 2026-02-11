@@ -341,7 +341,7 @@
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
       [ngClass]="{
-        'cursor-pointer': hasPermissionToOpenDetails
+        'cursor-pointer': hasPermissionToOpenDetails()
       }"
       (click)="onOpenAccountDetailDialog(row.id)"
     ></tr>

@@ -57,7 +57,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAccountsTableComponent {
   @Input() activitiesCount: number;
   @Input() baseCurrency: string;
-  @Input() hasPermissionToOpenDetails = true;
   @Input() showFooter = true;
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
@@ -67,6 +66,7 @@ export class GfAccountsTableComponent {
   @Output() transferBalance = new EventEmitter<void>();
 
   public readonly accounts = input.required<Account[] | undefined>();
+  public readonly hasPermissionToOpenDetails = input(true);
   public readonly locale = input(getLocale());
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);
@@ -152,7 +152,7 @@ export class GfAccountsTableComponent {
   }
 
   protected onOpenAccountDetailDialog(accountId: string) {
-    if (this.hasPermissionToOpenDetails) {
+    if (this.hasPermissionToOpenDetails()) {
       this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
       });
