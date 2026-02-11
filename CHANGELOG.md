@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `twitter-api-v2` from version `1.27.0` to `1.29.0`
 
+### Fixed
+
+- Fixed a performance calculation issue by resetting tracking variables when a holding is fully closed
+
 ## 2.237.0 - 2026-02-08
 
 ### Changed
@@ -23,10 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the accounts of the assistant for the impersonation mode
 - Fixed the tags of the assistant for the impersonation mode
-
-### Fixed
-
-- Fixed a performance calculation issue by resetting tracking variables when a holding is fully closed
 
 ## 2.236.0 - 2026-02-05
 
