@@ -9,7 +9,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
   computed,
   effect,
@@ -55,8 +54,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent {
-  @Input() totalValueInBaseCurrency: number;
-
   @Output() accountDeleted = new EventEmitter<string>();
   @Output() accountToUpdate = new EventEmitter<Account>();
   @Output() transferBalance = new EventEmitter<void>();
@@ -74,6 +71,7 @@ export class GfAccountsTableComponent {
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
   public readonly totalBalanceInBaseCurrency = input<number>();
+  public readonly totalValueInBaseCurrency = input<number>();
 
   public readonly sort = viewChild.required(MatSort);
 
