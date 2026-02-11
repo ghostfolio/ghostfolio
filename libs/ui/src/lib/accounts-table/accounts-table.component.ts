@@ -57,7 +57,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAccountsTableComponent {
   @Input() activitiesCount: number;
   @Input() baseCurrency: string;
-  @Input() showFooter = true;
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
 
@@ -72,6 +71,7 @@ export class GfAccountsTableComponent {
   public readonly showActivitiesCount = input(true);
   public readonly showAllocationInPercentage = input<boolean>();
   public readonly showBalance = input(true);
+  public readonly showFooter = input(true);
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(false);
   public readonly sort = viewChild.required(MatSort);
