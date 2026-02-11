@@ -11,7 +11,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   Output,
   computed,
@@ -48,7 +47,7 @@ import { GfValueComponent } from '../value/value.component';
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })
-export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
+export class GfHoldingsTableComponent implements OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale = getLocale();
@@ -98,10 +97,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   protected readonly isLoading = computed(() => !this.holdings());
 
   private readonly unsubscribeSubject = new Subject<void>();
-
-  public ngOnChanges() {
-    return;
-  }
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     if (this.hasPermissionToOpenDetails()) {
