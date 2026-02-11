@@ -111,7 +111,6 @@ export const Loading: Story = {
   args: {
     accounts: undefined,
     baseCurrency: 'USD',
-    deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
@@ -129,7 +128,6 @@ export const Default: Story = {
     accounts,
     activitiesCount: 12,
     baseCurrency: 'USD',
-    deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
@@ -149,7 +147,6 @@ export const WithoutFooter: Story = {
     accounts,
     activitiesCount: 12,
     baseCurrency: 'USD',
-    deviceType: 'desktop',
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
