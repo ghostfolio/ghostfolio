@@ -15,6 +15,7 @@ import {
   OnDestroy,
   Output,
   ViewChild,
+  computed,
   input
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -64,10 +65,11 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public dataSource = new MatTableDataSource<PortfolioPosition>();
   public displayedColumns: string[] = [];
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
-  public isLoading = true;
   public routeQueryParams: Subscription;
 
   public readonly holdings = input.required<PortfolioPosition[]>();
+
+  protected readonly isLoading = computed(() => !this.holdings());
 
   private readonly unsubscribeSubject = new Subject<void>();
 
@@ -90,17 +92,11 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
     this.displayedColumns.push('performanceInPercentage');
 
-    this.isLoading = true;
-
     this.dataSource = new MatTableDataSource(this.holdings());
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = getLowercase;
 
     this.dataSource.sort = this.sort;
-
-    if (this.holdings()) {
-      this.isLoading = false;
-    }
   }
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {

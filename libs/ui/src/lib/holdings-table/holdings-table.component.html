@@ -77,7 +77,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.quantity"
+            [value]="isLoading() ? undefined : element.quantity"
           />
         </div>
       </td>
@@ -101,7 +101,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.valueInBaseCurrency"
+            [value]="isLoading() ? undefined : element.valueInBaseCurrency"
           />
         </div>
       </td>
@@ -122,7 +122,7 @@
           <gf-value
             [isPercent]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.allocationInPercentage"
+            [value]="isLoading() ? undefined : element.allocationInPercentage"
           />
         </div>
       </td>
@@ -144,7 +144,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="
-              isLoading ? undefined : element.netPerformanceWithCurrencyEffect
+              isLoading() ? undefined : element.netPerformanceWithCurrencyEffect
             "
           />
         </div>
@@ -168,7 +168,7 @@
             [isPercent]="true"
             [locale]="locale"
             [value]="
-              isLoading
+              isLoading()
                 ? undefined
                 : element.netPerformancePercentWithCurrencyEffect
             "
@@ -199,7 +199,7 @@
 
 <mat-paginator class="d-none" [pageSize]="pageSize" />
 
-@if (isLoading) {
+@if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
     class="px-4 py-3"
