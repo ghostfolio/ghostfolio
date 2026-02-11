@@ -14,6 +14,7 @@ import {
   OnDestroy,
   Output,
   computed,
+  effect,
   input,
   viewChild
 } from '@angular/core';
@@ -64,13 +65,7 @@ export class GfHoldingsTableComponent implements OnDestroy {
   public readonly paginator = viewChild.required(MatPaginator);
   public readonly sort = viewChild.required(MatSort);
 
-  protected readonly dataSource = computed(() => {
-    const dataSource = new MatTableDataSource(this.holdings());
-    dataSource.paginator = this.paginator();
-    dataSource.sortingDataAccessor = getLowercase;
-    dataSource.sort = this.sort();
-    return dataSource;
-  });
+  protected readonly dataSource = new MatTableDataSource<PortfolioPosition>([]);
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
@@ -97,6 +92,21 @@ export class GfHoldingsTableComponent implements OnDestroy {
 
   private readonly unsubscribeSubject = new Subject<void>();
 
+  constructor() {
+    this.dataSource.sortingDataAccessor = getLowercase;
+
+    // Only runs when data changes
+    effect(() => {
+      this.dataSource.data = this.holdings();
+    });
+
+    // Only runs when view changes
+    effect(() => {
+      this.dataSource.paginator = this.paginator();
+      this.dataSource.sort = this.sort();
+    });
+  }
+
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     if (this.hasPermissionToOpenDetails()) {
       this.holdingClicked.emit({ dataSource, symbol });
@@ -107,7 +117,7 @@ export class GfHoldingsTableComponent implements OnDestroy {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {
-      this.dataSource().paginator = this.paginator();
+      this.dataSource.paginator = this.paginator();
     });
   }
 
