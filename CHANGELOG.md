@@ -572,6 +572,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the deprecated `ITEM` activity type
+- Removed unneeded columns in holdings table for closed view
 
 ## 2.202.0 - 2025-09-26
 
