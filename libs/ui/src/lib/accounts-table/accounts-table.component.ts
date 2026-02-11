@@ -57,7 +57,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAccountsTableComponent {
   @Input() activitiesCount: number;
   @Input() baseCurrency: string;
-  @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
   @Input() showFooter = true;
   @Input() totalBalanceInBaseCurrency: number;
