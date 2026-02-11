@@ -14,9 +14,9 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild,
   computed,
-  input
+  input,
+  viewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -59,15 +59,14 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
   public dataSource = new MatTableDataSource<PortfolioPosition>();
   public displayedColumns: string[] = [];
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public routeQueryParams: Subscription;
 
   public readonly holdings = input.required<PortfolioPosition[]>();
+  public readonly paginator = viewChild.required(MatPaginator);
+  public readonly sort = viewChild.required(MatSort);
 
   protected readonly isLoading = computed(() => !this.holdings());
 
@@ -93,10 +92,10 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.displayedColumns.push('performanceInPercentage');
 
     this.dataSource = new MatTableDataSource(this.holdings());
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator();
     this.dataSource.sortingDataAccessor = getLowercase;
 
-    this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort();
   }
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -109,7 +108,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator();
     });
   }
 
