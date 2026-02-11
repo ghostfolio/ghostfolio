@@ -13,6 +13,7 @@ import {
   OnDestroy,
   Output,
   computed,
+  effect,
   inject,
   input,
   viewChild
@@ -78,12 +79,7 @@ export class GfAccountsTableComponent implements OnDestroy {
   public readonly showValueInBaseCurrency = input(false);
   public readonly sort = viewChild.required(MatSort);
 
-  protected readonly dataSource = computed(() => {
-    const dataSource = new MatTableDataSource<Account>(this.accounts());
-    dataSource.sortingDataAccessor = getLowercase;
-    dataSource.sort = this.sort();
-    return dataSource;
-  });
+  protected readonly dataSource = new MatTableDataSource<Account>([]);
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['status', 'account', 'platform'];
@@ -134,6 +130,18 @@ export class GfAccountsTableComponent implements OnDestroy {
       eyeOffOutline,
       trashOutline,
       walletOutline
+    });
+
+    this.dataSource.sortingDataAccessor = getLowercase;
+
+    // Reactive data update
+    effect(() => {
+      this.dataSource.data = this.accounts();
+    });
+
+    // Reactive view connection
+    effect(() => {
+      this.dataSource.sort = this.sort();
     });
   }
 
