@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the accounts of the assistant for the impersonation mode
 - Fixed the tags of the assistant for the impersonation mode
 
+### Fixed
+
+- Fixed a performance calculation issue by resetting tracking variables when a holding is fully closed
+
 ## 2.236.0 - 2026-02-05
 
 ### Changed
