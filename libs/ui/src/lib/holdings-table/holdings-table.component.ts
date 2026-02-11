@@ -53,8 +53,6 @@ export class GfHoldingsTableComponent {
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  public ignoreAssetSubClasses = [AssetSubClass.CASH];
-
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
@@ -86,17 +84,18 @@ export class GfHoldingsTableComponent {
     return columns;
   });
 
+  protected readonly ignoreAssetSubClasses = [AssetSubClass.CASH];
   protected readonly isLoading = computed(() => !this.holdings());
 
   constructor() {
     this.dataSource.sortingDataAccessor = getLowercase;
 
-    // Only runs when data changes
+    // Reactive data update
     effect(() => {
       this.dataSource.data = this.holdings();
     });
 
-    // Only runs when view changes
+    // Reactive view connection
     effect(() => {
       this.dataSource.paginator = this.paginator();
       this.dataSource.sort = this.sort();
