@@ -14,7 +14,8 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  ViewChild,
+  input
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -52,7 +53,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToOpenDetails = true;
   @Input() hasPermissionToShowQuantities = true;
   @Input() hasPermissionToShowValues = true;
-  @Input() holdings: PortfolioPosition[];
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
@@ -67,7 +67,9 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public isLoading = true;
   public routeQueryParams: Subscription;
 
-  private unsubscribeSubject = new Subject<void>();
+  public readonly holdings = input.required<PortfolioPosition[]>();
+
+  private readonly unsubscribeSubject = new Subject<void>();
 
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
@@ -90,13 +92,13 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
     this.isLoading = true;
 
-    this.dataSource = new MatTableDataSource(this.holdings);
+    this.dataSource = new MatTableDataSource(this.holdings());
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = getLowercase;
 
     this.dataSource.sort = this.sort;
 
-    if (this.holdings) {
+    if (this.holdings()) {
       this.isLoading = false;
     }
   }
