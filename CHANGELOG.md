@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated `transactionCount` in favor of `activitiesCount` in the endpoint `GET api/v1/admin`
 - Removed the deprecated `firstBuyDate` in the portfolio calculator
+- Improved the routing of the asset profile dialog in the market data section of the admin control panel
 
 ## 2.234.0 - 2026-01-30
 
