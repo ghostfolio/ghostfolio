@@ -255,12 +255,12 @@
               <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
                 <a
                   mat-menu-item
-                  [queryParams]="{
-                    assetProfileDialog: true,
-                    dataSource: element.dataSource,
-                    symbol: element.symbol
-                  }"
-                  [routerLink]="[]"
+                  [routerLink]="
+                    getRouterLinkToAdminControlMarketData(
+                      element.dataSource,
+                      element.symbol
+                    )
+                  "
                 >
                   <span class="align-items-center d-flex">
                     <ion-icon class="mr-2" name="create-outline" />
@@ -336,8 +336,7 @@
       class="align-items-center d-flex justify-content-center"
       color="primary"
       mat-fab
-      [queryParams]="{ createAssetProfileDialog: true }"
-      [routerLink]="[]"
+      [routerLink]="['create']"
     >
       <ion-icon name="add-outline" size="large" />
     </a>
