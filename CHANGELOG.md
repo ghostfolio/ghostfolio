@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `twitter-api-v2` from version `1.27.0` to `1.29.0`
 
+### Fixed
+
+- Fixed an issue with the exchange rate calculation by expanding the date range to cover the full day (start to end of day)
+
 ## 2.237.0 - 2026-02-08
 
 ### Changed
