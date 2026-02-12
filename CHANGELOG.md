@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Added the missing `valueInBaseCurrency` to the response of the import activities endpoint
+
 ## 2.238.0 - 2026-02-12
 
 ### Changed
@@ -28,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the missing `valueInBaseCurrency` in the import endpoint (`POST api/v1/import`)
 - Fixed the accounts of the assistant for the impersonation mode
 - Fixed the tags of the assistant for the impersonation mode
 
