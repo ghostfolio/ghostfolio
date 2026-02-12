@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `twitter-api-v2` from version `1.27.0` to `1.29.0`
 
+### Fixed
+
+- Fixed an issue in the annualized performance calculation
+
 ## 2.237.0 - 2026-02-08
 
 ### Changed
