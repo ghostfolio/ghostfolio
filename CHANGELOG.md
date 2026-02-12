@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the annualized performance calculation
 - Fixed an issue with the exchange rate calculation by expanding the date range to cover the full day (start to end of day)
 
 ## 2.237.0 - 2026-02-08
