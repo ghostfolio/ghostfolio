@@ -87,7 +87,8 @@
                     >
                   }
                   <mat-option value="zh"
-                    >Chinese (<ng-container i18n>Community</ng-container
+                    >Chinese / 简体中文 (<ng-container i18n
+                      >Community</ng-container
                     >)</mat-option
                   >
                   <mat-option value="es"
@@ -102,6 +103,13 @@
                     >Italiano (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <mat-option value="ko"
+                      >Korean / 한국어 (<ng-container i18n
+                        >Community</ng-container
+                      >)</mat-option
+                    >
+                  }
                   <mat-option value="nl"
                     >Nederlands (<ng-container i18n>Community</ng-container
                     >)</mat-option
@@ -120,7 +128,8 @@
                   >
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="uk"
-                      >Українська (<ng-container i18n>Community</ng-container
+                      >Ukrainian / Українська (<ng-container i18n
+                        >Community</ng-container
                       >)</mat-option
                     >
                   }

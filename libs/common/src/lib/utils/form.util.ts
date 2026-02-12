@@ -30,7 +30,7 @@ export async function validateObjectForForm<T>({
 
     if (formControl) {
       formControl.setErrors({
-        validationError: Object.values(constraints)[0]
+        validationError: Object.values(constraints ?? {})[0]
       });
     }
 
@@ -38,7 +38,7 @@ export async function validateObjectForForm<T>({
 
     if (formControlInCustomCurrency) {
       formControlInCustomCurrency.setErrors({
-        validationError: Object.values(constraints)[0]
+        validationError: Object.values(constraints ?? {})[0]
       });
     }
   }

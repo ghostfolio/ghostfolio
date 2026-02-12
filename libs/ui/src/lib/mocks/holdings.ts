@@ -2,6 +2,7 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 export const holdings: PortfolioPosition[] = [
   {
+    activitiesCount: 1,
     allocationInPercentage: 0.042990776363386086,
     assetClass: 'EQUITY' as any,
     assetClassLabel: 'Equity',
@@ -40,11 +41,11 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'AAPL',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.apple.com',
     valueInBaseCurrency: 12230
   },
   {
+    activitiesCount: 2,
     allocationInPercentage: 0.02377401948293552,
     assetClass: 'EQUITY' as any,
     assetClassLabel: 'Equity',
@@ -83,11 +84,11 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'ALV.DE',
     tags: [],
-    transactionCount: 2,
     url: 'https://www.allianz.com',
     valueInBaseCurrency: 6763.224181360202
   },
   {
+    activitiesCount: 1,
     allocationInPercentage: 0.08038536990007467,
     assetClass: 'EQUITY' as any,
     assetClassLabel: 'Equity',
@@ -126,11 +127,11 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'AMZN',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.aboutamazon.com',
     valueInBaseCurrency: 22868
   },
   {
+    activitiesCount: 1,
     allocationInPercentage: 0.19216416482928922,
     assetClass: 'LIQUIDITY' as any,
     assetClassLabel: 'Liquidity',
@@ -157,11 +158,11 @@ export const holdings: PortfolioPosition[] = [
     sectors: [],
     symbol: 'bitcoin',
     tags: [],
-    transactionCount: 1,
     url: null,
     valueInBaseCurrency: 54666.7898248
   },
   {
+    activitiesCount: 1,
     allocationInPercentage: 0.04307127421937313,
     assetClass: 'EQUITY' as any,
     assetClassLabel: 'Equity',
@@ -200,11 +201,11 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'MSFT',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.microsoft.com',
     valueInBaseCurrency: 12252.9
   },
   {
+    activitiesCount: 1,
     allocationInPercentage: 0.18762679306394897,
     assetClass: 'EQUITY' as any,
     assetClassLabel: 'Equity',
@@ -243,11 +244,11 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'TSLA',
     tags: [],
-    transactionCount: 1,
     url: 'https://www.tesla.com',
     valueInBaseCurrency: 53376
   },
   {
+    activitiesCount: 5,
     allocationInPercentage: 0.053051250766657634,
     assetClass: 'EQUITY' as any,
     assetClassLabel: 'Equity',
@@ -286,7 +287,6 @@ export const holdings: PortfolioPosition[] = [
     ],
     symbol: 'VTI',
     tags: [],
-    transactionCount: 5,
     url: 'https://www.vanguard.com',
     valueInBaseCurrency: 15092
   }

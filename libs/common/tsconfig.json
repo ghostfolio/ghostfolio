@@ -9,5 +9,10 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "module": "preserve",
+    "lib": ["dom", "es2022"],
+    "strictNullChecks": true
+  }
 }

@@ -1,4 +1,4 @@
-@if (showActions) {
+@if (showActions()) {
   <div class="d-flex justify-content-end">
     <button
       class="align-items-center d-flex"
@@ -13,7 +13,14 @@
 }
 
 <div class="overflow-x-auto">
-  <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    [dataSource]="dataSource"
+  >
     <ng-container matColumnDef="status">
       <th
         *matHeaderCellDef
@@ -72,7 +79,7 @@
         {{ element.currency }}
       </td>
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
-        {{ baseCurrency }}
+        {{ baseCurrency() }}
       </td>
     </ng-container>
 
@@ -108,21 +115,21 @@
       ></td>
     </ng-container>
 
-    <ng-container matColumnDef="transactions">
+    <ng-container matColumnDef="activitiesCount">
       <th
         *matHeaderCellDef
         class="justify-content-end px-1"
         mat-header-cell
-        mat-sort-header="transactionCount"
+        mat-sort-header="activitiesCount"
       >
         <span class="d-block d-sm-none">#</span>
         <span class="d-none d-sm-block" i18n>Activities</span>
       </th>
       <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-        {{ element.transactionCount }}
+        {{ element.activitiesCount }}
       </td>
       <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
-        {{ transactionCount }}
+        {{ activitiesCount() }}
       </td>
     </ng-container>
 
@@ -143,7 +150,7 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
-          [locale]="locale"
+          [locale]="locale()"
           [value]="element.balance"
         />
       </td>
@@ -155,8 +162,8 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
-          [locale]="locale"
-          [value]="totalBalanceInBaseCurrency"
+          [locale]="locale()"
+          [value]="totalBalanceInBaseCurrency()"
         />
       </td>
     </ng-container>
@@ -178,7 +185,7 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
-          [locale]="locale"
+          [locale]="locale()"
           [value]="element.value"
         />
       </td>
@@ -190,8 +197,8 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
-          [locale]="locale"
-          [value]="totalValueInBaseCurrency"
+          [locale]="locale()"
+          [value]="totalValueInBaseCurrency()"
         />
       </td>
     </ng-container>
@@ -199,7 +206,7 @@
     <ng-container matColumnDef="valueInBaseCurrency">
       <th
         *matHeaderCellDef
-        class="d-lg-none d-xl-none px-1 text-right"
+        class="d-lg-none d-xl-none justify-content-end px-1"
         mat-header-cell
         mat-sort-header
       >
@@ -213,7 +220,7 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
-          [locale]="locale"
+          [locale]="locale()"
           [value]="element.valueInBaseCurrency"
         />
       </td>
@@ -225,8 +232,8 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
-          [locale]="locale"
-          [value]="totalValueInBaseCurrency"
+          [locale]="locale()"
+          [value]="totalValueInBaseCurrency()"
         />
       </td>
     </ng-container>
@@ -248,7 +255,7 @@
         <gf-value
           class="d-inline-block justify-content-end"
           [isPercent]="true"
-          [locale]="locale"
+          [locale]="locale()"
           [precision]="2"
           [value]="element.allocationInPercentage"
         />
@@ -316,7 +323,7 @@
           <hr class="m-0" />
           <button
             mat-menu-item
-            [disabled]="element.transactionCount > 0"
+            [disabled]="element.activitiesCount > 0"
             (click)="onDeleteAccount(element.id)"
           >
             <span class="align-items-center d-flex">
@@ -329,24 +336,24 @@
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns()"
       mat-row
       [ngClass]="{
-        'cursor-pointer': hasPermissionToOpenDetails
+        'cursor-pointer': hasPermissionToOpenDetails()
       }"
       (click)="onOpenAccountDetailDialog(row.id)"
     ></tr>
     <tr
-      *matFooterRowDef="displayedColumns"
+      *matFooterRowDef="displayedColumns()"
       mat-footer-row
-      [ngClass]="{ 'd-none': isLoading || !showFooter }"
+      [ngClass]="{ 'd-none': isLoading() || !showFooter() }"
     ></tr>
   </table>
 </div>
 
-@if (isLoading) {
+@if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
     class="px-4 py-3"

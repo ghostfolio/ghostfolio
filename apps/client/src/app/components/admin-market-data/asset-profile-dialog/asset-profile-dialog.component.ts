@@ -1,6 +1,4 @@
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   ASSET_CLASS_MAPPING,
@@ -28,11 +26,11 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -42,8 +40,7 @@ import {
   Inject,
   OnDestroy,
   OnInit,
-  ViewChild,
-  signal
+  ViewChild
 } from '@angular/core';
 import {
   AbstractControl,
@@ -64,7 +61,6 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -83,6 +79,7 @@ import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import {
+  codeSlashOutline,
   createOutline,
   ellipsisVertical,
   readerOutline,
@@ -98,7 +95,6 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    CommonModule,
     FormsModule,
     GfCurrencySelectorComponent,
     GfEntityLogoComponent,
@@ -111,7 +107,6 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatExpansionModule,
     MatInputModule,
     MatMenuModule,
     MatSelectModule,
@@ -238,8 +233,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     }
   ];
 
-  public scraperConfiguationIsExpanded = signal(false);
-
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -260,7 +253,13 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
-    addIcons({ createOutline, ellipsisVertical, readerOutline, serverOutline });
+    addIcons({
+      codeSlashOutline,
+      createOutline,
+      ellipsisVertical,
+      readerOutline,
+      serverOutline
+    });
   }
 
   public get canSaveAssetProfileIdentifier() {
@@ -509,7 +508,19 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       if (!scraperConfiguration.selector || !scraperConfiguration.url) {
         scraperConfiguration = undefined;
       }
-    } catch {}
+    } catch (error) {
+      console.error($localize`Could not parse scraper configuration`, error);
+
+      this.snackBar.open(
+        '😞 ' + $localize`Could not parse scraper configuration`,
+        undefined,
+        {
+          duration: ms('3 seconds')
+        }
+      );
+
+      return;
+    }
 
     try {
       sectors = JSON.parse(this.assetProfileForm.get('sectors').value);
@@ -543,7 +554,16 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         object: assetProfile
       });
     } catch (error) {
-      console.error(error);
+      console.error($localize`Could not validate form`, error);
+
+      this.snackBar.open(
+        '😞 ' + $localize`Could not validate form`,
+        undefined,
+        {
+          duration: ms('3 seconds')
+        }
+      );
+
       return;
     }
 
@@ -555,8 +575,29 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         },
         assetProfile
       )
-      .subscribe(() => {
-        this.initialize();
+      .subscribe({
+        next: () => {
+          this.snackBar.open(
+            '✅ ' + $localize`Asset profile has been saved`,
+            undefined,
+            {
+              duration: ms('3 seconds')
+            }
+          );
+
+          this.initialize();
+        },
+        error: (error) => {
+          console.error($localize`Could not save asset profile`, error);
+
+          this.snackBar.open(
+            '😞 ' + $localize`Could not save asset profile`,
+            undefined,
+            {
+              duration: ms('3 seconds')
+            }
+          );
+        }
       });
   }
 
@@ -707,8 +748,8 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   }
 
   public onTriggerSubmitAssetProfileForm() {
-    if (this.assetProfileForm) {
-      this.assetProfileFormElement.nativeElement.requestSubmit();
+    if (this.assetProfileForm.valid) {
+      this.onSubmitAssetProfileForm();
     }
   }
 

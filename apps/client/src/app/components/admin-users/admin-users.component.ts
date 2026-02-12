@@ -1,7 +1,5 @@
 import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -21,6 +19,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -58,7 +57,7 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -140,30 +139,30 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       ];
     }
 
-    this.route.paramMap
-      .pipe(takeUntil(this.unsubscribeSubject))
+    this.userService.stateChanged
+      .pipe(
+        takeUntil(this.unsubscribeSubject),
+        tap((state) => {
+          if (state?.user) {
+            this.user = state.user;
+
+            this.defaultDateFormat = getDateFormatString(
+              this.user.settings.locale
+            );
+
+            this.hasPermissionToImpersonateAllUsers = hasPermission(
+              this.user.permissions,
+              permissions.impersonateAllUsers
+            );
+          }
+        }),
+        switchMap(() => this.route.paramMap)
+      )
       .subscribe((params) => {
         const userId = params.get('userId');
 
         if (userId) {
           this.openUserDetailDialog(userId);
-        }
-      });
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-
-          this.defaultDateFormat = getDateFormatString(
-            this.user.settings.locale
-          );
-
-          this.hasPermissionToImpersonateAllUsers = hasPermission(
-            this.user.permissions,
-            permissions.impersonateAllUsers
-          );
         }
       });
 
@@ -209,10 +208,13 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
           .deleteUser(aId)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(() => {
-            this.fetchUsers();
+            this.router.navigate(['..'], { relativeTo: this.route });
           });
       },
       confirmType: ConfirmationDialogType.Warn,
+      discardFn: () => {
+        this.router.navigate(['..'], { relativeTo: this.route });
+      },
       title: $localize`Do you really want to delete this user?`
     });
   }
@@ -294,6 +296,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
+        currentUserId: this.user?.id,
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale,
@@ -306,10 +309,14 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(
-          internalRoutes.adminControl.subRoutes.users.routerLink
-        );
+      .subscribe((data) => {
+        if (data?.action === 'delete' && data?.userId) {
+          this.onDeleteUser(data.userId);
+        } else {
+          this.router.navigate(
+            internalRoutes.adminControl.subRoutes.users.routerLink
+          );
+        }
       });
   }
 }

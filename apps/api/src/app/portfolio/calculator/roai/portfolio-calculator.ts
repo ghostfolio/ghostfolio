@@ -13,7 +13,14 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
-import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
+import {
+  addMilliseconds,
+  differenceInDays,
+  eachYearOfInterval,
+  format,
+  isBefore,
+  isThisYear
+} from 'date-fns';
 import { cloneDeep, sortBy } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
@@ -34,7 +41,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let totalTimeWeightedInvestment = new Big(0);
     let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
 
-    for (const currentPosition of positions) {
+    for (const currentPosition of positions.filter(
+      ({ includeInTotalAssetValue }) => {
+        return includeInTotalAssetValue;
+      }
+    )) {
       if (currentPosition.feeInBaseCurrency) {
         totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
           currentPosition.feeInBaseCurrency
@@ -188,6 +199,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       })
     );
 
+    const isCash = orders[0]?.SymbolProfile?.assetSubClass === 'CASH';
+
     if (orders.length <= 0) {
       return {
         currentValues: {},
@@ -244,6 +257,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       // For BUY / SELL activities with a MANUAL data source where no historical market price is available,
       // the calculation should fall back to using the activity’s unit price.
       unitPriceAtEndDate = latestActivity.unitPrice;
+    } else if (isCash) {
+      unitPriceAtEndDate = new Big(1);
     }
 
     if (
@@ -295,7 +310,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       quantity: new Big(0),
       SymbolProfile: {
         dataSource,
-        symbol
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
       },
       type: 'BUY',
       unitPrice: unitPriceAtStartDate
@@ -308,7 +324,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       itemType: 'end',
       SymbolProfile: {
         dataSource,
-        symbol
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
       },
       quantity: new Big(0),
       type: 'BUY',
@@ -348,7 +365,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           quantity: new Big(0),
           SymbolProfile: {
             dataSource,
-            symbol
+            symbol,
+            assetSubClass: isCash ? 'CASH' : undefined
           },
           type: 'BUY',
           unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
@@ -826,15 +844,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       'max',
       'mtd',
       'wtd',
-      'ytd'
-      // TODO:
-      // ...eachYearOfInterval({ end, start })
-      //   .filter((date) => {
-      //     return !isThisYear(date);
-      //   })
-      //   .map((date) => {
-      //     return format(date, 'yyyy');
-      //   })
+      'ytd',
+      ...eachYearOfInterval({ end, start })
+        .filter((date) => {
+          return !isThisYear(date);
+        })
+        .map((date) => {
+          return format(date, 'yyyy');
+        })
     ] as DateRange[]) {
       const dateInterval = getIntervalFromDateRange(dateRange);
       const endDate = dateInterval.endDate;

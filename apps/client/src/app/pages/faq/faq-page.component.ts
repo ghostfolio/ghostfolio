@@ -1,7 +1,7 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,

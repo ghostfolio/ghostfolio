@@ -1,10 +1,7 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
-import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
-import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
+import { AdminService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,6 +14,10 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { ellipsisVertical } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -26,12 +27,11 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    CommonModule,
-    GfDialogFooterComponent,
-    GfDialogHeaderComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-user-detail-dialog',
@@ -48,7 +48,11 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
     public dialogRef: MatDialogRef<GfUserDetailDialogComponent>
-  ) {}
+  ) {
+    addIcons({
+      ellipsisVertical
+    });
+  }
 
   public ngOnInit() {
     this.adminService
@@ -66,6 +70,13 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public deleteUser() {
+    this.dialogRef.close({
+      action: 'delete',
+      userId: this.data.userId
+    });
   }
 
   public onClose() {
