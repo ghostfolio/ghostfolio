@@ -13,7 +13,7 @@ import { ConfirmDialogParams } from './interfaces/interfaces';
   templateUrl: './confirmation-dialog.html'
 })
 export class GfConfirmationDialogComponent {
-  public confirmLabel?: string;
+  public confirmLabel: string;
   public confirmType: ConfirmationDialogType;
   public discardLabel: string;
   public message?: string;

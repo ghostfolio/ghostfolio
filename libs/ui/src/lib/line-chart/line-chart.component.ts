@@ -316,9 +316,7 @@ export class GfLineChartComponent
       },
       duration: delayBetweenPoints,
       easing: 'linear',
-      // @ts-ignore
       from: NaN,
-      // @ts-ignore
       type: 'number'
     };
   }
