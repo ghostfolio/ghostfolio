@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a performance calculation issue by resetting tracking variables when a holding is fully closed
+- Fixed an issue in the annualized performance calculation
 
 ## 2.237.0 - 2026-02-08
 
