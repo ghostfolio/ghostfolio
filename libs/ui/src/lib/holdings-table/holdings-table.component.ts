@@ -88,7 +88,7 @@ export class GfHoldingsTableComponent {
 
   protected readonly isLoading = computed(() => !this.holdings());
 
-  constructor() {
+  public constructor() {
     this.dataSource.sortingDataAccessor = getLowercase;
 
     // Reactive data update
