@@ -259,7 +259,12 @@ export class AdminController {
     } catch (error) {
       Logger.error(error, 'AdminController');
 
-      throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'Scraper test failed. Check the URL, selector, and that the site returns the expected content.';
+
+      throw new HttpException(message, StatusCodes.BAD_REQUEST);
     }
   }
 

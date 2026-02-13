@@ -276,24 +276,52 @@ export class ManualService implements DataProviderInterface {
   ): Promise<number> {
     let locale = scraperConfiguration.locale;
 
-    const response = await fetch(scraperConfiguration.url, {
-      headers: scraperConfiguration.headers as HeadersInit,
-      signal: AbortSignal.timeout(
-        this.configurationService.get('REQUEST_TIMEOUT')
-      )
-    });
+    let response: Response;
+
+    try {
+      response = await fetch(scraperConfiguration.url, {
+        headers: scraperConfiguration.headers as HeadersInit,
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
+      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Unknown network error';
+      throw new Error(
+        `Request failed: ${message}. Check the URL and that the site is reachable.`
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status} (${response.statusText}). The site may be blocking requests, rate-limiting, or returning an error page.`
+      );
+    }
 
     let value: string;
 
     if (response.headers.get('content-type')?.includes('application/json')) {
-      const object = await response.json();
+      const object: unknown = await response.json();
 
-      value = String(
-        query({
-          object,
-          pathExpression: scraperConfiguration.selector
-        })[0]
-      );
+      const matched = query({
+        object: object as object,
+        pathExpression: scraperConfiguration.selector
+      })[0] as unknown;
+
+      if (matched === undefined || matched === null) {
+        throw new Error(
+          'Selector did not match any value in the response. Check the path expression.'
+        );
+      }
+
+      if (typeof matched === 'object') {
+        throw new Error(
+          'Selector matched an object or array. Expected a string or number value.'
+        );
+      }
+
+      value = typeof matched === 'string' ? matched : String(matched as number);
     } else {
       const $ = cheerio.load(await response.text());
 
@@ -305,6 +333,12 @@ export class ManualService implements DataProviderInterface {
 
       value = $(scraperConfiguration.selector).first().text();
 
+      if (!value?.trim()) {
+        throw new Error(
+          'Selector matched no element on the page. Check the selector and that the page structure matches.'
+        );
+      }
+
       const lines = value?.split('\n') ?? [];
 
       const lineWithDigits = lines.find((line) => {
@@ -314,13 +348,26 @@ export class ManualService implements DataProviderInterface {
       if (lineWithDigits) {
         value = lineWithDigits;
       }
-
-      return extractNumberFromString({
-        locale,
-        value
-      });
     }
 
-    return extractNumberFromString({ locale, value });
+    const parsed = extractNumberFromString({
+      locale,
+      value: value ?? ''
+    });
+
+    if (
+      parsed === undefined ||
+      (typeof parsed === 'number' && Number.isNaN(parsed))
+    ) {
+      const preview =
+        (value ?? '').trim().length > 50
+          ? `${(value ?? '').trim().slice(0, 50)}…`
+          : (value ?? '').trim();
+      throw new Error(
+        `Could not extract a number from the selected text. Got: "${preview}"`
+      );
+    }
+
+    return parsed;
   }
 }

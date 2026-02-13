@@ -691,9 +691,20 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         symbol: this.data.symbol
       })
       .pipe(
-        catchError(({ error }) => {
+        catchError((err: HttpErrorResponse) => {
+          const body: unknown = err.error;
+          const message: string =
+            typeof body === 'object' &&
+            body !== null &&
+            'message' in body &&
+            typeof (body as { message: unknown }).message === 'string'
+              ? (body as { message: string }).message
+              : typeof err.message === 'string'
+                ? err.message
+                : $localize`Scraper test failed`;
+
           this.notificationService.alert({
-            message: error?.message,
+            message,
             title: $localize`Error`
           });
           return EMPTY;
