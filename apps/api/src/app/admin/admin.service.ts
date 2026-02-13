@@ -614,6 +614,19 @@ export class AdminService {
         );
       }
     } else {
+      const [existingProfile] =
+        await this.symbolProfileService.getSymbolProfiles([
+          { dataSource, symbol }
+        ]);
+
+      if (!existingProfile) {
+        await this.addAssetProfile({
+          dataSource,
+          symbol,
+          currency: currency as string
+        });
+      }
+
       const symbolProfileOverrides = {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,

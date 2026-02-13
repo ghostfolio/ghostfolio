@@ -7,5 +7,6 @@ export interface AssetProfileDialogParams {
   dataSource: DataSource;
   deviceType: string;
   locale: string;
+  onSaved?: () => void;
   symbol: string;
 }

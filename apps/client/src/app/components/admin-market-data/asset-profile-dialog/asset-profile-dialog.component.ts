@@ -582,6 +582,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
             }
           );
 
+          this.data.onSaved?.();
           this.initialize();
         },
         error: (error) => {

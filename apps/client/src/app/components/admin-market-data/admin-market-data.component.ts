@@ -439,7 +439,14 @@ export class GfAdminMarketDataComponent
             symbol,
             colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
+            locale: this.user?.settings?.locale,
+            onSaved: () => {
+              this.loadData({
+                pageIndex: this.paginator?.pageIndex ?? 0,
+                sortColumn: this.sort?.active,
+                sortDirection: this.sort?.direction
+              });
+            }
           },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -450,6 +457,12 @@ export class GfAdminMarketDataComponent
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(
             (newAssetProfileIdentifier: AssetProfileIdentifier | undefined) => {
+              this.loadData({
+                pageIndex: this.paginator?.pageIndex ?? 0,
+                sortColumn: this.sort?.active,
+                sortDirection: this.sort?.direction
+              });
+
               if (newAssetProfileIdentifier) {
                 this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
               } else {
