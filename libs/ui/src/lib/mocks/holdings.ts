@@ -4,9 +4,9 @@ export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 1,
     allocationInPercentage: 0.042990776363386086,
-    assetClass: 'EQUITY' as any,
+    assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
-    assetSubClass: 'STOCK' as any,
+    assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
@@ -17,7 +17,7 @@ export const holdings: PortfolioPosition[] = [
       }
     ],
     currency: 'USD',
-    dataSource: 'YAHOO' as any,
+    dataSource: 'YAHOO',
     dateOfFirstActivity: new Date('2021-12-01T00:00:00.000Z'),
     dividend: 0,
     grossPerformance: 3856,
@@ -47,9 +47,9 @@ export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 2,
     allocationInPercentage: 0.02377401948293552,
-    assetClass: 'EQUITY' as any,
+    assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
-    assetSubClass: 'STOCK' as any,
+    assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
@@ -60,7 +60,7 @@ export const holdings: PortfolioPosition[] = [
       }
     ],
     currency: 'EUR',
-    dataSource: 'YAHOO' as any,
+    dataSource: 'YAHOO',
     dateOfFirstActivity: new Date('2021-04-23T00:00:00.000Z'),
     dividend: 192,
     grossPerformance: 2226.700251889169,
@@ -90,9 +90,9 @@ export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 1,
     allocationInPercentage: 0.08038536990007467,
-    assetClass: 'EQUITY' as any,
+    assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
-    assetSubClass: 'STOCK' as any,
+    assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
@@ -103,7 +103,7 @@ export const holdings: PortfolioPosition[] = [
       }
     ],
     currency: 'USD',
-    dataSource: 'YAHOO' as any,
+    dataSource: 'YAHOO',
     dateOfFirstActivity: new Date('2018-10-01T00:00:00.000Z'),
     dividend: 0,
     grossPerformance: 12758.05,
@@ -133,13 +133,13 @@ export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 1,
     allocationInPercentage: 0.19216416482928922,
-    assetClass: 'LIQUIDITY' as any,
+    assetClass: 'LIQUIDITY',
     assetClassLabel: 'Liquidity',
-    assetSubClass: 'CRYPTOCURRENCY' as any,
+    assetSubClass: 'CRYPTOCURRENCY',
     assetSubClassLabel: 'Cryptocurrency',
     countries: [],
     currency: 'USD',
-    dataSource: 'COINGECKO' as any,
+    dataSource: 'COINGECKO',
     dateOfFirstActivity: new Date('2017-08-16T00:00:00.000Z'),
     dividend: 0,
     grossPerformance: 52666.7898248,
@@ -158,15 +158,15 @@ export const holdings: PortfolioPosition[] = [
     sectors: [],
     symbol: 'bitcoin',
     tags: [],
-    url: null,
+    url: undefined,
     valueInBaseCurrency: 54666.7898248
   },
   {
     activitiesCount: 1,
     allocationInPercentage: 0.04307127421937313,
-    assetClass: 'EQUITY' as any,
+    assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
-    assetSubClass: 'STOCK' as any,
+    assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
@@ -177,7 +177,7 @@ export const holdings: PortfolioPosition[] = [
       }
     ],
     currency: 'USD',
-    dataSource: 'YAHOO' as any,
+    dataSource: 'YAHOO',
     dateOfFirstActivity: new Date('2023-01-03T00:00:00.000Z'),
     dividend: 0,
     grossPerformance: 5065.5,
@@ -207,9 +207,9 @@ export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 1,
     allocationInPercentage: 0.18762679306394897,
-    assetClass: 'EQUITY' as any,
+    assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
-    assetSubClass: 'STOCK' as any,
+    assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
@@ -220,7 +220,7 @@ export const holdings: PortfolioPosition[] = [
       }
     ],
     currency: 'USD',
-    dataSource: 'YAHOO' as any,
+    dataSource: 'YAHOO',
     dateOfFirstActivity: new Date('2017-01-03T00:00:00.000Z'),
     dividend: 0,
     grossPerformance: 51227.500000005,
@@ -250,9 +250,9 @@ export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 5,
     allocationInPercentage: 0.053051250766657634,
-    assetClass: 'EQUITY' as any,
+    assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
-    assetSubClass: 'ETF' as any,
+    assetSubClass: 'ETF',
     assetSubClassLabel: 'ETF',
     countries: [
       {
@@ -263,7 +263,7 @@ export const holdings: PortfolioPosition[] = [
       }
     ],
     currency: 'USD',
-    dataSource: 'YAHOO' as any,
+    dataSource: 'YAHOO',
     dateOfFirstActivity: new Date('2019-03-01T00:00:00.000Z'),
     dividend: 0,
     grossPerformance: 6845.8,
