@@ -102,8 +102,6 @@
           <div class="d-none d-sm-block ml-2" i18n>Holdings</div>
         </ng-template>
         <gf-holdings-table
-          [baseCurrency]="user?.settings?.baseCurrency"
-          [deviceType]="data.deviceType"
           [hasPermissionToOpenDetails]="false"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
