@@ -64,6 +64,17 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'JNUG':
+      if (isSameDay(parseDate('2025-12-10'), date)) {
+        return { marketPrice: 204.5599975585938 };
+      } else if (isSameDay(parseDate('2025-12-17'), date)) {
+        return { marketPrice: 203.9700012207031 };
+      } else if (isSameDay(parseDate('2025-12-28'), date)) {
+        return { marketPrice: 237.8000030517578 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'MSFT':
       if (isSameDay(parseDate('2021-09-16'), date)) {
         return { marketPrice: 89.12 };
