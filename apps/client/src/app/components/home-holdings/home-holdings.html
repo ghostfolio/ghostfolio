@@ -48,7 +48,7 @@
         <gf-holdings-table
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
-          [hasPermissionToShowQuantities]="false"
+          [hasPermissionToShowQuantities]="true"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
           (holdingClicked)="onHoldingClicked($event)"
