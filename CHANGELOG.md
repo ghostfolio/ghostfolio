@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
+
 ### Fixed
 
 - Added the missing `valueInBaseCurrency` to the response of the import activities endpoint
