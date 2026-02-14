@@ -157,6 +157,14 @@ describe('PortfolioCalculator', () => {
               date: parseDate('2024-12-31'),
               value: 2000,
               valueInBaseCurrency: 1800
+            },
+            {
+              // Future-dated balance: should be ignored (issue #6185)
+              accountId,
+              date: parseDate('2050-12-31'),
+              id: randomUUID(),
+              value: 0,
+              valueInBaseCurrency: 0
             }
           ]
         });
