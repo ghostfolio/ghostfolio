@@ -89,14 +89,17 @@ export class JournalPageComponent implements OnInit, OnDestroy {
         realizedProfit: dayData?.realizedProfit ?? 0
       } as JournalDayDialogData,
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+      maxWidth: this.deviceType === 'mobile' ? '100vw' : '50rem',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.loadJournalData();
+      .subscribe((result) => {
+        if (result?.hasChanges) {
+          this.loadJournalData();
+        }
       });
   }
 

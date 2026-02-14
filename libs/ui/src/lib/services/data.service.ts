@@ -432,7 +432,7 @@ export class DataService {
   }
 
   public putJournalEntry({ date, note }: { date: string; note: string }) {
-    return this.http.put(`/api/v1/journal/${date}`, { date, note });
+    return this.http.put(`/api/v1/journal/${date}`, { note });
   }
 
   public deleteJournalEntry({ date }: { date: string }) {

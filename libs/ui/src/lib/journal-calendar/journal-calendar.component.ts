@@ -10,7 +10,8 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +22,7 @@ import {
   endOfMonth,
   format,
   getDay,
+  isToday,
   startOfMonth,
   subMonths
 } from 'date-fns';
@@ -58,10 +60,13 @@ export class GfJournalCalendarComponent implements OnChanges {
   @Output() monthChanged = new EventEmitter<{ month: number; year: number }>();
 
   public calendarWeeks: CalendarDay[][] = [];
-  public weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  public weekDays: string[] = [];
 
   public get monthLabel(): string {
-    return format(new Date(this.year, this.month - 1), 'MMMM yyyy');
+    return new Intl.DateTimeFormat(this.locale ?? 'en-US', {
+      month: 'long',
+      year: 'numeric'
+    }).format(new Date(this.year, this.month - 1));
   }
 
   public get winRate(): number {
@@ -82,8 +87,14 @@ export class GfJournalCalendarComponent implements OnChanges {
     });
   }
 
-  public ngOnChanges() {
-    this.buildCalendar();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes['days'] || changes['month'] || changes['year']) {
+      this.buildCalendar();
+    }
+
+    if (changes['locale']) {
+      this.buildWeekDays();
+    }
   }
 
   public onPreviousMonth() {
@@ -129,7 +140,7 @@ export class GfJournalCalendarComponent implements OnChanges {
   }
 
   public formatCurrency(value: number): string {
-    if (value === 0 || value === undefined || value === null) {
+    if (value === undefined || value === null) {
       return '';
     }
 
@@ -145,11 +156,28 @@ export class GfJournalCalendarComponent implements OnChanges {
     }
   }
 
+  private buildWeekDays() {
+    // Generate locale-aware weekday names (Sunday-start)
+    const baseDate = new Date(2024, 0, 7); // A known Sunday
+
+    this.weekDays = Array.from({ length: 7 }, (_, i) => {
+      const day = new Date(baseDate);
+      day.setDate(baseDate.getDate() + i);
+
+      return new Intl.DateTimeFormat(this.locale ?? 'en-US', {
+        weekday: 'short'
+      }).format(day);
+    });
+  }
+
   private buildCalendar() {
+    if (!this.weekDays.length) {
+      this.buildWeekDays();
+    }
+
     const currentDate = new Date(this.year, this.month - 1);
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
-    const today = new Date();
 
     const daysDataMap = new Map<string, JournalCalendarDataItem>();
 
@@ -181,10 +209,7 @@ export class GfJournalCalendarComponent implements OnChanges {
         date,
         dayOfMonth: date.getDate(),
         isCurrentMonth: true,
-        isToday:
-          date.getDate() === today.getDate() &&
-          date.getMonth() === today.getMonth() &&
-          date.getFullYear() === today.getFullYear()
+        isToday: isToday(date)
       });
     }
 

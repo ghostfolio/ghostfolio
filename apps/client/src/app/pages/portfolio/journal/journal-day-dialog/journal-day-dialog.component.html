@@ -1,7 +1,7 @@
 <gf-dialog-header
   [deviceType]="data.deviceType"
   [title]="dateLabel"
-  (closeButtonClicked)="dialogRef.close()"
+  (closeButtonClicked)="onClose()"
 />
 
 <div class="flex-grow-1 overflow-auto px-3" mat-dialog-content>
@@ -20,7 +20,7 @@
 
     @if (data.realizedProfit !== 0) {
       <div class="performance-metric">
-        <div class="metric-label" i18n>Realized P&amp;L</div>
+        <div class="metric-label" i18n>Dividend &amp; Interest</div>
         <gf-value
           [colorizeSign]="true"
           [isCurrency]="true"
@@ -57,7 +57,7 @@
               <td>
                 <span
                   class="activity-type"
-                  [class]="activity.type?.toLowerCase()"
+                  [ngClass]="activity.type?.toLowerCase()"
                 >
                   {{ activity.type }}
                 </span>
@@ -119,5 +119,5 @@
 
 <gf-dialog-footer
   [deviceType]="data.deviceType"
-  (closeButtonClicked)="dialogRef.close()"
+  (closeButtonClicked)="onClose()"
 />

@@ -101,7 +101,7 @@
             class="calendar-cell day-cell"
             [class.clickable]="day.isCurrentMonth"
             [class.today]="day.isToday"
-            [class]="getDayClass(day)"
+            [ngClass]="getDayClass(day)"
             (click)="onDayClick(day)"
           >
             <div class="day-number">{{ day.dayOfMonth }}</div>
@@ -111,8 +111,10 @@
               </div>
               @if (day.data.activitiesCount > 0) {
                 <div class="day-activities">
-                  {{ day.data.activitiesCount }}
-                  {{ day.data.activitiesCount === 1 ? 'trade' : 'trades' }}
+                  <span i18n>{day.data.activitiesCount, plural,
+                    =1 {1 activity}
+                    other {{{day.data.activitiesCount}} activities}
+                  }</span>
                 </div>
               }
               @if (day.data.hasNote) {

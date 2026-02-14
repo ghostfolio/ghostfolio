@@ -1,7 +1,5 @@
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { Activity, User } from '@ghostfolio/common/interfaces';
-import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { Activity } from '@ghostfolio/common/interfaces';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { DataService } from '@ghostfolio/ui/services';
@@ -25,6 +23,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -45,14 +44,14 @@ export interface JournalDayDialogData {
   imports: [
     CommonModule,
     FormsModule,
-    GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
     GfValueComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
   selector: 'gf-journal-day-dialog',
   styleUrls: ['./journal-day-dialog.component.scss'],
@@ -62,12 +61,13 @@ export class GfJournalDayDialogComponent implements OnInit, OnDestroy {
   public activities: Activity[] = [];
   public date: string;
   public dateLabel: string;
+  public hasChanges = false;
   public isLoadingActivities = true;
   public isLoadingNote = true;
   public isSavingNote = false;
   public note = '';
-  public user: User;
 
+  private originalNote = '';
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -75,21 +75,17 @@ export class GfJournalDayDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: JournalDayDialogData,
     private dataService: DataService,
     public dialogRef: MatDialogRef<GfJournalDayDialogComponent>,
-    private userService: UserService
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnInit() {
     this.date = this.data.date;
-    this.dateLabel = format(parseISO(this.date), 'EEEE, MMMM d, yyyy');
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-          this.changeDetectorRef.markForCheck();
-        }
-      });
+    this.dateLabel = new Intl.DateTimeFormat(this.data.locale ?? 'en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(parseISO(this.date));
 
     this.loadActivities();
     this.loadNote();
@@ -108,29 +104,53 @@ export class GfJournalDayDialogComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe({
           next: () => {
+            this.hasChanges = true;
+            this.originalNote = this.note.trim();
             this.isSavingNote = false;
+            this.snackBar.open($localize`Note saved`, undefined, {
+              duration: 3000
+            });
             this.changeDetectorRef.markForCheck();
           },
           error: () => {
             this.isSavingNote = false;
+            this.snackBar.open($localize`Failed to save note`, undefined, {
+              duration: 5000
+            });
             this.changeDetectorRef.markForCheck();
           }
         });
-    } else {
+    } else if (this.originalNote) {
+      // Only call delete if there was an existing note
       this.dataService
         .deleteJournalEntry({ date: this.date })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe({
           next: () => {
+            this.hasChanges = true;
+            this.originalNote = '';
             this.isSavingNote = false;
+            this.snackBar.open($localize`Note deleted`, undefined, {
+              duration: 3000
+            });
             this.changeDetectorRef.markForCheck();
           },
           error: () => {
             this.isSavingNote = false;
+            this.snackBar.open($localize`Failed to delete note`, undefined, {
+              duration: 5000
+            });
             this.changeDetectorRef.markForCheck();
           }
         });
+    } else {
+      // No existing note and empty input - nothing to do
+      this.isSavingNote = false;
     }
+  }
+
+  public onClose() {
+    this.dialogRef.close({ hasChanges: this.hasChanges });
   }
 
   public ngOnDestroy() {
@@ -141,11 +161,16 @@ export class GfJournalDayDialogComponent implements OnInit, OnDestroy {
   private loadActivities() {
     this.isLoadingActivities = true;
 
+    // Use the year of the selected date as range filter to avoid
+    // fetching all-time activities and missing older dates
+    const year = this.date.substring(0, 4);
+
     this.dataService
       .fetchActivities({
         filters: [],
+        range: year as any,
         skip: 0,
-        take: 50,
+        take: 500,
         sortColumn: 'date',
         sortDirection: 'desc'
       })
@@ -174,11 +199,13 @@ export class GfJournalDayDialogComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (entry) => {
           this.note = entry?.note ?? '';
+          this.originalNote = this.note;
           this.isLoadingNote = false;
           this.changeDetectorRef.markForCheck();
         },
         error: () => {
           this.note = '';
+          this.originalNote = '';
           this.isLoadingNote = false;
           this.changeDetectorRef.markForCheck();
         }

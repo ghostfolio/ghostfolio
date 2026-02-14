@@ -2,6 +2,7 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { CreateOrUpdateJournalEntryDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import {
@@ -25,7 +26,13 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { endOfMonth, format, parseISO, startOfMonth } from 'date-fns';
+import {
+  endOfMonth,
+  format,
+  parseISO,
+  startOfMonth,
+  subMonths
+} from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { JournalService } from './journal.service';
@@ -40,6 +47,7 @@ export class JournalController {
   ) {}
 
   @Get()
+  @HasPermission(permissions.readJournalEntry)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getJournal(
     @Query('month') month: string,
@@ -49,15 +57,30 @@ export class JournalController {
     const monthNum = parseInt(month, 10) - 1;
     const yearNum = parseInt(year, 10);
 
-    if (isNaN(monthNum) || isNaN(yearNum)) {
+    if (
+      isNaN(monthNum) ||
+      isNaN(yearNum) ||
+      monthNum < 0 ||
+      monthNum > 11 ||
+      yearNum < 1970 ||
+      yearNum > 2100
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
       );
     }
 
+    const userCurrency =
+      this.request.user.settings?.settings?.baseCurrency ?? DEFAULT_CURRENCY;
+
     const startDate = startOfMonth(new Date(yearNum, monthNum));
     const endDate = endOfMonth(new Date(yearNum, monthNum));
+
+    // Fetch performance with a baseline that includes the previous month's
+    // last day, so January deltas are computed correctly
+    const performanceFetchStart = subMonths(startDate, 1);
+    const performanceYear = performanceFetchStart.getFullYear();
 
     const [journalEntries, performanceResponse, activitiesResponse] =
       await Promise.all([
@@ -67,17 +90,18 @@ export class JournalController {
           userId
         }),
         this.portfolioService.getPerformance({
-          dateRange: `${yearNum}`,
+          dateRange:
+            `${performanceYear}` === `${yearNum}` ? `${yearNum}` : 'max',
           filters: [],
           impersonationId: undefined,
           userId
         }),
         this.orderService.getOrders({
-          startDate,
           endDate,
           userId,
-          userCurrency: this.request.user.settings?.settings?.baseCurrency,
+          userCurrency,
           includeDrafts: false,
+          startDate: startDate,
           withExcludedAccountsAndActivities: false
         })
       ]);
@@ -104,26 +128,35 @@ export class JournalController {
       }
     }
 
-    // Calculate daily performance deltas
+    // Calculate daily performance deltas (both absolute and percentage)
     const sortedDates = Array.from(daysMap.keys()).sort();
     let previousNetPerformance = 0;
+    let previousNetPerformanceInPercentage = 0;
 
     // Find the chart item just before our month starts to get the baseline
     for (const item of chart) {
       const itemDate = parseISO(item.date);
       if (itemDate < startDate) {
         previousNetPerformance = item.netPerformance ?? 0;
+        previousNetPerformanceInPercentage =
+          item.netPerformanceInPercentage ?? 0;
       }
     }
 
     for (const dateKey of sortedDates) {
       const day = daysMap.get(dateKey);
+
       const currentNetPerformance = day.netPerformance;
       day.netPerformance = currentNetPerformance - previousNetPerformance;
       previousNetPerformance = currentNetPerformance;
+
+      const currentNetPerformanceInPercentage = day.netPerformanceInPercentage;
+      day.netPerformanceInPercentage =
+        currentNetPerformanceInPercentage - previousNetPerformanceInPercentage;
+      previousNetPerformanceInPercentage = currentNetPerformanceInPercentage;
     }
 
-    // Count activities per day and calculate realized profit
+    // Count activities per day and track dividend/interest income
     for (const activity of activities) {
       const dateKey = format(activity.date, DATE_FORMAT);
       let day = daysMap.get(dateKey);
@@ -143,11 +176,10 @@ export class JournalController {
 
       day.activitiesCount++;
 
-      if (
-        activity.type === 'SELL' ||
-        activity.type === 'DIVIDEND' ||
-        activity.type === 'INTEREST'
-      ) {
+      // Track dividend and interest income as realized profit.
+      // SELL activities use gross proceeds (not actual realized gain),
+      // so we exclude them to avoid misleading values.
+      if (activity.type === 'DIVIDEND' || activity.type === 'INTEREST') {
         day.realizedProfit +=
           activity.valueInBaseCurrency ?? activity.value ?? 0;
       }
@@ -173,6 +205,7 @@ export class JournalController {
   }
 
   @Get(':date')
+  @HasPermission(permissions.readJournalEntry)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getJournalEntry(@Param('date') dateString: string) {
     const userId = this.request.user.id;
