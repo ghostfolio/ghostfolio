@@ -11,10 +11,11 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  OnDestroy,
   Output,
-  ViewChild
+  computed,
+  effect,
+  input,
+  viewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -23,7 +24,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, Subscription } from 'rxjs';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfValueComponent } from '../value/value.component';
@@ -46,77 +46,82 @@ import { GfValueComponent } from '../value/value.component';
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })
-export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
-  @Input() hasPermissionToOpenDetails = true;
-  @Input() hasPermissionToShowQuantities = true;
-  @Input() hasPermissionToShowValues = true;
-  @Input() holdings: PortfolioPosition[];
-  @Input() locale = getLocale();
+export class GfHoldingsTableComponent {
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  public readonly hasPermissionToOpenDetails = input(true);
+  public readonly hasPermissionToShowQuantities = input(true);
+  public readonly hasPermissionToShowValues = input(true);
+  public readonly holdings = input.required<PortfolioPosition[]>();
+  public readonly locale = input(getLocale());
+  public readonly paginator = viewChild.required(MatPaginator);
+  public readonly sort = viewChild.required(MatSort);
 
-  public dataSource = new MatTableDataSource<PortfolioPosition>();
-  public displayedColumns = [];
-  public ignoreAssetSubClasses = [AssetSubClass.CASH];
-  public isLoading = true;
-  public routeQueryParams: Subscription;
+  protected readonly dataSource = new MatTableDataSource<PortfolioPosition>([]);
 
-  private unsubscribeSubject = new Subject<void>();
+  protected readonly displayedColumns = computed(() => {
+    const columns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 
-  public ngOnChanges() {
-    this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
-
-    if (this.hasPermissionToShowQuantities) {
-      this.displayedColumns.push('quantity');
+    if (this.hasPermissionToShowQuantities()) {
+      columns.push('quantity');
     }
 
-    if (this.hasPermissionToShowValues) {
-      this.displayedColumns.push('valueInBaseCurrency');
+    if (this.hasPermissionToShowValues()) {
+      columns.push('valueInBaseCurrency');
     }
 
-    this.displayedColumns.push('allocationInPercentage');
+    columns.push('allocationInPercentage');
 
-    if (this.hasPermissionToShowValues) {
-      this.displayedColumns.push('performance');
+    if (this.hasPermissionToShowValues()) {
+      columns.push('performance');
     }
 
-    this.displayedColumns.push('performanceInPercentage');
+    columns.push('performanceInPercentage');
+    return columns;
+  });
 
-    this.isLoading = true;
+  protected readonly ignoreAssetSubClasses: AssetSubClass[] = [
+    AssetSubClass.CASH
+  ];
 
-    this.dataSource = new MatTableDataSource(this.holdings);
-    this.dataSource.paginator = this.paginator;
+  protected readonly isLoading = computed(() => !this.holdings());
+
+  public constructor() {
     this.dataSource.sortingDataAccessor = getLowercase;
 
-    this.dataSource.sort = this.sort;
+    // Reactive data update
+    effect(() => {
+      this.dataSource.data = this.holdings();
+    });
 
-    if (this.holdings) {
-      this.isLoading = false;
-    }
-  }
-
-  public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
-    if (this.hasPermissionToOpenDetails) {
-      this.holdingClicked.emit({ dataSource, symbol });
-    }
-  }
-
-  public onShowAllHoldings() {
-    this.pageSize = Number.MAX_SAFE_INTEGER;
-
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
+    // Reactive view connection
+    effect(() => {
+      this.dataSource.paginator = this.paginator();
+      this.dataSource.sort = this.sort();
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+  protected canShowDetails(holding: PortfolioPosition): boolean {
+    return (
+      this.hasPermissionToOpenDetails() &&
+      !this.ignoreAssetSubClasses.includes(holding.assetSubClass)
+    );
+  }
+
+  protected onOpenHoldingDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    this.holdingClicked.emit({ dataSource, symbol });
+  }
+
+  protected onShowAllHoldings() {
+    this.pageSize = Number.MAX_SAFE_INTEGER;
+
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator();
+    });
   }
 }

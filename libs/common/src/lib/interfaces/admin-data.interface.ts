@@ -7,10 +7,6 @@ export interface AdminData {
     useForExchangeRates: boolean;
   })[];
   settings: { [key: string]: boolean | object | string | string[] };
-
-  /** @deprecated use activitiesCount instead */
-  transactionCount: number;
-
   userCount: number;
   version: string;
 }

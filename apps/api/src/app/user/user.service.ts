@@ -30,7 +30,7 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
-  locale
+  locale as defaultLocale
 } from '@ghostfolio/common/config';
 import {
   User as IUser,
@@ -49,7 +49,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { sortBy, without } from 'lodash';
+import { without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
 @Injectable()
@@ -96,10 +96,17 @@ export class UserService {
     return { accessToken, hashedAccessToken };
   }
 
-  public async getUser(
-    { accounts, id, permissions, settings, subscription }: UserWithSettings,
-    aLocale = locale
-  ): Promise<IUser> {
+  public async getUser({
+    impersonationUserId,
+    locale = defaultLocale,
+    user
+  }: {
+    impersonationUserId: string;
+    locale?: string;
+    user: UserWithSettings;
+  }): Promise<IUser> {
+    const { id, permissions, settings, subscription } = user;
+
     const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
@@ -108,22 +115,31 @@ export class UserService {
         orderBy: { alias: 'asc' },
         where: { granteeUserId: id }
       }),
+      this.prismaService.account.findMany({
+        orderBy: {
+          name: 'asc'
+        },
+        where: {
+          userId: impersonationUserId || user.id
+        }
+      }),
       this.prismaService.order.count({
-        where: { userId: id }
+        where: { userId: impersonationUserId || user.id }
       }),
       this.prismaService.order.findFirst({
         orderBy: {
           date: 'asc'
         },
-        where: { userId: id }
+        where: { userId: impersonationUserId || user.id }
       }),
-      this.tagService.getTagsForUser(id)
+      this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
     const access = userData[0];
-    const activitiesCount = userData[1];
-    const firstActivity = userData[2];
-    let tags = userData[3].filter((tag) => {
+    const accounts = userData[1];
+    const activitiesCount = userData[2];
+    const firstActivity = userData[3];
+    let tags = userData[4].filter((tag) => {
       return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
     });
 
@@ -146,7 +162,6 @@ export class UserService {
     }
 
     return {
-      accounts,
       activitiesCount,
       id,
       permissions,
@@ -160,10 +175,13 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
+      accounts: accounts.sort((a, b) => {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      }),
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
-        locale: (settings.settings as UserSettings)?.locale ?? aLocale
+        locale: (settings.settings as UserSettings)?.locale ?? locale
       }
     };
   }
@@ -516,9 +534,10 @@ export class UserService {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.accounts = sortBy(user.accounts, ({ name }) => {
-      return name.toLowerCase();
+    user.accounts = user.accounts.sort((a, b) => {
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
     });
+
     user.permissions = currentPermissions.sort();
 
     return user;

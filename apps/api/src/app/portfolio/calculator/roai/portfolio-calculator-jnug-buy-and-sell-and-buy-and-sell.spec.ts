@@ -1,5 +1,6 @@
 import {
   activityDummyData,
+  loadExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -13,10 +14,11 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces';
+import { Activity, ExportResponse } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
+import { join } from 'node:path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -46,12 +48,23 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
+  let exportResponse: ExportResponse;
+
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
+
+  beforeAll(() => {
+    exportResponse = loadExportFile(
+      join(
+        __dirname,
+        '../../../../../../../test/import/ok/jnug-buy-and-sell-and-buy-and-sell.json'
+      )
+    );
+  });
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
@@ -79,64 +92,31 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with BALN.SW buy and sell in two activities', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
+    it.only('with JNUG buy and sell', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2025-12-28').getTime());
 
-      const activities: Activity[] = [
-        {
+      const activities: Activity[] = exportResponse.activities.map(
+        (activity) => ({
           ...activityDummyData,
-          date: new Date('2021-11-22'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          feeInBaseCurrency: activity.fee,
           SymbolProfile: {
             ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
+            currency: activity.currency,
+            dataSource: activity.dataSource,
+            name: 'Direxion Daily Junior Gold Miners Index Bull 2X Shares',
+            symbol: activity.symbol
           },
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 142.9
-        },
-        {
-          ...activityDummyData,
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.65,
-          feeInBaseCurrency: 1.65,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          type: 'SELL',
-          unitPriceInAssetProfileCurrency: 136.6
-        },
-        {
-          ...activityDummyData,
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          type: 'SELL',
-          unitPriceInAssetProfileCurrency: 136.6
-        }
-      ];
+          unitPriceInAssetProfileCurrency: activity.unitPrice
+        })
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: exportResponse.user.settings.currency,
         userId: userDummyData.id
       });
 
@@ -160,70 +140,50 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
-            activitiesCount: 3,
+            activitiesCount: 4,
             averagePrice: new Big('0'),
-            currency: 'CHF',
+            currency: 'USD',
             dataSource: 'YAHOO',
-            dateOfFirstActivity: '2021-11-22',
+            dateOfFirstActivity: '2025-12-11',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
-            fee: new Big('3.2'),
-            feeInBaseCurrency: new Big('3.2'),
-            grossPerformance: new Big('-12.6'),
-            grossPerformancePercentage: new Big('-0.04408677396780965649'),
-            grossPerformancePercentageWithCurrencyEffect: new Big(
-              '-0.04408677396780965649'
-            ),
-            grossPerformanceWithCurrencyEffect: new Big('-12.6'),
+            fee: new Big('4'),
+            feeInBaseCurrency: new Big('4'),
+            grossPerformance: new Big('43.95'), // (1890.00 - 1885.05) + (2080.10 - 2041.10)
+            grossPerformanceWithCurrencyEffect: new Big('43.95'), // (1890.00 - 1885.05) + (2080.10 - 2041.10)
             investment: new Big('0'),
             investmentWithCurrencyEffect: new Big('0'),
-            netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('-0.0552834149755073478')
-            },
+            netPerformance: new Big('39.95'), // (1890.00 - 1885.05) + (2080.10 - 2041.10) - 4
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('-15.8')
+              max: new Big('39.95') // (1890.00 - 1885.05) + (2080.10 - 2041.10) - 4
             },
-            marketPrice: 148.9,
-            marketPriceInBaseCurrency: 148.9,
+            marketPrice: 237.8000030517578,
+            marketPriceInBaseCurrency: 237.8000030517578,
             quantity: new Big('0'),
-            symbol: 'BALN.SW',
+            symbol: 'JNUG',
             tags: [],
-            timeWeightedInvestment: new Big('285.80000000000000396627'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '285.80000000000000396627'
-            ),
             valueInBaseCurrency: new Big('0')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('3.2'),
+        totalFeesWithCurrencyEffect: new Big('4'),
         totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('0'),
         totalInvestmentWithCurrencyEffect: new Big('0'),
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
-      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
-        expect.objectContaining({
-          netPerformance: -15.8,
-          netPerformanceInPercentage: -0.05528341497550734703,
-          netPerformanceInPercentageWithCurrencyEffect: -0.05528341497550734703,
-          netPerformanceWithCurrencyEffect: -15.8,
-          totalInvestmentValueWithCurrencyEffect: 0
-        })
-      );
-
       expect(investments).toEqual([
-        { date: '2021-11-22', investment: new Big('285.8') },
-        { date: '2021-11-30', investment: new Big('0') }
+        { date: '2025-12-11', investment: new Big('1885.05') },
+        { date: '2025-12-18', investment: new Big('2041.1') },
+        { date: '2025-12-28', investment: new Big('0') }
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2021-11-01', investment: 0 },
-        { date: '2021-12-01', investment: 0 }
+        { date: '2025-12-01', investment: 0 }
       ]);
 
       expect(investmentsByYear).toEqual([
-        { date: '2021-01-01', investment: 0 }
+        { date: '2025-01-01', investment: 0 }
       ]);
     });
   });

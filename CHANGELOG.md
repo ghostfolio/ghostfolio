@@ -7,15 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
+### Changed
 
-- Added the ability to fetch top holdings for ETF and mutual fund assets from _Yahoo Finance_
+- Improved the routing of the asset profile dialog in the market data section of the admin control panel
+
+## 2.238.0 - 2026-02-12
 
 ### Changed
 
+- Upgraded `ngx-skeleton-loader` from version `11.3.0` to `12.0.0`
+- Upgraded `twitter-api-v2` from version `1.27.0` to `1.29.0`
+
+### Fixed
+
+- Fixed a performance calculation issue by resetting tracking variables when a holding is fully closed
+- Fixed an issue in the annualized performance calculation
+- Fixed an issue with the exchange rate calculation by expanding the date range to cover the full day (start to end of day)
+
+## 2.237.0 - 2026-02-08
+
+### Changed
+
+- Removed the deprecated `transactionCount` in the portfolio calculator and service
+- Refreshed the cryptocurrencies list
+- Upgraded `Nx` from version `22.4.1` to `22.4.5`
+
+### Fixed
+
+- Fixed the accounts of the assistant for the impersonation mode
+- Fixed the tags of the assistant for the impersonation mode
+
+## 2.236.0 - 2026-02-05
+
+### Changed
+
+- Removed the deprecated `transactionCount` in the endpoint `GET api/v1/admin`
+- Upgraded `stripe` from version `20.1.0` to `20.3.0`
+
+### Fixed
+
+- Fixed an exception when fetching the top holdings for ETF and mutual fund assets from _Yahoo Finance_
+
+## 2.235.0 - 2026-02-03
+
+### Added
+
+- Added the ability to fetch top holdings for ETF and mutual fund assets from _Yahoo Finance_
+- Added support for the impersonation mode in the endpoint `GET api/v1/account/:id/balances`
+- Added an action menu to the user detail dialog in the users section of the admin control panel
+
+### Changed
+
+- Optimized the value redaction interceptor for the impersonation mode by introducing `fast-redact`
+- Refactored `showTransactions` in favor of `showActivitiesCount` in the accounts table component
+- Refactored `transactionCount` in favor of `activitiesCount` in the accounts table component
 - Deprecated `transactionCount` in favor of `activitiesCount` in the endpoint `GET api/v1/admin`
 - Removed the deprecated `firstBuyDate` in the portfolio calculator
-- Improved the routing of the asset profile dialog in the market data section of the admin control panel
+- Upgraded `yahoo-finance2` from version `3.11.2` to `3.13.0`
 
 ## 2.234.0 - 2026-01-30
 

@@ -38,6 +38,8 @@ import {
   BarElement,
   CategoryScale,
   Chart,
+  type ChartData,
+  type ChartDataset,
   LinearScale,
   Tooltip
 } from 'chart.js';
@@ -270,7 +272,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'bar'>(this.chartCanvas.nativeElement, {
           data: chartData,
           options: {
             plugins: {
@@ -280,7 +282,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                 callbacks: {
                   footer: (items) => {
                     const totalAmount = items.reduce(
-                      (a, b) => a + b.parsed.y,
+                      (a, b) => a + (b.parsed.y ?? 0),
                       0
                     );
 
@@ -302,8 +304,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     if (context.parsed.y !== null) {
                       label += new Intl.NumberFormat(this.locale, {
                         currency: this.currency,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore: Only supported from ES2020 or later
                         currencyDisplay: 'code',
                         style: 'currency'
                       }).format(context.parsed.y);
@@ -345,9 +345,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     this.isLoading = false;
   }
 
-  private getChartData() {
+  private getChartData(): ChartData<'bar'> {
     const currentYear = new Date().getFullYear();
-    const labels = [];
+    const labels: number[] = [];
 
     // Principal investment amount
     const P: number = this.getP();
@@ -371,13 +371,13 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       labels.push(year);
     }
 
-    const datasetDeposit = {
+    const datasetDeposit: ChartDataset<'bar'> = {
       backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
       data: [],
       label: $localize`Deposit`
     };
 
-    const datasetInterest = {
+    const datasetInterest: ChartDataset<'bar'> = {
       backgroundColor: Color(
         `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`
       )
@@ -387,7 +387,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       label: $localize`Interest`
     };
 
-    const datasetSavings = {
+    const datasetSavings: ChartDataset<'bar'> = {
       backgroundColor: Color(
         `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`
       )

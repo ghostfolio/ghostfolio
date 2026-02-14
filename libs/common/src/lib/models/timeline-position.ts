@@ -93,9 +93,6 @@ export class TimelinePosition {
   @Type(() => Big)
   timeWeightedInvestmentWithCurrencyEffect: Big;
 
-  /** @deprecated use activitiesCount instead */
-  transactionCount: number;
-
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   valueInBaseCurrency: Big;
