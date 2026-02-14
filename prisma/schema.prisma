@@ -134,6 +134,20 @@ model MarketData {
   @@index([symbol])
 }
 
+model JournalEntry {
+  createdAt DateTime @default(now())
+  date      DateTime
+  id        String   @id @default(uuid())
+  note      String
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId    String
+
+  @@unique([userId, date])
+  @@index([date])
+  @@index([userId])
+}
+
 model Order {
   account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId       String?
@@ -259,17 +273,18 @@ model Tag {
 }
 
 model User {
-  accessesGet   Access[]        @relation("accessGet")
-  accessesGive  Access[]        @relation("accessGive")
-  accessToken   String?
-  accounts      Account[]
-  activities    Order[]
-  analytics     Analytics?
-  apiKeys       ApiKey[]
-  authChallenge String?
-  authDevices   AuthDevice[]
-  createdAt     DateTime        @default(now())
-  id            String          @id @default(uuid())
+  accessesGet    Access[]        @relation("accessGet")
+  accessesGive   Access[]        @relation("accessGive")
+  accessToken    String?
+  accounts       Account[]
+  activities     Order[]
+  analytics      Analytics?
+  apiKeys        ApiKey[]
+  authChallenge  String?
+  authDevices    AuthDevice[]
+  createdAt      DateTime        @default(now())
+  id             String          @id @default(uuid())
+  journalEntries JournalEntry[]
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
   settings      Settings?

@@ -1,0 +1,21 @@
+@if (isLoading) {
+  <div class="p-3">
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{ height: '400px', width: '100%' }"
+    />
+  </div>
+} @else {
+  <div class="container p-3">
+    <gf-journal-calendar
+      [baseCurrency]="user?.settings?.baseCurrency"
+      [days]="days"
+      [locale]="user?.settings?.locale"
+      [month]="month"
+      [stats]="stats"
+      [year]="year"
+      (dayClicked)="onDayClicked($event)"
+      (monthChanged)="onMonthChanged($event)"
+    />
+  </div>
+}

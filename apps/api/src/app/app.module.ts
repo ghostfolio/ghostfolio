@@ -47,6 +47,7 @@ import { ExportModule } from './export/export.module';
 import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
+import { JournalModule } from './journal/journal.module';
 import { LogoModule } from './logo/logo.module';
 import { OrderModule } from './order/order.module';
 import { PlatformModule } from './platform/platform.module';
@@ -92,6 +93,7 @@ import { UserModule } from './user/user.module';
     HealthModule,
     ImportModule,
     InfoModule,
+    JournalModule,
     LogoModule,
     MarketDataModule,
     OrderModule,
