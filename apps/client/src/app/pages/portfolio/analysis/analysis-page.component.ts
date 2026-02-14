@@ -2,6 +2,7 @@ import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/be
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -94,6 +95,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public portfolioEvolutionDataLabel = $localize`Investment`;
+  public precision = 2;
   public streaks: PortfolioInvestmentsResponse['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
@@ -317,10 +319,19 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
                 : valueInPercentage
             });
           }
+
           this.performanceDataItemsInPercentage.push({
             date,
             value: netPerformanceInPercentageWithCurrencyEffect
           });
+        }
+
+        if (
+          this.deviceType === 'mobile' &&
+          this.performance.currentValueInBaseCurrency >=
+            NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+        ) {
+          this.precision = 0;
         }
 
         this.isLoadingInvestmentChart = false;

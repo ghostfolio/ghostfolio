@@ -16,7 +16,7 @@ export function transformToMapOfBig({
   return mapOfBig;
 }
 
-export function transformToBig({ value }: { value: string }): Big {
+export function transformToBig({ value }: { value: string }): Big | null {
   if (value === null) {
     return null;
   }

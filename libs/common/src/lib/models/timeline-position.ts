@@ -9,12 +9,15 @@ import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
 export class TimelinePosition {
+  activitiesCount: number;
+
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   averagePrice: Big;
 
   currency: string;
   dataSource: DataSource;
+  dateOfFirstActivity: string;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
@@ -31,8 +34,6 @@ export class TimelinePosition {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   feeInBaseCurrency: Big;
-
-  firstBuyDate: string;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
@@ -91,8 +92,6 @@ export class TimelinePosition {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   timeWeightedInvestmentWithCurrencyEffect: Big;
-
-  transactionCount: number;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

@@ -1,4 +1,3 @@
-import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
@@ -38,7 +37,6 @@ export class InfoService {
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
-    private readonly platformService: PlatformService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly subscriptionService: SubscriptionService,
@@ -103,16 +101,12 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       isUserSignupEnabled,
-      platforms,
       statistics,
       subscriptionOffer
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
       this.propertyService.isUserSignupEnabled(),
-      this.platformService.getPlatforms({
-        orderBy: { name: 'asc' }
-      }),
       this.getStatistics(),
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
@@ -127,7 +121,6 @@ export class InfoService {
       demoAuthToken,
       globalPermissions,
       isReadOnlyMode,
-      platforms,
       statistics,
       subscriptionOffer,
       baseCurrency: DEFAULT_CURRENCY,

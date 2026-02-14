@@ -13,7 +13,14 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
-import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
+import {
+  addMilliseconds,
+  differenceInDays,
+  eachYearOfInterval,
+  format,
+  isBefore,
+  isThisYear
+} from 'date-fns';
 import { cloneDeep, sortBy } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
@@ -619,6 +626,13 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             totalQuantityFromBuyTransactions
           );
 
+      if (totalUnits.eq(0)) {
+        // Reset tracking variables when position is fully closed
+        totalInvestmentFromBuyTransactions = new Big(0);
+        totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
+        totalQuantityFromBuyTransactions = new Big(0);
+      }
+
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log(
           'grossPerformanceFromSells',
@@ -837,15 +851,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       'max',
       'mtd',
       'wtd',
-      'ytd'
-      // TODO:
-      // ...eachYearOfInterval({ end, start })
-      //   .filter((date) => {
-      //     return !isThisYear(date);
-      //   })
-      //   .map((date) => {
-      //     return format(date, 'yyyy');
-      //   })
+      'ytd',
+      ...eachYearOfInterval({ end, start })
+        .filter((date) => {
+          return !isThisYear(date);
+        })
+        .map((date) => {
+          return format(date, 'yyyy');
+        })
     ] as DateRange[]) {
       const dateInterval = getIntervalFromDateRange(dateRange);
       const endDate = dateInterval.endDate;
