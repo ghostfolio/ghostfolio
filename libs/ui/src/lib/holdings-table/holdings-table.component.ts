@@ -106,6 +106,7 @@ export class GfHoldingsTableComponent {
   protected canShowDetails(holding: PortfolioPosition): boolean {
     return (
       this.hasPermissionToOpenDetails() &&
+      !!holding.assetSubClass &&
       !this.ignoreAssetSubClasses.includes(holding.assetSubClass)
     );
   }
