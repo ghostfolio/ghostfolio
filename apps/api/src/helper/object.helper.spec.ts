@@ -1554,6 +1554,7 @@ describe('redactAttributes', () => {
             items: null,
             liabilities: null,
             totalInvestment: null,
+            totalInvestmentValueWithCurrencyEffect: null,
             totalValueInBaseCurrency: null,
             currentNetWorth: null
           }
@@ -3030,6 +3031,7 @@ describe('redactAttributes', () => {
         items: null,
         liabilities: null,
         totalInvestment: null,
+        totalInvestmentValueWithCurrencyEffect: null,
         totalValueInBaseCurrency: null,
         currentNetWorth: null
       }

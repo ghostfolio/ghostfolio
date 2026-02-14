@@ -174,6 +174,7 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
+          totalInvestment: 298.58,
           totalInvestmentValueWithCurrencyEffect: 298.58
         })
       );
