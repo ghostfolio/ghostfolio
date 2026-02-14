@@ -618,6 +618,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     }
   }
 
+  public getRouterLinkToAdminControlMarketDataForDataSourceAndSymbol() {
+    return [
+      ...this.routerLinkAdminControlMarketData,
+      this.SymbolProfile?.dataSource,
+      this.SymbolProfile?.symbol
+    ];
+  }
+
   public onUpdateActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,

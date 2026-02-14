@@ -30,6 +30,16 @@ export const routes: Routes = [
         title: internalRoutes.adminControl.subRoutes.marketData.title
       },
       {
+        path: `${internalRoutes.adminControl.subRoutes.marketData.path}/create`,
+        component: GfAdminMarketDataComponent,
+        title: internalRoutes.adminControl.subRoutes.marketData.title
+      },
+      {
+        path: `${internalRoutes.adminControl.subRoutes.marketData.path}/:dataSource/:symbol`,
+        component: GfAdminMarketDataComponent,
+        title: internalRoutes.adminControl.subRoutes.marketData.title
+      },
+      {
         path: internalRoutes.adminControl.subRoutes.settings.path,
         component: GfAdminSettingsComponent,
         title: internalRoutes.adminControl.subRoutes.settings.title

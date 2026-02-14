@@ -13,6 +13,7 @@ import {
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -157,6 +158,8 @@ export class GfAdminMarketDataComponent
   public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
+  public routerLinkAdminControlMarketData =
+    internalRoutes.adminControl.subRoutes.marketData.routerLink;
   public selection: SelectionModel<Partial<SymbolProfile>>;
   public totalItems = 0;
   public user: User;
@@ -203,22 +206,23 @@ export class GfAdminMarketDataComponent
     this.displayedColumns.push('comment');
     this.displayedColumns.push('actions');
 
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (
-          params['assetProfileDialog'] &&
-          params['dataSource'] &&
-          params['symbol']
-        ) {
-          this.openAssetProfileDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
-        } else if (params['createAssetProfileDialog']) {
-          this.openCreateAssetProfileDialog();
-        }
-      });
+    if (this.route.snapshot.routeConfig.path === 'market-data/create') {
+      this.openCreateAssetProfileDialog();
+    } else {
+      this.route.paramMap
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((paramMap) => {
+          const dataSource = paramMap.get('dataSource') as DataSource;
+          const symbol = paramMap.get('symbol');
+
+          if (dataSource && symbol) {
+            this.openAssetProfileDialog({
+              dataSource,
+              symbol
+            });
+          }
+        });
+    }
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -344,13 +348,13 @@ export class GfAdminMarketDataComponent
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.router.navigate([], {
-      queryParams: {
-        dataSource,
-        symbol,
-        assetProfileDialog: true
-      }
+    this.router.navigate([dataSource, symbol], {
+      relativeTo: this.route
     });
+  }
+
+  public getRouterLinkToAdminControlMarketData(dataSource, symbol) {
+    return [...this.routerLinkAdminControlMarketData, dataSource, symbol];
   }
 
   public ngOnDestroy() {
@@ -453,7 +457,9 @@ export class GfAdminMarketDataComponent
               if (newAssetProfileIdentifier) {
                 this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
               } else {
-                this.router.navigate(['.'], { relativeTo: this.route });
+                this.router.navigate(
+                  internalRoutes.adminControl.subRoutes.marketData.routerLink
+                );
               }
             }
           );
@@ -484,7 +490,7 @@ export class GfAdminMarketDataComponent
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((result) => {
             if (!result) {
-              this.router.navigate(['.'], { relativeTo: this.route });
+              this.router.navigate(['..'], { relativeTo: this.route });
 
               return;
             }
