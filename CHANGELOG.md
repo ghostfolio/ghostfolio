@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
 - Improved the scraper configuration with more detailed error messages
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.1.0` to `13.2.2`
 
 ### Fixed
 
