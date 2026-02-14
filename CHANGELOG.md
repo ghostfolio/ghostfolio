@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the routing of the asset profile dialog in the market data section of the admin control panel
+- Improved the routing of the create asset profile dialog in the market data section of the admin control panel
 
 ## 2.238.0 - 2026-02-12
 
