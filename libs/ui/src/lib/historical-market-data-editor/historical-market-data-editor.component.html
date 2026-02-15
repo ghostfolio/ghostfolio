@@ -17,7 +17,7 @@
             }"
             [title]="
               (`${itemByMonth.key}-${formatDay(i + 1)}`
-                | date: defaultDateFormat) ?? ''
+                | date: defaultDateFormat()) ?? ''
             "
             (click)="
               onOpenMarketDataDetail({

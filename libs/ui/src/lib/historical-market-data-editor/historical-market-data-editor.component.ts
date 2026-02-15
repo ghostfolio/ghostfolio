@@ -12,6 +12,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   EventEmitter,
   input,
   Input,
@@ -72,7 +73,6 @@ export class GfHistoricalMarketDataEditorComponent
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
-  public defaultDateFormat: string;
   public deviceType: string;
   public historicalDataForm = this.formBuilder.group({
     historicalData: this.formBuilder.group({
@@ -93,6 +93,9 @@ export class GfHistoricalMarketDataEditorComponent
   public readonly locale = input(getLocale());
 
   protected readonly days = Array(31);
+  protected readonly defaultDateFormat = computed(() =>
+    getDateFormatString(this.locale())
+  );
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -111,8 +114,6 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    this.defaultDateFormat = getDateFormatString(this.locale());
-
     this.historicalDataItems = this.marketData.map(({ date, marketPrice }) => {
       return {
         date: format(date, DATE_FORMAT),
