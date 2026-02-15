@@ -7,7 +7,8 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -51,6 +52,8 @@ export class GfHistoricalMarketDataEditorDialogComponent
   public readonly data =
     inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
+  protected readonly marketPrice = signal(this.data.marketPrice);
+
   private readonly locale =
     this.data.user.settings.locale ?? inject<string>(MAT_DATE_LOCALE);
   private readonly unsubscribeSubject = new Subject<void>();
@@ -82,14 +85,14 @@ export class GfHistoricalMarketDataEditorDialogComponent
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ marketPrice }) => {
-        this.data.marketPrice = marketPrice;
+        this.marketPrice.set(marketPrice);
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
   public onUpdate() {
-    if (this.data.marketPrice === undefined) {
+    if (this.marketPrice() === undefined) {
       return;
     }
 
@@ -100,7 +103,7 @@ export class GfHistoricalMarketDataEditorDialogComponent
           marketData: [
             {
               date: this.data.dateString,
-              marketPrice: this.data.marketPrice
+              marketPrice: this.marketPrice()
             }
           ]
         },
