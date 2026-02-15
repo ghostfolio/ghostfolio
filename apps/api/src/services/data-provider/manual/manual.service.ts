@@ -105,7 +105,10 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const value = await this.scrape(symbolProfile.scraperConfiguration);
+      const value = await this.scrape({
+        symbol,
+        scraperConfiguration: symbolProfile.scraperConfiguration
+      });
 
       return {
         [symbol]: {
@@ -170,7 +173,10 @@ export class ManualService implements DataProviderInterface {
         symbolProfilesWithScraperConfigurationAndInstantMode.map(
           async ({ scraperConfiguration, symbol }) => {
             try {
-              const marketPrice = await this.scrape(scraperConfiguration);
+              const marketPrice = await this.scrape({
+                scraperConfiguration,
+                symbol
+              });
               return { marketPrice, symbol };
             } catch (error) {
               Logger.error(
@@ -267,13 +273,23 @@ export class ManualService implements DataProviderInterface {
     };
   }
 
-  public async test(scraperConfiguration: ScraperConfiguration) {
-    return this.scrape(scraperConfiguration);
+  public async test({
+    scraperConfiguration,
+    symbol
+  }: {
+    scraperConfiguration: ScraperConfiguration;
+    symbol: string;
+  }) {
+    return this.scrape({ scraperConfiguration, symbol });
   }
 
-  private async scrape(
-    scraperConfiguration: ScraperConfiguration
-  ): Promise<number> {
+  private async scrape({
+    scraperConfiguration,
+    symbol
+  }: {
+    scraperConfiguration: ScraperConfiguration;
+    symbol: string;
+  }): Promise<number> {
     let locale = scraperConfiguration.locale;
 
     const response = await fetch(scraperConfiguration.url, {
@@ -282,6 +298,12 @@ export class ManualService implements DataProviderInterface {
         this.configurationService.get('REQUEST_TIMEOUT')
       )
     });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to scrape the market price for ${symbol} (${this.getName()}): ${response.status} ${response.statusText} at ${scraperConfiguration.url}`
+      );
+    }
 
     let value: string;
 
