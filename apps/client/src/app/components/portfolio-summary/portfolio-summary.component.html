@@ -65,7 +65,11 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.committedFunds"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.totalInvestmentValueWithCurrencyEffect
+        "
       />
     </div>
   </div>
