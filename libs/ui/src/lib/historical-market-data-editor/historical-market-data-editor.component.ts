@@ -13,15 +13,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   EventEmitter,
   inject,
   input,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -44,7 +45,7 @@ import { first, last } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { parse as csvToJson } from 'papaparse';
-import { EMPTY, Subject, takeUntil } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { GfHistoricalMarketDataEditorDialogComponent } from './historical-market-data-editor-dialog/historical-market-data-editor-dialog.component';
@@ -58,7 +59,7 @@ import { HistoricalMarketDataEditorDialogParams } from './historical-market-data
   templateUrl: './historical-market-data-editor.component.html'
 })
 export class GfHistoricalMarketDataEditorComponent
-  implements OnChanges, OnDestroy, OnInit
+  implements OnChanges, OnInit
 {
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -96,6 +97,7 @@ export class GfHistoricalMarketDataEditorComponent
     getDateFormatString(this.locale())
   );
 
+  private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -108,7 +110,6 @@ export class GfHistoricalMarketDataEditorComponent
       };
     })
   );
-  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private dataService: DataService,
@@ -238,7 +239,7 @@ export class GfHistoricalMarketDataEditorComponent
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ withRefresh } = { withRefresh: false }) => {
         this.marketDataChanged.emit(withRefresh);
       });
@@ -271,7 +272,7 @@ export class GfHistoricalMarketDataEditorComponent
             });
             return EMPTY;
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
           this.initializeHistoricalDataForm();
@@ -287,11 +288,6 @@ export class GfHistoricalMarketDataEditorComponent
         }
       );
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private initializeHistoricalDataForm() {
