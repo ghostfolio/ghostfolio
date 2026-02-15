@@ -3,6 +3,9 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
+/**
+ * @deprecated This rule is deprecated in favor of FeeRatioTotalInvestmentVolume
+ */
 export class FeeRatioInitialInvestment extends Rule<Settings> {
   private fees: number;
   private totalInvestment: number;
