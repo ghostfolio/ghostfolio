@@ -14,6 +14,7 @@ import {
   Component,
   computed,
   EventEmitter,
+  inject,
   input,
   Input,
   OnChanges,
@@ -73,7 +74,6 @@ export class GfHistoricalMarketDataEditorComponent
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
-  public deviceType: string;
   public historicalDataForm = this.formBuilder.group({
     historicalData: this.formBuilder.group({
       csvString: ''
@@ -97,17 +97,18 @@ export class GfHistoricalMarketDataEditorComponent
     getDateFormatString(this.locale())
   );
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private dataService: DataService,
-    private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar
-  ) {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-  }
+  ) {}
 
   public ngOnInit() {
     this.initializeHistoricalDataForm();
@@ -231,8 +232,8 @@ export class GfHistoricalMarketDataEditorComponent
         symbol: this.symbol,
         user: this.user
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef

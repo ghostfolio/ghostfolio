@@ -1,5 +1,6 @@
 import { DataService } from '@ghostfolio/ui/services';
 
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +28,9 @@ describe('GfHistoricalMarketDataEditorComponent', () => {
         { provide: DataService, useValue: {} },
         {
           provide: DeviceDetectorService,
-          useValue: { getDeviceInfo: () => ({ deviceType: 'desktop' }) }
+          useValue: {
+            deviceInfo: signal({ deviceType: 'desktop' })
+          }
         },
         { provide: MatDialog, useValue: {} },
         { provide: MatSnackBar, useValue: {} }
