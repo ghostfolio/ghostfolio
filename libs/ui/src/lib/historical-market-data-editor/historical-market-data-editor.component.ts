@@ -72,7 +72,6 @@ export class GfHistoricalMarketDataEditorComponent
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
-  public days = Array(31);
   public defaultDateFormat: string;
   public deviceType: string;
   public historicalDataForm = this.formBuilder.group({
@@ -90,6 +89,8 @@ export class GfHistoricalMarketDataEditorComponent
       };
     };
   } = {};
+
+  protected readonly days = Array(31);
 
   private unsubscribeSubject = new Subject<void>();
 
