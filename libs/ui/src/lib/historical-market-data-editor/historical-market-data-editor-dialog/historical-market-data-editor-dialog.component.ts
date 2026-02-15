@@ -48,10 +48,12 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
 export class GfHistoricalMarketDataEditorDialogComponent
   implements OnDestroy, OnInit
 {
-  public data = inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
+  public readonly data =
+    inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
-  private locale = inject<string>(MAT_DATE_LOCALE);
-  private unsubscribeSubject = new Subject<void>();
+  private readonly locale =
+    this.data.user.settings.locale ?? inject<string>(MAT_DATE_LOCALE);
+  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
@@ -64,7 +66,6 @@ export class GfHistoricalMarketDataEditorDialogComponent
   }
 
   public ngOnInit() {
-    this.locale = this.data.user.settings.locale ?? this.locale;
     this.dateAdapter.setLocale(this.locale);
   }
 
