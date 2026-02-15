@@ -113,7 +113,8 @@ describe('PortfolioService', () => {
         getSnapshot: jest.fn().mockResolvedValue({
           dividendYieldTrailingTwelveMonths: 0.0123,
           currentValueInBaseCurrency: new Big(500),
-          totalInvestment: new Big(400)
+          totalInvestment: new Big(400),
+          totalInvestmentWithCurrencyEffect: new Big(400)
         }),
         getStartDate: jest.fn().mockReturnValue(new Date('2023-01-01'))
       } as unknown as PortfolioCalculator;
@@ -166,6 +167,7 @@ describe('PortfolioService', () => {
         liabilitiesInBaseCurrency: 6,
         totalBuy: 100,
         totalInvestment: 400,
+        totalInvestmentValueWithCurrencyEffect: 400,
         totalSell: 40,
         totalValueInBaseCurrency: 1494
       });
