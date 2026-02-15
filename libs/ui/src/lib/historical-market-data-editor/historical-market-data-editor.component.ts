@@ -78,7 +78,6 @@ export class GfHistoricalMarketDataEditorComponent
       csvString: ''
     })
   });
-  public historicalDataItems: LineChartItem[];
   public marketDataByMonth: {
     [yearMonth: string]: {
       [day: string]: {
@@ -101,6 +100,14 @@ export class GfHistoricalMarketDataEditorComponent
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+  private readonly historicalDataItems = computed<LineChartItem[]>(() =>
+    this.marketData().map(({ date, marketPrice }) => {
+      return {
+        date: format(date, DATE_FORMAT),
+        value: marketPrice
+      };
+    })
+  );
   private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -115,25 +122,16 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    this.historicalDataItems = this.marketData().map(
-      ({ date, marketPrice }) => {
-        return {
-          date: format(date, DATE_FORMAT),
-          value: marketPrice
-        };
-      }
-    );
-
     if (this.dateOfFirstActivity) {
       let date = parseISO(this.dateOfFirstActivity);
 
       const missingMarketData: { date: Date; marketPrice?: number }[] = [];
 
-      if (this.historicalDataItems?.[0]?.date) {
+      if (this.historicalDataItems()?.[0]?.date) {
         while (
           isBefore(
             date,
-            parse(this.historicalDataItems[0].date, DATE_FORMAT, new Date())
+            parse(this.historicalDataItems()[0].date, DATE_FORMAT, new Date())
           )
         ) {
           missingMarketData.push({
