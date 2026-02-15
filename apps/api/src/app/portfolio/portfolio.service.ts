@@ -14,6 +14,7 @@ import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/model
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { FeeRatioTotalInvestmentVolume } from '@ghostfolio/api/models/rules/fees/fee-ratio-total-investment-volume';
 import { BuyingPower } from '@ghostfolio/api/models/rules/liquidity/buying-power';
 import { RegionalMarketClusterRiskAsiaPacific } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/asia-pacific';
 import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/emerging-markets';
@@ -1007,7 +1008,8 @@ export class PortfolioService {
           netPerformancePercentage: 0,
           netPerformancePercentageWithCurrencyEffect: 0,
           netPerformanceWithCurrencyEffect: 0,
-          totalInvestment: 0
+          totalInvestment: 0,
+          totalInvestmentValueWithCurrencyEffect: 0
         }
       };
     }
@@ -1038,6 +1040,7 @@ export class PortfolioService {
       netPerformanceWithCurrencyEffect,
       netWorth,
       totalInvestment,
+      totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
     } = chart?.at(-1) ?? {
       netPerformance: 0,
@@ -1058,6 +1061,7 @@ export class PortfolioService {
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
+        totalInvestmentValueWithCurrencyEffect,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
         netPerformancePercentage: netPerformanceInPercentage,
@@ -1311,6 +1315,13 @@ export class PortfolioService {
               this.i18nService,
               userSettings.language,
               summary.committedFunds,
+              summary.fees
+            ),
+            new FeeRatioTotalInvestmentVolume(
+              this.exchangeRateDataService,
+              this.i18nService,
+              userSettings.language,
+              summary.totalBuy + summary.totalSell,
               summary.fees
             )
           ],
@@ -1860,8 +1871,11 @@ export class PortfolioService {
       }
     }
 
-    const { currentValueInBaseCurrency, totalInvestment } =
-      await portfolioCalculator.getSnapshot();
+    const {
+      currentValueInBaseCurrency,
+      totalInvestment,
+      totalInvestmentWithCurrencyEffect
+    } = await portfolioCalculator.getSnapshot();
 
     const { performance } = await this.getPerformance({
       impersonationId,
@@ -2004,6 +2018,8 @@ export class PortfolioService {
       interestInBaseCurrency: interest.toNumber(),
       liabilitiesInBaseCurrency: liabilities.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
+      totalInvestmentValueWithCurrencyEffect:
+        totalInvestmentWithCurrencyEffect.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
   }

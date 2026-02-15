@@ -5,16 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.239.0 - 2026-02-15
+
+### Added
+
+- Added a new static portfolio analysis rule based on the total investment volume: _Fees_ (Fee Ratio)
+- Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page with information on derived currencies
 
 ### Changed
 
+- Deprecated the existing static portfolio analysis rule: _Fees_ (Fee Ratio)
 - Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
 - Improved the scraper configuration with more detailed error messages
+- Improved the language localization for German (`de`)
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.1.0` to `13.2.2`
 - Upgraded `cheerio` from version `1.0.0` to `1.2.0`
 
 ### Fixed
 
+- Fixed the investment value by including currency effects in the portfolio summary tab on the home page
 - Added the missing `valueInBaseCurrency` to the response of the import activities endpoint
 
 ## 2.238.0 - 2026-02-12
