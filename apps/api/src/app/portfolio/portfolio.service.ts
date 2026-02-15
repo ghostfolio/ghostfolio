@@ -1007,7 +1007,8 @@ export class PortfolioService {
           netPerformancePercentage: 0,
           netPerformancePercentageWithCurrencyEffect: 0,
           netPerformanceWithCurrencyEffect: 0,
-          totalInvestment: 0
+          totalInvestment: 0,
+          totalInvestmentValueWithCurrencyEffect: 0
         }
       };
     }
@@ -1038,6 +1039,7 @@ export class PortfolioService {
       netPerformanceWithCurrencyEffect,
       netWorth,
       totalInvestment,
+      totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
     } = chart?.at(-1) ?? {
       netPerformance: 0,
@@ -1058,6 +1060,7 @@ export class PortfolioService {
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
+        totalInvestmentValueWithCurrencyEffect,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
         netPerformancePercentage: netPerformanceInPercentage,
@@ -1860,8 +1863,11 @@ export class PortfolioService {
       }
     }
 
-    const { currentValueInBaseCurrency, totalInvestment } =
-      await portfolioCalculator.getSnapshot();
+    const {
+      currentValueInBaseCurrency,
+      totalInvestment,
+      totalInvestmentWithCurrencyEffect
+    } = await portfolioCalculator.getSnapshot();
 
     const { performance } = await this.getPerformance({
       impersonationId,
@@ -2004,6 +2010,8 @@ export class PortfolioService {
       interestInBaseCurrency: interest.toNumber(),
       liabilitiesInBaseCurrency: liabilities.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
+      totalInvestmentValueWithCurrencyEffect:
+        totalInvestmentWithCurrencyEffect.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
   }
