@@ -8,6 +8,7 @@ import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,6 +57,11 @@ import { HistoricalMarketDataEditorDialogParams } from './historical-market-data
 export class GfHistoricalMarketDataEditorComponent
   implements OnChanges, OnDestroy, OnInit
 {
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
+
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
@@ -77,14 +83,13 @@ export class GfHistoricalMarketDataEditorComponent
   public historicalDataItems: LineChartItem[];
   public marketDataByMonth: {
     [yearMonth: string]: {
-      [day: string]: Pick<MarketData, 'date' | 'marketPrice'> & { day: number };
+      [day: string]: {
+        date: Date;
+        day: number;
+        marketPrice?: number;
+      };
     };
   } = {};
-
-  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
-    new Date(),
-    DATE_FORMAT
-  )};123.45`;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -115,7 +120,7 @@ export class GfHistoricalMarketDataEditorComponent
     if (this.dateOfFirstActivity) {
       let date = parseISO(this.dateOfFirstActivity);
 
-      const missingMarketData: Partial<MarketData>[] = [];
+      const missingMarketData: { date: Date; marketPrice?: number }[] = [];
 
       if (this.historicalDataItems?.[0]?.date) {
         while (
@@ -135,7 +140,8 @@ export class GfHistoricalMarketDataEditorComponent
 
       const marketDataItems = [...missingMarketData, ...this.marketData];
 
-      if (!isToday(last(marketDataItems)?.date)) {
+      const lastDate = last(marketDataItems)?.date;
+      if (!lastDate || !isToday(lastDate)) {
         marketDataItems.push({ date: new Date() });
       }
 
@@ -160,21 +166,26 @@ export class GfHistoricalMarketDataEditorComponent
 
       // Fill up missing months
       const dates = Object.keys(this.marketDataByMonth).sort();
+      const startDateString = first(dates);
       const startDate = min([
         parseISO(this.dateOfFirstActivity),
-        parseISO(first(dates))
+        ...(startDateString ? [parseISO(startDateString)] : [])
       ]);
-      const endDate = parseISO(last(dates));
+      const endDateString = last(dates);
 
-      let currentDate = startDate;
+      if (endDateString) {
+        const endDate = parseISO(endDateString);
 
-      while (isBefore(currentDate, endDate)) {
-        const key = format(currentDate, 'yyyy-MM');
-        if (!this.marketDataByMonth[key]) {
-          this.marketDataByMonth[key] = {};
+        let currentDate = startDate;
+
+        while (isBefore(currentDate, endDate)) {
+          const key = format(currentDate, 'yyyy-MM');
+          if (!this.marketDataByMonth[key]) {
+            this.marketDataByMonth[key] = {};
+          }
+
+          currentDate = addMonths(currentDate, 1);
         }
-
-        currentDate = addMonths(currentDate, 1);
       }
     }
   }
@@ -201,7 +212,8 @@ export class GfHistoricalMarketDataEditorComponent
 
     const dialogRef = this.dialog.open<
       GfHistoricalMarketDataEditorDialogComponent,
-      HistoricalMarketDataEditorDialogParams
+      HistoricalMarketDataEditorDialogParams,
+      { withRefresh: boolean }
     >(GfHistoricalMarketDataEditorDialogComponent, {
       data: {
         marketPrice,
@@ -225,15 +237,15 @@ export class GfHistoricalMarketDataEditorComponent
 
   public onImportHistoricalData() {
     try {
-      const marketData = csvToJson(
-        this.historicalDataForm.controls['historicalData'].controls['csvString']
-          .value,
+      const marketData = csvToJson<UpdateMarketDataDto>(
+        this.historicalDataForm.controls.historicalData.controls.csvString
+          .value ?? '',
         {
           dynamicTyping: true,
           header: true,
           skipEmptyLines: true
         }
-      ).data as UpdateMarketDataDto[];
+      ).data;
 
       this.dataService
         .postMarketData({
@@ -244,7 +256,7 @@ export class GfHistoricalMarketDataEditorComponent
           symbol: this.symbol
         })
         .pipe(
-          catchError(({ error, message }) => {
+          catchError(({ error, message }: HttpErrorResponse) => {
             this.snackBar.open(`${error}: ${message[0]}`, undefined, {
               duration: ms('3 seconds')
             });

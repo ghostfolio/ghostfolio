@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  Inject,
+  inject,
   OnDestroy,
   OnInit
 } from '@angular/core';
@@ -48,23 +48,23 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
 export class GfHistoricalMarketDataEditorDialogComponent
   implements OnDestroy, OnInit
 {
+  public data = inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
+
+  private locale = inject<string>(MAT_DATE_LOCALE);
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA)
-    public data: HistoricalMarketDataEditorDialogParams,
     private dataService: DataService,
-    private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>,
-    @Inject(MAT_DATE_LOCALE) private locale: string
+    private dateAdapter: DateAdapter<Date, string>,
+    public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>
   ) {
     addIcons({ calendarClearOutline, refreshOutline });
   }
 
   public ngOnInit() {
-    this.locale = this.data.user?.settings?.locale;
+    this.locale = this.data.user.settings.locale ?? this.locale;
     this.dateAdapter.setLocale(this.locale);
   }
 
@@ -88,6 +88,10 @@ export class GfHistoricalMarketDataEditorDialogComponent
   }
 
   public onUpdate() {
+    if (this.data.marketPrice === undefined) {
+      return;
+    }
+
     this.dataService
       .postMarketData({
         dataSource: this.data.dataSource,
