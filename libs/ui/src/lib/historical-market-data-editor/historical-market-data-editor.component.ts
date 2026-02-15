@@ -191,6 +191,10 @@ export class GfHistoricalMarketDataEditorComponent
     }
   }
 
+  public formatDay(day: number): string {
+    return day < 10 ? `0${day}` : `${day}`;
+  }
+
   public isDateOfInterest(aDateString: string) {
     // Date is valid and in the past
     const date = parse(aDateString, DATE_FORMAT, new Date());
