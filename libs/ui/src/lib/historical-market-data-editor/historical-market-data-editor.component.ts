@@ -68,7 +68,6 @@ export class GfHistoricalMarketDataEditorComponent
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
-  @Input() marketData: MarketData[];
   @Input() symbol: string;
   @Input() user: User;
 
@@ -91,6 +90,7 @@ export class GfHistoricalMarketDataEditorComponent
   } = {};
 
   public readonly locale = input(getLocale());
+  public readonly marketData = input.required<MarketData[]>();
 
   protected readonly days = Array(31);
   protected readonly defaultDateFormat = computed(() =>
@@ -115,12 +115,14 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    this.historicalDataItems = this.marketData.map(({ date, marketPrice }) => {
-      return {
-        date: format(date, DATE_FORMAT),
-        value: marketPrice
-      };
-    });
+    this.historicalDataItems = this.marketData().map(
+      ({ date, marketPrice }) => {
+        return {
+          date: format(date, DATE_FORMAT),
+          value: marketPrice
+        };
+      }
+    );
 
     if (this.dateOfFirstActivity) {
       let date = parseISO(this.dateOfFirstActivity);
@@ -143,7 +145,7 @@ export class GfHistoricalMarketDataEditorComponent
         }
       }
 
-      const marketDataItems = [...missingMarketData, ...this.marketData];
+      const marketDataItems = [...missingMarketData, ...this.marketData()];
 
       const lastDate = last(marketDataItems)?.date;
       if (!lastDate || !isToday(lastDate)) {
