@@ -13,6 +13,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  input,
   Input,
   OnChanges,
   OnDestroy,
@@ -65,7 +66,6 @@ export class GfHistoricalMarketDataEditorComponent
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
-  @Input() locale = getLocale();
   @Input() marketData: MarketData[];
   @Input() symbol: string;
   @Input() user: User;
@@ -90,6 +90,8 @@ export class GfHistoricalMarketDataEditorComponent
     };
   } = {};
 
+  public readonly locale = input(getLocale());
+
   protected readonly days = Array(31);
 
   private unsubscribeSubject = new Subject<void>();
@@ -109,7 +111,7 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    this.defaultDateFormat = getDateFormatString(this.locale);
+    this.defaultDateFormat = getDateFormatString(this.locale());
 
     this.historicalDataItems = this.marketData.map(({ date, marketPrice }) => {
       return {
