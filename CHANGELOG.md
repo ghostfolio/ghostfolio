@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a new static portfolio analysis rule based on the total investment volume: _Fees_ (Fee Ratio)
 - Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page with information on derived currencies
 
 ### Changed
 
+- Deprecated the existing static portfolio analysis rule: _Fees_ (Fee Ratio)
 - Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
 - Improved the scraper configuration with more detailed error messages
 - Upgraded `cheerio` from version `1.0.0` to `1.2.0`
