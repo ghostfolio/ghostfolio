@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page with information on derived currencies
+
 ### Changed
 
 - Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
