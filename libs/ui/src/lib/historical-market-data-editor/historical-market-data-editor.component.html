@@ -3,25 +3,24 @@
     <div class="d-flex">
       <div class="date mr-1 text-nowrap">{{ itemByMonth.key }}</div>
       <div class="align-items-center d-flex flex-grow-1 px-1">
-        @for (dayItem of days; track dayItem; let i = $index) {
+        @for (day of days; track day) {
           <div
             class="day"
             [ngClass]="{
               'cursor-pointer valid': isDateOfInterest(
-                `${itemByMonth.key}-${formatDay(i + 1)}`
+                `${itemByMonth.key}-${formatDay(day)}`
               ),
               available:
-                marketDataByMonth[itemByMonth.key][formatDay(i + 1)]
-                  ?.marketPrice,
-              today: isToday(`${itemByMonth.key}-${formatDay(i + 1)}`)
+                marketDataByMonth[itemByMonth.key][formatDay(day)]?.marketPrice,
+              today: isToday(`${itemByMonth.key}-${formatDay(day)}`)
             }"
             [title]="
-              (`${itemByMonth.key}-${formatDay(i + 1)}`
+              (`${itemByMonth.key}-${formatDay(day)}`
                 | date: defaultDateFormat()) ?? ''
             "
             (click)="
               onOpenMarketDataDetail({
-                day: formatDay(i + 1),
+                day: formatDay(day),
                 yearMonth: itemByMonth.key
               })
             "

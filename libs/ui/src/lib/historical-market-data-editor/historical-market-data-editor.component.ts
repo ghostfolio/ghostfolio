@@ -91,7 +91,7 @@ export class GfHistoricalMarketDataEditorComponent
   public readonly locale = input(getLocale());
   public readonly marketData = input.required<MarketData[]>();
 
-  protected readonly days = Array(31);
+  protected readonly days = Array.from({ length: 31 }, (_, i) => i + 1);
   protected readonly defaultDateFormat = computed(() =>
     getDateFormatString(this.locale())
   );
