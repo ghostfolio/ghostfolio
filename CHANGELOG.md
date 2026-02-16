@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for the cryptocurrency _Sky_
 
+### Changed
+
+- Refreshed the cryptocurrencies list
+
 ## 2.239.0 - 2026-02-15
 
 ### Added
