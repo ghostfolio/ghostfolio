@@ -43,7 +43,7 @@
     "start:production": "npm run database:migrate && npm run database:seed && node main",
     "start:server": "nx run api:copy-assets && nx run api:serve --watch",
     "start:storybook": "nx run ui:storybook",
-    "test": "npm run test:api && npm run test:common",
+    "test": "npx dotenv-cli -e .env.example -- npx nx run-many --target=test --all --parallel=4",
     "test:api": "npx dotenv-cli -e .env.example -- nx test api",
     "test:common": "npx dotenv-cli -e .env.example -- nx test common",
     "test:ui": "npx dotenv-cli -e .env.example -- nx test ui",
