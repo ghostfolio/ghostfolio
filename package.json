@@ -46,6 +46,7 @@
     "test": "npm run test:api && npm run test:common",
     "test:api": "npx dotenv-cli -e .env.example -- nx test api",
     "test:common": "npx dotenv-cli -e .env.example -- nx test common",
+    "test:ui": "npx dotenv-cli -e .env.example -- nx test ui",
     "test:single": "nx run api:test --test-file object.helper.spec.ts",
     "ts-node": "ts-node",
     "update": "nx migrate latest",
