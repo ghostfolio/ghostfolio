@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for the cryptocurrency _Sky_
+- Added a new market data preset (`WITHOUT_ACTIVITIES`) in the markets section of the admin control panel to filter asset profiles without activities
 
 ### Changed
 
