@@ -442,6 +442,10 @@ export class AdminService {
           marketData = marketData.filter(({ sectorsCount }) => {
             return sectorsCount === 0;
           });
+        } else if (presetId === 'WITHOUT_ACTIVITIES') {
+          marketData = marketData.filter(({ activitiesCount }) => {
+            return activitiesCount === 0;
+          });
         }
 
         count = marketData.length;
