@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the validation for the create activity endpoint with the existing import activity logic
 - Upgraded `marked` from version `17.0.1` to `17.0.2`
 - Upgraded `ngx-markdown` from version `21.0.1` to `21.1.0`
 
