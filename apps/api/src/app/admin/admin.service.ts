@@ -205,6 +205,8 @@ export class AdminService {
     sortDirection?: Prisma.SortOrder;
     take?: number;
   }): Promise<AdminMarketData> {
+    const MARKET_DATA_QUERY_SYMBOL_CHUNK_SIZE = 5000;
+
     let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
       [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
@@ -225,6 +227,10 @@ export class AdminService {
       presetId === 'ETF_WITHOUT_SECTORS'
     ) {
       filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
+    } else if (presetId === 'WITHOUT_ACTIVITIES') {
+      where.activities = {
+        none: {}
+      };
     }
 
     const searchQuery = filters.find(({ type }) => {
@@ -316,27 +322,47 @@ export class AdminService {
       const assetProfiles = symbolProfileResult[0];
       let count = symbolProfileResult[1];
 
-      const lastMarketPrices = await this.prismaService.marketData.findMany({
-        distinct: ['dataSource', 'symbol'],
-        orderBy: { date: 'desc' },
-        select: {
-          dataSource: true,
-          marketPrice: true,
-          symbol: true
-        },
-        where: {
-          dataSource: {
-            in: assetProfiles.map(({ dataSource }) => {
-              return dataSource;
-            })
-          },
-          symbol: {
-            in: assetProfiles.map(({ symbol }) => {
-              return symbol;
-            })
-          }
-        }
-      });
+      const dataSources = [
+        ...new Set(assetProfiles.map(({ dataSource }) => dataSource))
+      ];
+      const symbols = [...new Set(assetProfiles.map(({ symbol }) => symbol))];
+      const symbolChunks: string[][] = [];
+
+      for (
+        let chunkStartIndex = 0;
+        chunkStartIndex < symbols.length;
+        chunkStartIndex += MARKET_DATA_QUERY_SYMBOL_CHUNK_SIZE
+      ) {
+        symbolChunks.push(
+          symbols.slice(
+            chunkStartIndex,
+            chunkStartIndex + MARKET_DATA_QUERY_SYMBOL_CHUNK_SIZE
+          )
+        );
+      }
+
+      const lastMarketPriceResults = await Promise.all(
+        symbolChunks.map((symbolChunk) => {
+          return this.prismaService.marketData.findMany({
+            distinct: ['dataSource', 'symbol'],
+            orderBy: { date: 'desc' },
+            select: {
+              dataSource: true,
+              marketPrice: true,
+              symbol: true
+            },
+            where: {
+              dataSource: {
+                in: dataSources
+              },
+              symbol: {
+                in: symbolChunk
+              }
+            }
+          });
+        })
+      );
+      const lastMarketPrices = lastMarketPriceResults.flat();
 
       const lastMarketPriceMap = new Map<string, number>();
 
@@ -433,21 +459,15 @@ export class AdminService {
         )
       );
 
-      if (presetId) {
-        if (presetId === 'ETF_WITHOUT_COUNTRIES') {
-          marketData = marketData.filter(({ countriesCount }) => {
-            return countriesCount === 0;
-          });
-        } else if (presetId === 'ETF_WITHOUT_SECTORS') {
-          marketData = marketData.filter(({ sectorsCount }) => {
-            return sectorsCount === 0;
-          });
-        } else if (presetId === 'WITHOUT_ACTIVITIES') {
-          marketData = marketData.filter(({ activitiesCount }) => {
-            return activitiesCount === 0;
-          });
-        }
-
+      if (presetId === 'ETF_WITHOUT_COUNTRIES') {
+        marketData = marketData.filter(({ countriesCount }) => {
+          return countriesCount === 0;
+        });
+        count = marketData.length;
+      } else if (presetId === 'ETF_WITHOUT_SECTORS') {
+        marketData = marketData.filter(({ sectorsCount }) => {
+          return sectorsCount === 0;
+        });
         count = marketData.length;
       }
 
