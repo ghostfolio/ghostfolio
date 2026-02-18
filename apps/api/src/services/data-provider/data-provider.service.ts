@@ -190,7 +190,7 @@ export class DataProviderService implements OnModuleInit {
 
   public async validateActivities({
     activitiesDto,
-    assetProfilesDto,
+    assetProfilesWithMarketDataDto,
     maxActivitiesToImport,
     user
   }: {
@@ -198,7 +198,7 @@ export class DataProviderService implements OnModuleInit {
       Partial<CreateOrderDto>,
       'currency' | 'dataSource' | 'symbol' | 'type'
     >[];
-    assetProfilesDto?: ImportDataDto['assetProfiles'];
+    assetProfilesWithMarketDataDto?: ImportDataDto['assetProfiles'];
     maxActivitiesToImport: number;
     user: UserWithSettings;
   }) {
@@ -212,9 +212,10 @@ export class DataProviderService implements OnModuleInit {
 
     const dataSources = await this.getDataSources();
 
-    for (const [index, activity] of activitiesDto.entries()) {
-      const { currency, dataSource, symbol, type } = activity;
-
+    for (const [
+      index,
+      { currency, dataSource, symbol, type }
+    ] of activitiesDto.entries()) {
       const activityPath =
         maxActivitiesToImport === 1 ? 'activity' : `activities.${index}`;
 
@@ -244,11 +245,13 @@ export class DataProviderService implements OnModuleInit {
 
       if (!assetProfiles[assetProfileIdentifier]) {
         if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          const assetProfileInImport = assetProfilesDto?.find((profile) => {
-            return (
-              profile.dataSource === dataSource && profile.symbol === symbol
-            );
-          });
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
 
           assetProfiles[assetProfileIdentifier] = {
             currency,
@@ -274,11 +277,13 @@ export class DataProviderService implements OnModuleInit {
         } catch {}
 
         if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfilesDto?.find((profile) => {
-            return (
-              profile.dataSource === dataSource && profile.symbol === symbol
-            );
-          });
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
 
           if (assetProfileInImport) {
             Object.assign(assetProfile, assetProfileInImport);
@@ -287,7 +292,7 @@ export class DataProviderService implements OnModuleInit {
 
         if (!assetProfile?.name) {
           throw new Error(
-            `${activityPath}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
         }
 

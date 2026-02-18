@@ -395,9 +395,9 @@ export class ImportService {
 
     const assetProfiles = await this.dataProviderService.validateActivities({
       activitiesDto,
+      assetProfilesWithMarketDataDto,
       maxActivitiesToImport,
-      user,
-      assetProfilesDto: assetProfilesWithMarketDataDto
+      user
     });
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
