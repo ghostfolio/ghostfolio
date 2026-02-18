@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a _No Activities_ preset to the historical market data table of the admin control panel
 - Added support for custom cryptocurrencies defined in the database
 - Added support for the cryptocurrency _Sky_
 
