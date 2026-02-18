@@ -142,8 +142,8 @@ export class GfAdminMarketDataComponent
       type: 'PRESET_ID' as Filter['type']
     },
     {
-      id: 'WITHOUT_ACTIVITIES',
-      label: $localize`Without Activities`,
+      id: 'NO_ACTIVITIES',
+      label: $localize`No Activities`,
       type: 'PRESET_ID' as Filter['type']
     }
   ];
