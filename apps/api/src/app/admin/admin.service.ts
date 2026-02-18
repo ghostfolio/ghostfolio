@@ -225,6 +225,10 @@ export class AdminService {
       presetId === 'ETF_WITHOUT_SECTORS'
     ) {
       filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
+    } else if (presetId === 'NO_ACTIVITIES') {
+      where.activities = {
+        none: {}
+      };
     }
 
     const searchQuery = filters.find(({ type }) => {

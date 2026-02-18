@@ -140,6 +140,11 @@ export class GfAdminMarketDataComponent
       id: 'ETF_WITHOUT_SECTORS',
       label: $localize`ETFs without Sectors`,
       type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'NO_ACTIVITIES',
+      label: $localize`No Activities`,
+      type: 'PRESET_ID' as Filter['type']
     }
   ];
   public benchmarks: Partial<SymbolProfile>[];
