@@ -13,9 +13,9 @@ import {
   OnChanges,
   OnInit,
   Output,
-  ViewChild,
   inject,
-  input
+  input,
+  viewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -66,7 +66,14 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   @Output() accountBalanceCreated = new EventEmitter<CreateAccountBalanceDto>();
   @Output() accountBalanceDeleted = new EventEmitter<string>();
 
-  @ViewChild(MatSort) sort: MatSort;
+  public readonly accountBalances =
+    input.required<AccountBalancesResponse['balances']>();
+  public readonly accountCurrency = input.required<string>();
+  public readonly accountId = input.required<string>();
+  public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
+  public readonly locale = input(getLocale());
+  public readonly showActions = input(true);
+  public readonly sort = viewChild(MatSort);
 
   public accountBalanceForm = new FormGroup({
     balance: new FormControl(0, (control) => Validators.required(control)),
@@ -76,14 +83,6 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   public dataSource = new MatTableDataSource<
     AccountBalancesResponse['balances'][0]
   >();
-
-  public readonly accountBalances =
-    input.required<AccountBalancesResponse['balances']>();
-  public readonly accountCurrency = input.required<string>();
-  public readonly accountId = input.required<string>();
-  public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
-  public readonly locale = input(getLocale());
-  public readonly showActions = input(true);
 
   private dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private notificationService = inject(NotificationService);
@@ -100,7 +99,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
     if (this.accountBalances()) {
       this.dataSource = new MatTableDataSource(this.accountBalances());
 
-      this.dataSource.sort = this.sort;
+      this.dataSource.sort = this.sort();
       this.dataSource.sortingDataAccessor = get;
     }
   }
