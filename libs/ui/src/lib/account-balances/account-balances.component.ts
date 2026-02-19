@@ -12,7 +12,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild
@@ -40,7 +39,6 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { get } from 'lodash';
-import { Subject } from 'rxjs';
 
 import { GfValueComponent } from '../value';
 
@@ -63,9 +61,7 @@ import { GfValueComponent } from '../value';
   styleUrls: ['./account-balances.component.scss'],
   templateUrl: './account-balances.component.html'
 })
-export class GfAccountBalancesComponent
-  implements OnChanges, OnDestroy, OnInit
-{
+export class GfAccountBalancesComponent implements OnChanges, OnInit {
   @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountCurrency: string;
   @Input() accountId: string;
@@ -88,8 +84,6 @@ export class GfAccountBalancesComponent
 
   public displayedColumns: string[] = ['date', 'value', 'actions'];
   public Validators = Validators;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private dateAdapter: DateAdapter<Date, string>,
@@ -146,10 +140,5 @@ export class GfAccountBalancesComponent
     }
 
     this.accountBalanceCreated.emit(accountBalance);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
