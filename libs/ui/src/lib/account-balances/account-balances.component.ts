@@ -78,8 +78,8 @@ export class GfAccountBalancesComponent
   @ViewChild(MatSort) sort: MatSort;
 
   public accountBalanceForm = new FormGroup({
-    balance: new FormControl(0, Validators.required),
-    date: new FormControl(new Date(), Validators.required)
+    balance: new FormControl(0, (control) => Validators.required(control)),
+    date: new FormControl(new Date(), (control) => Validators.required(control))
   });
 
   public dataSource = new MatTableDataSource<
