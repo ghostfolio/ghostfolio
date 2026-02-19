@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   OnChanges,
   OnInit,
   Output,
@@ -64,8 +63,6 @@ import { GfValueComponent } from '../value';
   templateUrl: './account-balances.component.html'
 })
 export class GfAccountBalancesComponent implements OnChanges, OnInit {
-  @Input() accountBalances: AccountBalancesResponse['balances'];
-
   @Output() accountBalanceCreated = new EventEmitter<CreateAccountBalanceDto>();
   @Output() accountBalanceDeleted = new EventEmitter<string>();
 
@@ -80,6 +77,8 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
     AccountBalancesResponse['balances'][0]
   >();
 
+  public readonly accountBalances =
+    input.required<AccountBalancesResponse['balances']>();
   public readonly accountCurrency = input.required<string>();
   public readonly accountId = input.required<string>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
@@ -98,8 +97,8 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   }
 
   public ngOnChanges() {
-    if (this.accountBalances) {
-      this.dataSource = new MatTableDataSource(this.accountBalances);
+    if (this.accountBalances()) {
+      this.dataSource = new MatTableDataSource(this.accountBalances());
 
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = get;
