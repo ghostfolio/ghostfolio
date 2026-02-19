@@ -3359,7 +3359,7 @@
       </trans-unit>
       <trans-unit id="9218541487912911620" datatype="html">
         <source>No Activities</source>
-        <target state="new">No Activities</target>
+        <target state="translated">Keine Aktivitäten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">146</context>
