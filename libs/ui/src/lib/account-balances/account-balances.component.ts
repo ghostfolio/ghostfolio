@@ -83,7 +83,6 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   >();
 
   public displayedColumns: string[] = ['date', 'value', 'actions'];
-  public Validators = Validators;
 
   public constructor(
     private dateAdapter: DateAdapter<Date, string>,
