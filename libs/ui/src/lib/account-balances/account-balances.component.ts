@@ -92,7 +92,7 @@ export class GfAccountBalancesComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private dateAdapter: DateAdapter<any>,
+    private dateAdapter: DateAdapter<Date, string>,
     private notificationService: NotificationService
   ) {
     addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
