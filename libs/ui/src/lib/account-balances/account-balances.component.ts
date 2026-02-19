@@ -14,7 +14,8 @@ import {
   OnChanges,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
 import {
   FormGroup,
@@ -84,10 +85,10 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
 
   public displayedColumns: string[] = ['date', 'value', 'actions'];
 
-  public constructor(
-    private dateAdapter: DateAdapter<Date, string>,
-    private notificationService: NotificationService
-  ) {
+  private dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
+  private notificationService = inject(NotificationService);
+
+  public constructor() {
     addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
   }
 
