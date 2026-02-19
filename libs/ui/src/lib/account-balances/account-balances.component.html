@@ -12,7 +12,7 @@
         <ng-container i18n>Date</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2" mat-cell>
-        <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
+        <gf-value [isDate]="true" [locale]="locale()" [value]="element?.date" />
       </td>
       <td *matFooterCellDef class="px-2" mat-footer-cell>
         <mat-form-field appearance="outline" class="py-1 without-hint">
@@ -37,7 +37,7 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
-            [locale]="locale"
+            [locale]="locale()"
             [unit]="element?.account?.currency"
             [value]="element?.value"
           />

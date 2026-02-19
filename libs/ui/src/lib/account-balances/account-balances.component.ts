@@ -15,7 +15,8 @@ import {
   OnInit,
   Output,
   ViewChild,
-  inject
+  inject,
+  input
 } from '@angular/core';
 import {
   FormGroup,
@@ -66,7 +67,6 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountCurrency: string;
   @Input() accountId: string;
-  @Input() locale = getLocale();
   @Input() showActions = true;
 
   @Output() accountBalanceCreated = new EventEmitter<CreateAccountBalanceDto>();
@@ -85,6 +85,8 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
 
   public displayedColumns: string[] = ['date', 'value', 'actions'];
 
+  protected readonly locale = input(getLocale());
+
   private dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private notificationService = inject(NotificationService);
 
@@ -93,7 +95,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   }
 
   public ngOnInit() {
-    this.dateAdapter.setLocale(this.locale);
+    this.dateAdapter.setLocale(this.locale());
   }
 
   public ngOnChanges() {
