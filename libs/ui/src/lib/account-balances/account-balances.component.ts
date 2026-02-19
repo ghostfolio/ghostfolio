@@ -122,10 +122,16 @@ export class GfAccountBalancesComponent
   }
 
   public async onSubmitAccountBalance() {
+    const { balance, date } = this.accountBalanceForm.value;
+
+    if (balance === null || balance === undefined || !date) {
+      return;
+    }
+
     const accountBalance: CreateAccountBalanceDto = {
+      balance,
       accountId: this.accountId,
-      balance: this.accountBalanceForm.get('balance').value,
-      date: format(this.accountBalanceForm.get('date').value, DATE_FORMAT)
+      date: format(date, DATE_FORMAT)
     };
 
     try {
