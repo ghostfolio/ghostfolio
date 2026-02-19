@@ -65,7 +65,6 @@ import { GfValueComponent } from '../value';
 })
 export class GfAccountBalancesComponent implements OnChanges, OnInit {
   @Input() accountBalances: AccountBalancesResponse['balances'];
-  @Input() accountCurrency: string;
 
   @Output() accountBalanceCreated = new EventEmitter<CreateAccountBalanceDto>();
   @Output() accountBalanceDeleted = new EventEmitter<string>();
@@ -81,6 +80,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
     AccountBalancesResponse['balances'][0]
   >();
 
+  public readonly accountCurrency = input.required<string>();
   public readonly accountId = input.required<string>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
   public readonly locale = input(getLocale());
