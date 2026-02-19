@@ -1,3 +1,4 @@
+import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
@@ -10,8 +11,10 @@ import {
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
+  getAssetProfileIdentifier,
   getCurrencyFromSymbol,
   getStartOfUtcDate,
   isCurrency,
@@ -183,6 +186,121 @@ export class DataProviderService implements OnModuleInit {
     }
 
     return dataSources.sort();
+  }
+
+  public async validateActivities({
+    activitiesDto,
+    assetProfilesWithMarketDataDto,
+    maxActivitiesToImport,
+    user
+  }: {
+    activitiesDto: Pick<
+      Partial<CreateOrderDto>,
+      'currency' | 'dataSource' | 'symbol' | 'type'
+    >[];
+    assetProfilesWithMarketDataDto?: ImportDataDto['assetProfiles'];
+    maxActivitiesToImport: number;
+    user: UserWithSettings;
+  }) {
+    if (activitiesDto?.length > maxActivitiesToImport) {
+      throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
+    }
+
+    const assetProfiles: {
+      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
+    } = {};
+
+    const dataSources = await this.getDataSources();
+
+    for (const [
+      index,
+      { currency, dataSource, symbol, type }
+    ] of activitiesDto.entries()) {
+      const activityPath =
+        maxActivitiesToImport === 1 ? 'activity' : `activities.${index}`;
+
+      if (!dataSources.includes(dataSource)) {
+        throw new Error(
+          `${activityPath}.dataSource ("${dataSource}") is not valid`
+        );
+      }
+
+      if (
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user.subscription.type === 'Basic'
+      ) {
+        const dataProvider = this.getDataProvider(DataSource[dataSource]);
+
+        if (dataProvider.getDataProviderInfo().isPremium) {
+          throw new Error(
+            `${activityPath}.dataSource ("${dataSource}") is not valid`
+          );
+        }
+      }
+
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource,
+        symbol
+      });
+
+      if (!assetProfiles[assetProfileIdentifier]) {
+        if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
+          assetProfiles[assetProfileIdentifier] = {
+            currency,
+            dataSource,
+            symbol,
+            name: assetProfileInImport?.name
+          };
+
+          continue;
+        }
+
+        let assetProfile: Partial<SymbolProfile> = { currency };
+
+        try {
+          assetProfile = (
+            await this.getAssetProfiles([
+              {
+                dataSource,
+                symbol
+              }
+            ])
+          )?.[symbol];
+        } catch {}
+
+        if (!assetProfile?.name) {
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
+          if (assetProfileInImport) {
+            Object.assign(assetProfile, assetProfileInImport);
+          }
+        }
+
+        if (!assetProfile?.name) {
+          throw new Error(
+            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+          );
+        }
+
+        assetProfiles[assetProfileIdentifier] = assetProfile;
+      }
+    }
+
+    return assetProfiles;
   }
 
   public async getDividends({
