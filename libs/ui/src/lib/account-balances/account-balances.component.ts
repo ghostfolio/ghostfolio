@@ -39,7 +39,7 @@ import {
   ellipsisHorizontal,
   trashOutline
 } from 'ionicons/icons';
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 
 import { GfValueComponent } from '../value';
 
@@ -117,7 +117,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   public async onSubmitAccountBalance() {
     const { balance, date } = this.accountBalanceForm.value;
 
-    if (balance === null || balance === undefined || !date) {
+    if (isNil(balance) || !date) {
       return;
     }
 
