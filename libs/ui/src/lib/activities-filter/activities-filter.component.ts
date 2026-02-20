@@ -108,21 +108,22 @@ export class GfActivitiesFilterComponent implements OnChanges {
   }
 
   public onRemoveFilter(aFilter: Filter) {
-    this.selectedFilters = this.selectedFilters.filter((filter) => {
-      return filter.id !== aFilter.id;
+    this.selectedFilters = this.selectedFilters.filter(({ id }) => {
+      return id !== aFilter.id;
     });
 
     this.updateFilters();
   }
 
   public onSelectFilter(event: MatAutocompleteSelectedEvent) {
-    const filter = this.allFilters.find((f) => {
-      return f.id === event.option.value;
+    const filter = this.allFilters.find(({ id }) => {
+      return id === event.option.value;
     });
 
     if (filter) {
       this.selectedFilters.push(filter);
     }
+
     this.updateFilters();
     this.searchInput.nativeElement.value = '';
     this.searchControl.setValue(null);
@@ -133,8 +134,8 @@ export class GfActivitiesFilterComponent implements OnChanges {
       this.allFilters
         .filter((filter) => {
           // Filter selected filters
-          return !this.selectedFilters.some((selectedFilter) => {
-            return selectedFilter.id === filter.id;
+          return !this.selectedFilters.some(({ id }) => {
+            return id === filter.id;
           });
         })
         .filter((filter) => {
@@ -148,8 +149,8 @@ export class GfActivitiesFilterComponent implements OnChanges {
           return filter;
         })
         .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? '')),
-      (filter) => {
-        return filter.type;
+      ({ type }) => {
+        return type;
       }
     );
 
