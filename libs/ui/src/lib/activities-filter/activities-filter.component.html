@@ -10,7 +10,7 @@
         [removable]="true"
         (removed)="onRemoveFilter(filter)"
       >
-        {{ filter.label | gfSymbol }}
+        {{ filter.label ?? '' | gfSymbol }}
         <button matChipRemove>
           <ion-icon name="close-outline" />
         </button>
@@ -35,7 +35,7 @@
       <mat-optgroup [label]="filterGroup.name">
         @for (filter of filterGroup.filters; track filter) {
           <mat-option [value]="filter.id">
-            {{ filter.label | gfSymbol }}
+            {{ filter.label ?? '' | gfSymbol }}
           </mat-option>
         }
       </mat-optgroup>
