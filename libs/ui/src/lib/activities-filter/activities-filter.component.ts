@@ -93,14 +93,14 @@ export class GfActivitiesFilterComponent implements OnChanges {
     }
   }
 
-  public onAddFilter({ input, value }: MatChipInputEvent) {
+  public onAddFilter({ chipInput, value }: MatChipInputEvent) {
     if (value?.trim()) {
       this.updateFilters();
     }
 
     // Reset the input value
-    if (input) {
-      input.value = '';
+    if (chipInput.inputElement) {
+      chipInput.inputElement.value = '';
     }
 
     this.searchControl.setValue(null);
