@@ -12,6 +12,7 @@ import {
   OnChanges,
   SimpleChanges,
   ViewChild,
+  input,
   output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -54,11 +55,11 @@ import { translate } from '../i18n';
 export class GfActivitiesFilterComponent implements OnChanges {
   @Input() allFilters: Filter[];
   @Input() isLoading: boolean;
-  @Input() placeholder: string;
 
   @ViewChild('autocomplete') protected matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') protected searchInput: ElementRef<HTMLInputElement>;
 
+  public readonly placeholder = input.required<string>();
   public readonly valueChanged = output<Filter[]>();
 
   protected readonly filterGroups$ = new BehaviorSubject<FilterGroup[]>([]);

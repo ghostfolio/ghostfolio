@@ -23,7 +23,7 @@
       [matAutocomplete]="autocomplete"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [placeholder]="placeholder"
+      [placeholder]="placeholder()"
       (matChipInputTokenEnd)="onAddFilter($event)"
     />
   </mat-chip-grid>
