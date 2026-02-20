@@ -66,7 +66,7 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
   public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
   public filters$: Subject<Filter[]> = new BehaviorSubject([]);
   public filters: Observable<Filter[]> = this.filters$.asObservable();
-  public searchControl = new FormControl<Filter | string>(undefined);
+  public searchControl = new FormControl<Filter | string | null>(null);
   public selectedFilters: Filter[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -107,7 +107,7 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
       input.value = '';
     }
 
-    this.searchControl.setValue(undefined);
+    this.searchControl.setValue(null);
   }
 
   public onRemoveFilter(aFilter: Filter) {
@@ -119,14 +119,16 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
   }
 
   public onSelectFilter(event: MatAutocompleteSelectedEvent) {
-    this.selectedFilters.push(
-      this.allFilters.find((filter) => {
-        return filter.id === event.option.value;
-      })
-    );
+    const filter = this.allFilters.find((f) => {
+      return f.id === event.option.value;
+    });
+
+    if (filter) {
+      this.selectedFilters.push(filter);
+    }
     this.updateFilters();
     this.searchInput.nativeElement.value = '';
-    this.searchControl.setValue(undefined);
+    this.searchControl.setValue(null);
   }
 
   public ngOnDestroy() {
@@ -147,13 +149,13 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
           if (searchTerm) {
             // Filter by search term
             return filter.label
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(searchTerm.toLowerCase());
           }
 
           return filter;
         })
-        .sort((a, b) => a.label?.localeCompare(b.label)),
+        .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? '')),
       (filter) => {
         return filter.type;
       }
