@@ -8,6 +8,7 @@ import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   Activity,
+  AssetProfileIdentifier,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,
@@ -546,6 +547,13 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
+  public getRouterLinkToAdminControlMarketData({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    return [...this.routerLinkAdminControlMarketData, dataSource, symbol];
+  }
+
   public onCloneActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
@@ -616,14 +624,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  public getRouterLinkToAdminControlMarketDataForDataSourceAndSymbol() {
-    return [
-      ...this.routerLinkAdminControlMarketData,
-      this.SymbolProfile?.dataSource,
-      this.SymbolProfile?.symbol
-    ];
   }
 
   public onUpdateActivity(aActivity: Activity) {

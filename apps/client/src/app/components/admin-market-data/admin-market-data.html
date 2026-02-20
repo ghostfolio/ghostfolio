@@ -256,10 +256,10 @@
                 <a
                   mat-menu-item
                   [routerLink]="
-                    getRouterLinkToAdminControlMarketData(
-                      element.dataSource,
-                      element.symbol
-                    )
+                    getRouterLinkToAdminControlMarketData({
+                      dataSource: element.dataSource,
+                      symbol: element.symbol
+                    })
                   "
                 >
                   <span class="align-items-center d-flex">

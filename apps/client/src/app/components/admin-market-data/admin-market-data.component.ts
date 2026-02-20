@@ -206,23 +206,18 @@ export class GfAdminMarketDataComponent
     this.displayedColumns.push('comment');
     this.displayedColumns.push('actions');
 
-    if (this.route.snapshot.routeConfig.path === 'market-data/create') {
-      this.openCreateAssetProfileDialog();
-    } else {
-      this.route.paramMap
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe((paramMap) => {
-          const dataSource = paramMap.get('dataSource') as DataSource;
-          const symbol = paramMap.get('symbol');
+    this.route.paramMap
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((paramMap) => {
+        const dataSource = paramMap.get('dataSource') as DataSource;
+        const symbol = paramMap.get('symbol');
 
-          if (dataSource && symbol) {
-            this.openAssetProfileDialog({
-              dataSource,
-              symbol
-            });
-          }
-        });
-    }
+        if (dataSource && symbol) {
+          this.openAssetProfileDialog({ dataSource, symbol });
+        } else if (this.route.snapshot.routeConfig.path.endsWith('/create')) {
+          this.openCreateAssetProfileDialog();
+        }
+      });
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -234,14 +229,14 @@ export class GfAdminMarketDataComponent
             this.user.settings.locale
           );
         }
-      });
 
-    this.filters$
-      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
-      .subscribe((filters) => {
-        this.activeFilters = filters;
+        this.filters$
+          .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+          .subscribe((filters) => {
+            this.activeFilters = filters;
 
-        this.loadData();
+            this.loadData();
+          });
       });
 
     addIcons({
@@ -276,6 +271,13 @@ export class GfAdminMarketDataComponent
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.selection = new SelectionModel(true);
+  }
+
+  public getRouterLinkToAdminControlMarketData({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    return [...this.routerLinkAdminControlMarketData, dataSource, symbol];
   }
 
   public onChangePage(page: PageEvent) {
@@ -351,10 +353,6 @@ export class GfAdminMarketDataComponent
     this.router.navigate([dataSource, symbol], {
       relativeTo: this.route
     });
-  }
-
-  public getRouterLinkToAdminControlMarketData(dataSource, symbol) {
-    return [...this.routerLinkAdminControlMarketData, dataSource, symbol];
   }
 
   public ngOnDestroy() {
