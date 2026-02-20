@@ -46,7 +46,7 @@
     disabled
     mat-icon-button
     matSuffix
-    [ngClass]="{ 'd-none': !isLoading }"
+    [ngClass]="{ 'd-none': !isLoading() }"
   >
     <mat-spinner matSuffix [diameter]="20" />
   </button>

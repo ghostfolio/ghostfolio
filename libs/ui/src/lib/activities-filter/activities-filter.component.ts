@@ -54,11 +54,11 @@ import { translate } from '../i18n';
 })
 export class GfActivitiesFilterComponent implements OnChanges {
   @Input() allFilters: Filter[];
-  @Input() isLoading: boolean;
 
   @ViewChild('autocomplete') protected matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') protected searchInput: ElementRef<HTMLInputElement>;
 
+  public readonly isLoading = input.required<boolean>();
   public readonly placeholder = input.required<string>();
   public readonly valueChanged = output<Filter[]>();
 
