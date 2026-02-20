@@ -10,11 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the dividend yield (trailing twelve months) to the portfolio summary (experimental)
+
+### Changed
+
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Spanish (`es`)
+
+## 2.240.0 - 2026-02-18
+
+### Added
+
+- Added a _No Activities_ preset to the historical market data table of the admin control panel
 - Added support for custom cryptocurrencies defined in the database
 - Added support for the cryptocurrency _Sky_
 
 ### Changed
 
+- Harmonized the validation for the create activity endpoint with the existing import activity logic
 - Upgraded `marked` from version `17.0.1` to `17.0.2`
 - Upgraded `ngx-markdown` from version `21.0.1` to `21.1.0`
 
