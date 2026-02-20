@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 
+### Fixed
+
+- Fixed an issue with `balanceInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `comment` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `interestInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `value` of the accounts in the value redaction interceptor for the impersonation mode
+
 ## 2.240.0 - 2026-02-18
 
 ### Added
