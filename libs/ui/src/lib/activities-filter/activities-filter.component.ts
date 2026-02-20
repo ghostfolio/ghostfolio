@@ -8,12 +8,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
-  Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -57,10 +56,10 @@ export class GfActivitiesFilterComponent implements OnChanges {
   @Input() isLoading: boolean;
   @Input() placeholder: string;
 
-  @Output() valueChanged = new EventEmitter<Filter[]>();
-
   @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+
+  public readonly valueChanged = output<Filter[]>();
 
   public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
   public filters$: Subject<Filter[]> = new BehaviorSubject([]);
