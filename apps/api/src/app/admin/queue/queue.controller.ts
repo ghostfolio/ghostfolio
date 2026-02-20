@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { JobStatusType } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
@@ -12,7 +13,6 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JobStatus } from 'bull';
 
 import { QueueService } from './queue.service';
 
@@ -26,7 +26,7 @@ export class QueueController {
   public async deleteJobs(
     @Query('status') filterByStatus?: string
   ): Promise<void> {
-    const status = (filterByStatus?.split(',') as JobStatus[]) ?? undefined;
+    const status = (filterByStatus?.split(',') as JobStatusType[]) ?? undefined;
     return this.queueService.deleteJobs({ status });
   }
 
@@ -36,7 +36,7 @@ export class QueueController {
   public async getJobs(
     @Query('status') filterByStatus?: string
   ): Promise<AdminJobs> {
-    const status = (filterByStatus?.split(',') as JobStatus[]) ?? undefined;
+    const status = (filterByStatus?.split(',') as JobStatusType[]) ?? undefined;
     return this.queueService.getJobs({ status });
   }
 

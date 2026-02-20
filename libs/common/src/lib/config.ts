@@ -1,5 +1,5 @@
 import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
-import { JobOptions, JobStatus } from 'bull';
+import { JobsOptions } from 'bullmq';
 import ms from 'ms';
 
 export const ghostfolioPrefix = 'GF';
@@ -56,7 +56,7 @@ export const CACHE_TTL_INFINITE = 0;
 
 export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
-export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
+export const DATA_GATHERING_QUEUE_PRIORITY_LOW = 2_097_152;
 export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
@@ -64,8 +64,7 @@ export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE =
   'PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE';
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH = 1;
-export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
-  Number.MAX_SAFE_INTEGER;
+export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW = 2_097_152;
 
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
@@ -150,7 +149,7 @@ export const DERIVED_CURRENCIES = [
 ];
 
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
-export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
+export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobsOptions = {
   attempts: 12,
   backoff: {
     delay: ms('1 minute'),
@@ -161,7 +160,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
 
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
-export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
+export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobsOptions = {
   attempts: 12,
   backoff: {
     delay: ms('1 minute'),
@@ -177,7 +176,7 @@ export const INVESTMENT_ACTIVITY_TYPES = [
 ] as Type[];
 
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
-export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
+export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobsOptions = {
   removeOnComplete: true
 };
 
@@ -220,7 +219,9 @@ export const QUEUE_JOB_STATUS_LIST = [
   'failed',
   'paused',
   'waiting'
-] as JobStatus[];
+] as const;
+
+export type JobStatusType = (typeof QUEUE_JOB_STATUS_LIST)[number];
 
 export const REPLACE_NAME_PARTS = [
   'Amundi Index Solutions -',

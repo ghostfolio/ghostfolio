@@ -24,10 +24,10 @@ import {
   BenchmarkProperty
 } from '@ghostfolio/common/interfaces';
 
-import { InjectQueue } from '@nestjs/bull';
+import { InjectQueue } from '@nestjs/bullmq';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { JobOptions, Queue } from 'bull';
+import { JobsOptions, Queue } from 'bullmq';
 import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
 import ms, { StringValue } from 'ms';
@@ -53,13 +53,13 @@ export class DataGatheringService {
   }: {
     data: any;
     name: string;
-    opts?: JobOptions;
+    opts?: JobsOptions;
   }) {
     return this.dataGatheringQueue.add(name, data, opts);
   }
 
   public async addJobsToQueue(
-    jobs: { data: any; name: string; opts?: JobOptions }[]
+    jobs: { data: any; name: string; opts?: JobsOptions }[]
   ) {
     return this.dataGatheringQueue.addBulk(jobs);
   }

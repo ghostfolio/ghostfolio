@@ -1,4 +1,4 @@
-import { Job, JobStatus } from 'bull';
+import { Job } from 'bullmq';
 
 export interface AdminJobs {
   jobs: (Pick<
@@ -12,6 +12,6 @@ export interface AdminJobs {
     | 'stacktrace'
     | 'timestamp'
   > & {
-    state: JobStatus | 'stuck';
+    state: string;
   })[];
 }

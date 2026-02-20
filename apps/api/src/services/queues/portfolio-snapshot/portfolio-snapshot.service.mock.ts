@@ -1,4 +1,4 @@
-import { Job, JobOptions } from 'bull';
+import { Job, JobsOptions } from 'bullmq';
 import { setTimeout } from 'timers/promises';
 
 import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
@@ -9,10 +9,10 @@ export const PortfolioSnapshotServiceMock = {
   }: {
     data: PortfolioSnapshotQueueJob;
     name: string;
-    opts?: JobOptions;
+    opts?: JobsOptions;
   }): Promise<Job<any>> {
     const mockJob: Partial<Job<any>> = {
-      finished: async () => {
+      waitUntilFinished: async () => {
         await setTimeout(100);
 
         return Promise.resolve();

@@ -31,7 +31,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { IonIcon } from '@ionic/angular/standalone';
-import { JobStatus } from 'bull';
 import { addIcons } from 'ionicons';
 import {
   alertCircleOutline,
@@ -194,7 +193,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchJobs(aStatus?: JobStatus[]) {
+  private fetchJobs(aStatus?: string[]) {
     this.isLoading = true;
 
     this.adminService
