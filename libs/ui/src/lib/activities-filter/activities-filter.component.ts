@@ -11,11 +11,11 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocomplete,
@@ -31,7 +31,6 @@ import { addIcons } from 'ionicons';
 import { closeOutline, searchOutline } from 'ionicons/icons';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { translate } from '../i18n';
 
@@ -53,7 +52,7 @@ import { translate } from '../i18n';
   styleUrls: ['./activities-filter.component.scss'],
   templateUrl: './activities-filter.component.html'
 })
-export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
+export class GfActivitiesFilterComponent implements OnChanges {
   @Input() allFilters: Filter[];
   @Input() isLoading: boolean;
   @Input() placeholder: string;
@@ -70,11 +69,9 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
   public selectedFilters: Filter[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor() {
     this.searchControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe((filterOrSearchTerm) => {
         if (filterOrSearchTerm) {
           const searchTerm =
@@ -129,11 +126,6 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.updateFilters();
     this.searchInput.nativeElement.value = '';
     this.searchControl.setValue(null);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private getGroupedFilters(searchTerm?: string) {
