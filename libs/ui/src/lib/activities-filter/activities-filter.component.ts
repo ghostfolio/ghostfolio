@@ -29,7 +29,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, searchOutline } from 'ionicons/icons';
 import { groupBy } from 'lodash';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { translate } from '../i18n';
 
@@ -56,17 +56,17 @@ export class GfActivitiesFilterComponent implements OnChanges {
   @Input() isLoading: boolean;
   @Input() placeholder: string;
 
-  @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
-  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+  @ViewChild('autocomplete') protected matAutocomplete: MatAutocomplete;
+  @ViewChild('searchInput') protected searchInput: ElementRef<HTMLInputElement>;
 
   public readonly valueChanged = output<Filter[]>();
 
-  public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
-  public filters$: Subject<Filter[]> = new BehaviorSubject([]);
-  public filters: Observable<Filter[]> = this.filters$.asObservable();
-  public searchControl = new FormControl<Filter | string | null>(null);
-  public selectedFilters: Filter[] = [];
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  protected readonly filterGroups$ = new BehaviorSubject<FilterGroup[]>([]);
+  protected readonly searchControl = new FormControl<Filter | string | null>(
+    null
+  );
+  protected selectedFilters: Filter[] = [];
+  protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public constructor() {
     this.searchControl.valueChanges
