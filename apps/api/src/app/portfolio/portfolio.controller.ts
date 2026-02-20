@@ -511,6 +511,7 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
+    @Query('groupBy') groupBy?: Extract<GroupBy, 'year'>,
     @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
@@ -529,6 +530,7 @@ export class PortfolioController {
     const performanceInformation = await this.portfolioService.getPerformance({
       dateRange,
       filters,
+      groupBy,
       impersonationId,
       withExcludedAccounts,
       userId: this.request.user.id

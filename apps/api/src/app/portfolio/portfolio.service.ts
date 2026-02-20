@@ -92,6 +92,7 @@ import {
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
+import { getPerformanceByYear } from './portfolio-chart.helper';
 import { RulesService } from './rules.service';
 
 const Fuse = require('fuse.js');
@@ -970,11 +971,13 @@ export class PortfolioService {
   public async getPerformance({
     dateRange = 'max',
     filters,
+    groupBy,
     impersonationId,
     userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    groupBy?: Extract<GroupBy, 'year'>;
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
@@ -1028,10 +1031,19 @@ export class PortfolioService {
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
-    const { chart } = await portfolioCalculator.getPerformance({
+    const { chart: fullChart } = await portfolioCalculator.getPerformance({
       end: endDate,
       start: startDate
     });
+
+    const chart =
+      groupBy === 'year'
+        ? await getPerformanceByYear({
+            end: endDate,
+            portfolioCalculator,
+            start: startDate
+          })
+        : fullChart;
 
     const {
       netPerformance,
@@ -1042,7 +1054,7 @@ export class PortfolioService {
       totalInvestment,
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
-    } = chart?.at(-1) ?? {
+    } = fullChart?.at(-1) ?? {
       netPerformance: 0,
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,
