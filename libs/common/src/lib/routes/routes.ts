@@ -142,6 +142,11 @@ export const internalRoutes: Record<string, InternalRoute> = {
         routerLink: ['/portfolio', 'fire'],
         title: 'FIRE'
       },
+      journal: {
+        path: 'journal',
+        routerLink: ['/portfolio', 'journal'],
+        title: $localize`Journal`
+      },
       xRay: {
         path: 'x-ray',
         routerLink: ['/portfolio', 'x-ray'],

@@ -37,6 +37,8 @@ import {
   ExportResponse,
   Filter,
   ImportResponse,
+  JournalEntryItem,
+  JournalResponse,
   InfoItem,
   LookupResponse,
   MarketDataDetailsResponse,
@@ -415,6 +417,26 @@ export class DataService {
     return this.http.get<ExportResponse>('/api/v1/export', {
       params
     });
+  }
+
+  public fetchJournal({ month, year }: { month: number; year: number }) {
+    const params = new HttpParams()
+      .set('month', month.toString())
+      .set('year', year.toString());
+
+    return this.http.get<JournalResponse>('/api/v1/journal', { params });
+  }
+
+  public fetchJournalEntry({ date }: { date: string }) {
+    return this.http.get<JournalEntryItem>(`/api/v1/journal/${date}`);
+  }
+
+  public putJournalEntry({ date, note }: { date: string; note: string }) {
+    return this.http.put(`/api/v1/journal/${date}`, { note });
+  }
+
+  public deleteJournalEntry({ date }: { date: string }) {
+    return this.http.delete(`/api/v1/journal/${date}`);
   }
 
   public fetchHoldingDetail({
