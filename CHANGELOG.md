@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the portfolio summary tab on the home page in the _Presenter View_
 - Refreshed the cryptocurrencies list
 - Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
