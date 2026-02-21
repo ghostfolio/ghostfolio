@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.241.0 - 2026-02-21
 
+### Added
+
+- Added the dividend yield (trailing twelve months) to the portfolio summary (experimental)
+
 ### Changed
 
 - Improved the usability of the portfolio summary tab on the home page in the _Presenter View_
