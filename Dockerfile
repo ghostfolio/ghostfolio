@@ -53,10 +53,30 @@ FROM node:22-slim
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
 
-RUN apt-get update && apt-get install -y --no-install-suggests \
-  curl \
-  openssl \
-  && rm -rf /var/lib/apt/lists/*
+# install Chrome + puppeteer deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    chromium \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    curl \
+    openssl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN npx puppeteer browsers install chrome
 
 COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps/
 COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/

@@ -106,7 +106,10 @@ export class ConfigurationService {
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
       TWITTER_API_KEY: str({ default: 'dummyApiKey' }),
-      TWITTER_API_SECRET: str({ default: 'dummyApiSecret' })
+      TWITTER_API_SECRET: str({ default: 'dummyApiSecret' }),
+      TRACK_INSIGHT_TRY_CURL_IMPERSONATE: bool({ default: false }),
+      TRACK_INSIGHT_TRY_PUPPETEER: bool({ default: true }),
+      TRACK_INSIGHT_CHROMIUM_PATH: str({ default: '/usr/bin/chromium' })
     });
   }
 
