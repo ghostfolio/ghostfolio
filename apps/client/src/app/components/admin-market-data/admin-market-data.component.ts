@@ -379,7 +379,7 @@ export class GfAdminMarketDataComponent
     this.pageSize =
       this.activeFilters.length === 1 &&
       this.activeFilters[0].type === 'PRESET_ID'
-        ? undefined
+        ? Number.MAX_SAFE_INTEGER
         : DEFAULT_PAGE_SIZE;
 
     if (pageIndex === 0 && this.paginator) {
