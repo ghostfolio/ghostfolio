@@ -132,7 +132,7 @@ export class AdminService {
   public fetchJobs({ status }: { status?: JobStatus[] }) {
     let params = new HttpParams();
 
-    if (status?.length > 0) {
+    if (status && status.length > 0) {
       params = params.append('status', status.join(','));
     }
 
@@ -158,8 +158,8 @@ export class AdminService {
   }) {
     let params = new HttpParams();
 
-    params = params.append('skip', skip);
-    params = params.append('take', take);
+    if (skip) params = params.append('skip', skip);
+    if (take) params = params.append('take', take);
 
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
