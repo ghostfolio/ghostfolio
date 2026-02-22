@@ -80,6 +80,11 @@ export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
 
 export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].balance',
+  'accounts[*].balanceInBaseCurrency',
+  'accounts[*].comment',
+  'accounts[*].dividendInBaseCurrency',
+  'accounts[*].interestInBaseCurrency',
+  'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
   'activities[*].account.balance',
   'activities[*].account.comment',
