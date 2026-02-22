@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a validation issue for valuables used in the create and import activity logic
 - Fixed the page size for presets in the historical market data table of the admin control panel
 
 ## 2.241.0 - 2026-02-21
