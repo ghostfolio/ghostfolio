@@ -244,11 +244,15 @@ export class DataProviderService implements OnModuleInit {
       });
 
       if (!assetProfiles[assetProfileIdentifier]) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+        if (
+          (dataSource === DataSource.MANUAL && type === 'BUY') ||
+          ['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+        ) {
           const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) => {
+            (assetProfile) => {
               return (
-                profile.dataSource === dataSource && profile.symbol === symbol
+                assetProfile.dataSource === dataSource &&
+                assetProfile.symbol === symbol
               );
             }
           );
@@ -257,7 +261,7 @@ export class DataProviderService implements OnModuleInit {
             currency,
             dataSource,
             symbol,
-            name: assetProfileInImport?.name
+            name: assetProfileInImport?.name ?? symbol
           };
 
           continue;
