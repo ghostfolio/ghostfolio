@@ -9,6 +9,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   Inject,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -52,7 +53,7 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
   styleUrls: ['./user-account-registration-dialog.scss'],
   templateUrl: 'user-account-registration-dialog.html'
 })
-export class GfUserAccountRegistrationDialogComponent {
+export class GfUserAccountRegistrationDialogComponent implements OnDestroy {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
   public accessToken: string;
@@ -94,5 +95,10 @@ export class GfUserAccountRegistrationDialogComponent {
 
   public onChangeDislaimerChecked() {
     this.isDisclaimerChecked = !this.isDisclaimerChecked;
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
