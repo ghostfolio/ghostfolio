@@ -13,12 +13,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
-  ViewChild
+  ViewChild,
+  output
 } from '@angular/core';
 import {
   FormBuilder,
@@ -90,13 +89,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;
 
-  @Output() annualInterestRateChanged = new EventEmitter<number>();
-  @Output() calculationCompleted =
-    new EventEmitter<FireCalculationCompleteEvent>();
-  @Output() projectedTotalAmountChanged = new EventEmitter<number>();
-  @Output() retirementDateChanged = new EventEmitter<Date>();
-  @Output() savingsRateChanged = new EventEmitter<number>();
-
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public calculatorForm = this.formBuilder.group({
@@ -110,6 +102,13 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   public isLoading = true;
   public minDate = addDays(new Date(), 1);
   public periodsToRetire = 0;
+
+  protected readonly annualInterestRateChanged = output<number>();
+  protected readonly calculationCompleted =
+    output<FireCalculationCompleteEvent>();
+  protected readonly projectedTotalAmountChanged = output<number>();
+  protected readonly retirementDateChanged = output<Date>();
+  protected readonly savingsRateChanged = output<number>();
 
   private readonly CONTRIBUTION_PERIOD = 12;
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
@@ -302,8 +301,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
                     return `Total: ${new Intl.NumberFormat(this.locale, {
                       currency: this.currency,
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore: Only supported from ES2020 or later
                       currencyDisplay: 'code',
                       style: 'currency'
                     }).format(totalAmount)}`;
