@@ -501,11 +501,12 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
       comment: this.activityForm.get('comment').value || null,
       currency: this.activityForm.get('currency').value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
+      dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
+        this.activityForm.get('type').value
+      )
+        ? 'MANUAL'
+        : this.activityForm.get('dataSource').value,
       date: this.activityForm.get('date').value,
-      dataSource:
-        this.activityForm.get('type').value === 'VALUABLE'
-          ? 'MANUAL'
-          : this.activityForm.get('dataSource').value,
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
