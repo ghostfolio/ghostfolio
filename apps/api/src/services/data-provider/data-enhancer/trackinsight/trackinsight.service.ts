@@ -7,12 +7,16 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { countries } from 'countries-list';
+import { Browser, impersonate } from 'node-libcurl-ja3';
+import { launch } from 'puppeteer';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
-    'Russian Federation': 'Russia'
+    'Russian Federation': 'Russia',
+    USA: 'United States',
+    'Republic of Korea': 'South Korea'
   };
   private static holdingsWeightTreshold = 0.85;
   private static sectorsMapping = {
@@ -21,10 +25,53 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     'Health Care': 'Healthcare',
     'Information Technology': 'Technology'
   };
+  private static curly = impersonate(Browser.Chrome);
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {}
+
+  private async fetchFromTrackInsight({
+    url,
+    requestTimeout
+  }: {
+    url: string;
+    requestTimeout?: number;
+  }): Promise<any> {
+    const useImpersonate = this.configurationService.get(
+      'TRACK_INSIGHT_TRY_CURL_IMPERSONATE'
+    );
+    const usePuppeteer = this.configurationService.get(
+      'TRACK_INSIGHT_TRY_PUPPETEER'
+    );
+    if (usePuppeteer) {
+      const browserPath = this.configurationService.get(
+        'TRACK_INSIGHT_CHROMIUM_PATH'
+      );
+      const browser = await launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: browserPath
+      });
+      const page = await browser.newPage();
+      await page.setJavaScriptEnabled(true);
+      await page.goto(url, {
+        waitUntil: 'networkidle0'
+      });
+      const data = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      await browser.close();
+      return JSON.parse(data);
+    }
+    if (useImpersonate) {
+      return TrackinsightDataEnhancerService.curly
+        .get(url)
+        .then((res) => res.data);
+    }
+    return fetch(url, { signal: AbortSignal.timeout(requestTimeout) }).then(
+      (res) => res.json()
+    );
+  }
 
   public async enhance({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
@@ -60,16 +107,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
-      .then((res) => res.json())
-      .catch(() => {
-        return {};
-      });
+    const profile = await this.fetchFromTrackInsight({
+      url: `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`
+    }).catch(() => {
+      return {};
+    });
 
     const cusip = profile?.cusip;
 
@@ -83,16 +125,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.isin = isin;
     }
 
-    const holdings = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
-      .then((res) => res.json())
-      .catch(() => {
-        return {};
-      });
+    const holdings = await this.fetchFromTrackInsight({
+      url: `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`
+    }).catch(() => {
+      return {};
+    });
 
     if (
       holdings?.weight < TrackinsightDataEnhancerService.holdingsWeightTreshold
@@ -182,19 +219,14 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     requestTimeout: number;
     symbol: string;
   }) {
-    return fetch(
-      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
-      .then((res) => res.json())
+    return await this.fetchFromTrackInsight({
+      url: `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+      requestTimeout
+    })
       .then((jsonRes) => {
         if (
           jsonRes['results']?.['count'] === 1 ||
-          // Allow exact match
           jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol ||
-          // Allow EXCHANGE:SYMBOL
           jsonRes['results']?.['docs']?.[0]?.['ticker']?.endsWith(`:${symbol}`)
         ) {
           return jsonRes['results']['docs'][0]['ticker'];
@@ -207,7 +239,6 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           `Failed to search Trackinsight symbol for ${symbol} (${message})`,
           'TrackinsightDataEnhancerService'
         );
-
         return undefined;
       });
   }
