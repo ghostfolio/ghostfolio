@@ -2,7 +2,6 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { resetHours } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   DataProviderInfo,
@@ -44,7 +43,7 @@ export class CurrentRateService {
       (!dateQuery.in || this.containsToday(dateQuery.in));
 
     const quoteErrors: ResponseError['errors'] = [];
-    const today = resetHours(new Date());
+    const today = new Date();
     const values: GetValueObject[] = [];
 
     if (includesToday) {
