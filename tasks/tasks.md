@@ -104,6 +104,30 @@ Last updated: 2026-02-23
 - [x] Verify fixed command resolves module-not-found crash
 - [x] Update task tracker evidence for deploy follow-up
 
+## Session Plan (2026-02-23, AI Chat Intent Recovery)
+
+- [x] Diagnose why allocation/invest prompts return memory-only fallback
+- [x] Expand tool-intent routing for invest/allocate/rebalance prompts
+- [x] Improve deterministic fallback answer content for allocation guidance
+- [x] Normalize risk concentration math for leveraged/liability portfolios
+- [x] Run focused AI test suite and eval regression checks
+
+## Session Plan (2026-02-23, Railway Latency + Redis Auth Fix)
+
+- [x] Reproduce production slowness and capture health endpoint latency
+- [x] Identify Redis AUTH error spam source from cache URL construction
+- [x] Fix Redis cache URL to avoid credentials when password is empty
+- [x] Correct `railway.toml` start command for Docker runtime (`node main.js`)
+- [x] Redeploy and verify logs + latency improvements in production
+
+## Session Plan (2026-02-23, Core Features Expansion)
+
+- [x] Run focused AI verification gate before feature work (`npm run test:ai`, `nx run api:lint`)
+- [ ] Expand agent toolset from 3 to 5 meaningful finance tools
+- [ ] Add deterministic tests for new tool planning and orchestration
+- [ ] Extend MVP eval dataset with coverage for new tools
+- [ ] Run focused AI regression suite and push to `origin/main`
+
 ## Verification Notes
 
 - `nx run api:lint` completed successfully (existing workspace warnings only).
@@ -125,3 +149,15 @@ Last updated: 2026-02-23
   - `node main.js` fails with `MODULE_NOT_FOUND` for `/ghostfolio/main.js` (old command)
   - `node dist/apps/api/main.js` starts successfully
   - `curl -fsS http://127.0.0.1:3333/api/v1/health` returns `{"status":"OK"}`
+- Railway crash recovery verification (production):
+  - `npx dotenv-cli -e .env -- npx -y @railway/cli@latest up --detach`
+  - `npx dotenv-cli -e .env -- npx -y @railway/cli@latest service status` reached `Status: SUCCESS` on deployment `4f26063a-97e5-43dd-b2dd-360e9e12a951`
+  - `curl -i https://ghostfolio-api-production.up.railway.app/api/v1/health` returned `HTTP/2 200` with `{"status":"OK"}`
+- AI chat intent recovery verification:
+  - `npx dotenv-cli -e .env.example -- npx jest apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts --config apps/api/jest.config.ts`
+  - `npm run test:ai` (all 4 suites passed)
+- Railway latency + Redis auth fix verification (production):
+  - `railway up --service ghostfolio-api --detach` produced successful deployment `d7f73e4a-0a11-4c06-b066-3cbe58368094`
+  - `railway logs -s ghostfolio-api -d d7f73e4a-0a11-4c06-b066-3cbe58368094 -n 800 | rg "ERR AUTH|Redis health check failed"` returned no matches
+  - `curl` probes improved from ~1.8-2.2s TTFB to ~0.16-0.47s on `/api/v1/health`
+  - `/en/accounts` now serves in ~0.27-0.42s TTFB in repeated probes
