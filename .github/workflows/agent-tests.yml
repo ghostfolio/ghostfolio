@@ -1,0 +1,29 @@
+name: Agent Tests
+
+on:
+  push:
+    paths:
+      - 'apps/api/src/app/endpoints/agent/**'
+  pull_request:
+    paths:
+      - 'apps/api/src/app/endpoints/agent/**'
+  workflow_dispatch:
+
+jobs:
+  agent-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run agent unit tests
+        run: npx nx test api --testFile=agent.service.spec.ts --skip-nx-cache
+
+      - name: Build API (type check)
+        run: npx nx run api:build --skip-nx-cache
