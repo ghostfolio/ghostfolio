@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Chinese (`zh`)
 - Upgraded `nestjs` from version `11.1.8` to `11.1.14`
 
 ### Fixed
