@@ -188,8 +188,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
         !this.data.activity?.accountId &&
         this.mode === 'create'
           ? this.data.accounts[0].id
-          : this.data.activity?.accountId,
-        Validators.required
+          : this.data.activity?.accountId
       ],
       assetClass: [this.data.activity?.SymbolProfile?.assetClass],
       assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
@@ -365,11 +364,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
           (this.activityForm.get('dataSource').value === 'MANUAL' &&
             type === 'BUY')
         ) {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId').value;
@@ -397,11 +391,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
           this.activityForm.get('updateAccountBalance').disable();
           this.activityForm.get('updateAccountBalance').setValue(false);
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId').value;
@@ -447,8 +436,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
             this.activityForm.get('updateAccountBalance').setValue(false);
           }
         } else {
-          this.activityForm.get('accountId').setValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
           this.activityForm
             .get('dataSource')
             .setValidators(Validators.required);

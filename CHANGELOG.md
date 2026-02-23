@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.242.0 - 2026-02-22
+
+### Changed
+
+- Changed the account field to optional in the create or update activity dialog
+
+### Fixed
+
+- Fixed a validation issue for valuables used in the create and import activity logic
+- Fixed the page size for presets in the historical market data table of the admin control panel
+
 ## 2.241.0 - 2026-02-21
 
 ### Changed
@@ -18,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue with `balanceInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `comment` of the accounts in the value redaction interceptor for the impersonation mode
-- Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `interestInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `value` of the accounts in the value redaction interceptor for the impersonation mode
