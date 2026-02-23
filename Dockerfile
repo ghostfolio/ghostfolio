@@ -31,7 +31,7 @@ COPY ./replace.build.mjs replace.build.mjs
 COPY ./tsconfig.base.json tsconfig.base.json
 
 ENV NX_DAEMON=false
-RUN npm run build:production
+RUN npm run build:production:runtime
 
 # Prepare the dist image with additional node_modules
 WORKDIR /ghostfolio/dist/apps/api
