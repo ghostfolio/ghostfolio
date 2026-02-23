@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Chinese (`zh`)
+
 ### Fixed
 
 - Fixed an issue when creating activities of type `FEE`, `INTEREST` or `LIABILITY`
