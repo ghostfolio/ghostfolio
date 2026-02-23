@@ -123,10 +123,10 @@ Last updated: 2026-02-23
 ## Session Plan (2026-02-23, Core Features Expansion)
 
 - [x] Run focused AI verification gate before feature work (`npm run test:ai`, `nx run api:lint`)
-- [ ] Expand agent toolset from 3 to 5 meaningful finance tools
-- [ ] Add deterministic tests for new tool planning and orchestration
-- [ ] Extend MVP eval dataset with coverage for new tools
-- [ ] Run focused AI regression suite and push to `origin/main`
+- [x] Expand agent toolset from 3 to 5 meaningful finance tools
+- [x] Add deterministic tests for new tool planning and orchestration
+- [x] Extend MVP eval dataset with coverage for new tools
+- [x] Run focused AI regression suite and push to `origin/main`
 
 ## Verification Notes
 
