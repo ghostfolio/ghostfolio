@@ -26,7 +26,7 @@ Last updated: 2026-02-23
 | T-005 | Eval dataset baseline (MVP 5-10) | Complete | `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Planned |
 | T-006 | Full eval dataset (50+) | Planned | Dataset validation and regression run | Planned |
 | T-007 | Observability wiring (LangSmith traces and metrics) | Planned | Trace assertions and latency checks | Planned |
-| T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | Pending push |
+| T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | `2b6506de8` |
 
 ## Notes
 
@@ -95,14 +95,14 @@ Last updated: 2026-02-23
 - [x] Trigger redeploy and verify production health endpoint on image-based deploy
 - [x] Create 1-page AI development log document for submission
 - [x] Create AI cost analysis document with 100/1K/10K/100K projections
-- [ ] Push submission documents and deployment updates to `origin/main`
+- [x] Push submission documents and deployment updates to `origin/main`
 
 ## Session Plan (2026-02-23, Railway Crash Recovery)
 
 - [x] Reproduce Railway start-command failure locally
-- [ ] Correct Railway start command to built API entrypoint
-- [ ] Verify fixed command resolves module-not-found crash
-- [ ] Update task tracker evidence for deploy follow-up
+- [x] Correct Railway start command to built API entrypoint
+- [x] Verify fixed command resolves module-not-found crash
+- [x] Update task tracker evidence for deploy follow-up
 
 ## Verification Notes
 
@@ -121,3 +121,7 @@ Last updated: 2026-02-23
   - `npx dotenv-cli -e .env -- npx -y @railway/cli@latest up --detach`
   - `npx dotenv-cli -e .env -- npx -y @railway/cli@latest service status`
   - `curl -i https://ghostfolio-api-production.up.railway.app/api/v1/health`
+- Railway crash recovery verification (local):
+  - `node main.js` fails with `MODULE_NOT_FOUND` for `/ghostfolio/main.js` (old command)
+  - `node dist/apps/api/main.js` starts successfully
+  - `curl -fsS http://127.0.0.1:3333/api/v1/health` returns `{"status":"OK"}`

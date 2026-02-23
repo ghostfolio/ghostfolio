@@ -13,7 +13,7 @@ Last updated: 2026-02-23
 | T-005 | Eval dataset baseline (MVP 5-10) | Complete | `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Planned |
 | T-006 | Full eval dataset (50+) | Planned | Dataset validation and regression run | Planned |
 | T-007 | Observability wiring (LangSmith traces and metrics) | Planned | Trace assertions and latency checks | Planned |
-| T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | Pending push |
+| T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | `2b6506de8` |
 
 ## Notes
 
