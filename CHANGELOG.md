@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `nestjs` from version `11.1.8` to `11.1.14`
+
 ### Fixed
 
 - Fixed an issue when creating activities of type `FEE`, `INTEREST` or `LIABILITY`
