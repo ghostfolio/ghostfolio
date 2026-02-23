@@ -115,7 +115,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
     addYears(new Date(), 10)
   );
-  private unsubscribeSubject = new Subject<void>();
+  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
