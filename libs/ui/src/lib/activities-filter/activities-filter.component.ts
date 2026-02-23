@@ -8,14 +8,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
-  Output,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  input,
+  output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocomplete,
@@ -30,8 +30,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, searchOutline } from 'ionicons/icons';
 import { groupBy } from 'lodash';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 import { translate } from '../i18n';
 
@@ -53,28 +52,26 @@ import { translate } from '../i18n';
   styleUrls: ['./activities-filter.component.scss'],
   templateUrl: './activities-filter.component.html'
 })
-export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
+export class GfActivitiesFilterComponent implements OnChanges {
   @Input() allFilters: Filter[];
-  @Input() isLoading: boolean;
-  @Input() placeholder: string;
 
-  @Output() valueChanged = new EventEmitter<Filter[]>();
+  @ViewChild('autocomplete') protected matAutocomplete: MatAutocomplete;
+  @ViewChild('searchInput') protected searchInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
-  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+  public readonly isLoading = input.required<boolean>();
+  public readonly placeholder = input.required<string>();
+  public readonly valueChanged = output<Filter[]>();
 
-  public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
-  public filters$: Subject<Filter[]> = new BehaviorSubject([]);
-  public filters: Observable<Filter[]> = this.filters$.asObservable();
-  public searchControl = new FormControl<Filter | string>(undefined);
-  public selectedFilters: Filter[] = [];
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
-
-  private unsubscribeSubject = new Subject<void>();
+  protected readonly filterGroups$ = new BehaviorSubject<FilterGroup[]>([]);
+  protected readonly searchControl = new FormControl<Filter | string | null>(
+    null
+  );
+  protected selectedFilters: Filter[] = [];
+  protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public constructor() {
     this.searchControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe((filterOrSearchTerm) => {
         if (filterOrSearchTerm) {
           const searchTerm =
@@ -97,41 +94,39 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onAddFilter({ input, value }: MatChipInputEvent) {
+  public onAddFilter({ chipInput, value }: MatChipInputEvent) {
     if (value?.trim()) {
       this.updateFilters();
     }
 
     // Reset the input value
-    if (input) {
-      input.value = '';
+    if (chipInput.inputElement) {
+      chipInput.inputElement.value = '';
     }
 
-    this.searchControl.setValue(undefined);
+    this.searchControl.setValue(null);
   }
 
   public onRemoveFilter(aFilter: Filter) {
-    this.selectedFilters = this.selectedFilters.filter((filter) => {
-      return filter.id !== aFilter.id;
+    this.selectedFilters = this.selectedFilters.filter(({ id }) => {
+      return id !== aFilter.id;
     });
 
     this.updateFilters();
   }
 
   public onSelectFilter(event: MatAutocompleteSelectedEvent) {
-    this.selectedFilters.push(
-      this.allFilters.find((filter) => {
-        return filter.id === event.option.value;
-      })
-    );
+    const filter = this.allFilters.find(({ id }) => {
+      return id === event.option.value;
+    });
+
+    if (filter) {
+      this.selectedFilters.push(filter);
+    }
+
     this.updateFilters();
     this.searchInput.nativeElement.value = '';
-    this.searchControl.setValue(undefined);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+    this.searchControl.setValue(null);
   }
 
   private getGroupedFilters(searchTerm?: string) {
@@ -139,23 +134,23 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
       this.allFilters
         .filter((filter) => {
           // Filter selected filters
-          return !this.selectedFilters.some((selectedFilter) => {
-            return selectedFilter.id === filter.id;
+          return !this.selectedFilters.some(({ id }) => {
+            return id === filter.id;
           });
         })
         .filter((filter) => {
           if (searchTerm) {
             // Filter by search term
             return filter.label
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(searchTerm.toLowerCase());
           }
 
           return filter;
         })
-        .sort((a, b) => a.label?.localeCompare(b.label)),
-      (filter) => {
-        return filter.type;
+        .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? '')),
+      ({ type }) => {
+        return type;
       }
     );
 

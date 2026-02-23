@@ -7,14 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Chinese (`zh`)
+
+## 2.242.0 - 2026-02-22
+
+### Changed
+
+- Changed the account field to optional in the create or update activity dialog
+
+### Fixed
+
+- Fixed a validation issue for valuables used in the create and import activity logic
+- Fixed the page size for presets in the historical market data table of the admin control panel
+
+## 2.241.0 - 2026-02-21
+
+### Changed
+
+- Improved the usability of the portfolio summary tab on the home page in the _Presenter View_
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Fixed an issue with `balanceInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `comment` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `interestInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `value` of the accounts in the value redaction interceptor for the impersonation mode
+
+## 2.240.0 - 2026-02-18
+
 ### Added
 
+- Added a _No Activities_ preset to the historical market data table of the admin control panel
 - Added support for custom cryptocurrencies defined in the database
 - Added support for the cryptocurrency _Sky_
 
 ### Changed
 
-- Improved the language localization for Chinese (`zh`)
+- Harmonized the validation for the create activity endpoint with the existing import activity logic
+- Upgraded `marked` from version `17.0.1` to `17.0.2`
 - Upgraded `ngx-markdown` from version `21.0.1` to `21.1.0`
 
 ## 2.239.0 - 2026-02-15
