@@ -1,0 +1,18 @@
+# Keep Docker build context lean for faster Railway uploads and builds.
+# Main savings: local dependencies, VCS data, build artifacts.
+node_modules
+.git
+dist
+coverage
+.nx
+
+# Local/dev metadata not needed in container build context.
+.env
+.env.*
+.DS_Store
+*.log
+
+# Project-specific local work artifacts.
+docs
+tasks
+thoughts
