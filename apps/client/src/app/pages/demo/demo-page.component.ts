@@ -3,9 +3,8 @@ import { InfoItem } from '@ghostfolio/common/interfaces';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -13,10 +12,8 @@ import { Subject } from 'rxjs';
   standalone: true,
   templateUrl: './demo-page.html'
 })
-export class GfDemoPageComponent implements OnDestroy {
+export class GfDemoPageComponent {
   public info: InfoItem;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private dataService: DataService,
@@ -39,10 +36,5 @@ export class GfDemoPageComponent implements OnDestroy {
     }
 
     this.router.navigate(['/']);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
