@@ -1,0 +1,238 @@
+<div class="container">
+  <h1 class="h3 mb-3 text-center" i18n>AI Chat</h1>
+
+  <div class="row">
+    <div class="col-lg-4 mb-3 mb-lg-0">
+      <mat-card appearance="outlined" class="h-100">
+        <mat-card-content>
+          <button
+            class="w-100"
+            color="primary"
+            mat-flat-button
+            type="button"
+            (click)="onNewChat()"
+          >
+            <span class="align-items-center d-inline-flex">
+              <mat-icon aria-hidden="true" class="mr-1">add</mat-icon>
+              <span i18n>New chat</span>
+            </span>
+          </button>
+
+          <div class="conversation-list mt-3">
+            @for (
+              conversation of conversations;
+              track trackConversationById($index, conversation)
+            ) {
+              <div class="align-items-center conversation-row d-flex mb-2">
+                <button
+                  class="conversation-select flex-grow-1 text-left"
+                  mat-stroked-button
+                  type="button"
+                  [class.active]="currentConversation?.id === conversation.id"
+                  (click)="onSelectConversation(conversation.id)"
+                >
+                  <div class="conversation-title text-truncate">{{ conversation.title }}</div>
+                  <div class="conversation-meta text-muted">
+                    {{ conversation.updatedAt | date: 'short' }}
+                  </div>
+                </button>
+
+                <button
+                  aria-label="Delete conversation"
+                  class="conversation-delete ml-1"
+                  i18n-aria-label
+                  mat-icon-button
+                  type="button"
+                  (click)="onDeleteConversation($event, conversation.id)"
+                >
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="col-lg-8">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          @if (!hasPermissionToReadAiPrompt) {
+            <div class="alert alert-warning mb-0" role="alert" i18n>
+              You need AI prompt permission to use this assistant.
+            </div>
+          } @else {
+            <div class="d-flex flex-wrap mb-3 prompt-list">
+              @for (prompt of starterPrompts; track prompt) {
+                <button
+                  class="mr-2 mb-2"
+                  mat-stroked-button
+                  type="button"
+                  (click)="onSelectStarterPrompt(prompt)"
+                >
+                  {{ prompt }}
+                </button>
+              }
+            </div>
+
+            <mat-form-field class="w-100">
+              <mat-label i18n>Ask about your portfolio</mat-label>
+              <textarea
+                aria-label="Ask about your portfolio"
+                i18n-aria-label
+                matInput
+                rows="3"
+                [(ngModel)]="query"
+                [disabled]="isSubmitting"
+                (keydown.enter)="onSubmitFromKeyboard($event)"
+              ></textarea>
+            </mat-form-field>
+
+            <div class="align-items-center d-flex mb-3">
+              <button
+                color="primary"
+                mat-flat-button
+                type="button"
+                [disabled]="isSubmitting || !query?.trim()"
+                (click)="onSubmit()"
+              >
+                <ng-container i18n>Send</ng-container>
+              </button>
+              @if (isSubmitting) {
+                <mat-spinner class="ml-3" color="accent" [diameter]="20" />
+              }
+            </div>
+
+            @if (errorMessage) {
+              <div class="alert alert-danger mb-3" role="alert">
+                {{ errorMessage }}
+              </div>
+            }
+
+            <div #chatLogContainer aria-live="polite" aria-relevant="additions text" class="chat-log" role="log">
+              @for (message of visibleMessages; track message.id) {
+                <div
+                  class="chat-message mb-3 p-3 rounded"
+                  [class.assistant]="message.role === 'assistant'"
+                  [class.user]="message.role === 'user'"
+                >
+                  <div class="chat-message-header mb-1 text-muted">
+                    <span class="role-label text-uppercase">{{ getRoleLabel(message.role) }}</span>
+                    <span class="ml-2 timestamp">{{
+                      message.createdAt | date: 'shortTime'
+                    }}</span>
+
+                    @if (message.role === 'assistant' && message.response) {
+                      <button
+                        aria-label="Show response details"
+                        class="chat-details-trigger ml-2"
+                        i18n-aria-label
+                        mat-stroked-button
+                        type="button"
+                        [matMenuTriggerFor]="responseDetailsMenu"
+                        (click)="onOpenResponseDetails(message.response)"
+                      >
+                        <mat-icon aria-hidden="true">info</mat-icon>
+                        <span i18n>Info</span>
+                      </button>
+                    }
+                  </div>
+                  <div class="chat-message-content">{{ message.content }}</div>
+
+                  @if (message.feedback) {
+                    <div class="align-items-center d-flex feedback-controls mt-2">
+                      <button
+                        class="mr-2"
+                        mat-stroked-button
+                        type="button"
+                        [disabled]="
+                          message.feedback.isSubmitting || !!message.feedback.rating
+                        "
+                        (click)="onRateResponse({ messageId: message.id, rating: 'up' })"
+                      >
+                        <ng-container i18n>Helpful</ng-container>
+                      </button>
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        [disabled]="
+                          message.feedback.isSubmitting || !!message.feedback.rating
+                        "
+                        (click)="onRateResponse({ messageId: message.id, rating: 'down' })"
+                      >
+                        <ng-container i18n>Needs work</ng-container>
+                      </button>
+
+                      @if (message.feedback.isSubmitting) {
+                        <span class="ml-2 text-muted" i18n>Saving feedback...</span>
+                      } @else if (message.feedback.feedbackId) {
+                        <span class="ml-2 text-muted" i18n>Feedback saved</span>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+            <mat-menu #responseDetailsMenu="matMenu" class="no-max-width" xPosition="before">
+              <div class="response-details-panel p-3" (click)="$event.stopPropagation()">
+                @if (activeResponseDetails; as details) {
+                  <div class="response-details-section">
+                    <strong i18n>Confidence</strong>:
+                    {{ details.confidence.score * 100 | number: '1.0-0' }}%
+                    ({{ details.confidence.band }})
+                  </div>
+
+                  @if (details.citations.length > 0) {
+                    <div class="response-details-section">
+                      <strong i18n>Citations</strong>
+                      <ul class="mb-0 pl-3 response-details-list">
+                        @for (citation of details.citations; track $index) {
+                          <li>
+                            <span class="font-weight-bold">{{ citation.source }}</span>
+                            -
+                            {{ citation.snippet }}
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  }
+
+                  @if (details.verification.length > 0) {
+                    <div class="response-details-section">
+                      <strong i18n>Verification</strong>
+                      <ul class="mb-0 pl-3 response-details-list">
+                        @for (check of details.verification; track $index) {
+                          <li>
+                            <span class="text-capitalize">{{ check.status }}</span>
+                            -
+                            {{ check.check }}:
+                            {{ check.details }}
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  }
+
+                  @if (details.observability) {
+                    <div class="response-details-section">
+                      <strong i18n>Observability</strong>:
+                      <span class="ml-1"
+                        >{{ details.observability.latencyInMs }}ms, ~{{
+                          details.observability.tokenEstimate.total
+                        }}
+                        tokens</span
+                      >
+                    </div>
+                  }
+                } @else {
+                  <span class="text-muted" i18n>No response details available.</span>
+                }
+              </div>
+            </mat-menu>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
