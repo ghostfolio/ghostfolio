@@ -16,15 +16,15 @@ Ghostfolio is a privacy-first, open-source personal finance dashboard for tracki
 
 ### What AgentForge Adds (The AI Layer)
 
-AgentForge extends Ghostfolio's **existing AiModule** (not a new module) to add a full conversational agent:
+AgentForge adds a **new, independent `AgentModule`** — separate from the existing `AiModule` — providing a full conversational agent:
 
-- **LangGraph TS ReAct agent** — `createReactAgent` with tool-calling loop and verification post-node
+- **LangGraph TS StateGraph** — 6-node pipeline: `query → plan → execute → verify → disclaim → respond`
+- **Model-agnostic LLM provider** — defaults to Claude Sonnet 4 via `@langchain/anthropic`, swappable to any provider
 - **7 tools** wrapping existing Ghostfolio services (portfolio summary, performance, holdings, activities, market data, risk analysis, account overview)
-- **Real-time streaming** — Server-Sent Events (SSE) for streaming AI responses via new `POST /api/v1/ai/chat` endpoint
-- **Conversation memory** — persistent chat history stored in PostgreSQL via Prisma (`Conversation` + `Message` models)
+- **Real-time streaming** — Server-Sent Events (SSE) for streaming AI responses via `POST /api/v1/agents/chat`
+- **Conversation memory** — LangGraph checkpointer persisted to PostgreSQL (no custom Prisma models needed)
 - **LangSmith observability** — tracing, latency metrics, and tool-call auditing
-- **Admin-configurable LLM** — API keys and model selection stored via PropertyService (already exists)
-- **Extended Assistant UI** — Angular Assistant component gains a chat tab alongside existing search
+- **Minimal chat UI** — dedicated `/chat` page with message history and streaming display
 
 ---
 
@@ -37,7 +37,7 @@ AgentForge extends Ghostfolio's **existing AiModule** (not a new module) to add 
 | **Frontend** | Angular 21.x with Angular Material |
 | **Database** | PostgreSQL 15 via Prisma 6.x ORM |
 | **Cache** | Redis (Bull queues for background jobs) |
-| **AI/LLM** | LangGraph TS (`@langchain/langgraph`), Vercel AI SDK, LangSmith |
+| **AI/LLM** | LangGraph TS (`@langchain/langgraph`), `@langchain/anthropic`, LangSmith |
 | **Auth** | JWT, Google OAuth, OIDC, WebAuthn (Passport strategies) |
 | **Containerization** | Docker / Docker Compose |
 | **i18n** | Angular i18n (12 languages) |
@@ -226,84 +226,87 @@ Key models in `prisma/schema.prisma`:
 
 ---
 
-## Existing AI Infrastructure
+## Existing AI Infrastructure (Reference Only)
 
-Ghostfolio already has a lightweight AI module. AgentForge extends it rather than replacing it.
-
-### Current State
+Ghostfolio has an existing lightweight `AiModule` (from PR #4176). AgentForge does **not** extend it — we build a new, independent `AgentModule`. The existing module is documented here for reference only.
 
 | Component | Location | What It Does |
 |-----------|----------|-------------|
-| **AiController** | `apps/api/src/app/endpoints/ai/ai.controller.ts` | `GET /api/v1/ai/prompt/:mode` — returns a formatted prompt string |
-| **AiService** | `apps/api/src/app/endpoints/ai/ai.service.ts` | `getPrompt()` builds a markdown holdings table; `generateText()` calls OpenRouter via Vercel AI SDK |
-| **AiModule** | `apps/api/src/app/endpoints/ai/ai.module.ts` | Imports PortfolioService, AccountService, MarketDataService, etc. |
-| **Assistant UI** | `libs/ui/src/lib/assistant/assistant.component.ts` | Search/navigation modal (accounts, holdings, asset profiles, quick links) — **not yet a chat UI** |
-| **PropertyService** | `apps/api/src/services/property/property.service.ts` | Stores `API_KEY_OPENROUTER` and `OPENROUTER_MODEL` in the `Property` DB table |
-| **Config constants** | `libs/common/src/lib/config.ts` | `PROPERTY_API_KEY_OPENROUTER`, `PROPERTY_OPENROUTER_MODEL`, `PROPERTY_SYSTEM_MESSAGE` |
-| **Permission** | `libs/common/src/lib/permissions.ts` | `readAiPrompt` — granted to ADMIN, DEMO, USER roles |
-| **AI SDK deps** | `package.json` | `ai` (Vercel AI SDK 4.x), `@openrouter/ai-sdk-provider` |
+| `AiController` | `apps/api/src/app/endpoints/ai/ai.controller.ts` | `GET /api/v1/ai/prompt/:mode` — returns a formatted prompt string |
+| `AiService` | `apps/api/src/app/endpoints/ai/ai.service.ts` | `getPrompt()` builds a markdown holdings table; `generateText()` calls OpenRouter via Vercel AI SDK |
+| `AiModule` | `apps/api/src/app/endpoints/ai/ai.module.ts` | Imports PortfolioService, AccountService, MarketDataService, etc. |
+| `Assistant UI` | `libs/ui/src/lib/assistant/assistant.component.ts` | Search/navigation modal — **not a chat UI** |
 
-### Current Data Flow
-
-1. User opens Analysis page → clicks "Copy AI Prompt" (portfolio or analysis mode)
-2. Frontend calls `GET /api/v1/ai/prompt/{mode}` with optional filters
-3. `AiService.getPrompt()` fetches holdings via `PortfolioService.getDetails()`, formats a markdown table
-4. Prompt is copied to clipboard; user pastes into external LLM (Duck.ai, ChatGPT, etc.)
-
-**Key insight:** The current flow is prompt-generation-only with no in-app chat, no tool calling, and no conversation memory.
+**We do not touch any of these files.** Our `AgentModule` is fully independent.
 
 ---
 
-## AgentForge Integration Plan (v3)
+## AgentForge Integration Plan (v2)
 
-The core principle: **extend the existing `AiModule`** — do not create a new module. Add files alongside `ai.controller.ts` and `ai.service.ts`.
+### Core Principle
 
-### Architecture: LangGraph TS ReAct Agent
+**New, independent `AgentModule`** — does not modify or depend on the existing `AiModule`. Clean separation, own endpoints, own state management.
 
-A single `createReactAgent` (from `@langchain/langgraph`) with a tool-calling loop and a **verification post-node** that reviews tool outputs before responding to the user.
+### Architecture: LangGraph TS StateGraph (6 Nodes)
 
 ```
 User message
     │
     ▼
-┌─────────┐     ┌───────────┐     ┌──────────────┐
-│  Agent   │────▶│   Tools   │────▶│ Verification │
-│  (ReAct) │◀────│ (7 tools) │◀────│  Post-Node   │
-└─────────┘     └───────────┘     └──────────────┘
-    │
-    ▼
-Streamed response (SSE)
+┌─────────┐   ┌────────┐   ┌───────────┐   ┌──────────┐   ┌───────────┐   ┌───────────┐
+│  Query   │──▶│  Plan  │──▶│  Execute  │──▶│  Verify  │──▶│ Disclaim  │──▶│  Respond  │
+│  (parse) │   │(decide)│   │  (tools)  │   │ (checks) │   │(caveats)  │   │ (stream)  │
+└─────────┘   └────────┘   └───────────┘   └──────────┘   └───────────┘   └───────────┘
 ```
 
-### Extended Module Structure
+| Node | Purpose |
+|------|---------|
+| **Query** | Parse user input, classify intent, extract entities |
+| **Plan** | Decide which tools to call and in what order |
+| **Execute** | Run tools via LangGraph tool-calling loop (may cycle back to Plan) |
+| **Verify** | Domain-specific validation — sanity-check numbers, flag stale data, validate ranges |
+| **Disclaim** | Inject financial disclaimers ("not financial advice", data freshness caveats) |
+| **Respond** | Format final response and stream via SSE |
+
+### Module Structure
 
 ```
-apps/api/src/app/endpoints/ai/
-├── ai.module.ts                    # Extended with new providers
-├── ai.controller.ts                # Extended with POST /chat and GET /conversations
-├── ai.service.ts                   # Extended with agent orchestration
-├── tools/                          # NEW — LangGraph tool definitions
-│   ├── portfolio-summary.tool.ts   # Wraps PortfolioService.getDetails()
-│   ├── portfolio-performance.tool.ts # Wraps PortfolioService.getPerformance()
-│   ├── holdings-lookup.tool.ts     # Wraps PortfolioService.getHoldings()
-│   ├── activity-search.tool.ts     # Wraps OrderService
-│   ├── market-data.tool.ts         # Wraps DataProviderService
-│   ├── risk-analysis.tool.ts       # Wraps RulesService / portfolio rules
-│   └── account-overview.tool.ts    # Wraps AccountService
-├── memory/                         # NEW — Conversation persistence
-│   └── conversation.service.ts     # CRUD for Conversation + Message via Prisma
-└── streaming/                      # NEW — SSE streaming
-    └── sse.service.ts              # Server-Sent Events for token delivery
+apps/api/src/app/endpoints/agents/
+├── agent.module.ts                    # NestJS module (independent from AiModule)
+├── agent.controller.ts                # REST + SSE endpoints
+├── agent.service.ts                   # Core orchestration — builds and invokes the graph
+├── graph/
+│   ├── agent.graph.ts                 # StateGraph definition with 6 nodes
+│   ├── state.ts                       # AgentState type definition
+│   └── nodes/
+│       ├── query.node.ts              # Intent classification + entity extraction
+│       ├── plan.node.ts               # Tool selection + execution planning
+│       ├── execute.node.ts            # Tool invocation via LangGraph
+│       ├── verify.node.ts             # Domain-specific output validation
+│       ├── disclaim.node.ts           # Financial disclaimer injection
+│       └── respond.node.ts            # Response formatting + SSE streaming
+├── tools/
+│   ├── portfolio-summary.tool.ts      # Wraps PortfolioService.getDetails()
+│   ├── portfolio-performance.tool.ts  # Wraps PortfolioService.getPerformance()
+│   ├── holdings-detail.tool.ts        # Wraps PortfolioService.getHoldings()
+│   ├── activity-history.tool.ts       # Wraps OrderService
+│   ├── market-data.tool.ts            # Wraps DataProviderService
+│   ├── account-overview.tool.ts       # Wraps AccountService
+│   └── risk-report.tool.ts            # Wraps RulesService + portfolio rules
+├── providers/
+│   └── llm-provider.ts               # Model-agnostic LLM provider interface
+└── streaming/
+    └── sse.service.ts                 # Server-Sent Events for token delivery
 ```
 
-### New API Endpoints
+### API Endpoints
 
 | Method | Route | Purpose |
 |--------|-------|---------|
-| `POST` | `/api/v1/ai/chat` | Send message, get streamed SSE response |
-| `GET` | `/api/v1/ai/conversations` | List user's conversations |
-| `GET` | `/api/v1/ai/conversations/:id` | Get conversation with messages |
-| `DELETE` | `/api/v1/ai/conversations/:id` | Delete a conversation |
+| `POST` | `/api/v1/agents/chat` | Send message, get streamed SSE response |
+| `GET` | `/api/v1/agents/conversations` | List user's conversations |
+| `GET` | `/api/v1/agents/conversations/:id` | Get conversation with messages |
+| `DELETE` | `/api/v1/agents/conversations/:id` | Delete a conversation |
 
 ### 7 Tools (LangGraph `DynamicStructuredTool`)
 
@@ -311,48 +314,43 @@ Each tool wraps an existing Ghostfolio service — **no duplicate business logic
 
 | Tool Name | Wraps | Input Schema | Returns |
 |-----------|-------|-------------|---------|
-| `portfolio_summary` | `PortfolioService.getDetails()` | filters (accounts, tags, assetClasses) | Holdings table with allocations, sectors, currencies |
-| `portfolio_performance` | `PortfolioService.getPerformance()` | dateRange, filters | ROI, TWR, MWR, chart data for time range |
-| `holdings_lookup` | `PortfolioService.getHoldings()` | symbol (optional), filters | Detailed holding info (quantity, price, P&L) |
-| `activity_search` | `OrderService.getOrders()` | symbol, type, dateRange | Filtered transaction history |
+| `portfolio_summary` | `PortfolioService.getDetails()` | filters (accounts, tags, assetClasses) | Holdings with allocations, sectors, currencies |
+| `portfolio_performance` | `PortfolioService.getPerformance()` | dateRange, filters | ROI, TWR, MWR, chart data |
+| `holdings_detail` | `PortfolioService.getHoldings()` | symbol (optional), filters | Quantity, price, P&L per holding |
+| `activity_history` | `OrderService.getOrders()` | symbol, type, dateRange | Filtered transaction history |
 | `market_data` | `DataProviderService.getQuotes()` | symbols[] | Current quotes, daily change, market state |
-| `risk_analysis` | `RulesService` + portfolio rules | filters | Rule evaluations (cluster risk, currency risk, etc.) |
+| `risk_report` | `RulesService` + portfolio rules | filters | Rule evaluations (cluster risk, currency risk, etc.) |
 | `account_overview` | `AccountService.getAccounts()` | accountId (optional) | Account balances, platforms, cash positions |
 
-### New Prisma Models
+### Conversation Memory
 
-```prisma
-model Conversation {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  messages  Message[]
-  title     String?
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-}
+Uses **LangGraph checkpointer** persisted to PostgreSQL — no custom Prisma `Conversation`/`Message` models needed. LangGraph manages state serialization and retrieval natively via `@langchain/langgraph-checkpoint-postgres`.
 
-model Message {
-  id             String       @id @default(uuid())
-  content        String
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  conversationId String
-  createdAt      DateTime     @default(now())
-  role           String       // 'user' | 'assistant' | 'tool'
-  toolCalls      Json?        // Serialized tool invocations
-  tokenCount     Int?
-}
+Each conversation is identified by a `thread_id` (UUID). The checkpointer stores the full graph state (messages, tool results, metadata) at each step.
+
+### LLM Provider
+
+Model-agnostic provider interface with **Claude Sonnet 4** as default:
+
+```typescript
+// providers/llm-provider.ts
+import { ChatAnthropic } from '@langchain/anthropic';
+
+// Default: Claude Sonnet 4 via Anthropic API
+// Swappable to OpenAI, OpenRouter, or any @langchain/* provider
 ```
 
-### Frontend: Extended Assistant Component
+API key stored via `PropertyService` (key: `API_KEY_ANTHROPIC`). Model configurable via `ANTHROPIC_MODEL` property.
 
-The existing `GfAssistantComponent` (`libs/ui/src/lib/assistant/`) gains a **chat tab** alongside the current search functionality:
+### Frontend: Dedicated Chat Page
 
-- New tab or mode toggle: **Search** (existing) | **Chat** (new)
-- Chat tab renders conversation history with streaming message display
-- Input field sends messages to `POST /api/v1/ai/chat`
-- SSE consumption for real-time token rendering
-- Conversation list sidebar for switching between chats
+New lazy-loaded Angular route at `/chat`:
+
+- Full-page layout with conversation list sidebar + chat area
+- Streaming message display via SSE (`EventSource`)
+- Input field sends to `POST /api/v1/agents/chat`
+- Basic markdown rendering for agent responses
+- Shows tool call indicators (e.g., "Fetching portfolio summary...")
 
 ### Observability: LangSmith
 
@@ -363,13 +361,33 @@ The existing `GfAssistantComponent` (`libs/ui/src/lib/assistant/`) gains a **cha
 
 ### Key Design Principles
 
-1. **Extend, don't fork** — add to the existing `AiModule`; keep all current prompt-generation functionality working
+1. **Independent module** — `AgentModule` is fully separate from `AiModule`; no shared state, no shared code
 2. **Wrap, don't replace** — tools call existing services; no duplicate business logic
-3. **Verification post-node** — LangGraph graph includes a node after tool execution that validates outputs before responding
-4. **Streaming-first** — all chat responses use SSE for real-time token delivery
-5. **Permission-gated** — tool access respects existing `readAiPrompt` permission and user roles
-6. **Admin-configurable** — LLM provider, model, and API keys stored in PropertyService (no env vars needed)
-7. **Auditable** — LangSmith tracing for all tool invocations; Message model stores toolCalls JSON
+3. **6-node pipeline** — query → plan → execute → verify → disclaim → respond
+4. **Verify node** — domain-specific validation (sanity-check portfolio values, flag stale data, validate date ranges)
+5. **Disclaim node** — automatic financial disclaimers on all responses
+6. **Streaming-first** — all chat responses use SSE for real-time token delivery
+7. **Model-agnostic** — swap LLM provider without code changes; just update PropertyService
+8. **LangGraph-native memory** — checkpointer handles conversation persistence, no custom ORM models
+9. **Auditable** — LangSmith tracing for all tool invocations
+
+---
+
+## 24-Hour MVP Requirements (Hard Gate)
+
+All items required to pass:
+
+| # | Requirement | Implementation |
+|---|------------|----------------|
+| 1 | Agent responds to natural language queries | LangGraph StateGraph with Claude Sonnet 4 |
+| 2 | At least 3 functional tools | `portfolio_summary`, `holdings_detail`, `account_overview` |
+| 3 | Tool calls execute successfully with structured results | Tools wrap existing services, return typed JSON |
+| 4 | Agent synthesizes tool results into coherent responses | Respond node formats tool outputs into natural language |
+| 5 | Conversation history maintained across turns | LangGraph checkpointer to PostgreSQL |
+| 6 | Basic error handling (graceful failure, not crashes) | Try/catch in each node, fallback error messages |
+| 7 | At least one domain-specific verification check | Verify node: validate portfolio totals, flag stale market data |
+| 8 | 5+ test cases with expected outcomes | Jest test suite in `agent.service.spec.ts` |
+| 9 | Deployed and publicly accessible | Docker build via existing `docker-compose.build.yml` |
 
 ---
 
