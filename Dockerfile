@@ -52,6 +52,8 @@ RUN npm run database:generate-typings
 FROM node:22-slim
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
+# Railway and most PaaS route to 3000; app default is 3333. Set here so healthcheck passes even if PORT isn't in Variables.
+ENV PORT=3000
 
 RUN apt-get update && apt-get install -y --no-install-suggests \
   curl \
@@ -61,6 +63,6 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
 COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps/
 COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/
 WORKDIR /ghostfolio/apps/api
-EXPOSE ${PORT:-3333}
+EXPOSE 3000
 USER node
 CMD [ "/ghostfolio/entrypoint.sh" ]

@@ -86,7 +86,11 @@ async function bootstrap() {
   }
 
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;
-  const PORT = configService.get<number>('PORT') || DEFAULT_PORT;
+  // Prefer process.env.PORT so Railway/Heroku etc. work (they inject PORT; app default is 3333)
+  const PORT =
+    Number(process.env.PORT) ||
+    configService.get<number>('PORT') ||
+    DEFAULT_PORT;
 
   await app.listen(PORT, HOST, () => {
     logLogo();

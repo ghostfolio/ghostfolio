@@ -39,7 +39,7 @@ Here, **Postgres and Redis are provided by Railway**; you only generate the two 
 | **OPENROUTER_API_KEY** | Your key from [openrouter.ai](https://openrouter.ai). |
 | **OPENROUTER_MODEL** | Your choice; e.g. `openai/gpt-4o-mini`. |
 | **NODE_ENV** | Set to `production`. |
-| **PORT** | Railway usually sets this (e.g. `3333`); only set if your app expects a specific port. |
+| **PORT** | **Required on Railway.** Set to `3000` so the app listens on the same port Railway routes to (target port 3000). The app default is 3333, so without this you get "Application failed to respond". |
 
 **Setup:** In your Railway project, open the **Ghostfolio** service (the one from GitHub) → **Variables** → add each variable. For Postgres and Redis, copy from the addon services. For `ACCESS_TOKEN_SALT` and `JWT_SECRET_KEY`, generate once and paste.
 
