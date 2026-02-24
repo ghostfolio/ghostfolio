@@ -122,6 +122,7 @@ export class GfHeaderComponent implements OnChanges {
   public routeResources = publicRoutes.resources.path;
   public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkAccount = internalRoutes.account.routerLink;
+  public routerLinkAiChat = internalRoutes.aiChat.routerLink;
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;

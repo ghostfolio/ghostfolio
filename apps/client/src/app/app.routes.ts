@@ -11,6 +11,15 @@ export const routes: Routes = [
       import('./pages/about/about-page.routes').then((m) => m.routes)
   },
   {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/ai-chat/ai-chat-page.component').then(
+        (c) => c.GfAiChatPageComponent
+      ),
+    path: internalRoutes.aiChat.path,
+    title: internalRoutes.aiChat.title
+  },
+  {
     path: internalRoutes.account.path,
     loadChildren: () =>
       import('./pages/user-account/user-account-page.routes').then(

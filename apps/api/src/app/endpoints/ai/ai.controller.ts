@@ -6,10 +6,12 @@ import { permissions } from '@ghostfolio/common/permissions';
 import type { AiPromptMode, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
+  Body,
   Controller,
   Get,
   Inject,
   Param,
+  Post,
   Query,
   UseGuards
 } from '@nestjs/common';
@@ -55,5 +57,20 @@ export class AiController {
     });
 
     return { prompt };
+  }
+
+  @Post('agent')
+  @HasPermission(permissions.readAiPrompt)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async agentChat(
+    @Body() body: { message: string; conversationHistory?: any[] }
+  ) {
+    return this.aiService.agentChat({
+      message: body.message,
+      conversationHistory: body.conversationHistory,
+      impersonationId: undefined,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
+      userId: this.request.user.id
+    });
   }
 }

@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="chat-wrapper">
+    <h3 class="mb-3" i18n>AI Chat</h3>
+
+    <div #messagesContainer class="messages-container">
+      @if (messages.length === 0 && !isLoading) {
+        <div class="empty-state">
+          <p i18n>Ask me anything about your portfolio, holdings, performance, or market data.</p>
+        </div>
+      }
+
+      @for (msg of messages; track $index) {
+        <div class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+          <div class="message-label">
+            @if (msg.role === 'user') {
+              <strong i18n>You</strong>
+            } @else {
+              <strong i18n>Assistant</strong>
+            }
+          </div>
+          <div class="message-content">{{ msg.content }}</div>
+        </div>
+      }
+
+      @if (isLoading) {
+        <div class="message assistant">
+          <div class="message-label"><strong i18n>Assistant</strong></div>
+          <mat-spinner diameter="24"></mat-spinner>
+        </div>
+      }
+    </div>
+
+    <div class="input-area">
+      <mat-form-field class="w-100" appearance="outline">
+        <input
+          matInput
+          placeholder="Ask about your portfolio..."
+          i18n-placeholder
+          [(ngModel)]="userInput"
+          (keydown)="onKeyDown($event)"
+          [disabled]="isLoading"
+        />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!userInput.trim() || isLoading"
+        (click)="sendMessage()"
+        i18n
+      >Send</button>
+    </div>
+  </div>
+</div>

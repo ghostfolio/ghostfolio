@@ -16,6 +16,11 @@ if (typeof window !== 'undefined') {
 }
 
 export const internalRoutes: Record<string, InternalRoute> = {
+  aiChat: {
+    path: 'ai-chat',
+    routerLink: ['/ai-chat'],
+    title: $localize`AI Chat`
+  },
   account: {
     path: 'account',
     routerLink: ['/account'],

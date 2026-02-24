@@ -58,6 +58,20 @@
           >Accounts</a
         >
       </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === internalRoutes.aiChat.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.aiChat.path
+          }"
+          [routerLink]="routerLinkAiChat"
+          >AI Chat</a
+        >
+      </li>
       @if (hasPermissionToAccessAdminControl) {
         <li class="list-inline-item">
           <a
@@ -266,6 +280,16 @@
             }"
             [routerLink]="routerLinkAccounts"
             >Accounts</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.aiChat.path
+            }"
+            [routerLink]="routerLinkAiChat"
+            >AI Chat</a
           >
           <a
             i18n
