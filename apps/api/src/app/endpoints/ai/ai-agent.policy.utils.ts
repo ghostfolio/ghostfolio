@@ -355,13 +355,34 @@ function createNoToolDirectResponse(query?: string) {
     ].join('\n');
   }
 
-  return [
-    'I am Ghostfolio AI. I can help with portfolio analysis, concentration risk, market prices, diversification options, and stress scenarios.',
-    'Try one of these:',
-    '- "Show my top holdings"',
-    '- "What is my concentration risk?"',
-    '- "Help me diversify with actionable options"'
-  ].join('\n');
+  const greetingPattern = /^(hi|hello|hey|hiya|greetings|good (morning|afternoon|evening))/i;
+  const acknowledgmentPattern = /^(thanks|thank you|thx|ty|ok|okay|great|awesome|perfect)/i;
+
+  if (greetingPattern.test(normalizedQuery)) {
+    const greetings = [
+      "Hello! I'm here to help with your portfolio analysis. What would you like to know?",
+      "Hi! I can help you understand your portfolio better. What's on your mind?",
+      "Hey there! Ready to dive into your portfolio? Just ask!"
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  if (acknowledgmentPattern.test(normalizedQuery)) {
+    const acknowledgments = [
+      "You're welcome! Let me know if you need anything else.",
+      "Happy to help! What else would you like to know?",
+      "Anytime! Feel free to ask if you have more questions."
+    ];
+    return acknowledgments[Math.floor(Math.random() * acknowledgments.length)];
+  }
+
+  const defaults = [
+    "I'm here to help with your portfolio! You can ask me things like 'Show my top holdings' or 'What's my concentration risk?'",
+    "Sure! I can analyze your portfolio, check concentration risks, look up market prices, and more. What would you like to explore?",
+    "I'd be happy to help! Try asking about your holdings, risk analysis, or market data for your investments."
+  ];
+
+  return defaults[Math.floor(Math.random() * defaults.length)];
 }
 
 export function applyToolExecutionPolicy({

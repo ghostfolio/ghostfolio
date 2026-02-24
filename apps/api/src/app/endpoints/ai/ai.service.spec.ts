@@ -255,7 +255,7 @@ describe('AiService', () => {
       userId: 'user-direct-route'
     });
 
-    expect(result.answer).toContain('I am Ghostfolio AI');
+    expect(result.answer).toMatch(/(hello|hi|here to help|portfolio)/i);
     expect(result.toolCalls).toEqual([]);
     expect(result.citations).toEqual([]);
     expect(dataProviderService.getQuotes).not.toHaveBeenCalled();

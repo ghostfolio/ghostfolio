@@ -90,7 +90,7 @@ describe('AiAgentPolicyUtils', () => {
           policyDecision: decision,
           query
         })
-      ).toContain('portfolio analysis');
+      ).toMatch(/(portfolio|holdings|ask|help)/i);
     }
   );
 
