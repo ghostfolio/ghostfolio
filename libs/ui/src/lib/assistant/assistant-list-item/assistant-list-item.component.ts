@@ -32,13 +32,10 @@ export class GfAssistantListItemComponent
   implements FocusableOption, OnChanges
 {
   @HostBinding('attr.tabindex') tabindex = -1;
-  @HostBinding('class.has-focus') get getHasFocus() {
-    return this.hasFocus;
-  }
 
   @Input() item: SearchResultItem;
 
-  @ViewChild('link') public linkElement: ElementRef;
+  @ViewChild('link') public linkElement: ElementRef<HTMLAnchorElement>;
 
   public hasFocus = false;
   public queryParams: Params;
@@ -47,6 +44,11 @@ export class GfAssistantListItemComponent
   protected readonly clicked = output<void>();
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
+  @HostBinding('class.has-focus')
+  public get getHasFocus() {
+    return this.hasFocus;
+  }
 
   public ngOnChanges() {
     if (this.item?.mode === SearchMode.ACCOUNT) {

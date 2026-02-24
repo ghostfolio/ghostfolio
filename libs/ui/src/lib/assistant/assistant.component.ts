@@ -85,37 +85,7 @@ import {
   templateUrl: './assistant.html'
 })
 export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
-  @HostListener('document:keydown', ['$event']) onKeydown(
-    event: KeyboardEvent
-  ) {
-    if (!this.isOpen) {
-      return;
-    }
-
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      for (const item of this.assistantListItems) {
-        item.removeFocus();
-      }
-
-      this.keyManager.onKeydown(event);
-
-      const currentAssistantListItem = this.getCurrentAssistantListItem();
-
-      if (currentAssistantListItem?.linkElement) {
-        currentAssistantListItem.linkElement.nativeElement?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }
-    } else if (event.key === 'Enter') {
-      const currentAssistantListItem = this.getCurrentAssistantListItem();
-
-      if (currentAssistantListItem?.linkElement) {
-        currentAssistantListItem.linkElement.nativeElement?.click();
-        event.stopPropagation();
-      }
-    }
-  }
+  public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
   @Input() deviceType: string;
   @Input() hasPermissionToAccessAdminControl: boolean;
@@ -124,12 +94,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   @Input() user: User;
 
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
-  @ViewChild('search', { static: true }) searchElement: ElementRef;
+  @ViewChild('search', { static: true })
+  searchElement: ElementRef<HTMLInputElement>;
 
   @ViewChildren(GfAssistantListItemComponent)
   assistantListItems: QueryList<GfAssistantListItemComponent>;
-
-  public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
   public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
@@ -185,6 +154,37 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     private dataService: DataService
   ) {
     addIcons({ closeCircleOutline, closeOutline, searchOutline });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeydown(event: KeyboardEvent) {
+    if (!this.isOpen) {
+      return;
+    }
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      for (const item of this.assistantListItems) {
+        item.removeFocus();
+      }
+
+      this.keyManager.onKeydown(event);
+
+      const currentAssistantListItem = this.getCurrentAssistantListItem();
+
+      if (currentAssistantListItem?.linkElement) {
+        currentAssistantListItem.linkElement.nativeElement?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    } else if (event.key === 'Enter') {
+      const currentAssistantListItem = this.getCurrentAssistantListItem();
+
+      if (currentAssistantListItem?.linkElement) {
+        currentAssistantListItem.linkElement.nativeElement?.click();
+        event.stopPropagation();
+      }
+    }
   }
 
   public ngOnInit() {
