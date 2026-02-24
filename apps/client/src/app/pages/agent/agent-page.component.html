@@ -1,0 +1,81 @@
+<div class="container h-100 d-flex flex-column agent-page">
+  <h1 class="h3 line-height-1 mb-3 mt-3">
+    <span i18n>AI Agent</span>
+    <small class="text-muted d-block mt-1" i18n>Ask questions about your portfolio in plain language.</small>
+  </h1>
+
+  @if (messages.length === 0 && !isLoading) {
+    <div class="suggestions mb-3">
+      <p class="text-muted mb-2" i18n>Try asking:</p>
+      <div class="d-flex flex-wrap gap-2">
+        @for (s of suggestions; track s) {
+          <button
+            class="suggestion-chip"
+            mat-stroked-button
+            (click)="onSuggestionClick(s)"
+          >
+            {{ s }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <div
+    #messagesContainer
+    class="messages-container flex-grow-1 overflow-auto mb-2 p-2 rounded"
+  >
+    @for (msg of messages; track $index) {
+      <div
+        class="message-row d-flex gap-2 mb-3"
+        [class.user]="msg.role === 'user'"
+        [class.assistant]="msg.role === 'assistant'"
+      >
+        @if (msg.role === 'assistant') {
+          <div class="avatar assistant-avatar">G</div>
+        }
+        <div
+          class="message-bubble p-2 rounded"
+          [class.user-bubble]="msg.role === 'user'"
+          [class.assistant-bubble]="msg.role === 'assistant'"
+        >
+          <span class="message-content">{{ msg.content }}</span>
+        </div>
+        @if (msg.role === 'user') {
+          <div class="avatar user-avatar">U</div>
+        }
+      </div>
+    }
+    @if (isLoading) {
+      <div class="message-row d-flex gap-2 mb-3 assistant">
+        <div class="avatar assistant-avatar">G</div>
+        <div class="message-bubble assistant-bubble p-2 rounded typing">
+          <span class="typing-dots">
+            <span></span><span></span><span></span>
+          </span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="input-bar d-flex gap-2 align-items-end p-2 rounded">
+    <textarea
+      #inputEl
+      class="flex-grow-1 p-2 rounded border-0"
+      [placeholder]="'Ask about your portfolio...' | i18n"
+      [(ngModel)]="inputText"
+      [disabled]="isLoading"
+      rows="1"
+      (keydown.enter)="onInputKeydown($event)"
+    ></textarea>
+    <button
+      class="send-btn"
+      mat-flat-button
+      color="primary"
+      [disabled]="isLoading || !inputText?.trim()"
+      (click)="send()"
+    >
+      <span i18n>Send</span>
+    </button>
+  </div>
+</div>

@@ -58,6 +58,10 @@ node scripts/agent-setup.mjs --openrouter-key=sk-or-YOUR_KEY
 
 This writes `API_KEY_OPENROUTER` and `OPENROUTER_MODEL` (default: `openai/gpt-4o-mini`) to the DB. Alternatively, set them in Ghostfolio Admin → Settings.
 
+## LangSmith tracing (optional)
+
+Same pattern as Collabboard. Set **`LANGSMITH_API_KEY`** (or `LANGCHAIN_API_KEY`) in env; the agent will wrap the Vercel AI SDK with LangSmith and send runs to [smith.langchain.com](https://smith.langchain.com). Optional: `LANGCHAIN_PROJECT=Ghostfolio` to set the project name. No code changes needed when the key is absent.
+
 ## Eval
 
 - **Test cases:** See `eval-cases.ts` (10 cases: 6 happy path, 2 edge, 1 adversarial, 1 multi-step).

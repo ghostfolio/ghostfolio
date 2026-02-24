@@ -88,6 +88,22 @@
           >Resources</a
         >
       </li>
+      @if (hasPermissionToAccessAgent) {
+        <li class="list-inline-item">
+          <a
+            class="d-none d-sm-block"
+            i18n
+            mat-flat-button
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.agent.path,
+              'text-decoration-underline':
+                currentRoute === internalRoutes.agent.path
+            }"
+            [routerLink]="routerLinkAgent"
+            >AI Agent</a
+          >
+        </li>
+      }
       @if (
         hasPermissionForSubscription && user?.subscription?.type === 'Basic'
       ) {
@@ -287,6 +303,18 @@
               }"
               [routerLink]="routerLinkAdminControl"
               >Admin Control</a
+            >
+          }
+          @if (hasPermissionToAccessAgent) {
+            <a
+              class="d-flex d-sm-none"
+              i18n
+              mat-menu-item
+              [ngClass]="{
+                'font-weight-bold': currentRoute === internalRoutes.agent.path
+              }"
+              [routerLink]="routerLinkAgent"
+              >AI Agent</a
             >
           }
           <hr class="m-0" />

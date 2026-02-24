@@ -114,6 +114,7 @@
     "http-status-codes": "2.3.0",
     "ionicons": "8.0.13",
     "jsonpath": "1.1.1",
+    "langsmith": "^0.5.6",
     "lodash": "4.17.23",
     "marked": "17.0.2",
     "ms": "3.0.0-canary.1",

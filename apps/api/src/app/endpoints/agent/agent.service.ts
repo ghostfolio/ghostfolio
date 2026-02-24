@@ -11,11 +11,33 @@ import { DataSource } from '@prisma/client';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+import * as ai from 'ai';
 import { generateText, tool } from 'ai';
+import { Client } from 'langsmith';
+import {
+  createLangSmithProviderOptions,
+  wrapAISDK
+} from 'langsmith/experimental/vercel';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 
 import { AgentTraceService, ToolTrace } from './agent-trace.service';
+
+const LANGSMITH_ENDPOINT = 'https://api.smith.langchain.com';
+
+function ensureLangSmithEnv(): string | null {
+  const key =
+    process.env.LANGSMITH_API_KEY ?? process.env.LANGCHAIN_API_KEY;
+  if (!key) return null;
+  process.env.LANGCHAIN_API_KEY = process.env.LANGCHAIN_API_KEY ?? key;
+  process.env.LANGCHAIN_TRACING = 'true';
+  process.env.LANGSMITH_TRACING = 'true';
+  process.env.LANGCHAIN_ENDPOINT =
+    process.env.LANGCHAIN_ENDPOINT ?? LANGSMITH_ENDPOINT;
+  process.env.LANGSMITH_ENDPOINT =
+    process.env.LANGSMITH_ENDPOINT ?? LANGSMITH_ENDPOINT;
+  return key;
+}
 
 export interface AgentChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -280,14 +302,34 @@ export class AgentService {
         content: m.content
       }));
 
+      // Optional LangSmith tracing (same pattern as Collabboard)
+      const hasLangSmith = !!ensureLangSmithEnv();
+      const langsmithClient = hasLangSmith ? new Client() : null;
+      const tracedAi = langsmithClient
+        ? wrapAISDK(ai, { client: langsmithClient })
+        : null;
+      const generateTextFn = tracedAi?.generateText ?? generateText;
+
       const llmT0 = Date.now();
-      const { text, usage } = await generateText({
+      const { text, usage } = await generateTextFn({
         model: openRouter.chat(openRouterModel),
         system: systemPrompt,
         messages: coreMessages,
         tools,
-        maxSteps: 5
+        maxSteps: 5,
+        ...(langsmithClient && {
+          providerOptions: {
+            langsmith: createLangSmithProviderOptions({
+              name: 'Ghostfolio Agent',
+              tags: ['ghostfolio', 'agent'],
+              metadata: { traceId }
+            })
+          }
+        })
       });
+      if (langsmithClient) {
+        await langsmithClient.awaitPendingTraceBatches?.();
+      }
       const llmMs = Date.now() - llmT0;
 
       const { content, verification } = verifyAgentOutput(text);

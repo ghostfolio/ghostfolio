@@ -1,0 +1,112 @@
+.agent-page {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.messages-container {
+  min-height: 12rem;
+  background: var(--mat-sys-surface-container-low, #f5f5f5);
+}
+
+:host-context(.dark-theme) .messages-container {
+  background: var(--mat-sys-surface-container-low, #1e1e1e);
+}
+
+.message-row {
+  max-width: 90%;
+  &.user {
+    flex-direction: row-reverse;
+    margin-left: auto;
+    .user-bubble {
+      background: var(--mat-sys-primary-container, #d0bcff);
+      color: var(--mat-sys-on-primary-container, #1d1b20);
+    }
+  }
+  &.assistant {
+    margin-right: auto;
+    .assistant-bubble {
+      background: var(--mat-sys-surface-container-high, #e6e0e9);
+      color: var(--mat-sys-on-surface, #1c1b1f);
+    }
+  }
+}
+
+:host-context(.dark-theme) .message-row.assistant .assistant-bubble {
+  background: var(--mat-sys-surface-container-high, #2d2a32);
+  color: var(--mat-sys-on-surface, #e6e1e5);
+}
+
+.message-bubble {
+  max-width: 100%;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  &.user-avatar {
+    background: var(--mat-sys-primary, #6750a4);
+    color: white;
+  }
+  &.assistant-avatar {
+    background: var(--mat-sys-secondary-container, #e8def8);
+    color: var(--mat-sys-on-secondary-container, #1d1b20);
+  }
+}
+
+.typing-dots {
+  display: flex;
+  gap: 0.25rem;
+  span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+    animation: typing-blink 1.4s ease-in-out infinite both;
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes typing-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+.input-bar {
+  background: var(--mat-sys-surface-container, #f3edf7);
+  textarea {
+    min-height: 2.5rem;
+    resize: none;
+    font: inherit;
+    outline: none;
+  }
+}
+
+:host-context(.dark-theme) .input-bar {
+  background: var(--mat-sys-surface-container, #2d2a32);
+}
+
+.suggestion-chip {
+  font-size: 0.875rem;
+}

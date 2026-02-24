@@ -30,6 +30,15 @@ export const routes: Routes = [
   {
     canActivate: [AuthGuard],
     loadComponent: () =>
+      import('./pages/agent/agent-page.component').then(
+        (c) => c.GfAgentPageComponent
+      ),
+    path: internalRoutes.agent.path,
+    title: internalRoutes.agent.title
+  },
+  {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
       import('./pages/api/api-page.component').then(
         (c) => c.GfApiPageComponent
       ),

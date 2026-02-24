@@ -19,6 +19,7 @@ You **choose** the values; nothing is provided by a third party except OpenRoute
 | **JWT_SECRET_KEY** | Generate a random string (e.g. `openssl rand -hex 32`) | `agentforge-jwt-secret-2026` |
 | **OPENROUTER_API_KEY** | From [openrouter.ai](https://openrouter.ai) → Keys → Create Key | `sk-or-v1-...` |
 | **OPENROUTER_MODEL** | Your choice (optional; has default) | `openai/gpt-4o-mini` |
+| **LANGSMITH_API_KEY** (optional) | From [smith.langchain.com](https://smith.langchain.com) → Settings → API Key. For AI request tracing (like Collabboard). | `lsv2_pt_...` |
 
 **Setup:** Copy `.env.dev` to `.env`, then replace every `<INSERT_...>` with your chosen values. For a quick local dev setup you can use the examples in the table above.
 
@@ -40,6 +41,7 @@ Here, **Postgres and Redis are provided by Railway**; you only generate the two 
 | **OPENROUTER_MODEL** | Your choice; e.g. `openai/gpt-4o-mini`. |
 | **NODE_ENV** | Set to `production`. |
 | **PORT** | **Required on Railway.** Set to `3000` so the app listens on the same port Railway routes to (target port 3000). The app default is 3333, so without this you get "Application failed to respond". |
+| **LANGSMITH_API_KEY** (optional) | From [smith.langchain.com](https://smith.langchain.com). Enables LangSmith tracing for agent runs (latency, tokens, runs in dashboard). |
 
 **Setup:** In your Railway project, open the **Ghostfolio** service (the one from GitHub) → **Variables** → add each variable. For Postgres and Redis, copy from the addon services. For `ACCESS_TOKEN_SALT` and `JWT_SECRET_KEY`, generate once and paste.
 
