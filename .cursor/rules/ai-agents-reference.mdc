@@ -1,0 +1,163 @@
+---
+description: AI Agents architecture patterns, ReAct loops, tool design, evaluation, and production guardrails reference
+globs:
+alwaysApply: true
+---
+
+# AI Agents — Architecture & Production Reference
+
+## Core Terminology
+
+- **LLM Call**: Single request-response, no tools, no iteration
+- **LLM + Tools**: LLM can call functions, still single-turn
+- **Agentic System**: Multi-turn loop with Reasoning → Action → Observation cycle
+
+We are building an **Agentic System**, not just an LLM wrapper.
+
+## The ReAct Loop
+
+```
+THOUGHT ("What do I need?") → ACTION (Call tool) → OBSERVATION (Process result) → REPEAT or ANSWER
+```
+
+## When to Use Agentic Patterns
+
+**Use agents when:**
+- Unknown information needs (can't predict data sources)
+- Multi-step reasoning with dependencies
+- Complex analysis requiring iteration
+- Dynamic decision trees
+
+**Do NOT use agents when:**
+- Deterministic workflows (use code / if-else)
+- Batch processing (use pipelines)
+- Simple classification (use single LLM call)
+- Speed critical (<1s needed)
+
+**Key insight**: Start simple. Most problems don't need agents. Match complexity to uncertainty.
+
+## Complexity Spectrum (Cost & Latency)
+
+| Pattern | Cost | Latency |
+|---|---|---|
+| Single LLM | 1x | <1s |
+| LLM + Tools | 2-3x | 1-3s |
+| ReAct Agent | 5-10x | 5-15s |
+| Planning | 10-20x | 15-30s |
+| Multi-Agent | 20-50x | 30s+ |
+
+## Tool Design Principles
+
+Tools are the building blocks. Each tool must be:
+- **Atomic**: One clear purpose, does ONE thing
+- **Idempotent**: Safe to retry
+- **Well-documented**: LLM reads the description to decide usage
+- **Error-handled**: Returns structured errors (ToolResult with status, data, message)
+- **Verified**: Check results before returning
+
+**Anti-patterns**: Too broad ("manage_patient"), missing error states, undocumented, side effects, unverified raw API data.
+
+## Production Guardrails (Non-Negotiable)
+
+All four must be implemented:
+
+1. **MAX_ITERATIONS (10-15)**: Prevents infinite loops and runaway costs
+2. **TIMEOUT (30-45s)**: User experience limit / API gateway timeout
+3. **COST_LIMIT ($1/query)**: Prevent bill explosions, alert on anomalies
+4. **CIRCUIT_BREAKER**: Same action 3x → abort, log for debugging
+
+Without these: $10K bills from loops, 5min timeouts, hammered downstream services.
+
+## Verification Layer (3+ Required)
+
+| Type | Description |
+|---|---|
+| Fact Checking | Cross-reference claims against authoritative sources |
+| Hallucination Detection | Flag unsupported claims, require source attribution |
+| Confidence Scoring | Quantify certainty (0-1), surface low-confidence |
+| Domain Constraints | Enforce business rules (dosage limits, trade limits) |
+| Human-in-the-Loop | Escalation triggers for high-risk decisions |
+
+Implementation pattern:
+```
+ToolResult(status, data, verification: VerificationResult(passed, confidence, warnings, errors, sources))
+```
+
+## Evaluation Framework (50+ Test Cases Required)
+
+**What to measure**: Correctness, tool selection, tool execution, safety, consistency, edge cases, latency, cost.
+
+**Test case breakdown**:
+- 20+ happy path scenarios with expected outcomes
+- 10+ edge cases (missing data, boundary conditions)
+- 10+ adversarial inputs (bypass attempts)
+- 10+ multi-step reasoning scenarios
+
+Each test case includes: input query, expected tool calls, expected output, pass/fail criteria.
+
+**Targets**: Pass rate >80% (good), >90% (excellent). Run evals daily.
+
+## Performance Targets
+
+| Metric | Target |
+|---|---|
+| Single-tool latency | <5 seconds |
+| Multi-step latency (3+ tools) | <15 seconds |
+| Tool success rate | >95% |
+| Eval pass rate | >80% |
+| Hallucination rate | <5% |
+| Verification accuracy | >90% |
+
+## Observability (Required)
+
+- **Trace Logging**: Full trace per request (input → reasoning → tool calls → output)
+- **Latency Tracking**: Time breakdown for LLM calls, tool execution, total response
+- **Error Tracking**: Capture and categorize failures with context
+- **Token Usage**: Input/output tokens per request, cost tracking
+- **Eval Results**: Historical scores, regression detection
+
+## BaseAgent Implementation Pattern
+
+```python
+class BaseAgent:
+    def __init__(self, model, max_iterations=10, timeout_seconds=30.0, max_cost_usd=1.0):
+        # Register tools, set guardrails
+
+    def run(self, task):
+        # ReAct loop:
+        # 1. LLM call with tool schemas
+        # 2. If no tool_calls → return final answer
+        # 3. Execute tool calls, append results
+        # 4. Check guardrails (iterations, timeout, cost, circuit breaker)
+        # 5. Repeat
+```
+
+## Cost Analysis (Required for Submission)
+
+Track during development:
+- LLM API costs, total tokens (input/output), number of API calls, observability tool costs
+
+Project to production at: 100 / 1,000 / 10,000 / 100,000 users/month.
+
+## Build Strategy (Priority Order)
+
+1. Basic agent — single tool call working end-to-end
+2. Tool expansion — add remaining tools, verify each works
+3. Multi-step reasoning — agent chains tools appropriately
+4. Observability — integrate tracing
+5. Eval framework — build test suite, measure baseline
+6. Verification layer — domain-specific checks
+7. Iterate on evals — improve agent based on failures
+8. Open source prep — package and document
+
+## Submission Deliverables
+
+- GitHub repo with setup guide, architecture overview, deployed link
+- Demo video (3-5 min)
+- Pre-Search document
+- Agent architecture doc (1-2 pages)
+- AI cost analysis (dev spend + projections)
+- Eval dataset (50+ test cases with results)
+- Open source contribution (package, PR, or public dataset)
+- Deployed application (publicly accessible)
+- Social post (X or LinkedIn, tag @GauntletAI)

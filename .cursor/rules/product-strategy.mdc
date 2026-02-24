@@ -1,0 +1,152 @@
+---
+description: Product strategy, vision, and accountability for the Ghostfolio CSV Import Auditor reasoning agent
+globs:
+alwaysApply: true
+---
+
+# Ghostfolio CSV Import Auditor — Product Strategy
+
+## Product Vision
+
+For Ghostfolio users managing personal investment portfolios who need reliable, safe, and verifiable transaction imports, the CSV Import Auditor is a deterministic reasoning agent embedded in Ghostfolio that validates, audits, previews, and safely commits broker CSV imports.
+
+**Core Purpose**: Eliminate financial data corruption during portfolio imports.
+
+**Differentiation**: Unlike manual CSV imports or loosely validated parsers, this product guarantees schema correctness, duplicate prevention, accounting invariants, deterministic state verification, and transactional safety before any database mutation.
+
+## Insights
+
+### Market
+
+- Ghostfolio serves thousands of personal portfolio users
+- CSV import reliability is a real friction point
+- Imports mutate persistent financial state — high trust requirement
+- Most portfolio tools provide basic parsers without deterministic validation, transactional state verification, or idempotency protection
+
+### Trends
+
+- Movement toward AI-assisted financial tooling
+- Demand for explainability and auditability
+- Increased distrust in opaque AI automation
+- Shift toward deterministic + AI hybrid systems
+
+### Customer Personas
+
+**Primary — DIY Investor**: Imports broker exports, low tolerance for data corruption, wants preview + confirmation before commit.
+
+**Secondary — Power User**: Imports from multiple brokers, needs repeatable idempotent workflow.
+
+**Core need**: Correctness > speed.
+
+## Challenges
+
+### Technical
+
+- Broker CSV variability
+- Deterministic schema validation
+- Duplicate detection accuracy
+- Safe transactional DB writes
+- State mutation protection
+
+### Customer Pain Points
+
+- Fear of corrupting portfolio data
+- Confusing CSV error messages
+- Duplicate transactions after re-import
+- Lack of preview transparency
+
+### GTM Risks
+
+- PR acceptance into Ghostfolio OSS repo
+- Must integrate without architectural disruption
+- Must demonstrate reliability via eval data
+
+### Compliance
+
+- Financial data integrity expectations
+- Audit logging required
+- Must prevent partial writes
+
+## Architecture & Approach
+
+### Pipeline (6 Tools)
+
+```
+parseCSV → mapBrokerFields → validateTransactions → detectDuplicates → previewImportReport → commitImport
+```
+
+- Custom deterministic orchestrator (no LangChain/LangGraph/CrewAI)
+- Strict Zod schemas, deterministic outputs, explicit error handling
+- Only `commitImport` mutates state
+
+### Verification Layer (Non-Negotiable)
+
+No commit without 100% deterministic pass on ALL checks:
+
+1. Schema validation (required fields, types, formats)
+2. Numeric invariants (quantity >= 0, commission >= 0, price logic)
+3. Currency consistency
+4. Duplicate prevention (idempotency)
+5. Deterministic state signature
+6. Transactional DB boundary
+
+### Observability (Langfuse)
+
+Per import: one trace (`agent.import_audit`), one span per tool, `toolCountPlanned` vs `toolCountExecuted`, latency per tool, token usage, commit status, validation metrics.
+
+### Evaluation Strategy
+
+**Layer 1 — Deterministic (Primary)**: 50+ CSV test cases, schema + invariant enforcement, idempotency validation, CI gated.
+
+**Layer 2 — LLM-as-Judge (Secondary)**: Scores explanation clarity, logical completeness, issue detection quality, hallucination presence. Judge never controls commit.
+
+## Do's and Don'ts
+
+### Do
+
+- Deterministic before AI
+- Verification before mutation
+- Audit everything
+- Eval-gated release
+
+### Don't
+
+- No auto-commit without user approval
+- No per-row LLM inference
+- No silent partial writes
+- No hidden tool side effects
+
+## Accountability
+
+### North Star Metric
+
+**Zero corrupted imports.**
+
+### Success Metrics
+
+| Metric | Target |
+|---|---|
+| Tool success rate | >95% |
+| Deterministic validation pass rate | 100% |
+| Eval pass rate | >80% |
+| Duplicate detection accuracy | >95% |
+| Small CSV latency | <2s |
+| Large CSV latency | <15s |
+| Hallucination rate (preview) | <5% |
+
+### Operational Metrics
+
+- Import failure reasons categorized
+- State signature verification rate
+- Commit rollback occurrences
+- Mapping confidence scores
+
+## Strategic Positioning
+
+This is NOT an AI CSV parser. This is:
+
+- A **deterministic financial safety layer**
+- A **structured reasoning agent**
+- An **audit-first import system**
+- A **verification-gated mutation controller**
+- An **eval-driven OSS contribution**

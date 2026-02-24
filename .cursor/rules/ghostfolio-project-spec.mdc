@@ -1,0 +1,122 @@
+---
+description: Ghostfolio CSV Import Auditor project specification and requirements
+globs:
+alwaysApply: true
+---
+
+# Ghostfolio CSV Import Auditor — Project Spec
+
+## What We're Building
+
+A **CSV Import Auditor Reasoning Agent** for the Ghostfolio finance platform that ensures safe, deterministic, and verifiable transaction imports.
+
+## Use Cases
+
+1. Parsing broker CSV exports
+2. Mapping broker-specific fields to Ghostfolio schema
+3. Validating transaction correctness
+4. Detecting duplicates and conflicts
+5. Generating a structured preview report
+6. Safely committing transactions to the database
+
+## Architecture
+
+- **Backend**: TypeScript + NestJS (Ghostfolio native)
+- **Database**: PostgreSQL (Railway)
+- **Validation**: Zod schemas
+- **Agent Orchestration**: Custom lightweight controller (no LangChain/LangGraph/CrewAI)
+- **LLM**: Reasoning-capable model with tool/function calling
+- **Observability**: Langfuse
+- **Evaluation**: Deterministic + LLM-as-Judge (dual-layer)
+- **CI**: Eval gating
+- **Deployment**: Docker-compatible Ghostfolio backend
+
+## Agent Pipeline (6 Tools)
+
+```
+CSV → parseCSV → mapBrokerFields → validateTransactions → detectDuplicates → previewImportReport → commitImport
+```
+
+Each tool has: strict Zod input/output schemas, deterministic behavior, explicit error handling, no hidden side effects. All tools are pure except `commitImport()`.
+
+## Verification Requirements (Non-Negotiable)
+
+- Schema validation (required fields, types, formats)
+- Accounting invariants (quantity >= 0, commission >= 0, price logic)
+- Currency consistency
+- Duplicate prevention (idempotency)
+- Deterministic normalization
+- Transactional database commits
+- Before/after state signature validation
+- No commit occurs unless ALL deterministic checks pass
+
+## Human-in-the-Loop
+
+- Always generate `previewImportReport()` before commit
+- Require explicit user confirmation
+- Never auto-commit without approval
+
+## LLM Usage (Cost-Efficient)
+
+- Parsing and validation are deterministic code (no LLM)
+- LLM used ONLY for: broker column mapping suggestions + human-readable preview explanation
+- Maximum 1-2 LLM calls per import
+- No per-row inference
+
+## Performance Targets
+
+- Small CSV: < 2 seconds
+- Large CSV: < 10-15 seconds
+- Progress feedback required
+- Dozens of concurrent imports supported
+
+## Evaluation Requirements
+
+### Layer 1: Deterministic (Primary)
+- Schema correctness, numeric invariants, duplicate detection, idempotency, state signature comparison
+- Minimum 50 test CSV cases, pass/fail enforced in CI
+
+### Layer 2: LLM-as-a-Judge (Secondary)
+- Mapping explanation clarity (1-5), logical completeness (1-5), issue detection completeness (1-5), hallucination presence (0/1), overall quality (1-10)
+- Judge does NOT control commit, only scores language outputs
+
+## Observability (Langfuse)
+
+Per import: one trace (`agent.import_audit`), one span per tool, latency per tool, token usage, `toolCountPlanned` vs `toolCountExecuted`, validation result, duplicate detection metrics, commit success/failure.
+
+## Security
+
+- CSV treated as data only
+- Prompt injection prevention
+- No arbitrary CSV content in prompts
+- API keys secured server-side
+- Audit logging enforced
+
+## Testing Strategy
+
+- Unit tests per tool
+- Integration tests for full pipeline
+- Adversarial malformed CSV tests
+- Regression test suite in CI
+- Deterministic eval dataset
+
+## Deadlines
+
+| Checkpoint | Deadline | Focus |
+|---|---|---|
+| Pre-Search | 2 hours after receiving | Architecture, Plan |
+| MVP | Tuesday (24 hours) | Basic agent with tool use |
+| Early Submission | Friday (4 days) | Eval framework + observability |
+| Final | Sunday (7 days) | Production-ready + open source |
+
+## MVP Checklist
+
+- Agent responds to natural language queries in finance domain
+- At least 3 functional tools the agent can invoke
+- Tool calls execute successfully and return structured results
+- Agent synthesizes tool results into coherent responses
+- Conversation history maintained across turns
+- Basic error handling (graceful failure, not crashes)
+- At least one domain-specific verification check
+- Simple evaluation: 5+ test cases with expected outcomes
+- Deployed and publicly accessible
