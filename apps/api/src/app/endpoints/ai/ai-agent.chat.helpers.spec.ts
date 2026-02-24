@@ -73,6 +73,40 @@ describe('AiAgentChatHelpers', () => {
     expect(answer).toBe(generatedText);
   });
 
+  it('adds deterministic diversification action guidance when generated answer is unreliable', async () => {
+    const answer = await buildAnswer({
+      generateText: jest.fn().mockResolvedValue({
+        text: 'Diversify.'
+      }),
+      languageCode: 'en',
+      memory: { turns: [] },
+      portfolioAnalysis: {
+        allocationSum: 1,
+        holdings: [
+          {
+            allocationInPercentage: 0.7,
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL',
+            valueInBaseCurrency: 7000
+          },
+          {
+            allocationInPercentage: 0.3,
+            dataSource: DataSource.YAHOO,
+            symbol: 'MSFT',
+            valueInBaseCurrency: 3000
+          }
+        ],
+        holdingsCount: 2,
+        totalValueInBaseCurrency: 10000
+      },
+      query: 'help me diversify',
+      userCurrency: 'USD'
+    });
+
+    expect(answer).toContain('Next-step allocation:');
+    expect(answer).toContain('AAPL');
+  });
+
   it('parses and persists concise response-style preference updates', () => {
     const result = resolvePreferenceUpdate({
       query: 'Remember to keep responses concise.',

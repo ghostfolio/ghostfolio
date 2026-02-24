@@ -430,6 +430,52 @@ describe('AiService', () => {
     );
   });
 
+  it('returns deterministic diversification action guidance when generated output is unreliable', async () => {
+    portfolioService.getDetails.mockResolvedValue({
+      holdings: {
+        AAPL: {
+          allocationInPercentage: 0.665,
+          dataSource: DataSource.YAHOO,
+          symbol: 'AAPL',
+          valueInBaseCurrency: 6650
+        },
+        VTI: {
+          allocationInPercentage: 0.159,
+          dataSource: DataSource.YAHOO,
+          symbol: 'VTI',
+          valueInBaseCurrency: 1590
+        },
+        MSFT: {
+          allocationInPercentage: 0.085,
+          dataSource: DataSource.YAHOO,
+          symbol: 'MSFT',
+          valueInBaseCurrency: 850
+        }
+      }
+    });
+    redisCacheService.get.mockResolvedValue(undefined);
+    jest.spyOn(subject, 'generateText').mockResolvedValue({
+      text: 'Diversify.'
+    } as never);
+
+    const result = await subject.chat({
+      languageCode: 'en',
+      query: 'help me diversify',
+      sessionId: 'session-diversify-1',
+      userCurrency: 'USD',
+      userId: 'user-diversify-1'
+    });
+
+    expect(result.answer).toContain('Next-step allocation:');
+    expect(result.answer).toContain('AAPL');
+    expect(result.toolCalls).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ tool: 'portfolio_analysis' }),
+        expect.objectContaining({ tool: 'risk_assessment' })
+      ])
+    );
+  });
+
   it('returns graceful failure metadata when a tool execution fails', async () => {
     dataProviderService.getQuotes.mockRejectedValue(
       new Error('market provider unavailable')

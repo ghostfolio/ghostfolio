@@ -194,6 +194,8 @@ export async function buildAnswer({
     'add',
     'allocat',
     'buy',
+    'deconcentrat',
+    'diversif',
     'invest',
     'next',
     'rebalanc',
@@ -265,7 +267,7 @@ export async function buildAnswer({
 
         if (topLongShare >= 0.35) {
           fallbackSections.push(
-            'Next-step allocation: direct new capital to positions outside your top holding until concentration falls below 35%.'
+            `Next-step allocation: cap ${longHoldings[0].symbol} contribution and direct new capital to positions outside your top holding until concentration falls below 35% to improve diversification.`
           );
         } else {
           fallbackSections.push(
