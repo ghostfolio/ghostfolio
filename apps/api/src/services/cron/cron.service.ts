@@ -12,11 +12,12 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
-export class CronService {
+export class CronService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(CronService.name);
   private static readonly EVERY_HOUR_AT_RANDOM_MINUTE = `${new Date().getMinutes()} * * * *`;
   private static readonly EVERY_SUNDAY_AT_LUNCH_TIME = '0 12 * * 0';
 
@@ -28,6 +29,13 @@ export class CronService {
     private readonly twitterBotService: TwitterBotService,
     private readonly userService: UserService
   ) {}
+
+  public async onApplicationBootstrap() {
+    if (await this.isDataGatheringEnabled()) {
+      this.logger.log('Triggering initial data gathering on startup...');
+      await this.dataGatheringService.gather7Days();
+    }
+  }
 
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
   public async runEveryHourAtRandomMinute() {

@@ -233,9 +233,9 @@ export class AiService {
         impersonationId
       }),
       get_portfolio_performance: getPortfolioPerformanceTool({
-        portfolioService: this.portfolioService,
-        userId,
-        impersonationId
+        dataProviderService: this.dataProviderService,
+        prismaService: this.prismaService,
+        userId
       }),
       get_account_summary: getAccountSummaryTool({
         portfolioService: this.portfolioService,
