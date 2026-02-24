@@ -85,6 +85,7 @@
     "@internationalized/number": "3.6.5",
     "@ionic/angular": "8.7.8",
     "@keyv/redis": "4.4.0",
+    "@langchain/core": "^0.3.80",
     "@nestjs/bull": "11.0.4",
     "@nestjs/cache-manager": "3.0.1",
     "@nestjs/common": "11.1.8",

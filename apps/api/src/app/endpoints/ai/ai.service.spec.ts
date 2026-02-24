@@ -274,6 +274,23 @@ describe('AiService', () => {
     );
   });
 
+  it('returns arithmetic response on direct no-tool arithmetic query', async () => {
+    redisCacheService.get.mockResolvedValue(undefined);
+    const generateTextSpy = jest.spyOn(subject, 'generateText');
+
+    const result = await subject.chat({
+      languageCode: 'en',
+      query: '2+2',
+      sessionId: 'session-arithmetic-route',
+      userCurrency: 'USD',
+      userId: 'user-arithmetic-route'
+    });
+
+    expect(result.answer).toBe('2+2 = 4');
+    expect(result.toolCalls).toEqual([]);
+    expect(generateTextSpy).not.toHaveBeenCalled();
+  });
+
   it('runs rebalance and stress test tools for portfolio scenario prompts', async () => {
     portfolioService.getDetails.mockResolvedValue({
       holdings: {

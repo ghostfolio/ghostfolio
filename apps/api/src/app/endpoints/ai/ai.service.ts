@@ -10,6 +10,7 @@ import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+import { RunnableLambda } from '@langchain/core/runnables';
 import { generateText } from 'ai';
 import { randomUUID } from 'node:crypto';
 import {
@@ -85,31 +86,71 @@ export class AiService {
       provider: string;
       run: () => Promise<{ text?: string }>;
     }) => {
-      const startedAt = Date.now();
-      let invocationError: unknown;
-      let responseText: string | undefined;
+      const invocationRunnable = RunnableLambda.from(
+        async ({
+          model: runnableModel,
+          prompt: runnablePrompt,
+          provider: runnableProvider,
+          query,
+          sessionId,
+          userId
+        }: {
+          model: string;
+          prompt: string;
+          provider: string;
+          query?: string;
+          sessionId?: string;
+          userId?: string;
+        }) => {
+          const startedAt = Date.now();
+          let invocationError: unknown;
+          let responseText: string | undefined;
 
-      try {
-        const response = await run();
-        responseText = response?.text;
+          try {
+            const response = await run();
+            responseText = response?.text;
 
-        return response;
-      } catch (error) {
-        invocationError = error;
-        throw error;
-      } finally {
-        void this.aiObservabilityService.recordLlmInvocation({
-          durationInMs: Date.now() - startedAt,
-          error: invocationError,
+            return response;
+          } catch (error) {
+            invocationError = error;
+            throw error;
+          } finally {
+            void this.aiObservabilityService.recordLlmInvocation({
+              durationInMs: Date.now() - startedAt,
+              error: invocationError,
+              model: runnableModel,
+              prompt: runnablePrompt,
+              provider: runnableProvider,
+              query,
+              responseText,
+              sessionId,
+              userId
+            });
+          }
+        }
+      );
+
+      return invocationRunnable.invoke(
+        {
           model,
           prompt,
           provider,
           query: traceContext?.query,
-          responseText,
           sessionId: traceContext?.sessionId,
           userId: traceContext?.userId
-        });
-      }
+        },
+        {
+          metadata: {
+            model,
+            provider,
+            query: traceContext?.query ?? '',
+            sessionId: traceContext?.sessionId ?? '',
+            userId: traceContext?.userId ?? ''
+          },
+          runName: `ghostfolio_ai_llm_${provider}`,
+          tags: ['ghostfolio-ai', 'llm-invocation', provider]
+        }
+      );
     };
 
     if (zAiGlmApiKey) {
@@ -393,7 +434,8 @@ export class AiService {
       });
 
       let answer = createPolicyRouteResponse({
-        policyDecision
+        policyDecision,
+        query: normalizedQuery
       });
 
       if (policyDecision.route === 'tools') {

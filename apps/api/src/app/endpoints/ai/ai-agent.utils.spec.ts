@@ -83,6 +83,19 @@ describe('AiAgentUtils', () => {
     );
   });
 
+  it('returns deterministic arithmetic result for direct no-tool arithmetic query', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: [],
+      query: '2+2'
+    });
+
+    expect(decision.route).toBe('direct');
+    expect(decision.toolsToExecute).toEqual([]);
+    expect(createPolicyRouteResponse({ policyDecision: decision, query: '2+2' })).toBe(
+      '2+2 = 4'
+    );
+  });
+
   it('keeps finance-intent prompts on clarify route even with capability phrasing', () => {
     const decision = applyToolExecutionPolicy({
       plannedTools: [],

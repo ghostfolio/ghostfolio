@@ -28,6 +28,7 @@ const GREETING_ONLY_PATTERN =
 const SIMPLE_ARITHMETIC_QUERY_PATTERN =
   /^\s*(?:what(?:'s| is)\s+)?[-+*/().\d\s%=]+\??\s*$/i;
 const SIMPLE_ARITHMETIC_OPERATOR_PATTERN = /[+\-*/]/;
+const SIMPLE_ARITHMETIC_PREFIX_PATTERN = /^\s*(?:what(?:'s| is)\s+)?/i;
 const SIMPLE_ASSISTANT_QUERY_PATTERNS = [
   /^\s*(?:who are you|what are you|what can you do)\s*[!.?]*\s*$/i,
   /^\s*(?:how do you work|how (?:can|do) i use (?:you|this))\s*[!.?]*\s*$/i,
@@ -92,6 +93,203 @@ function isNoToolDirectQuery(query: string) {
     SIMPLE_ARITHMETIC_OPERATOR_PATTERN.test(normalized) &&
     /\d/.test(normalized)
   );
+}
+
+function formatNumericResult(value: number) {
+  if (Math.abs(value) < Number.EPSILON) {
+    return '0';
+  }
+
+  if (Number.isInteger(value)) {
+    return value.toString();
+  }
+
+  return value.toFixed(6).replace(/\.?0+$/, '');
+}
+
+function evaluateArithmeticExpression(expression: string) {
+  let cursor = 0;
+
+  const skipWhitespace = () => {
+    while (cursor < expression.length && /\s/.test(expression[cursor])) {
+      cursor += 1;
+    }
+  };
+
+  const parseNumber = () => {
+    skipWhitespace();
+    const start = cursor;
+    let dotCount = 0;
+
+    while (cursor < expression.length) {
+      const token = expression[cursor];
+
+      if (token >= '0' && token <= '9') {
+        cursor += 1;
+        continue;
+      }
+
+      if (token === '.') {
+        dotCount += 1;
+
+        if (dotCount > 1) {
+          return undefined;
+        }
+
+        cursor += 1;
+        continue;
+      }
+
+      break;
+    }
+
+    if (start === cursor) {
+      return undefined;
+    }
+
+    const parsed = Number(expression.slice(start, cursor));
+
+    return Number.isFinite(parsed) ? parsed : undefined;
+  };
+
+  const parseFactor = (): number | undefined => {
+    skipWhitespace();
+
+    if (expression[cursor] === '+') {
+      cursor += 1;
+      return parseFactor();
+    }
+
+    if (expression[cursor] === '-') {
+      cursor += 1;
+      const nested = parseFactor();
+
+      return nested === undefined ? undefined : -nested;
+    }
+
+    if (expression[cursor] === '(') {
+      cursor += 1;
+      const nested = parseExpression();
+
+      skipWhitespace();
+      if (nested === undefined || expression[cursor] !== ')') {
+        return undefined;
+      }
+
+      cursor += 1;
+      return nested;
+    }
+
+    return parseNumber();
+  };
+
+  const parseTerm = (): number | undefined => {
+    let value = parseFactor();
+
+    if (value === undefined) {
+      return undefined;
+    }
+
+    while (true) {
+      skipWhitespace();
+      const operator = expression[cursor];
+
+      if (operator !== '*' && operator !== '/') {
+        break;
+      }
+
+      cursor += 1;
+      const right = parseFactor();
+
+      if (right === undefined) {
+        return undefined;
+      }
+
+      if (operator === '*') {
+        value *= right;
+      } else {
+        if (Math.abs(right) < Number.EPSILON) {
+          return undefined;
+        }
+
+        value /= right;
+      }
+    }
+
+    return value;
+  };
+
+  const parseExpression = (): number | undefined => {
+    let value = parseTerm();
+
+    if (value === undefined) {
+      return undefined;
+    }
+
+    while (true) {
+      skipWhitespace();
+      const operator = expression[cursor];
+
+      if (operator !== '+' && operator !== '-') {
+        break;
+      }
+
+      cursor += 1;
+      const right = parseTerm();
+
+      if (right === undefined) {
+        return undefined;
+      }
+
+      if (operator === '+') {
+        value += right;
+      } else {
+        value -= right;
+      }
+    }
+
+    return value;
+  };
+
+  const result = parseExpression();
+
+  skipWhitespace();
+
+  if (result === undefined || cursor !== expression.length || !Number.isFinite(result)) {
+    return undefined;
+  }
+
+  return result;
+}
+
+function evaluateSimpleArithmetic(query: string) {
+  const normalized = query.trim();
+
+  if (
+    !SIMPLE_ARITHMETIC_QUERY_PATTERN.test(normalized) ||
+    !SIMPLE_ARITHMETIC_OPERATOR_PATTERN.test(normalized) ||
+    !/\d/.test(normalized)
+  ) {
+    return undefined;
+  }
+
+  const expression = normalized
+    .replace(SIMPLE_ARITHMETIC_PREFIX_PATTERN, '')
+    .replace(/\?+$/, '')
+    .replace(/=/g, '')
+    .trim();
+
+  if (!expression) {
+    return undefined;
+  }
+
+  const result = evaluateArithmeticExpression(expression);
+
+  if (result === undefined) {
+    return undefined;
+  }
+
+  return `${expression} = ${formatNumericResult(result)}`;
 }
 
 export function applyToolExecutionPolicy({
@@ -188,9 +386,11 @@ export function applyToolExecutionPolicy({
 }
 
 export function createPolicyRouteResponse({
-  policyDecision
+  policyDecision,
+  query
 }: {
   policyDecision: AiAgentToolPolicyDecision;
+  query?: string;
 }) {
   if (policyDecision.route === 'clarify') {
     if (policyDecision.blockReason === 'needs_confirmation') {
@@ -204,6 +404,12 @@ export function createPolicyRouteResponse({
     policyDecision.route === 'direct' &&
     policyDecision.blockReason === 'no_tool_query'
   ) {
+    const arithmeticResult = query ? evaluateSimpleArithmetic(query) : undefined;
+
+    if (arithmeticResult) {
+      return arithmeticResult;
+    }
+
     return `I am your Ghostfolio AI assistant. I can help with portfolio analysis, concentration risk, market prices, rebalancing ideas, and stress scenarios. Try: "Show my top holdings" or "What is my concentration risk?".`;
   }
 
