@@ -14,14 +14,16 @@ import { RedisCacheService } from './redis-cache.service';
       imports: [ConfigurationModule],
       inject: [ConfigurationService],
       useFactory: async (configurationService: ConfigurationService) => {
-        const redisPassword = encodeURIComponent(
-          configurationService.get('REDIS_PASSWORD')
-        );
+        const rawRedisPassword = configurationService.get('REDIS_PASSWORD');
+        const redisPassword = rawRedisPassword
+          ? encodeURIComponent(rawRedisPassword)
+          : '';
+        const redisAuth = redisPassword ? `:${redisPassword}@` : '';
 
         return {
           stores: [
             createKeyv(
-              `redis://${redisPassword ? `:${redisPassword}` : ''}@${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
+              `redis://${redisAuth}${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
             )
           ],
           ttl: configurationService.get('CACHE_TTL')

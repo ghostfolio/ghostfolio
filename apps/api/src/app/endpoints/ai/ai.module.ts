@@ -24,6 +24,8 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/sym
 import { Module } from '@nestjs/common';
 
 import { AiController } from './ai.controller';
+import { AiFeedbackService } from './ai-feedback.service';
+import { AiObservabilityService } from './ai-observability.service';
 import { AiService } from './ai.service';
 
 @Module({
@@ -48,6 +50,8 @@ import { AiService } from './ai.service';
   providers: [
     AccountBalanceService,
     AccountService,
+    AiFeedbackService,
+    AiObservabilityService,
     AiService,
     CurrentRateService,
     MarketDataService,

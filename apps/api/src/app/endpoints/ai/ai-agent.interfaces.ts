@@ -36,11 +36,37 @@ export interface AiAgentMemorySnapshot {
   turns: number;
 }
 
+export interface AiAgentTokenEstimate {
+  input: number;
+  output: number;
+  total: number;
+}
+
+export interface AiAgentLatencyBreakdown {
+  llmGenerationInMs: number;
+  memoryReadInMs: number;
+  memoryWriteInMs: number;
+  toolExecutionInMs: number;
+}
+
+export interface AiAgentObservabilitySnapshot {
+  latencyBreakdownInMs: AiAgentLatencyBreakdown;
+  latencyInMs: number;
+  tokenEstimate: AiAgentTokenEstimate;
+  traceId?: string;
+}
+
+export interface AiAgentFeedbackResponse {
+  accepted: boolean;
+  feedbackId: string;
+}
+
 export interface AiAgentChatResponse {
   answer: string;
   citations: AiAgentCitation[];
   confidence: AiAgentConfidence;
   memory: AiAgentMemorySnapshot;
+  observability?: AiAgentObservabilitySnapshot;
   toolCalls: AiAgentToolCall[];
   verification: AiAgentVerificationCheck[];
 }

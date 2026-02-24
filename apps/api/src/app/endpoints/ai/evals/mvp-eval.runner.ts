@@ -1,10 +1,244 @@
 import { AiService } from '../ai.service';
+import { Client, RunTree } from 'langsmith';
 
 import {
+  AiAgentMvpEvalCategory,
+  AiAgentMvpEvalCategorySummary,
   AiAgentMvpEvalCase,
   AiAgentMvpEvalResult,
+  AiAgentMvpEvalSuiteResult,
   AiAgentMvpEvalVerificationExpectation
 } from './mvp-eval.interfaces';
+import {
+  calculateHallucinationRate,
+  calculateVerificationAccuracy
+} from './mvp-eval.metrics';
+
+const OBSERVABILITY_TIMEOUT_IN_MS = 1_000;
+const ENV_PLACEHOLDER_PATTERN = /^<[^>]+>$/;
+const EVAL_CATEGORIES: AiAgentMvpEvalCategory[] = [
+  'happy_path',
+  'edge_case',
+  'adversarial',
+  'multi_step'
+];
+
+function getLangSmithApiKey() {
+  return process.env.LANGSMITH_API_KEY || process.env.LANGCHAIN_API_KEY;
+}
+
+function getLangSmithEndpoint() {
+  return process.env.LANGSMITH_ENDPOINT || process.env.LANGCHAIN_ENDPOINT;
+}
+
+function getLangSmithProjectName() {
+  return (
+    process.env.LANGSMITH_PROJECT ||
+    process.env.LANGCHAIN_PROJECT ||
+    'ghostfolio-ai-agent'
+  );
+}
+
+function isLangSmithTracingEnabled() {
+  return (
+    process.env.LANGSMITH_TRACING === 'true' ||
+    process.env.LANGCHAIN_TRACING_V2 === 'true'
+  );
+}
+
+function hasValidLangSmithApiKey(apiKey?: string) {
+  const normalizedApiKey = apiKey?.trim();
+
+  return Boolean(normalizedApiKey) && !ENV_PLACEHOLDER_PATTERN.test(normalizedApiKey);
+}
+
+async function runSafely(operation: () => Promise<void>) {
+  let timeoutId: NodeJS.Timeout | undefined;
+
+  try {
+    await Promise.race([
+      operation().catch(() => undefined),
+      new Promise<void>((resolve) => {
+        timeoutId = setTimeout(resolve, OBSERVABILITY_TIMEOUT_IN_MS);
+        timeoutId.unref?.();
+      })
+    ]);
+  } catch {
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  }
+}
+
+function summarizeByCategory({
+  cases,
+  results
+}: {
+  cases: AiAgentMvpEvalCase[];
+  results: AiAgentMvpEvalResult[];
+}): AiAgentMvpEvalCategorySummary[] {
+  const passedById = new Map(
+    results.map(({ id, passed }) => {
+      return [id, passed];
+    })
+  );
+  const categoryStats = new Map<
+    AiAgentMvpEvalCategory,
+    { passed: number; total: number }
+  >(
+    EVAL_CATEGORIES.map((category) => {
+      return [category, { passed: 0, total: 0 }];
+    })
+  );
+
+  for (const evalCase of cases) {
+    const categorySummary = categoryStats.get(evalCase.category);
+
+    if (!categorySummary) {
+      continue;
+    }
+
+    categorySummary.total += 1;
+
+    if (passedById.get(evalCase.id)) {
+      categorySummary.passed += 1;
+    }
+  }
+
+  return EVAL_CATEGORIES.map((category) => {
+    const { passed, total } = categoryStats.get(category) ?? {
+      passed: 0,
+      total: 0
+    };
+
+    return {
+      category,
+      passRate: total > 0 ? passed / total : 0,
+      passed,
+      total
+    };
+  });
+}
+
+function createEvalSuiteRun({
+  cases
+}: {
+  cases: AiAgentMvpEvalCase[];
+}) {
+  const apiKey = getLangSmithApiKey();
+
+  if (!hasValidLangSmithApiKey(apiKey) || !isLangSmithTracingEnabled()) {
+    return undefined;
+  }
+
+  const client = new Client({
+    apiKey: apiKey.trim(),
+    apiUrl: getLangSmithEndpoint()
+  });
+
+  return new RunTree({
+    client,
+    inputs: {
+      categories: Array.from(
+        new Set(
+          cases.map(({ category }) => {
+            return category;
+          })
+        )
+      ),
+      totalCases: cases.length
+    },
+    metadata: {
+      type: 'mvp_eval_suite'
+    },
+    name: 'ghostfolio_ai_mvp_eval_suite',
+    project_name: getLangSmithProjectName(),
+    run_type: 'chain'
+  });
+}
+
+async function captureEvalCaseRun({
+  evalCase,
+  result,
+  suiteRunTree
+}: {
+  evalCase: AiAgentMvpEvalCase;
+  result: AiAgentMvpEvalResult;
+  suiteRunTree?: RunTree;
+}) {
+  if (!suiteRunTree) {
+    return;
+  }
+
+  const caseRunTree = suiteRunTree.createChild({
+    inputs: {
+      expected: evalCase.expected,
+      query: evalCase.input.query,
+      sessionId: evalCase.input.sessionId
+    },
+    metadata: {
+      category: evalCase.category,
+      intent: evalCase.intent
+    },
+    name: `ghostfolio_ai_mvp_eval_case_${evalCase.id}`,
+    run_type: 'tool'
+  });
+
+  await runSafely(async () => caseRunTree.postRun());
+  await runSafely(async () =>
+    caseRunTree.end(
+      {
+        durationInMs: result.durationInMs,
+        failures: result.failures,
+        passed: result.passed,
+        toolCalls:
+          result.response?.toolCalls.map(({ status, tool }) => {
+            return { status, tool };
+          }) ?? []
+      },
+      result.passed ? undefined : result.failures.join(' | ')
+    )
+  );
+  await runSafely(async () => caseRunTree.patchRun());
+}
+
+async function finalizeSuiteRun({
+  categorySummaries,
+  hallucinationRate,
+  passRate,
+  passed,
+  suiteRunTree,
+  total,
+  verificationAccuracy
+}: {
+  categorySummaries: AiAgentMvpEvalCategorySummary[];
+  hallucinationRate: number;
+  passRate: number;
+  passed: number;
+  suiteRunTree?: RunTree;
+  total: number;
+  verificationAccuracy: number;
+}) {
+  if (!suiteRunTree) {
+    return;
+  }
+
+  await runSafely(async () =>
+    suiteRunTree.end(
+      {
+        categorySummaries,
+        hallucinationRate,
+        passRate,
+        passed,
+        total,
+        verificationAccuracy
+      },
+      passRate >= 0.8 ? undefined : 'mvp eval pass rate below threshold'
+    )
+  );
+  await runSafely(async () => suiteRunTree.patchRun());
+}
 
 function hasExpectedVerification({
   actualChecks,
@@ -96,6 +330,15 @@ function evaluateResponse({
     }
   }
 
+  if (
+    evalCase.expected.answerPattern &&
+    !evalCase.expected.answerPattern.test(response.answer)
+  ) {
+    failures.push(
+      `Answer does not match expected pattern: ${String(evalCase.expected.answerPattern)}`
+    );
+  }
+
   for (const expectedVerification of evalCase.expected.verificationChecks ?? []) {
     if (
       !hasExpectedVerification({
@@ -159,25 +402,58 @@ export async function runMvpEvalSuite({
 }: {
   aiServiceFactory: (evalCase: AiAgentMvpEvalCase) => AiService;
   cases: AiAgentMvpEvalCase[];
-}) {
+}): Promise<AiAgentMvpEvalSuiteResult> {
   const results: AiAgentMvpEvalResult[] = [];
+  const suiteRunTree = createEvalSuiteRun({ cases });
+
+  await runSafely(async () => suiteRunTree?.postRun());
 
   for (const evalCase of cases) {
-    results.push(
-      await runMvpEvalCase({
-        aiService: aiServiceFactory(evalCase),
-        evalCase
-      })
-    );
+    const result = await runMvpEvalCase({
+      aiService: aiServiceFactory(evalCase),
+      evalCase
+    });
+
+    results.push(result);
+
+    await captureEvalCaseRun({
+      evalCase,
+      result,
+      suiteRunTree
+    });
   }
 
   const passed = results.filter(({ passed: isPassed }) => isPassed).length;
   const passRate = cases.length > 0 ? passed / cases.length : 0;
+  const hallucinationRate = calculateHallucinationRate({
+    results
+  });
+  const categorySummaries = summarizeByCategory({
+    cases,
+    results
+  });
+  const verificationAccuracy = calculateVerificationAccuracy({
+    cases,
+    results
+  });
+
+  await finalizeSuiteRun({
+    categorySummaries,
+    hallucinationRate,
+    passRate,
+    passed,
+    suiteRunTree,
+    total: cases.length,
+    verificationAccuracy
+  });
 
   return {
     passRate,
     passed,
     results,
-    total: cases.length
+    total: cases.length,
+    categorySummaries,
+    hallucinationRate: Number(hallucinationRate.toFixed(4)),
+    verificationAccuracy: Number(verificationAccuracy.toFixed(4))
   };
 }

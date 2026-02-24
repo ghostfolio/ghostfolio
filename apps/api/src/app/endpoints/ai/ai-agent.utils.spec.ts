@@ -1,8 +1,14 @@
 import {
   calculateConfidence,
   determineToolPlan,
-  extractSymbolsFromQuery
+  evaluateAnswerQuality,
+  extractSymbolsFromQuery,
+  isGeneratedAnswerReliable
 } from './ai-agent.utils';
+import {
+  applyToolExecutionPolicy,
+  createPolicyRouteResponse
+} from './ai-agent.policy.utils';
 
 describe('AiAgentUtils', () => {
   it('extracts and deduplicates symbols from query', () => {
@@ -42,12 +48,54 @@ describe('AiAgentUtils', () => {
     ).toEqual(['market_data_lookup']);
   });
 
-  it('falls back to portfolio tool when no clear tool keyword exists', () => {
+  it('returns no tools when no clear tool keyword exists', () => {
     expect(
       determineToolPlan({
         query: 'Help me with my account'
       })
-    ).toEqual(['portfolio_analysis', 'risk_assessment']);
+    ).toEqual([]);
+  });
+
+  it('routes greetings to direct no-tool policy', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: ['portfolio_analysis'],
+      query: 'Hi'
+    });
+
+    expect(decision.route).toBe('direct');
+    expect(decision.toolsToExecute).toEqual([]);
+    expect(decision.blockedByPolicy).toBe(true);
+    expect(decision.blockReason).toBe('no_tool_query');
+    expect(decision.forcedDirect).toBe(true);
+  });
+
+  it('routes to clarify when planner provides no tools for finance-style query', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: [],
+      query: 'Portfolio please'
+    });
+
+    expect(decision.route).toBe('clarify');
+    expect(decision.toolsToExecute).toEqual([]);
+    expect(decision.blockReason).toBe('unknown');
+    expect(createPolicyRouteResponse({ policyDecision: decision })).toContain(
+      'Which one should I run next?'
+    );
+  });
+
+  it('blocks rebalance tool without explicit action intent while keeping read tools', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: ['portfolio_analysis', 'risk_assessment', 'rebalance_plan'],
+      query: 'Review portfolio concentration risk'
+    });
+
+    expect(decision.route).toBe('tools');
+    expect(decision.toolsToExecute).toEqual([
+      'portfolio_analysis',
+      'risk_assessment'
+    ]);
+    expect(decision.blockedByPolicy).toBe(true);
+    expect(decision.blockReason).toBe('needs_confirmation');
   });
 
   it('selects risk reasoning for investment intent queries', () => {
@@ -197,5 +245,50 @@ describe('AiAgentUtils', () => {
 
     expect(confidence.score).toBe(0.8);
     expect(confidence.band).toBe('high');
+  });
+
+  it('accepts generated answer with actionable and numeric support', () => {
+    expect(
+      isGeneratedAnswerReliable({
+        answer:
+          'Trim AAPL by 5% and allocate the next 1000 USD into MSFT and BND to reduce concentration risk.',
+        query: 'Where should I invest next to rebalance my portfolio?'
+      })
+    ).toBe(true);
+  });
+
+  it('rejects generated answer with disclaimer language', () => {
+    expect(
+      isGeneratedAnswerReliable({
+        answer:
+          'As an AI, I cannot provide financial advice. Please consult a financial advisor.',
+        query: 'How should I rebalance my portfolio?'
+      })
+    ).toBe(false);
+  });
+
+  it('marks response quality as warning when quantitative support is missing', () => {
+    const qualityCheck = evaluateAnswerQuality({
+      answer:
+        'Your allocation profile is concentrated in one name and needs balancing across other holdings.',
+      query: 'Show risk concentration and latest price trend for AAPL'
+    });
+
+    expect(qualityCheck.check).toBe('response_quality');
+    expect(qualityCheck.status).toBe('warning');
+    expect(qualityCheck.details).toContain(
+      'Quantitative query response lacks numeric support'
+    );
+  });
+
+  it('marks response quality as failed for generic AI disclaimers', () => {
+    const qualityCheck = evaluateAnswerQuality({
+      answer:
+        'As an AI, I am not your financial advisor so I cannot provide financial advice.',
+      query: 'Should I buy more MSFT?'
+    });
+
+    expect(qualityCheck.check).toBe('response_quality');
+    expect(qualityCheck.status).toBe('failed');
   });
 });

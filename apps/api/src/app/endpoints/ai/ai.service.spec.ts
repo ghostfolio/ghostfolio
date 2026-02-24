@@ -7,6 +7,11 @@ describe('AiService', () => {
   let portfolioService: { getDetails: jest.Mock };
   let propertyService: { getByKey: jest.Mock };
   let redisCacheService: { get: jest.Mock; set: jest.Mock };
+  let aiObservabilityService: {
+    captureChatFailure: jest.Mock;
+    captureChatSuccess: jest.Mock;
+    recordFeedback: jest.Mock;
+  };
   let subject: AiService;
   const originalFetch = global.fetch;
   const originalMinimaxApiKey = process.env.minimax_api_key;
@@ -28,12 +33,32 @@ describe('AiService', () => {
       get: jest.fn(),
       set: jest.fn()
     };
+    aiObservabilityService = {
+      captureChatFailure: jest.fn().mockResolvedValue(undefined),
+      captureChatSuccess: jest.fn().mockResolvedValue({
+        latencyBreakdownInMs: {
+          llmGenerationInMs: 9,
+          memoryReadInMs: 2,
+          memoryWriteInMs: 3,
+          toolExecutionInMs: 7
+        },
+        latencyInMs: 21,
+        tokenEstimate: {
+          input: 10,
+          output: 20,
+          total: 30
+        },
+        traceId: 'trace-1'
+      }),
+      recordFeedback: jest.fn()
+    };
 
     subject = new AiService(
       dataProviderService as never,
       portfolioService as never,
       propertyService as never,
-      redisCacheService as never
+      redisCacheService as never,
+      aiObservabilityService as never
     );
 
     delete process.env.minimax_api_key;
@@ -101,7 +126,7 @@ describe('AiService', () => {
     });
     redisCacheService.get.mockResolvedValue(undefined);
     jest.spyOn(subject, 'generateText').mockResolvedValue({
-      text: 'Portfolio risk looks medium with strong concentration controls.'
+      text: 'Portfolio risk is medium with top holding at 60% and HHI at 0.52 today.'
     } as never);
 
     const result = await subject.chat({
@@ -144,6 +169,31 @@ describe('AiService', () => {
       sessionId: 'session-1',
       turns: 1
     });
+    expect(result.observability).toEqual({
+      latencyBreakdownInMs: {
+        llmGenerationInMs: 9,
+        memoryReadInMs: 2,
+        memoryWriteInMs: 3,
+        toolExecutionInMs: 7
+      },
+      latencyInMs: 21,
+      tokenEstimate: {
+        input: 10,
+        output: 20,
+        total: 30
+      },
+      traceId: 'trace-1'
+    });
+    expect(aiObservabilityService.captureChatSuccess).toHaveBeenCalledWith(
+      expect.objectContaining({
+        latencyBreakdownInMs: expect.objectContaining({
+          llmGenerationInMs: expect.any(Number),
+          memoryReadInMs: expect.any(Number),
+          memoryWriteInMs: expect.any(Number),
+          toolExecutionInMs: expect.any(Number)
+        })
+      })
+    );
     expect(redisCacheService.set).toHaveBeenCalledWith(
       'ai-agent-memory-user-1-session-1',
       expect.any(String),
@@ -188,6 +238,38 @@ describe('AiService', () => {
         ({ query }: { query: string }) => query === 'query-0'
       )
     ).toBeUndefined();
+  });
+
+  it('enforces direct no-tool route at executor even when symbols are provided', async () => {
+    redisCacheService.get.mockResolvedValue(undefined);
+    const generateTextSpy = jest.spyOn(subject, 'generateText');
+
+    const result = await subject.chat({
+      languageCode: 'en',
+      query: 'Hi',
+      sessionId: 'session-direct-route',
+      symbols: ['NVDA'],
+      userCurrency: 'USD',
+      userId: 'user-direct-route'
+    });
+
+    expect(result.answer).toContain('Ask a portfolio question when you are ready');
+    expect(result.toolCalls).toEqual([]);
+    expect(result.citations).toEqual([]);
+    expect(dataProviderService.getQuotes).not.toHaveBeenCalled();
+    expect(generateTextSpy).not.toHaveBeenCalled();
+    expect(result.verification).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          check: 'numerical_consistency',
+          status: 'passed'
+        }),
+        expect.objectContaining({
+          check: 'policy_gating',
+          status: 'warning'
+        })
+      ])
+    );
   });
 
   it('runs rebalance and stress test tools for portfolio scenario prompts', async () => {
@@ -248,7 +330,7 @@ describe('AiService', () => {
     );
     redisCacheService.get.mockResolvedValue(undefined);
     jest.spyOn(subject, 'generateText').mockResolvedValue({
-      text: 'Market data currently has limited availability.'
+      text: 'Market data currently has limited availability with 0 quotes returned for the requested symbols.'
     } as never);
 
     const result = await subject.chat({
@@ -270,7 +352,7 @@ describe('AiService', () => {
       expect.arrayContaining([
         expect.objectContaining({
           check: 'numerical_consistency',
-          status: 'warning'
+          status: 'passed'
         }),
         expect.objectContaining({
           check: 'tool_execution',
@@ -415,5 +497,34 @@ describe('AiService', () => {
     expect(result).toEqual({
       text: 'minimax-response'
     });
+  });
+
+  it('captures observability failure events when chat throws', async () => {
+    portfolioService.getDetails.mockResolvedValue({
+      holdings: {}
+    });
+    redisCacheService.get.mockResolvedValue(undefined);
+    redisCacheService.set.mockRejectedValue(new Error('redis write failed'));
+    jest.spyOn(subject, 'generateText').mockResolvedValue({
+      text: 'Fallback response'
+    } as never);
+
+    await expect(
+      subject.chat({
+        languageCode: 'en',
+        query: 'Show my portfolio allocation',
+        sessionId: 'session-observability-failure',
+        userCurrency: 'USD',
+        userId: 'user-observability-failure'
+      })
+    ).rejects.toThrow('redis write failed');
+
+    expect(aiObservabilityService.captureChatFailure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: 'Show my portfolio allocation',
+        sessionId: 'session-observability-failure',
+        userId: 'user-observability-failure'
+      })
+    );
   });
 });

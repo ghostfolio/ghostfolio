@@ -4,7 +4,10 @@ import { AiService } from '../ai.service';
 
 import { AI_AGENT_MVP_EVAL_DATASET } from './mvp-eval.dataset';
 import { runMvpEvalSuite } from './mvp-eval.runner';
-import { AiAgentMvpEvalCase } from './mvp-eval.interfaces';
+import {
+  AiAgentMvpEvalCase,
+  AiAgentMvpEvalCategory
+} from './mvp-eval.interfaces';
 
 function createAiServiceForCase(evalCase: AiAgentMvpEvalCase) {
   const dataProviderService = {
@@ -19,6 +22,15 @@ function createAiServiceForCase(evalCase: AiAgentMvpEvalCase) {
   const redisCacheService = {
     get: jest.fn(),
     set: jest.fn()
+  };
+  const aiObservabilityService = {
+    captureChatFailure: jest.fn().mockResolvedValue(undefined),
+    captureChatSuccess: jest.fn().mockResolvedValue({
+      latencyInMs: 10,
+      tokenEstimate: { input: 1, output: 1, total: 2 },
+      traceId: 'eval-trace'
+    }),
+    recordFeedback: jest.fn().mockResolvedValue(undefined)
   };
 
   portfolioService.getDetails.mockResolvedValue({
@@ -72,7 +84,8 @@ function createAiServiceForCase(evalCase: AiAgentMvpEvalCase) {
     dataProviderService as never,
     portfolioService as never,
     propertyService as never,
-    redisCacheService as never
+    redisCacheService as never,
+    aiObservabilityService as never
   );
 
   if (evalCase.setup.llmThrows) {
@@ -87,8 +100,50 @@ function createAiServiceForCase(evalCase: AiAgentMvpEvalCase) {
 }
 
 describe('AiAgentMvpEvalSuite', () => {
-  it('contains at least five baseline MVP eval cases', () => {
-    expect(AI_AGENT_MVP_EVAL_DATASET.length).toBeGreaterThanOrEqual(5);
+  const originalLangChainTracingV2 = process.env.LANGCHAIN_TRACING_V2;
+  const originalLangSmithTracing = process.env.LANGSMITH_TRACING;
+
+  beforeAll(() => {
+    process.env.LANGCHAIN_TRACING_V2 = 'false';
+    process.env.LANGSMITH_TRACING = 'false';
+  });
+
+  afterAll(() => {
+    if (originalLangChainTracingV2 === undefined) {
+      delete process.env.LANGCHAIN_TRACING_V2;
+    } else {
+      process.env.LANGCHAIN_TRACING_V2 = originalLangChainTracingV2;
+    }
+
+    if (originalLangSmithTracing === undefined) {
+      delete process.env.LANGSMITH_TRACING;
+    } else {
+      process.env.LANGSMITH_TRACING = originalLangSmithTracing;
+    }
+  });
+
+  it('contains at least fifty eval cases with required category coverage', () => {
+    const countsByCategory = AI_AGENT_MVP_EVAL_DATASET.reduce<
+      Record<AiAgentMvpEvalCategory, number>
+    >(
+      (result, { category }) => {
+        result[category] += 1;
+
+        return result;
+      },
+      {
+        adversarial: 0,
+        edge_case: 0,
+        happy_path: 0,
+        multi_step: 0
+      }
+    );
+
+    expect(AI_AGENT_MVP_EVAL_DATASET.length).toBeGreaterThanOrEqual(50);
+    expect(countsByCategory.happy_path).toBeGreaterThanOrEqual(20);
+    expect(countsByCategory.edge_case).toBeGreaterThanOrEqual(10);
+    expect(countsByCategory.adversarial).toBeGreaterThanOrEqual(10);
+    expect(countsByCategory.multi_step).toBeGreaterThanOrEqual(10);
   });
 
   it('passes the MVP eval suite with at least 80% success rate', async () => {
@@ -98,6 +153,28 @@ describe('AiAgentMvpEvalSuite', () => {
     });
 
     expect(suiteResult.passRate).toBeGreaterThanOrEqual(0.8);
+    expect(suiteResult.categorySummaries).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          category: 'happy_path',
+          total: expect.any(Number)
+        }),
+        expect.objectContaining({
+          category: 'edge_case',
+          total: expect.any(Number)
+        }),
+        expect.objectContaining({
+          category: 'adversarial',
+          total: expect.any(Number)
+        }),
+        expect.objectContaining({
+          category: 'multi_step',
+          total: expect.any(Number)
+        })
+      ])
+    );
+    expect(suiteResult.hallucinationRate).toBeLessThanOrEqual(0.05);
+    expect(suiteResult.verificationAccuracy).toBeGreaterThanOrEqual(0.9);
     expect(
       suiteResult.results
         .filter(({ passed }) => !passed)

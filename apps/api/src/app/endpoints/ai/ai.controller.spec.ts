@@ -4,18 +4,26 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 
 import { AiController } from './ai.controller';
+import { AiFeedbackService } from './ai-feedback.service';
 import { AiChatDto } from './ai-chat.dto';
 import { AiService } from './ai.service';
 
 describe('AiController', () => {
   let controller: AiController;
-  let aiService: { chat: jest.Mock; getPrompt: jest.Mock };
+  let aiService: {
+    chat: jest.Mock;
+    getPrompt: jest.Mock;
+  };
+  let aiFeedbackService: { submitFeedback: jest.Mock };
   let apiService: { buildFiltersFromQueryParams: jest.Mock };
 
   beforeEach(async () => {
     aiService = {
       chat: jest.fn(),
       getPrompt: jest.fn()
+    };
+    aiFeedbackService = {
+      submitFeedback: jest.fn()
     };
     apiService = {
       buildFiltersFromQueryParams: jest.fn()
@@ -27,6 +35,10 @@ describe('AiController', () => {
         {
           provide: AiService,
           useValue: aiService
+        },
+        {
+          provide: AiFeedbackService,
+          useValue: aiFeedbackService
         },
         {
           provide: ApiService,
@@ -111,6 +123,30 @@ describe('AiController', () => {
     });
     expect(response).toEqual({
       prompt: 'prompt-body'
+    });
+  });
+
+  it('passes feedback payload and user context to ai service', async () => {
+    aiFeedbackService.submitFeedback.mockResolvedValue({
+      accepted: true,
+      feedbackId: 'feedback-1'
+    });
+
+    const response = await controller.submitFeedback({
+      comment: 'Helpful answer',
+      rating: 'up',
+      sessionId: 'chat-session-1'
+    });
+
+    expect(aiFeedbackService.submitFeedback).toHaveBeenCalledWith({
+      comment: 'Helpful answer',
+      rating: 'up',
+      sessionId: 'chat-session-1',
+      userId: 'user-controller'
+    });
+    expect(response).toEqual({
+      accepted: true,
+      feedbackId: 'feedback-1'
     });
   });
 });

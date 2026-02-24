@@ -43,13 +43,20 @@ async function callChatCompletions({
   apiKey,
   model,
   prompt,
+  signal,
   url
 }: {
   apiKey: string;
   model: string;
   prompt: string;
+  signal?: AbortSignal;
   url: string;
 }) {
+  const providerTimeoutSignal = AbortSignal.timeout(DEFAULT_REQUEST_TIMEOUT_IN_MS);
+  const requestSignal = signal
+    ? AbortSignal.any([providerTimeoutSignal, signal])
+    : providerTimeoutSignal;
+
   const response = await fetch(url, {
     body: JSON.stringify({
       messages: [
@@ -69,7 +76,7 @@ async function callChatCompletions({
       'Content-Type': 'application/json'
     },
     method: 'POST',
-    signal: AbortSignal.timeout(DEFAULT_REQUEST_TIMEOUT_IN_MS)
+    signal: requestSignal
   });
 
   if (!response.ok) {
@@ -91,16 +98,19 @@ async function callChatCompletions({
 export async function generateTextWithZAiGlm({
   apiKey,
   model,
-  prompt
+  prompt,
+  signal
 }: {
   apiKey: string;
   model?: string;
   prompt: string;
+  signal?: AbortSignal;
 }) {
   return callChatCompletions({
     apiKey,
     model: model ?? DEFAULT_GLM_MODEL,
     prompt,
+    signal,
     url: 'https://api.z.ai/api/paas/v4/chat/completions'
   });
 }
@@ -108,16 +118,19 @@ export async function generateTextWithZAiGlm({
 export async function generateTextWithMinimax({
   apiKey,
   model,
-  prompt
+  prompt,
+  signal
 }: {
   apiKey: string;
   model?: string;
   prompt: string;
+  signal?: AbortSignal;
 }) {
   return callChatCompletions({
     apiKey,
     model: model ?? DEFAULT_MINIMAX_MODEL,
     prompt,
+    signal,
     url: 'https://api.minimax.io/v1/chat/completions'
   });
 }

@@ -5,6 +5,12 @@ import {
   AiAgentToolName
 } from '../ai-agent.interfaces';
 
+export type AiAgentMvpEvalCategory =
+  | 'happy_path'
+  | 'edge_case'
+  | 'adversarial'
+  | 'multi_step';
+
 export interface AiAgentMvpEvalQuote {
   currency: string;
   marketPrice: number;
@@ -58,6 +64,7 @@ export interface AiAgentMvpEvalVerificationExpectation {
 
 export interface AiAgentMvpEvalCaseExpected {
   answerIncludes?: string[];
+  answerPattern?: RegExp;
   confidenceScoreMin?: number;
   forbiddenTools?: AiAgentToolName[];
   memoryTurnsAtLeast?: number;
@@ -68,6 +75,7 @@ export interface AiAgentMvpEvalCaseExpected {
 }
 
 export interface AiAgentMvpEvalCase {
+  category: AiAgentMvpEvalCategory;
   expected: AiAgentMvpEvalCaseExpected;
   id: string;
   input: AiAgentMvpEvalCaseInput;
@@ -81,4 +89,21 @@ export interface AiAgentMvpEvalResult {
   id: string;
   passed: boolean;
   response?: AiAgentChatResponse;
+}
+
+export interface AiAgentMvpEvalCategorySummary {
+  category: AiAgentMvpEvalCategory;
+  passRate: number;
+  passed: number;
+  total: number;
+}
+
+export interface AiAgentMvpEvalSuiteResult {
+  categorySummaries: AiAgentMvpEvalCategorySummary[];
+  hallucinationRate: number;
+  passRate: number;
+  passed: number;
+  results: AiAgentMvpEvalResult[];
+  total: number;
+  verificationAccuracy: number;
 }

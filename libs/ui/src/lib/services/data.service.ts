@@ -25,6 +25,8 @@ import {
   AccountsResponse,
   ActivitiesResponse,
   ActivityResponse,
+  AiAgentChatResponse,
+  AiAgentFeedbackResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
@@ -667,6 +669,38 @@ export class DataService {
 
     return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`, {
       params
+    });
+  }
+
+  public postAiChat({
+    query,
+    sessionId,
+    symbols
+  }: {
+    query: string;
+    sessionId?: string;
+    symbols?: string[];
+  }) {
+    return this.http.post<AiAgentChatResponse>('/api/v1/ai/chat', {
+      query,
+      sessionId,
+      symbols
+    });
+  }
+
+  public postAiChatFeedback({
+    comment,
+    rating,
+    sessionId
+  }: {
+    comment?: string;
+    rating: 'down' | 'up';
+    sessionId: string;
+  }) {
+    return this.http.post<AiAgentFeedbackResponse>('/api/v1/ai/chat/feedback', {
+      comment,
+      rating,
+      sessionId
     });
   }
 

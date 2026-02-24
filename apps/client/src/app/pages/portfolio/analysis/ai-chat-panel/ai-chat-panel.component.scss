@@ -1,0 +1,82 @@
+:host {
+  --ai-chat-assistant-background: rgba(var(--dark-primary-text), 0.03);
+  --ai-chat-border-color: rgba(var(--dark-primary-text), 0.14);
+  --ai-chat-message-text: rgb(var(--dark-primary-text));
+  --ai-chat-muted-text: rgba(var(--dark-primary-text), 0.7);
+  --ai-chat-selection-background: rgba(var(--palette-primary-500), 0.45);
+  --ai-chat-selection-text: rgb(var(--dark-primary-text));
+  --ai-chat-user-background: rgba(var(--palette-primary-500), 0.1);
+  --ai-chat-user-border: rgba(var(--palette-primary-500), 0.3);
+  display: block;
+}
+
+:host-context(.theme-dark) {
+  --ai-chat-assistant-background: rgba(var(--light-primary-text), 0.06);
+  --ai-chat-border-color: rgba(var(--light-primary-text), 0.2);
+  --ai-chat-message-text: rgb(var(--light-primary-text));
+  --ai-chat-muted-text: rgba(var(--light-primary-text), 0.72);
+  --ai-chat-selection-background: rgba(var(--palette-primary-300), 0.4);
+  --ai-chat-selection-text: rgb(var(--light-primary-text));
+  --ai-chat-user-background: rgba(var(--palette-primary-500), 0.18);
+  --ai-chat-user-border: rgba(var(--palette-primary-300), 0.45);
+}
+
+.chat-log {
+  max-height: 32rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.chat-message {
+  border: 1px solid var(--ai-chat-border-color);
+  color: var(--ai-chat-message-text);
+}
+
+.chat-message.assistant {
+  background: var(--ai-chat-assistant-background);
+}
+
+.chat-message.user {
+  background: var(--ai-chat-user-background);
+  border-color: var(--ai-chat-user-border);
+}
+
+.chat-message-content {
+  color: var(--ai-chat-message-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat-message-content::selection,
+.chat-message-header::selection,
+.chat-metadata::selection,
+.chat-metadata li::selection,
+.chat-metadata strong::selection,
+textarea::selection {
+  background: var(--ai-chat-selection-background);
+  color: var(--ai-chat-selection-text);
+}
+
+.chat-message-header {
+  color: var(--ai-chat-muted-text) !important;
+}
+
+.chat-metadata {
+  border-top: 1px solid var(--ai-chat-border-color);
+  color: var(--ai-chat-muted-text);
+  font-size: 0.85rem;
+  padding-top: 0.75rem;
+}
+
+.prompt-list {
+  gap: 0.25rem;
+}
+
+.role-label {
+  letter-spacing: 0.03em;
+}
+
+.feedback-controls {
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}

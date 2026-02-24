@@ -1,0 +1,42 @@
+{
+  "name": "@ghostfolio/finance-agent-evals",
+  "version": "0.1.0",
+  "description": "Framework-agnostic evaluation dataset and runner for finance AI agents.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "index.mjs",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "types": "./index.d.ts"
+    },
+    "./dataset": {
+      "import": "./datasets/ghostfolio-finance-agent-evals.v1.json"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "datasets/ghostfolio-finance-agent-evals.v1.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ai",
+    "evals",
+    "finance",
+    "ghostfolio",
+    "langsmith",
+    "llm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghostfolio/ghostfolio.git",
+    "directory": "tools/evals/finance-agent-evals"
+  },
+  "scripts": {
+    "check": "node ./scripts/smoke-test.mjs",
+    "pack:dry-run": "npm pack --dry-run"
+  }
+}

@@ -75,6 +75,14 @@
     </div>
   }
 
+  <div class="mb-5 row">
+    <div class="col-lg">
+      <gf-ai-chat-panel
+        [hasPermissionToReadAiPrompt]="hasPermissionToReadAiPrompt"
+      ></gf-ai-chat-panel>
+    </div>
+  </div>
+
   @if (user?.settings?.isExperimentalFeatures) {
     <div class="mb-5 row">
       <div class="col-lg-4 mb-3 mb-lg-0">

@@ -6,10 +6,6 @@ import { DataSource } from '@prisma/client';
 import ms from 'ms';
 
 import {
-  AiAgentToolCall,
-  AiAgentVerificationCheck
-} from './ai-agent.interfaces';
-import {
   AiAgentMemoryState,
   MarketDataLookupResult,
   PortfolioAnalysisResult,
@@ -17,102 +13,22 @@ import {
   RiskAssessmentResult,
   StressTestResult
 } from './ai-agent.chat.interfaces';
-import { extractSymbolsFromQuery } from './ai-agent.utils';
+import {
+  extractSymbolsFromQuery,
+  isGeneratedAnswerReliable
+} from './ai-agent.utils';
 
 const AI_AGENT_MEMORY_TTL = ms('24 hours');
+const DEFAULT_LLM_TIMEOUT_IN_MS = 3_500;
 
 export const AI_AGENT_MEMORY_MAX_TURNS = 10;
 
-export function addVerificationChecks({
-  marketData,
-  portfolioAnalysis,
-  rebalancePlan,
-  stressTest,
-  toolCalls,
-  verification
-}: {
-  marketData?: MarketDataLookupResult;
-  portfolioAnalysis?: PortfolioAnalysisResult;
-  rebalancePlan?: RebalancePlanResult;
-  stressTest?: StressTestResult;
-  toolCalls: AiAgentToolCall[];
-  verification: AiAgentVerificationCheck[];
-}) {
-  if (portfolioAnalysis) {
-    const allocationDifference = Math.abs(portfolioAnalysis.allocationSum - 1);
+function getLlmTimeoutInMs() {
+  const parsed = Number.parseInt(process.env.AI_AGENT_LLM_TIMEOUT_IN_MS ?? '', 10);
 
-    verification.push({
-      check: 'numerical_consistency',
-      details:
-        allocationDifference <= 0.05
-          ? `Allocation sum difference is ${allocationDifference.toFixed(4)}`
-          : `Allocation sum difference is ${allocationDifference.toFixed(4)} (can happen with liabilities or leveraged exposure)`,
-      status: allocationDifference <= 0.05 ? 'passed' : 'warning'
-    });
-  } else {
-    verification.push({
-      check: 'numerical_consistency',
-      details: 'Portfolio tool did not run',
-      status: 'warning'
-    });
-  }
-
-  if (marketData) {
-    const unresolvedSymbols = marketData.symbolsRequested.length -
-      marketData.quotes.length;
-
-    verification.push({
-      check: 'market_data_coverage',
-      details:
-        unresolvedSymbols > 0
-          ? `${unresolvedSymbols} symbols did not resolve with quote data`
-          : 'All requested symbols resolved with quote data',
-      status:
-        unresolvedSymbols === 0
-          ? 'passed'
-          : marketData.quotes.length > 0
-            ? 'warning'
-            : 'failed'
-    });
-  }
-
-  if (rebalancePlan) {
-    verification.push({
-      check: 'rebalance_coverage',
-      details:
-        rebalancePlan.overweightHoldings.length > 0 ||
-        rebalancePlan.underweightHoldings.length > 0
-          ? `Rebalance plan found ${rebalancePlan.overweightHoldings.length} overweight and ${rebalancePlan.underweightHoldings.length} underweight holdings`
-          : 'No rebalance action identified from current holdings',
-      status:
-        rebalancePlan.overweightHoldings.length > 0 ||
-        rebalancePlan.underweightHoldings.length > 0
-          ? 'passed'
-          : 'warning'
-    });
-  }
-
-  if (stressTest) {
-    verification.push({
-      check: 'stress_test_coherence',
-      details: `Shock ${(stressTest.shockPercentage * 100).toFixed(1)}% implies drawdown ${stressTest.estimatedDrawdownInBaseCurrency.toFixed(2)}`,
-      status:
-        stressTest.estimatedDrawdownInBaseCurrency >= 0 &&
-        stressTest.estimatedPortfolioValueAfterShock >= 0
-          ? 'passed'
-          : 'failed'
-    });
-  }
-
-  verification.push({
-    check: 'tool_execution',
-    details: `${toolCalls.filter(({ status }) => {
-      return status === 'success';
-    }).length}/${toolCalls.length} tools executed successfully`,
-    status: toolCalls.every(({ status }) => status === 'success')
-      ? 'passed'
-      : 'warning'
-  });
+  return Number.isFinite(parsed) && parsed > 0
+    ? parsed
+    : DEFAULT_LLM_TIMEOUT_IN_MS;
 }
 
 export async function buildAnswer({
@@ -127,7 +43,13 @@ export async function buildAnswer({
   stressTest,
   userCurrency
 }: {
-  generateText: ({ prompt }: { prompt: string }) => Promise<{ text?: string }>;
+  generateText: ({
+    prompt,
+    signal
+  }: {
+    prompt: string;
+    signal?: AbortSignal;
+  }) => Promise<{ text?: string }>;
   languageCode: string;
   marketData?: MarketDataLookupResult;
   memory: AiAgentMemoryState;
@@ -257,16 +179,42 @@ export async function buildAnswer({
     fallbackAnswer,
     `Write a concise response with actionable insight and avoid speculation.`
   ].join('\n');
+  const llmTimeoutInMs = getLlmTimeoutInMs();
+  const abortController = new AbortController();
+  let timeoutId: NodeJS.Timeout | undefined;
 
   try {
-    const generated = await generateText({
-      prompt: llmPrompt
-    });
+    const generated = await Promise.race([
+      generateText({
+        prompt: llmPrompt,
+        signal: abortController.signal
+      }),
+      new Promise<{ text?: string } | undefined>((resolve) => {
+        timeoutId = setTimeout(() => {
+          abortController.abort();
+          resolve(undefined);
+        }, llmTimeoutInMs);
+        timeoutId.unref?.();
+      })
+    ]);
 
-    if (generated?.text?.trim()) {
-      return generated.text.trim();
+    const generatedAnswer = generated?.text?.trim();
+
+    if (
+      generatedAnswer &&
+      isGeneratedAnswerReliable({
+        answer: generatedAnswer,
+        query
+      })
+    ) {
+      return generatedAnswer;
     }
   } catch {}
+  finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  }
 
   return fallbackAnswer;
 }

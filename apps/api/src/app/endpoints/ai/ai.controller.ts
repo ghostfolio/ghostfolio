@@ -18,13 +18,19 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
-import { AiAgentChatResponse } from './ai-agent.interfaces';
+import {
+  AiAgentChatResponse,
+  AiAgentFeedbackResponse
+} from './ai-agent.interfaces';
+import { AiFeedbackService } from './ai-feedback.service';
+import { AiChatFeedbackDto } from './ai-chat-feedback.dto';
 import { AiChatDto } from './ai-chat.dto';
 import { AiService } from './ai.service';
 
 @Controller('ai')
 export class AiController {
   public constructor(
+    private readonly aiFeedbackService: AiFeedbackService,
     private readonly aiService: AiService,
     private readonly apiService: ApiService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -71,6 +77,20 @@ export class AiController {
       sessionId: data.sessionId,
       symbols: data.symbols,
       userCurrency: this.request.user.settings.settings.baseCurrency,
+      userId: this.request.user.id
+    });
+  }
+
+  @Post('chat/feedback')
+  @HasPermission(permissions.readAiPrompt)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async submitFeedback(
+    @Body() data: AiChatFeedbackDto
+  ): Promise<AiAgentFeedbackResponse> {
+    return this.aiFeedbackService.submitFeedback({
+      comment: data.comment,
+      rating: data.rating,
+      sessionId: data.sessionId,
       userId: this.request.user.id
     });
   }

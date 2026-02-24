@@ -49,6 +49,169 @@ const REBALANCE_KEYWORDS = [
 ];
 
 const STRESS_TEST_KEYWORDS = ['crash', 'drawdown', 'shock', 'stress'];
+const ANSWER_NUMERIC_INTENT_KEYWORDS = [
+  'allocat',
+  'drawdown',
+  'hhi',
+  'market',
+  'performance',
+  'price',
+  'quote',
+  'return',
+  'risk',
+  'shock',
+  'stress',
+  'trim'
+];
+const ANSWER_ACTIONABLE_KEYWORDS = [
+  'add',
+  'allocate',
+  'buy',
+  'hedge',
+  'increase',
+  'monitor',
+  'rebalance',
+  'reduce',
+  'sell',
+  'trim'
+];
+const DISALLOWED_RESPONSE_PATTERNS = [
+  /\bas an ai\b/i,
+  /\bi am not (?:a|your) financial advisor\b/i,
+  /\bi can(?:not|'t) provide financial advice\b/i,
+  /\bconsult (?:a|your) financial advisor\b/i
+];
+const MINIMUM_GENERATED_ANSWER_WORDS = 12;
+
+interface AnswerQualitySignals {
+  disallowedPhraseDetected: boolean;
+  hasActionableGuidance: boolean;
+  hasInvestmentIntent: boolean;
+  hasNumericIntent: boolean;
+  hasNumericSignal: boolean;
+  sentenceCount: number;
+  wordCount: number;
+}
+
+function getAnswerQualitySignals({
+  answer,
+  query
+}: {
+  answer: string;
+  query: string;
+}): AnswerQualitySignals {
+  const normalizedAnswer = answer.trim();
+  const normalizedAnswerLowerCase = normalizedAnswer.toLowerCase();
+  const normalizedQueryLowerCase = query.toLowerCase();
+  const words = normalizedAnswer.split(/\s+/).filter(Boolean);
+  const sentenceCount = normalizedAnswer
+    .split(/[.!?](?:\s+|$)/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean).length;
+  const hasInvestmentIntent = INVESTMENT_INTENT_KEYWORDS.some((keyword) => {
+    return normalizedQueryLowerCase.includes(keyword);
+  });
+  const hasNumericIntent = ANSWER_NUMERIC_INTENT_KEYWORDS.some((keyword) => {
+    return normalizedQueryLowerCase.includes(keyword);
+  });
+  const hasActionableGuidance = ANSWER_ACTIONABLE_KEYWORDS.some((keyword) => {
+    return normalizedAnswerLowerCase.includes(keyword);
+  });
+  const hasNumericSignal = /\d/.test(normalizedAnswer);
+  const disallowedPhraseDetected = DISALLOWED_RESPONSE_PATTERNS.some((pattern) => {
+    return pattern.test(normalizedAnswer);
+  });
+
+  return {
+    disallowedPhraseDetected,
+    hasActionableGuidance,
+    hasInvestmentIntent,
+    hasNumericIntent,
+    hasNumericSignal,
+    sentenceCount,
+    wordCount: words.length
+  };
+}
+
+export function isGeneratedAnswerReliable({
+  answer,
+  query
+}: {
+  answer: string;
+  query: string;
+}) {
+  const qualitySignals = getAnswerQualitySignals({ answer, query });
+
+  if (qualitySignals.disallowedPhraseDetected) {
+    return false;
+  }
+
+  if (qualitySignals.wordCount < MINIMUM_GENERATED_ANSWER_WORDS) {
+    return false;
+  }
+
+  if (qualitySignals.hasInvestmentIntent && !qualitySignals.hasActionableGuidance) {
+    return false;
+  }
+
+  if (qualitySignals.hasNumericIntent && !qualitySignals.hasNumericSignal) {
+    return false;
+  }
+
+  return true;
+}
+
+export function evaluateAnswerQuality({
+  answer,
+  query
+}: {
+  answer: string;
+  query: string;
+}): AiAgentVerificationCheck {
+  const qualitySignals = getAnswerQualitySignals({ answer, query });
+  const issues: string[] = [];
+
+  if (qualitySignals.disallowedPhraseDetected) {
+    issues.push('Response contains a generic AI disclaimer');
+  }
+
+  if (qualitySignals.wordCount < MINIMUM_GENERATED_ANSWER_WORDS) {
+    issues.push(
+      `Response length is short (${qualitySignals.wordCount} words; target >= ${MINIMUM_GENERATED_ANSWER_WORDS})`
+    );
+  }
+
+  if (qualitySignals.sentenceCount < 2) {
+    issues.push(
+      `Response uses limited structure (${qualitySignals.sentenceCount} sentence)`
+    );
+  }
+
+  if (qualitySignals.hasInvestmentIntent && !qualitySignals.hasActionableGuidance) {
+    issues.push('Investment request lacks explicit action guidance');
+  }
+
+  if (qualitySignals.hasNumericIntent && !qualitySignals.hasNumericSignal) {
+    issues.push('Quantitative query response lacks numeric support');
+  }
+
+  if (qualitySignals.disallowedPhraseDetected) {
+    return {
+      check: 'response_quality',
+      details: issues.join('; '),
+      status: 'failed'
+    };
+  }
+
+  return {
+    check: 'response_quality',
+    details:
+      issues.length > 0
+        ? issues.join('; ')
+        : 'Response passed structure, actionability, and evidence heuristics',
+    status: issues.length === 0 ? 'passed' : 'warning'
+  };
+}
 
 function normalizeSymbolCandidate(rawCandidate: string) {
   const hasDollarPrefix = rawCandidate.startsWith('$');
@@ -152,11 +315,6 @@ export function determineToolPlan({
     extractedSymbols.length > 0
   ) {
     selectedTools.add('market_data_lookup');
-  }
-
-  if (selectedTools.size === 0) {
-    selectedTools.add('portfolio_analysis');
-    selectedTools.add('risk_assessment');
   }
 
   return Array.from(selectedTools);

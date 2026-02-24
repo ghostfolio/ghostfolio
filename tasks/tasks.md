@@ -1,6 +1,6 @@
 # Todo
 
-Updated: 2026-02-23
+Updated: 2026-02-24
 
 - [x] Verify current repository state and missing required files
 - [x] Create `docs/adr/` for architecture decisions
@@ -13,7 +13,7 @@ Updated: 2026-02-23
 
 # Tasks
 
-Last updated: 2026-02-23
+Last updated: 2026-02-24
 
 ## Active Tickets
 
@@ -24,9 +24,10 @@ Last updated: 2026-02-23
 | T-003 | Agent MVP tool 1: `portfolio_analysis` | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts` | Planned |
 | T-004 | Agent memory and response formatter | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts` | Planned |
 | T-005 | Eval dataset baseline (MVP 5-10) | Complete | `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Planned |
-| T-006 | Full eval dataset (50+) | Planned | Dataset validation and regression run | Planned |
-| T-007 | Observability wiring (LangSmith traces and metrics) | Planned | Trace assertions and latency checks | Planned |
+| T-006 | Full eval dataset (50+) | Complete | `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
+| T-007 | Observability wiring (LangSmith traces and metrics) | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai-feedback.service.spec.ts`, `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
 | T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | `2b6506de8` |
+| T-009 | Open source eval framework contribution | Ready for Publish | `@ghostfolio/finance-agent-evals` package scaffold + dataset export + smoke/pack checks | `thoughts/shared/plans/open-source-eval-framework.md` |
 
 ## Notes
 
@@ -112,6 +113,13 @@ Last updated: 2026-02-23
 - [x] Normalize risk concentration math for leveraged/liability portfolios
 - [x] Run focused AI test suite and eval regression checks
 
+## Session Plan (2026-02-24, LangSmith Relevance Gate)
+
+- [x] Add deterministic investment-relevance expectations to MVP eval dataset
+- [x] Add direct eval case for the prompt "Where should I invest?"
+- [x] Add runnable LangSmith eval script for full suite + investment subset summary
+- [x] Run LangSmith eval command and capture pass/fail evidence
+
 ## Session Plan (2026-02-23, Railway Latency + Redis Auth Fix)
 
 - [x] Reproduce production slowness and capture health endpoint latency
@@ -127,6 +135,55 @@ Last updated: 2026-02-23
 - [x] Add deterministic tests for new tool planning and orchestration
 - [x] Extend MVP eval dataset with coverage for new tools
 - [x] Run focused AI regression suite and push to `origin/main`
+
+## Session Plan (2026-02-23, Full Requirements Closure - Local)
+
+- [x] Expand eval dataset to 50+ cases with required category coverage (happy/edge/adversarial/multi-step)
+- [x] Add LangSmith observability integration for AI chat traces and key metrics
+- [x] Add/adjust tests to validate observability payload and expanded eval pass gate
+- [x] Update submission docs to reflect 5-tool architecture and 50+ eval status
+- [x] Run local verification (`npm run test:ai`, `npm run test:mvp-eval`, `nx run api:lint`) without pushing
+
+## Session Plan (2026-02-24, Requirement Closure Execution)
+
+- [x] Expand eval dataset to at least 50 deterministic test cases with explicit category tags and category-level assertions.
+- [x] Wire `AiObservabilityService` into `AiService.chat` and capture total latency, tool latency, LLM latency, error traces, and token estimates.
+- [x] Integrate optional LangSmith eval run upload path in eval runner with environment-based gating.
+- [x] Update AI endpoint tests for observability payload and updated eval thresholds.
+- [x] Update `.env.example`, `docs/LOCAL-TESTING.md`, `Tasks.md`, and `docs/tasks/tasks.md` to reflect LangSmith setup and new eval baseline.
+- [x] Run focused verification and record outcomes.
+
+## Session Plan (2026-02-24, Quality Lift to 9+)
+
+- [x] Fix AI service typing regression and ensure extended AI quality/performance suites compile and pass.
+- [x] Make observability non-blocking on the request path and harden env defaults to prevent accidental tracing overhead.
+- [x] Improve chat panel quality for theming consistency, i18n coverage, and accessibility semantics.
+- [x] Expand AI verification gate scripts to include quality/performance/feedback suites.
+- [x] Re-run verification (`test:ai`, `test:mvp-eval`, `api:lint`, targeted client tests) and record outcomes.
+- [x] Add deterministic performance regression test gate for single-tool and multi-step latency targets.
+
+## Session Plan (2026-02-24, Live Latency + Reply Quality Hardening)
+
+- [x] Add environment-gated live latency benchmark test that exercises real LLM network calls and records p95 for single-tool and multi-step prompts.
+- [x] Add deterministic reply-quality eval checks (clarity/actionability/anti-disclaimer guardrails) on representative prompts.
+- [x] Add npm script(s) for the new benchmark/eval paths and document how to run locally.
+- [x] Run focused verification (`test:ai`, `test:mvp-eval`, new quality and live latency commands) and capture evidence.
+- [x] Update critical requirements and presearch docs with latest evidence and any remaining gaps.
+
+## Session Plan (2026-02-24, Remaining Gap Closure)
+
+- [x] Add explicit eval metrics for hallucination rate and verification accuracy.
+- [x] Add open-source eval package scaffold with dataset artifact and framework-agnostic runner.
+- [x] Add condensed architecture summary document derived from `docs/MVP-VERIFICATION.md`.
+- [x] Re-run focused verification and capture updated evidence.
+
+## Session Plan (2026-02-24, Tool Gating + Routing Hardening)
+
+- [x] Replace planner unknown-intent fallback with no-tool route (`[]`) to prevent deterministic over-tooling.
+- [x] Add deterministic policy gate at executor boundary to enforce route decisions (`direct|tools|clarify`) and tool allowlist filtering.
+- [x] Emit policy metrics in runtime output (`blocked_by_policy`, `block_reason`, `forced_direct`) via verification checks and observability logging.
+- [x] Add/adjust unit tests for planner fallback, policy enforcement, and no-tool execution path.
+- [x] Run focused verification (`npm run test:ai`, `npm run test:mvp-eval`) and capture evidence.
 
 ## Verification Notes
 
@@ -155,9 +212,39 @@ Last updated: 2026-02-23
   - `curl -i https://ghostfolio-api-production.up.railway.app/api/v1/health` returned `HTTP/2 200` with `{"status":"OK"}`
 - AI chat intent recovery verification:
   - `npx dotenv-cli -e .env.example -- npx jest apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts --config apps/api/jest.config.ts`
-  - `npm run test:ai` (all 4 suites passed)
+  - `npm run test:ai` (passed)
+- LangSmith relevance gate verification:
+  - `npm run test:mvp-eval` (passes with the new investment relevance checks)
+  - `npm run test:ai` (6/6 suites, 34/34 tests)
+  - `npm run test:ai:langsmith` -> `Overall suite: 53/53 passed (100.0%)`, `Investment relevance subset: 25/25 passed (100.0%)`
+- Full requirements closure verification (local, 2026-02-24):
+  - `npm run test:mvp-eval` (passes with 50+ eval cases and category minimums)
+  - `npm run test:ai` (7 suites passed, includes reply quality and timeout fallback assertions)
+  - `npm run test:ai:performance` (service-level p95 regression gate for `<5s` / `<15s` targets)
+  - `npm run test:ai:quality` (reply-quality eval slice passed)
+  - `npm run test:ai:live-latency` (env-backed live benchmark passed with strict targets enabled)
+  - `npm run test:ai:live-latency:strict` (single-tool p95 `3514ms`, multi-step p95 `3505ms`, both within thresholds)
+  - `npx nx run api:lint` (passed with existing non-blocking workspace warnings)
+- Remaining-gap closure verification (local, 2026-02-24):
+  - `npm run test:ai` (9/9 suites, 40/40 tests)
+  - `npm run test:mvp-eval` (includes hallucination-rate and verification-accuracy assertions)
+  - `npm run test:ai:quality` (3/3 tests)
+  - `npm run test:ai:performance` (p95 under service-level targets)
+  - `npm run test:ai:live-latency:strict` (real model/network strict targets pass)
+  - `(cd tools/evals/finance-agent-evals && npm run check)` (package scaffold smoke test pass)
+  - `(cd tools/evals/finance-agent-evals && npm run pack:dry-run)` (packaging dry run pass)
 - Railway latency + Redis auth fix verification (production):
   - `railway up --service ghostfolio-api --detach` produced successful deployment `d7f73e4a-0a11-4c06-b066-3cbe58368094`
   - `railway logs -s ghostfolio-api -d d7f73e4a-0a11-4c06-b066-3cbe58368094 -n 800 | rg "ERR AUTH|Redis health check failed"` returned no matches
   - `curl` probes improved from ~1.8-2.2s TTFB to ~0.16-0.47s on `/api/v1/health`
   - `/en/accounts` now serves in ~0.27-0.42s TTFB in repeated probes
+- Quality lift verification (local, 2026-02-24):
+  - `npm run test:ai` (9 suites passed, includes new `ai-observability.service.spec.ts` and deterministic performance gate)
+  - `npx dotenv-cli -e .env.example -- npx jest apps/client/src/app/pages/portfolio/analysis/ai-chat-panel/ai-chat-panel.component.spec.ts --config apps/client/jest.config.ts` (4/4 tests passed)
+  - `npx nx run api:lint` (passes with existing workspace warnings)
+  - `npx nx run client:lint` (passes with existing workspace warnings)
+- Tool gating + routing hardening verification (local, 2026-02-24):
+  - `npx jest apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts --config apps/api/jest.config.ts` (passes after policy-gating assertion updates)
+  - `npm run test:ai` (9/9 suites, 44/44 tests)
+  - `npm run test:mvp-eval` (pass rate threshold test still passes)
+  - `npx nx run api:lint` (passes with existing workspace warnings)

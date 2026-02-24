@@ -47,7 +47,7 @@ Manual smoke estimate for development sessions:
 
 Observability cost:
 
-- LangSmith tracing integration: planned, current spend in this repository phase: `$0.00`
+- LangSmith tracing integration: implemented (optional env-gated), current spend in this repository phase: `$0.00`
 
 ## Production Cost Projections
 
@@ -82,6 +82,6 @@ Same token assumptions, model-only monthly cost (without 25% buffer):
 ## Instrumentation Plan for Exact Tracking
 
 1. Add per-request token usage logging at provider response level.
-2. Add LangSmith traces for request, tool-call, and verification spans.
+2. Keep LangSmith traces enabled in staging for request, tool-call, and verification spans.
 3. Export weekly token and cost aggregates into a versioned cost ledger.
 4. Set alert thresholds for cost/query drift and high retry rates.

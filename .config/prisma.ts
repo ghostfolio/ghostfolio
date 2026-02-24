@@ -8,7 +8,7 @@ expand(config({ quiet: true }));
 export default defineConfig({
   migrations: {
     path: join(__dirname, '..', 'prisma', 'migrations'),
-    seed: `node ${join(__dirname, '..', 'prisma', 'seed.mts')}`
+    seed: `node --loader ts-node/esm ${join(__dirname, '..', 'prisma', 'seed.mts')}`
   },
   schema: join(__dirname, '..', 'prisma', 'schema.prisma')
 });

@@ -45,8 +45,11 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { GfAiChatPanelComponent } from './ai-chat-panel/ai-chat-panel.component';
+
 @Component({
   imports: [
+    GfAiChatPanelComponent,
     GfBenchmarkComparatorComponent,
     GfInvestmentChartComponent,
     GfPremiumIndicatorComponent,
