@@ -138,7 +138,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
-  public dateRangeFormControl = new FormControl<string>(undefined);
+  public dateRangeFormControl = new FormControl<string | null>(null);
   public dateRangeOptions: DateRangeOption[] = [];
   public holdings: PortfolioPosition[] = [];
   public isLoading = {
@@ -482,7 +482,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       .subscribe(({ holdings }) => {
         this.holdings = holdings
           .filter(({ assetSubClass }) => {
-            return !['CASH'].includes(assetSubClass);
+            return assetSubClass && !['CASH'].includes(assetSubClass);
           })
           .sort((a, b) => {
             return a.name?.localeCompare(b.name);
@@ -499,23 +499,23 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.filtersChanged.emit([
       {
-        id: filterValue?.account,
+        id: filterValue?.account ?? '',
         type: 'ACCOUNT'
       },
       {
-        id: filterValue?.assetClass,
+        id: filterValue?.assetClass ?? '',
         type: 'ASSET_CLASS'
       },
       {
-        id: filterValue?.holding?.dataSource,
+        id: filterValue?.holding?.dataSource ?? '',
         type: 'DATA_SOURCE'
       },
       {
-        id: filterValue?.holding?.symbol,
+        id: filterValue?.holding?.symbol ?? '',
         type: 'SYMBOL'
       },
       {
-        id: filterValue?.tag,
+        id: filterValue?.tag ?? '',
         type: 'TAG'
       }
     ]);
@@ -541,7 +541,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.filterTypes.map((type) => {
         return {
           type,
-          id: null
+          id: ''
         };
       })
     );
@@ -673,7 +673,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass),
+                assetSubClassString: translate(assetSubClass ?? ''),
                 mode: SearchMode.ASSET_PROFILE as const
               };
             }
@@ -705,7 +705,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass),
+                assetSubClassString: translate(assetSubClass ?? ''),
                 mode: SearchMode.HOLDING as const
               };
             }
@@ -755,6 +755,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const symbol = this.user?.settings?.['filters.symbol'];
     const selectedHolding = this.holdings.find((holding) => {
       return (
+        !!(dataSource && symbol) &&
         getAssetProfileIdentifier({
           dataSource: holding.dataSource,
           symbol: holding.symbol
