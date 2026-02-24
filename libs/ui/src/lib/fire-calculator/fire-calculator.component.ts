@@ -472,6 +472,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     const projectedTotalAmount = this.calculatorForm.get(
       'projectedTotalAmount'
     )?.value;
+
     if (!isNil(projectedTotalAmount)) {
       return projectedTotalAmount;
     }
