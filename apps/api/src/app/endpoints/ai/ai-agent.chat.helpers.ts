@@ -32,6 +32,17 @@ const PREFERENCE_RECALL_PATTERN =
   /\b(?:what do you remember about me|show (?:my )?preferences?|what are my preferences?|which preferences (?:do|did) you (?:remember|save))\b/i;
 const RECOMMENDATION_INTENT_PATTERN =
   /\b(?:how do i|what should i do|help me|fix|reduce|diversif|deconcentrat|rebalance|recommend|what can i do)\b/i;
+const RECOMMENDATION_REQUIRED_SECTIONS = [
+  /option 1/i,
+  /option 2/i
+];
+const RECOMMENDATION_SUPPORTING_SECTIONS = [
+  /summary:/i,
+  /assumptions:/i,
+  /risk notes:/i,
+  /next questions:/i
+];
+const MINIMUM_RECOMMENDATION_WORDS = 45;
 
 export const AI_AGENT_MEMORY_MAX_TURNS = 10;
 
@@ -80,7 +91,7 @@ function getResponseInstruction({
   return `Write a concise response with actionable insight and avoid speculation.`;
 }
 
-function isRecommendationIntentQuery(query: string) {
+export function isRecommendationIntentQuery(query: string) {
   return RECOMMENDATION_INTENT_PATTERN.test(query.trim().toLowerCase());
 }
 
@@ -155,11 +166,9 @@ function buildRecommendationContext({
 }
 
 function buildRecommendationFallback({
-  memory,
   portfolioAnalysis,
   riskAssessment
 }: {
-  memory: AiAgentMemoryState;
   portfolioAnalysis?: PortfolioAnalysisResult;
   riskAssessment?: RiskAssessmentResult;
 }) {
@@ -200,22 +209,40 @@ function buildRecommendationFallback({
     .join(', ');
   const recommendationSections: string[] = [];
 
-  if (memory.turns.length > 0) {
-    recommendationSections.push(
-      `Session memory applied from ${memory.turns.length} prior turn(s).`
-    );
-  }
-
   recommendationSections.push(
     `Summary: concentration is ${riskAssessment?.concentrationBand ?? 'elevated'} with ${topHolding.symbol} at ${currentTopPct}% of long exposure.`,
     `Largest long allocations: ${topAllocationsSummary}.`,
-    `Option 1 (new money first): Next-step allocation: direct 80-100% of new contributions to positions outside ${topHolding.symbol} until the top holding approaches 35%.`,
-    `Option 2 (sell and rebalance): Next-step allocation: trim ${topHolding.symbol} by about ${reallocationGapPct} percentage points in staged rebalances and rotate into underweight diversified exposures.`,
+    `Option 1 (new money first): direct 80-100% of new contributions away from ${topHolding.symbol} until top concentration approaches 35%; a neutral split can start at 50-60% broad equity, 20-30% international equity, and 20-25% defensive exposure.`,
+    `Option 2 (sell and rebalance): trim ${topHolding.symbol} by about ${reallocationGapPct} percentage points in 2-3 staged rebalances and rotate proceeds into underweight diversified sleeves to reduce single-name dependence.`,
+    `Option 3 (risk-managed path): keep core holdings, reduce incremental exposure to ${topHolding.symbol}, and add defensive or uncorrelated assets while monitoring monthly drift back toward target concentration.`,
+    'Risk notes: taxable accounts can trigger realized gains when trimming; include fees, spread, and currency exposure checks before execution.',
     'Assumptions: taxable status, account type, and product universe were not provided.',
     'Next questions: account type (taxable vs tax-advantaged), tax sensitivity (low/medium/high), and whether new-money-only rebalancing is preferred.'
   );
 
   return recommendationSections.join('\n');
+}
+
+function isDetailedRecommendationAnswer(answer: string) {
+  const normalizedAnswer = answer.trim();
+
+  if (!normalizedAnswer) {
+    return false;
+  }
+
+  const words = normalizedAnswer.split(/\s+/).filter(Boolean);
+  const hasRequiredOptions = RECOMMENDATION_REQUIRED_SECTIONS.every((pattern) => {
+    return pattern.test(normalizedAnswer);
+  });
+  const supportingSectionMatches = RECOMMENDATION_SUPPORTING_SECTIONS.filter((pattern) => {
+    return pattern.test(normalizedAnswer);
+  }).length;
+
+  return (
+    words.length >= MINIMUM_RECOMMENDATION_WORDS &&
+    hasRequiredOptions &&
+    supportingSectionMatches >= 2
+  );
 }
 
 export function isPreferenceRecallQuery(query: string) {
@@ -346,12 +373,6 @@ export async function buildAnswer({
   });
   const hasRecommendationIntent = isRecommendationIntentQuery(query);
 
-  if (memory.turns.length > 0) {
-    fallbackSections.push(
-      `Session memory applied from ${memory.turns.length} prior turn(s).`
-    );
-  }
-
   if (riskAssessment) {
     fallbackSections.push(
       `Risk concentration is ${riskAssessment.concentrationBand}. Top holding allocation is ${(riskAssessment.topHoldingAllocation * 100).toFixed(2)}% with HHI ${riskAssessment.hhi.toFixed(3)}.`
@@ -454,12 +475,16 @@ export async function buildAnswer({
         `User currency: ${userCurrency}`,
         `Language code: ${languageCode}`,
         `Query: ${query}`,
+        `Session turns available: ${memory.turns.length}`,
         `Recommendation context (JSON):`,
         JSON.stringify(recommendationContext),
         `Context summary:`,
         fallbackAnswer,
         `Task: provide 2-3 policy-bounded options to improve diversification with concrete allocation targets or percentage ranges.`,
         `Output sections: Summary, Assumptions, Option 1 (new money first), Option 2 (sell and rebalance), Risk notes, Next questions (max 3).`,
+        `Each option must include concrete percentage ranges or target bands derived from the recommendation context.`,
+        `If constraints are missing, provide conditioned pathways for taxable vs tax-advantaged accounts.`,
+        `Use at least 120 words unless the user explicitly asked for concise responses.`,
         `Do not rely on a single hardcoded ETF unless the user explicitly requests a product. Ask for missing constraints when needed.`,
         getResponseInstruction({ userPreferences })
       ].join('\n')
@@ -468,6 +493,7 @@ export async function buildAnswer({
         `User currency: ${userCurrency}`,
         `Language code: ${languageCode}`,
         `Query: ${query}`,
+        `Session turns available: ${memory.turns.length}`,
         `Context summary:`,
         fallbackAnswer,
         getResponseInstruction({ userPreferences })
@@ -500,7 +526,9 @@ export async function buildAnswer({
         query
       })
     ) {
-      return generatedAnswer;
+      if (!hasRecommendationIntent || isDetailedRecommendationAnswer(generatedAnswer)) {
+        return generatedAnswer;
+      }
     }
   } catch {}
   finally {
@@ -511,7 +539,6 @@ export async function buildAnswer({
 
   if (hasRecommendationIntent) {
     const recommendationFallback = buildRecommendationFallback({
-      memory,
       portfolioAnalysis,
       riskAssessment
     });

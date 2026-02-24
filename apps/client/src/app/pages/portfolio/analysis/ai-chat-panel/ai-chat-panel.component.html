@@ -77,12 +77,13 @@
                   aria-label="Show response details"
                   class="chat-details-trigger ml-2"
                   i18n-aria-label
-                  mat-icon-button
+                  mat-stroked-button
                   type="button"
                   [matMenuTriggerFor]="responseDetailsMenu"
                   (click)="onOpenResponseDetails(message.response)"
                 >
-                  <mat-icon aria-hidden="true">info_outline</mat-icon>
+                  <mat-icon aria-hidden="true">info</mat-icon>
+                  <span i18n>Info</span>
                 </button>
               }
             </div>

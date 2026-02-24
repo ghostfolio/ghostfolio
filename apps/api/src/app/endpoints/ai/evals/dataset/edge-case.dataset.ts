@@ -141,7 +141,7 @@ export const EDGE_CASE_EVAL_CASES: AiAgentMvpEvalCase[] = [
   createEvalCase({
     category: 'edge_case',
     expected: {
-      answerIncludes: ['Session memory applied from 2 prior turn(s).'],
+      answerIncludes: ['Largest long allocations:'],
       memoryTurnsAtLeast: 3,
       requiredTools: ['portfolio_analysis']
     },
@@ -158,7 +158,7 @@ export const EDGE_CASE_EVAL_CASES: AiAgentMvpEvalCase[] = [
   createEvalCase({
     category: 'edge_case',
     expected: {
-      answerIncludes: ['Session memory applied from 1 prior turn(s).'],
+      answerIncludes: ['Largest long allocations:'],
       memoryTurnsAtLeast: 2,
       requiredTools: ['portfolio_analysis']
     },

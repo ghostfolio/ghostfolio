@@ -226,14 +226,62 @@ Last updated: 2026-02-24
 
 ## Session Plan (2026-02-24, Chat Details Popover UX)
 
-- [ ] Audit current AI chat response rendering and identify diagnostics shown inline.
-- [ ] Move diagnostics (confidence, citations, verification, observability) behind an info-triggered popover per assistant message.
-- [ ] Keep main assistant response focused on user-facing answer and retain feedback controls in primary view.
-- [ ] Update chat panel tests to assert info-trigger behavior and diagnostics visibility expectations.
-- [ ] Run focused frontend verification and update trackers (`Tasks.md`, `tasks/tasks.md`, `tasks/lessons.md`).
+- [x] Audit current AI chat response rendering and identify diagnostics shown inline.
+- [x] Move diagnostics (confidence, citations, verification, observability) behind an info-triggered popover per assistant message.
+- [x] Keep main assistant response focused on user-facing answer and retain feedback controls in primary view.
+- [x] Update chat panel tests to assert info-trigger behavior and diagnostics visibility expectations.
+- [x] Run focused frontend verification and update trackers (`Tasks.md`, `tasks/tasks.md`, `tasks/lessons.md`).
+
+## Session Plan (2026-02-24, Diversification Reply Actionability Fix)
+
+- [x] Reproduce and inspect `help me diversify` routing and fallback behavior in AI service.
+- [x] Add deterministic diversification-action fallback guidance when LLM output is unavailable or rejected.
+- [x] Add targeted helper/service tests for diversification prompt behavior.
+- [x] Run focused verification (`npm run test:ai`) and update tracker notes.
+
+## Session Plan (2026-02-24, Recommendation Composer Prompting)
+
+- [ ] Add action-intent recommendation mode detection in AI answer builder.
+- [ ] Build and inject structured recommendation context (concentration + constraints placeholders) into LLM prompting.
+- [ ] Strengthen recommendation instructions to produce option-based actionable plans with assumptions and follow-up questions.
+- [ ] Add targeted tests for recommendation-mode prompt composition.
+- [ ] Run focused verification (`npm run test:ai`) and update tracker notes.
+
+## Session Plan (2026-02-24, Chat Reply Detail + Hidden Diagnostics Follow-up)
+
+- [x] Remove session-memory status text from user-facing assistant answers.
+- [x] Improve no-tool direct assistant replies so identity/help prompts produce distinct, more detailed responses.
+- [x] Enforce recommendation-mode fallback structure when generated answers are too short or lack option sections.
+- [x] Update chat diagnostics trigger to show `i` icon with visible `Info` label while keeping details hidden in popover.
+- [x] Run focused verification on touched API/client suites and update tracker evidence.
+
+## Session Plan (2026-02-24, AI + Eval Coverage to 100+)
+
+- [x] Audit current AI test count and eval dataset size against 100+ targets.
+- [x] Add deterministic AI unit tests for policy routing, arithmetic handling, planning heuristics, and response quality guards.
+- [x] Expand eval datasets to at least 100 cases with balanced category coverage and edge/adversarial depth.
+- [x] Raise eval runner guardrails to assert 100+ total dataset size and updated category minimums.
+- [x] Run focused verification (`npm run test:ai`, `npm run test:mvp-eval`) and update trackers (`Tasks.md`, `tasks/tasks.md`, `tasks/lessons.md`).
+
+## Session Plan (2026-02-24, Recommendation Follow-Up Routing Fix)
+
+- [x] Reproduce and isolate why `what can i do?` returns capability fallback after a risk turn.
+- [x] Route ambiguous action follow-up queries with recent finance memory through tools to unlock recommendation-mode generation.
+- [x] Add deterministic AI service tests for follow-up recommendation behavior and guard against capability fallback regression.
+- [x] Run focused verification (`npm run test:ai`) and update trackers (`Tasks.md`, `tasks/tasks.md`, `tasks/lessons.md`).
 
 ## Verification Notes
 
+- Chat reply detail + hidden diagnostics follow-up verification (local, 2026-02-24):
+  - `npm run test:ai` (10/10 suites passed, 181/181 tests)
+  - `npm run test:mvp-eval` (1/1 suite passed, 2/2 tests)
+  - `npx dotenv-cli -e .env.example -- npx jest apps/client/src/app/pages/portfolio/analysis/ai-chat-panel/ai-chat-panel.component.spec.ts --config apps/client/jest.config.ts` (8/8 tests passed)
+  - `npx nx run api:lint` (passed with existing workspace warnings)
+  - `npx nx run client:lint` (passed with existing workspace warnings)
+- Chat details popover UX verification (2026-02-24):
+  - `npx dotenv-cli -e .env.example -- npx jest apps/client/src/app/pages/portfolio/analysis/ai-chat-panel/ai-chat-panel.component.spec.ts --config apps/client/jest.config.ts`
+  - `npx nx run client:lint`
+  - `npx nx run client:build:development-en`
 - `nx run api:lint` completed successfully (existing workspace warnings only).
 - Full `nx test api` currently fails in pre-existing portfolio calculator suites unrelated to AI endpoint changes.
 - Focused MVP verification passed:
@@ -312,3 +360,14 @@ Last updated: 2026-02-24
 - Cross-session user preference memory verification (local, 2026-02-24):
   - `npm run test:ai` (9/9 suites passed, 54/54 tests)
   - `npx nx run api:lint` (passes with existing workspace warnings)
+- Diversification reply actionability fix verification (local, 2026-02-24):
+  - `npm run test:ai` (9/9 suites passed, 56/56 tests)
+  - `npx nx run api:lint` (passes with existing workspace warnings)
+- AI + eval coverage to 100+ verification (local, 2026-02-24):
+  - `npm run test:ai` (10/10 suites passed, 176/176 tests)
+  - `npm run test:mvp-eval` (1/1 suite passed; dataset and pass-rate gates enforced)
+  - `npx tsx -e "import { AI_AGENT_MVP_EVAL_DATASET } from './apps/api/src/app/endpoints/ai/evals/mvp-eval.dataset.ts'; ..."` (109 total eval cases; category counts: happy_path 43, edge_case 26, adversarial 20, multi_step 20)
+- Recommendation follow-up routing fix verification (local, 2026-02-24):
+  - `npx dotenv-cli -e .env.example -- npx jest apps/api/src/app/endpoints/ai/ai.service.spec.ts apps/api/src/app/endpoints/ai/ai-agent.chat.helpers.spec.ts apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai-agent.policy.utils.spec.ts --config apps/api/jest.config.ts` (4/4 suites passed, 167/167 tests)
+  - `npm run test:ai` (10/10 suites passed, 181/181 tests)
+  - `npm run test:mvp-eval` (1/1 suite passed)

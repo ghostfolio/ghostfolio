@@ -34,6 +34,11 @@ const SIMPLE_ASSISTANT_QUERY_PATTERNS = [
   /^\s*(?:how do you work|how (?:can|do) i use (?:you|this))\s*[!.?]*\s*$/i,
   /^\s*(?:help|assist(?: me)?|what can you help with)\s*[!.?]*\s*$/i
 ];
+const DIRECT_IDENTITY_QUERY_PATTERN = /\b(?:who are you|what are you)\b/i;
+const DIRECT_USAGE_QUERY_PATTERN =
+  /\b(?:how do you work|how (?:can|do) i use (?:you|this)|how should i ask)\b/i;
+const DIRECT_CAPABILITY_QUERY_PATTERN =
+  /\b(?:what can (?:you|i) do|help|assist(?: me)?|what can you help with)\b/i;
 const READ_ONLY_TOOLS = new Set<AiAgentToolName>([
   'portfolio_analysis',
   'risk_assessment',
@@ -292,6 +297,51 @@ function evaluateSimpleArithmetic(query: string) {
   return `${expression} = ${formatNumericResult(result)}`;
 }
 
+function createNoToolDirectResponse(query?: string) {
+  const normalizedQuery = query?.trim().toLowerCase() ?? '';
+
+  if (DIRECT_IDENTITY_QUERY_PATTERN.test(normalizedQuery)) {
+    return [
+      'I am Ghostfolio AI, your portfolio copilot for this account.',
+      'I analyze concentration risk, summarize holdings, fetch market quotes, run stress scenarios, and compose diversification or rebalance options.',
+      'Try one of these:',
+      '- "Give me a concentration risk summary"',
+      '- "Show the latest prices for my top holdings"',
+      '- "Help me diversify with 2-3 optioned plans"'
+    ].join('\n');
+  }
+
+  if (DIRECT_USAGE_QUERY_PATTERN.test(normalizedQuery)) {
+    return [
+      'I am Ghostfolio AI. Use short direct prompts and include your goal or constraint.',
+      'Good pattern: objective + scope + constraint (for example, "reduce top holding below 35% with low tax impact").',
+      'I can return analysis, recommendation options, stress scenarios, and market snapshots with citations.',
+      'If key constraints are missing, I will ask up to 3 follow-up questions before giving trade-style steps.'
+    ].join('\n');
+  }
+
+  if (DIRECT_CAPABILITY_QUERY_PATTERN.test(normalizedQuery)) {
+    return [
+      'I am Ghostfolio AI. You can use me in three modes: diagnose, recommend, and verify.',
+      'Diagnose: concentration risk, top exposures, and allocation summaries.',
+      'Recommend: optioned diversification/rebalance plans with assumptions and next questions.',
+      'Verify: live quote checks and stress-scenario impact estimates.',
+      'Try next:',
+      '- "Analyze my concentration risk"',
+      '- "Help me diversify with new-money and sell/rotate options"',
+      '- "Run a 20% downside stress test"'
+    ].join('\n');
+  }
+
+  return [
+    'I am Ghostfolio AI. I can help with portfolio analysis, concentration risk, market prices, diversification options, and stress scenarios.',
+    'Try one of these:',
+    '- "Show my top holdings"',
+    '- "What is my concentration risk?"',
+    '- "Help me diversify with actionable options"'
+  ].join('\n');
+}
+
 export function applyToolExecutionPolicy({
   plannedTools,
   query
@@ -410,7 +460,7 @@ export function createPolicyRouteResponse({
       return arithmeticResult;
     }
 
-    return `I am your Ghostfolio AI assistant. I can help with portfolio analysis, concentration risk, market prices, rebalancing ideas, and stress scenarios. Try: "Show my top holdings" or "What is my concentration risk?".`;
+    return createNoToolDirectResponse(query);
   }
 
   return `I can help with portfolio analysis, concentration risk, market prices, and stress scenarios. Ask a portfolio question when you are ready.`;

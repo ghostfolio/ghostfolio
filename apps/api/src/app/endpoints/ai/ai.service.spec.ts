@@ -255,7 +255,7 @@ describe('AiService', () => {
       userId: 'user-direct-route'
     });
 
-    expect(result.answer).toContain('Ghostfolio AI assistant');
+    expect(result.answer).toContain('I am Ghostfolio AI');
     expect(result.toolCalls).toEqual([]);
     expect(result.citations).toEqual([]);
     expect(dataProviderService.getQuotes).not.toHaveBeenCalled();
@@ -289,6 +289,82 @@ describe('AiService', () => {
     expect(result.answer).toBe('2+2 = 4');
     expect(result.toolCalls).toEqual([]);
     expect(generateTextSpy).not.toHaveBeenCalled();
+  });
+
+  it('routes ambiguous action follow-up query through recommendation tools when finance memory exists', async () => {
+    portfolioService.getDetails.mockResolvedValue({
+      holdings: {
+        USD: {
+          allocationInPercentage: 0.665,
+          dataSource: DataSource.MANUAL,
+          symbol: 'USD',
+          valueInBaseCurrency: 6650
+        },
+        VTI: {
+          allocationInPercentage: 0.159,
+          dataSource: DataSource.YAHOO,
+          symbol: 'VTI',
+          valueInBaseCurrency: 1590
+        },
+        AAPL: {
+          allocationInPercentage: 0.085,
+          dataSource: DataSource.YAHOO,
+          symbol: 'AAPL',
+          valueInBaseCurrency: 850
+        }
+      }
+    });
+    redisCacheService.get.mockImplementation(async (key: string) => {
+      if (key.startsWith('ai-agent-memory-user-follow-up-')) {
+        return JSON.stringify({
+          turns: [
+            {
+              answer:
+                'Risk concentration is high. Top holding allocation is 66.5%.',
+              query: 'help me diversify',
+              timestamp: '2026-02-24T12:00:00.000Z',
+              toolCalls: [
+                { status: 'success', tool: 'portfolio_analysis' },
+                { status: 'success', tool: 'risk_assessment' }
+              ]
+            }
+          ]
+        });
+      }
+
+      return undefined;
+    });
+    jest.spyOn(subject, 'generateText').mockResolvedValue({
+      text: 'Improve concentration by redirecting new cash to underweight holdings, trimming the top position in stages, and reassessing risk after each rebalance checkpoint.'
+    } as never);
+
+    const result = await subject.chat({
+      languageCode: 'en',
+      query: 'what can i do?',
+      sessionId: 'session-follow-up',
+      userCurrency: 'USD',
+      userId: 'user-follow-up'
+    });
+
+    expect(result.answer).toContain('Option 1 (new money first):');
+    expect(result.answer).toContain('Option 2 (sell and rebalance):');
+    expect(result.toolCalls).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          status: 'success',
+          tool: 'portfolio_analysis'
+        }),
+        expect.objectContaining({
+          status: 'success',
+          tool: 'risk_assessment'
+        })
+      ])
+    );
+    expect(subject.generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('Recommendation context (JSON):')
+      })
+    );
   });
 
   it('persists and recalls cross-session user preferences for the same user', async () => {
@@ -466,7 +542,6 @@ describe('AiService', () => {
       userId: 'user-diversify-1'
     });
 
-    expect(result.answer).toContain('Next-step allocation:');
     expect(result.answer).toContain('AAPL');
     expect(result.answer).toContain('Option 1 (new money first):');
     expect(result.answer).toContain('Option 2 (sell and rebalance):');

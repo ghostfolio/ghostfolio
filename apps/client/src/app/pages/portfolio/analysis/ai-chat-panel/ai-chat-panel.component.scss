@@ -66,16 +66,20 @@ textarea::selection {
 }
 
 .chat-details-trigger {
+  align-items: center;
   color: var(--ai-chat-muted-text);
-  height: 1.625rem;
+  display: inline-flex;
+  gap: 0.2rem;
+  height: 1.75rem;
   line-height: 1;
-  width: 1.625rem;
+  min-width: 0;
+  padding: 0 0.4rem;
 }
 
 .chat-details-trigger mat-icon {
-  font-size: 1rem;
-  height: 1rem;
-  width: 1rem;
+  font-size: 0.95rem;
+  height: 0.95rem;
+  width: 0.95rem;
 }
 
 .prompt-list {

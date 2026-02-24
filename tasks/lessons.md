@@ -36,6 +36,22 @@ Updated: 2026-02-24
    Mistake: Treated npm publication as the only completion path for contribution evidence
    Rule: When package publication is blocked, ship the tool in-repo and open upstream PRs in high-signal repositories to preserve external contribution progress.
 
-9. Context: Memory feature validation after chat/session persistence rollout
+9. Context: AI chat UX feedback on response readability
+   Mistake: Diagnostic metadata remained inline with assistant answers, reducing answer clarity
+   Rule: Keep primary assistant messages user-facing only and place diagnostics (confidence, citations, verification, observability) behind an explicit info-triggered popover.
+
+10. Context: Memory feature validation after chat/session persistence rollout
    Mistake: Session-scoped memory shipped without an explicit user-scoped preference path for cross-session continuity.
    Rule: When memory requirements mention user preferences, implement and test both session memory and user-level memory keyed independently from session IDs.
+
+11. Context: Large table-driven Jest test expansion for policy routing and arithmetic behavior
+   Mistake: Mixed tuple/string/object datasets under a single typed `it.each` signature created preventable TypeScript compile failures.
+   Rule: Keep each table shape typed independently (`it.each<[...tuple]>()` for positional rows and object generics only for object rows).
+
+12. Context: Ambiguous user follow-up prompts in a finance assistant ("what can i do?")
+   Mistake: Capability-style routing captured actionable follow-up intent and bypassed tool-backed recommendation generation.
+   Rule: Treat ambiguous action follow-ups as recommendation intent when finance context exists, and lock this with deterministic service tests.
+
+13. Context: Recommendation replies looked short and repetitive even when tool context was available
+   Mistake: Reliability gating accepted generic recommendation prose that lacked option sections and actionable structure.
+   Rule: For recommendation-intent prompts, enforce sectioned output quality gates (Option 1/2 + assumptions/risk notes/next questions) and fall back to deterministic option plans when structure is missing.

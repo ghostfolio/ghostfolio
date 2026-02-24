@@ -105,8 +105,9 @@ describe('AiReplyQualityEval', () => {
       userId: 'quality-user'
     });
 
-    expect(response.answer).toContain('Next-step allocation:');
+    expect(response.answer).toContain('Option 1 (new money first):');
     expect(response.answer).toContain('Largest long allocations:');
+    expect(response.answer).toContain('Risk notes:');
     expect(response.answer).not.toContain('As an AI');
     expect(response.verification).toEqual(
       expect.arrayContaining([
@@ -127,7 +128,7 @@ describe('AiReplyQualityEval', () => {
 
     const response = await subject.chat({
       languageCode: 'en',
-      query: 'How should I rebalance and invest next month?',
+      query: 'Summarize my concentration risk and allocation status.',
       sessionId: 'quality-eval-generated',
       userCurrency: 'USD',
       userId: 'quality-user'

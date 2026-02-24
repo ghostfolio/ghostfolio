@@ -181,6 +181,7 @@ describe('GfAiChatPanelComponent', () => {
     ) as HTMLButtonElement | null;
 
     expect(detailsTrigger).toBeTruthy();
+    expect(detailsTrigger?.textContent).toContain('Info');
 
     detailsTrigger?.click();
     fixture.detectChanges();

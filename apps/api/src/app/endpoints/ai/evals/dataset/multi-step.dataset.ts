@@ -131,7 +131,7 @@ export const MULTI_STEP_EVAL_CASES: AiAgentMvpEvalCase[] = [
   createEvalCase({
     category: 'multi_step',
     expected: {
-      answerIncludes: ['Session memory applied from 1 prior turn(s).'],
+      answerIncludes: ['Summary: concentration is'],
       memoryTurnsAtLeast: 2,
       requiredTools: ['portfolio_analysis', 'risk_assessment', 'rebalance_plan']
     },
