@@ -107,6 +107,50 @@ describe('AiAgentChatHelpers', () => {
     expect(answer).toContain('AAPL');
   });
 
+  it('uses recommendation-composer prompt structure for action-intent queries', async () => {
+    const generateText = jest.fn().mockResolvedValue({
+      text: 'Summary: reduce top concentration with staged reallocation. Option 1 uses new money first. Option 2 trims overweight exposure gradually.'
+    });
+
+    await buildAnswer({
+      generateText,
+      languageCode: 'en',
+      memory: { turns: [] },
+      portfolioAnalysis: {
+        allocationSum: 1,
+        holdings: [
+          {
+            allocationInPercentage: 0.66,
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL',
+            valueInBaseCurrency: 6600
+          },
+          {
+            allocationInPercentage: 0.34,
+            dataSource: DataSource.YAHOO,
+            symbol: 'VTI',
+            valueInBaseCurrency: 3400
+          }
+        ],
+        holdingsCount: 2,
+        totalValueInBaseCurrency: 10000
+      },
+      query: 'What should I do to diversify?',
+      userCurrency: 'USD'
+    });
+
+    expect(generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('Recommendation context (JSON):')
+      })
+    );
+    expect(generateText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('Option 1 (new money first)')
+      })
+    );
+  });
+
   it('parses and persists concise response-style preference updates', () => {
     const result = resolvePreferenceUpdate({
       query: 'Remember to keep responses concise.',

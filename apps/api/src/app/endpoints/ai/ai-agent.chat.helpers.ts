@@ -30,6 +30,8 @@ const DETAILED_RESPONSE_STYLE_PATTERN =
   /\b(?:(?:detailed|verbose|longer)\s+(?:answers?|responses?|replies?)|(?:answers?|responses?|replies?)\s+(?:detailed|verbose|longer)|(?:answer|reply)\s+(?:in detail|verbosely)|(?:more|extra)\s+detail)\b/i;
 const PREFERENCE_RECALL_PATTERN =
   /\b(?:what do you remember about me|show (?:my )?preferences?|what are my preferences?|which preferences (?:do|did) you (?:remember|save))\b/i;
+const RECOMMENDATION_INTENT_PATTERN =
+  /\b(?:how do i|what should i do|help me|fix|reduce|diversif|deconcentrat|rebalance|recommend|what can i do)\b/i;
 
 export const AI_AGENT_MEMORY_MAX_TURNS = 10;
 
@@ -76,6 +78,144 @@ function getResponseInstruction({
   }
 
   return `Write a concise response with actionable insight and avoid speculation.`;
+}
+
+function isRecommendationIntentQuery(query: string) {
+  return RECOMMENDATION_INTENT_PATTERN.test(query.trim().toLowerCase());
+}
+
+function extractTargetConcentration(query: string) {
+  const targetConcentrationPattern =
+    /\b(?:below|under|to)\s*(\d{1,2}(?:\.\d{1,2})?)\s*%/i;
+  const match = targetConcentrationPattern.exec(query);
+
+  if (!match) {
+    return undefined;
+  }
+
+  const parsed = Number.parseFloat(match[1]);
+
+  if (!Number.isFinite(parsed) || parsed <= 0 || parsed >= 100) {
+    return undefined;
+  }
+
+  return parsed / 100;
+}
+
+function buildRecommendationContext({
+  portfolioAnalysis,
+  query,
+  riskAssessment
+}: {
+  portfolioAnalysis?: PortfolioAnalysisResult;
+  query: string;
+  riskAssessment?: RiskAssessmentResult;
+}) {
+  const longHoldings = (portfolioAnalysis?.holdings ?? [])
+    .filter(({ valueInBaseCurrency }) => {
+      return valueInBaseCurrency > 0;
+    })
+    .sort((a, b) => {
+      return b.valueInBaseCurrency - a.valueInBaseCurrency;
+    });
+  const totalLongValue = longHoldings.reduce((sum, { valueInBaseCurrency }) => {
+    return sum + valueInBaseCurrency;
+  }, 0);
+  const topContributors = longHoldings.slice(0, 3).map(({ symbol, valueInBaseCurrency }) => {
+    return {
+      name: symbol,
+      pct:
+        totalLongValue > 0
+          ? Number((valueInBaseCurrency / totalLongValue).toFixed(4))
+          : 0
+    };
+  });
+  const topHoldingPct =
+    riskAssessment?.topHoldingAllocation ??
+    (topContributors.length > 0 ? topContributors[0].pct : 0);
+
+  return {
+    concentration: {
+      band: riskAssessment?.concentrationBand ?? 'unknown',
+      currentPct: Number(topHoldingPct.toFixed(4)),
+      dimension: 'single_asset',
+      targetPct: Number((extractTargetConcentration(query) ?? 0.35).toFixed(4)),
+      topContributors
+    },
+    constraints: {
+      accountType: 'unknown',
+      canAddNewMoney: 'unknown',
+      productUniverse: 'unknown',
+      region: 'unknown',
+      taxSensitivity: 'unknown',
+      timeframe: 'unknown'
+    },
+    userIntent: 'recommend'
+  };
+}
+
+function buildRecommendationFallback({
+  memory,
+  portfolioAnalysis,
+  riskAssessment
+}: {
+  memory: AiAgentMemoryState;
+  portfolioAnalysis?: PortfolioAnalysisResult;
+  riskAssessment?: RiskAssessmentResult;
+}) {
+  const longHoldings = (portfolioAnalysis?.holdings ?? [])
+    .filter(({ valueInBaseCurrency }) => {
+      return valueInBaseCurrency > 0;
+    })
+    .sort((a, b) => {
+      return b.valueInBaseCurrency - a.valueInBaseCurrency;
+    });
+  const totalLongValue = longHoldings.reduce((sum, { valueInBaseCurrency }) => {
+    return sum + valueInBaseCurrency;
+  }, 0);
+  const topHolding = longHoldings[0];
+  const topHoldingPct =
+    riskAssessment?.topHoldingAllocation ??
+    (topHolding && totalLongValue > 0
+      ? topHolding.valueInBaseCurrency / totalLongValue
+      : 0);
+  const targetConcentration = 0.35;
+
+  if (!topHolding) {
+    return undefined;
+  }
+
+  const reallocationGap = Math.max(topHoldingPct - targetConcentration, 0);
+  const reallocationGapPct = (reallocationGap * 100).toFixed(1);
+  const currentTopPct = (topHoldingPct * 100).toFixed(1);
+  const topAllocationsSummary = longHoldings
+    .slice(0, 3)
+    .map(({ symbol, valueInBaseCurrency }) => {
+      const allocation = totalLongValue > 0
+        ? (valueInBaseCurrency / totalLongValue) * 100
+        : 0;
+
+      return `${symbol} ${allocation.toFixed(1)}%`;
+    })
+    .join(', ');
+  const recommendationSections: string[] = [];
+
+  if (memory.turns.length > 0) {
+    recommendationSections.push(
+      `Session memory applied from ${memory.turns.length} prior turn(s).`
+    );
+  }
+
+  recommendationSections.push(
+    `Summary: concentration is ${riskAssessment?.concentrationBand ?? 'elevated'} with ${topHolding.symbol} at ${currentTopPct}% of long exposure.`,
+    `Largest long allocations: ${topAllocationsSummary}.`,
+    `Option 1 (new money first): Next-step allocation: direct 80-100% of new contributions to positions outside ${topHolding.symbol} until the top holding approaches 35%.`,
+    `Option 2 (sell and rebalance): Next-step allocation: trim ${topHolding.symbol} by about ${reallocationGapPct} percentage points in staged rebalances and rotate into underweight diversified exposures.`,
+    'Assumptions: taxable status, account type, and product universe were not provided.',
+    'Next questions: account type (taxable vs tax-advantaged), tax sensitivity (low/medium/high), and whether new-money-only rebalancing is preferred.'
+  );
+
+  return recommendationSections.join('\n');
 }
 
 export function isPreferenceRecallQuery(query: string) {
@@ -204,6 +344,7 @@ export async function buildAnswer({
   ].some((keyword) => {
     return normalizedQuery.includes(keyword);
   });
+  const hasRecommendationIntent = isRecommendationIntentQuery(query);
 
   if (memory.turns.length > 0) {
     fallbackSections.push(
@@ -302,15 +443,35 @@ export async function buildAnswer({
   const fallbackAnswer = userPreferences?.responseStyle === 'concise'
     ? fallbackSections.slice(0, 2).join('\n')
     : fallbackSections.join('\n');
-  const llmPrompt = [
-    `You are a neutral financial assistant.`,
-    `User currency: ${userCurrency}`,
-    `Language code: ${languageCode}`,
-    `Query: ${query}`,
-    `Context summary:`,
-    fallbackAnswer,
-    getResponseInstruction({ userPreferences })
-  ].join('\n');
+  const recommendationContext = buildRecommendationContext({
+    portfolioAnalysis,
+    query,
+    riskAssessment
+  });
+  const llmPrompt = hasRecommendationIntent
+    ? [
+        `You are a neutral financial assistant.`,
+        `User currency: ${userCurrency}`,
+        `Language code: ${languageCode}`,
+        `Query: ${query}`,
+        `Recommendation context (JSON):`,
+        JSON.stringify(recommendationContext),
+        `Context summary:`,
+        fallbackAnswer,
+        `Task: provide 2-3 policy-bounded options to improve diversification with concrete allocation targets or percentage ranges.`,
+        `Output sections: Summary, Assumptions, Option 1 (new money first), Option 2 (sell and rebalance), Risk notes, Next questions (max 3).`,
+        `Do not rely on a single hardcoded ETF unless the user explicitly requests a product. Ask for missing constraints when needed.`,
+        getResponseInstruction({ userPreferences })
+      ].join('\n')
+    : [
+        `You are a neutral financial assistant.`,
+        `User currency: ${userCurrency}`,
+        `Language code: ${languageCode}`,
+        `Query: ${query}`,
+        `Context summary:`,
+        fallbackAnswer,
+        getResponseInstruction({ userPreferences })
+      ].join('\n');
   const llmTimeoutInMs = getLlmTimeoutInMs();
   const abortController = new AbortController();
   let timeoutId: NodeJS.Timeout | undefined;
@@ -345,6 +506,18 @@ export async function buildAnswer({
   finally {
     if (timeoutId) {
       clearTimeout(timeoutId);
+    }
+  }
+
+  if (hasRecommendationIntent) {
+    const recommendationFallback = buildRecommendationFallback({
+      memory,
+      portfolioAnalysis,
+      riskAssessment
+    });
+
+    if (recommendationFallback) {
+      return recommendationFallback;
     }
   }
 
