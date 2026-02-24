@@ -54,6 +54,10 @@ npm run database:push
 
 Run `npm test`
 
+## Deployment
+
+For deploying to Railway (PostgreSQL, Redis, app), see [agentforge/doc/deployment-railway.md](./agentforge/doc/deployment-railway.md) and the [agentforge-mvp-deployment implementation plan](./agentforge/doc/features/agentforge-mvp-deployment/implementation-plan.md).
+
 ## Experimental Features
 
 New functionality can be enabled using a feature flag switch from the user settings.
