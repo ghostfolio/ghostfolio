@@ -3,7 +3,7 @@ dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckPath = "/api/v1/health"
-# Migrate + seed run before server start; allow 3 min for first deploy or slow DB
-healthcheckTimeout = 180
+# DB schema push + seed run before server start; allow 5 min for first deploy
+healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
