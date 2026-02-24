@@ -27,7 +27,7 @@ Last updated: 2026-02-24
 | T-006 | Full eval dataset (50+) | Complete | `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
 | T-007 | Observability wiring (LangSmith traces and metrics) | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai-feedback.service.spec.ts`, `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
 | T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | `2b6506de8` |
-| T-009 | Open source eval framework contribution | Ready for Publish | `@ghostfolio/finance-agent-evals` package scaffold + dataset export + smoke/pack checks | `thoughts/shared/plans/open-source-eval-framework.md` |
+| T-009 | Open source eval framework contribution | In Review | `@ghostfolio/finance-agent-evals` package scaffold + dataset export + smoke/pack checks | openai/evals PR #1625 + langchain PR #35421 |
 
 ## Notes
 
@@ -184,6 +184,14 @@ Last updated: 2026-02-24
 - [x] Emit policy metrics in runtime output (`blocked_by_policy`, `block_reason`, `forced_direct`) via verification checks and observability logging.
 - [x] Add/adjust unit tests for planner fallback, policy enforcement, and no-tool execution path.
 - [x] Run focused verification (`npm run test:ai`, `npm run test:mvp-eval`) and capture evidence.
+
+## Session Plan (2026-02-24, OSS Publish + External PRs)
+
+- [x] Confirm in-repo open-source tool package is committed and documented for direct repo consumption.
+- [x] Create high-signal upstream PR in `openai/evals` fork with finance-agent eval dataset integration docs/template.
+- [x] Create high-signal upstream PR in `langchain` fork with a focused docs contribution for finance-agent eval interoperability.
+- [x] Push fork branches and open PRs against upstream repositories.
+- [x] Update `Tasks.md` and plan artifact with PR links and current status.
 
 ## Verification Notes
 

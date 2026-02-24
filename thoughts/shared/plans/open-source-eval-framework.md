@@ -1,6 +1,6 @@
 # Open Source Eval Framework Contribution Plan
 
-**Status:** In Progress (Track 1 scaffold complete locally)
+**Status:** In Progress (Track 1 complete locally, external PRs opened)
 **Priority:** High
 **Task:** Publish 53-case eval framework as open source package
 **Created:** 2026-02-24
@@ -20,8 +20,12 @@ Completed locally:
 Remaining for external completion:
 
 - Publish npm package
-- Open PR to LangChain
 - Submit benchmark/dataset links
+
+External PR evidence:
+
+- OpenAI Evals: https://github.com/openai/evals/pull/1625
+- LangChain: https://github.com/langchain-ai/langchain/pull/35421
 
 ## Overview
 

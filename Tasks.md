@@ -14,7 +14,7 @@ Last updated: 2026-02-24
 | T-006 | Full eval dataset (50+) | Complete | `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
 | T-007 | Observability wiring (LangSmith traces and metrics) | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai-feedback.service.spec.ts`, `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
 | T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | `2b6506de8` |
-| T-009 | Open source eval framework contribution | Ready for Publish | `@ghostfolio/finance-agent-evals` package scaffold + dataset export + smoke/pack checks | thoughts/shared/plans/open-source-eval-framework.md |
+| T-009 | Open source eval framework contribution | In Review | `@ghostfolio/finance-agent-evals` package scaffold + dataset export + smoke/pack checks | openai/evals PR #1625 + langchain PR #35421 |
 
 ## Notes
 
@@ -27,6 +27,9 @@ Last updated: 2026-02-24
 - Reply quality gate (2026-02-24): `npm run test:ai:quality` added with deterministic anti-disclaimer and actionability checks.
 - Eval quality metrics (2026-02-24): hallucination-rate (`<=5%`) and verification-accuracy (`>=90%`) tracked and asserted in MVP eval suite.
 - Open-source package scaffold (2026-02-24): `tools/evals/finance-agent-evals/` with dataset export, runner, smoke test, and pack dry-run.
+- External OSS PRs (2026-02-24):
+  - https://github.com/openai/evals/pull/1625
+  - https://github.com/langchain-ai/langchain/pull/35421
 - Condensed architecture doc (2026-02-24): `docs/ARCHITECTURE-CONDENSED.md`.
 - Railway crash recovery (2026-02-23): `railway.toml` start command corrected to `node dist/apps/api/main.js`, deployed to Railway (`4f26063a-97e5-43dd-b2dd-360e9e12a951`), and validated with production health check.
 - Tool gating hardening (2026-02-24): planner unknown-intent fallback changed to no-tools, executor policy gate added (`direct|tools|clarify`), and policy metrics emitted via verification and observability logs.

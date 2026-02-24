@@ -94,7 +94,12 @@ These are still outstanding at submission level:
 
 - Demo video (3-5 min)
 - Social post with `@GauntletAI`
-- Open-source release link (local scaffold complete at `tools/evals/finance-agent-evals/`, external publish/PR link still pending)
+- Open-source package npm publish (local scaffold complete at `tools/evals/finance-agent-evals/`, upstream PRs opened)
+
+External contribution links:
+
+- https://github.com/openai/evals/pull/1625
+- https://github.com/langchain-ai/langchain/pull/35421
 
 Open-source scaffold verification commands:
 

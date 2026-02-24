@@ -31,3 +31,7 @@ Updated: 2026-02-24
 7. Context: AI routing hardening in deterministic tool orchestration
    Mistake: Considered model-structured output guards before validating actual failure surface
    Rule: When tool routing is deterministic, prioritize planner fallback correctness and executor policy gating before adding LLM classifier layers.
+
+8. Context: Open-source submission strategy after publish constraints
+   Mistake: Treated npm publication as the only completion path for contribution evidence
+   Rule: When package publication is blocked, ship the tool in-repo and open upstream PRs in high-signal repositories to preserve external contribution progress.
