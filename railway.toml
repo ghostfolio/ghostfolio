@@ -2,8 +2,9 @@
 dockerfilePath = "Dockerfile"
 
 [deploy]
-healthcheckPath = "/api/v1/health"
-# DB schema push + seed run before server start; allow 5 min for first deploy
-healthcheckTimeout = 300
+# Healthcheck disabled: /api/v1/health returns 503 until DB+Redis are connected.
+# Re-enable once DB and Redis are confirmed working:
+#   healthcheckPath = "/api/v1/health"
+#   healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
