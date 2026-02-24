@@ -253,7 +253,7 @@ describe('AiService', () => {
       userId: 'user-direct-route'
     });
 
-    expect(result.answer).toContain('Ask a portfolio question when you are ready');
+    expect(result.answer).toContain('Ghostfolio AI assistant');
     expect(result.toolCalls).toEqual([]);
     expect(result.citations).toEqual([]);
     expect(dataProviderService.getQuotes).not.toHaveBeenCalled();

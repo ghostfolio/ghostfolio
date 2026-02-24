@@ -33,6 +33,10 @@ interface AiChatMessage {
   role: 'assistant' | 'user';
 }
 
+type StoredAiChatMessage = Omit<AiChatMessage, 'createdAt'> & {
+  createdAt: string;
+};
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -49,6 +53,10 @@ interface AiChatMessage {
   templateUrl: './ai-chat-panel.component.html'
 })
 export class GfAiChatPanelComponent implements OnDestroy {
+  private readonly STORAGE_KEY_MESSAGES = 'gf_ai_chat_messages';
+  private readonly STORAGE_KEY_SESSION_ID = 'gf_ai_chat_session_id';
+  private readonly MAX_STORED_MESSAGES = 200;
+
   @Input() hasPermissionToReadAiPrompt = false;
 
   public readonly assistantRoleLabel = $localize`Assistant`;
@@ -70,7 +78,9 @@ export class GfAiChatPanelComponent implements OnDestroy {
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService
-  ) {}
+  ) {
+    this.restoreChatState();
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
@@ -153,15 +163,12 @@ export class GfAiChatPanelComponent implements OnDestroy {
       return;
     }
 
-    this.chatMessages = [
-      ...this.chatMessages,
-      {
-        content: normalizedQuery,
-        createdAt: new Date(),
-        id: this.nextMessageId++,
-        role: 'user'
-      }
-    ];
+    this.appendMessage({
+      content: normalizedQuery,
+      createdAt: new Date(),
+      id: this.nextMessageId++,
+      role: 'user'
+    });
     this.errorMessage = undefined;
     this.isSubmitting = true;
     this.query = '';
@@ -181,33 +188,27 @@ export class GfAiChatPanelComponent implements OnDestroy {
       .subscribe({
         next: (response) => {
           this.chatSessionId = response.memory.sessionId;
-          this.chatMessages = [
-            ...this.chatMessages,
-            {
-              content: response.answer,
-              createdAt: new Date(),
-              feedback: {
-                isSubmitting: false
-              },
-              id: this.nextMessageId++,
-              response,
-              role: 'assistant'
-            }
-          ];
+          this.appendMessage({
+            content: response.answer,
+            createdAt: new Date(),
+            feedback: {
+              isSubmitting: false
+            },
+            id: this.nextMessageId++,
+            response,
+            role: 'assistant'
+          });
 
           this.changeDetectorRef.markForCheck();
         },
         error: () => {
           this.errorMessage = $localize`AI request failed. Check your model quota and permissions.`;
-          this.chatMessages = [
-            ...this.chatMessages,
-            {
-              content: $localize`Request failed. Please retry.`,
-              createdAt: new Date(),
-              id: this.nextMessageId++,
-              role: 'assistant'
-            }
-          ];
+          this.appendMessage({
+            content: $localize`Request failed. Please retry.`,
+            createdAt: new Date(),
+            id: this.nextMessageId++,
+            role: 'assistant'
+          });
 
           this.changeDetectorRef.markForCheck();
         }
@@ -218,10 +219,125 @@ export class GfAiChatPanelComponent implements OnDestroy {
     return role === 'assistant' ? this.assistantRoleLabel : this.userRoleLabel;
   }
 
+  private appendMessage(message: AiChatMessage) {
+    this.chatMessages = [...this.chatMessages, message].slice(
+      -this.MAX_STORED_MESSAGES
+    );
+    this.persistChatState();
+  }
+
+  private getStorage() {
+    try {
+      return globalThis.localStorage;
+    } catch {
+      return undefined;
+    }
+  }
+
+  private persistChatState() {
+    const storage = this.getStorage();
+
+    if (!storage) {
+      return;
+    }
+
+    try {
+      if (this.chatSessionId) {
+        storage.setItem(this.STORAGE_KEY_SESSION_ID, this.chatSessionId);
+      } else {
+        storage.removeItem(this.STORAGE_KEY_SESSION_ID);
+      }
+
+      storage.setItem(
+        this.STORAGE_KEY_MESSAGES,
+        JSON.stringify(this.chatMessages.slice(-this.MAX_STORED_MESSAGES))
+      );
+    } catch {
+      // Keep chat available if browser storage is unavailable or full.
+    }
+  }
+
+  private restoreChatState() {
+    const storage = this.getStorage();
+
+    if (!storage) {
+      return;
+    }
+
+    const storedSessionId = storage.getItem(this.STORAGE_KEY_SESSION_ID);
+
+    if (storedSessionId?.trim()) {
+      this.chatSessionId = storedSessionId.trim();
+    }
+
+    const storedMessages = storage.getItem(this.STORAGE_KEY_MESSAGES);
+
+    if (!storedMessages) {
+      return;
+    }
+
+    try {
+      const parsedMessages = JSON.parse(storedMessages) as unknown;
+
+      if (!Array.isArray(parsedMessages)) {
+        return;
+      }
+
+      this.chatMessages = parsedMessages
+        .map((message) => {
+          return this.toChatMessage(message);
+        })
+        .filter((message): message is AiChatMessage => {
+          return Boolean(message);
+        })
+        .slice(-this.MAX_STORED_MESSAGES);
+
+      this.nextMessageId =
+        this.chatMessages.reduce((maxId, message) => {
+          return Math.max(maxId, message.id);
+        }, -1) + 1;
+    } catch {
+      storage.removeItem(this.STORAGE_KEY_MESSAGES);
+    }
+  }
+
+  private toChatMessage(message: unknown): AiChatMessage | undefined {
+    if (!message || typeof message !== 'object') {
+      return undefined;
+    }
+
+    const storedMessage = message as Partial<StoredAiChatMessage>;
+
+    if (
+      typeof storedMessage.content !== 'string' ||
+      typeof storedMessage.id !== 'number' ||
+      typeof storedMessage.createdAt !== 'string' ||
+      (storedMessage.role !== 'assistant' && storedMessage.role !== 'user')
+    ) {
+      return undefined;
+    }
+
+    const createdAt = new Date(storedMessage.createdAt);
+
+    if (Number.isNaN(createdAt.getTime())) {
+      return undefined;
+    }
+
+    return {
+      content: storedMessage.content,
+      createdAt,
+      feedback: storedMessage.feedback,
+      id: storedMessage.id,
+      response: storedMessage.response,
+      role: storedMessage.role
+    };
+  }
+
   private updateMessage(index: number, updatedMessage: AiChatMessage) {
     this.chatMessages = this.chatMessages.map((message, messageIndex) => {
       return messageIndex === index ? updatedMessage : message;
     });
+    this.persistChatState();
     this.changeDetectorRef.markForCheck();
   }
 }

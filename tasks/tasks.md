@@ -193,6 +193,14 @@ Last updated: 2026-02-24
 - [x] Push fork branches and open PRs against upstream repositories.
 - [x] Update `Tasks.md` and plan artifact with PR links and current status.
 
+## Session Plan (2026-02-24, Chat Persistence + Simple Query Handling)
+
+- [x] Review current chat panel storage behavior and AI policy direct-route behavior.
+- [x] Implement localStorage-backed chat session/message persistence with bounded history in `ai-chat-panel.component.ts`.
+- [x] Extend direct no-tool query handling for simple assistant capability/help prompts in `ai-agent.policy.utils.ts`.
+- [x] Add or update unit tests for chat persistence and policy simple-query routing.
+- [x] Run focused verification on touched frontend/backend AI suites and update task tracking artifacts.
+
 ## Verification Notes
 
 - `nx run api:lint` completed successfully (existing workspace warnings only).
@@ -256,3 +264,8 @@ Last updated: 2026-02-24
   - `npm run test:ai` (9/9 suites, 44/44 tests)
   - `npm run test:mvp-eval` (pass rate threshold test still passes)
   - `npx nx run api:lint` (passes with existing workspace warnings)
+- Chat persistence + simple query handling verification (local, 2026-02-24):
+  - `npx jest apps/client/src/app/pages/portfolio/analysis/ai-chat-panel/ai-chat-panel.component.spec.ts --config apps/client/jest.config.ts` (7/7 tests passed)
+  - `npx jest apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts --config apps/api/jest.config.ts` (31/31 tests passed)
+  - `npx nx run api:lint` (passes with existing workspace warnings)
+  - `npx nx run client:lint` (passes with existing workspace warnings)

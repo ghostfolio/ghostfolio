@@ -69,6 +69,30 @@ describe('AiAgentUtils', () => {
     expect(decision.forcedDirect).toBe(true);
   });
 
+  it('routes assistant capability prompts to direct no-tool policy', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: [],
+      query: 'Who are you?'
+    });
+
+    expect(decision.route).toBe('direct');
+    expect(decision.toolsToExecute).toEqual([]);
+    expect(decision.blockReason).toBe('no_tool_query');
+    expect(createPolicyRouteResponse({ policyDecision: decision })).toContain(
+      'Ghostfolio AI assistant'
+    );
+  });
+
+  it('keeps finance-intent prompts on clarify route even with capability phrasing', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: [],
+      query: 'What can you do about my portfolio risk?'
+    });
+
+    expect(decision.route).toBe('clarify');
+    expect(decision.blockReason).toBe('unknown');
+  });
+
   it('routes to clarify when planner provides no tools for finance-style query', () => {
     const decision = applyToolExecutionPolicy({
       plannedTools: [],

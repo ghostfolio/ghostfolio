@@ -6,6 +6,9 @@ import { of, throwError } from 'rxjs';
 
 import { GfAiChatPanelComponent } from './ai-chat-panel.component';
 
+const STORAGE_KEY_MESSAGES = 'gf_ai_chat_messages';
+const STORAGE_KEY_SESSION_ID = 'gf_ai_chat_session_id';
+
 function createChatResponse({
   answer,
   sessionId,
@@ -50,6 +53,23 @@ function createChatResponse({
   };
 }
 
+function createStoredMessage({
+  content,
+  id,
+  role
+}: {
+  content: string;
+  id: number;
+  role: 'assistant' | 'user';
+}) {
+  return {
+    content,
+    createdAt: new Date().toISOString(),
+    id,
+    role
+  };
+}
+
 describe('GfAiChatPanelComponent', () => {
   let component: GfAiChatPanelComponent;
   let fixture: ComponentFixture<GfAiChatPanelComponent>;
@@ -59,6 +79,8 @@ describe('GfAiChatPanelComponent', () => {
   };
 
   beforeEach(async () => {
+    localStorage.clear();
+
     dataService = {
       postAiChat: jest.fn(),
       postAiChatFeedback: jest.fn()
@@ -73,6 +95,10 @@ describe('GfAiChatPanelComponent', () => {
     component = fixture.componentInstance;
     component.hasPermissionToReadAiPrompt = true;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
   });
 
   it('sends a chat query and appends assistant response', () => {
@@ -106,6 +132,10 @@ describe('GfAiChatPanelComponent', () => {
         role: 'assistant'
       })
     );
+    expect(localStorage.getItem(STORAGE_KEY_SESSION_ID)).toBe('session-1');
+    expect(
+      JSON.parse(localStorage.getItem(STORAGE_KEY_MESSAGES) ?? '[]')
+    ).toHaveLength(2);
   });
 
   it('reuses session id across consecutive prompts', () => {
@@ -142,6 +172,82 @@ describe('GfAiChatPanelComponent', () => {
       query: 'Second prompt',
       sessionId: 'session-abc'
     });
+  });
+
+  it('restores chat session and messages from local storage', () => {
+    localStorage.setItem(STORAGE_KEY_SESSION_ID, 'session-restored');
+    localStorage.setItem(
+      STORAGE_KEY_MESSAGES,
+      JSON.stringify([
+        createStoredMessage({
+          content: 'Restored user message',
+          id: 11,
+          role: 'user'
+        }),
+        createStoredMessage({
+          content: 'Restored assistant message',
+          id: 12,
+          role: 'assistant'
+        })
+      ])
+    );
+
+    const restoredFixture = TestBed.createComponent(GfAiChatPanelComponent);
+    const restoredComponent = restoredFixture.componentInstance;
+    restoredComponent.hasPermissionToReadAiPrompt = true;
+    restoredFixture.detectChanges();
+
+    dataService.postAiChat.mockReturnValue(
+      of(
+        createChatResponse({
+          answer: 'Follow-up response',
+          sessionId: 'session-restored',
+          turns: 3
+        })
+      )
+    );
+
+    restoredComponent.query = 'Follow-up';
+    restoredComponent.onSubmit();
+
+    expect(restoredComponent.chatMessages).toHaveLength(4);
+    expect(dataService.postAiChat).toHaveBeenCalledWith({
+      query: 'Follow-up',
+      sessionId: 'session-restored'
+    });
+  });
+
+  it('ignores invalid chat storage payload without throwing', () => {
+    localStorage.setItem(STORAGE_KEY_MESSAGES, '{invalid-json');
+
+    const restoredFixture = TestBed.createComponent(GfAiChatPanelComponent);
+    const restoredComponent = restoredFixture.componentInstance;
+    restoredComponent.hasPermissionToReadAiPrompt = true;
+
+    expect(() => {
+      restoredFixture.detectChanges();
+    }).not.toThrow();
+    expect(restoredComponent.chatMessages).toEqual([]);
+    expect(localStorage.getItem(STORAGE_KEY_MESSAGES)).toBeNull();
+  });
+
+  it('caps restored chat history to the most recent 200 messages', () => {
+    const storedMessages = Array.from({ length: 250 }, (_, index) => {
+      return createStoredMessage({
+        content: `message-${index}`,
+        id: index,
+        role: index % 2 === 0 ? 'user' : 'assistant'
+      });
+    });
+    localStorage.setItem(STORAGE_KEY_MESSAGES, JSON.stringify(storedMessages));
+
+    const restoredFixture = TestBed.createComponent(GfAiChatPanelComponent);
+    const restoredComponent = restoredFixture.componentInstance;
+    restoredComponent.hasPermissionToReadAiPrompt = true;
+    restoredFixture.detectChanges();
+
+    expect(restoredComponent.chatMessages).toHaveLength(200);
+    expect(restoredComponent.chatMessages[0].id).toBe(50);
   });
 
   it('adds a fallback assistant message when chat request fails', () => {

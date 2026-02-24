@@ -15,6 +15,7 @@ Last updated: 2026-02-24
 | T-007 | Observability wiring (LangSmith traces and metrics) | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai-feedback.service.spec.ts`, `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts` | Local implementation |
 | T-008 | Deployment and submission bundle | Complete | `npm run test:ai` + Railway healthcheck + submission docs checklist | `2b6506de8` |
 | T-009 | Open source eval framework contribution | In Review | `@ghostfolio/finance-agent-evals` package scaffold + dataset export + smoke/pack checks | openai/evals PR #1625 + langchain PR #35421 |
+| T-010 | Chat history persistence and simple direct-query handling | Complete | `apps/client/src/app/pages/portfolio/analysis/ai-chat-panel/ai-chat-panel.component.spec.ts`, `apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts`, `apps/api/src/app/endpoints/ai/ai.service.spec.ts` | Local implementation |
 
 ## Notes
 
@@ -33,3 +34,4 @@ Last updated: 2026-02-24
 - Condensed architecture doc (2026-02-24): `docs/ARCHITECTURE-CONDENSED.md`.
 - Railway crash recovery (2026-02-23): `railway.toml` start command corrected to `node dist/apps/api/main.js`, deployed to Railway (`4f26063a-97e5-43dd-b2dd-360e9e12a951`), and validated with production health check.
 - Tool gating hardening (2026-02-24): planner unknown-intent fallback changed to no-tools, executor policy gate added (`direct|tools|clarify`), and policy metrics emitted via verification and observability logs.
+- Chat persistence + simple direct-query handling (2026-02-24): client chat panel now restores/persists session + bounded message history via localStorage and policy no-tool prompts now return assistant capability guidance for queries like "Who are you?".

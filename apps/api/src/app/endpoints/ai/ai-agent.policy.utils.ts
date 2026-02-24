@@ -28,6 +28,11 @@ const GREETING_ONLY_PATTERN =
 const SIMPLE_ARITHMETIC_QUERY_PATTERN =
   /^\s*(?:what(?:'s| is)\s+)?[-+*/().\d\s%=]+\??\s*$/i;
 const SIMPLE_ARITHMETIC_OPERATOR_PATTERN = /[+\-*/]/;
+const SIMPLE_ASSISTANT_QUERY_PATTERNS = [
+  /^\s*(?:who are you|what are you|what can you do)\s*[!.?]*\s*$/i,
+  /^\s*(?:how do you work|how (?:can|do) i use (?:you|this))\s*[!.?]*\s*$/i,
+  /^\s*(?:help|assist(?: me)?|what can you help with)\s*[!.?]*\s*$/i
+];
 const READ_ONLY_TOOLS = new Set<AiAgentToolName>([
   'portfolio_analysis',
   'risk_assessment',
@@ -66,6 +71,14 @@ function includesKeyword({
 
 function isNoToolDirectQuery(query: string) {
   if (GREETING_ONLY_PATTERN.test(query)) {
+    return true;
+  }
+
+  if (
+    SIMPLE_ASSISTANT_QUERY_PATTERNS.some((pattern) => {
+      return pattern.test(query);
+    })
+  ) {
     return true;
   }
 
@@ -185,6 +198,13 @@ export function createPolicyRouteResponse({
     }
 
     return `I can help with allocation review, concentration risk, market prices, and stress scenarios. Which one should I run next? Example: "Show concentration risk" or "Price for NVDA".`;
+  }
+
+  if (
+    policyDecision.route === 'direct' &&
+    policyDecision.blockReason === 'no_tool_query'
+  ) {
+    return `I am your Ghostfolio AI assistant. I can help with portfolio analysis, concentration risk, market prices, rebalancing ideas, and stress scenarios. Try: "Show my top holdings" or "What is my concentration risk?".`;
   }
 
   return `I can help with portfolio analysis, concentration risk, market prices, and stress scenarios. Ask a portfolio question when you are ready.`;
