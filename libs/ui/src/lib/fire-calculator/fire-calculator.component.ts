@@ -19,6 +19,7 @@ import {
   ViewChild,
   output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormControl,
@@ -56,7 +57,7 @@ import {
 } from 'date-fns';
 import { isNil, isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
 
@@ -114,7 +115,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
     addYears(new Date(), 10)
   );
-  private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -130,13 +130,13 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     );
 
     this.calculatorForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => {
         this.initialize();
       });
 
     this.calculatorForm.valueChanges
-      .pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      .pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe(() => {
         const { projectedTotalAmount, retirementDate } =
           this.calculatorForm.getRawValue();
@@ -151,7 +151,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
     this.calculatorForm
       .get('annualInterestRate')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((annualInterestRate) => {
         if (annualInterestRate !== null) {
           this.annualInterestRateChanged.emit(annualInterestRate);
@@ -159,7 +159,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
     this.calculatorForm
       .get('paymentPerPeriod')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((savingsRate) => {
         if (savingsRate !== null) {
           this.savingsRateChanged.emit(savingsRate);
@@ -167,7 +167,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
     this.calculatorForm
       .get('projectedTotalAmount')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((projectedTotalAmount) => {
         if (projectedTotalAmount !== null) {
           this.projectedTotalAmountChanged.emit(projectedTotalAmount);
@@ -175,7 +175,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
     this.calculatorForm
       .get('retirementDate')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((retirementDate) => {
         if (retirementDate !== null) {
           this.retirementDateChanged.emit(retirementDate);
@@ -265,9 +265,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.chart?.destroy();
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private initialize() {
