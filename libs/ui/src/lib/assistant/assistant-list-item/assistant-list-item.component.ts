@@ -11,6 +11,7 @@ import {
   Input,
   OnChanges,
   ViewChild,
+  inject,
   output
 } from '@angular/core';
 import { Params, RouterModule } from '@angular/router';
@@ -43,7 +44,7 @@ export class GfAssistantListItemComponent
 
   protected readonly clicked = output<void>();
 
-  public constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   @HostBinding('class.has-focus')
   public get getHasFocus() {
