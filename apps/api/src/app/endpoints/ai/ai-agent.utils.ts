@@ -49,11 +49,17 @@ const REBALANCE_KEYWORDS = [
 ];
 
 const STRESS_TEST_KEYWORDS = ['crash', 'drawdown', 'shock', 'stress'];
+const PORTFOLIO_VALUE_QUERY_PATTERNS = [
+  /\bhow much(?:\s+\w+){0,4}\s+(?:money|cash|value|worth)\b.*\b(?:i|my)\b.*\b(?:have|own)\b/,
+  /\b(?:net\s+worth|portfolio\s+value|portfolio\s+worth|account\s+balance|total\s+portfolio\s+value)\b/
+];
 const ANSWER_NUMERIC_INTENT_KEYWORDS = [
   'allocat',
+  'balance',
   'drawdown',
   'hhi',
   'market',
+  'money',
   'performance',
   'price',
   'quote',
@@ -61,7 +67,8 @@ const ANSWER_NUMERIC_INTENT_KEYWORDS = [
   'risk',
   'shock',
   'stress',
-  'trim'
+  'trim',
+  'worth'
 ];
 const ANSWER_ACTIONABLE_KEYWORDS = [
   'add',
@@ -275,6 +282,11 @@ export function determineToolPlan({
   const hasStressTestIntent = STRESS_TEST_KEYWORDS.some((keyword) => {
     return normalizedQuery.includes(keyword);
   });
+  const hasPortfolioValueIntent = PORTFOLIO_VALUE_QUERY_PATTERNS.some(
+    (pattern) => {
+      return pattern.test(normalizedQuery);
+    }
+  );
 
   if (
     normalizedQuery.includes('portfolio') ||
@@ -283,6 +295,10 @@ export function determineToolPlan({
     normalizedQuery.includes('performance') ||
     normalizedQuery.includes('return')
   ) {
+    selectedTools.add('portfolio_analysis');
+  }
+
+  if (hasPortfolioValueIntent) {
     selectedTools.add('portfolio_analysis');
   }
 

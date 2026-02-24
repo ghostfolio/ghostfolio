@@ -291,6 +291,46 @@ describe('AiService', () => {
     expect(generateTextSpy).not.toHaveBeenCalled();
   });
 
+  it('uses portfolio data for "how much money i have?" queries', async () => {
+    portfolioService.getDetails.mockResolvedValue({
+      holdings: {
+        AAPL: {
+          allocationInPercentage: 0.6,
+          dataSource: DataSource.YAHOO,
+          symbol: 'AAPL',
+          valueInBaseCurrency: 6000
+        },
+        MSFT: {
+          allocationInPercentage: 0.4,
+          dataSource: DataSource.YAHOO,
+          symbol: 'MSFT',
+          valueInBaseCurrency: 4000
+        }
+      }
+    });
+    redisCacheService.get.mockResolvedValue(undefined);
+    jest.spyOn(subject, 'generateText').mockRejectedValue(new Error('offline'));
+
+    const result = await subject.chat({
+      languageCode: 'en',
+      query: 'how much money i have?',
+      sessionId: 'session-total-value',
+      userCurrency: 'USD',
+      userId: 'user-total-value'
+    });
+
+    expect(result.answer).toContain('Total portfolio value: 10000.00 USD');
+    expect(result.answer).not.toContain('I am Ghostfolio AI');
+    expect(result.toolCalls).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          status: 'success',
+          tool: 'portfolio_analysis'
+        })
+      ])
+    );
+  });
+
   it('routes ambiguous action follow-up query through recommendation tools when finance memory exists', async () => {
     portfolioService.getDetails.mockResolvedValue({
       holdings: {

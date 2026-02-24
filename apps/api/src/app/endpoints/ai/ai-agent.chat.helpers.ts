@@ -414,6 +414,10 @@ export async function buildAnswer({
       return sum + valueInBaseCurrency;
     }, 0);
 
+    fallbackSections.push(
+      `Total portfolio value: ${portfolioAnalysis.totalValueInBaseCurrency.toFixed(2)} ${userCurrency} across ${portfolioAnalysis.holdingsCount} holdings.`
+    );
+
     if (totalLongValue > 0) {
       const topLongHoldingsSummary = longHoldings
         .slice(0, 3)

@@ -48,6 +48,14 @@ describe('AiAgentUtils', () => {
     ).toEqual(['market_data_lookup']);
   });
 
+  it('selects portfolio analysis for portfolio value query wording', () => {
+    expect(
+      determineToolPlan({
+        query: 'how much money i have?'
+      })
+    ).toEqual(['portfolio_analysis']);
+  });
+
   it('returns no tools when no clear tool keyword exists', () => {
     expect(
       determineToolPlan({
