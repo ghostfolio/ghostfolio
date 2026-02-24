@@ -45,6 +45,7 @@ import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
 import { HealthModule } from './health/health.module';
+import { ImportAuditorModule } from './import-auditor/import-auditor.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { LogoModule } from './logo/logo.module';
@@ -90,6 +91,7 @@ import { UserModule } from './user/user.module';
     ExportModule,
     GhostfolioModule,
     HealthModule,
+    ImportAuditorModule,
     ImportModule,
     InfoModule,
     LogoModule,
