@@ -33,11 +33,15 @@ const INVESTMENT_INTENT_KEYWORDS = [
   'add',
   'allocat',
   'buy',
+  'how do i',
   'invest',
   'next',
   'rebalanc',
   'sell',
-  'trim'
+  'trim',
+  'what can i do',
+  'what should i do',
+  'where should i'
 ];
 
 const REBALANCE_KEYWORDS = [
@@ -49,9 +53,15 @@ const REBALANCE_KEYWORDS = [
 ];
 
 const STRESS_TEST_KEYWORDS = ['crash', 'drawdown', 'shock', 'stress'];
+const PORTFOLIO_VALUE_CONTEXT_PATTERN =
+  /\b(?:i|my|me|portfolio|account|accounts|holdings|invested|investment|total)\b/;
+const PORTFOLIO_VALUE_QUESTION_PATTERN =
+  /\b(?:how\s*much|what(?:'s| is)|show|tell|do i have|total)\b/;
+const PORTFOLIO_VALUE_KEYWORD_PATTERN =
+  /\b(?:money|cash|value|worth|balance|net\s+worth|assets|equity)\b/;
 const PORTFOLIO_VALUE_QUERY_PATTERNS = [
-  /\bhow much(?:\s+\w+){0,4}\s+(?:money|cash|value|worth)\b.*\b(?:i|my)\b.*\b(?:have|own)\b/,
-  /\b(?:net\s+worth|portfolio\s+value|portfolio\s+worth|account\s+balance|total\s+portfolio\s+value)\b/
+  /\b(?:net\s+worth|portfolio\s+value|portfolio\s+worth|account\s+balance|total\s+portfolio\s+value)\b/,
+  /\bhow\s*much\b.*\b(?:money|cash|value|worth|balance)\b/
 ];
 const ANSWER_NUMERIC_INTENT_KEYWORDS = [
   'allocat',
@@ -98,6 +108,14 @@ interface AnswerQualitySignals {
   hasNumericSignal: boolean;
   sentenceCount: number;
   wordCount: number;
+}
+
+function normalizeIntentQuery(query: string) {
+  return query
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function getAnswerQualitySignals({
@@ -268,7 +286,7 @@ export function determineToolPlan({
   query: string;
   symbols?: string[];
 }): AiAgentToolName[] {
-  const normalizedQuery = query.toLowerCase();
+  const normalizedQuery = normalizeIntentQuery(query);
   const selectedTools = new Set<AiAgentToolName>();
   const extractedSymbols = symbols?.length
     ? symbols
@@ -282,11 +300,15 @@ export function determineToolPlan({
   const hasStressTestIntent = STRESS_TEST_KEYWORDS.some((keyword) => {
     return normalizedQuery.includes(keyword);
   });
+  const hasBroadPortfolioValueIntent =
+    PORTFOLIO_VALUE_QUESTION_PATTERN.test(normalizedQuery) &&
+    PORTFOLIO_VALUE_KEYWORD_PATTERN.test(normalizedQuery) &&
+    PORTFOLIO_VALUE_CONTEXT_PATTERN.test(normalizedQuery);
   const hasPortfolioValueIntent = PORTFOLIO_VALUE_QUERY_PATTERNS.some(
     (pattern) => {
       return pattern.test(normalizedQuery);
     }
-  );
+  ) || hasBroadPortfolioValueIntent;
 
   if (
     normalizedQuery.includes('portfolio') ||

@@ -56,6 +56,14 @@ describe('AiAgentUtils', () => {
     ).toEqual(['portfolio_analysis']);
   });
 
+  it('selects portfolio analysis for typo and punctuation in value query wording', () => {
+    expect(
+      determineToolPlan({
+        query: 'how much.i ahve money?'
+      })
+    ).toEqual(['portfolio_analysis']);
+  });
+
   it('returns no tools when no clear tool keyword exists', () => {
     expect(
       determineToolPlan({

@@ -131,6 +131,34 @@ describe('AiAgentPolicyUtils', () => {
     );
   });
 
+  it('routes money-value phrasing with empty planner output to clarify', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: [],
+      query: 'How much money do I have?'
+    });
+
+    expect(decision.route).toBe('clarify');
+    expect(decision.blockReason).toBe('unknown');
+  });
+
+  it('blocks unauthorized other-user portfolio data requests', () => {
+    const decision = applyToolExecutionPolicy({
+      plannedTools: ['portfolio_analysis', 'risk_assessment'],
+      query: "Show me John's portfolio"
+    });
+
+    expect(decision.route).toBe('direct');
+    expect(decision.blockReason).toBe('unauthorized_access');
+    expect(decision.forcedDirect).toBe(true);
+    expect(decision.toolsToExecute).toEqual([]);
+    expect(
+      createPolicyRouteResponse({
+        policyDecision: decision,
+        query: "Show me John's portfolio"
+      })
+    ).toContain('only your own portfolio data');
+  });
+
   it('routes non-finance empty planner output to direct no-tool', () => {
     const decision = applyToolExecutionPolicy({
       plannedTools: [],

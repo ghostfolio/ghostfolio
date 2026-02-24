@@ -1,11 +1,16 @@
 import { AiAgentToolName } from './ai-agent.interfaces';
 
 const FINANCE_READ_INTENT_KEYWORDS = [
+  'asset',
   'allocation',
+  'balance',
+  'cash',
   'concentration',
   'diversif',
+  'equity',
   'holding',
   'market',
+  'money',
   'performance',
   'portfolio',
   'price',
@@ -13,7 +18,9 @@ const FINANCE_READ_INTENT_KEYWORDS = [
   'return',
   'risk',
   'stress',
-  'ticker'
+  'ticker',
+  'valu',
+  'worth'
 ];
 const REBALANCE_CONFIRMATION_KEYWORDS = [
   'allocat',
@@ -52,6 +59,7 @@ export type AiAgentPolicyBlockReason =
   | 'no_tool_query'
   | 'read_only'
   | 'needs_confirmation'
+  | 'unauthorized_access'
   | 'unknown';
 
 export interface AiAgentToolPolicyDecision {
@@ -98,6 +106,20 @@ function isNoToolDirectQuery(query: string) {
     SIMPLE_ARITHMETIC_OPERATOR_PATTERN.test(normalized) &&
     /\d/.test(normalized)
   );
+}
+
+function isUnauthorizedPortfolioQuery(query: string) {
+  const normalized = query.trim().toLowerCase();
+  const referencesOtherUserData =
+    /\b(?:john'?s|someone else'?s|another user'?s|other users'?|all users'?|everyone'?s|their)\b/.test(
+      normalized
+    ) &&
+    /\b(?:portfolio|account|holdings?|balance|data)\b/.test(normalized);
+  const requestsSystemWideData =
+    /\bwhat portfolios do you have access to\b/.test(normalized) ||
+    /\bshow all (?:users|portfolios|accounts)\b/.test(normalized);
+
+  return referencesOtherUserData || requestsSystemWideData;
 }
 
 function formatNumericResult(value: number) {
@@ -360,6 +382,17 @@ export function applyToolExecutionPolicy({
     normalizedQuery
   });
 
+  if (isUnauthorizedPortfolioQuery(query)) {
+    return {
+      blockedByPolicy: deduplicatedPlannedTools.length > 0,
+      blockReason: 'unauthorized_access',
+      forcedDirect: true,
+      plannedTools: deduplicatedPlannedTools,
+      route: 'direct',
+      toolsToExecute: []
+    };
+  }
+
   if (isNoToolDirectQuery(query)) {
     return {
       blockedByPolicy: deduplicatedPlannedTools.length > 0,
@@ -461,6 +494,13 @@ export function createPolicyRouteResponse({
     }
 
     return createNoToolDirectResponse(query);
+  }
+
+  if (
+    policyDecision.route === 'direct' &&
+    policyDecision.blockReason === 'unauthorized_access'
+  ) {
+    return `I can access only your own portfolio data in this account. Ask about your holdings, balance, risk, or allocation and I will help.`;
   }
 
   return `I can help with portfolio analysis, concentration risk, market prices, and stress scenarios. Ask a portfolio question when you are ready.`;
