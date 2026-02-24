@@ -58,10 +58,16 @@ export class AiService {
   ) {}
   public async generateText({
     prompt,
-    signal
+    signal,
+    traceContext
   }: {
     prompt: string;
     signal?: AbortSignal;
+    traceContext?: {
+      query?: string;
+      sessionId?: string;
+      userId?: string;
+    };
   }) {
     const zAiGlmApiKey =
       process.env.z_ai_glm_api_key ?? process.env.Z_AI_GLM_API_KEY;
@@ -70,14 +76,54 @@ export class AiService {
       process.env.minimax_api_key ?? process.env.MINIMAX_API_KEY;
     const minimaxModel = process.env.minimax_model ?? process.env.MINIMAX_MODEL;
     const providerErrors: string[] = [];
+    const invokeProviderWithTracing = async ({
+      model,
+      provider,
+      run
+    }: {
+      model: string;
+      provider: string;
+      run: () => Promise<{ text?: string }>;
+    }) => {
+      const startedAt = Date.now();
+      let invocationError: unknown;
+      let responseText: string | undefined;
+
+      try {
+        const response = await run();
+        responseText = response?.text;
+
+        return response;
+      } catch (error) {
+        invocationError = error;
+        throw error;
+      } finally {
+        void this.aiObservabilityService.recordLlmInvocation({
+          durationInMs: Date.now() - startedAt,
+          error: invocationError,
+          model,
+          prompt,
+          provider,
+          query: traceContext?.query,
+          responseText,
+          sessionId: traceContext?.sessionId,
+          userId: traceContext?.userId
+        });
+      }
+    };
 
     if (zAiGlmApiKey) {
       try {
-        return await generateTextWithZAiGlm({
-          apiKey: zAiGlmApiKey,
-          model: zAiGlmModel,
-          prompt,
-          signal
+        return await invokeProviderWithTracing({
+          model: zAiGlmModel ?? 'glm-5',
+          provider: 'z_ai_glm',
+          run: () =>
+            generateTextWithZAiGlm({
+              apiKey: zAiGlmApiKey,
+              model: zAiGlmModel,
+              prompt,
+              signal
+            })
         });
       } catch (error) {
         providerErrors.push(
@@ -88,11 +134,16 @@ export class AiService {
 
     if (minimaxApiKey) {
       try {
-        return await generateTextWithMinimax({
-          apiKey: minimaxApiKey,
-          model: minimaxModel,
-          prompt,
-          signal
+        return await invokeProviderWithTracing({
+          model: minimaxModel ?? 'MiniMax-M2.5',
+          provider: 'minimax',
+          run: () =>
+            generateTextWithMinimax({
+              apiKey: minimaxApiKey,
+              model: minimaxModel,
+              prompt,
+              signal
+            })
         });
       } catch (error) {
         providerErrors.push(
@@ -118,10 +169,15 @@ export class AiService {
     const openRouterService = createOpenRouter({
       apiKey: openRouterApiKey
     });
-    return generateText({
-      prompt,
-      abortSignal: signal,
-      model: openRouterService.chat(openRouterModel)
+    return invokeProviderWithTracing({
+      model: openRouterModel,
+      provider: 'openrouter',
+      run: () =>
+        generateText({
+          prompt,
+          abortSignal: signal,
+          model: openRouterService.chat(openRouterModel)
+        })
     });
   }
 
@@ -343,7 +399,15 @@ export class AiService {
       if (policyDecision.route === 'tools') {
         const llmGenerationStartedAt = Date.now();
         answer = await buildAnswer({
-          generateText: (options) => this.generateText(options),
+          generateText: (options) =>
+            this.generateText({
+              ...options,
+              traceContext: {
+                query: normalizedQuery,
+                sessionId: resolvedSessionId,
+                userId
+              }
+            }),
           languageCode,
           marketData,
           memory,

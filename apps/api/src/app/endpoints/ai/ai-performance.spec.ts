@@ -85,6 +85,7 @@ function createAiServiceForPerformanceTests() {
       tokenEstimate: { input: 10, output: 10, total: 20 },
       traceId: 'perf-trace'
     }),
+    recordLlmInvocation: jest.fn().mockResolvedValue(undefined),
     recordFeedback: jest.fn().mockResolvedValue(undefined)
   };
 

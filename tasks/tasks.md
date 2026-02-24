@@ -201,6 +201,14 @@ Last updated: 2026-02-24
 - [x] Add or update unit tests for chat persistence and policy simple-query routing.
 - [x] Run focused verification on touched frontend/backend AI suites and update task tracking artifacts.
 
+## Session Plan (2026-02-24, Per-LLM LangSmith Invocation Tracing)
+
+- [x] Audit current AI provider call path and verify where LangSmith/LangChain tracing is missing.
+- [x] Add explicit per-provider LLM invocation tracing hooks before/after each `generateText` provider call.
+- [x] Thread query/session/user context into LLM invocation tracing payloads for easier LangSmith filtering.
+- [x] Update AI and observability unit tests to assert LLM invocation trace behavior and keep provider fallback behavior stable.
+- [x] Run focused verification for touched AI suites and update task tracking notes.
+
 ## Verification Notes
 
 - `nx run api:lint` completed successfully (existing workspace warnings only).
@@ -269,3 +277,8 @@ Last updated: 2026-02-24
   - `npx jest apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts --config apps/api/jest.config.ts` (31/31 tests passed)
   - `npx nx run api:lint` (passes with existing workspace warnings)
   - `npx nx run client:lint` (passes with existing workspace warnings)
+- Per-LLM LangSmith invocation tracing verification (local + deploy config, 2026-02-24):
+  - `npx jest apps/api/src/app/endpoints/ai/ai-observability.service.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts apps/api/src/app/endpoints/ai/ai-performance.spec.ts apps/api/src/app/endpoints/ai/evals/ai-quality-eval.spec.ts apps/api/src/app/endpoints/ai/evals/ai-live-latency.spec.ts --config apps/api/jest.config.ts` (5/5 suites passed, live-latency suite skipped by env gate)
+  - `npx nx run api:lint` (passes with existing workspace warnings)
+  - `railway variable set -s ghostfolio-api --skip-deploys LANGCHAIN_API_KEY=... LANGSMITH_API_KEY=... LANGCHAIN_TRACING_V2=true LANGSMITH_TRACING=true LANGSMITH_PROJECT=ghostfolio-ai-agent`
+  - `railway variable list -s ghostfolio-api --kv` confirms: `LANGCHAIN_API_KEY`, `LANGSMITH_API_KEY`, `LANGCHAIN_TRACING_V2`, `LANGSMITH_TRACING`, `LANGSMITH_PROJECT`

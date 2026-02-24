@@ -30,6 +30,7 @@ function createAiServiceForCase(evalCase: AiAgentMvpEvalCase) {
       tokenEstimate: { input: 1, output: 1, total: 2 },
       traceId: 'eval-trace'
     }),
+    recordLlmInvocation: jest.fn().mockResolvedValue(undefined),
     recordFeedback: jest.fn().mockResolvedValue(undefined)
   };
 

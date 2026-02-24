@@ -107,6 +107,7 @@ function createLiveBenchmarkSubject() {
       },
       traceId: 'live-benchmark'
     }),
+    recordLlmInvocation: jest.fn().mockResolvedValue(undefined),
     recordFeedback: jest.fn().mockResolvedValue(undefined)
   };
 

@@ -134,4 +134,50 @@ describe('AiObservabilityService', () => {
     expect(mockClientConstructor).toHaveBeenCalledTimes(1);
     expect(mockRunTreeConstructor).toHaveBeenCalledTimes(1);
   });
+
+  it('captures explicit llm invocation traces when tracing is enabled', async () => {
+    process.env.LANGSMITH_TRACING = 'true';
+    process.env.LANGSMITH_API_KEY = 'lsv2_test_key';
+
+    const runTree = {
+      end: jest.fn(),
+      patchRun: jest.fn().mockResolvedValue(undefined),
+      postRun: jest.fn().mockResolvedValue(undefined)
+    };
+    mockRunTreeConstructor.mockReturnValue(runTree);
+
+    const subject = new AiObservabilityService();
+
+    await subject.recordLlmInvocation({
+      durationInMs: 23,
+      model: 'openrouter/auto',
+      prompt: 'Query: who are you?',
+      provider: 'openrouter',
+      query: 'who are you?',
+      responseText: 'I am your Ghostfolio assistant.',
+      sessionId: 'session-3',
+      userId: 'user-3'
+    });
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    expect(mockClientConstructor).toHaveBeenCalledTimes(1);
+    expect(mockRunTreeConstructor).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'ghostfolio_ai_llm_openrouter',
+        run_type: 'llm'
+      })
+    );
+    expect(runTree.postRun).toHaveBeenCalledTimes(1);
+    expect(runTree.end).toHaveBeenCalledWith(
+      expect.objectContaining({
+        outputs: expect.objectContaining({
+          model: 'openrouter/auto',
+          provider: 'openrouter',
+          responseText: 'I am your Ghostfolio assistant.',
+          status: 'success'
+        })
+      })
+    );
+    expect(runTree.patchRun).toHaveBeenCalledTimes(1);
+  });
 });

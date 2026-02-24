@@ -71,6 +71,7 @@ function createSubject({
       },
       traceId: 'quality-eval-trace'
     }),
+    recordLlmInvocation: jest.fn().mockResolvedValue(undefined),
     recordFeedback: jest.fn().mockResolvedValue(undefined)
   };
 

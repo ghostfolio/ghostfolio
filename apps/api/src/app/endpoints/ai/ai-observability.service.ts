@@ -20,6 +20,19 @@ interface AiAgentPolicySnapshot {
   toolsToExecute: string[];
 }
 
+interface AiLlmInvocationSnapshot {
+  durationInMs: number;
+  errorMessage?: string;
+  model: string;
+  prompt: string;
+  provider: string;
+  query?: string;
+  responseText?: string;
+  sessionId?: string;
+  traceId: string;
+  userId?: string;
+}
+
 @Injectable()
 export class AiObservabilityService {
   private readonly logger = new Logger(OBSERVABILITY_LOG_LABEL);
@@ -321,6 +334,56 @@ export class AiObservabilityService {
     await this.runSafely(async () => runTree.patchRun());
   }
 
+  private async captureLlmInvocationTrace({
+    durationInMs,
+    errorMessage,
+    model,
+    prompt,
+    provider,
+    query,
+    responseText,
+    sessionId,
+    traceId,
+    userId
+  }: AiLlmInvocationSnapshot) {
+    const client = this.getLangSmithClient();
+
+    if (!client) {
+      return;
+    }
+
+    const runTree = new RunTree({
+      client,
+      inputs: {
+        model,
+        prompt,
+        provider,
+        query,
+        sessionId,
+        userId
+      },
+      name: `ghostfolio_ai_llm_${provider}`,
+      project_name: this.langSmithProjectName,
+      run_type: 'llm'
+    });
+
+    await this.runSafely(async () => runTree.postRun());
+    await this.runSafely(async () =>
+      runTree.end({
+        outputs: {
+          durationInMs,
+          error: errorMessage,
+          model,
+          provider,
+          responseText,
+          status: errorMessage ? 'failed' : 'success',
+          traceId
+        }
+      })
+    );
+    await this.runSafely(async () => runTree.patchRun());
+  }
+
   public async captureChatFailure({
     durationInMs,
     error,
@@ -457,6 +520,64 @@ export class AiObservabilityService {
       feedbackId,
       rating,
       sessionId,
+      userId
+    }).catch(() => undefined);
+  }
+
+  public async recordLlmInvocation({
+    durationInMs,
+    error,
+    model,
+    prompt,
+    provider,
+    query,
+    responseText,
+    sessionId,
+    userId
+  }: {
+    durationInMs: number;
+    error?: unknown;
+    model: string;
+    prompt: string;
+    provider: string;
+    query?: string;
+    responseText?: string;
+    sessionId?: string;
+    userId?: string;
+  }) {
+    const traceId = randomUUID();
+    const errorMessage = error instanceof Error ? error.message : undefined;
+
+    this.logger.log(
+      JSON.stringify({
+        durationInMs,
+        error: errorMessage,
+        event: 'ai_llm_invocation',
+        model,
+        promptLength: prompt.length,
+        provider,
+        queryLength: query?.length ?? 0,
+        responseLength: responseText?.length ?? 0,
+        sessionId,
+        traceId,
+        userId
+      })
+    );
+
+    if (!this.isLangSmithEnabled) {
+      return;
+    }
+
+    void this.captureLlmInvocationTrace({
+      durationInMs,
+      errorMessage,
+      model,
+      prompt,
+      provider,
+      query,
+      responseText,
+      sessionId,
+      traceId,
       userId
     }).catch(() => undefined);
   }

@@ -10,6 +10,7 @@ describe('AiService', () => {
   let aiObservabilityService: {
     captureChatFailure: jest.Mock;
     captureChatSuccess: jest.Mock;
+    recordLlmInvocation: jest.Mock;
     recordFeedback: jest.Mock;
   };
   let subject: AiService;
@@ -50,6 +51,7 @@ describe('AiService', () => {
         },
         traceId: 'trace-1'
       }),
+      recordLlmInvocation: jest.fn().mockResolvedValue(undefined),
       recordFeedback: jest.fn()
     };
 
@@ -458,6 +460,13 @@ describe('AiService', () => {
     expect(result).toEqual({
       text: 'zai-response'
     });
+    expect(aiObservabilityService.recordLlmInvocation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        model: 'glm-5',
+        provider: 'z_ai_glm',
+        responseText: 'zai-response'
+      })
+    );
     expect(propertyService.getByKey).not.toHaveBeenCalled();
   });
 
@@ -497,6 +506,21 @@ describe('AiService', () => {
     expect(result).toEqual({
       text: 'minimax-response'
     });
+    expect(aiObservabilityService.recordLlmInvocation).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        model: 'glm-5',
+        provider: 'z_ai_glm'
+      })
+    );
+    expect(aiObservabilityService.recordLlmInvocation).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        model: 'MiniMax-M2.5',
+        provider: 'minimax',
+        responseText: 'minimax-response'
+      })
+    );
   });
 
   it('captures observability failure events when chat throws', async () => {
