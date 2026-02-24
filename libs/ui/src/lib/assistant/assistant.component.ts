@@ -12,16 +12,15 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   QueryList,
   ViewChild,
-  ViewChildren
+  ViewChildren,
+  output
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -124,10 +123,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   @Input() hasPermissionToChangeFilters: boolean;
   @Input() user: User;
 
-  @Output() closed = new EventEmitter<void>();
-  @Output() dateRangeChanged = new EventEmitter<DateRange>();
-  @Output() filtersChanged = new EventEmitter<Filter[]>();
-
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
   @ViewChild('search', { static: true }) searchElement: ElementRef;
 
@@ -165,6 +160,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     quickLinks: []
   };
   public tags: Filter[] = [];
+
+  protected readonly closed = output<void>();
+  protected readonly dateRangeChanged = output<DateRange>();
+  protected readonly filtersChanged = output<Filter[]>();
 
   private readonly PRESELECTION_DELAY = 100;
 

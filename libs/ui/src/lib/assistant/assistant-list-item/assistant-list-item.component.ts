@@ -7,12 +7,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   HostBinding,
   Input,
   OnChanges,
-  Output,
-  ViewChild
+  ViewChild,
+  output
 } from '@angular/core';
 import { Params, RouterModule } from '@angular/router';
 
@@ -39,13 +38,13 @@ export class GfAssistantListItemComponent
 
   @Input() item: SearchResultItem;
 
-  @Output() clicked = new EventEmitter<void>();
-
   @ViewChild('link') public linkElement: ElementRef;
 
   public hasFocus = false;
   public queryParams: Params;
   public routerLink: string[];
+
+  protected readonly clicked = output<void>();
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
