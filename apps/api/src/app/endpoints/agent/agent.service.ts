@@ -13,11 +13,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import * as ai from 'ai';
 import { generateText, tool } from 'ai';
-import { Client } from 'langsmith';
-import {
-  createLangSmithProviderOptions,
-  wrapAISDK
-} from 'langsmith/experimental/vercel';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 
@@ -37,6 +32,39 @@ function ensureLangSmithEnv(): string | null {
   process.env.LANGSMITH_ENDPOINT =
     process.env.LANGSMITH_ENDPOINT ?? LANGSMITH_ENDPOINT;
   return key;
+}
+
+/** Lazy-load LangSmith tracing when key is set; avoids hard build dependency. */
+async function getTracedGenerateText(metadata: Record<string, unknown>): Promise<{
+  generateTextFn: typeof generateText;
+  flush?: () => Promise<void>;
+}> {
+  const key = ensureLangSmithEnv();
+  if (!key) return { generateTextFn: generateText };
+  try {
+    const { Client } = await import('langsmith');
+    const { wrapAISDK, createLangSmithProviderOptions } = await import(
+      'langsmith/experimental/vercel'
+    );
+    const client = new Client();
+    const traced = wrapAISDK(ai, { client });
+    const generateTextFn = (opts: Parameters<typeof generateText>[0]) =>
+      traced.generateText({
+        ...opts,
+        providerOptions: {
+          ...(opts as any).providerOptions,
+          langsmith: createLangSmithProviderOptions({
+            name: 'Ghostfolio Agent',
+            tags: ['ghostfolio', 'agent'],
+            metadata
+          })
+        }
+      });
+    const flush = () => (client as any).awaitPendingTraceBatches?.() ?? Promise.resolve();
+    return { generateTextFn, flush };
+  } catch {
+    return { generateTextFn: generateText };
+  }
 }
 
 export interface AgentChatMessage {
@@ -302,13 +330,8 @@ export class AgentService {
         content: m.content
       }));
 
-      // Optional LangSmith tracing (same pattern as Collabboard)
-      const hasLangSmith = !!ensureLangSmithEnv();
-      const langsmithClient = hasLangSmith ? new Client() : null;
-      const tracedAi = langsmithClient
-        ? wrapAISDK(ai, { client: langsmithClient })
-        : null;
-      const generateTextFn = tracedAi?.generateText ?? generateText;
+      // Optional LangSmith tracing (lazy-loaded to avoid build failures)
+      const { generateTextFn, flush } = await getTracedGenerateText({ traceId });
 
       const llmT0 = Date.now();
       const { text, usage } = await generateTextFn({
@@ -316,20 +339,9 @@ export class AgentService {
         system: systemPrompt,
         messages: coreMessages,
         tools,
-        maxSteps: 5,
-        ...(langsmithClient && {
-          providerOptions: {
-            langsmith: createLangSmithProviderOptions({
-              name: 'Ghostfolio Agent',
-              tags: ['ghostfolio', 'agent'],
-              metadata: { traceId }
-            })
-          }
-        })
+        maxSteps: 5
       });
-      if (langsmithClient) {
-        await langsmithClient.awaitPendingTraceBatches?.();
-      }
+      await flush?.();
       const llmMs = Date.now() - llmT0;
 
       const { content, verification } = verifyAgentOutput(text);
