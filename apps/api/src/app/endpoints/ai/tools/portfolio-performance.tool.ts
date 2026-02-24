@@ -2,6 +2,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 
+import { subDays } from 'date-fns';
 import { tool } from 'ai';
 import { z } from 'zod';
 
@@ -58,30 +59,7 @@ export function getPortfolioPerformanceTool(deps: {
   });
 }
 
-function computeAllTimePerformance(
-  deps: { dataProviderService: DataProviderService },
-  orders: {
-    type: string;
-    quantity: number;
-    unitPrice: number;
-    date: Date;
-    symbolProfileId: string;
-  }[],
-  profileMap: Record<
-    string,
-    {
-      id: string;
-      symbol: string;
-      dataSource: any;
-      name: string;
-      currency: string;
-    }
-  >
-) {
-  return computePerformanceFromOrders(deps, orders, profileMap);
-}
-
-async function computePerformanceFromOrders(
+async function computeAllTimePerformance(
   deps: { dataProviderService: DataProviderService },
   orders: {
     type: string;
@@ -224,7 +202,6 @@ async function computePeriodPerformance(
   dateRange: "1d" | "mtd" | "wtd" | "ytd" | "1y" | "5y"
 ) {
   const { startDate, endDate } = getIntervalFromDateRange(dateRange);
-  const warnings: string[] = [];
 
   // Partition orders into before-period and during-period
   const ordersBeforePeriod = orders.filter(
@@ -237,7 +214,13 @@ async function computePeriodPerformance(
   // Build positions at start of period from orders before period
   const startPositions: Record<
     string,
-    { quantity: number; costBasis: number; symbol: string; dataSource: any; name: string }
+    {
+      quantity: number;
+      costBasis: number;
+      symbol: string;
+      dataSource: any;
+      name: string;
+    }
   > = {};
 
   for (const order of ordersBeforePeriod) {
@@ -262,28 +245,50 @@ async function computePeriodPerformance(
     }
   }
 
-  // Look up historical prices on/before startDate for each starting position
-  let startValue = 0;
   const activeStartPositions = Object.values(startPositions).filter(
     (p) => p.quantity > 0
   );
 
-  for (const pos of activeStartPositions) {
-    const historicalPrice = await deps.prismaService.marketData.findFirst({
-      where: {
-        symbol: pos.symbol,
-        dataSource: pos.dataSource,
-        date: { lte: startDate }
-      },
-      orderBy: { date: "desc" },
-      select: { marketPrice: true }
+  // Fetch historical prices from the data provider (Yahoo Finance) for the
+  // period start date. Use a 7-day window to account for weekends/holidays.
+  const startPriceMap: Record<string, number> = {};
+
+  if (activeStartPositions.length > 0) {
+    const items = activeStartPositions.map((p) => ({
+      dataSource: p.dataSource,
+      symbol: p.symbol
+    }));
+
+    const historicalData = await deps.dataProviderService.getHistoricalRaw({
+      assetProfileIdentifiers: items,
+      from: subDays(startDate, 7),
+      to: startDate
     });
 
-    if (historicalPrice) {
-      startValue +=
-        pos.quantity * (historicalPrice.marketPrice as unknown as number);
+    for (const pos of activeStartPositions) {
+      const symbolData = historicalData[pos.symbol];
+      if (symbolData) {
+        // Get the most recent price in the window (closest to startDate)
+        const dates = Object.keys(symbolData).sort();
+        const latestDate = dates[dates.length - 1];
+        if (latestDate && symbolData[latestDate]?.marketPrice != null) {
+          startPriceMap[pos.symbol] = Number(
+            symbolData[latestDate].marketPrice
+          );
+        }
+      }
+    }
+  }
+
+  // Compute startValue using historical prices, with cost-basis fallback
+  let startValue = 0;
+  const warnings: string[] = [];
+
+  for (const pos of activeStartPositions) {
+    const historicalPrice = startPriceMap[pos.symbol];
+    if (historicalPrice != null) {
+      startValue += pos.quantity * historicalPrice;
     } else {
-      // Fall back to cost basis
       startValue += pos.costBasis;
       warnings.push(
         `No historical price found for ${pos.symbol} at period start; using cost basis as fallback.`
@@ -297,7 +302,6 @@ async function computePeriodPerformance(
     { quantity: number; symbol: string; dataSource: any; name: string }
   > = {};
 
-  // Start with positions from before the period
   for (const pos of activeStartPositions) {
     endPositions[pos.symbol] = {
       quantity: pos.quantity,
@@ -307,7 +311,7 @@ async function computePeriodPerformance(
     };
   }
 
-  let netCashFlow = 0; // positive = money added (buys), negative = money removed (sells)
+  let netCashFlow = 0;
 
   for (const order of ordersDuringPeriod) {
     const profile = profileMap[order.symbolProfileId];
@@ -377,7 +381,6 @@ async function computePeriodPerformance(
     }
   }
 
-  // Period gain = endValue - startValue - netCashFlow
   const periodGain = endValue - startValue - netCashFlow;
   const denominator = startValue > 0 ? startValue : Math.abs(netCashFlow);
   const periodGainPercentage =
