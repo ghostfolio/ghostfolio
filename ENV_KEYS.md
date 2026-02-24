@@ -43,6 +43,8 @@ Here, **Postgres and Redis are provided by Railway**; you only generate the two 
 
 **Setup:** In your Railway project, open the **Ghostfolio** service (the one from GitHub) → **Variables** → add each variable. For Postgres and Redis, copy from the addon services. For `ACCESS_TOKEN_SALT` and `JWT_SECRET_KEY`, generate once and paste.
 
+**If healthcheck fails:** Open the Ghostfolio service → **Deployments** → latest deploy → **View logs**. Use the **Deploy** (runtime) logs, not Build. Look for: `Entrypoint: PORT=...`, `Running database migrations`, `Seeding the database`, `Starting the server`, and `Listening at http://...`. If logs stop before `Listening at`, the failure is there (e.g. migrate/seed error or missing env). Ensure the service deploys from the branch that has the PORT fix (e.g. `feature/agent-forge`).
+
 ---
 
 ## Generate random strings (for ACCESS_TOKEN_SALT and JWT_SECRET_KEY)
