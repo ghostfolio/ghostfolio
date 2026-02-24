@@ -26,7 +26,10 @@ import { getLookupMarketDataTool } from './tools/market-data.tool';
 import { getExchangeRateTool } from './tools/exchange-rate.tool';
 import { getPortfolioReportTool } from './tools/portfolio-report.tool';
 
-const AGENT_SYSTEM_PROMPT = [
+function getAgentSystemPrompt() {
+  return [
+  `Today's date is ${new Date().toISOString().split('T')[0]}.`,
+  '',
   'You are a helpful financial assistant for Ghostfolio, a personal wealth management application.',
   'You help users understand their portfolio, holdings, performance, and financial data.',
   '',
@@ -41,7 +44,8 @@ const AGENT_SYSTEM_PROMPT = [
   '',
   'DISCLAIMER: This is an AI assistant providing informational responses based on portfolio data.',
   'This is not financial advice. Always consult with a qualified financial advisor before making investment decisions.'
-].join('\n');
+  ].join('\n');
+}
 
 @Injectable()
 export class AiService {
@@ -275,7 +279,7 @@ export class AiService {
     try {
       const result = await generateText({
         model: anthropic("claude-sonnet-4-20250514"),
-        system: AGENT_SYSTEM_PROMPT,
+        system: getAgentSystemPrompt(),
         tools,
         toolChoice: "auto",
         messages,
