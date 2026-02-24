@@ -71,97 +71,114 @@
               <span class="ml-2 timestamp">{{
                 message.createdAt | date: 'shortTime'
               }}</span>
+
+              @if (message.role === 'assistant' && message.response) {
+                <button
+                  aria-label="Show response details"
+                  class="chat-details-trigger ml-2"
+                  i18n-aria-label
+                  mat-icon-button
+                  type="button"
+                  [matMenuTriggerFor]="responseDetailsMenu"
+                  (click)="onOpenResponseDetails(message.response)"
+                >
+                  <mat-icon aria-hidden="true">info_outline</mat-icon>
+                </button>
+              }
             </div>
             <div class="chat-message-content">{{ message.content }}</div>
 
-            @if (message.response) {
-              <div class="chat-metadata mt-2">
-                <div class="confidence mb-2">
-                  <strong i18n>Confidence</strong>:
-                  {{ message.response.confidence.score * 100 | number: '1.0-0'
-                  }}% ({{ message.response.confidence.band }})
-                </div>
+            @if (message.feedback) {
+              <div class="align-items-center d-flex feedback-controls mt-2">
+                <button
+                  class="mr-2"
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="
+                    message.feedback.isSubmitting || !!message.feedback.rating
+                  "
+                  (click)="onRateResponse({ index: $index, rating: 'up' })"
+                >
+                  <ng-container i18n>Helpful</ng-container>
+                </button>
+                <button
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="
+                    message.feedback.isSubmitting || !!message.feedback.rating
+                  "
+                  (click)="onRateResponse({ index: $index, rating: 'down' })"
+                >
+                  <ng-container i18n>Needs work</ng-container>
+                </button>
 
-                @if (message.response.citations.length > 0) {
-                  <div class="mb-2">
-                    <strong i18n>Citations</strong>
-                    <ul class="mb-0 pl-3">
-                      @for (citation of message.response.citations; track $index) {
-                        <li>
-                          <span class="font-weight-bold">{{
-                            citation.source
-                          }}</span>
-                          -
-                          {{ citation.snippet }}
-                        </li>
-                      }
-                    </ul>
-                  </div>
-                }
-
-                @if (message.response.verification.length > 0) {
-                  <div class="mb-2">
-                    <strong i18n>Verification</strong>
-                    <ul class="mb-0 pl-3">
-                      @for (check of message.response.verification; track $index) {
-                        <li>
-                          {{ check.status }} - {{ check.check }}:
-                          {{ check.details }}
-                        </li>
-                      }
-                    </ul>
-                  </div>
-                }
-
-                @if (message.response.observability) {
-                  <div class="mb-2">
-                    <strong i18n>Observability</strong>:
-                    <span class="ml-1"
-                      >{{ message.response.observability.latencyInMs }}ms,
-                      ~{{
-                        message.response.observability.tokenEstimate.total
-                      }}
-                      tokens</span
-                    >
-                  </div>
-                }
-
-                @if (message.feedback) {
-                  <div class="align-items-center d-flex feedback-controls">
-                    <button
-                      class="mr-2"
-                      mat-stroked-button
-                      type="button"
-                      [disabled]="
-                        message.feedback.isSubmitting || !!message.feedback.rating
-                      "
-                      (click)="onRateResponse({ index: $index, rating: 'up' })"
-                    >
-                      <ng-container i18n>Helpful</ng-container>
-                    </button>
-                    <button
-                      mat-stroked-button
-                      type="button"
-                      [disabled]="
-                        message.feedback.isSubmitting || !!message.feedback.rating
-                      "
-                      (click)="onRateResponse({ index: $index, rating: 'down' })"
-                    >
-                      <ng-container i18n>Needs work</ng-container>
-                    </button>
-
-                    @if (message.feedback.isSubmitting) {
-                      <span class="ml-2 text-muted" i18n>Saving feedback...</span>
-                    } @else if (message.feedback.feedbackId) {
-                      <span class="ml-2 text-muted" i18n>Feedback saved</span>
-                    }
-                  </div>
+                @if (message.feedback.isSubmitting) {
+                  <span class="ml-2 text-muted" i18n>Saving feedback...</span>
+                } @else if (message.feedback.feedbackId) {
+                  <span class="ml-2 text-muted" i18n>Feedback saved</span>
                 }
               </div>
             }
           </div>
         }
       </div>
+
+      <mat-menu #responseDetailsMenu="matMenu" class="no-max-width" xPosition="before">
+        <div class="response-details-panel p-3" (click)="$event.stopPropagation()">
+          @if (activeResponseDetails; as details) {
+            <div class="response-details-section">
+              <strong i18n>Confidence</strong>:
+              {{ details.confidence.score * 100 | number: '1.0-0' }}%
+              ({{ details.confidence.band }})
+            </div>
+
+            @if (details.citations.length > 0) {
+              <div class="response-details-section">
+                <strong i18n>Citations</strong>
+                <ul class="mb-0 pl-3 response-details-list">
+                  @for (citation of details.citations; track $index) {
+                    <li>
+                      <span class="font-weight-bold">{{ citation.source }}</span>
+                      -
+                      {{ citation.snippet }}
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (details.verification.length > 0) {
+              <div class="response-details-section">
+                <strong i18n>Verification</strong>
+                <ul class="mb-0 pl-3 response-details-list">
+                  @for (check of details.verification; track $index) {
+                    <li>
+                      <span class="text-capitalize">{{ check.status }}</span>
+                      -
+                      {{ check.check }}:
+                      {{ check.details }}
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+
+            @if (details.observability) {
+              <div class="response-details-section">
+                <strong i18n>Observability</strong>:
+                <span class="ml-1"
+                  >{{ details.observability.latencyInMs }}ms, ~{{
+                    details.observability.tokenEstimate.total
+                  }}
+                  tokens</span
+                >
+              </div>
+            }
+          } @else {
+            <span class="text-muted" i18n>No response details available.</span>
+          }
+        </div>
+      </mat-menu>
     }
   </mat-card-content>
 </mat-card>

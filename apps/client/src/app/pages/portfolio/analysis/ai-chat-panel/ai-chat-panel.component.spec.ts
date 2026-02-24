@@ -1,7 +1,14 @@
 import { AiAgentChatResponse } from '@ghostfolio/common/interfaces';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 
 import { GfAiChatPanelComponent } from './ai-chat-panel.component';
@@ -77,6 +84,8 @@ describe('GfAiChatPanelComponent', () => {
     postAiChat: jest.Mock;
     postAiChatFeedback: jest.Mock;
   };
+  let overlayContainer: OverlayContainer;
+  let overlayContainerElement: HTMLElement;
 
   beforeEach(async () => {
     localStorage.clear();
@@ -87,9 +96,12 @@ describe('GfAiChatPanelComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [GfAiChatPanelComponent],
+      imports: [GfAiChatPanelComponent, NoopAnimationsModule],
       providers: [{ provide: DataService, useValue: dataService }]
     }).compileComponents();
+
+    overlayContainer = TestBed.inject(OverlayContainer);
+    overlayContainerElement = overlayContainer.getContainerElement();
 
     fixture = TestBed.createComponent(GfAiChatPanelComponent);
     component = fixture.componentInstance;
@@ -99,6 +111,7 @@ describe('GfAiChatPanelComponent', () => {
 
   afterEach(() => {
     localStorage.clear();
+    overlayContainer.ngOnDestroy();
   });
 
   it('sends a chat query and appends assistant response', () => {
@@ -137,6 +150,51 @@ describe('GfAiChatPanelComponent', () => {
       JSON.parse(localStorage.getItem(STORAGE_KEY_MESSAGES) ?? '[]')
     ).toHaveLength(2);
   });
+
+  it('shows diagnostics in info popover instead of inline message body', fakeAsync(() => {
+    dataService.postAiChat.mockReturnValue(
+      of(
+        createChatResponse({
+          answer: 'You are concentrated in one position.',
+          sessionId: 'session-details',
+          turns: 1
+        })
+      )
+    );
+    component.query = 'Help me diversify';
+
+    component.onSubmit();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const nativeElement = fixture.nativeElement as HTMLElement;
+    const chatLogText = nativeElement.querySelector('.chat-log')?.textContent ?? '';
+
+    expect(nativeElement.querySelector('.chat-metadata')).toBeNull();
+    expect(chatLogText).not.toContain('Confidence');
+    expect(chatLogText).not.toContain('Citations');
+    expect(chatLogText).not.toContain('Verification');
+
+    const detailsTrigger = nativeElement.querySelector(
+      '.chat-details-trigger'
+    ) as HTMLButtonElement | null;
+
+    expect(detailsTrigger).toBeTruthy();
+
+    detailsTrigger?.click();
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const overlayText = overlayContainerElement.textContent ?? '';
+
+    expect(overlayText).toContain('Confidence');
+    expect(overlayText).toContain('Citations');
+    expect(overlayText).toContain('Verification');
+    expect(overlayText).toContain('2 holdings analyzed');
+    expect(overlayText).toContain('market_data_coverage');
+  }));
 
   it('reuses session id across consecutive prompts', () => {
     dataService.postAiChat

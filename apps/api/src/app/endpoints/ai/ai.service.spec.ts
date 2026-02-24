@@ -468,6 +468,8 @@ describe('AiService', () => {
 
     expect(result.answer).toContain('Next-step allocation:');
     expect(result.answer).toContain('AAPL');
+    expect(result.answer).toContain('Option 1 (new money first):');
+    expect(result.answer).toContain('Option 2 (sell and rebalance):');
     expect(result.toolCalls).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ tool: 'portfolio_analysis' }),
