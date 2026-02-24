@@ -11,6 +11,13 @@ export interface AiAgentMemoryState {
   }[];
 }
 
+export type AiAgentResponseStylePreference = 'concise' | 'detailed';
+
+export interface AiAgentUserPreferenceState {
+  responseStyle?: AiAgentResponseStylePreference;
+  updatedAt?: string;
+}
+
 export interface PortfolioAnalysisResult {
   allocationSum: number;
   holdings: {

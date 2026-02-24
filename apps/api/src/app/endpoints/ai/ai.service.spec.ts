@@ -291,6 +291,93 @@ describe('AiService', () => {
     expect(generateTextSpy).not.toHaveBeenCalled();
   });
 
+  it('persists and recalls cross-session user preferences for the same user', async () => {
+    const redisStore = new Map<string, string>();
+    redisCacheService.get.mockImplementation(async (key: string) => {
+      return redisStore.get(key);
+    });
+    redisCacheService.set.mockImplementation(
+      async (key: string, value: string) => {
+        redisStore.set(key, value);
+      }
+    );
+
+    const savePreferenceResult = await subject.chat({
+      languageCode: 'en',
+      query: 'Remember to keep responses concise.',
+      sessionId: 'session-pref-1',
+      userCurrency: 'USD',
+      userId: 'user-pref'
+    });
+
+    expect(savePreferenceResult.answer).toContain('Saved preference');
+    expect(redisStore.get('ai-agent-preferences-user-pref')).toContain('concise');
+
+    const recallPreferenceResult = await subject.chat({
+      languageCode: 'en',
+      query: 'What do you remember about me?',
+      sessionId: 'session-pref-2',
+      userCurrency: 'USD',
+      userId: 'user-pref'
+    });
+
+    expect(recallPreferenceResult.answer).toContain(
+      'Saved cross-session preferences'
+    );
+    expect(recallPreferenceResult.answer).toContain('response style: concise');
+  });
+
+  it('applies persisted response-style preferences to LLM prompt generation', async () => {
+    const redisStore = new Map<string, string>();
+    redisCacheService.get.mockImplementation(async (key: string) => {
+      return redisStore.get(key);
+    });
+    redisCacheService.set.mockImplementation(
+      async (key: string, value: string) => {
+        redisStore.set(key, value);
+      }
+    );
+    portfolioService.getDetails.mockResolvedValue({
+      holdings: {
+        AAPL: {
+          allocationInPercentage: 1,
+          dataSource: DataSource.YAHOO,
+          symbol: 'AAPL',
+          valueInBaseCurrency: 1000
+        }
+      }
+    });
+    const generateTextSpy = jest.spyOn(subject, 'generateText');
+    generateTextSpy.mockResolvedValue({
+      text: 'Portfolio concentration is high.'
+    } as never);
+
+    await subject.chat({
+      languageCode: 'en',
+      query: 'Keep responses concise.',
+      sessionId: 'session-pref-tools-1',
+      userCurrency: 'USD',
+      userId: 'user-pref-tools'
+    });
+
+    const result = await subject.chat({
+      languageCode: 'en',
+      query: 'Show my portfolio allocation',
+      sessionId: 'session-pref-tools-2',
+      userCurrency: 'USD',
+      userId: 'user-pref-tools'
+    });
+
+    expect(result.answer.length).toBeGreaterThan(0);
+    expect(generateTextSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining(
+          'User preference: keep the response concise in 1-3 short sentences and avoid speculation.'
+        )
+      })
+    );
+  });
+
   it('runs rebalance and stress test tools for portfolio scenario prompts', async () => {
     portfolioService.getDetails.mockResolvedValue({
       holdings: {

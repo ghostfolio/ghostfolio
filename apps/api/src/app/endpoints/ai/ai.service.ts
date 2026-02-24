@@ -20,12 +20,17 @@ import {
 import {
   AI_AGENT_MEMORY_MAX_TURNS,
   buildAnswer,
+  createPreferenceSummaryResponse,
   getMemory,
+  getUserPreferences,
+  isPreferenceRecallQuery,
+  resolvePreferenceUpdate,
   resolveSymbols,
   runMarketDataLookup,
   runPortfolioAnalysis,
   runRiskAssessment,
-  setMemory
+  setMemory,
+  setUserPreferences
 } from './ai-agent.chat.helpers';
 import { addVerificationChecks } from './ai-agent.verification.helpers';
 import {
@@ -247,11 +252,17 @@ export class AiService {
 
     try {
       const memoryReadStartedAt = Date.now();
-      const memory = await getMemory({
-        redisCacheService: this.redisCacheService,
-        sessionId: resolvedSessionId,
-        userId
-      });
+      const [memory, userPreferences] = await Promise.all([
+        getMemory({
+          redisCacheService: this.redisCacheService,
+          sessionId: resolvedSessionId,
+          userId
+        }),
+        getUserPreferences({
+          redisCacheService: this.redisCacheService,
+          userId
+        })
+      ]);
       memoryReadInMs = Date.now() - memoryReadStartedAt;
 
       const plannedTools = determineToolPlan({
@@ -262,6 +273,11 @@ export class AiService {
         plannedTools,
         query: normalizedQuery
       });
+      const preferenceUpdate = resolvePreferenceUpdate({
+        query: normalizedQuery,
+        userPreferences
+      });
+      const effectiveUserPreferences = preferenceUpdate.userPreferences;
       const toolCalls: AiAgentToolCall[] = [];
       const citations: AiAgentChatResponse['citations'] = [];
       const verification: AiAgentChatResponse['verification'] = [];
@@ -438,6 +454,19 @@ export class AiService {
         query: normalizedQuery
       });
 
+      if (
+        policyDecision.route === 'direct' &&
+        policyDecision.blockReason === 'no_tool_query'
+      ) {
+        if (isPreferenceRecallQuery(normalizedQuery)) {
+          answer = createPreferenceSummaryResponse({
+            userPreferences: effectiveUserPreferences
+          });
+        } else if (preferenceUpdate.acknowledgement) {
+          answer = preferenceUpdate.acknowledgement;
+        }
+      }
+
       if (policyDecision.route === 'tools') {
         const llmGenerationStartedAt = Date.now();
         answer = await buildAnswer({
@@ -458,6 +487,7 @@ export class AiService {
           rebalancePlan,
           riskAssessment,
           stressTest,
+          userPreferences: effectiveUserPreferences,
           userCurrency
         });
         llmGenerationInMs = Date.now() - llmGenerationStartedAt;
@@ -525,6 +555,13 @@ export class AiService {
         sessionId: resolvedSessionId,
         userId
       });
+      if (preferenceUpdate.shouldPersist) {
+        await setUserPreferences({
+          redisCacheService: this.redisCacheService,
+          userId,
+          userPreferences: effectiveUserPreferences
+        });
+      }
       memoryWriteInMs = Date.now() - memoryWriteStartedAt;
 
       const response: AiAgentChatResponse = {

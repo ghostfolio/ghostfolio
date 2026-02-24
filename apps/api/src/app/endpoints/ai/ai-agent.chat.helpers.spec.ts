@@ -1,6 +1,12 @@
 import { DataSource } from '@prisma/client';
 
-import { buildAnswer } from './ai-agent.chat.helpers';
+import {
+  buildAnswer,
+  createPreferenceSummaryResponse,
+  getUserPreferences,
+  isPreferenceRecallQuery,
+  resolvePreferenceUpdate
+} from './ai-agent.chat.helpers';
 
 describe('AiAgentChatHelpers', () => {
   const originalLlmTimeout = process.env.AI_AGENT_LLM_TIMEOUT_IN_MS;
@@ -65,5 +71,41 @@ describe('AiAgentChatHelpers', () => {
     });
 
     expect(answer).toBe(generatedText);
+  });
+
+  it('parses and persists concise response-style preference updates', () => {
+    const result = resolvePreferenceUpdate({
+      query: 'Remember to keep responses concise.',
+      userPreferences: {}
+    });
+
+    expect(result.shouldPersist).toBe(true);
+    expect(result.userPreferences.responseStyle).toBe('concise');
+    expect(result.acknowledgement).toContain('Saved preference');
+  });
+
+  it('recognizes preference recall queries and renders deterministic summary', () => {
+    expect(isPreferenceRecallQuery('What do you remember about me?')).toBe(true);
+    expect(
+      createPreferenceSummaryResponse({
+        userPreferences: {
+          responseStyle: 'concise',
+          updatedAt: '2026-02-24T10:00:00.000Z'
+        }
+      })
+    ).toContain('response style: concise');
+  });
+
+  it('returns empty preferences for malformed user preference payload', async () => {
+    const redisCacheService = {
+      get: jest.fn().mockResolvedValue('{bad-json')
+    };
+
+    const result = await getUserPreferences({
+      redisCacheService: redisCacheService as never,
+      userId: 'user-1'
+    });
+
+    expect(result).toEqual({});
   });
 });

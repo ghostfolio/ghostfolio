@@ -216,6 +216,22 @@ Last updated: 2026-02-24
 - [x] Add/update unit tests for arithmetic direct replies and provider tracing/fallback behavior.
 - [x] Run focused verification (`test:ai` and `api:lint`) and update tracker notes.
 
+## Session Plan (2026-02-24, Cross-Session User Preference Memory)
+
+- [x] Add Redis-backed user preference storage keyed by `userId` (independent of `sessionId`).
+- [x] Parse explicit preference update prompts and persist preference changes across sessions.
+- [x] Apply persisted preference context to AI answer generation and direct-route responses where relevant.
+- [x] Add/update AI unit tests to verify cross-session preference continuity and deterministic behavior.
+- [x] Run focused verification (`test:ai`) and update tracker notes.
+
+## Session Plan (2026-02-24, Chat Details Popover UX)
+
+- [ ] Audit current AI chat response rendering and identify diagnostics shown inline.
+- [ ] Move diagnostics (confidence, citations, verification, observability) behind an info-triggered popover per assistant message.
+- [ ] Keep main assistant response focused on user-facing answer and retain feedback controls in primary view.
+- [ ] Update chat panel tests to assert info-trigger behavior and diagnostics visibility expectations.
+- [ ] Run focused frontend verification and update trackers (`Tasks.md`, `tasks/tasks.md`, `tasks/lessons.md`).
+
 ## Verification Notes
 
 - `nx run api:lint` completed successfully (existing workspace warnings only).
@@ -293,3 +309,6 @@ Last updated: 2026-02-24
   - `npx jest apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts apps/api/src/app/endpoints/ai/ai.service.spec.ts apps/api/src/app/endpoints/ai/ai-observability.service.spec.ts --config apps/api/jest.config.ts` (36/36 tests passed)
   - `npm run test:ai` (9/9 suites passed, 49/49 tests)
   - `npx nx run api:lint --verbose` (passes with existing workspace warnings)
+- Cross-session user preference memory verification (local, 2026-02-24):
+  - `npm run test:ai` (9/9 suites passed, 54/54 tests)
+  - `npx nx run api:lint` (passes with existing workspace warnings)

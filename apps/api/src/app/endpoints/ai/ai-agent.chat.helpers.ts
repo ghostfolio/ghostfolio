@@ -7,6 +7,7 @@ import ms from 'ms';
 
 import {
   AiAgentMemoryState,
+  AiAgentUserPreferenceState,
   MarketDataLookupResult,
   PortfolioAnalysisResult,
   RebalancePlanResult,
@@ -19,7 +20,16 @@ import {
 } from './ai-agent.utils';
 
 const AI_AGENT_MEMORY_TTL = ms('24 hours');
+const AI_AGENT_USER_PREFERENCES_TTL = ms('90 days');
 const DEFAULT_LLM_TIMEOUT_IN_MS = 3_500;
+const CLEAR_PREFERENCES_PATTERN =
+  /\b(?:clear|forget|reset)\s+(?:all\s+)?(?:my\s+)?(?:saved\s+)?preferences?\b/i;
+const CONCISE_RESPONSE_STYLE_PATTERN =
+  /\b(?:(?:concise|brief|short)\s+(?:answers?|responses?|replies?)|(?:answers?|responses?|replies?)\s+(?:concise|brief|short)|(?:answer|reply)\s+(?:briefly|concisely)|keep (?:the )?(?:answers?|responses?|replies?) (?:short|brief|concise))\b/i;
+const DETAILED_RESPONSE_STYLE_PATTERN =
+  /\b(?:(?:detailed|verbose|longer)\s+(?:answers?|responses?|replies?)|(?:answers?|responses?|replies?)\s+(?:detailed|verbose|longer)|(?:answer|reply)\s+(?:in detail|verbosely)|(?:more|extra)\s+detail)\b/i;
+const PREFERENCE_RECALL_PATTERN =
+  /\b(?:what do you remember about me|show (?:my )?preferences?|what are my preferences?|which preferences (?:do|did) you (?:remember|save))\b/i;
 
 export const AI_AGENT_MEMORY_MAX_TURNS = 10;
 
@@ -29,6 +39,122 @@ function getLlmTimeoutInMs() {
   return Number.isFinite(parsed) && parsed > 0
     ? parsed
     : DEFAULT_LLM_TIMEOUT_IN_MS;
+}
+
+function sanitizeUserPreferences(
+  preferences?: AiAgentUserPreferenceState
+): AiAgentUserPreferenceState {
+  if (!preferences || typeof preferences !== 'object') {
+    return {};
+  }
+
+  return {
+    responseStyle:
+      preferences.responseStyle === 'concise' || preferences.responseStyle === 'detailed'
+        ? preferences.responseStyle
+        : undefined,
+    updatedAt:
+      typeof preferences.updatedAt === 'string' ? preferences.updatedAt : undefined
+  };
+}
+
+function hasStoredPreferences(preferences: AiAgentUserPreferenceState) {
+  return Boolean(preferences.responseStyle);
+}
+
+function getResponseInstruction({
+  userPreferences
+}: {
+  userPreferences?: AiAgentUserPreferenceState;
+}) {
+  if (userPreferences?.responseStyle === 'concise') {
+    return `User preference: keep the response concise in 1-3 short sentences and avoid speculation.`;
+  }
+
+  if (userPreferences?.responseStyle === 'detailed') {
+    return `User preference: provide a detailed structured response with clear steps and avoid speculation.`;
+  }
+
+  return `Write a concise response with actionable insight and avoid speculation.`;
+}
+
+export function isPreferenceRecallQuery(query: string) {
+  return PREFERENCE_RECALL_PATTERN.test(query.trim().toLowerCase());
+}
+
+export function createPreferenceSummaryResponse({
+  userPreferences
+}: {
+  userPreferences: AiAgentUserPreferenceState;
+}) {
+  if (!hasStoredPreferences(userPreferences)) {
+    return 'I have no saved cross-session preferences yet.';
+  }
+
+  const sections: string[] = ['Saved cross-session preferences:'];
+
+  if (userPreferences.responseStyle) {
+    sections.push(`- response style: ${userPreferences.responseStyle}`);
+  }
+
+  return sections.join('\n');
+}
+
+export function resolvePreferenceUpdate({
+  query,
+  userPreferences
+}: {
+  query: string;
+  userPreferences: AiAgentUserPreferenceState;
+}): {
+  acknowledgement?: string;
+  shouldPersist: boolean;
+  userPreferences: AiAgentUserPreferenceState;
+} {
+  const normalizedPreferences = sanitizeUserPreferences(userPreferences);
+  const normalizedQuery = query.trim();
+
+  if (CLEAR_PREFERENCES_PATTERN.test(normalizedQuery)) {
+    return {
+      acknowledgement: hasStoredPreferences(normalizedPreferences)
+        ? 'Cleared your saved cross-session preferences.'
+        : 'No saved cross-session preferences were found.',
+      shouldPersist: hasStoredPreferences(normalizedPreferences),
+      userPreferences: {}
+    };
+  }
+
+  const wantsConcise = CONCISE_RESPONSE_STYLE_PATTERN.test(normalizedQuery);
+  const wantsDetailed = DETAILED_RESPONSE_STYLE_PATTERN.test(normalizedQuery);
+
+  if (wantsConcise === wantsDetailed) {
+    return {
+      shouldPersist: false,
+      userPreferences: normalizedPreferences
+    };
+  }
+
+  const responseStyle: AiAgentUserPreferenceState['responseStyle'] = wantsConcise
+    ? 'concise'
+    : 'detailed';
+
+  if (normalizedPreferences.responseStyle === responseStyle) {
+    return {
+      acknowledgement: `Preference already saved: response style is ${responseStyle}.`,
+      shouldPersist: false,
+      userPreferences: normalizedPreferences
+    };
+  }
+
+  return {
+    acknowledgement: `Saved preference: I will keep responses ${responseStyle} across sessions.`,
+    shouldPersist: true,
+    userPreferences: {
+      ...normalizedPreferences,
+      responseStyle,
+      updatedAt: new Date().toISOString()
+    }
+  };
 }
 
 export async function buildAnswer({
@@ -41,6 +167,7 @@ export async function buildAnswer({
   rebalancePlan,
   riskAssessment,
   stressTest,
+  userPreferences,
   userCurrency
 }: {
   generateText: ({
@@ -58,6 +185,7 @@ export async function buildAnswer({
   rebalancePlan?: RebalancePlanResult;
   riskAssessment?: RiskAssessmentResult;
   stressTest?: StressTestResult;
+  userPreferences?: AiAgentUserPreferenceState;
   userCurrency: string;
 }) {
   const fallbackSections: string[] = [];
@@ -169,7 +297,9 @@ export async function buildAnswer({
     );
   }
 
-  const fallbackAnswer = fallbackSections.join('\n');
+  const fallbackAnswer = userPreferences?.responseStyle === 'concise'
+    ? fallbackSections.slice(0, 2).join('\n')
+    : fallbackSections.join('\n');
   const llmPrompt = [
     `You are a neutral financial assistant.`,
     `User currency: ${userCurrency}`,
@@ -177,7 +307,7 @@ export async function buildAnswer({
     `Query: ${query}`,
     `Context summary:`,
     fallbackAnswer,
-    `Write a concise response with actionable insight and avoid speculation.`
+    getResponseInstruction({ userPreferences })
   ].join('\n');
   const llmTimeoutInMs = getLlmTimeoutInMs();
   const abortController = new AbortController();
@@ -255,6 +385,30 @@ export async function getMemory({
   }
 }
 
+export async function getUserPreferences({
+  redisCacheService,
+  userId
+}: {
+  redisCacheService: RedisCacheService;
+  userId: string;
+}): Promise<AiAgentUserPreferenceState> {
+  const rawPreferences = await redisCacheService.get(
+    getUserPreferencesKey({ userId })
+  );
+
+  if (!rawPreferences) {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(rawPreferences) as AiAgentUserPreferenceState;
+
+    return sanitizeUserPreferences(parsed);
+  } catch {
+    return {};
+  }
+}
+
 export function getMemoryKey({
   sessionId,
   userId
@@ -263,6 +417,10 @@ export function getMemoryKey({
   userId: string;
 }) {
   return `ai-agent-memory-${userId}-${sessionId}`;
+}
+
+export function getUserPreferencesKey({ userId }: { userId: string }) {
+  return `ai-agent-preferences-${userId}`;
 }
 
 export function resolveSymbols({
@@ -432,5 +590,21 @@ export async function setMemory({
     getMemoryKey({ sessionId, userId }),
     JSON.stringify(memory),
     AI_AGENT_MEMORY_TTL
+  );
+}
+
+export async function setUserPreferences({
+  redisCacheService,
+  userId,
+  userPreferences
+}: {
+  redisCacheService: RedisCacheService;
+  userId: string;
+  userPreferences: AiAgentUserPreferenceState;
+}) {
+  await redisCacheService.set(
+    getUserPreferencesKey({ userId }),
+    JSON.stringify(sanitizeUserPreferences(userPreferences)),
+    AI_AGENT_USER_PREFERENCES_TTL
   );
 }

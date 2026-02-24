@@ -35,3 +35,7 @@ Updated: 2026-02-24
 8. Context: Open-source submission strategy after publish constraints
    Mistake: Treated npm publication as the only completion path for contribution evidence
    Rule: When package publication is blocked, ship the tool in-repo and open upstream PRs in high-signal repositories to preserve external contribution progress.
+
+9. Context: Memory feature validation after chat/session persistence rollout
+   Mistake: Session-scoped memory shipped without an explicit user-scoped preference path for cross-session continuity.
+   Rule: When memory requirements mention user preferences, implement and test both session memory and user-level memory keyed independently from session IDs.

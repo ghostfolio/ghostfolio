@@ -18,6 +18,7 @@ Last updated: 2026-02-24
 | T-010 | Chat history persistence and simple direct-query handling | Complete | `apps/client/src/app/pages/portfolio/analysis/ai-chat-panel/ai-chat-panel.component.spec.ts`, `apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts`, `apps/api/src/app/endpoints/ai/ai.service.spec.ts` | Local implementation |
 | T-011 | Per-LLM LangSmith invocation tracing + production tracing env enablement | Complete | `apps/api/src/app/endpoints/ai/ai-observability.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai-performance.spec.ts`, `apps/api/src/app/endpoints/ai/evals/mvp-eval.runner.spec.ts`, `apps/api/src/app/endpoints/ai/evals/ai-quality-eval.spec.ts` | Local implementation + Railway variable update |
 | T-012 | LangChain wrapper enforcement for provider calls + arithmetic direct-response correction | Complete | `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `apps/api/src/app/endpoints/ai/ai-agent.utils.spec.ts`, `npm run test:ai` | Local implementation |
+| T-013 | Cross-session user preference memory (persisted by user, independent of chat session) | Complete | `apps/api/src/app/endpoints/ai/ai-agent.chat.helpers.spec.ts`, `apps/api/src/app/endpoints/ai/ai.service.spec.ts`, `npm run test:ai`, `npx nx run api:lint` | Local implementation |
 
 ## Notes
 
@@ -39,3 +40,4 @@ Last updated: 2026-02-24
 - Chat persistence + simple direct-query handling (2026-02-24): client chat panel now restores/persists session + bounded message history via localStorage and policy no-tool prompts now return assistant capability guidance for queries like "Who are you?".
 - Per-LLM LangSmith invocation tracing (2026-02-24): each provider call now records an explicit LangSmith `llm` run (provider/model/query/session/response metadata), and production Railway env now has tracing variables enabled.
 - Direct arithmetic no-tool behavior fix (2026-02-24): simple arithmetic prompts now return computed answers (for example `2+2 = 4`) instead of generic capability guidance.
+- Cross-session preference memory (2026-02-24): AI now persists explicit user response-style preferences in Redis by `userId`, recalls them across different `sessionId`s, and applies them to later AI responses.
