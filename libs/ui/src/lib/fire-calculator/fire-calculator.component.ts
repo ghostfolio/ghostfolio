@@ -13,13 +13,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
-  ViewChild
+  ViewChild,
+  output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormControl,
@@ -55,9 +55,9 @@ import {
   startOfMonth,
   sub
 } from 'date-fns';
-import { isNumber } from 'lodash';
+import { isNil, isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
 
@@ -90,37 +90,31 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;
 
-  @Output() annualInterestRateChanged = new EventEmitter<number>();
-  @Output() calculationCompleted =
-    new EventEmitter<FireCalculationCompleteEvent>();
-  @Output() projectedTotalAmountChanged = new EventEmitter<number>();
-  @Output() retirementDateChanged = new EventEmitter<Date>();
-  @Output() savingsRateChanged = new EventEmitter<number>();
-
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public calculatorForm = this.formBuilder.group({
-    // @ts-ignore
-    annualInterestRate: new FormControl<number>(undefined),
-    // @ts-ignore
-    paymentPerPeriod: new FormControl<number>(undefined),
-    // @ts-ignore
-    principalInvestmentAmount: new FormControl<number>(undefined),
-    // @ts-ignore
-    projectedTotalAmount: new FormControl<number>(undefined),
-    // @ts-ignore
-    retirementDate: new FormControl<Date>(undefined)
+    annualInterestRate: new FormControl<number | null>(null),
+    paymentPerPeriod: new FormControl<number | null>(null),
+    principalInvestmentAmount: new FormControl<number | null>(null),
+    projectedTotalAmount: new FormControl<number | null>(null),
+    retirementDate: new FormControl<Date | null>(null)
   });
   public chart: Chart<'bar'>;
   public isLoading = true;
   public minDate = addDays(new Date(), 1);
   public periodsToRetire = 0;
 
+  protected readonly annualInterestRateChanged = output<number>();
+  protected readonly calculationCompleted =
+    output<FireCalculationCompleteEvent>();
+  protected readonly projectedTotalAmountChanged = output<number>();
+  protected readonly retirementDateChanged = output<Date>();
+  protected readonly savingsRateChanged = output<number>();
+
   private readonly CONTRIBUTION_PERIOD = 12;
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
     addYears(new Date(), 10)
   );
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -136,46 +130,56 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     );
 
     this.calculatorForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => {
         this.initialize();
       });
 
     this.calculatorForm.valueChanges
-      .pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      .pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe(() => {
         const { projectedTotalAmount, retirementDate } =
           this.calculatorForm.getRawValue();
 
-        this.calculationCompleted.emit({
-          projectedTotalAmount,
-          retirementDate
-        });
+        if (projectedTotalAmount !== null && retirementDate !== null) {
+          this.calculationCompleted.emit({
+            projectedTotalAmount,
+            retirementDate
+          });
+        }
       });
 
     this.calculatorForm
       .get('annualInterestRate')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((annualInterestRate) => {
-        this.annualInterestRateChanged.emit(annualInterestRate);
+        if (annualInterestRate !== null) {
+          this.annualInterestRateChanged.emit(annualInterestRate);
+        }
       });
     this.calculatorForm
       .get('paymentPerPeriod')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((savingsRate) => {
-        this.savingsRateChanged.emit(savingsRate);
+        if (savingsRate !== null) {
+          this.savingsRateChanged.emit(savingsRate);
+        }
       });
     this.calculatorForm
       .get('projectedTotalAmount')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((projectedTotalAmount) => {
-        this.projectedTotalAmountChanged.emit(projectedTotalAmount);
+        if (projectedTotalAmount !== null) {
+          this.projectedTotalAmountChanged.emit(projectedTotalAmount);
+        }
       });
     this.calculatorForm
       .get('retirementDate')
-      ?.valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((retirementDate) => {
-        this.retirementDateChanged.emit(retirementDate);
+        if (retirementDate !== null) {
+          this.retirementDateChanged.emit(retirementDate);
+        }
       });
   }
 
@@ -248,7 +252,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     normalizedMonthAndYear: Date,
     datepicker: MatDatepicker<Date>
   ) {
-    const retirementDate = this.calculatorForm.get('retirementDate')!.value;
+    const retirementDate =
+      this.calculatorForm.get('retirementDate')?.value ??
+      this.DEFAULT_RETIREMENT_DATE;
     const newRetirementDate = setMonth(
       setYear(retirementDate, normalizedMonthAndYear.getFullYear()),
       normalizedMonthAndYear.getMonth()
@@ -259,9 +265,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.chart?.destroy();
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private initialize() {
@@ -295,8 +298,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
                     return `Total: ${new Intl.NumberFormat(this.locale, {
                       currency: this.currency,
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore: Only supported from ES2020 or later
                       currencyDisplay: 'code',
                       style: 'currency'
                     }).format(totalAmount)}`;
@@ -434,12 +435,16 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   private getPeriodsToRetire(): number {
-    if (this.calculatorForm.get('projectedTotalAmount')?.value) {
+    const projectedTotalAmount = this.calculatorForm.get(
+      'projectedTotalAmount'
+    )?.value;
+
+    if (projectedTotalAmount) {
       let periods = this.fireCalculatorService.calculatePeriodsToRetire({
         P: this.getP(),
         PMT: this.getPMT(),
         r: this.getR(),
-        totalAmount: this.calculatorForm.get('projectedTotalAmount')!.value
+        totalAmount: projectedTotalAmount
       });
 
       if (periods === Infinity) {
@@ -460,13 +465,17 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getPMT(): number {
-    return this.calculatorForm.get('paymentPerPeriod')!.value;
+  private getPMT() {
+    return this.calculatorForm.get('paymentPerPeriod')?.value ?? 0;
   }
 
   private getProjectedTotalAmount() {
-    if (this.calculatorForm.get('projectedTotalAmount')?.value) {
-      return this.calculatorForm.get('projectedTotalAmount')!.value;
+    const projectedTotalAmount = this.calculatorForm.get(
+      'projectedTotalAmount'
+    )?.value;
+
+    if (!isNil(projectedTotalAmount)) {
+      return projectedTotalAmount;
     }
 
     const { totalAmount } =
@@ -481,12 +490,12 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   private getR() {
-    return this.calculatorForm.get('annualInterestRate')!.value / 100;
+    return (this.calculatorForm.get('annualInterestRate')?.value ?? 0) / 100;
   }
 
   private getRetirementDate(): Date | undefined {
     if (this.periodsToRetire === Number.MAX_SAFE_INTEGER) {
-      return undefined;
+      return this.DEFAULT_RETIREMENT_DATE;
     }
 
     const monthsToRetire = this.periodsToRetire % 12;
