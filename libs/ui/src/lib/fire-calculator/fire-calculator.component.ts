@@ -368,7 +368,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
     // Calculate retirement date
     // if we want to retire at month x, we need the projectedTotalAmount at month x-1
-    // @ts-ignore
     const lastPeriodDate = sub(this.getRetirementDate(), { months: 1 });
     const yearsToRetire = lastPeriodDate.getFullYear() - currentYear;
 
@@ -493,7 +492,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     return (this.calculatorForm.get('annualInterestRate')?.value ?? 0) / 100;
   }
 
-  private getRetirementDate(): Date | undefined {
+  private getRetirementDate(): Date {
     if (this.periodsToRetire === Number.MAX_SAFE_INTEGER) {
       return this.DEFAULT_RETIREMENT_DATE;
     }
