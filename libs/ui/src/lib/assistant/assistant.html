@@ -186,7 +186,7 @@
     <div class="p-3">
       <gf-portfolio-filter-form
         #portfolioFilterForm
-        [accounts]="user?.accounts"
+        [accounts]="user?.accounts ?? []"
         [assetClasses]="assetClasses"
         [formControl]="portfolioFilterFormControl"
         [holdings]="holdings"
