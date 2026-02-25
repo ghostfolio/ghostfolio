@@ -516,3 +516,81 @@
     </div>
   </div>
 </div>
+
+<div class="gauntlet-chat-widget">
+  @if (isGauntletChatOpen) {
+    <mat-card class="gauntlet-chat-panel" appearance="outlined">
+      <mat-card-content>
+        <div class="align-items-center d-flex gauntlet-chat-header justify-content-between mb-2">
+          <div class="h6 m-0">Gauntlet AI</div>
+          <button class="no-min-width px-2" mat-stroked-button (click)="toggleGauntletChat()">
+            x
+          </button>
+        </div>
+
+        <div class="gauntlet-chat-messages">
+          @if (!gauntletChatMessages.length && !isLoadingGauntletChat) {
+            <div class="gauntlet-chat-empty">
+              Ask about allocation, concentration risk, and portfolio overview.
+            </div>
+          }
+
+          @for (message of gauntletChatMessages; track $index) {
+            <div
+              class="gauntlet-chat-row"
+              [class.gauntlet-chat-row-assistant]="message.role === 'assistant'"
+              [class.gauntlet-chat-row-user]="message.role === 'user'"
+            >
+              <div
+                class="gauntlet-chat-bubble"
+                [class.gauntlet-chat-bubble-assistant]="message.role === 'assistant'"
+                [class.gauntlet-chat-bubble-user]="message.role === 'user'"
+              >
+                {{ message.text }}
+              </div>
+            </div>
+          }
+
+          @if (isLoadingGauntletChat) {
+            <div class="gauntlet-chat-row gauntlet-chat-row-assistant">
+              <div class="gauntlet-chat-bubble gauntlet-chat-bubble-assistant">
+                <mat-spinner class="d-inline-block mr-2" [diameter]="14" />
+                AI is thinking...
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="gauntlet-chat-input">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Type your question...</mat-label>
+            <input
+              matInput
+              [(ngModel)]="gauntletMessage"
+              (keyup.enter)="sendGauntletMessage()"
+              placeholder="e.g. Where is my concentration risk?"
+            />
+          </mat-form-field>
+          <button
+            class="gauntlet-chat-send"
+            mat-fab
+            color="primary"
+            [disabled]="isLoadingGauntletChat || !gauntletMessage?.trim()"
+            (click)="sendGauntletMessage()"
+          >
+            >
+          </button>
+        </div>
+        @if (gauntletResponse?.traceId) {
+          <div class="gauntlet-chat-trace mt-1">
+            Trace: {{ gauntletResponse?.traceId }}
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <button class="gauntlet-chat-launcher" mat-fab color="primary" (click)="toggleGauntletChat()">
+    AI
+  </button>
+</div>

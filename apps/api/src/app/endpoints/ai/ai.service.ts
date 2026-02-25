@@ -41,13 +41,8 @@ export class AiService {
   ) {}
 
   public async generateText({ prompt }: { prompt: string }) {
-    const openRouterApiKey = await this.propertyService.getByKey<string>(
-      PROPERTY_API_KEY_OPENROUTER
-    );
-
-    const openRouterModel = await this.propertyService.getByKey<string>(
-      PROPERTY_OPENROUTER_MODEL
-    );
+    const { apiKey: openRouterApiKey, model: openRouterModel } =
+      await this.getOpenRouterConfig();
 
     const openRouterService = createOpenRouter({
       apiKey: openRouterApiKey
@@ -57,6 +52,57 @@ export class AiService {
       prompt,
       model: openRouterService.chat(openRouterModel)
     });
+  }
+
+  public async generateTextWithSystem({
+    systemPrompt,
+    userPrompt
+  }: {
+    systemPrompt: string;
+    userPrompt: string;
+  }) {
+    const { apiKey: openRouterApiKey, model: openRouterModel } =
+      await this.getOpenRouterConfig();
+
+    const openRouterService = createOpenRouter({
+      apiKey: openRouterApiKey
+    });
+
+    const prompt = `${systemPrompt}\n\nUser question:\n${userPrompt}`;
+
+    return generateText({
+      prompt,
+      model: openRouterService.chat(openRouterModel)
+    });
+  }
+
+  private async getOpenRouterConfig() {
+    const envApiKey = process.env.OPENROUTER_API_KEY?.trim();
+    const envModel = process.env.OPENROUTER_MODEL?.trim();
+
+    const propertyApiKey = await this.propertyService.getByKey<string>(
+      PROPERTY_API_KEY_OPENROUTER
+    );
+    const propertyModel = await this.propertyService.getByKey<string>(
+      PROPERTY_OPENROUTER_MODEL
+    );
+
+    const apiKey = envApiKey || propertyApiKey?.trim();
+    const model = envModel || propertyModel?.trim();
+
+    if (!apiKey) {
+      throw new Error(
+        'OpenRouter API key is missing. Set OPENROUTER_API_KEY in .env or API_KEY_OPENROUTER in property settings.'
+      );
+    }
+
+    if (!model) {
+      throw new Error(
+        'OpenRouter model is missing. Set OPENROUTER_MODEL in .env or OPENROUTER_MODEL in property settings.'
+      );
+    }
+
+    return { apiKey, model };
   }
 
   public async getPrompt({

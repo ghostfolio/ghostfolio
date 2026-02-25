@@ -44,6 +44,7 @@ import type { ActivityResponse } from './responses/activity-response.interface';
 import type { AdminUserResponse } from './responses/admin-user-response.interface';
 import type { AdminUsersResponse } from './responses/admin-users-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
+import type { AiChatResponse } from './responses/ai-chat-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
@@ -117,6 +118,7 @@ export {
   AdminUserResponse,
   AdminUsersResponse,
   AiPromptResponse,
+  AiChatResponse,
   ApiKeyResponse,
   AssertionCredentialJSON,
   AssetClassSelectorOption,

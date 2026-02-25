@@ -9,6 +9,7 @@ import {
   PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPosition,
+  AiChatResponse,
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
@@ -30,9 +31,12 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
@@ -52,9 +56,12 @@ import { takeUntil } from 'rxjs/operators';
     GfPremiumIndicatorComponent,
     GfToggleComponent,
     GfValueComponent,
+    FormsModule,
     IonIcon,
     MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     NgxSkeletonLoaderModule,
@@ -101,8 +108,17 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
   public user: User;
+  public isLoadingGauntletChat = false;
+  public isGauntletChatOpen = false;
+  public gauntletMessage = '';
+  public gauntletResponse?: AiChatResponse;
+  public gauntletChatMessages: Array<{
+    role: 'assistant' | 'user';
+    text: string;
+  }> = [];
 
   private unsubscribeSubject = new Subject<void>();
+  private readonly gauntletSessionId = 'analysis-page-session';
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -225,6 +241,77 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  public sendGauntletMessage() {
+    const message = this.gauntletMessage?.trim();
+
+    if (!message) {
+      return;
+    }
+
+    this.isLoadingGauntletChat = true;
+    this.gauntletResponse = undefined;
+    this.gauntletChatMessages.push({
+      role: 'user',
+      text: message
+    });
+    this.gauntletMessage = '';
+
+    this.dataService
+      .postAiChat({
+        filters: this.userService.getFilters(),
+        message,
+        sessionId: this.gauntletSessionId
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: (response) => {
+          this.gauntletResponse = response;
+          this.gauntletChatMessages.push({
+            role: 'assistant',
+            text: this.composeAssistantMessage(response)
+          });
+          if (response.warnings?.length) {
+            this.gauntletChatMessages.push({
+              role: 'assistant',
+              text: `Alerts: ${response.warnings.join(' | ')}`
+            });
+          }
+          this.isLoadingGauntletChat = false;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: () => {
+          this.isLoadingGauntletChat = false;
+          this.gauntletChatMessages.push({
+            role: 'assistant',
+            text: 'Sorry, I could not fetch a response. Please try again.'
+          });
+          this.snackBar.open('Failed to get AI response', undefined, {
+            duration: ms('4 seconds')
+          });
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+
+  public toggleGauntletChat() {
+    this.isGauntletChatOpen = !this.isGauntletChatOpen;
+  }
+
+  private composeAssistantMessage(response: AiChatResponse): string {
+    return this.cleanAssistantText(response.answer);
+  }
+
+  private cleanAssistantText(text: string): string {
+    const withoutMarkdownHeaders = text.replace(/^#{1,6}\s*/gm, '');
+    const withoutDuplicateMeta = withoutMarkdownHeaders
+      .replace(/^\s*Warnings?\s*:.*$/gim, '')
+      .replace(/^\s*Confidence\s*:.*$/gim, '')
+      .replace(/^\s*Latency\s*:.*$/gim, '')
+      .trim();
+
+    return withoutDuplicateMeta;
   }
 
   private fetchDividendsAndInvestments() {

@@ -4,4 +4,101 @@
   .chart-container {
     aspect-ratio: 16 / 9;
   }
+
+  .gauntlet-chat-widget {
+    bottom: 24px;
+    position: fixed;
+    right: 24px;
+    z-index: 1000;
+  }
+
+  .gauntlet-chat-panel {
+    margin-bottom: 12px;
+    max-width: min(420px, calc(100vw - 32px));
+    min-width: min(360px, calc(100vw - 32px));
+    overflow: hidden;
+  }
+
+  .gauntlet-chat-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
+  }
+
+  .gauntlet-chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 46vh;
+    min-height: 180px;
+    overflow-y: auto;
+    padding: 8px 2px;
+  }
+
+  .gauntlet-chat-empty {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin: auto 0;
+    text-align: center;
+  }
+
+  .gauntlet-chat-row {
+    display: flex;
+    width: 100%;
+  }
+
+  .gauntlet-chat-row-user {
+    justify-content: flex-end;
+  }
+
+  .gauntlet-chat-row-assistant {
+    justify-content: flex-start;
+  }
+
+  .gauntlet-chat-bubble {
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    max-width: 84%;
+    padding: 10px 12px;
+    white-space: pre-wrap;
+  }
+
+  .gauntlet-chat-bubble-user {
+    background: #2a74ff;
+    color: #ffffff;
+  }
+
+  .gauntlet-chat-bubble-assistant {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f1f3f4;
+  }
+
+  .gauntlet-chat-input {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .gauntlet-chat-send {
+    flex-shrink: 0;
+    height: 40px;
+    width: 40px;
+  }
+
+  .gauntlet-chat-trace {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.75rem;
+  }
+
+  .gauntlet-chat-response {
+    font-size: 0.9rem;
+    line-height: 1.35;
+    white-space: pre-wrap;
+  }
+
+  .gauntlet-chat-launcher {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
 }

@@ -1,5 +1,12 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { InMemorySessionStore } from '@ghostfolio/api/app/gauntlet-ai/memory/in-memory-session.store';
+import { GauntletAiOrchestratorService } from '@ghostfolio/api/app/gauntlet-ai/orchestrator/gauntlet-ai-orchestrator.service';
+import { AllocationBreakdownTool } from '@ghostfolio/api/app/gauntlet-ai/tools/allocation-breakdown.tool';
+import { PortfolioAnalysisTool } from '@ghostfolio/api/app/gauntlet-ai/tools/portfolio-analysis.tool';
+import { RiskFlagsTool } from '@ghostfolio/api/app/gauntlet-ai/tools/risk-flags.tool';
+import { ToolRegistryService } from '@ghostfolio/api/app/gauntlet-ai/tools/tool-registry.service';
+import { ConcentrationVerificationService } from '@ghostfolio/api/app/gauntlet-ai/verification/concentration-verification.service';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
@@ -49,10 +56,17 @@ import { AiService } from './ai.service';
     AccountBalanceService,
     AccountService,
     AiService,
+    AllocationBreakdownTool,
     CurrentRateService,
+    ConcentrationVerificationService,
+    GauntletAiOrchestratorService,
+    InMemorySessionStore,
     MarketDataService,
+    PortfolioAnalysisTool,
     PortfolioCalculatorFactory,
     PortfolioService,
+    RiskFlagsTool,
+    ToolRegistryService,
     RulesService
   ]
 })
