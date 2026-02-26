@@ -69,12 +69,11 @@ export class GfPortfolioFilterFormComponent
     tag: FormControl<string | null>;
   }>;
 
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private formBuilder: FormBuilder
-  ) {
+  public constructor() {
     this.filterForm = this.formBuilder.group({
       account: new FormControl<string | null>(null),
       assetClass: new FormControl<string | null>(null),
