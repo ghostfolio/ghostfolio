@@ -13,7 +13,8 @@ import {
   OnChanges,
   OnInit,
   forwardRef,
-  inject
+  inject,
+  input
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -56,11 +57,12 @@ import { PortfolioFilterFormValue } from './interfaces';
 export class GfPortfolioFilterFormComponent
   implements ControlValueAccessor, OnInit, OnChanges
 {
-  @Input() accounts: AccountWithPlatform[] = [];
   @Input() assetClasses: Filter[] = [];
   @Input() holdings: PortfolioPosition[] = [];
   @Input() tags: Filter[] = [];
   @Input() disabled = false;
+
+  public readonly accounts = input<AccountWithPlatform[]>([]);
 
   public filterForm: FormGroup<{
     account: FormControl<string | null>;
