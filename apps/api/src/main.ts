@@ -16,11 +16,23 @@ import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
+import { ProxyAgent, setGlobalDispatcher } from 'undici';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
+  // Configure HTTP/HTTPS proxy for fetch() - Node.js fetch does NOT automatically
+  // use HTTP_PROXY/HTTPS_PROXY env vars (unless Node 22.21+ with NODE_USE_ENV_PROXY=1)
+  const proxyUrl =
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy ||
+    process.env.HTTP_PROXY ||
+    process.env.http_proxy;
+  if (proxyUrl) {
+    setGlobalDispatcher(new ProxyAgent(proxyUrl));
+    Logger.log(`Using proxy: ${proxyUrl.replace(/:[^:@]+@/, ':****@')}`);
+  }
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
   let customLogLevels: LogLevel[];
