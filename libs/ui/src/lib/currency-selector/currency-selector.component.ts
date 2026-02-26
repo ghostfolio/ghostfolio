@@ -11,6 +11,7 @@ import {
   OnInit,
   ViewChild,
   inject,
+  input,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -66,14 +67,14 @@ export class GfCurrencySelectorComponent
   @ViewChild('currencyAutocomplete')
   public currencyAutocomplete: MatAutocomplete;
 
-  @Input() private currencies: string[] = [];
   @Input() private formControlName: string;
 
   public control = new FormControl<string | null>(null);
+  public readonly currencies = input<string[]>([]);
   public filteredCurrencies: string[] = [];
 
-  private destroyRef = inject(DestroyRef);
-  private input = viewChild.required(MatInput);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly input = viewChild.required(MatInput);
 
   public constructor(
     public readonly _elementRef: ElementRef,
@@ -112,7 +113,7 @@ export class GfCurrencySelectorComponent
 
       if (control) {
         this.value =
-          this.currencies.find((value) => {
+          this.currencies().find((value) => {
             return value === control.value;
           }) ?? null;
       }
@@ -131,7 +132,7 @@ export class GfCurrencySelectorComponent
         takeUntilDestroyed(this.destroyRef),
         startWith(''),
         map((value) => {
-          return value ? this.filter(value) : this.currencies.slice();
+          return value ? this.filter(value) : this.currencies().slice();
         })
       )
       .subscribe((values) => {
@@ -154,7 +155,7 @@ export class GfCurrencySelectorComponent
   private filter(value: string) {
     const filterValue = value.toLowerCase();
 
-    return this.currencies.filter((currency) => {
+    return this.currencies().filter((currency) => {
       return currency.toLowerCase().startsWith(filterValue);
     });
   }
