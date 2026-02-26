@@ -8,7 +8,6 @@ import {
   DoCheck,
   ElementRef,
   Input,
-  OnDestroy,
   OnInit,
   ViewChild,
   inject,
@@ -62,7 +61,7 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 })
 export class GfCurrencySelectorComponent
   extends AbstractMatFormField<string | null>
-  implements DoCheck, OnDestroy, OnInit
+  implements DoCheck, OnInit
 {
   @ViewChild('currencyAutocomplete')
   public currencyAutocomplete: MatAutocomplete;
@@ -150,10 +149,6 @@ export class GfCurrencySelectorComponent
 
   public onUpdateCurrency({ option }: { option: MatOption<string> }) {
     super.value = option.value;
-  }
-
-  public ngOnDestroy() {
-    super.ngOnDestroy();
   }
 
   private filter(value: string) {
