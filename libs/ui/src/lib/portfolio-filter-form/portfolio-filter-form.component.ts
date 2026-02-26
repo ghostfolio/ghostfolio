@@ -8,12 +8,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
-  forwardRef
+  forwardRef,
+  inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -25,7 +27,6 @@ import {
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { Subject, takeUntil } from 'rxjs';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { PortfolioFilterFormValue } from './interfaces';
@@ -53,7 +54,7 @@ import { PortfolioFilterFormValue } from './interfaces';
   templateUrl: './portfolio-filter-form.component.html'
 })
 export class GfPortfolioFilterFormComponent
-  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges
 {
   @Input() accounts: AccountWithPlatform[] = [];
   @Input() assetClasses: Filter[] = [];
@@ -68,7 +69,7 @@ export class GfPortfolioFilterFormComponent
     tag: FormControl<string | null>;
   }>;
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -84,7 +85,7 @@ export class GfPortfolioFilterFormComponent
 
   public ngOnInit() {
     this.filterForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
         this.onChange(value as PortfolioFilterFormValue);
         this.onTouched();
@@ -164,11 +165,6 @@ export class GfPortfolioFilterFormComponent
     } else {
       this.filterForm.reset({}, { emitEvent: false });
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
