@@ -64,7 +64,7 @@
       <mat-label i18n>Asset Class</mat-label>
       <mat-select formControlName="assetClass">
         <mat-option [value]="null" />
-        @for (assetClass of assetClasses; track assetClass.id) {
+        @for (assetClass of assetClasses(); track assetClass.id) {
           <mat-option [value]="assetClass.id">{{
             assetClass.label
           }}</mat-option>
