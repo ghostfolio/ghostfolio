@@ -57,12 +57,12 @@ import { PortfolioFilterFormValue } from './interfaces';
 export class GfPortfolioFilterFormComponent
   implements ControlValueAccessor, OnInit, OnChanges
 {
-  @Input() holdings: PortfolioPosition[] = [];
   @Input() tags: Filter[] = [];
   @Input() disabled = false;
 
   public readonly accounts = input<AccountWithPlatform[]>([]);
   public readonly assetClasses = input<Filter[]>([]);
+  public readonly holdings = input<PortfolioPosition[]>([]);
 
   public filterForm: FormGroup<{
     account: FormControl<string | null>;
