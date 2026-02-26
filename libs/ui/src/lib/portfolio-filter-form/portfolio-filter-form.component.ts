@@ -61,7 +61,12 @@ export class GfPortfolioFilterFormComponent
   @Input() tags: Filter[] = [];
   @Input() disabled = false;
 
-  public filterForm: FormGroup;
+  public filterForm: FormGroup<{
+    account: FormControl<string | null>;
+    assetClass: FormControl<string | null>;
+    holding: FormControl<PortfolioPosition | null>;
+    tag: FormControl<string | null>;
+  }>;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -70,10 +75,10 @@ export class GfPortfolioFilterFormComponent
     private formBuilder: FormBuilder
   ) {
     this.filterForm = this.formBuilder.group({
-      account: new FormControl<string>(null),
-      assetClass: new FormControl<string>(null),
-      holding: new FormControl<PortfolioPosition>(null),
-      tag: new FormControl<string>(null)
+      account: new FormControl<string | null>(null),
+      assetClass: new FormControl<string | null>(null),
+      holding: new FormControl<PortfolioPosition | null>(null),
+      tag: new FormControl<string | null>(null)
     });
   }
 
