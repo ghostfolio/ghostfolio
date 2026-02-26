@@ -9,7 +9,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  viewChild
 } from '@angular/core';
 import {
   FormControl,
@@ -67,11 +68,10 @@ export class GfCurrencySelectorComponent
   @Input() private currencies: string[] = [];
   @Input() private formControlName: string;
 
-  @ViewChild(MatInput) private input: MatInput;
-
   public control = new FormControl<string | null>(null);
   public filteredCurrencies: string[] = [];
 
+  private input = viewChild.required(MatInput);
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -87,7 +87,7 @@ export class GfCurrencySelectorComponent
   }
 
   public get empty() {
-    return this.input?.empty;
+    return this.input().empty;
   }
 
   public set value(value: string | null) {
@@ -96,7 +96,7 @@ export class GfCurrencySelectorComponent
   }
 
   public focus() {
-    this.input.focus();
+    this.input().focus();
   }
 
   public ngOnInit() {
