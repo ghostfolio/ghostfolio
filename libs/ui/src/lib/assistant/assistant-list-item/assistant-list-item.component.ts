@@ -7,12 +7,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   HostBinding,
   Input,
   OnChanges,
-  Output,
-  ViewChild
+  ViewChild,
+  inject,
+  output
 } from '@angular/core';
 import { Params, RouterModule } from '@angular/router';
 
@@ -33,21 +33,23 @@ export class GfAssistantListItemComponent
   implements FocusableOption, OnChanges
 {
   @HostBinding('attr.tabindex') tabindex = -1;
-  @HostBinding('class.has-focus') get getHasFocus() {
-    return this.hasFocus;
-  }
 
   @Input() item: SearchResultItem;
 
-  @Output() clicked = new EventEmitter<void>();
-
-  @ViewChild('link') public linkElement: ElementRef;
+  @ViewChild('link') public linkElement: ElementRef<HTMLAnchorElement>;
 
   public hasFocus = false;
   public queryParams: Params;
   public routerLink: string[];
 
-  public constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  protected readonly clicked = output<void>();
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+  @HostBinding('class.has-focus')
+  public get getHasFocus() {
+    return this.hasFocus;
+  }
 
   public ngOnChanges() {
     if (this.item?.mode === SearchMode.ACCOUNT) {
@@ -65,7 +67,7 @@ export class GfAssistantListItemComponent
       };
 
       this.routerLink =
-        internalRoutes.adminControl.subRoutes.marketData.routerLink;
+        internalRoutes.adminControl.subRoutes?.marketData.routerLink ?? [];
     } else if (this.item?.mode === SearchMode.HOLDING) {
       this.queryParams = {
         dataSource: this.item.dataSource,
