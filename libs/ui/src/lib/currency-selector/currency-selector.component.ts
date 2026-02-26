@@ -4,14 +4,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   DoCheck,
   ElementRef,
   Input,
   OnDestroy,
   OnInit,
   ViewChild,
+  inject,
   viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroupDirective,
@@ -29,8 +32,7 @@ import {
   MatFormFieldModule
 } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
-import { Subject } from 'rxjs';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 
@@ -71,8 +73,8 @@ export class GfCurrencySelectorComponent
   public control = new FormControl<string | null>(null);
   public filteredCurrencies: string[] = [];
 
+  private destroyRef = inject(DestroyRef);
   private input = viewChild.required(MatInput);
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     public readonly _elementRef: ElementRef,
@@ -118,7 +120,7 @@ export class GfCurrencySelectorComponent
     }
 
     this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         if (super.value) {
           super.value = null;
@@ -127,7 +129,7 @@ export class GfCurrencySelectorComponent
 
     this.control.valueChanges
       .pipe(
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         startWith(''),
         map((value) => {
           return value ? this.filter(value) : this.currencies.slice();
@@ -152,9 +154,6 @@ export class GfCurrencySelectorComponent
 
   public ngOnDestroy() {
     super.ngOnDestroy();
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private filter(value: string) {
