@@ -7,7 +7,6 @@ import {
   DestroyRef,
   DoCheck,
   ElementRef,
-  Input,
   OnInit,
   ViewChild,
   inject,
@@ -67,11 +66,10 @@ export class GfCurrencySelectorComponent
   @ViewChild('currencyAutocomplete')
   public currencyAutocomplete: MatAutocomplete;
 
-  @Input() private formControlName: string;
-
-  public control = new FormControl<string | null>(null);
-  public readonly currencies = input<string[]>([]);
+  public readonly control = new FormControl<string | null>(null);
+  public readonly currencies = input.required<string[]>();
   public filteredCurrencies: string[] = [];
+  public readonly formControlName = input.required<string>();
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly input = viewChild.required(MatInput);
@@ -109,7 +107,7 @@ export class GfCurrencySelectorComponent
     const formGroup = this.formGroupDirective.form;
 
     if (formGroup) {
-      const control = formGroup.get(this.formControlName);
+      const control = formGroup.get(this.formControlName());
 
       if (control) {
         this.value =
