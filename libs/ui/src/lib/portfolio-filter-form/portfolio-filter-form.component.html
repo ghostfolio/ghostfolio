@@ -53,7 +53,7 @@
       <mat-label i18n>Tag</mat-label>
       <mat-select formControlName="tag">
         <mat-option [value]="null" />
-        @for (tag of tags; track tag.id) {
+        @for (tag of tags(); track tag.id) {
           <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
         }
       </mat-select>

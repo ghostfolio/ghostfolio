@@ -57,12 +57,12 @@ import { PortfolioFilterFormValue } from './interfaces';
 export class GfPortfolioFilterFormComponent
   implements ControlValueAccessor, OnInit, OnChanges
 {
-  @Input() tags: Filter[] = [];
   @Input() disabled = false;
 
   public readonly accounts = input<AccountWithPlatform[]>([]);
   public readonly assetClasses = input<Filter[]>([]);
   public readonly holdings = input<PortfolioPosition[]>([]);
+  public readonly tags = input<Filter[]>([]);
 
   public filterForm: FormGroup<{
     account: FormControl<string | null>;
@@ -123,7 +123,7 @@ export class GfPortfolioFilterFormComponent
 
     const tagControl = this.filterForm.get('tag');
 
-    if (this.tags.length === 0) {
+    if (this.tags().length === 0) {
       tagControl?.disable({ emitEvent: false });
     } else if (!this.disabled) {
       tagControl?.enable({ emitEvent: false });
