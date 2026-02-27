@@ -15,7 +15,10 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
-import { validateObjectForForm } from '@ghostfolio/common/utils';
+import {
+  validateObjectForForm,
+  jsonValidator
+} from '@ghostfolio/common/utils/form.util';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
@@ -145,7 +148,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
-    countries: '',
+    countries: ['', jsonValidator()],
     currency: '',
     historicalData: this.formBuilder.group({
       csvString: ''
@@ -154,14 +157,14 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
       defaultMarketPrice: null,
-      headers: JSON.stringify({}),
+      headers: [JSON.stringify({}), jsonValidator()],
       locale: '',
       mode: '',
       selector: '',
       url: ''
     }),
-    sectors: '',
-    symbolMapping: '',
+    sectors: ['', jsonValidator()],
+    symbolMapping: ['', jsonValidator()],
     url: ''
   });
 
