@@ -5,7 +5,11 @@ import {
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getCurrencyFromSymbol,
+  isCurrency
+} from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   AssetClassSelectorOption,
@@ -138,7 +142,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     });
 
   public assetSubClassOptions: AssetClassSelectorOption[] = [];
-
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
   public assetProfileForm = this.formBuilder.group({
@@ -180,12 +183,14 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   );
 
   public benchmarks: Partial<SymbolProfile>[];
+  public canEditAssetProfile = true;
 
   public countries: {
     [code: string]: { name: string; value: number };
   };
 
   public currencies: string[] = [];
+
   public dateRangeOptions = [
     {
       label: $localize`Current week` + ' (' + $localize`WTD` + ')',
@@ -260,7 +265,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   }
 
   public get canSaveAssetProfileIdentifier() {
-    return !this.assetProfileForm.dirty;
+    return !this.assetProfileForm.dirty && this.canEditAssetProfile;
   }
 
   public ngOnInit() {
@@ -321,6 +326,10 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
+
+        this.canEditAssetProfile = !isCurrency(
+          getCurrencyFromSymbol(this.data.symbol)
+        );
 
         this.assetClassLabel = translate(this.assetProfile?.assetClass);
         this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
@@ -390,6 +399,10 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
           url: this.assetProfile?.url ?? ''
         });
 
+        if (!this.canEditAssetProfile) {
+          this.assetProfileForm.disable();
+        }
+
         this.assetProfileForm.markAsPristine();
 
         this.changeDetectorRef.markForCheck();
@@ -399,7 +412,9 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onCancelEditAssetProfileIdentifierMode() {
     this.isEditAssetProfileIdentifierMode = false;
 
-    this.assetProfileForm.enable();
+    if (this.canEditAssetProfile) {
+      this.assetProfileForm.enable();
+    }
 
     this.assetProfileIdentifierForm.reset();
   }
