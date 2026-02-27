@@ -1,0 +1,123 @@
+<gf-dialog-header
+  [deviceType]="data.deviceType"
+  [title]="dateLabel"
+  (closeButtonClicked)="onClose()"
+/>
+
+<div class="flex-grow-1 overflow-auto px-3" mat-dialog-content>
+  <!-- Performance summary -->
+  <div class="d-flex flex-wrap gap-4 mb-4">
+    <div class="performance-metric">
+      <div class="metric-label" i18n>Portfolio Change</div>
+      <gf-value
+        [colorizeSign]="true"
+        [isCurrency]="true"
+        [locale]="data.locale"
+        [unit]="data.baseCurrency"
+        [value]="data.netPerformance"
+      />
+    </div>
+
+    @if (data.realizedProfit !== 0) {
+      <div class="performance-metric">
+        <div class="metric-label" i18n>Dividend &amp; Interest</div>
+        <gf-value
+          [colorizeSign]="true"
+          [isCurrency]="true"
+          [locale]="data.locale"
+          [unit]="data.baseCurrency"
+          [value]="data.realizedProfit"
+        />
+      </div>
+    }
+
+    <div class="performance-metric">
+      <div class="metric-label" i18n>Activities</div>
+      <gf-value [value]="data.activitiesCount" />
+    </div>
+  </div>
+
+  <!-- Activities list -->
+  @if (activities.length > 0) {
+    <h4 class="mb-2" i18n>Activities</h4>
+    <div class="activities-list mb-4">
+      <table class="w-100">
+        <thead>
+          <tr>
+            <th i18n>Type</th>
+            <th i18n>Symbol</th>
+            <th class="text-end" i18n>Quantity</th>
+            <th class="text-end" i18n>Unit Price</th>
+            <th class="text-end" i18n>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (activity of activities; track activity.id) {
+            <tr>
+              <td>
+                <span
+                  class="activity-type"
+                  [ngClass]="activity.type?.toLowerCase()"
+                >
+                  {{ activity.type }}
+                </span>
+              </td>
+              <td>{{ activity.SymbolProfile?.symbol ?? '-' }}</td>
+              <td class="text-end">{{ activity.quantity | number }}</td>
+              <td class="text-end">
+                <gf-value
+                  size="small"
+                  [isCurrency]="true"
+                  [locale]="data.locale"
+                  [unit]="activity.SymbolProfile?.currency"
+                  [value]="activity.unitPrice"
+                />
+              </td>
+              <td class="text-end">
+                <gf-value
+                  size="small"
+                  [isCurrency]="true"
+                  [locale]="data.locale"
+                  [unit]="activity.SymbolProfile?.currency"
+                  [value]="activity.value"
+                />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Journal Note -->
+  <h4 class="mb-2" i18n>Journal Note</h4>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label i18n
+      >Write your thoughts, observations, or strategy notes for this
+      day...</mat-label
+    >
+    <textarea
+      matInput
+      rows="6"
+      [disabled]="isLoadingNote"
+      [(ngModel)]="note"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="d-flex justify-content-end mb-3">
+    <button
+      color="primary"
+      i18n
+      mat-flat-button
+      [disabled]="isSavingNote || isLoadingNote"
+      (click)="onSaveNote()"
+    >
+      Save Note
+    </button>
+  </div>
+</div>
+
+<gf-dialog-footer
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+/>

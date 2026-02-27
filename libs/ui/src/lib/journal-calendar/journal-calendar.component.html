@@ -1,0 +1,129 @@
+<div class="journal-calendar">
+  <!-- Header with navigation -->
+  <div
+    class="calendar-header d-flex align-items-center justify-content-between mb-3"
+  >
+    <button mat-icon-button (click)="onPreviousMonth()">
+      <ion-icon name="chevron-back-outline" />
+    </button>
+    <h3 class="mb-0">{{ monthLabel }}</h3>
+    <button mat-icon-button (click)="onNextMonth()">
+      <ion-icon name="chevron-forward-outline" />
+    </button>
+  </div>
+
+  <!-- Stats bar -->
+  @if (stats) {
+    <div class="stats-bar d-flex flex-wrap gap-3 mb-3">
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value">{{ stats.totalTradingDays }}</div>
+          <div class="stat-label" i18n>Trading Days</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value text-success">{{ stats.winningDays }}</div>
+          <div class="stat-label" i18n>Winning Days</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value text-danger">{{ stats.losingDays }}</div>
+          <div class="stat-label" i18n>Losing Days</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value">{{ winRate }}%</div>
+          <div class="stat-label" i18n>Win Rate</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value">
+            {{ formatCurrency(stats.averageDailyPnL) }}
+          </div>
+          <div class="stat-label" i18n>Avg Daily P&amp;L</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Additional stats -->
+    <div class="stats-bar d-flex flex-wrap gap-3 mb-3">
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value text-success">
+            {{ formatCurrency(stats.largestProfit) }}
+          </div>
+          <div class="stat-label" i18n>Largest Profit</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value text-danger">
+            {{ formatCurrency(stats.largestLoss) }}
+          </div>
+          <div class="stat-label" i18n>Largest Loss</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value text-success">
+            {{ stats.maxConsecutiveWins }}
+          </div>
+          <div class="stat-label" i18n>Max Consecutive Wins</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card flex-fill">
+        <mat-card-content>
+          <div class="stat-value text-danger">
+            {{ stats.maxConsecutiveLosses }}
+          </div>
+          <div class="stat-label" i18n>Max Consecutive Losses</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <!-- Calendar grid -->
+  <div class="calendar-grid">
+    <div class="calendar-week-header d-flex">
+      @for (weekDay of weekDays; track weekDay) {
+        <div class="calendar-cell header-cell">{{ weekDay }}</div>
+      }
+    </div>
+
+    @for (week of calendarWeeks; track $index) {
+      <div class="calendar-week d-flex">
+        @for (day of week; track day.date) {
+          <div
+            class="calendar-cell day-cell"
+            [class.clickable]="day.isCurrentMonth"
+            [class.today]="day.isToday"
+            [ngClass]="getDayClass(day)"
+            (click)="onDayClick(day)"
+          >
+            <div class="day-number">{{ day.dayOfMonth }}</div>
+            @if (day.data && day.isCurrentMonth) {
+              <div class="day-pnl">
+                {{ formatCurrency(day.data.netPerformance) }}
+              </div>
+              @if (day.data.activitiesCount > 0) {
+                <div class="day-activities">
+                  <span i18n>{day.data.activitiesCount, plural,
+                    =1 {1 activity}
+                    other {{{day.data.activitiesCount}} activities}
+                  }</span>
+                </div>
+              }
+              @if (day.data.hasNote) {
+                <ion-icon class="note-icon" name="document-text-outline" />
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

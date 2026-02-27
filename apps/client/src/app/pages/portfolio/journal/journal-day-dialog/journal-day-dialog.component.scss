@@ -1,0 +1,97 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.performance-metric {
+  .metric-label {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.activities-list {
+  table {
+    border-collapse: collapse;
+
+    th {
+      font-size: 0.75rem;
+      font-weight: 500;
+      opacity: 0.7;
+      padding: 0.5rem 0.75rem;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--border-color, rgba(0, 0, 0, 0.12));
+    }
+
+    td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.06));
+    }
+  }
+}
+
+.activity-type {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.buy {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+  }
+
+  &.sell {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+
+  &.dividend,
+  &.interest {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  &.fee {
+    background-color: rgba(249, 115, 22, 0.1);
+    color: #f97316;
+  }
+}
+
+// Dark mode support
+:host-context(.is-dark-theme) {
+  .activities-list {
+    table {
+      --border-color: rgba(255, 255, 255, 0.12);
+
+      td {
+        --border-color: rgba(255, 255, 255, 0.06);
+      }
+    }
+  }
+
+  .activity-type {
+    &.buy {
+      background-color: rgba(34, 197, 94, 0.2);
+    }
+
+    &.sell {
+      background-color: rgba(239, 68, 68, 0.2);
+    }
+
+    &.dividend,
+    &.interest {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+
+    &.fee {
+      background-color: rgba(249, 115, 22, 0.2);
+    }
+  }
+}

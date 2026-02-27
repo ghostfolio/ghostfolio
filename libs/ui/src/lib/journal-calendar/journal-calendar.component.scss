@@ -1,0 +1,185 @@
+:host {
+  display: block;
+}
+
+.journal-calendar {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.calendar-header {
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    min-width: 200px;
+    text-align: center;
+  }
+}
+
+.stats-bar {
+  .stat-card {
+    min-width: 120px;
+    text-align: center;
+
+    mat-card-content {
+      padding: 0.75rem 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.text-success {
+  color: #22c55e;
+}
+
+.text-danger {
+  color: #ef4444;
+}
+
+.calendar-grid {
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.calendar-cell {
+  flex: 1;
+  min-height: 40px;
+  border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.header-cell {
+  background: var(--header-bg, rgba(0, 0, 0, 0.04));
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.day-cell {
+  min-height: 90px;
+  padding: 0.25rem 0.4rem;
+  position: relative;
+  transition: background-color 0.15s ease;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--hover-bg, rgba(0, 0, 0, 0.04));
+    }
+  }
+
+  &.other-month {
+    opacity: 0.3;
+  }
+
+  &.today {
+    .day-number {
+      background-color: var(--primary-color, #3f51b5);
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &.positive {
+    background-color: rgba(34, 197, 94, 0.08);
+
+    .day-pnl {
+      color: #22c55e;
+    }
+  }
+
+  &.negative {
+    background-color: rgba(239, 68, 68, 0.08);
+
+    .day-pnl {
+      color: #ef4444;
+    }
+  }
+
+  &.neutral {
+    background-color: rgba(156, 163, 175, 0.06);
+
+    .day-pnl {
+      color: rgba(156, 163, 175, 0.8);
+    }
+  }
+}
+
+.day-number {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.15rem;
+}
+
+.day-pnl {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.day-activities {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  margin-top: 0.1rem;
+}
+
+.note-icon {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.calendar-week {
+  &:last-child {
+    .calendar-cell {
+      border-bottom: none;
+    }
+  }
+}
+
+// Dark mode support
+:host-context(.is-dark-theme) {
+  .calendar-grid {
+    --border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .header-cell {
+    --header-bg: rgba(255, 255, 255, 0.05);
+  }
+
+  .day-cell {
+    &.clickable:hover {
+      --hover-bg: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
