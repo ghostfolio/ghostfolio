@@ -11,6 +11,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the deprecated static portfolio analysis rule: _Fees_ (Fee Ratio)
 
+### Fixed
+
+- Fixed an exception by adding a fallback for missing market price values on the _X-ray_ page
+
+## 2.243.0 - 2026-02-23
+
+### Changed
+
+- Improved the language localization for Chinese (`zh`)
+- Upgraded `nestjs` from version `11.1.8` to `11.1.14`
+
+### Fixed
+
+- Fixed an issue when creating activities of type `FEE`, `INTEREST` or `LIABILITY`
+
+## 2.242.0 - 2026-02-22
+
+### Changed
+
+- Changed the account field to optional in the create or update activity dialog
+
+### Fixed
+
+- Fixed a validation issue for valuables used in the create and import activity logic
+- Fixed the page size for presets in the historical market data table of the admin control panel
+
 ## 2.241.0 - 2026-02-21
 
 ### Changed
@@ -24,7 +50,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue with `balanceInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `comment` of the accounts in the value redaction interceptor for the impersonation mode
-- Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `interestInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
 - Fixed an issue with `value` of the accounts in the value redaction interceptor for the impersonation mode
