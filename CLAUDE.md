@@ -44,18 +44,22 @@ There is already a basic AI service at `apps/api/src/app/endpoints/ai/`. It uses
 
 These services are injected via NestJS DI. The agent module will import the same modules they depend on.
 
-## MVP Requirements (24-hour hard gate)
+## MVP — COMPLETE ✅
 
-ALL of these must be working:
-1. Agent responds to natural language queries about finance/portfolio
-2. At least 3 functional tools the agent can invoke (we're building 8)
-3. Tool calls execute successfully and return structured results
-4. Agent synthesizes tool results into coherent responses
-5. Conversation history maintained across turns
-6. Basic error handling (graceful failure, not crashes)
-7. At least one domain-specific verification check (portfolio data accuracy)
-8. Simple evaluation: 5+ test cases with expected outcomes
-9. Deployed and publicly accessible
+All 9 MVP requirements passed. Deployed at https://ghostfolio-production-f9fe.up.railway.app
+
+## Current Phase: Early Submission
+
+See `EARLY_BUILD_PLAN.md` for the full step-by-step plan. Key remaining work:
+
+1. **Langfuse observability** — install `@langfuse/vercel-ai`, wrap `generateText()` calls, get tracing dashboard working
+2. **3+ verification checks** — currently have 1 (financial disclaimer). Add: portfolio scope validation, hallucination detection (data-backed claims), consistency check
+3. **50+ eval test cases** — currently have 10. Expand with correctness checks, adversarial inputs, edge cases, multi-step reasoning. Add ground-truth validation against actual DB/API data
+4. **AI Cost Analysis doc** — track actual Anthropic spend, project costs at scale
+5. **Agent Architecture doc** — 1-2 page doc using pre-search content
+6. **Open source contribution** — publish eval dataset publicly
+7. **Updated demo video** — re-record with observability dashboard + expanded evals
+8. **Social post** — LinkedIn/X post tagging @GauntletAI
 
 ## Architecture Pattern
 
@@ -78,6 +82,13 @@ User message
 - All new code goes in `apps/api/src/app/endpoints/ai/` (extend existing module)
 - System prompt must include financial disclaimers
 - Error handling: catch and return friendly messages, never crash
+
+## Known Issues / Gotchas
+
+- **Ghostfolio's portfolio calculator** depends on pre-computed snapshots from background data-gathering jobs. In a freshly seeded environment, these don't exist, so `getPerformance()` returns zeroes. The `get_portfolio_performance` tool was rewritten to bypass this and compute returns directly from orders + live quotes.
+- **Exchange rate tool** may return 1:1 for currency pairs if market data hasn't been gathered. Same root cause — data gathering needs to run.
+- **Demo user** is auto-created by the seed script. Access via `/demo` route which auto-authenticates.
+- **Production port** is 8080 (set in Dockerfile), not 3333 (dev only).
 
 ## Dev Environment
 

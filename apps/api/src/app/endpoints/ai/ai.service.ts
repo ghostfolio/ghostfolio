@@ -25,6 +25,7 @@ import { getTransactionHistoryTool } from './tools/transaction-history.tool';
 import { getLookupMarketDataTool } from './tools/market-data.tool';
 import { getExchangeRateTool } from './tools/exchange-rate.tool';
 import { getPortfolioReportTool } from './tools/portfolio-report.tool';
+import { runVerificationChecks } from './verification';
 
 function getAgentSystemPrompt() {
   return [
@@ -283,7 +284,12 @@ export class AiService {
         tools,
         toolChoice: "auto",
         messages,
-        maxSteps: 5
+        maxSteps: 5,
+        experimental_telemetry: {
+          isEnabled: true,
+          functionId: "ghostfolio-ai-agent",
+          metadata: { userId }
+        }
       });
 
       const toolCalls = result.steps
@@ -293,24 +299,25 @@ export class AiService {
           args: tc.args
         }));
 
+      const toolResults = result.steps
+        .flatMap((step) => step.toolResults ?? []);
+
       const updatedHistory: CoreMessage[] = [
         ...messages,
         { role: "assistant" as const, content: result.text }
       ];
 
-      let responseText = result.text;
-      const containsNumbers = /\$[\d,]+|\d+\.\d{2}%|\d{1,3}(,\d{3})+/.test(
-        responseText
-      );
-
-      if (containsNumbers) {
-        responseText +=
-          "\n\n*Note: All figures shown are based on your actual portfolio data. This is informational only and not financial advice.*";
-      }
+      // Run verification checks (disclaimer, hallucination detection, scope validation)
+      const { responseText, checks } = runVerificationChecks({
+        responseText: result.text,
+        toolResults,
+        toolCalls
+      });
 
       return {
         response: responseText,
         toolCalls,
+        verificationChecks: checks,
         conversationHistory: updatedHistory
       };
     } catch (error) {

@@ -1,3 +1,6 @@
+// Langfuse/OTel must be initialized before all other imports
+import './langfuse';
+
 import {
   DEFAULT_HOST,
   DEFAULT_PORT,
