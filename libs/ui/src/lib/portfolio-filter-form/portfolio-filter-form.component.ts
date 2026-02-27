@@ -9,12 +9,12 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Input,
   OnChanges,
   OnInit,
   forwardRef,
   inject,
-  input
+  input,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -55,10 +55,8 @@ import { PortfolioFilterFormValue } from './interfaces';
   templateUrl: './portfolio-filter-form.component.html'
 })
 export class GfPortfolioFilterFormComponent
-  implements ControlValueAccessor, OnInit, OnChanges
+  implements ControlValueAccessor, OnChanges, OnInit
 {
-  @Input() disabled = false;
-
   public readonly accounts = input<AccountWithPlatform[]>([]);
   public readonly assetClasses = input<Filter[]>([]);
   public readonly holdings = input<PortfolioPosition[]>([]);
@@ -73,6 +71,7 @@ export class GfPortfolioFilterFormComponent
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly disabled = signal(false);
   private readonly formBuilder = inject(FormBuilder);
 
   public constructor() {
@@ -115,7 +114,7 @@ export class GfPortfolioFilterFormComponent
   }
 
   public ngOnChanges() {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.filterForm.disable({ emitEvent: false });
     } else {
       this.filterForm.enable({ emitEvent: false });
@@ -125,7 +124,7 @@ export class GfPortfolioFilterFormComponent
 
     if (this.tags().length === 0) {
       tagControl?.disable({ emitEvent: false });
-    } else if (!this.disabled) {
+    } else if (!this.disabled()) {
       tagControl?.enable({ emitEvent: false });
     }
 
@@ -141,9 +140,9 @@ export class GfPortfolioFilterFormComponent
   }
 
   public setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this.disabled.set(isDisabled);
 
-    if (this.disabled) {
+    if (this.disabled()) {
       this.filterForm.disable({ emitEvent: false });
     } else {
       this.filterForm.enable({ emitEvent: false });
