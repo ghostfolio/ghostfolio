@@ -14,7 +14,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
-import { format, parseISO } from 'date-fns';
+import { endOfDay, format, parseISO } from 'date-fns';
 
 @Injectable()
 export class AccountBalanceService {
@@ -109,11 +109,19 @@ export class AccountBalanceService {
       userId,
       withExcludedAccounts: false // TODO
     });
+
+    // Exclude future-dated balances so they do not affect portfolio calculation (fixes #6185)
+    const asOfDate = endOfDay(new Date());
+    const asOfTime = asOfDate.getTime();
+    const balancesUpToToday = balances.filter(({ date }) => {
+      return date.getTime() <= asOfTime;
+    });
+
     const accumulatedBalancesByDate: { [date: string]: HistoricalDataItem } =
       {};
     const lastBalancesByAccount: { [accountId: string]: Big } = {};
 
-    for (const { accountId, date, valueInBaseCurrency } of balances) {
+    for (const { accountId, date, valueInBaseCurrency } of balancesUpToToday) {
       const formattedDate = format(date, DATE_FORMAT);
 
       lastBalancesByAccount[accountId] = new Big(valueInBaseCurrency);

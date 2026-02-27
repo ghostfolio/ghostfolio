@@ -371,10 +371,16 @@ export class OrderService {
         filters: [{ id: account.id, type: 'ACCOUNT' }]
       });
 
+      // Exclude future-dated balances so they do not affect portfolio calculation (fixes #6185)
+      const asOfDate = endOfToday();
+      const balancesUpToToday = balances.filter(({ date }) => {
+        return date <= asOfDate;
+      });
+
       let currentBalance = 0;
       let currentBalanceInBaseCurrency = 0;
 
-      for (const balanceItem of balances) {
+      for (const balanceItem of balancesUpToToday) {
         const syntheticActivityTemplate: Activity = {
           userId,
           accountId: account.id,
