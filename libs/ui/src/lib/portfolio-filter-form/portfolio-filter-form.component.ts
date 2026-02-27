@@ -14,7 +14,7 @@ import {
   forwardRef,
   inject,
   input,
-  signal
+  model
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -59,6 +59,7 @@ export class GfPortfolioFilterFormComponent
 {
   public readonly accounts = input<AccountWithPlatform[]>([]);
   public readonly assetClasses = input<Filter[]>([]);
+  public readonly disabled = model(false);
   public readonly holdings = input<PortfolioPosition[]>([]);
   public readonly tags = input<Filter[]>([]);
 
@@ -71,7 +72,6 @@ export class GfPortfolioFilterFormComponent
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly disabled = signal(false);
   private readonly formBuilder = inject(FormBuilder);
 
   public constructor() {
