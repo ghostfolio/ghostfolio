@@ -3,7 +3,7 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { getLocale } from '@ghostfolio/common/helper';
+import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
 import { FireCalculationCompleteEvent } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
@@ -49,6 +49,7 @@ import {
   add,
   addDays,
   addYears,
+  format,
   getMonth,
   setMonth,
   setYear,
@@ -246,6 +247,20 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     }
 
     this.calculatorForm.get('retirementDate')?.disable({ emitEvent: false });
+  }
+
+  public getFormattedRetirementDate(): string {
+    const retirementDate = this.calculatorForm.get('retirementDate')?.value;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    const dateFnsLocale = getDateFnsLocale(this.locale);
+
+    return format(retirementDate, 'MMMM yyyy', {
+      locale: dateFnsLocale
+    });
   }
 
   public setMonthAndYear(
