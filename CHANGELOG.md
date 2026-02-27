@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the usability of the asset profile details dialog in the admin control panel for currencies
+
 ### Fixed
 
 - Fixed an exception by adding a fallback for missing market price values on the _X-ray_ page
