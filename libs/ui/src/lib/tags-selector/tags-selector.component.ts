@@ -77,7 +77,7 @@ export class GfTagsSelectorComponent
     this.tagInputControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((value) => {
-        this.filteredOptions.next(this.filterTags(value));
+        this.filteredOptions.next(this.filterTags(value ?? ''));
       });
 
     addIcons({ addCircleOutline, closeOutline });
@@ -100,21 +100,23 @@ export class GfTagsSelectorComponent
 
     if (!tag && this.hasPermissionToCreateTag) {
       tag = {
-        id: undefined,
+        id: '',
         name: event.option.value as string,
         userId: null
       };
     }
 
-    this.tagsSelected.update((tags) => {
-      return [...(tags ?? []), tag];
-    });
+    if (tag) {
+      this.tagsSelected.update((tags) => {
+        return [...(tags ?? []), tag];
+      });
+    }
 
     const newTags = this.tagsSelected();
     this.onChange(newTags);
     this.onTouched();
     this.tagInput.nativeElement.value = '';
-    this.tagInputControl.setValue(undefined);
+    this.tagInputControl.setValue(null);
   }
 
   public onRemoveTag(tag: Tag) {

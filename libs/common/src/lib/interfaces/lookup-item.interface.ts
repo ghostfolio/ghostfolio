@@ -7,7 +7,7 @@ export interface LookupItem {
   assetSubClass: AssetSubClass;
   currency: string;
   dataProviderInfo: DataProviderInfo;
-  dataSource: DataSource;
+  dataSource: DataSource | null;
   name: string;
   symbol: string;
 }

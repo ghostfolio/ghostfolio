@@ -185,7 +185,7 @@ export class GfSymbolAutocompleteComponent
   public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
-      this.errorState = this.ngControl.invalid && this.ngControl.touched;
+      this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);
       this.stateChanges.next();
     }
   }
@@ -225,7 +225,7 @@ export class GfSymbolAutocompleteComponent
       ? !super.value?.dataSource || !super.value?.symbol
       : false;
     if (requiredCheck) {
-      this.ngControl.control.setErrors({ invalidData: true });
+      this.ngControl.control?.setErrors({ invalidData: true });
     }
   }
 }
