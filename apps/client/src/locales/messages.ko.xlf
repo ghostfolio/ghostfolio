@@ -1241,7 +1241,7 @@
       </trans-unit>
       <trans-unit id="8319378030525016917" datatype="html">
         <source>Asset profile has been saved</source>
-        <target state="new">Asset profile has been saved</target>
+        <target state="translated">자산 프로필이 저장되었습니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">578</context>
@@ -1413,7 +1413,7 @@
       </trans-unit>
       <trans-unit id="7341990227686441824" datatype="html">
         <source>Could not validate form</source>
-        <target state="new">Could not validate form</target>
+        <target state="translated">양식을 검증할 수 없습니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">554</context>
@@ -2173,7 +2173,7 @@
       </trans-unit>
       <trans-unit id="366169681580494481" datatype="html">
         <source>Performance with currency effect</source>
-        <target state="new">Performance with currency effect</target>
+        <target state="translated">환율 효과를 포함한 수익률</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">135</context>
@@ -2913,7 +2913,7 @@
       </trans-unit>
       <trans-unit id="5134951682994822188" datatype="html">
         <source>Could not parse scraper configuration</source>
-        <target state="new">Could not parse scraper configuration</target>
+        <target state="translated">스크래퍼 구성을 파싱할 수 없습니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">509</context>
@@ -4453,7 +4453,7 @@
       </trans-unit>
       <trans-unit id="7498591289549626867" datatype="html">
         <source>Could not save asset profile</source>
-        <target state="new">Could not save asset profile</target>
+        <target state="translated">자산 프로필을 저장할 수 없습니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">588</context>
@@ -7409,7 +7409,7 @@
       </trans-unit>
       <trans-unit id="7825231215382064101" datatype="html">
         <source>Change with currency effect</source>
-        <target state="new">Change with currency effect</target>
+        <target state="translated">환율 효과를 포함한 변동</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">116</context>
@@ -7573,7 +7573,7 @@
       </trans-unit>
       <trans-unit id="5004550577313573215" datatype="html">
         <source>Total amount</source>
-        <target state="new">Total amount</target>
+        <target state="translated">총액</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">95</context>

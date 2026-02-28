@@ -178,6 +178,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated `firstBuyDate` in favor of `dateOfFirstActivity` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Improved the language localization for German (`de`)
+- Improved the language localization for Korean (`ko`)
 - Upgraded `countries-list` from version `3.2.0` to `3.2.2`
 
 ## 2.231.0 - 2026-01-17
