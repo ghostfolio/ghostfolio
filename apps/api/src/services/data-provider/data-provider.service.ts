@@ -30,7 +30,7 @@ import {
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
+import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
@@ -347,36 +347,35 @@ export class DataProviderService implements OnModuleInit {
 
     const granularityQuery =
       aGranularity === 'month'
-        ? `AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
-        : '';
+        ? Prisma.sql`AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
+        : Prisma.empty;
 
     const rangeQuery =
       from && to
-        ? `AND date >= '${format(from, DATE_FORMAT)}' AND date <= '${format(
+        ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT)}::timestamp AND date <= ${format(
             to,
             DATE_FORMAT
-          )}'`
-        : '';
+          )}::timestamp`
+        : Prisma.empty;
 
     const dataSources = aItems.map(({ dataSource }) => {
       return dataSource;
     });
+
     const symbols = aItems.map(({ symbol }) => {
       return symbol;
     });
 
     try {
-      const queryRaw = `
-        SELECT *
-        FROM "MarketData"
-        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
-          AND "symbol" IN ('${symbols.join(
-            `','`
-          )}') ${granularityQuery} ${rangeQuery}
-        ORDER BY date;`;
-
-      const marketDataByGranularity: MarketData[] =
-        await this.prismaService.$queryRawUnsafe(queryRaw);
+      const marketDataByGranularity: MarketData[] = await this.prismaService
+        .$queryRaw`
+          SELECT *
+          FROM "MarketData"
+          WHERE "dataSource"::text IN (${Prisma.join(dataSources)})
+            AND "symbol" IN (${Prisma.join(symbols)})
+            ${granularityQuery}
+            ${rangeQuery}
+          ORDER BY date;`;
 
       response = marketDataByGranularity.reduce((r, marketData) => {
         const { date, marketPrice, symbol } = marketData;
