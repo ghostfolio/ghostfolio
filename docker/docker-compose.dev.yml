@@ -4,7 +4,7 @@ services:
     extends:
       file: docker-compose.yml
       service: postgres
-    container_name: gf-postgres-dev-hl
+    container_name: gf-postgres-dev
     ports:
       - ${POSTGRES_PORT:-5432}:5432
 
@@ -12,7 +12,7 @@ services:
     extends:
       file: docker-compose.yml
       service: redis
-    container_name: gf-redis-dev-hl
+    container_name: gf-redis-dev
     ports:
       - ${REDIS_PORT:-6379}:6379
 
