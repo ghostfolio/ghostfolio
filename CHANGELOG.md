@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the asset profile details dialog in the admin control panel for currencies
+- Removed the deprecated static portfolio analysis rule: _Fees_ (Fee Ratio)
 
 ### Fixed
 
