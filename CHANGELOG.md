@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the deprecated static portfolio analysis rule: _Fees_ (Fee Ratio)
-- Refactored queries in the data provider service to use Prisma’s type-safe methods
+- Refactored queries in the data provider service to use Prisma’s safe query methods
 
 ### Fixed
 
