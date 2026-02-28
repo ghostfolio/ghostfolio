@@ -8,12 +8,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
+  DestroyRef,
   OnChanges,
-  OnDestroy,
   OnInit,
-  forwardRef
+  forwardRef,
+  inject,
+  input,
+  model
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormBuilder,
@@ -25,7 +28,6 @@ import {
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { Subject, takeUntil } from 'rxjs';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { PortfolioFilterFormValue } from './interfaces';
@@ -53,33 +55,37 @@ import { PortfolioFilterFormValue } from './interfaces';
   templateUrl: './portfolio-filter-form.component.html'
 })
 export class GfPortfolioFilterFormComponent
-  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
+  implements ControlValueAccessor, OnChanges, OnInit
 {
-  @Input() accounts: AccountWithPlatform[] = [];
-  @Input() assetClasses: Filter[] = [];
-  @Input() holdings: PortfolioPosition[] = [];
-  @Input() tags: Filter[] = [];
-  @Input() disabled = false;
+  public readonly accounts = input<AccountWithPlatform[]>([]);
+  public readonly assetClasses = input<Filter[]>([]);
+  public readonly disabled = model(false);
+  public readonly holdings = input<PortfolioPosition[]>([]);
+  public readonly tags = input<Filter[]>([]);
 
-  public filterForm: FormGroup;
+  public filterForm: FormGroup<{
+    account: FormControl<string | null>;
+    assetClass: FormControl<string | null>;
+    holding: FormControl<PortfolioPosition | null>;
+    tag: FormControl<string | null>;
+  }>;
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private formBuilder: FormBuilder
-  ) {
+  public constructor() {
     this.filterForm = this.formBuilder.group({
-      account: new FormControl<string>(null),
-      assetClass: new FormControl<string>(null),
-      holding: new FormControl<PortfolioPosition>(null),
-      tag: new FormControl<string>(null)
+      account: new FormControl<string | null>(null),
+      assetClass: new FormControl<string | null>(null),
+      holding: new FormControl<PortfolioPosition | null>(null),
+      tag: new FormControl<string | null>(null)
     });
   }
 
   public ngOnInit() {
     this.filterForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
         this.onChange(value as PortfolioFilterFormValue);
         this.onTouched();
@@ -108,7 +114,7 @@ export class GfPortfolioFilterFormComponent
   }
 
   public ngOnChanges() {
-    if (this.disabled) {
+    if (this.disabled()) {
       this.filterForm.disable({ emitEvent: false });
     } else {
       this.filterForm.enable({ emitEvent: false });
@@ -116,9 +122,9 @@ export class GfPortfolioFilterFormComponent
 
     const tagControl = this.filterForm.get('tag');
 
-    if (this.tags.length === 0) {
+    if (this.tags().length === 0) {
       tagControl?.disable({ emitEvent: false });
-    } else if (!this.disabled) {
+    } else if (!this.disabled()) {
       tagControl?.enable({ emitEvent: false });
     }
 
@@ -134,9 +140,9 @@ export class GfPortfolioFilterFormComponent
   }
 
   public setDisabledState(isDisabled: boolean) {
-    this.disabled = isDisabled;
+    this.disabled.set(isDisabled);
 
-    if (this.disabled) {
+    if (this.disabled()) {
       this.filterForm.disable({ emitEvent: false });
     } else {
       this.filterForm.enable({ emitEvent: false });
@@ -159,11 +165,6 @@ export class GfPortfolioFilterFormComponent
     } else {
       this.filterForm.reset({}, { emitEvent: false });
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
