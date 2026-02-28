@@ -18,6 +18,7 @@ import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
+import { HyperliquidImportService } from './hyperliquid-import.service';
 import { ImportController } from './import.controller';
 import { ImportService } from './import.service';
 
@@ -42,6 +43,6 @@ import { ImportService } from './import.service';
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],
-  providers: [ImportService]
+  providers: [HyperliquidImportService, ImportService]
 })
 export class ImportModule {}

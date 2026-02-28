@@ -85,26 +85,28 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 ### Supported Environment Variables
 
-| Name                        | Type                  | Default Value         | Description                                                                                                                         |
-| --------------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT`         | `string`              |                       | A random string used as salt for access tokens                                                                                      |
-| `API_KEY_COINGECKO_DEMO`    | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                        |
-| `API_KEY_COINGECKO_PRO`     | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                         |
-| `DATABASE_URL`              | `string`              |                       | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
-| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                           |
-| `HOST`                      | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                               |
-| `JWT_SECRET_KEY`            | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
-| `LOG_LEVELS`                | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
-| `PORT`                      | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                               |
-| `POSTGRES_DB`               | `string`              |                       | The name of the _PostgreSQL_ database                                                                                               |
-| `POSTGRES_PASSWORD`         | `string`              |                       | The password of the _PostgreSQL_ database                                                                                           |
-| `POSTGRES_USER`             | `string`              |                       | The user of the _PostgreSQL_ database                                                                                               |
-| `REDIS_DB`                  | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                       |
-| `REDIS_HOST`                | `string`              |                       | The host where _Redis_ is running                                                                                                   |
-| `REDIS_PASSWORD`            | `string`              |                       | The password of _Redis_                                                                                                             |
-| `REDIS_PORT`                | `number`              |                       | The port where _Redis_ is running                                                                                                   |
-| `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                   |
-| `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                   |
+| Name                        | Type                  | Default Value                    | Description                                                                                                                         |
+| --------------------------- | --------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `ACCESS_TOKEN_SALT`         | `string`              |                                  | A random string used as salt for access tokens                                                                                      |
+| `API_KEY_COINGECKO_DEMO`    | `string` (optional)   |                                  | The _CoinGecko_ Demo API key                                                                                                        |
+| `API_KEY_COINGECKO_PRO`     | `string` (optional)   |                                  | The _CoinGecko_ Pro API key                                                                                                         |
+| `DATABASE_URL`              | `string`              |                                  | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
+| `DATA_SOURCE_IMPORT`        | `string` (optional)   | `YAHOO`                          | Default data source for imports                                                                                                     |
+| `DATA_SOURCES`              | `string[]` (optional) | `["COINGECKO","MANUAL","YAHOO"]` | Enabled data sources for market data and import validation                                                                          |
+| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                           | Enables authentication via security token                                                                                           |
+| `HOST`                      | `string` (optional)   | `0.0.0.0`                        | The host where the Ghostfolio application will run on                                                                               |
+| `JWT_SECRET_KEY`            | `string`              |                                  | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
+| `LOG_LEVELS`                | `string[]` (optional) |                                  | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
+| `PORT`                      | `number` (optional)   | `3333`                           | The port where the Ghostfolio application will run on                                                                               |
+| `POSTGRES_DB`               | `string`              |                                  | The name of the _PostgreSQL_ database                                                                                               |
+| `POSTGRES_PASSWORD`         | `string`              |                                  | The password of the _PostgreSQL_ database                                                                                           |
+| `POSTGRES_USER`             | `string`              |                                  | The user of the _PostgreSQL_ database                                                                                               |
+| `REDIS_DB`                  | `number` (optional)   | `0`                              | The database index of _Redis_                                                                                                       |
+| `REDIS_HOST`                | `string`              |                                  | The host where _Redis_ is running                                                                                                   |
+| `REDIS_PASSWORD`            | `string`              |                                  | The password of _Redis_                                                                                                             |
+| `REDIS_PORT`                | `number`              |                                  | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                           | The timeout of network requests to data providers in milliseconds                                                                   |
+| `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333`            | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                   |
 
 #### OpenID Connect OIDC (Experimental)
 
@@ -237,18 +239,18 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 }
 ```
 
-| Field        | Type                | Description                                                         |
-| ------------ | ------------------- | ------------------------------------------------------------------- |
-| `accountId`  | `string` (optional) | Id of the account                                                   |
-| `comment`    | `string` (optional) | Comment of the activity                                             |
-| `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                        |
-| `dataSource` | `string`            | `COINGECKO` \| `GHOSTFOLIO` [^1] \| `MANUAL` \| `YAHOO`             |
-| `date`       | `string`            | Date in the format `ISO-8601`                                       |
-| `fee`        | `number`            | Fee of the activity                                                 |
-| `quantity`   | `number`            | Quantity of the activity                                            |
-| `symbol`     | `string`            | Symbol of the activity (suitable for `dataSource`)                  |
-| `type`       | `string`            | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `LIABILITY` \| `SELL` |
-| `unitPrice`  | `number`            | Price per unit of the activity                                      |
+| Field        | Type                | Description                                                              |
+| ------------ | ------------------- | ------------------------------------------------------------------------ |
+| `accountId`  | `string` (optional) | Id of the account                                                        |
+| `comment`    | `string` (optional) | Comment of the activity                                                  |
+| `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                             |
+| `dataSource` | `string`            | `COINGECKO` \| `GHOSTFOLIO` [^1] \| `HYPERLIQUID` \| `MANUAL` \| `YAHOO` |
+| `date`       | `string`            | Date in the format `ISO-8601`                                            |
+| `fee`        | `number`            | Fee of the activity                                                      |
+| `quantity`   | `number`            | Quantity of the activity                                                 |
+| `symbol`     | `string`            | Symbol of the activity (suitable for `dataSource`)                       |
+| `type`       | `string`            | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `LIABILITY` \| `SELL`      |
+| `unitPrice`  | `number`            | Price per unit of the activity                                           |
 
 #### Response
 
@@ -268,6 +270,40 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
   ]
 }
 ```
+
+### Import Hyperliquid Activities
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization
+
+#### Request
+
+`POST http://localhost:3333/api/v1/import/hyperliquid?dryRun=true`
+
+#### Body
+
+```
+{
+  "walletAddress": "0x0000000000000000000000000000000000000001",
+  "from": "2026-01-01T00:00:00.000Z",
+  "to": "2026-01-31T23:59:59.999Z",
+  "includeLedger": true
+}
+```
+
+| Field           | Type                 | Description                                                                  |
+| --------------- | -------------------- | ---------------------------------------------------------------------------- |
+| `walletAddress` | `string`             | Wallet address (EVM format)                                                  |
+| `from`          | `string` (optional)  | Lower time bound in `ISO-8601` format                                        |
+| `to`            | `string` (optional)  | Upper time bound in `ISO-8601` format                                        |
+| `includeLedger` | `boolean` (optional) | Includes selected non-funding ledger items (enabled by default)              |
+| `dryRun`        | `boolean` (query)    | `true` validates and previews imported activities without persisting changes |
+
+#### Notes
+
+- This endpoint maps Hyperliquid user fills, user funding, and selected ledger updates.
+- Unsupported ledger delta types are skipped.
 
 ### Portfolio (experimental)
 

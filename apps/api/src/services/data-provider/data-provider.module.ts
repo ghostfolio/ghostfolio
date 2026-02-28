@@ -7,6 +7,7 @@ import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider
 import { FinancialModelingPrepService } from '@ghostfolio/api/services/data-provider/financial-modeling-prep/financial-modeling-prep.service';
 import { GhostfolioService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
+import { HyperliquidService } from '@ghostfolio/api/services/data-provider/hyperliquid/hyperliquid.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
@@ -40,6 +41,7 @@ import { DataProviderService } from './data-provider.service';
     FinancialModelingPrepService,
     GhostfolioService,
     GoogleSheetsService,
+    HyperliquidService,
     ManualService,
     RapidApiService,
     YahooFinanceService,
@@ -51,6 +53,7 @@ import { DataProviderService } from './data-provider.service';
         FinancialModelingPrepService,
         GhostfolioService,
         GoogleSheetsService,
+        HyperliquidService,
         ManualService,
         RapidApiService,
         YahooFinanceService
@@ -63,6 +66,7 @@ import { DataProviderService } from './data-provider.service';
         financialModelingPrepService,
         ghostfolioService,
         googleSheetsService,
+        hyperliquidService,
         manualService,
         rapidApiService,
         yahooFinanceService
@@ -73,6 +77,7 @@ import { DataProviderService } from './data-provider.service';
         financialModelingPrepService,
         ghostfolioService,
         googleSheetsService,
+        hyperliquidService,
         manualService,
         rapidApiService,
         yahooFinanceService

@@ -25,6 +25,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { HyperliquidImportDto } from './hyperliquid-import.dto';
+import { HyperliquidImportService } from './hyperliquid-import.service';
 import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';
 
@@ -32,6 +34,7 @@ import { ImportService } from './import.service';
 export class ImportController {
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly hyperliquidImportService: HyperliquidImportService,
     private readonly importService: ImportService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -56,25 +59,62 @@ export class ImportController {
       );
     }
 
-    let maxActivitiesToImport = this.configurationService.get(
-      'MAX_ACTIVITIES_TO_IMPORT'
-    );
-
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Premium'
-    ) {
-      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
-    }
-
     try {
       const activities = await this.importService.import({
         isDryRun,
-        maxActivitiesToImport,
+        maxActivitiesToImport: this.getMaxActivitiesToImport(),
         accountsWithBalancesDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
         tagsDto: importData.tags ?? [],
+        user: this.request.user
+      });
+
+      return { activities };
+    } catch (error) {
+      Logger.error(error, ImportController);
+
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [error.message]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
+  }
+
+  @Post('hyperliquid')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.createOrder)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async importHyperliquid(
+    @Body() data: HyperliquidImportDto,
+    @Query('dryRun') isDryRunParam = 'false'
+  ): Promise<ImportResponse> {
+    const isDryRun = isDryRunParam === 'true';
+
+    if (
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    try {
+      const activitiesDto =
+        await this.hyperliquidImportService.getActivities(data);
+
+      const activities = await this.importService.import({
+        isDryRun,
+        maxActivitiesToImport: this.getMaxActivitiesToImport(),
+        accountsWithBalancesDto: [],
+        activitiesDto,
+        assetProfilesWithMarketDataDto: [],
+        tagsDto: [],
         user: this.request.user
       });
 
@@ -108,5 +148,20 @@ export class ImportController {
     });
 
     return { activities };
+  }
+
+  private getMaxActivitiesToImport() {
+    let maxActivitiesToImport = this.configurationService.get(
+      'MAX_ACTIVITIES_TO_IMPORT'
+    );
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Premium'
+    ) {
+      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
+    }
+
+    return maxActivitiesToImport;
   }
 }
