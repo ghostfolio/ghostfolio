@@ -327,12 +327,13 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
+        this.assetClassLabel = translate(this.assetProfile?.assetClass);
+        this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
+
         this.canEditAssetProfile = !isCurrency(
           getCurrencyFromSymbol(this.data.symbol)
         );
 
-        this.assetClassLabel = translate(this.assetProfile?.assetClass);
-        this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
 
         this.isBenchmark = this.benchmarks.some(({ id }) => {
