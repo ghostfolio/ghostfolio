@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Refactored queries in the data provider service to use Prisma’s type-safe methods
+
 ### Fixed
 
 - Fixed an exception by adding a fallback for missing market price values on the _X-ray_ page
