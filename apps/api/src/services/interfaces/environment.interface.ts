@@ -53,6 +53,10 @@ export interface Environment extends CleanedEnvAccessors {
   REQUEST_TIMEOUT: number;
   ROOT_URL: string;
   STRIPE_SECRET_KEY: string;
+  PAYTHEFLY_PROJECT_ID: string;
+  PAYTHEFLY_PROJECT_KEY: string;
+  PAYTHEFLY_PRIVATE_KEY: string;
+  PAYTHEFLY_CHAIN_ID: number;
   TWITTER_ACCESS_TOKEN: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;
   TWITTER_API_KEY: string;

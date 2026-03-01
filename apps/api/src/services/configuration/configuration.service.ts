@@ -103,6 +103,10 @@ export class ConfigurationService {
         default: environment.rootUrl
       }),
       STRIPE_SECRET_KEY: str({ default: '' }),
+      PAYTHEFLY_PROJECT_ID: str({ default: '' }),
+      PAYTHEFLY_PROJECT_KEY: str({ default: '' }),
+      PAYTHEFLY_PRIVATE_KEY: str({ default: '' }),
+      PAYTHEFLY_CHAIN_ID: num({ default: 56 }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
       TWITTER_API_KEY: str({ default: 'dummyApiKey' }),
