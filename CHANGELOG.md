@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Excluded the scraper configuration from the import and export functionality
+- Excluded the symbol mapping from the import and export functionality
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Italian (`it`)
 
