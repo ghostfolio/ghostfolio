@@ -30,6 +30,20 @@ COPY ./nx.json nx.json
 COPY ./replace.build.mjs replace.build.mjs
 COPY ./tsconfig.base.json tsconfig.base.json
 
+# Initialize ghostfolio-agent submodule (ghostfolio-main branch)
+COPY ./.gitmodules .gitmodules
+COPY ./ghostfolio-agent ghostfolio-agent/
+# If the submodule directory is empty (not initialized in build context),
+# clone it directly from the repository
+RUN if [ ! -f ghostfolio-agent/.git ] && [ ! -d ghostfolio-agent/.git ]; then \
+      echo "Submodule not initialized in build context, cloning ghostfolio-agent..."; \
+      rm -rf ghostfolio-agent; \
+      git clone --branch ghostfolio-main --depth 1 \
+        https://github.com/RajatA98/ghostfolio-agent.git ghostfolio-agent; \
+    else \
+      echo "ghostfolio-agent submodule found in build context"; \
+    fi
+
 ENV NX_DAEMON=false
 RUN npm run build:production
 
@@ -59,7 +73,9 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps/
+COPY --chown=node:node --from=builder /ghostfolio/ghostfolio-agent /ghostfolio/ghostfolio-agent/
 COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/
+COPY --chown=node:node ./scripts/railway-deploy.sh /ghostfolio/
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
 USER node

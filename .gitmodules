@@ -1,0 +1,4 @@
+[submodule "ghostfolio-agent"]
+	path = ghostfolio-agent
+	url = https://github.com/RajatA98/ghostfolio-agent.git
+	branch = ghostfolio-main

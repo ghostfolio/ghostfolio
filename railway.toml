@@ -1,4 +1,13 @@
-# Railway: deploy from GitHub; add Postgres + Redis in dashboard, then set env vars.
+# Railway deployment configuration for Ghostfolio
+#
+# Branch strategy:
+#   - Ghostfolio (this repo):   deploy from "main" branch
+#   - ghostfolio-agent submodule: uses "ghostfolio-main" branch
+#
+# Required environment variables (set in Railway dashboard):
+#   DATABASE_URL, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD,
+#   JWT_SECRET_KEY, ACCESS_TOKEN_SALT, ROOT_URL
+
 [build]
 builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
