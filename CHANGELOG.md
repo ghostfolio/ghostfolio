@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Excluded the scraper configuration from the import and export functionality
 - Excluded the symbol mapping from the import and export functionality
+- Improved the language localization for Dutch (`nl`)
 
 ## 2.244.0 - 2026-02-28
 
