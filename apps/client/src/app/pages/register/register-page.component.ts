@@ -7,15 +7,14 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { UserAccountRegistrationDialogParams } from './user-account-registration-dialog/interfaces/interfaces';
 import { GfUserAccountRegistrationDialogComponent } from './user-account-registration-dialog/user-account-registration-dialog.component';
@@ -28,7 +27,7 @@ import { GfUserAccountRegistrationDialogComponent } from './user-account-registr
   styleUrls: ['./register-page.scss'],
   templateUrl: './register-page.html'
 })
-export class GfRegisterPageComponent implements OnDestroy, OnInit {
+export class GfRegisterPageComponent implements OnInit {
   public deviceType: string;
   public hasPermissionForAuthGoogle: boolean;
   public hasPermissionForAuthToken: boolean;
@@ -37,10 +36,9 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
   public historicalDataItems: LineChartItem[];
   public info: InfoItem;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private router: Router,
@@ -93,7 +91,7 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((authToken) => {
         if (authToken) {
           this.tokenStorageService.saveToken(authToken, true);
@@ -101,10 +99,5 @@ export class GfRegisterPageComponent implements OnDestroy, OnInit {
           this.router.navigate(['/']);
         }
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
