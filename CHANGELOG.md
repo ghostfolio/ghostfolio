@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Italian (`it`)
 
+### Fixed
+
+- Resolved the data source transformation in the errors of the performance endpoint
+- Resolved the data source transformation in the export functionality
+
 ## 2.244.0 - 2026-02-28
 
 ### Changed
