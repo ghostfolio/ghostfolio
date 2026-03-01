@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.245.0 - 2026-03-01
 
+### Added
+
+- Added the dividend yield (trailing twelve months) to the portfolio summary (experimental)
+
 ### Changed
 
 - Excluded the scraper configuration from the import and export functionality
