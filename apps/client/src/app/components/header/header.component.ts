@@ -13,6 +13,7 @@ import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
+import { GfAgentChatComponent } from '@ghostfolio/ui/agent-chat';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -40,6 +41,7 @@ import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  chatbubbleOutline,
   closeOutline,
   logoGithub,
   menuOutline,
@@ -55,6 +57,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    GfAgentChatComponent,
     GfAssistantComponent,
     GfLogoComponent,
     GfPremiumIndicatorComponent,
@@ -109,9 +112,11 @@ export class GfHeaderComponent implements OnChanges {
   public hasPermissionForAuthToken: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
+  public hasPermissionToAccessAgent: boolean;
   public hasPermissionToAccessAssistant: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
+  public isChatOpen = false;
   public impersonationId: string;
   public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
@@ -153,6 +158,7 @@ export class GfHeaderComponent implements OnChanges {
       });
 
     addIcons({
+      chatbubbleOutline,
       closeOutline,
       logoGithub,
       menuOutline,
@@ -190,6 +196,8 @@ export class GfHeaderComponent implements OnChanges {
       this.user?.permissions,
       permissions.accessAdminControl
     );
+
+    this.hasPermissionToAccessAgent = this.info?.hasPermissionToAccessAgent;
 
     this.hasPermissionToAccessAssistant = hasPermission(
       this.user?.permissions,
@@ -265,6 +273,10 @@ export class GfHeaderComponent implements OnChanges {
     if (['home', 'zen'].includes(this.currentRoute)) {
       this.layoutService.getShouldReloadSubject().next();
     }
+  }
+
+  public onOpenChat() {
+    this.isChatOpen = !this.isChatOpen;
   }
 
   public onMenuClosed() {

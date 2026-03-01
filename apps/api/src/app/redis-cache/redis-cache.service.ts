@@ -128,6 +128,36 @@ export class RedisCacheService {
     return this.cache.clear();
   }
 
+  public async increment(key: string, ttlMs?: number): Promise<number> {
+    try {
+      // Access underlying ioredis client for atomic INCR
+      const store = (this.client as any).store;
+      const redisClient =
+        store?.redis ||
+        store?.client ||
+        (this.client as any).opts?.store?.redis;
+
+      if (redisClient?.incr) {
+        const count: number = await redisClient.incr(key);
+
+        if (count === 1 && ttlMs) {
+          await redisClient.pexpire(key, ttlMs);
+        }
+
+        return count;
+      }
+    } catch {
+      // Fall through to non-atomic fallback
+    }
+
+    // Fallback: non-atomic get-set (if raw Redis client is unavailable)
+    const raw = await this.get(key);
+    const count = (parseInt(raw, 10) || 0) + 1;
+    await this.set(key, String(count), ttlMs);
+
+    return count;
+  }
+
   public async set(key: string, value: string, ttl?: number) {
     return this.cache.set(
       key,

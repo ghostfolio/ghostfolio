@@ -120,6 +120,9 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       globalPermissions,
+      hasPermissionToAccessAgent:
+        this.configurationService.get('ENABLE_FEATURE_AGENT') &&
+        !!this.configurationService.get('ANTHROPIC_API_KEY'),
       isReadOnlyMode,
       statistics,
       subscriptionOffer,

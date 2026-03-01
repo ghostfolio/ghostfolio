@@ -1,0 +1,186 @@
+<div
+  [@.disabled]="skipAnimation"
+  [@messageEnter]
+  class="message-bubble"
+  [attr.aria-label]="
+    message.role === 'user' ? 'Your message' : 'Assistant response'
+  "
+  [class.agent-message]="message.role === 'agent'"
+  [class.user-message]="message.role === 'user'"
+>
+  @if (message.role === 'agent' && content) {
+    <div
+      class="message-content"
+      [innerHTML]="safeStreamingHtml ?? (content | gfMarkdown)"
+    ></div>
+  }
+
+  @if (message.role === 'user') {
+    <div class="message-content">{{ content }}</div>
+  }
+
+  @if (message.role === 'agent' && isStreaming && !message.content) {
+    <div class="typing-indicator">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+  }
+
+  @if (message.role === 'agent' && isStreaming && message.currentToolName) {
+    <div class="active-tool-indicator">
+      <div class="tool-progress-spinner"></div>
+      <span i18n>Using: {{ message.currentToolName }}</span>
+      @if (message.toolsUsed?.length) {
+        <span class="tool-step-count">({{ message.toolsUsed.length }})</span>
+      }
+    </div>
+  }
+
+  @if (message.reasoning || message.isReasoningStreaming) {
+    <div
+      class="reasoning-section"
+      [class.reasoning-active]="message.isReasoningStreaming"
+    >
+      <button
+        class="reasoning-toggle"
+        [attr.aria-expanded]="isReasoningExpanded"
+        (click)="onToggleReasoning()"
+      >
+        @if (message.isReasoningStreaming) {
+          <div class="reasoning-spinner"></div>
+        } @else {
+          <ion-icon name="sparkles-outline" />
+        }
+        <span>{{ reasoningLabel }}</span>
+        <ion-icon
+          [name]="
+            isReasoningExpanded ? 'chevron-up-outline' : 'chevron-down-outline'
+          "
+        />
+      </button>
+      @if (isReasoningExpanded) {
+        <div
+          class="reasoning-content"
+          [innerHTML]="message.reasoning | gfMarkdown"
+        ></div>
+      }
+    </div>
+  }
+
+  @if (message.role === 'agent' && message.isError) {
+    <div class="error-actions">
+      <button class="retry-btn" [attr.aria-label]="'Retry'" (click)="onRetry()">
+        <ion-icon name="refresh-outline" />
+        <span i18n>Retry</span>
+      </button>
+    </div>
+  }
+
+  @if (message.isVerifying) {
+    <div class="verifying-indicator">
+      <ion-icon name="shield-checkmark-outline" />
+      <span i18n>Verifying response...</span>
+    </div>
+  }
+
+  @if (message.correction) {
+    <div class="correction-notice">
+      <ion-icon name="alert-circle-outline" />
+      <span>{{ message.correction }}</span>
+    </div>
+  }
+
+  @if (
+    message.confidence && message.confidence.level?.toLowerCase() !== 'high'
+  ) {
+    <div class="confidence-badge" [class]="getConfidenceBadgeClass()">
+      <ion-icon name="shield-checkmark-outline" />
+      <span i18n>Confidence: {{ message.confidence.level }}</span>
+    </div>
+  }
+
+  @if (message.disclaimers?.length || message.domainViolations?.length) {
+    <div class="disclaimers">
+      @for (disclaimer of message.disclaimers; track disclaimer) {
+        <div class="disclaimer-item">
+          <ion-icon name="alert-circle-outline" />
+          <span>{{ disclaimer }}</span>
+        </div>
+      }
+      @for (violation of message.domainViolations; track violation) {
+        <div class="disclaimer-item warning">
+          <ion-icon name="warning-outline" />
+          <span>{{ violation }}</span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (message.toolsUsed?.length) {
+    <div class="sources-section">
+      <button
+        class="sources-toggle"
+        [attr.aria-expanded]="isSourcesExpanded"
+        (click)="onToggleSources()"
+      >
+        <ion-icon name="construct-outline" />
+        <span i18n>Sources ({{ message.toolsUsed.length }})</span>
+        <ion-icon
+          [name]="
+            isSourcesExpanded ? 'chevron-up-outline' : 'chevron-down-outline'
+          "
+        />
+      </button>
+      @if (isSourcesExpanded) {
+        <ul class="sources-list">
+          @for (tool of message.toolsUsed; track tool.toolId) {
+            <li [class.tool-failed]="tool.success === false">
+              {{ getToolDisplayName(tool.toolName) }}
+              @if (tool.durationMs) {
+                <span class="tool-duration">{{ tool.durationMs }}ms</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+
+  @if (message.role === 'agent' && !isStreaming && message.interactionId) {
+    <div class="feedback-actions">
+      <button
+        class="feedback-btn"
+        [attr.aria-label]="'Helpful'"
+        [class.active]="message.feedbackRating === 'positive'"
+        (click)="onFeedback('positive')"
+      >
+        <ion-icon name="thumbs-up-outline" />
+      </button>
+      <button
+        class="feedback-btn"
+        [attr.aria-label]="'Not helpful'"
+        [class.active]="message.feedbackRating === 'negative'"
+        (click)="onFeedback('negative')"
+      >
+        <ion-icon name="thumbs-down-outline" />
+      </button>
+    </div>
+  }
+
+  @if (
+    message.role === 'agent' && !isStreaming && message.suggestions?.length
+  ) {
+    <div class="suggestions-section">
+      @for (suggestion of message.suggestions; track suggestion) {
+        <button class="suggestion-chip" (click)="onSuggestionClick(suggestion)">
+          {{ suggestion }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (!isStreaming && relativeTimestamp) {
+    <div class="message-timestamp">{{ relativeTimestamp }}</div>
+  }
+</div>

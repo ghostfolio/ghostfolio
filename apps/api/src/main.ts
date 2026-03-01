@@ -18,6 +18,7 @@ import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
+import './app/endpoints/agent/telemetry/otel-setup';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
