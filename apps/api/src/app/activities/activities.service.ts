@@ -745,17 +745,17 @@ export class ActivitiesService {
   }
 
   /**
-   * Retrieves all orders required for the portfolio calculator, including both standard asset orders
-   * and optional synthetic orders representing cash activities.
+   * Retrieves all activities required for the portfolio calculator, including both standard asset activities
+   * and optional synthetic activities representing cash activities.
    */
   @LogPerformance
-  public async getOrdersForPortfolioCalculator({
+  public async getActivitiesForPortfolioCalculator({
     filters,
     userCurrency,
     userId,
     withCash = false
   }: {
-    /** Optional filters to apply to the orders. */
+    /** Optional filters to apply to the activities. */
     filters?: Filter[];
     /** The base currency of the user. */
     userCurrency: string;

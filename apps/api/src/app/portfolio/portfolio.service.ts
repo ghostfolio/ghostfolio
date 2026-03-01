@@ -406,7 +406,7 @@ export class PortfolioService {
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } =
-      await this.activitiesService.getOrdersForPortfolioCalculator({
+      await this.activitiesService.getActivitiesForPortfolioCalculator({
         filters,
         userCurrency,
         userId
@@ -490,7 +490,7 @@ export class PortfolioService {
     );
 
     const { activities } =
-      await this.activitiesService.getOrdersForPortfolioCalculator({
+      await this.activitiesService.getActivitiesForPortfolioCalculator({
         filters,
         userCurrency,
         userId
@@ -779,7 +779,7 @@ export class PortfolioService {
     const userCurrency = this.getUserCurrency(user);
 
     const { activities } =
-      await this.activitiesService.getOrdersForPortfolioCalculator({
+      await this.activitiesService.getActivitiesForPortfolioCalculator({
         userCurrency,
         userId
       });
@@ -1009,7 +1009,7 @@ export class PortfolioService {
         userId,
         userCurrency
       }),
-      this.activitiesService.getOrdersForPortfolioCalculator({
+      this.activitiesService.getActivitiesForPortfolioCalculator({
         filters,
         userCurrency,
         userId

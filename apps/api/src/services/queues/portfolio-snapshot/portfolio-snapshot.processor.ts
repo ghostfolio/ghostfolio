@@ -47,7 +47,7 @@ export class PortfolioSnapshotProcessor {
       );
 
       const { activities } =
-        await this.activitiesService.getOrdersForPortfolioCalculator({
+        await this.activitiesService.getActivitiesForPortfolioCalculator({
           filters: job.data.filters,
           userCurrency: job.data.userCurrency,
           userId: job.data.userId,

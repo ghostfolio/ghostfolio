@@ -189,7 +189,7 @@ describe('PortfolioCalculator', () => {
       });
 
       const { activities } =
-        await activitiesService.getOrdersForPortfolioCalculator({
+        await activitiesService.getActivitiesForPortfolioCalculator({
           userCurrency: 'CHF',
           userId: userDummyData.id,
           withCash: true
