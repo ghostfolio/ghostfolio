@@ -1,6 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
@@ -62,11 +62,11 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 describe('PortfolioCalculator', () => {
   let accountBalanceService: AccountBalanceService;
   let accountService: AccountService;
+  let activitiesService: ActivitiesService;
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
-  let orderService: OrderService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
@@ -106,13 +106,13 @@ describe('PortfolioCalculator', () => {
     );
 
     currentRateService = new CurrentRateService(
-      dataProviderService,
       null,
+      dataProviderService,
       null,
       null
     );
 
-    orderService = new OrderService(
+    activitiesService = new ActivitiesService(
       accountBalanceService,
       accountService,
       null,
@@ -183,18 +183,17 @@ describe('PortfolioCalculator', () => {
         .spyOn(dataProviderService, 'getDataSourceForExchangeRates')
         .mockReturnValue(DataSource.YAHOO);
 
-      jest.spyOn(orderService, 'getOrders').mockResolvedValue({
+      jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
         activities: [],
         count: 0
       });
 
-      const { activities } = await orderService.getOrdersForPortfolioCalculator(
-        {
+      const { activities } =
+        await activitiesService.getOrdersForPortfolioCalculator({
           userCurrency: 'CHF',
           userId: userDummyData.id,
           withCash: true
-        }
-      );
+        });
 
       jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
         dataProviderInfos: [],
