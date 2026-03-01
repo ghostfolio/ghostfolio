@@ -4,6 +4,7 @@ import { interpolate } from '@ghostfolio/common/helper';
 import {
   Controller,
   Get,
+  OnModuleInit,
   Param,
   Res,
   Version,
@@ -14,12 +15,14 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 @Controller('assets')
-export class AssetsController {
+export class AssetsController implements OnModuleInit {
   private webManifest = '';
 
   public constructor(
     public readonly configurationService: ConfigurationService
-  ) {
+  ) {}
+
+  public onModuleInit() {
     try {
       this.webManifest = readFileSync(
         join(__dirname, 'assets', 'site.webmanifest'),
