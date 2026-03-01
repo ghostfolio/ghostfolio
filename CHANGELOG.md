@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Excluded the symbol mapping from the import and export functionality
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Italian (`it`)
+- Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
