@@ -1,13 +1,12 @@
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline } from 'ionicons/icons';
-import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -16,7 +15,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./personal-finance-tools-page.scss'],
   templateUrl: './personal-finance-tools-page.html'
 })
-export class PersonalFinanceToolsPageComponent implements OnDestroy {
+export class PersonalFinanceToolsPageComponent {
   public pathAlternativeTo =
     publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product
       .path + '-';
@@ -28,14 +27,7 @@ export class PersonalFinanceToolsPageComponent implements OnDestroy {
   });
   public routerLinkAbout = publicRoutes.about.routerLink;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor() {
     addIcons({ chevronForwardOutline });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
