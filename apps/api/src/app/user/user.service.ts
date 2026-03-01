@@ -1,4 +1,4 @@
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
@@ -55,10 +55,10 @@ import { createHmac } from 'node:crypto';
 @Injectable()
 export class UserService {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
     private readonly eventEmitter: EventEmitter2,
     private readonly i18nService: I18nService,
-    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -643,7 +643,7 @@ export class UserService {
     } catch {}
 
     try {
-      await this.orderService.deleteOrders({
+      await this.activitiesService.deleteOrders({
         userId: where.id
       });
     } catch {}

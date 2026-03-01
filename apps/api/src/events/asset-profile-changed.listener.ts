@@ -1,4 +1,4 @@
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -13,11 +13,11 @@ import { AssetProfileChangedEvent } from './asset-profile-changed.event';
 @Injectable()
 export class AssetProfileChangedListener {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly orderService: OrderService
+    private readonly exchangeRateDataService: ExchangeRateDataService
   ) {}
 
   @OnEvent(AssetProfileChangedEvent.getName())
@@ -48,7 +48,7 @@ export class AssetProfileChangedListener {
     }
 
     const { dateOfFirstActivity } =
-      await this.orderService.getStatisticsByCurrency(event.data.currency);
+      await this.activitiesService.getStatisticsByCurrency(event.data.currency);
 
     if (dateOfFirstActivity) {
       await this.dataGatheringService.gatherSymbol({

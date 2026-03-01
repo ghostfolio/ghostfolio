@@ -41,20 +41,20 @@ import { Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { OrderService } from './order.service';
+import { ActivitiesService } from './activities.service';
 
 @Controller([
   'activities',
   /** @deprecated */
   'order'
 ])
-export class OrderController {
+export class ActivitiesController {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly impersonationService: ImpersonationService,
-    private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -77,7 +77,7 @@ export class OrderController {
       filterByTags
     });
 
-    return this.orderService.deleteOrders({
+    return this.activitiesService.deleteOrders({
       filters,
       userId: this.request.user.id
     });
@@ -87,7 +87,7 @@ export class OrderController {
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
-    const order = await this.orderService.order({
+    const order = await this.activitiesService.order({
       id,
       userId: this.request.user.id
     });
@@ -99,7 +99,7 @@ export class OrderController {
       );
     }
 
-    return this.orderService.deleteOrder({
+    return this.activitiesService.deleteOrder({
       id
     });
   }
@@ -141,7 +141,7 @@ export class OrderController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { activities, count } = await this.orderService.getOrders({
+    const { activities, count } = await this.activitiesService.getOrders({
       endDate,
       filters,
       sortColumn,
@@ -170,7 +170,7 @@ export class OrderController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { activities } = await this.orderService.getOrders({
+    const { activities } = await this.activitiesService.getOrders({
       userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
@@ -231,7 +231,7 @@ export class OrderController {
 
     delete data.dataSource;
 
-    const order = await this.orderService.createOrder({
+    const order = await this.activitiesService.createOrder({
       ...data,
       date: parseISO(data.date),
       SymbolProfile: {
@@ -279,7 +279,7 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
-    const originalOrder = await this.orderService.order({
+    const originalOrder = await this.activitiesService.order({
       id
     });
 
@@ -306,7 +306,7 @@ export class OrderController {
 
     delete data.dataSource;
 
-    return this.orderService.updateOrder({
+    return this.activitiesService.updateOrder({
       data: {
         ...data,
         date,

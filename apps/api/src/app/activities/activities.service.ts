@@ -44,7 +44,7 @@ import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
-export class OrderService {
+export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,

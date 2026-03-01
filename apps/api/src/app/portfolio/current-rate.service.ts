@@ -1,4 +1,4 @@
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -24,9 +24,9 @@ export class CurrentRateService {
   private static readonly MARKET_DATA_PAGE_SIZE = 50000;
 
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
-    private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -129,7 +129,7 @@ export class CurrentRateService {
 
           if (!value) {
             // Fallback to unit price of latest activity
-            const latestActivity = await this.orderService.getLatestOrder({
+            const latestActivity = await this.activitiesService.getLatestOrder({
               dataSource,
               symbol
             });

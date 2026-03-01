@@ -1,7 +1,7 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
@@ -105,13 +105,13 @@ export class PortfolioService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly i18nService: I18nService,
     private readonly impersonationService: ImpersonationService,
-    private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -406,7 +406,7 @@ export class PortfolioService {
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
+      await this.activitiesService.getOrdersForPortfolioCalculator({
         filters,
         userCurrency,
         userId
@@ -490,7 +490,7 @@ export class PortfolioService {
     );
 
     const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
+      await this.activitiesService.getOrdersForPortfolioCalculator({
         filters,
         userCurrency,
         userId
@@ -779,7 +779,7 @@ export class PortfolioService {
     const userCurrency = this.getUserCurrency(user);
 
     const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
+      await this.activitiesService.getOrdersForPortfolioCalculator({
         userCurrency,
         userId
       });
@@ -1009,7 +1009,7 @@ export class PortfolioService {
         userId,
         userCurrency
       }),
-      this.orderService.getOrdersForPortfolioCalculator({
+      this.activitiesService.getOrdersForPortfolioCalculator({
         filters,
         userCurrency,
         userId
@@ -1370,7 +1370,12 @@ export class PortfolioService {
   }) {
     userId = await this.getUserId(impersonationId, userId);
 
-    await this.orderService.assignTags({ dataSource, symbol, tags, userId });
+    await this.activitiesService.assignTags({
+      dataSource,
+      symbol,
+      tags,
+      userId
+    });
   }
 
   private getAggregatedMarkets(holdings: Record<string, PortfolioPosition>): {
@@ -1872,7 +1877,7 @@ export class PortfolioService {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
-    const { activities } = await this.orderService.getOrders({
+    const { activities } = await this.activitiesService.getOrders({
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: true
