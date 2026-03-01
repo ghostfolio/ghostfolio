@@ -91,7 +91,7 @@ export class ImportService {
             userId,
             withExcludedAccounts: true
           }),
-          this.activitiesService.getOrders({
+          this.activitiesService.getActivities({
             filters,
             userCurrency,
             userId,
@@ -548,7 +548,7 @@ export class ImportService {
           continue;
         }
 
-        order = await this.activitiesService.createOrder({
+        order = await this.activitiesService.createActivity({
           comment,
           currency,
           date,
@@ -645,7 +645,7 @@ export class ImportService {
     userId: string;
   }): Promise<Partial<Activity>[]> {
     const { activities: existingActivities } =
-      await this.activitiesService.getOrders({
+      await this.activitiesService.getActivities({
         userCurrency,
         userId,
         includeDrafts: true,

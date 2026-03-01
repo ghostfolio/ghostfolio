@@ -322,7 +322,7 @@ export class PortfolioController {
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
-    const { activities } = await this.activitiesService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       endDate,
       filters,
       startDate,

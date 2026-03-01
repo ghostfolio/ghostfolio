@@ -129,10 +129,11 @@ export class CurrentRateService {
 
           if (!value) {
             // Fallback to unit price of latest activity
-            const latestActivity = await this.activitiesService.getLatestOrder({
-              dataSource,
-              symbol
-            });
+            const latestActivity =
+              await this.activitiesService.getLatestActivity({
+                dataSource,
+                symbol
+              });
 
             value = {
               dataSource,

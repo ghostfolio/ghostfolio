@@ -81,7 +81,7 @@ export class PublicController {
       })
     ]);
 
-    const { activities } = await this.activitiesService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,

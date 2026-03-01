@@ -643,7 +643,7 @@ export class UserService {
     } catch {}
 
     try {
-      await this.activitiesService.deleteOrders({
+      await this.activitiesService.deleteActivities({
         userId: where.id
       });
     } catch {}

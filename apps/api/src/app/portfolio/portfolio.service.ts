@@ -1877,7 +1877,7 @@ export class PortfolioService {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
-    const { activities } = await this.activitiesService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: true

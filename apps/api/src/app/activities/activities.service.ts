@@ -96,7 +96,7 @@ export class ActivitiesService {
     );
   }
 
-  public async createOrder(
+  public async createActivity(
     data: Prisma.OrderCreateInput & {
       accountId?: string;
       assetClass?: AssetClass;
@@ -251,7 +251,7 @@ export class ActivitiesService {
     return order;
   }
 
-  public async deleteOrder(
+  public async deleteActivity(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
     const order = await this.prismaService.order.delete({
@@ -277,14 +277,14 @@ export class ActivitiesService {
     return order;
   }
 
-  public async deleteOrders({
+  public async deleteActivities({
     filters,
     userId
   }: {
     filters?: Filter[];
     userId: string;
   }): Promise<number> {
-    const { activities } = await this.getOrders({
+    const { activities } = await this.getActivities({
       filters,
       userId,
       includeDrafts: true,
@@ -324,7 +324,7 @@ export class ActivitiesService {
   }
 
   /**
-   * Generates synthetic orders for cash holdings based on account balance history.
+   * Generates synthetic activities for cash holdings based on account balance history.
    * Treat currencies as assets with a fixed unit price of 1.0 (in their own currency) to allow
    * performance tracking based on exchange rate fluctuations.
    *
@@ -334,7 +334,7 @@ export class ActivitiesService {
    * @param userId - The ID of the user.
    * @returns A response containing the list of synthetic cash activities.
    */
-  public async getCashOrders({
+  public async getCashActivities({
     cashDetails,
     filters = [],
     userCurrency,
@@ -448,7 +448,10 @@ export class ActivitiesService {
     };
   }
 
-  public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
+  public async getLatestActivity({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     return this.prismaService.order.findFirst({
       orderBy: {
         date: 'desc'
@@ -459,7 +462,7 @@ export class ActivitiesService {
     });
   }
 
-  public async getOrders({
+  public async getActivities({
     endDate,
     filters,
     includeDrafts = false,
@@ -761,7 +764,7 @@ export class ActivitiesService {
     /** Whether to include cash activities in the result. */
     withCash?: boolean;
   }) {
-    const orders = await this.getOrders({
+    const orders = await this.getActivities({
       filters,
       userCurrency,
       userId,
@@ -775,7 +778,7 @@ export class ActivitiesService {
         currency: userCurrency
       });
 
-      const cashOrders = await this.getCashOrders({
+      const cashOrders = await this.getCashActivities({
         cashDetails,
         filters,
         userCurrency,
@@ -817,7 +820,7 @@ export class ActivitiesService {
     });
   }
 
-  public async updateOrder({
+  public async updateActivity({
     data,
     where
   }: {

@@ -38,7 +38,7 @@ export class ExportService {
     });
     const platformsMap: { [platformId: string]: Platform } = {};
 
-    let { activities } = await this.activitiesService.getOrders({
+    let { activities } = await this.activitiesService.getActivities({
       filters,
       userId,
       includeDrafts: true,

@@ -77,7 +77,7 @@ export class ActivitiesController {
       filterByTags
     });
 
-    return this.activitiesService.deleteOrders({
+    return this.activitiesService.deleteActivities({
       filters,
       userId: this.request.user.id
     });
@@ -99,7 +99,7 @@ export class ActivitiesController {
       );
     }
 
-    return this.activitiesService.deleteOrder({
+    return this.activitiesService.deleteActivity({
       id
     });
   }
@@ -141,7 +141,7 @@ export class ActivitiesController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { activities, count } = await this.activitiesService.getOrders({
+    const { activities, count } = await this.activitiesService.getActivities({
       endDate,
       filters,
       sortColumn,
@@ -170,7 +170,7 @@ export class ActivitiesController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { activities } = await this.activitiesService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
@@ -231,7 +231,7 @@ export class ActivitiesController {
 
     delete data.dataSource;
 
-    const order = await this.activitiesService.createOrder({
+    const activity = await this.activitiesService.createActivity({
       ...data,
       date: parseISO(data.date),
       SymbolProfile: {
@@ -256,14 +256,14 @@ export class ActivitiesController {
       userId: this.request.user.id
     });
 
-    if (dataSource && !order.isDraft) {
+    if (dataSource && !activity.isDraft) {
       // Gather symbol data in the background, if data source is set
       // (not MANUAL) and not draft
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
             dataSource,
-            date: order.date,
+            date: activity.date,
             symbol: data.symbol
           }
         ],
@@ -271,7 +271,7 @@ export class ActivitiesController {
       });
     }
 
-    return order;
+    return activity;
   }
 
   @HasPermission(permissions.updateOrder)
@@ -306,7 +306,7 @@ export class ActivitiesController {
 
     delete data.dataSource;
 
-    return this.activitiesService.updateOrder({
+    return this.activitiesService.updateActivity({
       data: {
         ...data,
         date,
