@@ -300,6 +300,7 @@
           </div>
           <form
             #assetProfileFormElement
+            [class.d-none]="!canEditAssetProfile"
             [formGroup]="assetProfileForm"
             (keyup.enter)="assetProfileForm.valid && onSubmitAssetProfileForm()"
             (ngSubmit)="onSubmitAssetProfileForm()"
@@ -358,7 +359,9 @@
                 <mat-checkbox
                   color="primary"
                   [checked]="isBenchmark"
-                  [disabled]="isEditAssetProfileIdentifierMode"
+                  [disabled]="
+                    !canEditAssetProfile || isEditAssetProfileIdentifierMode
+                  "
                   (change)="
                     isBenchmark
                       ? onUnsetBenchmark({
@@ -581,7 +584,11 @@
       <mat-checkbox
         color="primary"
         [checked]="isDataGatheringEnabled && (assetProfile?.isActive ?? false)"
-        [disabled]="!isDataGatheringEnabled || isEditAssetProfileIdentifierMode"
+        [disabled]="
+          !canEditAssetProfile ||
+          !isDataGatheringEnabled ||
+          isEditAssetProfileIdentifierMode
+        "
         (change)="onToggleIsActive($event)"
       >
         <ng-container i18n>Data Gathering</ng-container>

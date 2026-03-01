@@ -41,10 +41,8 @@
       "isin": null,
       "marketData": [],
       "name": "Account Opening Fee",
-      "scraperConfiguration": null,
       "sectors": [],
       "symbol": "14a69cb9-1e31-43fa-b320-83703d8ed74b",
-      "symbolMapping": {},
       "url": null
     },
     {
@@ -63,10 +61,8 @@
       "isin": null,
       "marketData": [],
       "name": "Penthouse Apartment",
-      "scraperConfiguration": null,
       "sectors": [],
       "symbol": "7e91b7d4-1430-4212-8380-289a06c9bbc1",
-      "symbolMapping": {},
       "url": null
     }
   ],

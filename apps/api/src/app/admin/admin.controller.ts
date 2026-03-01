@@ -247,14 +247,17 @@ export class AdminController {
     @Param('symbol') symbol: string
   ): Promise<{ price: number }> {
     try {
-      const price = await this.manualService.test(data.scraperConfiguration);
+      const price = await this.manualService.test({
+        symbol,
+        scraperConfiguration: data.scraperConfiguration
+      });
 
       if (price) {
         return { price };
       }
 
       throw new Error(
-        `Could not parse the current market price for ${symbol} (${dataSource})`
+        `Could not parse the market price for ${symbol} (${dataSource})`
       );
     } catch (error) {
       Logger.error(error, 'AdminController');

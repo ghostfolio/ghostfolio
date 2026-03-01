@@ -13,7 +13,6 @@ import {
   readerOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page has-tabs' },
@@ -47,18 +46,11 @@ export class ResourcesPageComponent implements OnInit {
     }
   ];
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(private deviceService: DeviceDetectorService) {
     addIcons({ bookOutline, libraryOutline, newspaperOutline, readerOutline });
   }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

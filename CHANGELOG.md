@@ -16,6 +16,120 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking Change**: The `sslmode=prefer` parameter in `DATABASE_URL` is no longer supported. Please update your environment variables (see `.env`) to use `sslmode=require` if _SSL_ is enabled or remove the `sslmode` parameter entirely if _SSL_ is not used.
 
+## 2.245.0 - 2026-03-01
+
+### Changed
+
+- Excluded the scraper configuration from the import and export functionality
+- Excluded the symbol mapping from the import and export functionality
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Italian (`it`)
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Resolved the data source transformation in the errors of the performance endpoint
+- Resolved the data source transformation in the export functionality
+
+## 2.244.0 - 2026-02-28
+
+### Changed
+
+- Improved the usability of the asset profile details dialog in the admin control panel for currencies
+- Removed the deprecated static portfolio analysis rule: _Fees_ (Fee Ratio)
+- Refactored queries in the data provider service to use Prisma’s safe query methods
+
+### Fixed
+
+- Fixed an exception by adding a fallback for missing market price values on the _X-ray_ page
+
+## 2.243.0 - 2026-02-23
+
+### Changed
+
+- Improved the language localization for Chinese (`zh`)
+- Upgraded `nestjs` from version `11.1.8` to `11.1.14`
+
+### Fixed
+
+- Fixed an issue when creating activities of type `FEE`, `INTEREST` or `LIABILITY`
+
+## 2.242.0 - 2026-02-22
+
+### Changed
+
+- Changed the account field to optional in the create or update activity dialog
+
+### Fixed
+
+- Fixed a validation issue for valuables used in the create and import activity logic
+- Fixed the page size for presets in the historical market data table of the admin control panel
+
+## 2.241.0 - 2026-02-21
+
+### Changed
+
+- Improved the usability of the portfolio summary tab on the home page in the _Presenter View_
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Fixed an issue with `balanceInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `comment` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `dividendInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `interestInBaseCurrency` of the accounts in the value redaction interceptor for the impersonation mode
+- Fixed an issue with `value` of the accounts in the value redaction interceptor for the impersonation mode
+
+## 2.240.0 - 2026-02-18
+
+### Added
+
+- Added a _No Activities_ preset to the historical market data table of the admin control panel
+- Added support for custom cryptocurrencies defined in the database
+- Added support for the cryptocurrency _Sky_
+
+### Changed
+
+- Harmonized the validation for the create activity endpoint with the existing import activity logic
+- Upgraded `marked` from version `17.0.1` to `17.0.2`
+- Upgraded `ngx-markdown` from version `21.0.1` to `21.1.0`
+
+## 2.239.0 - 2026-02-15
+
+### Added
+
+- Added a new static portfolio analysis rule based on the total investment volume: _Fees_ (Fee Ratio)
+- Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page with information on derived currencies
+
+### Changed
+
+- Deprecated the existing static portfolio analysis rule: _Fees_ (Fee Ratio)
+- Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
+- Improved the scraper configuration with more detailed error messages
+- Improved the language localization for German (`de`)
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.1.0` to `13.2.2`
+- Upgraded `cheerio` from version `1.0.0` to `1.2.0`
+
+### Fixed
+
+- Fixed the investment value by including currency effects in the portfolio summary tab on the home page
+- Added the missing `valueInBaseCurrency` to the response of the import activities endpoint
+
+## 2.238.0 - 2026-02-12
+
+### Changed
+
+- Upgraded `ngx-skeleton-loader` from version `11.3.0` to `12.0.0`
+- Upgraded `twitter-api-v2` from version `1.27.0` to `1.29.0`
+
+### Fixed
+
+- Fixed a performance calculation issue by resetting tracking variables when a holding is fully closed
+- Fixed an issue in the annualized performance calculation
+- Fixed an issue with the exchange rate calculation by expanding the date range to cover the full day (start to end of day)
+
 ## 2.237.0 - 2026-02-08
 
 ### Changed

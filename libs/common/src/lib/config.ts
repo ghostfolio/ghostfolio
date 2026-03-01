@@ -80,6 +80,11 @@ export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
 
 export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].balance',
+  'accounts[*].balanceInBaseCurrency',
+  'accounts[*].comment',
+  'accounts[*].dividendInBaseCurrency',
+  'accounts[*].interestInBaseCurrency',
+  'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
   'activities[*].account.balance',
   'activities[*].account.comment',
@@ -199,6 +204,7 @@ export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';
 export const PROPERTY_COUNTRIES_OF_SUBSCRIBERS = 'COUNTRIES_OF_SUBSCRIBERS';
 export const PROPERTY_COUPONS = 'COUPONS';
 export const PROPERTY_CURRENCIES = 'CURRENCIES';
+export const PROPERTY_CUSTOM_CRYPTOCURRENCIES = 'CUSTOM_CRYPTOCURRENCIES';
 export const PROPERTY_DATA_SOURCE_MAPPING = 'DATA_SOURCE_MAPPING';
 export const PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS =
   'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS';

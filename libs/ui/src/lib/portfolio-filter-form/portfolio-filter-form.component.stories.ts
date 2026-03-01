@@ -40,7 +40,7 @@ export const Default: Story = {
       { id: 'COMMODITY', label: 'Commodity', type: 'ASSET_CLASS' },
       { id: 'EQUITY', label: 'Equity', type: 'ASSET_CLASS' },
       { id: 'FIXED_INCOME', label: 'Fixed Income', type: 'ASSET_CLASS' }
-    ] as any,
+    ],
     holdings: [
       {
         currency: 'USD',
@@ -66,7 +66,7 @@ export const Default: Story = {
         label: 'Retirement Fund',
         type: 'TAG'
       }
-    ] as any,
+    ],
     disabled: false
   }
 };

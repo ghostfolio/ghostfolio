@@ -140,6 +140,11 @@ export class GfAdminMarketDataComponent
       id: 'ETF_WITHOUT_SECTORS',
       label: $localize`ETFs without Sectors`,
       type: 'PRESET_ID' as Filter['type']
+    },
+    {
+      id: 'NO_ACTIVITIES',
+      label: $localize`No Activities`,
+      type: 'PRESET_ID' as Filter['type']
     }
   ];
   public benchmarks: Partial<SymbolProfile>[];
@@ -374,7 +379,7 @@ export class GfAdminMarketDataComponent
     this.pageSize =
       this.activeFilters.length === 1 &&
       this.activeFilters[0].type === 'PRESET_ID'
-        ? undefined
+        ? Number.MAX_SAFE_INTEGER
         : DEFAULT_PAGE_SIZE;
 
     if (pageIndex === 0 && this.paginator) {

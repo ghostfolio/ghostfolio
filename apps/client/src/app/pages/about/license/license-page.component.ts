@@ -1,6 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
-import { Subject } from 'rxjs';
 
 @Component({
   imports: [MarkdownModule],
@@ -8,11 +7,4 @@ import { Subject } from 'rxjs';
   styleUrls: ['./license-page.scss'],
   templateUrl: './license-page.html'
 })
-export class GfLicensePageComponent implements OnDestroy {
-  private unsubscribeSubject = new Subject<void>();
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-}
+export class GfLicensePageComponent {}

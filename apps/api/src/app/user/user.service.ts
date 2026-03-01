@@ -12,7 +12,7 @@ import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rul
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
-import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { FeeRatioTotalInvestmentVolume } from '@ghostfolio/api/models/rules/fees/fee-ratio-total-investment-volume';
 import { BuyingPower } from '@ghostfolio/api/models/rules/liquidity/buying-power';
 import { RegionalMarketClusterRiskAsiaPacific } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/asia-pacific';
 import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/emerging-markets';
@@ -376,7 +376,7 @@ export class UserService {
         undefined,
         undefined
       ).getSettings(user.settings.settings),
-      FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
+      FeeRatioTotalInvestmentVolume: new FeeRatioTotalInvestmentVolume(
         undefined,
         undefined,
         undefined,

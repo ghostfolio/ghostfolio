@@ -190,6 +190,7 @@ describe('PortfolioCalculator', () => {
           netPerformanceInPercentage: 0.12184460284330327256,
           netPerformanceInPercentageWithCurrencyEffect: 0.12184460284330327256,
           netPerformanceWithCurrencyEffect: 17.68,
+          totalInvestment: 75.8,
           totalInvestmentValueWithCurrencyEffect: 75.8
         })
       );

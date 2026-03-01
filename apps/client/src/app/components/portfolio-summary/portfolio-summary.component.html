@@ -65,7 +65,11 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.committedFunds"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.totalInvestmentValueWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -180,18 +184,21 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToUpdateUserSettings &&
+          !user?.settings?.isRestrictedView &&
           user?.subscription?.type !== 'Basic'
       }"
       (click)="
         hasPermissionToUpdateUserSettings &&
+          !user?.settings?.isRestrictedView &&
           user?.subscription?.type !== 'Basic' &&
           onEditEmergencyFund()
       "
     >
       @if (
         hasPermissionToUpdateUserSettings &&
-        user?.subscription?.type !== 'Basic' &&
-        !isLoading
+        !isLoading &&
+        !user?.settings?.isRestrictedView &&
+        user?.subscription?.type !== 'Basic'
       ) {
         <ion-icon
           class="mr-1 text-muted"
