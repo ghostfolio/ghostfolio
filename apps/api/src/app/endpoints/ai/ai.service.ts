@@ -9,7 +9,7 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { generateText } from 'ai';
+import { generateText, type LanguageModel } from 'ai';
 import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
@@ -55,7 +55,7 @@ export class AiService {
 
     return generateText({
       prompt,
-      model: openRouterService.chat(openRouterModel)
+      model: openRouterService.chat(openRouterModel) as unknown as LanguageModel
     });
   }
 

@@ -65,12 +65,20 @@ export class CoinGeckoService implements DataProviderInterface {
     };
 
     try {
-      const { name } = await fetch(`${this.apiUrl}/coins/${symbol}`, {
+      const res = await fetch(`${this.apiUrl}/coins/${symbol}`, {
         headers: this.headers,
         signal: AbortSignal.timeout(
           this.configurationService.get('REQUEST_TIMEOUT')
         )
-      }).then((res) => res.json());
+      });
+
+      if (!res.ok) {
+        throw new Error(
+          `CoinGecko API returned ${res.status} for asset profile ${symbol}`
+        );
+      }
+
+      const { name } = await res.json();
 
       response.name = name;
     } catch (error) {
@@ -116,13 +124,21 @@ export class CoinGeckoService implements DataProviderInterface {
         vs_currency: DEFAULT_CURRENCY.toLowerCase()
       });
 
-      const { error, prices, status } = await fetch(
+      const res = await fetch(
         `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`,
         {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json());
+      );
+
+      if (!res.ok) {
+        throw new Error(
+          `CoinGecko API returned ${res.status} for historical data ${symbol}`
+        );
+      }
+
+      const { error, prices, status } = await res.json();
 
       if (error?.status) {
         throw new Error(error.status.error_message);
@@ -179,13 +195,21 @@ export class CoinGeckoService implements DataProviderInterface {
         vs_currencies: DEFAULT_CURRENCY.toLowerCase()
       });
 
-      const quotes = await fetch(
+      const res = await fetch(
         `${this.apiUrl}/simple/price?${queryParams.toString()}`,
         {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json());
+      );
+
+      if (!res.ok) {
+        throw new Error(
+          `CoinGecko API returned ${res.status} for quotes ${symbols.join(', ')}`
+        );
+      }
+
+      const quotes = await res.json();
 
       for (const symbol in quotes) {
         response[symbol] = {
@@ -228,13 +252,21 @@ export class CoinGeckoService implements DataProviderInterface {
         query
       });
 
-      const { coins } = await fetch(
+      const res = await fetch(
         `${this.apiUrl}/search?${queryParams.toString()}`,
         {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).then((res) => res.json());
+      );
+
+      if (!res.ok) {
+        throw new Error(
+          `CoinGecko API returned ${res.status} for search "${query}"`
+        );
+      }
+
+      const { coins } = await res.json();
 
       items = coins.map(({ id: symbol, name }) => {
         return {
