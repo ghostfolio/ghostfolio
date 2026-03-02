@@ -1,0 +1,47 @@
+<div class="chart-panel-container">
+  <div class="metrics-bar">
+    <div class="metric">
+      <span class="metric-label">TOTAL VALUE</span>
+      <span class="metric-value">${{ currentValue | number: '1.2-2' }}</span>
+    </div>
+    <div class="metric">
+      <span class="metric-label">RETURN</span>
+      <span
+        class="metric-value"
+        [class.negative]="returnPct < 0"
+        [class.positive]="returnPct >= 0"
+      >
+        {{ returnPct >= 0 ? '+' : '' }}{{ returnPct * 100 | number: '1.2-2' }}%
+      </span>
+    </div>
+    <div class="metric">
+      <span class="metric-label">TODAY</span>
+      <span
+        class="metric-value"
+        [class.negative]="todayChange < 0"
+        [class.positive]="todayChange >= 0"
+      >
+        {{ todayChange >= 0 ? '+' : '' }}{{ todayChange | number: '1.2-2' }}%
+      </span>
+    </div>
+  </div>
+
+  <div class="chart-wrapper">
+    @if (isLoading) {
+      <div class="chart-loading">Loading...</div>
+    }
+    <canvas #chartCanvas></canvas>
+  </div>
+
+  <div class="range-selector">
+    @for (r of ranges; track r.value) {
+      <button
+        class="range-pill"
+        [class.active]="range === r.value"
+        (click)="setRange(r.value)"
+      >
+        {{ r.label }}
+      </button>
+    }
+  </div>
+</div>

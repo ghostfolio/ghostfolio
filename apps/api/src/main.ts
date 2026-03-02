@@ -18,6 +18,7 @@ import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
+import { setupAgentWebSocket } from './app/endpoints/agent/agent.gateway';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
@@ -91,7 +92,10 @@ async function bootstrap() {
   await app.listen(PORT, HOST, () => {
     logLogo();
 
-    let address = app.getHttpServer().address();
+    const httpServer = app.getHttpServer();
+    setupAgentWebSocket(httpServer, app);
+
+    let address = httpServer.address();
 
     if (typeof address === 'object') {
       const addressObject = address;

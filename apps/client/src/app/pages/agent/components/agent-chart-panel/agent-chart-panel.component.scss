@@ -1,0 +1,107 @@
+.chart-panel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 0.75rem;
+}
+
+.metrics-bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.metric-label {
+  color: #666;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  color: #d9d9d9;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+
+  &.positive {
+    color: #33ff99;
+  }
+
+  &.negative {
+    color: #ff6b6b;
+  }
+}
+
+.chart-wrapper {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+
+  canvas {
+    height: 100% !important;
+    width: 100% !important;
+  }
+}
+
+.chart-loading {
+  align-items: center;
+  color: #666;
+  display: flex;
+  font-family: monospace;
+  font-size: 0.7rem;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  letter-spacing: 1px;
+  position: absolute;
+  text-transform: uppercase;
+  top: 0;
+  width: 100%;
+}
+
+.range-selector {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.range-pill {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 2px;
+  color: #888;
+  cursor: pointer;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  padding: 0.25rem 0.5rem;
+  text-transform: uppercase;
+
+  &:hover {
+    border-color: #555;
+    color: #ccc;
+  }
+
+  &.active {
+    background: #ff6600;
+    border-color: #ff6600;
+    color: #000;
+    font-weight: 600;
+  }
+}

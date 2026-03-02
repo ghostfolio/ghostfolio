@@ -1,0 +1,279 @@
+<div class="agent-layout">
+  <div class="chat-panel">
+    <mat-card class="agent-shell terminal-theme">
+      <mat-card-header class="terminal-header">
+        <mat-card-title class="terminal-brand" i18n>
+          Agent
+          <span
+            class="connection-dot"
+            [ngClass]="connectionStatus"
+            [title]="connectionStatus"
+          ></span>
+        </mat-card-title>
+        <mat-card-subtitle class="terminal-subtitle" i18n
+          >Ask portfolio questions using your current Ghostfolio
+          session.</mat-card-subtitle
+        >
+      </mat-card-header>
+
+      <mat-card-content class="agent-content">
+        <div #messagesContainer class="messages" role="log">
+          @if (messages.length === 0) {
+            <div class="empty-state" i18n>
+              <div class="empty-text">
+                Would you like me to buy stocks or crypto for you?
+              </div>
+              <button
+                class="strategy-flow-btn"
+                type="button"
+                (click)="startStrategyFlow()"
+              >
+                Build Investment Strategy
+              </button>
+            </div>
+          }
+
+          @for (entry of messages; track trackByIndex($index)) {
+            <div
+              class="message-row"
+              [ngClass]="{
+                assistant: entry.role === 'assistant',
+                user: entry.role === 'user'
+              }"
+            >
+              @if (entry.strategyStep) {
+                <gf-strategy-card
+                  [disabled]="
+                    strategyMode &&
+                    currentStrategyStep?.stepId !== entry.strategyStep.stepId
+                  "
+                  [step]="entry.strategyStep"
+                  (optionSelected)="handleStrategySelection($event)"
+                ></gf-strategy-card>
+              } @else {
+                <div class="message-bubble">
+                  <div class="message-text">
+                    <markdown
+                      class="message-markdown"
+                      mermaid
+                      [data]="entry.content ?? ''"
+                      [mermaidOptions]="mermaidOptions"
+                    ></markdown>
+                  </div>
+                  @if (
+                    entry.role === 'assistant' && entry.confidence !== undefined
+                  ) {
+                    <div class="meta-row">
+                      {{ entry.confidence * 100 | number: '1.0-0' }}% confidence
+                    </div>
+                  }
+                  @if (
+                    entry.role === 'assistant' &&
+                    getDisplayWarnings(entry).length > 0
+                  ) {
+                    <div class="meta-row warning">
+                      {{ getDisplayWarnings(entry).join(' | ') }}
+                    </div>
+                  }
+                  @if (
+                    entry.role === 'assistant' &&
+                    (entry.toolTrace?.length ?? 0) > 0
+                  ) {
+                    <div class="meta-row tool-trace">
+                      <span class="tool-trace-label" i18n>Tools</span>
+                      @for (
+                        tool of getToolStatuses(entry);
+                        track trackByIndex($index)
+                      ) {
+                        <span
+                          class="tool-pill"
+                          [ngClass]="{ ok: tool.ok, fail: !tool.ok }"
+                        >
+                          {{ tool.tool }} {{ tool.ok ? 'ok' : 'failed' }}
+                        </span>
+                      }
+                    </div>
+                  }
+                  @if (entry.role === 'assistant' && entry.loopMeta) {
+                    <div class="meta-row metrics-row">
+                      {{ getMetricsText(entry.loopMeta) }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Thinking indicator -->
+          @if (isSending && thinkingLabel && streamingAnswer.length === 0) {
+            <div class="message-row assistant">
+              <div class="thinking-indicator">
+                <span class="thinking-dots">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </span>
+                <span class="thinking-label">{{ thinkingLabel }}</span>
+              </div>
+            </div>
+          }
+
+          <!-- Collapsible tool call rows -->
+          @if (activeToolCalls.length > 0) {
+            <div class="tool-calls-panel">
+              @for (tc of activeToolCalls; track trackByIndex($index)) {
+                <div
+                  class="tool-call-row"
+                  [class.expanded]="tc.expanded"
+                  [class.fail]="!tc.ok"
+                  [class.ok]="tc.ok"
+                >
+                  <div
+                    class="tool-call-header"
+                    (click)="toggleToolExpanded($index)"
+                  >
+                    <span class="tool-call-chevron">{{
+                      tc.expanded ? '▾' : '▸'
+                    }}</span>
+                    <span class="tool-call-name">{{ tc.tool }}</span>
+                    @if (tc.ms > 0) {
+                      <span
+                        class="tool-call-status"
+                        [class.fail]="!tc.ok"
+                        [class.ok]="tc.ok"
+                      >
+                        {{ tc.ok ? tc.ms + 'ms' : 'FAIL' }}
+                      </span>
+                    } @else {
+                      <span class="tool-call-status running">running</span>
+                    }
+                  </div>
+                  @if (tc.expanded) {
+                    <div class="tool-call-detail">
+                      @if (tc.input && (tc.input | json) !== '{}') {
+                        <div class="tool-detail-section">
+                          <span class="tool-detail-label">Input</span>
+                          <pre class="tool-detail-pre">{{
+                            tc.input | json
+                          }}</pre>
+                        </div>
+                      }
+                      @if (tc.result) {
+                        <div class="tool-detail-section">
+                          <span class="tool-detail-label">Result</span>
+                          <pre class="tool-detail-pre">{{
+                            tc.result | json
+                          }}</pre>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Debug console (toggleable) -->
+          @if (showDebugConsole && streamLogLines.length > 0) {
+            <div class="message-row assistant stream-console">
+              <div class="stream-bubble">
+                <div class="stream-header">[AGENT]</div>
+                <div class="stream-lines">
+                  @for (line of streamLogLines; track trackByIndex($index)) {
+                    <div class="stream-line" [ngClass]="line.cssClass">
+                      {{ line.text }}
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Streaming answer with blinking cursor -->
+          @if (streamingAnswer.length > 0) {
+            <div class="message-row assistant streaming-answer">
+              <div class="message-bubble">
+                <div class="message-text">
+                  @if (receivedTextDelta) {
+                    <markdown
+                      class="message-markdown"
+                      mermaid
+                      [data]="streamingAnswer"
+                      [mermaidOptions]="mermaidOptions"
+                    ></markdown>
+                  } @else {
+                    <span class="streaming-text">{{
+                      streamingAnswer.slice(0, streamingAnswerVisibleLength)
+                    }}</span>
+                  }
+                  @if (isSending) {
+                    <span aria-hidden="true" class="typewriter-cursor"></span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+          <div #scrollAnchor aria-hidden="true" class="scroll-anchor"></div>
+        </div>
+
+        <div class="composer terminal-composer">
+          <span aria-hidden="true" class="prompt-char">&gt;</span>
+          <mat-form-field appearance="outline" class="composer-input">
+            <input
+              i18n-placeholder
+              matInput
+              placeholder="Type your question..."
+              [(ngModel)]="draftMessage"
+              (keyup.enter)="sendMessage()"
+            />
+          </mat-form-field>
+
+          @if (isSending && hasDraftMessage) {
+            <button
+              class="queue-btn terminal-queue"
+              i18n
+              type="button"
+              (click)="sendMessage()"
+            >
+              Queue
+            </button>
+            <button
+              class="queue-btn terminal-interject"
+              i18n
+              type="button"
+              (click)="interjectMessage()"
+            >
+              Interject
+            </button>
+          }
+
+          <button
+            class="debug-toggle-btn"
+            title="Toggle debug console"
+            type="button"
+            [class.active]="showDebugConsole"
+            (click)="toggleDebugConsole()"
+          >
+            <span aria-hidden="true">{{ '{' }}{{ '}' }}</span>
+          </button>
+
+          <button
+            class="send-btn terminal-send"
+            type="button"
+            [disabled]="!isSending && !hasDraftMessage"
+            [ngClass]="{ stop: isSending }"
+            (click)="isSending ? cancelMessage() : sendMessage()"
+          >
+            <span aria-hidden="true" class="send-glyph">{{
+              isSending ? '■' : '>'
+            }}</span>
+          </button>
+        </div>
+
+        @if (queueCount > 0) {
+          <div class="queue-meta" i18n>{{ queueCount }} queued</div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

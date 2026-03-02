@@ -1,0 +1,163 @@
+.strategy-card {
+  padding: 0.25rem 0;
+}
+
+.strategy-question {
+  color: #d9d9d9;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+}
+
+.strategy-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.strategy-option {
+  align-items: flex-start;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 3px;
+  color: #d9d9d9;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  gap: 0.15rem;
+  min-width: 140px;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+
+  &:hover:not(.disabled) {
+    background: #222;
+    border-color: #ff6600;
+  }
+
+  &:active:not(.disabled) {
+    background: #ff6600;
+    color: #000;
+  }
+
+  &.disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.option-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.option-desc {
+  color: #888;
+  font-size: 0.68rem;
+  line-height: 1.3;
+}
+
+// --- Recommendation card ---
+
+.recommendation-card {
+  background: #111;
+  border: 1px solid #333;
+  border-left: 3px solid #ff6600;
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+}
+
+.rec-header {
+  color: #ff6600;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.rec-description {
+  color: #c8c8c8;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.allocation-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.alloc-row {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.alloc-label {
+  color: #aaa;
+  flex-shrink: 0;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.68rem;
+  width: 160px;
+}
+
+.alloc-bar-bg {
+  background: #222;
+  border-radius: 1px;
+  flex: 1;
+  height: 12px;
+}
+
+.alloc-bar {
+  border-radius: 1px;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.alloc-pct {
+  color: #d9d9d9;
+  flex-shrink: 0;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  width: 32px;
+}
+
+.rec-risk {
+  color: #666;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .strategy-options {
+    flex-direction: column;
+  }
+
+  .strategy-option {
+    min-width: auto;
+  }
+
+  .alloc-label {
+    font-size: 0.6rem;
+    width: 100px;
+  }
+}

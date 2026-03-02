@@ -1,0 +1,45 @@
+<div class="strategy-card">
+  @if (step.options) {
+    <div class="strategy-question">{{ step.question }}</div>
+    <div class="strategy-options">
+      @for (opt of step.options; track opt.value) {
+        <button
+          class="strategy-option"
+          [class.disabled]="disabled"
+          [disabled]="disabled"
+          (click)="selectOption(opt.value)"
+        >
+          <span class="option-label">{{ opt.label }}</span>
+          @if (opt.description) {
+            <span class="option-desc">{{ opt.description }}</span>
+          }
+        </button>
+      }
+    </div>
+  }
+
+  @if (step.recommendation) {
+    <div class="recommendation-card">
+      <div class="rec-header">{{ step.recommendation.title }}</div>
+      <div class="rec-description">{{ step.recommendation.description }}</div>
+      <div class="allocation-bars">
+        @for (alloc of step.recommendation.allocations; track alloc.asset) {
+          <div class="alloc-row">
+            <span class="alloc-label">{{ alloc.asset }}</span>
+            <div class="alloc-bar-bg">
+              <div
+                class="alloc-bar"
+                [style.background]="alloc.color"
+                [style.width.%]="alloc.percent"
+              ></div>
+            </div>
+            <span class="alloc-pct">{{ alloc.percent }}%</span>
+          </div>
+        }
+      </div>
+      <div class="rec-risk">
+        Risk Level: {{ step.recommendation.riskLevel }}
+      </div>
+    </div>
+  }
+</div>

@@ -37,6 +37,11 @@ export const routes: Routes = [
     title: internalRoutes.api.title
   },
   {
+    path: internalRoutes.agent.path,
+    loadChildren: () =>
+      import('./pages/agent/agent-page.routes').then((m) => m.routes)
+  },
+  {
     path: internalRoutes.auth.path,
     loadChildren: () =>
       import('./pages/auth/auth-page.routes').then((m) => m.routes),

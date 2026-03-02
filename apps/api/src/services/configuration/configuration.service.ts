@@ -22,6 +22,7 @@ export class ConfigurationService {
   public constructor() {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
+      AGENT_SERVICE_URL: str({ default: '' }),
       API_KEY_ALPHA_VANTAGE: str({ default: '' }),
       API_KEY_BETTER_UPTIME: str({ default: '' }),
       API_KEY_COINGECKO_DEMO: str({ default: '' }),

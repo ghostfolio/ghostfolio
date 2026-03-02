@@ -1,0 +1,708 @@
+// Bloomberg terminal-style theme for the agent tab
+:host {
+  display: block;
+}
+
+// --- Layout: chat + chart side by side ---
+
+.agent-layout {
+  display: flex;
+  gap: 0;
+  height: calc(100vh - 8.5rem);
+  margin: 1rem auto;
+  max-width: 90rem;
+}
+
+.chat-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .agent-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 8.5rem);
+  }
+
+  .chat-panel {
+    min-height: 60vh;
+  }
+}
+
+.agent-shell.terminal-theme {
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.terminal-theme .terminal-header {
+  align-items: flex-start;
+  background: #111;
+  border-bottom: 2px solid #ff6600;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+
+  .terminal-brand {
+    align-items: center;
+    color: #ff6600;
+    display: flex;
+    font-family:
+      'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+      monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    gap: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .connection-dot {
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    height: 8px;
+    width: 8px;
+
+    &.connected {
+      background: #33ff99;
+      box-shadow: 0 0 4px rgba(51, 255, 153, 0.5);
+    }
+
+    &.connecting {
+      animation: dot-pulse 1.2s ease-in-out infinite;
+      background: #ffb84d;
+      box-shadow: 0 0 4px rgba(255, 184, 77, 0.5);
+    }
+
+    &.disconnected,
+    &.error {
+      background: #ff6b6b;
+      box-shadow: 0 0 4px rgba(255, 107, 107, 0.5);
+    }
+  }
+
+  @keyframes dot-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  .terminal-subtitle {
+    color: #666;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
+
+.terminal-theme .agent-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.terminal-theme .messages {
+  background: #0a0a0a;
+  border: none;
+  border-radius: 0;
+  flex: 1;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 13px;
+  min-height: 0;
+  overflow: auto;
+  overflow-anchor: auto;
+  padding: 0.75rem 1rem;
+  scroll-behavior: auto;
+}
+
+.terminal-theme .scroll-anchor {
+  height: 1px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.terminal-theme .empty-state {
+  color: #666;
+  margin: auto;
+  text-align: center;
+
+  .empty-text {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
+
+.terminal-theme .message-row {
+  display: flex;
+  padding: 6px 0;
+  border-bottom: 1px solid #1a1a1a;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.terminal-theme .message-row.user {
+  justify-content: flex-end;
+}
+
+.terminal-theme .message-bubble {
+  background: transparent;
+  border-radius: 0;
+  max-width: 85%;
+  padding: 0.4rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-theme .message-text {
+  color: #d9d9d9;
+  font-size: 0.86rem;
+  line-height: 1.6;
+
+  // Structured table styling for markdown tables
+  table {
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 0.75rem 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  th,
+  td {
+    border: 1px solid #333;
+    padding: 0.45rem 0.65rem;
+    text-align: left;
+  }
+
+  th {
+    background: #1a1a1a;
+    color: #ff6600;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  td {
+    color: #c8c8c8;
+  }
+
+  // Right-align numeric columns (2nd column onward, typically metric values)
+  td:not(:first-child) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  tr:nth-child(even) td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  tr:hover td {
+    background: rgba(255, 102, 0, 0.06);
+  }
+
+  // Inline Mermaid charts
+  .mermaid {
+    margin: 0.75rem 0;
+    max-width: 100%;
+  }
+}
+
+.terminal-theme .message-row.assistant .message-text {
+  color: #c8c8c8;
+}
+
+.terminal-theme .stream-console .stream-bubble {
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 0;
+  max-width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.78rem;
+}
+
+.terminal-theme .stream-header {
+  color: #ff6600;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0.35rem;
+}
+
+.terminal-theme .stream-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.terminal-theme .stream-line {
+  color: #888;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+}
+
+.terminal-theme .stream-line.stream-thinking {
+  color: #6b8cae;
+}
+
+.terminal-theme .stream-line.stream-tool-running {
+  color: #ffb84d;
+}
+
+.terminal-theme .stream-line.stream-tool-ok {
+  color: #33ff99;
+}
+
+.terminal-theme .stream-line.stream-tool-fail,
+.terminal-theme .stream-line.stream-tool-blocked {
+  color: #ff6b6b;
+}
+
+.terminal-theme .stream-line.stream-done {
+  color: #33ff99;
+  font-weight: 600;
+}
+
+.terminal-theme .stream-line.stream-metrics {
+  color: #888;
+  font-size: 0.72rem;
+}
+
+.terminal-theme .stream-line.stream-fail {
+  color: #ff6b6b;
+  font-weight: 500;
+}
+
+.terminal-theme .streaming-answer .message-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-theme .streaming-text {
+  white-space: pre-wrap;
+}
+
+.terminal-theme .typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: #ff6600;
+  margin-left: 1px;
+  animation: cursor-blink 1s step-end infinite;
+  vertical-align: text-bottom;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.terminal-theme .message-row.user .message-text {
+  color: #ff9900;
+}
+
+.terminal-theme .meta-row {
+  color: #5b5b5b;
+  font-size: 0.65rem;
+  margin-top: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.terminal-theme .meta-row.warning {
+  color: #ff3333;
+}
+
+.terminal-theme .meta-row.metrics-row {
+  color: #6b8cae;
+  font-size: 0.68rem;
+}
+
+.terminal-theme .tool-trace {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.terminal-theme .tool-trace-label {
+  color: #999;
+  margin-right: 0.2rem;
+}
+
+.terminal-theme .tool-pill {
+  border: 1px solid #333;
+  border-radius: 2px;
+  color: #aaa;
+  display: inline-block;
+  font-size: 0.62rem;
+  letter-spacing: 0.4px;
+  padding: 0.1rem 0.3rem;
+  text-transform: uppercase;
+}
+
+.terminal-theme .tool-pill.ok {
+  border-color: #1f5f3a;
+  color: #33ff99;
+}
+
+.terminal-theme .tool-pill.fail {
+  border-color: #733;
+  color: #ff6b6b;
+}
+
+@media (max-width: 768px) {
+  .terminal-theme .tool-trace {
+    gap: 0.2rem;
+  }
+}
+
+.terminal-theme .composer.terminal-composer {
+  align-items: center;
+  display: flex;
+  gap: 0;
+  background: #111;
+  border: 1px solid #333;
+  border-top: 1px solid #333;
+  padding: 0;
+}
+
+.terminal-theme .prompt-char {
+  color: #ff6600;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 0 10px 12px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.terminal-theme .composer-input {
+  flex: 1;
+
+  ::ng-deep {
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+    .mat-mdc-text-field-wrapper {
+      background: transparent;
+    }
+    .mdc-notched-outline .mdc-notched-outline__leading,
+    .mdc-notched-outline .mdc-notched-outline__notch,
+    .mdc-notched-outline .mdc-notched-outline__trailing {
+      border-color: transparent;
+    }
+    .mat-mdc-form-field-focus-overlay {
+      background: transparent;
+    }
+    input {
+      color: #ff9900;
+      caret-color: #ff6600;
+    }
+    input::placeholder {
+      color: #444;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+    }
+    .mat-mdc-floating-label {
+      color: #666;
+    }
+  }
+}
+
+.terminal-theme .send-btn.terminal-send {
+  background: #ff6600;
+  border: none;
+  color: #000;
+  min-width: 44px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    background: #ff8533;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.terminal-theme .send-btn.terminal-send.stop {
+  background: #c74d00;
+}
+
+.terminal-theme .send-glyph {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.terminal-theme .queue-btn {
+  border: 1px solid #444;
+  background: #111;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 0.62rem;
+  letter-spacing: 0.6px;
+  padding: 0.45rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.terminal-theme .queue-btn.terminal-queue:hover {
+  border-color: #ff8533;
+  color: #ff8533;
+}
+
+.terminal-theme .queue-btn.terminal-interject:hover {
+  border-color: #33ff99;
+  color: #33ff99;
+}
+
+// --- Thinking indicator ---
+
+.terminal-theme .thinking-indicator {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.terminal-theme .thinking-dots {
+  display: inline-flex;
+  gap: 4px;
+
+  .dot {
+    animation: dot-bounce 1.4s ease-in-out infinite;
+    background: #ff6600;
+    border-radius: 50%;
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes dot-bounce {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.terminal-theme .thinking-label {
+  color: #6b8cae;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+// --- Collapsible tool call rows ---
+
+.terminal-theme .tool-calls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0.4rem 0;
+}
+
+.terminal-theme .tool-call-row {
+  background: #111;
+  border-left: 2px solid #333;
+  border-radius: 0;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.75rem;
+
+  &.ok {
+    border-left-color: #33ff99;
+  }
+
+  &.fail {
+    border-left-color: #ff6b6b;
+  }
+}
+
+.terminal-theme .tool-call-header {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  user-select: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.terminal-theme .tool-call-chevron {
+  color: #666;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  width: 0.8rem;
+}
+
+.terminal-theme .tool-call-name {
+  color: #ff6600;
+  font-weight: 600;
+}
+
+.terminal-theme .tool-call-status {
+  color: #888;
+  margin-left: auto;
+
+  &.ok {
+    color: #33ff99;
+  }
+
+  &.fail {
+    color: #ff6b6b;
+  }
+
+  &.running {
+    animation: dot-pulse 1.2s ease-in-out infinite;
+    color: #ffb84d;
+  }
+}
+
+.terminal-theme .tool-call-detail {
+  border-top: 1px solid #222;
+  padding: 0.3rem 0.6rem 0.4rem 1.6rem;
+}
+
+.terminal-theme .tool-detail-section {
+  margin-bottom: 0.3rem;
+}
+
+.terminal-theme .tool-detail-label {
+  color: #666;
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.terminal-theme .tool-detail-pre {
+  color: #999;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  margin: 0.15rem 0 0;
+  max-height: 120px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+// --- Debug console toggle ---
+
+.terminal-theme .debug-toggle-btn {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 2px;
+  color: #666;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.7rem;
+  padding: 0.35rem 0.4rem;
+
+  &:hover {
+    border-color: #555;
+    color: #aaa;
+  }
+
+  &.active {
+    border-color: #ff6600;
+    color: #ff6600;
+  }
+}
+
+.terminal-theme .queue-meta {
+  color: #777;
+  font-size: 0.62rem;
+  letter-spacing: 0.4px;
+  margin: 0.25rem 0.5rem 0.4rem;
+  text-transform: uppercase;
+}
+
+// --- Strategy flow button in empty state ---
+
+.terminal-theme .empty-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.terminal-theme .strategy-flow-btn {
+  background: transparent;
+  border: 1px solid #ff6600;
+  color: #ff6600;
+  cursor: pointer;
+  font-family:
+    'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New',
+    monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.8px;
+  padding: 0.55rem 1rem;
+  text-transform: uppercase;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: #ff6600;
+    color: #000;
+  }
+}
+
+// --- Strategy card within messages ---
+
+.terminal-theme .message-row gf-strategy-card {
+  max-width: 85%;
+  width: 100%;
+}
