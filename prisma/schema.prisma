@@ -338,6 +338,41 @@ enum Provider {
   OIDC
 }
 
+model AgentChatLog {
+  id                 String            @id @default(uuid())
+  requestId          String            @unique
+  userId             String
+  latencyMs          Int
+  totalSteps         Int
+  toolsUsed          String[]          @default([])
+  promptTokens       Int               @default(0)
+  completionTokens   Int               @default(0)
+  totalTokens        Int               @default(0)
+  modelId            String?
+  errorOccurred      Boolean           @default(false)
+  errorMessage       String?
+  verificationScore  Float?
+  verificationResult Json?
+  createdAt          DateTime          @default(now())
+  feedback           AgentFeedback[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AgentFeedback {
+  id        String       @id @default(uuid())
+  requestId String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime     @default(now())
+  chatLog   AgentChatLog @relation(fields: [requestId], references: [requestId])
+
+  @@unique([requestId, userId])
+  @@index([createdAt])
+}
+
 enum Role {
   ADMIN
   DEMO
