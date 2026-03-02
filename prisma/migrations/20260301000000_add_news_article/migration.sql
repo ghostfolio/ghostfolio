@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "NewsArticle" (
+CREATE TABLE IF NOT EXISTS "NewsArticle" (
     "id" TEXT NOT NULL,
     "symbol" TEXT NOT NULL,
     "headline" TEXT NOT NULL,
@@ -16,10 +16,10 @@ CREATE TABLE "NewsArticle" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "NewsArticle_finnhubId_key" ON "NewsArticle"("finnhubId");
+CREATE UNIQUE INDEX IF NOT EXISTS "NewsArticle_finnhubId_key" ON "NewsArticle"("finnhubId");
 
 -- CreateIndex
-CREATE INDEX "NewsArticle_symbol_idx" ON "NewsArticle"("symbol");
+CREATE INDEX IF NOT EXISTS "NewsArticle_symbol_idx" ON "NewsArticle"("symbol");
 
 -- CreateIndex
-CREATE INDEX "NewsArticle_publishedAt_idx" ON "NewsArticle"("publishedAt");
+CREATE INDEX IF NOT EXISTS "NewsArticle_publishedAt_idx" ON "NewsArticle"("publishedAt");
