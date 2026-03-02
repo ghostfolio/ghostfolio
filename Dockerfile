@@ -63,4 +63,4 @@ COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
 USER node
-CMD [ "/ghostfolio/entrypoint.sh" ]
+CMD [ "/bin/sh", "/ghostfolio/entrypoint.sh" ]
