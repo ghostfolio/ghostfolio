@@ -1,0 +1,61 @@
+name: Golden Evals
+
+on:
+  # Run after deploy — trigger via Render deploy hook or manually
+  workflow_dispatch:
+    inputs:
+      api_base:
+        description: 'API base URL (e.g. https://ghostfolio-xxxx.onrender.com)'
+        required: false
+  # Also run on push to main (evals hit the deployed instance)
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/src/app/endpoints/agent/**'
+      - 'evals/**'
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  golden-evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for service health
+        env:
+          API_BASE: ${{ inputs.api_base || secrets.RENDER_URL }}
+        run: |
+          echo "Waiting for ${API_BASE}/api/v1/health..."
+          for i in $(seq 1 30); do
+            if curl -sf "${API_BASE}/api/v1/health" > /dev/null 2>&1; then
+              echo "Service healthy!"
+              exit 0
+            fi
+            echo "Attempt $i/30 — retrying in 10s..."
+            sleep 10
+          done
+          echo "Service not healthy after 5 minutes"
+          exit 1
+
+      - name: Run golden evals
+        env:
+          API_BASE: ${{ inputs.api_base || secrets.RENDER_URL }}
+          TEST_USER_ACCESS_TOKEN: ${{ secrets.TEST_USER_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx evalite run --threshold 100 evals/golden/agent-golden.eval.ts

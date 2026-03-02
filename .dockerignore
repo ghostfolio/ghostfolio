@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.git
+evals
+evalite.config.ts
+*.md
+!CHANGELOG.md
