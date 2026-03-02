@@ -176,6 +176,8 @@ For detailed information on the environment setup and development process, pleas
 
 ## Public API
 
+For an end-to-end `curl` workflow, see [`PUBLIC_API_TUTORIAL.md`](./PUBLIC_API_TUTORIAL.md).
+
 ### Authorization: Bearer Token
 
 Set the header for each request as follows:
