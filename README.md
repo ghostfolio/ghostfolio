@@ -305,6 +305,8 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 
 Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
 
+Example evaluation resource: [Ghostfolio Agent Eval Dataset](https://github.com/thisisyoussef/ghostfolio-agent-eval-dataset) (deterministic finance-agent golden cases).
+
 Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ repository to get listed as well. [Learn more →](https://docs.github.com/en/articles/classifying-your-repository-with-topics)
 
 ## Contributing
