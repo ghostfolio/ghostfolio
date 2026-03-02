@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subject, takeUntil } from 'rxjs';
@@ -32,7 +31,6 @@ interface ChatMessage {
     CommonModule,
     FormsModule,
     MatButtonModule,
-    MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule
   ],
