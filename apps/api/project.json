@@ -58,7 +58,8 @@
       "executor": "@nx/js:node",
       "options": {
         "buildTarget": "api:build"
-      }
+      },
+      "dependsOn": ["copy-assets"]
     },
     "lint": {
       "executor": "@nx/eslint:lint",
