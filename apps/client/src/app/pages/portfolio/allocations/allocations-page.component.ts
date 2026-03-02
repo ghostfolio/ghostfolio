@@ -22,7 +22,13 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -36,8 +42,6 @@ import {
 } from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -54,7 +58,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'
 })
-export class GfAllocationsPageComponent implements OnDestroy, OnInit {
+export class GfAllocationsPageComponent implements OnInit {
   public accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
@@ -119,11 +123,10 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
   public user: User;
   public worldMapChartFormat: string;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
@@ -132,7 +135,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {
           this.openAccountDetailDialog(params['accountId']);
@@ -145,13 +148,13 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -166,7 +169,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
           this.initialize();
 
           this.fetchPortfolioDetails()
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((portfolioDetails) => {
               this.initialize();
 
@@ -200,11 +203,6 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private extractEtfProvider({
@@ -578,7 +576,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });
