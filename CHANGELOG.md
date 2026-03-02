@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the deprecated `committedFunds` from the summary of the portfolio details endpoint
+- Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
 - Upgraded `Nx` from version `22.4.5` to `22.5.3`
 
 ### Fixed
