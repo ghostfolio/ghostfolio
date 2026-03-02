@@ -1,8 +1,10 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { getLocale } from '@ghostfolio/common/helper';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   ChangeDetectionStrategy,
@@ -10,7 +12,8 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -36,6 +39,7 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    GfValueComponent,
     IonIcon,
     MatButtonModule,
     MatMenuModule,
@@ -48,6 +52,8 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
   templateUrl: './admin-tag.component.html'
 })
 export class GfAdminTagComponent implements OnDestroy, OnInit {
+  @Input() locale = getLocale();
+
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Tag>();
