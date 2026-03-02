@@ -58,6 +58,22 @@
           >Accounts</a
         >
       </li>
+      @if (hasPermissionToAccessAgent) {
+        <li class="list-inline-item">
+          <a
+            class="d-none d-sm-block"
+            i18n
+            mat-flat-button
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.agent.path,
+              'text-decoration-underline':
+                currentRoute === internalRoutes.agent.path
+            }"
+            [routerLink]="routerLinkAgent"
+            >Agent</a
+          >
+        </li>
+      }
       @if (hasPermissionToAccessAdminControl) {
         <li class="list-inline-item">
           <a
@@ -267,6 +283,18 @@
             [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
+          @if (hasPermissionToAccessAgent) {
+            <a
+              class="d-flex d-sm-none"
+              i18n
+              mat-menu-item
+              [ngClass]="{
+                'font-weight-bold': currentRoute === internalRoutes.agent.path
+              }"
+              [routerLink]="routerLinkAgent"
+              >Agent</a
+            >
+          }
           <a
             i18n
             mat-menu-item
@@ -330,8 +358,7 @@
         </mat-menu>
       </li>
     </ul>
-  }
-  @if (user === null) {
+  } @else {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
         class="align-items-center justify-content-start rounded-0"

@@ -33,6 +33,11 @@ export const internalRoutes: Record<string, InternalRoute> = {
     },
     title: $localize`Settings`
   },
+  agent: {
+    path: 'agent',
+    routerLink: ['/agent'],
+    title: $localize`Agent`
+  },
   adminControl: {
     excludeFromAssistant: (aUser: User) => {
       return hasPermission(aUser?.permissions, permissions.accessAdminControl);

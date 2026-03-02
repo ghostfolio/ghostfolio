@@ -1,0 +1,438 @@
+// Agent page – markdown body & rich component styles
+// Scoped to gf-agent-page so they don't leak to other views.
+// Lives in global styles because Angular's ::ng-deep is deprecated
+// and [innerHTML] content doesn't receive encapsulation attributes.
+
+$agent-primary: #4db6ac;
+$agent-primary-dark: #3aa198;
+$agent-primary-light: #e0f2f1;
+$agent-text-secondary: #6b7280;
+$agent-border: #e5e7eb;
+$agent-bg-input: #f3f4f6;
+$agent-radius-sm: 8px;
+$agent-font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+gf-agent-page .markdown-body {
+  font-size: 15px;
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 12px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 0 0 12px 20px;
+  }
+  li {
+    margin: 4px 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 16px 0 8px;
+    font-weight: 600;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+  h2 {
+    font-size: 16px;
+  }
+  h3 {
+    font-size: 15px;
+  }
+
+  code {
+    background: $agent-primary-light;
+    color: $agent-primary-dark;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  pre {
+    background: $agent-bg-input;
+    border: 1px solid $agent-border;
+    border-radius: $agent-radius-sm;
+    padding: 12px 16px;
+    margin: 8px 0 12px;
+    overflow-x: auto;
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid $agent-border;
+    padding-left: 12px;
+    color: $agent-text-secondary;
+    margin: 8px 0 12px;
+  }
+
+  // Tables – base styles apply to all tables including .c-table / .c-comp-table
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 8px 0 12px;
+    font-size: 13px;
+    width: 100%;
+    border: 1px solid $agent-border;
+    border-radius: $agent-radius-sm;
+    overflow: hidden;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid $agent-border;
+    border-right: 1px solid $agent-border;
+    padding: 8px 12px;
+    text-align: left;
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  th {
+    background: $agent-bg-input;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .c-comp-table th {
+    background: rgba($agent-primary, 0.08);
+  }
+
+  a {
+    color: $agent-primary;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  // Value sentiment
+  .value-positive,
+  .c-val-pos {
+    color: #10b981;
+    font-weight: 600;
+  }
+  .value-negative,
+  .c-val-neg {
+    color: #ef4444;
+    font-weight: 600;
+  }
+
+  // Cell types
+  .c-cell-ticker {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .c-cell-currency,
+  .c-cell-num,
+  .c-cell-delta {
+    font-family: $agent-font-mono;
+    text-align: right;
+  }
+
+  // Allocation bars
+  .c-alloc-group {
+    margin: 8px 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    background: white;
+    border: 1px solid $agent-border;
+    border-radius: $agent-radius-sm;
+  }
+
+  .c-progress-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .c-progress-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .c-progress-label {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .c-progress-value {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    font-family: $agent-font-mono;
+  }
+
+  .c-alloc-bar {
+    width: 100%;
+    height: 4px;
+    background: $agent-border;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .c-alloc-fill {
+    height: 100%;
+    background: $agent-primary;
+    border-radius: 2px;
+  }
+
+  // Sparkline
+  .c-sparkline {
+    margin: 8px 0 12px;
+  }
+
+  .c-sparkline-title,
+  .c-chart-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: $agent-text-secondary;
+    margin-bottom: 4px;
+  }
+
+  .c-chart-title {
+    margin-bottom: 8px;
+  }
+
+  .c-spark-svg {
+    width: 100%;
+    height: 40px;
+    display: block;
+  }
+
+  // Suggestions
+  .c-suggest-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 16px 0 4px;
+  }
+
+  .c-suggest {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    color: $agent-text-secondary;
+    cursor: pointer;
+    transition: color 0.15s;
+    &:hover {
+      color: rgba(var(--dark-primary-text));
+    }
+  }
+
+  .c-suggest-arrow {
+    color: #9ca3af;
+    margin-right: 8px;
+    font-size: 14px;
+  }
+
+  // Metric cards
+  .c-metric-row {
+    display: flex;
+    gap: 12px;
+    margin: 8px 0 12px;
+    flex-wrap: wrap;
+  }
+
+  .c-metric-card {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 16px;
+    background: $agent-bg-input;
+    border-radius: $agent-radius-sm;
+    border: 1px solid $agent-border;
+  }
+
+  .c-metric-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $agent-text-secondary;
+    margin-bottom: 4px;
+  }
+
+  .c-metric-value {
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .c-metric-delta {
+    font-size: 12px;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Chart
+  .c-chart-wrap {
+    margin: 8px 0 12px;
+  }
+  .c-chart-canvas {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+// Streaming cursor
+gf-agent-page .bubble.streaming .markdown-body::after {
+  content: '\25CE';
+  color: $agent-primary;
+  animation: agent-blink 1s steps(2) infinite;
+}
+
+@keyframes agent-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+// Verification tooltip inner content (injected via innerHTML)
+gf-agent-page .latency-tooltip {
+  .vt-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 2px 0;
+  }
+
+  .vt-label {
+    color: $agent-text-secondary;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .vt-value {
+    color: rgba(var(--dark-primary-text));
+    font-family: $agent-font-mono;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+// Dark mode
+.theme-dark gf-agent-page .markdown-body {
+  // Inline code
+  code {
+    background: rgba($agent-primary, 0.15);
+    color: $agent-primary;
+  }
+
+  // Code blocks
+  pre {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  // Blockquotes
+  blockquote {
+    border-left-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  // Tables
+  table {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  th,
+  td {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    border-right-color: rgba(255, 255, 255, 0.08);
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .c-comp-table th {
+    background: rgba($agent-primary, 0.1);
+  }
+
+  // Cell types
+  .c-cell-ticker {
+    color: #e2e8f0;
+  }
+
+  // Allocation bars
+  .c-alloc-group {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .c-alloc-bar {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  // Suggestions
+  .c-suggest {
+    color: rgba(255, 255, 255, 0.5);
+    &:hover {
+      color: rgb(var(--light-primary-text));
+    }
+  }
+
+  .c-suggest-arrow {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  // Metric cards
+  .c-metric-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .c-metric-label {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  // Sparkline / chart titles
+  .c-sparkline-title,
+  .c-chart-title {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Dark mode – verification tooltip
+.theme-dark gf-agent-page .latency-tooltip {
+  .vt-label {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .vt-value {
+    color: rgba(var(--light-primary-text));
+  }
+}

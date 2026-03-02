@@ -1,0 +1,317 @@
+<div class="agent-container">
+  <!-- Sidebar -->
+  <aside class="agent-sidebar">
+    <div class="sidebar-header">
+      <button class="new-chat-btn" (click)="onNewChat()">
+        <ion-icon name="add-outline" size="small" />
+        <span i18n>New Chat</span>
+      </button>
+    </div>
+    <div class="conversation-list">
+      @for (conversation of conversations; track conversation.id) {
+        <div class="conversation-item-wrapper">
+          @if (renamingId === conversation.id) {
+            <input
+              autofocus
+              class="rename-input"
+              [value]="renameValue"
+              (blur)="confirmRename(conversation)"
+              (click)="$event.stopPropagation()"
+              (input)="renameValue = $any($event.target).value"
+              (keydown)="onRenameKeydown($event, conversation)"
+            />
+          } @else {
+            <button
+              class="conversation-item"
+              [class.active]="activeConversation?.id === conversation.id"
+              (click)="onSelectConversation(conversation)"
+            >
+              @if (conversation.pinned) {
+                <ion-icon class="pin-badge" name="pin-outline" />
+              }
+              <span class="conversation-title">{{ conversation.title }}</span>
+            </button>
+            <button
+              class="context-menu-trigger"
+              (click)="toggleMenu($event, conversation.id)"
+            >
+              <ion-icon name="ellipsis-vertical-outline" />
+            </button>
+            @if (openMenuId === conversation.id) {
+              <div class="context-menu" (click)="$event.stopPropagation()">
+                <button
+                  class="context-menu-item"
+                  (click)="startRename($event, conversation)"
+                >
+                  <ion-icon name="create-outline" size="small" />
+                  <span i18n>Rename</span>
+                </button>
+                <button
+                  class="context-menu-item"
+                  (click)="togglePin($event, conversation)"
+                >
+                  <ion-icon name="pin-outline" size="small" />
+                  <span>{{ conversation.pinned ? 'Unpin' : 'Pin' }}</span>
+                </button>
+                <button
+                  class="context-menu-item delete"
+                  (click)="deleteConversation($event, conversation)"
+                >
+                  <ion-icon name="trash-outline" size="small" />
+                  <span i18n>Delete</span>
+                </button>
+              </div>
+            }
+          }
+        </div>
+      }
+      @if (conversations.length === 0) {
+        <div class="no-conversations" i18n>No conversations yet</div>
+      }
+    </div>
+  </aside>
+
+  <!-- Main Chat Area -->
+  <main class="agent-main">
+    @if (!activeConversation || activeConversation.messages.length === 0) {
+      <!-- Empty State -->
+      <div class="chat-canvas">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <ion-icon name="chatbubble-ellipses-outline" />
+          </div>
+          <h2 class="empty-title" i18n>Hello, Portfolio Owner</h2>
+          <p class="empty-subtitle" i18n>
+            I can help analyze your assets, check dividends, or rebalance.
+          </p>
+          <div class="prompts-grid">
+            @for (card of promptCards; track card.title) {
+              <button class="prompt-card" (click)="onPromptCardClick(card)">
+                <div class="prompt-icon">
+                  <ion-icon size="small" [name]="card.iconName" />
+                </div>
+                <div class="prompt-text">{{ card.title }}</div>
+                <div class="prompt-sub">{{ card.subtitle }}</div>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+      <!-- Messages -->
+      <div #messagesContainer class="chat-canvas">
+        <div class="chat-stream">
+          @for (message of activeConversation.messages; track $index) {
+            @if (
+              message.role === 'user' ||
+              message.content ||
+              message.html ||
+              message.activeTools?.length ||
+              message.pendingApproval
+            ) {
+              <div
+                class="message-group"
+                [class.assistant]="message.role === 'assistant'"
+                [class.user]="message.role === 'user'"
+              >
+                <div class="bubble-wrapper">
+                  @if (message.activeTools?.length) {
+                    <div
+                      class="tool-indicator"
+                      [class.completed]="!message.isStreaming"
+                    >
+                      @for (tool of message.activeTools; track tool) {
+                        <span class="tool-label"
+                          ><code>{{ tool }}</code></span
+                        >
+                      }
+                    </div>
+                  }
+                  <div class="bubble" [class.streaming]="message.isStreaming">
+                    @if (message.role === 'assistant' && message.html) {
+                      <div
+                        class="markdown-body"
+                        [innerHTML]="message.html"
+                        (click)="onMarkdownClick($event)"
+                      ></div>
+                    } @else {
+                      {{ message.content }}
+                    }
+                  </div>
+                  @if (message.pendingApproval) {
+                    <div class="approval-card">
+                      <div class="approval-header">Confirm action</div>
+                      <div class="approval-summary">
+                        <code class="approval-tool">{{
+                          formatToolName(message.pendingApproval.toolName)
+                        }}</code>
+                        <pre class="approval-detail">{{
+                          formatApprovalInput(message.pendingApproval)
+                        }}</pre>
+                      </div>
+                      <div class="approval-actions">
+                        <button
+                          class="approve-btn"
+                          (click)="handleApproval(message, true)"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          class="deny-btn"
+                          (click)="handleApproval(message, false)"
+                        >
+                          Deny
+                        </button>
+                      </div>
+                    </div>
+                  }
+                  @if (
+                    message.role === 'assistant' &&
+                    message.requestId &&
+                    message.content &&
+                    !message.isStreaming
+                  ) {
+                    <div class="action-bar">
+                      <button class="action-btn" (click)="copyMessage(message)">
+                        <ion-icon name="copy-outline" size="small" />
+                        <span class="action-tooltip">Copy</span>
+                      </button>
+                      <button
+                        class="action-btn"
+                        (click)="shareMessage(message)"
+                      >
+                        <ion-icon name="link-outline" size="small" />
+                        <span class="action-tooltip">Share link</span>
+                      </button>
+                      <button
+                        class="action-btn"
+                        [class.active-up]="message.feedbackRating === 1"
+                        [disabled]="!!message.feedbackRating"
+                        (click)="sendFeedback(message, 1)"
+                      >
+                        <ion-icon name="thumbs-up-outline" size="small" />
+                        <span class="action-tooltip">Love this</span>
+                      </button>
+                      <button
+                        class="action-btn"
+                        [class.active-down]="message.feedbackRating === -1"
+                        [disabled]="!!message.feedbackRating"
+                        (click)="sendFeedback(message, -1)"
+                      >
+                        <ion-icon name="thumbs-down-outline" size="small" />
+                        <span class="action-tooltip">Not helpful</span>
+                      </button>
+                      <button class="action-btn" disabled>
+                        <ion-icon
+                          name="ellipsis-horizontal-outline"
+                          size="small"
+                        />
+                        <span class="action-tooltip">More</span>
+                      </button>
+                      @if (message.latencyMs) {
+                        <span
+                          class="latency-badge"
+                          (mouseenter)="prefetchVerification(message)"
+                        >
+                          {{ formatLatency(message.latencyMs) }}
+                          <span
+                            class="latency-tooltip"
+                            [innerHTML]="buildVerificationTooltip(message)"
+                          ></span>
+                        </span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          }
+          @if (
+            isLoading &&
+            activeConversation.messages[activeConversation.messages.length - 1]
+              ?.content === '' &&
+            !activeConversation.messages[activeConversation.messages.length - 1]
+              ?.activeTools?.length
+          ) {
+            <div class="message-group assistant">
+              <div class="bubble-wrapper">
+                <div class="bubble">
+                  <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Input Area -->
+    <div class="input-container">
+      <div class="input-wrapper">
+        <textarea
+          #messageInput
+          class="chat-input"
+          i18n-placeholder
+          placeholder="Ask about your portfolio..."
+          rows="1"
+          [disabled]="isLoading"
+          [value]="inputValue"
+          (input)="onInputChange($event)"
+          (keydown)="onInputKeydown($event)"
+        ></textarea>
+        <div class="input-actions">
+          <div class="model-selector-container">
+            <button
+              class="model-pill"
+              (click)="
+                modelDropdownOpen = !modelDropdownOpen; $event.stopPropagation()
+              "
+            >
+              {{ getModelLabel(selectedModel) }}
+              <ion-icon
+                size="small"
+                [name]="
+                  modelDropdownOpen
+                    ? 'chevron-up-outline'
+                    : 'chevron-down-outline'
+                "
+              />
+            </button>
+            @if (modelDropdownOpen) {
+              <div class="model-dropdown" (click)="$event.stopPropagation()">
+                @for (m of models; track m.id) {
+                  <button
+                    class="model-option"
+                    [class.selected]="selectedModel === m.id"
+                    (click)="selectModel(m.id)"
+                  >
+                    <div class="model-option-text">
+                      <span class="model-name">{{ m.label }}</span>
+                      <span class="model-tier">{{ m.tier }}</span>
+                    </div>
+                    @if (selectedModel === m.id) {
+                      <ion-icon
+                        class="model-check"
+                        name="checkmark-outline"
+                        size="small"
+                      />
+                    }
+                  </button>
+                }
+              </div>
+            }
+          </div>
+          <button
+            class="send-btn"
+            [disabled]="!inputValue.trim() || isLoading"
+            (click)="sendMessage()"
+          >
+            <ion-icon name="send-outline" size="small" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
