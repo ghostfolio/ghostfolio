@@ -18,11 +18,13 @@ import { generateText, streamText, CoreMessage } from 'ai';
 import { randomUUID } from 'crypto';
 import type { ColumnDescriptor } from 'tablemark';
 
+import { NewsService } from '../news/news.service';
 import { getAccountSummaryTool } from './tools/account-summary.tool';
 import { getDividendSummaryTool } from './tools/dividend-summary.tool';
 import { getExchangeRateTool } from './tools/exchange-rate.tool';
 import { getLookupMarketDataTool } from './tools/market-data.tool';
 import { getPortfolioHoldingsTool } from './tools/portfolio-holdings.tool';
+import { getPortfolioNewsTool } from './tools/portfolio-news.tool';
 import { getPortfolioPerformanceTool } from './tools/portfolio-performance.tool';
 import { getPortfolioReportTool } from './tools/portfolio-report.tool';
 import { getTransactionHistoryTool } from './tools/transaction-history.tool';
@@ -77,6 +79,7 @@ export class AiService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly newsService: NewsService,
     private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     private readonly prismaService: PrismaService,
@@ -266,6 +269,9 @@ export class AiService {
         portfolioService: this.portfolioService,
         userId,
         impersonationId
+      }),
+      get_portfolio_news: getPortfolioNewsTool({
+        newsService: this.newsService
       })
     };
 

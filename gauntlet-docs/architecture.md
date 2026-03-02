@@ -16,20 +16,21 @@
 
 **LLM:** Anthropic Claude Haiku 3.5 via `@ai-sdk/anthropic`. Originally used Sonnet for quality during development, then switched to Haiku for production — 3-5x faster latency and 70% cost reduction with no degradation in eval pass rate (still 100%). Originally planned for OpenRouter (already configured in Ghostfolio) but switched to direct Anthropic when OpenRouter's payment system went down. The Vercel AI SDK's provider abstraction made both switches trivial one-line changes.
 
-**Architecture:** Single agent with 8-tool registry. The agent receives a user query, the LLM selects appropriate tools, tool functions call existing Ghostfolio services (PortfolioService, OrderService, DataProviderService, ExchangeRateService), and the LLM synthesizes results into a natural language response. Multi-step reasoning is handled via `maxSteps: 10` — the agent can chain up to 10 tool calls before responding. Responses stream to the frontend via Server-Sent Events, so users see tokens appearing in real time rather than waiting for the full response.
+**Architecture:** Single agent with 9-tool registry. The agent receives a user query, the LLM selects appropriate tools, tool functions call existing Ghostfolio services (PortfolioService, OrderService, DataProviderService, ExchangeRateService), and the LLM synthesizes results into a natural language response. Multi-step reasoning is handled via `maxSteps: 10` — the agent can chain up to 10 tool calls before responding. Responses stream to the frontend via Server-Sent Events, so users see tokens appearing in real time rather than waiting for the full response.
 
-**Tools (8 implemented):**
+**Tools (9 implemented):**
 
-| Tool | Wraps | Purpose |
-|---|---|---|
-| get_portfolio_holdings | PortfolioService.getDetails() | Holdings, allocations, performance per position |
-| get_portfolio_performance | Direct Prisma + DataProviderService | All-time returns (cost basis vs current value) |
-| get_dividend_summary | PortfolioService.getDividends() | Dividend income breakdown |
-| get_transaction_history | Prisma Order queries | Buy/sell/dividend activity history |
-| lookup_market_data | DataProviderService.getQuotes() | Current prices and asset profiles |
-| get_portfolio_report | PortfolioService.getReport() | X-ray: diversification, concentration, fees |
-| get_exchange_rate | ExchangeRateDataService | Currency pair conversions |
-| get_account_summary | PortfolioService.getAccounts() | Account names, platforms, balances |
+| Tool                      | Wraps                               | Purpose                                         |
+| ------------------------- | ----------------------------------- | ----------------------------------------------- |
+| get_portfolio_holdings    | PortfolioService.getDetails()       | Holdings, allocations, performance per position |
+| get_portfolio_performance | Direct Prisma + DataProviderService | All-time returns (cost basis vs current value)  |
+| get_dividend_summary      | PortfolioService.getDividends()     | Dividend income breakdown                       |
+| get_transaction_history   | Prisma Order queries                | Buy/sell/dividend activity history              |
+| lookup_market_data        | DataProviderService.getQuotes()     | Current prices and asset profiles               |
+| get_portfolio_report      | PortfolioService.getReport()        | X-ray: diversification, concentration, fees     |
+| get_exchange_rate         | ExchangeRateDataService             | Currency pair conversions                       |
+| get_account_summary       | PortfolioService.getAccounts()      | Account names, platforms, balances              |
+| get_portfolio_news        | Finnhub API + Prisma NewsArticle    | Recent financial news for portfolio symbols     |
 
 **Memory:** Conversation history stored client-side in Angular component state. The full message array is passed to the server on each request, enabling multi-turn conversations without server-side session storage.
 
@@ -53,19 +54,20 @@ Three verification checks run on every agent response:
 
 ## Eval Results
 
-**55 test cases** across four categories:
+**58 test cases** across four categories:
 
-| Category | Count | Pass Rate |
-|---|---|---|
-| Happy path | 20 | 100% |
-| Edge cases | 12 | 100% |
-| Adversarial | 12 | 100% |
-| Multi-step | 11 | 100% |
-| **Total** | **55** | **100%** |
+| Category    | Count  | Pass Rate |
+| ----------- | ------ | --------- |
+| Happy path  | 21     | 100%      |
+| Edge cases  | 13     | 100%      |
+| Adversarial | 12     | 100%      |
+| Multi-step  | 12     | 100%      |
+| **Total**   | **58** | **100%**  |
 
-**Failure analysis:** An earlier version had one multi-step test (MS-009) failing because the agent exhausted the default `maxSteps` limit (5) before generating a response after calling 5+ tools. Increasing `maxSteps` to 10 resolved this — the agent now completes complex multi-tool queries that require up to 7 sequential tool calls. LLM-as-judge scoring averages 4.18/5 across all 55 tests, with the lowest scores on queries involving exchange rate data (known data-gathering dependency) and computed values the judge couldn't independently verify.
+**Failure analysis:** An earlier version had one multi-step test (MS-009) failing because the agent exhausted the default `maxSteps` limit (5) before generating a response after calling 5+ tools. Increasing `maxSteps` to 10 resolved this — the agent now completes complex multi-tool queries that require up to 7 sequential tool calls. LLM-as-judge scoring averages 4.13/5 across all 58 tests, with the lowest scores on queries involving exchange rate data (known data-gathering dependency) and computed values the judge couldn't independently verify.
 
 **Performance metrics:**
+
 - Average latency: 7.7 seconds (with Sonnet), improving to ~3-4s with Haiku
 - Single-tool queries: 4-9 seconds (target: <5s — met with Haiku model switch)
 - Multi-step queries: 8-20 seconds (target: <15s — mostly met, complex queries with 5+ tools can exceed)
@@ -83,6 +85,7 @@ Three verification checks run on every agent response:
 **Integration:** Via OpenTelemetry SDK with LangfuseSpanProcessor, initialized at application startup before any other imports. The Vercel AI SDK's `experimental_telemetry` option sends traces automatically on every `generateText()` call.
 
 **What we track:**
+
 - Full request traces: input → LLM reasoning → tool selection → tool execution → LLM synthesis → output
 - Latency breakdown: per-LLM-call timing and per-tool-execution timing
 - Token usage: input and output tokens per LLM call
@@ -98,8 +101,8 @@ Three verification checks run on every agent response:
 
 **Type:** Published eval dataset + feature PR to Ghostfolio
 
-**Eval dataset:** 55 test cases published as a structured JSON file in the repository under `eval-dataset/`, covering happy path, edge case, adversarial, and multi-step scenarios for financial AI agents. Each test case includes input query, expected tools, pass/fail criteria, and category tags. Licensed AGPL-3.0 (matching Ghostfolio).
+**Eval dataset:** 58 test cases published as a structured JSON file in the repository under `eval-dataset/`, covering happy path, edge case, adversarial, and multi-step scenarios for financial AI agents. Each test case includes input query, expected tools, pass/fail criteria, and category tags. Licensed AGPL-3.0 (matching Ghostfolio).
 
 **Repository:** github.com/a8garber/ghostfolio (fork with AI agent module)
 
-**What was contributed:** A complete AI agent module for Ghostfolio adding conversational financial analysis capabilities — 8 tools, verification layer, eval suite, Langfuse observability, and Angular chat UI. Any Ghostfolio instance can enable AI features by adding an Anthropic API key.
+**What was contributed:** A complete AI agent module for Ghostfolio adding conversational financial analysis capabilities — 9 tools (including financial news via Finnhub), verification layer, eval suite, Langfuse observability, and Angular chat UI. Any Ghostfolio instance can enable AI features by adding an Anthropic API key and optionally a Finnhub API key for news.

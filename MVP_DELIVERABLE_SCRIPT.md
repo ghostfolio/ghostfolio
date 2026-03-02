@@ -80,15 +80,19 @@ Record with QuickTime. Read callouts aloud. Each **[MVP-X]** tag maps to a requi
 1. Switch to terminal (or split screen).
 2. **Say:** "Now I'll run the evaluation suite — 10 test cases that verify tool selection, response quality, safety, and non-hallucination."
 3. Run:
+
    ```bash
    AUTH_TOKEN="<your bearer token>" npx tsx apps/api/src/app/endpoints/ai/eval/eval.ts
    ```
-   *(To get a token: `curl -s https://ghostfolio-production-f9fe.up.railway.app/api/v1/info | python3 -c "import sys,json; print(json.load(sys.stdin)['demoAuthToken'])"` )*
+
+   _(To get a token: `curl -s https://ghostfolio-production-f9fe.up.railway.app/api/v1/info | python3 -c "import sys,json; print(json.load(sys.stdin)['demoAuthToken'])"` )_
 
    Or if running against localhost:
+
    ```bash
    AUTH_TOKEN="<token>" npx tsx apps/api/src/app/endpoints/ai/eval/eval.ts
    ```
+
 4. Wait for all 10 tests to complete. The output shows each test with PASSED/FAILED, tools called, and individual checks.
 5. **Say:** "All 10 test cases pass. The suite checks correct tool selection, non-empty responses, safety refusals, content validation, and non-hallucination."
 
@@ -98,23 +102,23 @@ Record with QuickTime. Read callouts aloud. Each **[MVP-X]** tag maps to a requi
 
 ## Wrap-Up (3:45)
 
-**Say:** "To recap — this is a fully functional AI financial agent built on Ghostfolio. It responds to natural language, invokes 8 tools backed by real portfolio services, maintains multi-turn conversation, handles errors gracefully, includes financial verification checks, passes a 10-case evaluation suite, and is deployed publicly on Railway. Thanks for watching."
+**Say:** "To recap — this is a fully functional AI financial agent built on Ghostfolio. It responds to natural language, invokes 9 tools backed by real portfolio services, maintains multi-turn conversation, handles errors gracefully, includes financial verification checks, passes a 10-case evaluation suite, and is deployed publicly on Railway. Thanks for watching."
 
 ---
 
 ## Quick Reference: All 9 MVP Requirements
 
-| # | Requirement | Demonstrated In |
-|---|-------------|----------------|
-| 1 | Natural language queries | Scene 3 |
-| 2 | 3+ functional tools | Scenes 3, 4, 5 |
-| 3 | Tool calls return structured results | Scene 3 |
-| 4 | Coherent synthesized responses | Scene 3 |
-| 5 | Conversation history across turns | Scene 4 |
-| 6 | Graceful error handling | Scene 6 |
-| 7 | Domain-specific verification | Scene 7 |
-| 8 | 5+ eval test cases | Scene 8 |
-| 9 | Deployed and accessible | Scene 1 |
+| #   | Requirement                          | Demonstrated In |
+| --- | ------------------------------------ | --------------- |
+| 1   | Natural language queries             | Scene 3         |
+| 2   | 3+ functional tools                  | Scenes 3, 4, 5  |
+| 3   | Tool calls return structured results | Scene 3         |
+| 4   | Coherent synthesized responses       | Scene 3         |
+| 5   | Conversation history across turns    | Scene 4         |
+| 6   | Graceful error handling              | Scene 6         |
+| 7   | Domain-specific verification         | Scene 7         |
+| 8   | 5+ eval test cases                   | Scene 8         |
+| 9   | Deployed and accessible              | Scene 1         |
 
 ---
 

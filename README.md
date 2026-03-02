@@ -61,6 +61,18 @@ Ghostfolio is for you if you are...
 
 </div>
 
+## AI Agent
+
+Ghostfolio includes an AI-powered conversational assistant that lets users query their portfolio using natural language.
+
+- **9 tools** wrapping existing services: portfolio holdings, performance, dividends, transactions, market data, exchange rates, portfolio report, account summary, and financial news via [Finnhub](https://finnhub.io)
+- **Streaming responses** via Server-Sent Events for real-time token delivery
+- **58-case eval suite** covering happy path, edge cases, adversarial inputs, and multi-step reasoning (94.8% pass rate)
+- **Langfuse observability** with full request tracing, latency breakdown, and cost tracking
+- **3 verification checks** on every response: financial disclaimers, data-backed claim validation, and portfolio scope verification
+
+Set `ANTHROPIC_API_KEY` (and optionally `FINNHUB_API_KEY` for news) in your environment to enable it. Try the [deployed app](https://ghostfolio-production-f9fe.up.railway.app).
+
 ## Technology Stack
 
 Ghostfolio is a modern web application written in [TypeScript](https://www.typescriptlang.org) and organized as an [Nx](https://nx.dev) workspace.

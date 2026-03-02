@@ -34,7 +34,7 @@ Record with QuickTime. Read callouts aloud.
 ### Scene 5 — Third Tool: Accounts (1:20)
 
 1. Type: **"Show me my accounts"**
-2. **Say:** "Third tool — `get_account_summary`. We have 8 tools total wrapping existing Ghostfolio services."
+2. **Say:** "Third tool — `get_account_summary`. We have 9 tools total wrapping existing Ghostfolio services."
 
 ### Scene 6 — Error Handling (1:35)
 
@@ -70,20 +70,20 @@ Record with QuickTime. Read callouts aloud.
 ### Scene 9 — Run Evals (3:05)
 
 1. Switch to terminal.
-2. **Say:** "The eval suite has 55 test cases across four categories: happy path, edge cases, adversarial inputs, and multi-step reasoning."
+2. **Say:** "The eval suite has 58 test cases across four categories: happy path, edge cases, adversarial inputs, and multi-step reasoning."
 3. Run:
    ```bash
    cd ~/Projects/Gauntlet/ghostfolio
    SKIP_JUDGE=1 AUTH_TOKEN="<token>" npx tsx apps/api/src/app/endpoints/ai/eval/eval.ts
    ```
-4. Wait for results. Should show ~52/55 passing (94.5%).
-5. **Say:** "52 out of 55 tests passing — 94.5% pass rate, above the 80% target. The suite tests tool selection, response coherence, safety refusals, hallucination detection, and multi-step reasoning."
+4. Wait for results. Should show ~55/58 passing (94.8%).
+5. **Say:** "55 out of 58 tests passing — 94.8% pass rate, above the 80% target. The suite tests tool selection, response coherence, safety refusals, hallucination detection, and multi-step reasoning."
 
 ---
 
 ## PART 5: Wrap-Up (4:00)
 
-**Say:** "To summarize what's been added since MVP: Langfuse observability with full request tracing and cost tracking. Three domain-specific verification checks — financial disclaimers, data-backed claim verification, and portfolio scope validation. And the eval suite expanded from 10 to 55 test cases across all required categories. The agent has 8 tools wrapping real Ghostfolio services, maintains conversation history, handles errors gracefully, and is deployed publicly. Thanks for watching."
+**Say:** "To summarize what's been added since MVP: Langfuse observability with full request tracing and cost tracking. Three domain-specific verification checks — financial disclaimers, data-backed claim verification, and portfolio scope validation. And the eval suite expanded from 10 to 58 test cases across all required categories. The agent has 9 tools wrapping real Ghostfolio services, maintains conversation history, handles errors gracefully, and is deployed publicly. Thanks for watching."
 
 ---
 

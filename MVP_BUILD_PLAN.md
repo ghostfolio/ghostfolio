@@ -29,49 +29,61 @@
 Build the minimal agent with ONE tool (`get_portfolio_holdings`) to prove the full loop works.
 
 ### 2a. Create tool definitions file
+
 **File:** `apps/api/src/app/endpoints/ai/tools/portfolio-holdings.tool.ts`
 
 ```typescript
 import { tool } from 'ai';
 import { z } from 'zod';
 
-export const getPortfolioHoldingsTool = (deps: { portfolioService; userId; impersonationId? }) =>
+export const getPortfolioHoldingsTool = (deps: {
+  portfolioService;
+  userId;
+  impersonationId?;
+}) =>
   tool({
-    description: 'Get the user\'s current portfolio holdings with allocation percentages, asset classes, and currencies',
+    description:
+      "Get the user's current portfolio holdings with allocation percentages, asset classes, and currencies",
     parameters: z.object({
       accountFilter: z.string().optional().describe('Filter by account name'),
-      assetClassFilter: z.string().optional().describe('Filter by asset class (EQUITY, FIXED_INCOME, etc.)'),
+      assetClassFilter: z
+        .string()
+        .optional()
+        .describe('Filter by asset class (EQUITY, FIXED_INCOME, etc.)')
     }),
     execute: async (params) => {
       const { holdings } = await deps.portfolioService.getDetails({
         userId: deps.userId,
         impersonationId: deps.impersonationId,
-        filters: [], // Build filters from params if provided
+        filters: [] // Build filters from params if provided
       });
       // Return structured, LLM-friendly data
-      return Object.values(holdings).map(h => ({
+      return Object.values(holdings).map((h) => ({
         name: h.name,
         symbol: h.symbol,
         currency: h.currency,
         assetClass: h.assetClass,
         allocationPercent: (h.allocationInPercentage * 100).toFixed(2) + '%',
-        value: h.value,
+        value: h.value
       }));
-    },
+    }
   });
 ```
 
 ### 2b. Extend AiService with agent method
+
 **File:** `apps/api/src/app/endpoints/ai/ai.service.ts` (extend existing)
 
 Add a new method `chat()` that uses `generateText()` with tools and a system prompt.
 
 ### 2c. Add POST endpoint to AiController
+
 **File:** `apps/api/src/app/endpoints/ai/ai.controller.ts` (extend existing)
 
 Add `POST /ai/agent` that accepts `{ message: string, conversationHistory?: Message[] }` and returns the agent's response.
 
 ### 2d. Test it
+
 ```bash
 curl -X POST http://localhost:3333/api/v1/ai/agent \
   -H "Authorization: Bearer <TOKEN>" \
@@ -88,41 +100,48 @@ curl -X POST http://localhost:3333/api/v1/ai/agent \
 Add tools one at a time, testing each before moving to the next:
 
 ### Tool 2: `get_portfolio_performance`
+
 - Wraps `PortfolioService.getPerformance()`
 - Parameters: `dateRange` (enum: 'ytd', '1y', '5y', 'max')
 - Returns: total return, net performance percentage, chart data points
 
 ### Tool 3: `get_account_summary`
+
 - Wraps `PortfolioService.getAccounts()`
 - No parameters needed
 - Returns: account names, platforms, balances, currencies
 
 ### Tool 4: `get_dividend_summary`
+
 - Wraps `PortfolioService.getDividends()`
 - Parameters: `dateRange`, `groupBy` (month/year)
 - Returns: dividend income breakdown
 
 ### Tool 5: `get_transaction_history`
+
 - Wraps `OrderService` / Prisma query on Order table
 - Parameters: `symbol?`, `type?` (BUY/SELL/DIVIDEND), `startDate?`, `endDate?`
 - Returns: list of activities with dates, quantities, prices
 
 ### Tool 6: `lookup_market_data`
+
 - Wraps `DataProviderService`
 - Parameters: `symbol`, `dataSource?`
 - Returns: current quote, asset profile info
 
 ### Tool 7: `get_exchange_rate`
+
 - Wraps `ExchangeRateDataService`
 - Parameters: `fromCurrency`, `toCurrency`, `date?`
 - Returns: exchange rate value
 
 ### Tool 8: `get_portfolio_report`
+
 - Wraps `PortfolioService.getReport()`
 - No parameters
 - Returns: X-ray analysis (diversification, concentration, fee rules)
 
-**Gate check:** All 8 tools callable. Test multi-tool queries like "What's my best performing holding and when did I buy it?"
+**Gate check:** All 9 tools callable. Test multi-tool queries like "What's my best performing holding and when did I buy it?"
 
 ---
 
@@ -142,13 +161,16 @@ Add tools one at a time, testing each before moving to the next:
 Implement at least ONE domain-specific verification check (MVP requires 1, we'll add more for Early):
 
 ### Portfolio Data Accuracy Check
+
 After the LLM generates its response, check that any numbers mentioned in the text are traceable to tool results. Implementation:
+
 - Collect all numerical values from tool results
 - Scan the LLM's response for numbers
 - Flag if the response contains specific numbers that don't appear in any tool result
 - If flagged, append a disclaimer or regenerate
 
 For MVP, a simpler approach works too:
+
 - Always prepend the system prompt with instructions to only cite data from tool results
 - Add a post-processing step that appends a standard financial disclaimer to any response containing numerical data
 
@@ -183,6 +205,7 @@ Test 7: "Tell me about a holding I don't own" → expects no hallucination
 ```
 
 Each test checks:
+
 - Correct tool(s) selected
 - Response is coherent and non-empty
 - No crashes or unhandled errors
@@ -196,11 +219,13 @@ Save as `apps/api/src/app/endpoints/ai/eval/eval.ts` — runnable with `npx ts-n
 ## Step 8: Deploy (1 hr)
 
 Options (pick the fastest):
+
 - **Railway:** Connect GitHub repo, set env vars, deploy
 - **Docker on a VPS:** `docker compose -f docker/docker-compose.yml up -d`
 - **Vercel + separate DB:** More complex but free tier available
 
 Needs:
+
 - PostgreSQL database (Railway/Supabase/Neon for free tier)
 - Redis instance (Upstash for free tier)
 - `ANTHROPIC_API_KEY` environment variable set
@@ -212,16 +237,16 @@ Needs:
 
 ## Time Budget (24 hours)
 
-| Task | Estimated | Running Total |
-|------|-----------|---------------|
-| Setup & dev environment | 0.5 hr | 0.5 hr |
-| First tool end-to-end | 1.5 hr | 2 hr |
-| Remaining 7 tools | 2.5 hr | 4.5 hr |
-| Conversation history | 0.5 hr | 5 hr |
-| Verification layer | 1 hr | 6 hr |
-| Error handling | 0.5 hr | 6.5 hr |
-| Eval test cases | 1 hr | 7.5 hr |
-| Deploy | 1 hr | 8.5 hr |
-| Buffer / debugging | 2.5 hr | 11 hr |
+| Task                    | Estimated | Running Total |
+| ----------------------- | --------- | ------------- |
+| Setup & dev environment | 0.5 hr    | 0.5 hr        |
+| First tool end-to-end   | 1.5 hr    | 2 hr          |
+| Remaining 7 tools       | 2.5 hr    | 4.5 hr        |
+| Conversation history    | 0.5 hr    | 5 hr          |
+| Verification layer      | 1 hr      | 6 hr          |
+| Error handling          | 0.5 hr    | 6.5 hr        |
+| Eval test cases         | 1 hr      | 7.5 hr        |
+| Deploy                  | 1 hr      | 8.5 hr        |
+| Buffer / debugging      | 2.5 hr    | 11 hr         |
 
 ~11 hours of work, well within the 24-hour deadline with ample buffer for sleep and unexpected issues.

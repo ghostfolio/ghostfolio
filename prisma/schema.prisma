@@ -116,6 +116,23 @@ model AuthDevice {
   @@index([userId])
 }
 
+model NewsArticle {
+  id          String   @id @default(cuid())
+  symbol      String
+  headline    String
+  summary     String
+  source      String
+  url         String
+  imageUrl    String?
+  publishedAt DateTime
+  finnhubId   Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([symbol])
+  @@index([publishedAt])
+}
+
 model MarketData {
   createdAt   DateTime        @default(now())
   dataSource  DataSource
