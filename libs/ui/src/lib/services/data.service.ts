@@ -740,15 +740,17 @@ export class DataService {
     return this.http.get<WatchlistResponse>('/api/v1/watchlist');
   }
 
-  public postAgentChat(body: {
-    message: string;
-    conversationHistory?: any[];
-  }) {
+  public postAgentChat(body: { message: string; conversationHistory?: any[] }) {
     return this.http.post<{
       response: string;
       toolCalls: Array<{ toolName: string; args: any }>;
       conversationHistory: any[];
+      traceId?: string;
     }>('/api/v1/ai/agent', body);
+  }
+
+  public postAgentFeedback(body: { traceId: string; value: number }) {
+    return this.http.post<{ success: boolean }>('/api/v1/ai/feedback', body);
   }
 
   public loginAnonymous(accessToken: string) {

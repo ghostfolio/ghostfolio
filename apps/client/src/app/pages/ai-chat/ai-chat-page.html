@@ -5,12 +5,19 @@
     <div #messagesContainer class="messages-container">
       @if (messages.length === 0 && !isLoading) {
         <div class="empty-state">
-          <p i18n>Ask me anything about your portfolio, holdings, performance, or market data.</p>
+          <p i18n>
+            Ask me anything about your portfolio, holdings, performance, or
+            market data.
+          </p>
         </div>
       }
 
       @for (msg of messages; track $index) {
-        <div class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+        <div
+          class="message"
+          [class.assistant]="msg.role === 'assistant'"
+          [class.user]="msg.role === 'user'"
+        >
           <div class="message-label">
             @if (msg.role === 'user') {
               <strong i18n>You</strong>
@@ -18,36 +25,59 @@
               <strong i18n>Assistant</strong>
             }
           </div>
-          <div class="message-content">{{ msg.content }}</div>
-        </div>
-      }
-
-      @if (isLoading) {
-        <div class="message assistant">
-          <div class="message-label"><strong i18n>Assistant</strong></div>
-          <mat-spinner diameter="24"></mat-spinner>
+          @if (msg.role === 'assistant' && !msg.content && isLoading) {
+            <mat-spinner diameter="24"></mat-spinner>
+          } @else {
+            <div class="message-content">{{ msg.content }}</div>
+          }
+          @if (msg.role === 'assistant' && msg.traceId) {
+            <div class="feedback-buttons">
+              <button
+                class="feedback-btn"
+                mat-icon-button
+                title="Helpful"
+                [class.selected]="msg.feedback === 1"
+                [disabled]="!!msg.feedback"
+                (click)="submitFeedback(msg, 1)"
+              >
+                <mat-icon>thumb_up</mat-icon>
+              </button>
+              <button
+                class="feedback-btn"
+                mat-icon-button
+                title="Not helpful"
+                [class.selected]="msg.feedback === -1"
+                [disabled]="!!msg.feedback"
+                (click)="submitFeedback(msg, -1)"
+              >
+                <mat-icon>thumb_down</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       }
     </div>
 
     <div class="input-area">
-      <mat-form-field class="w-100" appearance="outline">
+      <mat-form-field appearance="outline" class="w-100">
         <input
+          i18n-placeholder
           matInput
           placeholder="Ask about your portfolio..."
-          i18n-placeholder
+          [disabled]="isLoading"
           [(ngModel)]="userInput"
           (keydown)="onKeyDown($event)"
-          [disabled]="isLoading"
         />
       </mat-form-field>
       <button
-        mat-flat-button
         color="primary"
+        i18n
+        mat-flat-button
         [disabled]="!userInput.trim() || isLoading"
         (click)="sendMessage()"
-        i18n
-      >Send</button>
+      >
+        Send
+      </button>
     </div>
   </div>
 </div>

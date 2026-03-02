@@ -13,10 +13,12 @@ import {
   Param,
   Post,
   Query,
+  Res,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 
 import { AiService } from './ai.service';
 
@@ -70,6 +72,51 @@ export class AiController {
       conversationHistory: body.conversationHistory,
       impersonationId: undefined,
       userCurrency: this.request.user.settings.settings.baseCurrency,
+      userId: this.request.user.id
+    });
+  }
+
+  @Post('agent/stream')
+  @HasPermission(permissions.readAiPrompt)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async agentChatStream(
+    @Body() body: { message: string; conversationHistory?: any[] },
+    @Res() res: Response
+  ) {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    await this.aiService.agentChatStream({
+      message: body.message,
+      conversationHistory: body.conversationHistory,
+      impersonationId: undefined,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
+      userId: this.request.user.id,
+      onChunk: (text) => {
+        res.write(`event: text\ndata: ${JSON.stringify(text)}\n\n`);
+      },
+      onDone: (metadata) => {
+        res.write(`event: done\ndata: ${JSON.stringify(metadata)}\n\n`);
+        res.end();
+      },
+      onError: (error) => {
+        res.write(`event: error\ndata: ${JSON.stringify({ error })}\n\n`);
+        res.end();
+      }
+    });
+  }
+
+  @Post('feedback')
+  @HasPermission(permissions.readAiPrompt)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async submitFeedback(
+    @Body() body: { traceId: string; value: number }
+  ) {
+    return this.aiService.submitFeedback({
+      traceId: body.traceId,
+      value: body.value,
       userId: this.request.user.id
     });
   }

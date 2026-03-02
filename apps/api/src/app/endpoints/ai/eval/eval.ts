@@ -22,6 +22,7 @@
  *   CATEGORY=<name>     — run only one category (happy_path, edge_case, adversarial, multi_step)
  */
 
+import "dotenv/config";
 import * as http from "http";
 import * as fs from "fs";
 

@@ -71,6 +71,38 @@
   line-height: 1.5;
 }
 
+.feedback-buttons {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+
+  .feedback-btn {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    opacity: 0.5;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+      opacity: 1;
+    }
+
+    &.selected {
+      opacity: 1;
+      color: rgb(var(--palette-primary-500));
+    }
+
+    &:disabled:not(.selected) {
+      opacity: 0.3;
+    }
+  }
+}
+
 .input-area {
   display: flex;
   gap: 0.5rem;

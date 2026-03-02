@@ -11,40 +11,41 @@ import {
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
-import { Injectable, Logger } from '@nestjs/common';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { Injectable, Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { generateText, CoreMessage } from 'ai';
+import { generateText, streamText, CoreMessage } from 'ai';
+import { randomUUID } from 'crypto';
 import type { ColumnDescriptor } from 'tablemark';
 
-import { getPortfolioHoldingsTool } from './tools/portfolio-holdings.tool';
-import { getPortfolioPerformanceTool } from './tools/portfolio-performance.tool';
 import { getAccountSummaryTool } from './tools/account-summary.tool';
 import { getDividendSummaryTool } from './tools/dividend-summary.tool';
-import { getTransactionHistoryTool } from './tools/transaction-history.tool';
-import { getLookupMarketDataTool } from './tools/market-data.tool';
 import { getExchangeRateTool } from './tools/exchange-rate.tool';
+import { getLookupMarketDataTool } from './tools/market-data.tool';
+import { getPortfolioHoldingsTool } from './tools/portfolio-holdings.tool';
+import { getPortfolioPerformanceTool } from './tools/portfolio-performance.tool';
 import { getPortfolioReportTool } from './tools/portfolio-report.tool';
+import { getTransactionHistoryTool } from './tools/transaction-history.tool';
 import { runVerificationChecks } from './verification';
 
 function getAgentSystemPrompt() {
   return [
-  `Today's date is ${new Date().toISOString().split('T')[0]}.`,
-  '',
-  'You are a helpful financial assistant for Ghostfolio, a personal wealth management application.',
-  'You help users understand their portfolio, holdings, performance, and financial data.',
-  '',
-  'IMPORTANT RULES:',
-  '1. Only provide information based on actual data from the tools available to you. NEVER make up or hallucinate financial data.',
-  '2. When citing specific numbers (prices, percentages, values), they MUST come directly from tool results.',
-  '3. If you cannot find the requested information, say so clearly rather than guessing.',
-  '4. You are a READ-ONLY assistant. You cannot execute trades, modify portfolios, or make changes to accounts.',
-  '5. If asked to perform actions like buying, selling, or transferring assets, politely decline and explain you can only provide information.',
-  '6. Include appropriate financial disclaimers when providing analytical or forward-looking commentary.',
-  '7. When the user asks about performance for a specific time period, pass the appropriate dateRange parameter: "ytd" for this year, "1y" for past year, "5y" for 5 years, "mtd" for this month, "wtd" for this week, "1d" for today. Use "max" for all-time or when no specific period is mentioned.',
-  '',
-  'DISCLAIMER: This is an AI assistant providing informational responses based on portfolio data.',
-  'This is not financial advice. Always consult with a qualified financial advisor before making investment decisions.'
+    `Today's date is ${new Date().toISOString().split('T')[0]}.`,
+    '',
+    'You are a helpful financial assistant for Ghostfolio, a personal wealth management application.',
+    'You help users understand their portfolio, holdings, performance, and financial data.',
+    '',
+    'IMPORTANT RULES:',
+    '1. Only provide information based on actual data from the tools available to you. NEVER make up or hallucinate financial data.',
+    '2. When citing specific numbers (prices, percentages, values), they MUST come directly from tool results.',
+    '3. If you cannot find the requested information, say so clearly rather than guessing.',
+    '4. You are a READ-ONLY assistant. You cannot execute trades, modify portfolios, or make changes to accounts.',
+    '5. If asked to perform actions like buying, selling, or transferring assets, politely decline and explain you can only provide information.',
+    '6. Include appropriate financial disclaimers when providing analytical or forward-looking commentary.',
+    '7. When the user asks about performance for a specific time period, pass the appropriate dateRange parameter: "ytd" for this year, "1y" for past year, "5y" for 5 years, "mtd" for this month, "wtd" for this week, "1d" for today. Use "max" for all-time or when no specific period is mentioned.',
+    '',
+    'DISCLAIMER: This is an AI assistant providing informational responses based on portfolio data.',
+    'This is not financial advice. Always consult with a qualified financial advisor before making investment decisions.'
   ].join('\n');
 }
 
@@ -197,36 +198,32 @@ export class AiService {
     return [
       `You are a neutral financial assistant. Please analyze the following investment portfolio (base currency being ${userCurrency}) in simple words.`,
       holdingsTableString,
-      "Structure your answer with these sections:",
-      "Overview: Briefly summarize the portfolio composition and allocation rationale.",
-      "Risk Assessment: Identify potential risks, including market volatility, concentration, and sectoral imbalances.",
-      "Advantages: Highlight strengths, focusing on growth potential, diversification, or other benefits.",
-      "Disadvantages: Point out weaknesses, such as overexposure or lack of defensive assets.",
-      "Target Group: Discuss who this portfolio might suit (e.g., risk tolerance, investment goals, life stages, and experience levels).",
-      "Optimization Ideas: Offer ideas to complement the portfolio, ensuring they are constructive and neutral in tone.",
-      "Conclusion: Provide a concise summary highlighting key insights.",
+      'Structure your answer with these sections:',
+      'Overview: Briefly summarize the portfolio composition and allocation rationale.',
+      'Risk Assessment: Identify potential risks, including market volatility, concentration, and sectoral imbalances.',
+      'Advantages: Highlight strengths, focusing on growth potential, diversification, or other benefits.',
+      'Disadvantages: Point out weaknesses, such as overexposure or lack of defensive assets.',
+      'Target Group: Discuss who this portfolio might suit (e.g., risk tolerance, investment goals, life stages, and experience levels).',
+      'Optimization Ideas: Offer ideas to complement the portfolio, ensuring they are constructive and neutral in tone.',
+      'Conclusion: Provide a concise summary highlighting key insights.',
       `Provide your answer in the following language: ${languageCode}.`
-    ].join("\n");
+    ].join('\n');
   }
 
-  public async agentChat({
-    conversationHistory,
-    message,
+  private buildAgentConfig({
+    userId,
     impersonationId,
-    userCurrency,
-    userId
+    userCurrency
   }: {
-    conversationHistory?: CoreMessage[];
-    message: string;
+    userId: string;
     impersonationId?: string;
     userCurrency: string;
-    userId: string;
   }) {
     const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
 
     if (!anthropicApiKey) {
       throw new Error(
-        "ANTHROPIC_API_KEY is not configured. Please set the environment variable."
+        'ANTHROPIC_API_KEY is not configured. Please set the environment variable.'
       );
     }
 
@@ -272,23 +269,47 @@ export class AiService {
       })
     };
 
+    return { anthropic, tools };
+  }
+
+  public async agentChat({
+    conversationHistory,
+    message,
+    impersonationId,
+    userCurrency,
+    userId
+  }: {
+    conversationHistory?: CoreMessage[];
+    message: string;
+    impersonationId?: string;
+    userCurrency: string;
+    userId: string;
+  }) {
+    const { anthropic, tools } = this.buildAgentConfig({
+      userId,
+      impersonationId,
+      userCurrency
+    });
+
     const messages: CoreMessage[] = [
       ...(conversationHistory ?? []),
-      { role: "user" as const, content: message }
+      { role: 'user' as const, content: message }
     ];
+
+    const traceId = randomUUID();
 
     try {
       const result = await generateText({
-        model: anthropic("claude-sonnet-4-20250514"),
+        model: anthropic('claude-haiku-4-5-20251001'),
         system: getAgentSystemPrompt(),
         tools,
-        toolChoice: "auto",
+        toolChoice: 'auto',
         messages,
-        maxSteps: 5,
+        maxSteps: 10,
         experimental_telemetry: {
           isEnabled: true,
-          functionId: "ghostfolio-ai-agent",
-          metadata: { userId }
+          functionId: 'ghostfolio-ai-agent',
+          metadata: { userId, traceId }
         }
       });
 
@@ -299,12 +320,13 @@ export class AiService {
           args: tc.args
         }));
 
-      const toolResults = result.steps
-        .flatMap((step) => step.toolResults ?? []);
+      const toolResults = result.steps.flatMap(
+        (step) => step.toolResults ?? []
+      );
 
       const updatedHistory: CoreMessage[] = [
         ...messages,
-        { role: "assistant" as const, content: result.text }
+        { role: 'assistant' as const, content: result.text }
       ];
 
       // Run verification checks (disclaimer, hallucination detection, scope validation)
@@ -318,15 +340,16 @@ export class AiService {
         response: responseText,
         toolCalls,
         verificationChecks: checks,
-        conversationHistory: updatedHistory
+        conversationHistory: updatedHistory,
+        traceId
       };
     } catch (error) {
-      this.logger.error("Agent chat error:", error);
+      this.logger.error('Agent chat error:', error);
 
-      if (error?.message?.includes("API key")) {
+      if (error?.message?.includes('API key')) {
         return {
           response:
-            "The AI service is not properly configured. Please check your API key settings.",
+            'The AI service is not properly configured. Please check your API key settings.',
           toolCalls: [],
           conversationHistory: messages
         };
@@ -334,10 +357,170 @@ export class AiService {
 
       return {
         response:
-          "I encountered an issue processing your request. Please try again later.",
+          'I encountered an issue processing your request. Please try again later.',
         toolCalls: [],
         conversationHistory: messages
       };
+    }
+  }
+
+  public async agentChatStream({
+    conversationHistory,
+    message,
+    impersonationId,
+    userCurrency,
+    userId,
+    onChunk,
+    onDone,
+    onError
+  }: {
+    conversationHistory?: CoreMessage[];
+    message: string;
+    impersonationId?: string;
+    userCurrency: string;
+    userId: string;
+    onChunk: (text: string) => void;
+    onDone: (metadata: {
+      response: string;
+      toolCalls: any[];
+      verificationChecks: any[];
+      conversationHistory: CoreMessage[];
+      traceId: string;
+    }) => void;
+    onError: (error: string) => void;
+  }) {
+    const messages: CoreMessage[] = [
+      ...(conversationHistory ?? []),
+      { role: 'user' as const, content: message }
+    ];
+
+    const traceId = randomUUID();
+
+    try {
+      const { anthropic, tools } = this.buildAgentConfig({
+        userId,
+        impersonationId,
+        userCurrency
+      });
+
+      const result = streamText({
+        model: anthropic('claude-haiku-4-5-20251001'),
+        system: getAgentSystemPrompt(),
+        tools,
+        toolChoice: 'auto',
+        messages,
+        maxSteps: 10,
+        experimental_telemetry: {
+          isEnabled: true,
+          functionId: 'ghostfolio-ai-agent-stream',
+          metadata: { userId, traceId }
+        }
+      });
+
+      let fullText = '';
+
+      for await (const chunk of result.textStream) {
+        fullText += chunk;
+        onChunk(chunk);
+      }
+
+      const stepsResult = await result.steps;
+
+      const toolCalls = stepsResult
+        .flatMap((step) => step.toolCalls ?? [])
+        .map((tc) => ({
+          toolName: tc.toolName,
+          args: tc.args
+        }));
+
+      const toolResults = stepsResult.flatMap((step) => step.toolResults ?? []);
+
+      const { responseText, checks } = runVerificationChecks({
+        responseText: fullText,
+        toolResults,
+        toolCalls
+      });
+
+      // If verification added extra text (e.g. disclaimer), send the difference
+      if (responseText.length > fullText.length) {
+        onChunk(responseText.slice(fullText.length));
+      }
+
+      const updatedHistory: CoreMessage[] = [
+        ...messages,
+        { role: 'assistant' as const, content: responseText }
+      ];
+
+      onDone({
+        response: responseText,
+        toolCalls,
+        verificationChecks: checks,
+        conversationHistory: updatedHistory,
+        traceId
+      });
+    } catch (error) {
+      this.logger.error('Agent stream error:', error);
+      onError(
+        error?.message?.includes('API key')
+          ? 'The AI service is not properly configured.'
+          : 'I encountered an issue processing your request.'
+      );
+    }
+  }
+
+  public async submitFeedback({
+    traceId,
+    value,
+    userId
+  }: {
+    traceId: string;
+    value: number;
+    userId: string;
+  }) {
+    const langfuseSecretKey = process.env.LANGFUSE_SECRET_KEY;
+    const langfusePublicKey = process.env.LANGFUSE_PUBLIC_KEY;
+    const langfuseBaseUrl =
+      process.env.LANGFUSE_BASEURL || 'https://cloud.langfuse.com';
+
+    if (!langfuseSecretKey || !langfusePublicKey) {
+      this.logger.warn('Langfuse keys not configured — feedback not recorded');
+      return { success: false, reason: 'Langfuse not configured' };
+    }
+
+    try {
+      const credentials = Buffer.from(
+        `${langfusePublicKey}:${langfuseSecretKey}`
+      ).toString('base64');
+
+      const res = await fetch(`${langfuseBaseUrl}/api/public/scores`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Basic ${credentials}`
+        },
+        body: JSON.stringify({
+          traceId,
+          name: 'user-feedback',
+          value,
+          comment: value === 1 ? 'thumbs up' : 'thumbs down',
+          source: 'API',
+          metadata: { userId }
+        })
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.text();
+        this.logger.warn(
+          `Langfuse score API error: ${res.status} ${errorBody}`
+        );
+        return { success: false, reason: `Langfuse API error: ${res.status}` };
+      }
+
+      this.logger.log(`Feedback recorded: traceId=${traceId} value=${value}`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error('Failed to submit feedback to Langfuse:', error);
+      return { success: false, reason: 'Failed to contact Langfuse' };
     }
   }
 }

@@ -1,3 +1,4 @@
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
@@ -6,11 +7,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  NgZone,
   OnDestroy,
   ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,6 +21,8 @@ import { Subject, takeUntil } from 'rxjs';
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+  traceId?: string;
+  feedback?: 1 | -1;
 }
 
 @Component({
@@ -27,6 +32,7 @@ interface ChatMessage {
     CommonModule,
     FormsModule,
     MatButtonModule,
+    MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule
   ],
@@ -43,11 +49,14 @@ export class GfAiChatPageComponent implements OnDestroy {
   public isLoading = false;
 
   private conversationHistory: any[] = [];
+  private abortController: AbortController | null = null;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private ngZone: NgZone,
+    private tokenStorageService: TokenStorageService
   ) {}
 
   public sendMessage() {
@@ -62,34 +71,25 @@ export class GfAiChatPageComponent implements OnDestroy {
     this.changeDetectorRef.markForCheck();
     this.scrollToBottom();
 
+    const assistantMsg: ChatMessage = { role: 'assistant', content: '' };
+    this.messages.push(assistantMsg);
+    this.changeDetectorRef.markForCheck();
+
+    this.streamResponse(message, assistantMsg);
+  }
+
+  public submitFeedback(msg: ChatMessage, value: 1 | -1) {
+    if (!msg.traceId || msg.feedback) {
+      return;
+    }
+
+    msg.feedback = value;
+    this.changeDetectorRef.markForCheck();
+
     this.dataService
-      .postAgentChat({
-        message,
-        conversationHistory: this.conversationHistory
-      })
+      .postAgentFeedback({ traceId: msg.traceId, value })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: (response) => {
-          this.messages.push({
-            role: 'assistant',
-            content: response.response
-          });
-          this.conversationHistory = response.conversationHistory;
-          this.isLoading = false;
-          this.changeDetectorRef.markForCheck();
-          this.scrollToBottom();
-        },
-        error: () => {
-          this.messages.push({
-            role: 'assistant',
-            content:
-              'Sorry, something went wrong. Please try again.'
-          });
-          this.isLoading = false;
-          this.changeDetectorRef.markForCheck();
-          this.scrollToBottom();
-        }
-      });
+      .subscribe();
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -100,8 +100,105 @@ export class GfAiChatPageComponent implements OnDestroy {
   }
 
   public ngOnDestroy() {
+    this.abortController?.abort();
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private async streamResponse(message: string, assistantMsg: ChatMessage) {
+    this.abortController = new AbortController();
+    const token = this.tokenStorageService.getToken();
+
+    try {
+      const res = await fetch('/api/v1/ai/agent/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          message,
+          conversationHistory: this.conversationHistory
+        }),
+        signal: this.abortController.signal
+      });
+
+      if (!res.ok || !res.body) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Parse SSE events from buffer
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        let eventType = '';
+
+        for (const line of lines) {
+          if (line.startsWith('event: ')) {
+            eventType = line.slice(7).trim();
+          } else if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+
+            this.ngZone.run(() => {
+              if (eventType === 'text') {
+                assistantMsg.content += JSON.parse(data);
+                this.changeDetectorRef.markForCheck();
+                this.scrollToBottom();
+              } else if (eventType === 'done') {
+                const metadata = JSON.parse(data);
+                assistantMsg.traceId = metadata.traceId;
+                assistantMsg.content = metadata.response;
+                this.conversationHistory = metadata.conversationHistory;
+                this.isLoading = false;
+                this.changeDetectorRef.markForCheck();
+                this.scrollToBottom();
+              } else if (eventType === 'error') {
+                const errorData = JSON.parse(data);
+                assistantMsg.content =
+                  errorData.error ||
+                  'Sorry, something went wrong. Please try again.';
+                this.isLoading = false;
+                this.changeDetectorRef.markForCheck();
+              }
+            });
+
+            eventType = '';
+          }
+        }
+      }
+
+      // If stream ended without a done event, finalize
+      if (this.isLoading) {
+        this.ngZone.run(() => {
+          this.isLoading = false;
+          this.changeDetectorRef.markForCheck();
+        });
+      }
+    } catch (error: any) {
+      if (error?.name === 'AbortError') {
+        return;
+      }
+
+      this.ngZone.run(() => {
+        assistantMsg.content = 'Sorry, something went wrong. Please try again.';
+        this.isLoading = false;
+        this.changeDetectorRef.markForCheck();
+        this.scrollToBottom();
+      });
+    }
   }
 
   private scrollToBottom() {

@@ -35,6 +35,23 @@ export class CronService implements OnApplicationBootstrap {
       this.logger.log('Triggering initial data gathering on startup...');
       await this.dataGatheringService.gather7Days();
     }
+
+    // Reload exchange rates after data gathering queue has had time
+    // to process high-priority currency pair jobs (~1 job per 4s).
+    // This ensures rates are populated on fresh Railway deployments.
+    setTimeout(
+      async () => {
+        try {
+          await this.exchangeRateDataService.loadCurrencies();
+          this.logger.log(
+            'Exchange rates reloaded after startup data gathering'
+          );
+        } catch (error) {
+          this.logger.warn('Failed to reload exchange rates on startup', error);
+        }
+      },
+      5 * 60 * 1000
+    );
   }
 
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
