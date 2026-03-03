@@ -762,11 +762,20 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       );
     });
 
+    const account =
+      this.user?.settings?.['filters.accounts']?.[0] ?? null;
+    const assetClass =
+      this.user?.settings?.['filters.assetClasses']?.[0] ?? null;
+    const tag = this.user?.settings?.['filters.tags']?.[0] ?? null;
+
     this.portfolioFilterFormControl.setValue({
-      account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
-      assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
+      account,
+      assetClass,
       holding: selectedHolding ?? null,
-      tag: this.user?.settings?.['filters.tags']?.[0] ?? null
+      tag
     });
+
+    if (account || assetClass || selectedHolding || tag) {
+      this.portfolioFilterFormControl.markAsDirty();
+    }
   }
-}
