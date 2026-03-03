@@ -167,6 +167,7 @@ export class PublicController {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
         assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
+        assetProfile: hasDetails ? portfolioPosition.assetProfile : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         dataSource: portfolioPosition.dataSource,
