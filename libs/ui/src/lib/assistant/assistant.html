@@ -197,7 +197,7 @@
           mat-button
           type="button"
           [disabled]="
-            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled
+            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled()
           "
           (click)="onResetFilters()"
         >
@@ -210,7 +210,7 @@
           type="button"
           [disabled]="
             !portfolioFilterForm.filterForm.dirty ||
-            portfolioFilterForm.disabled
+            portfolioFilterForm.disabled()
           "
           (click)="onApplyFilters()"
         >
