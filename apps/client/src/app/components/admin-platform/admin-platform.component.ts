@@ -1,9 +1,11 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { User } from '@ghostfolio/common/interfaces';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   ChangeDetectionStrategy,
@@ -38,6 +40,7 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfEntityLogoComponent,
+    GfValueComponent,
     IonIcon,
     MatButtonModule,
     MatMenuModule,
@@ -56,6 +59,7 @@ export class GfAdminPlatformComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];
+  public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -93,6 +97,16 @@ export class GfAdminPlatformComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.changeDetectorRef.markForCheck();
+        }
+      });
 
     this.fetchPlatforms();
   }

@@ -52,7 +52,11 @@
       <ng-container i18n>Accounts</ng-container>
     </th>
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-      {{ element.accountCount }}
+      <gf-value
+        class="d-inline-block justify-content-end"
+        [locale]="user?.settings?.locale"
+        [value]="element.accountCount"
+      />
     </td>
   </ng-container>
 
