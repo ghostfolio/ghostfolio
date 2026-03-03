@@ -991,11 +991,13 @@ export class PortfolioService {
   public async getPerformance({
     dateRange = 'max',
     filters,
+    groupBy,
     impersonationId,
     userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    groupBy?: Extract<GroupBy, 'year'>;
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
@@ -1049,10 +1051,23 @@ export class PortfolioService {
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
-    const { chart } = await portfolioCalculator.getPerformance({
+    const { chart: intervalChart } = await portfolioCalculator.getPerformance({
       end: endDate,
       start: startDate
     });
+
+    let chart = intervalChart;
+
+    if (groupBy) {
+      const { chart: groupedChart } =
+        await portfolioCalculator.getPerformanceByGroup({
+          startDate,
+          endDate,
+          groupBy
+        });
+
+      chart = groupedChart;
+    }
 
     const {
       netPerformance,
@@ -1063,7 +1078,7 @@ export class PortfolioService {
       totalInvestment,
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
-    } = chart?.at(-1) ?? {
+    } = intervalChart?.at(-1) ?? {
       netPerformance: 0,
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,
