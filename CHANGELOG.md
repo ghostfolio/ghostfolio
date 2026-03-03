@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Added the asset profile to the endpoint `GET api/v1/portfolio/holdings`
-- Added the asset profile to the holdings of the public page
+- Included asset profile data in the endpoint `GET api/v1/portfolio/holdings`
+- Included asset profile data in the holdings of the public page
 
 ## 2.246.0 - 2026-03-03
 
