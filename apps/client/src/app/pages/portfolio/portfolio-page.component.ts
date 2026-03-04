@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   analyticsOutline,
+  calendarOutline,
   calculatorOutline,
   pieChartOutline,
   scanOutline,
@@ -62,6 +63,11 @@ export class PortfolioPageComponent implements OnInit {
                 internalRoutes.portfolio.subRoutes.allocations.routerLink
             },
             {
+              iconName: 'calendar-outline',
+              label: internalRoutes.portfolio.subRoutes.journal.title,
+              routerLink: internalRoutes.portfolio.subRoutes.journal.routerLink
+            },
+            {
               iconName: 'calculator-outline',
               label: internalRoutes.portfolio.subRoutes.fire.title,
               routerLink: internalRoutes.portfolio.subRoutes.fire.routerLink
@@ -80,6 +86,7 @@ export class PortfolioPageComponent implements OnInit {
 
     addIcons({
       analyticsOutline,
+      calendarOutline,
       calculatorOutline,
       pieChartOutline,
       scanOutline,
