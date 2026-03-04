@@ -97,9 +97,7 @@ export class ImportActivitiesService {
           isin: null,
           marketData: [],
           name: symbol,
-          scraperConfiguration: null,
           sectors: [],
-          symbolMapping: {},
           url: null
         });
       }

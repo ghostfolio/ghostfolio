@@ -62,8 +62,10 @@ export class TransformDataSourceInResponseInterceptor<
             valueMap,
             object: data,
             paths: [
+              'activities[*].dataSource',
               'activities[*].SymbolProfile.dataSource',
               'benchmarks[*].dataSource',
+              'errors[*].dataSource',
               'fearAndGreedIndex.CRYPTOCURRENCIES.dataSource',
               'fearAndGreedIndex.STOCKS.dataSource',
               'holdings[*].dataSource',

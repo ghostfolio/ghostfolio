@@ -1,12 +1,7 @@
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnDestroy
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -25,7 +20,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Account } from '@prisma/client';
-import { Subject } from 'rxjs';
 
 import { TransferBalanceDialogParams } from './interfaces/interfaces';
 
@@ -45,12 +39,10 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
   styleUrls: ['./transfer-balance-dialog.scss'],
   templateUrl: 'transfer-balance-dialog.html'
 })
-export class GfTransferBalanceDialogComponent implements OnDestroy {
+export class GfTransferBalanceDialogComponent {
   public accounts: Account[] = [];
   public currency: string;
   public transferBalanceForm: FormGroup;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: TransferBalanceDialogParams,
@@ -91,11 +83,6 @@ export class GfTransferBalanceDialogComponent implements OnDestroy {
     };
 
     this.dialogRef.close({ account });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private compareAccounts(control: AbstractControl): ValidationErrors {

@@ -5,7 +5,6 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
-  IsObject,
   IsOptional,
   IsString,
   IsUrl
@@ -66,22 +65,12 @@ export class CreateAssetProfileDto {
   @IsString()
   name?: string;
 
-  @IsObject()
-  @IsOptional()
-  scraperConfiguration?: Prisma.InputJsonObject;
-
   @IsArray()
   @IsOptional()
   sectors?: Prisma.InputJsonArray;
 
   @IsString()
   symbol: string;
-
-  @IsObject()
-  @IsOptional()
-  symbolMapping?: {
-    [dataProvider: string]: string;
-  };
 
   @IsOptional()
   @IsUrl({

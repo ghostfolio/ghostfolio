@@ -182,10 +182,8 @@ export class ExportService {
           isActive,
           isin,
           name,
-          scraperConfiguration,
           sectors,
           symbol,
-          symbolMapping,
           url
         }) => {
           return {
@@ -204,11 +202,8 @@ export class ExportService {
             isin,
             marketData: marketDataByAssetProfile[id],
             name,
-            scraperConfiguration:
-              scraperConfiguration as unknown as Prisma.JsonArray,
             sectors: sectors as unknown as Prisma.JsonArray,
             symbol,
-            symbolMapping,
             url
           };
         }
