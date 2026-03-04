@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Included asset profile data in the endpoint `GET api/v1/portfolio/holdings`
 - Included asset profile data in the holdings of the public page
+- Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
+
+## 2.247.0 - 2026-03-04
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `3.13.0` to `3.13.2`
 
 ## 2.246.0 - 2026-03-03
 
