@@ -22,6 +22,11 @@ export class ConfigurationService {
   public constructor() {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
+      AGENT_DAILY_BUDGET_USD: num({ default: 1.0 }),
+      AGENT_MAX_CONCURRENT_CONNECTIONS: num({ default: 10 }),
+      AGENT_RATE_LIMIT_MAX: num({ default: 20 }),
+      AGENT_RATE_LIMIT_WINDOW_SECONDS: num({ default: 60 }),
+      ANTHROPIC_API_KEY: str({ default: '' }),
       API_KEY_ALPHA_VANTAGE: str({ default: '' }),
       API_KEY_BETTER_UPTIME: str({ default: '' }),
       API_KEY_COINGECKO_DEMO: str({ default: '' }),
@@ -40,6 +45,7 @@ export class ConfigurationService {
       DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: json({
         default: []
       }),
+      ENABLE_FEATURE_AGENT: bool({ default: true }),
       ENABLE_FEATURE_AUTH_GOOGLE: bool({ default: false }),
       ENABLE_FEATURE_AUTH_OIDC: bool({ default: false }),
       ENABLE_FEATURE_AUTH_TOKEN: bool({ default: true }),

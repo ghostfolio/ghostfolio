@@ -11,6 +11,7 @@ export interface InfoItem {
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
   globalPermissions: string[];
+  hasPermissionToAccessAgent?: boolean;
   isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;
   statistics: Statistics;

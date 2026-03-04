@@ -1,0 +1,255 @@
+<div
+  aria-label="AI Assistant"
+  cdkTrapFocus
+  class="agent-chat-container"
+  role="dialog"
+  [class.mobile]="isMobile"
+>
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <ion-icon name="chatbubble-ellipses-outline" />
+      <h2 i18n>AI Assistant</h2>
+    </div>
+    <div class="chat-header-actions">
+      <button
+        mat-icon-button
+        [attr.aria-label]="'Conversation history'"
+        (click)="onToggleConversationList()"
+      >
+        <ion-icon name="list-outline" />
+      </button>
+      @if (messages.length > 0) {
+        <button
+          mat-icon-button
+          [attr.aria-label]="'New conversation'"
+          (click)="onNewConversation()"
+        >
+          <ion-icon name="refresh-outline" />
+        </button>
+      }
+      <button
+        mat-icon-button
+        [attr.aria-label]="'Close'"
+        [disabled]="isLoading"
+        (click)="onClose()"
+      >
+        <ion-icon name="close-outline" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Conversation List Panel -->
+  @if (showConversationList) {
+    <div class="conversation-list-panel">
+      <div class="conversation-list-header">
+        <span i18n>Conversations</span>
+        <button class="new-chat-btn" (click)="onNewConversation()">
+          <ion-icon name="refresh-outline" />
+          <span i18n>New chat</span>
+        </button>
+      </div>
+      @if (isLoadingConversations) {
+        <div class="conversation-list-loading">
+          <ngx-skeleton-loader
+            animation="pulse"
+            [count]="3"
+            [theme]="{
+              height: '2.5rem',
+              width: '100%',
+              'margin-bottom': '0.5rem',
+              'border-radius': '0.5rem'
+            }"
+          />
+        </div>
+      } @else if (conversations.length === 0) {
+        <div class="conversation-list-empty" i18n>
+          No previous conversations
+        </div>
+      } @else {
+        <div class="conversation-list-items">
+          @for (group of groupedConversations; track group.label) {
+            <div class="conversation-group-header">{{ group.label }}</div>
+            @for (conversation of group.conversations; track conversation.id) {
+              <div
+                class="conversation-item"
+                [class.active]="conversation.id === activeConversationId"
+                (click)="onLoadConversation(conversation.id)"
+              >
+                <div class="conversation-item-content">
+                  <div class="conversation-item-title">
+                    {{ conversation.title || 'Untitled' }}
+                  </div>
+                  <div class="conversation-item-meta">
+                    {{ conversation.messageCount }}
+                    <span i18n>messages</span>
+                  </div>
+                </div>
+                <button
+                  class="conversation-delete-btn"
+                  [attr.aria-label]="'Delete conversation'"
+                  (click)="onDeleteConversation($event, conversation.id)"
+                >
+                  <ion-icon name="trash-outline" />
+                </button>
+              </div>
+            }
+          }
+          @if (nextConversationCursor) {
+            @if (isLoadingMoreConversations) {
+              <div class="conversation-list-loading">
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [count]="2"
+                  [theme]="{
+                    height: '2.5rem',
+                    width: '100%',
+                    'margin-bottom': '0.5rem',
+                    'border-radius': '0.5rem'
+                  }"
+                />
+              </div>
+            } @else {
+              <button
+                class="load-more-btn"
+                i18n
+                (click)="onLoadMoreConversations()"
+              >
+                Load more
+              </button>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Loading history indicator -->
+  @if (isLoadingHistory) {
+    <div class="loading-history">
+      <ngx-skeleton-loader
+        animation="pulse"
+        [count]="4"
+        [theme]="{
+          height: '2rem',
+          width: '80%',
+          'margin-bottom': '0.75rem',
+          'border-radius': '0.5rem'
+        }"
+      />
+    </div>
+  } @else {
+    <!-- Message List -->
+    <div
+      #messageList
+      aria-live="polite"
+      class="message-list"
+      role="log"
+      [attr.aria-busy]="isLoading"
+      (scroll)="onScroll()"
+    >
+      @if (messages.length === 0) {
+        <div class="empty-state">
+          <div class="suggested-prompts">
+            <p class="suggested-title" i18n>Try asking about:</p>
+            @for (prompt of suggestedPrompts; track prompt) {
+              <button
+                class="suggested-chip"
+                (click)="onSuggestedPrompt(prompt)"
+              >
+                {{ prompt }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      @if (messages.length >= maxMessages) {
+        <div class="truncation-notice" i18n>Older messages not shown</div>
+      }
+
+      @for (message of messages; track message.id) {
+        <gf-agent-chat-message
+          [content]="message.content"
+          [isStreaming]="message.isStreaming"
+          [message]="message"
+          [skipAnimation]="skipMessageAnimations"
+          (feedbackChanged)="onFeedbackChanged(message, $event)"
+          (retryRequested)="onRetryLastMessage()"
+          (suggestionClicked)="onSuggestionClick($event)"
+        />
+      }
+
+      @if (isLoading && !currentStreamingMessageId) {
+        <div class="thinking-indicator">
+          <ngx-skeleton-loader
+            animation="pulse"
+            [theme]="{
+              height: '1rem',
+              width: '60%',
+              'margin-bottom': '0.5rem',
+              'border-radius': '0.5rem'
+            }"
+          />
+          <ngx-skeleton-loader
+            animation="pulse"
+            [theme]="{
+              height: '1rem',
+              width: '40%',
+              'border-radius': '0.5rem'
+            }"
+          />
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Scroll to bottom FAB -->
+  @if (showScrollFab) {
+    <button class="scroll-fab" (click)="scrollToBottom(true)">
+      <ion-icon name="arrow-down-outline" />
+    </button>
+  }
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <div class="input-wrapper">
+      <textarea
+        #messageInput
+        cdkAutosizeMaxRows="6"
+        cdkAutosizeMinRows="1"
+        cdkTextareaAutosize
+        class="message-input"
+        i18n-placeholder
+        placeholder="Ask about your portfolio..."
+        [attr.aria-label]="'Message input'"
+        [maxlength]="maxLength"
+        [(ngModel)]="inputText"
+        (keydown)="onKeydown($event)"
+      ></textarea>
+      @if (isLoading) {
+        <button
+          class="stop-btn"
+          [attr.aria-label]="'Stop generating'"
+          (click)="onStopGenerating()"
+        >
+          <ion-icon name="stop-circle-outline" />
+        </button>
+      } @else {
+        <button
+          class="send-btn"
+          [attr.aria-label]="'Send message'"
+          [disabled]="!canSend"
+          (click)="onSendMessage()"
+        >
+          <ion-icon name="send-outline" />
+        </button>
+      }
+    </div>
+    @if (inputText?.length > 2500) {
+      <div class="char-counter" [class]="characterCountClass">
+        {{ inputText.length }} / {{ maxLength }}
+      </div>
+    }
+  </div>
+</div>

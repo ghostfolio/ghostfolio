@@ -26,6 +26,76 @@ model Access {
   @@index([userId])
 }
 
+model AgentConversation {
+  id           String             @id @default(uuid())
+  userId       String
+  user         User               @relation(fields: [userId], onDelete: Cascade, references: [id])
+  title        String?
+  sdkSessionId String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  messages     AgentMessage[]
+  interactions AgentInteraction[]
+
+  @@index([userId])
+  @@index([userId, updatedAt])
+}
+
+model AgentFeedback {
+  id            String           @id @default(uuid())
+  interactionId String
+  interaction   AgentInteraction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User             @relation(fields: [userId], onDelete: Cascade, references: [id])
+  rating        String
+  comment       String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([interactionId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AgentInteraction {
+  id             String             @id @default(uuid())
+  userId         String
+  user           User               @relation(fields: [userId], onDelete: Cascade, references: [id])
+  sessionId      String?
+  conversationId String?
+  conversation   AgentConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  model          String
+  inputTokens    Int                @default(0)
+  outputTokens   Int                @default(0)
+  costUsd        Decimal            @default(0) @db.Decimal(10, 6)
+  durationMs     Int                @default(0)
+  toolCount      Int                @default(0)
+  otelTraceId    String?
+  createdAt      DateTime           @default(now())
+  feedback       AgentFeedback[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([conversationId])
+}
+
+model AgentMessage {
+  id             String            @id @default(uuid())
+  conversationId String
+  conversation   AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String
+  content        String
+  toolsUsed      Json?
+  confidence     Json?
+  disclaimers    String[]
+  interactionId  String?
+  createdAt      DateTime          @default(now())
+
+  @@index([conversationId])
+  @@index([conversationId, createdAt])
+}
+
 model Account {
   activities Order[]
   balance    Float            @default(0)
@@ -259,13 +329,16 @@ model Tag {
 }
 
 model User {
-  accessesGet   Access[]        @relation("accessGet")
-  accessesGive  Access[]        @relation("accessGive")
-  accessToken   String?
-  accounts      Account[]
-  activities    Order[]
-  analytics     Analytics?
-  apiKeys       ApiKey[]
+  accessesGet          Access[]              @relation("accessGet")
+  accessesGive         Access[]              @relation("accessGive")
+  accessToken          String?
+  accounts             Account[]
+  activities           Order[]
+  agentConversations   AgentConversation[]
+  agentFeedback        AgentFeedback[]
+  agentInteractions    AgentInteraction[]
+  analytics            Analytics?
+  apiKeys              ApiKey[]
   authChallenge String?
   authDevices   AuthDevice[]
   createdAt     DateTime        @default(now())

@@ -34,6 +34,7 @@ export class ExchangeRateDataService {
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
+  private initPromise: Promise<void>;
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -136,6 +137,18 @@ export class ExchangeRateDataService {
   }
 
   public async initialize() {
+    this.initPromise = this.doInitialize();
+
+    return this.initPromise;
+  }
+
+  public async waitForInitialization(): Promise<void> {
+    if (this.initPromise) {
+      await this.initPromise;
+    }
+  }
+
+  private async doInitialize() {
     this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
     this.derivedCurrencyFactors = {};
@@ -218,6 +231,96 @@ export class ExchangeRateDataService {
           1 / this.exchangeRates[symbol];
       }
     }
+  }
+
+  public async toCurrencyOnDemand(
+    aValue: number,
+    aFromCurrency: string,
+    aToCurrency: string
+  ): Promise<number | undefined> {
+    if (aValue === 0) {
+      return 0;
+    }
+
+    if (aFromCurrency === aToCurrency) {
+      return aValue;
+    }
+
+    // Try cached rate first
+    const cacheKey = `${aFromCurrency}${aToCurrency}`;
+
+    if (this.exchangeRates[cacheKey]) {
+      return this.exchangeRates[cacheKey] * aValue;
+    }
+
+    // Fetch on demand from data provider
+    try {
+      const dataSource =
+        this.dataProviderService.getDataSourceForExchangeRates();
+
+      // Try direct pair
+      const quotes = await this.dataProviderService.getQuotes({
+        items: [{ dataSource, symbol: cacheKey }],
+        requestTimeout: ms('10 seconds')
+      });
+
+      if (isNumber(quotes[cacheKey]?.marketPrice)) {
+        const rate = quotes[cacheKey].marketPrice;
+        this.exchangeRates[cacheKey] = rate;
+        this.exchangeRates[`${aToCurrency}${aFromCurrency}`] = 1 / rate;
+
+        return rate * aValue;
+      }
+
+      // Try indirect via DEFAULT_CURRENCY
+      const items = [];
+
+      if (aFromCurrency !== DEFAULT_CURRENCY) {
+        items.push({
+          dataSource,
+          symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
+        });
+      }
+
+      if (aToCurrency !== DEFAULT_CURRENCY) {
+        items.push({
+          dataSource,
+          symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
+        });
+      }
+
+      if (items.length > 0) {
+        const indirectQuotes = await this.dataProviderService.getQuotes({
+          items,
+          requestTimeout: ms('10 seconds')
+        });
+
+        const fromRate =
+          aFromCurrency === DEFAULT_CURRENCY
+            ? 1
+            : indirectQuotes[`${DEFAULT_CURRENCY}${aFromCurrency}`]
+                ?.marketPrice;
+        const toRate =
+          aToCurrency === DEFAULT_CURRENCY
+            ? 1
+            : indirectQuotes[`${DEFAULT_CURRENCY}${aToCurrency}`]?.marketPrice;
+
+        if (isNumber(fromRate) && isNumber(toRate) && fromRate > 0) {
+          const rate = (1 / fromRate) * toRate;
+          this.exchangeRates[cacheKey] = rate;
+          this.exchangeRates[`${aToCurrency}${aFromCurrency}`] = 1 / rate;
+
+          return rate * aValue;
+        }
+      }
+    } catch (error) {
+      Logger.error(
+        `Failed to fetch exchange rate on demand for ${aFromCurrency}${aToCurrency}: ${error.message}`,
+        'ExchangeRateDataService'
+      );
+    }
+
+    return undefined;
   }
 
   public toCurrency(
