@@ -35,8 +35,8 @@
           [min]="data.rule.configuration.threshold.min"
           [step]="data.rule.configuration.threshold.step"
         >
-          <input matSliderStartThumb [(ngModel)]="data.settings.thresholdMin" />
-          <input matSliderEndThumb [(ngModel)]="data.settings.thresholdMax" />
+          <input matSliderStartThumb [(ngModel)]="data.settings.thresholdMin" (ngModelChange)="onChange()" />
+          <input matSliderEndThumb [(ngModel)]="data.settings.thresholdMax" (ngModelChange)="onChange()" />
         </mat-slider>
         <gf-value
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
@@ -75,7 +75,7 @@
           [min]="data.rule.configuration.threshold.min"
           [step]="data.rule.configuration.threshold.step"
         >
-          <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" />
+          <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" (ngModelChange)="onChange()" />
         </mat-slider>
         <gf-value
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
@@ -113,7 +113,7 @@
           [min]="data.rule.configuration.threshold.min"
           [step]="data.rule.configuration.threshold.step"
         >
-          <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" />
+          <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" (ngModelChange)="onChange()" />
         </mat-slider>
         <gf-value
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
@@ -131,6 +131,7 @@
   <button
     color="primary"
     mat-flat-button
+    [disabled]="!hasChanges"
     (click)="dialogRef.close(data.settings)"
   >
     <ng-container i18n>Save</ng-container>
