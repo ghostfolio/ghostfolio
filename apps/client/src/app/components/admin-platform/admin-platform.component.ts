@@ -5,6 +5,7 @@ import { User } from '@ghostfolio/common/interfaces';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
+import { getLocale } from '@ghostfolio/common/helper';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
@@ -57,6 +58,7 @@ export class GfAdminPlatformComponent implements OnDestroy, OnInit {
 
   public dataSource = new MatTableDataSource<Platform>();
   public deviceType: string;
+  public locale = getLocale();
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];
   public user: User;
