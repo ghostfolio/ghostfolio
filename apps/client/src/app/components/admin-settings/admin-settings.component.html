@@ -40,9 +40,21 @@
           </mat-card-actions>
         </mat-card>
       }
-      <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+      <table
+        class="gf-table w-100"
+        mat-table
+        matSort
+        matSortActive="name"
+        matSortDirection="asc"
+        [dataSource]="dataSource"
+      >
         <ng-container matColumnDef="name">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="name"
+          >
             <ng-container i18n>Name</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
@@ -88,7 +100,12 @@
         </ng-container>
 
         <ng-container matColumnDef="status">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="dataSource"
+          >
             <ng-container i18n>Status</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
@@ -102,7 +119,12 @@
         </ng-container>
 
         <ng-container matColumnDef="assetProfileCount">
-          <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+          <th
+            *matHeaderCellDef
+            class="px-1 text-right"
+            mat-header-cell
+            mat-sort-header="assetProfileCount"
+          >
             <ng-container i18n>Asset Profiles</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
