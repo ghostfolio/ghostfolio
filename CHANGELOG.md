@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded `yahoo-finance2` from version `3.13.0` to `3.13.1`
+- Upgraded `yahoo-finance2` from version `3.13.0` to `3.13.2`
 
 ## 2.246.0 - 2026-03-03
 
