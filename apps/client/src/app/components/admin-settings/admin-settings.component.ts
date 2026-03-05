@@ -74,9 +74,9 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
   public pricingUrl: string;
+  public user: User;
 
   private unsubscribeSubject = new Subject<void>();
-  private user: User;
 
   public constructor(
     private adminService: AdminService,

@@ -1,17 +1,18 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { getLocale } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
-import { getLocale } from '@ghostfolio/common/helper';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild
@@ -54,11 +55,12 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
   templateUrl: './admin-platform.component.html'
 })
 export class GfAdminPlatformComponent implements OnDestroy, OnInit {
+  @Input() locale = getLocale();
+
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource = new MatTableDataSource<Platform>();
   public deviceType: string;
-  public locale = getLocale();
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];
   public user: User;
