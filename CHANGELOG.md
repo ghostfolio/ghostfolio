@@ -10,8 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Reused the value component in the platform management of the admin control panel
+- Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
+
+## 2.247.0 - 2026-03-04
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `3.13.0` to `3.13.2`
+
+## 2.246.0 - 2026-03-03
+
+### Changed
+
 - Removed the deprecated `committedFunds` from the summary of the portfolio details endpoint
 - Upgraded `Nx` from version `22.4.5` to `22.5.3`
+
+### Fixed
+
+- Fixed an issue where the apply and reset filter buttons remained disabled in the assistant
 
 ## 2.245.0 - 2026-03-01
 
