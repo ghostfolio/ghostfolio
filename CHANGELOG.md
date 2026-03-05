@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added column sorting to the data provider table of the admin control panel
+
 ### Changed
 
 - Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
