@@ -17,6 +17,8 @@ export class PortfolioSnapshot {
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
 
+  dividendYieldTrailingTwelveMonths: number;
+
   errors: AssetProfileIdentifier[];
 
   hasErrors: boolean;

@@ -27,6 +27,8 @@ export class TimelinePosition {
   @Type(() => Big)
   dividendInBaseCurrency: Big;
 
+  dividendYieldTrailingTwelveMonths: number;
+
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   fee: Big;
