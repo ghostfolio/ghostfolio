@@ -91,6 +91,10 @@ describe('PortfolioCalculator', () => {
     );
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   describe('get current positions', () => {
     it.only('with NOVN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
@@ -121,6 +125,10 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      // Make getPerformance() usable (see btcusd test for full explanation)
+      (portfolioCalculator as any).snapshot = portfolioSnapshot;
+      (portfolioCalculator as any).snapshotPromise = Promise.resolve();
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -259,6 +267,22 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2022-01-01', investment: 0 }
       ]);
+
+      // Performance grouped by year: single year (2022-03-06 to 2022-04-11)
+      const { chart: chart2022 } = await portfolioCalculator.getPerformance({
+        end: parseDate('2022-04-11'),
+        start: parseDate('2022-03-06')
+      });
+
+      expect(chart2022.length).toBeGreaterThan(0);
+
+      expect(chart2022.at(-1)).toMatchObject(
+        expect.objectContaining({
+          netPerformance: 19.86,
+          netPerformanceInPercentage: 0.13100263852242744,
+          totalInvestmentValueWithCurrencyEffect: 0
+        })
+      );
     });
   });
 });
