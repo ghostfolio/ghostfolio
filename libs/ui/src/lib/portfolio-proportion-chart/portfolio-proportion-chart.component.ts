@@ -13,11 +13,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
+  output,
   viewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
@@ -81,10 +80,10 @@ export class GfPortfolioProportionChartComponent
   @Input() maxItems?: number;
   @Input() showLabels = false;
 
-  @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
-
   public chart: Chart<'doughnut'>;
   public isLoading = true;
+
+  protected readonly proportionChartClicked = output<AssetProfileIdentifier>();
 
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
