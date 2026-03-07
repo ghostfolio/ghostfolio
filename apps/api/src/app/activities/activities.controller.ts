@@ -37,7 +37,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order as OrderModel, Prisma } from '@prisma/client';
+import { Order, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -86,7 +86,7 @@ export class ActivitiesController {
   @Delete(':id')
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteActivity(@Param('id') id: string): Promise<OrderModel> {
+  public async deleteActivity(@Param('id') id: string): Promise<Order> {
     const activity = await this.activitiesService.order({
       id,
       userId: this.request.user.id
@@ -195,9 +195,7 @@ export class ActivitiesController {
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async createActivity(
-    @Body() data: CreateOrderDto
-  ): Promise<OrderModel> {
+  public async createActivity(@Body() data: CreateOrderDto): Promise<Order> {
     try {
       await this.dataProviderService.validateActivities({
         activitiesDto: [
