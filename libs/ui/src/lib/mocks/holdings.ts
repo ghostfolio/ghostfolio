@@ -6,14 +6,35 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.042990776363386086,
     assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
+    assetProfile: {
+      assetClass: 'EQUITY',
+      assetSubClass: 'STOCK',
+      countries: [
+        {
+          code: 'US',
+          continent: 'North America',
+          name: 'United States',
+          weight: 1
+        }
+      ],
+      dataSource: 'YAHOO',
+      holdings: [],
+      sectors: [
+        {
+          name: 'Technology',
+          weight: 1
+        }
+      ],
+      symbol: 'AAPL'
+    },
     assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -49,14 +70,35 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.02377401948293552,
     assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
+    assetProfile: {
+      assetClass: 'EQUITY',
+      assetSubClass: 'STOCK',
+      countries: [
+        {
+          code: 'DE',
+          continent: 'Europe',
+          name: 'Germany',
+          weight: 1
+        }
+      ],
+      dataSource: 'YAHOO',
+      holdings: [],
+      sectors: [
+        {
+          name: 'Financial Services',
+          weight: 1
+        }
+      ],
+      symbol: 'ALV.DE'
+    },
     assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
         code: 'DE',
-        weight: 1,
         continent: 'Europe',
-        name: 'Germany'
+        name: 'Germany',
+        weight: 1
       }
     ],
     currency: 'EUR',
@@ -92,14 +134,35 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.08038536990007467,
     assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
+    assetProfile: {
+      assetClass: 'EQUITY',
+      assetSubClass: 'STOCK',
+      countries: [
+        {
+          code: 'US',
+          continent: 'North America',
+          name: 'United States',
+          weight: 1
+        }
+      ],
+      dataSource: 'YAHOO',
+      holdings: [],
+      sectors: [
+        {
+          name: 'Consumer Discretionary',
+          weight: 1
+        }
+      ],
+      symbol: 'AMZN'
+    },
     assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -135,6 +198,15 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.19216416482928922,
     assetClass: 'LIQUIDITY',
     assetClassLabel: 'Liquidity',
+    assetProfile: {
+      assetClass: 'LIQUIDITY',
+      assetSubClass: 'CASH',
+      countries: [],
+      dataSource: 'COINGECKO',
+      holdings: [],
+      sectors: [],
+      symbol: 'bitcoin'
+    },
     assetSubClass: 'CRYPTOCURRENCY',
     assetSubClassLabel: 'Cryptocurrency',
     countries: [],
@@ -166,14 +238,35 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.04307127421937313,
     assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
+    assetProfile: {
+      assetClass: 'EQUITY',
+      assetSubClass: 'STOCK',
+      countries: [
+        {
+          code: 'US',
+          continent: 'North America',
+          name: 'United States',
+          weight: 1
+        }
+      ],
+      dataSource: 'YAHOO',
+      holdings: [],
+      sectors: [
+        {
+          name: 'Technology',
+          weight: 1
+        }
+      ],
+      symbol: 'MSFT'
+    },
     assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -209,14 +302,35 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.18762679306394897,
     assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
+    assetProfile: {
+      assetClass: 'EQUITY',
+      assetSubClass: 'STOCK',
+      countries: [
+        {
+          code: 'US',
+          continent: 'North America',
+          name: 'United States',
+          weight: 1
+        }
+      ],
+      dataSource: 'YAHOO',
+      holdings: [],
+      sectors: [
+        {
+          name: 'Consumer Discretionary',
+          weight: 1
+        }
+      ],
+      symbol: 'TSLA'
+    },
     assetSubClass: 'STOCK',
     assetSubClassLabel: 'Stock',
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -252,6 +366,27 @@ export const holdings: PortfolioPosition[] = [
     allocationInPercentage: 0.053051250766657634,
     assetClass: 'EQUITY',
     assetClassLabel: 'Equity',
+    assetProfile: {
+      assetClass: 'EQUITY',
+      assetSubClass: 'ETF',
+      countries: [
+        {
+          code: 'US',
+          continent: 'North America',
+          name: 'United States',
+          weight: 1
+        }
+      ],
+      dataSource: 'YAHOO',
+      holdings: [],
+      sectors: [
+        {
+          name: 'Equity',
+          weight: 1
+        }
+      ],
+      symbol: 'VTI'
+    },
     assetSubClass: 'ETF',
     assetSubClassLabel: 'ETF',
     countries: [

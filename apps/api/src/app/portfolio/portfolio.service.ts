@@ -623,6 +623,27 @@ export class PortfolioService {
           ? 0
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
         assetClass: assetProfile.assetClass,
+        assetProfile: {
+          assetClass: assetProfile.assetClass,
+          assetSubClass: assetProfile.assetSubClass,
+          countries: assetProfile.countries,
+          dataSource: assetProfile.dataSource,
+          holdings: assetProfile.holdings.map(
+            ({ allocationInPercentage, name }) => {
+              return {
+                allocationInPercentage,
+                name,
+                valueInBaseCurrency: valueInBaseCurrency
+                  .mul(allocationInPercentage)
+                  .toNumber()
+              };
+            }
+          ),
+          name: assetProfile.name,
+          sectors: assetProfile.sectors,
+          symbol: assetProfile.symbol,
+          url: assetProfile.url
+        },
         assetSubClass: assetProfile.assetSubClass,
         countries: assetProfile.countries,
         dataSource: assetProfile.dataSource,
@@ -1672,6 +1693,16 @@ export class PortfolioService {
       allocationInPercentage: 0,
       assetClass: AssetClass.LIQUIDITY,
       assetSubClass: AssetSubClass.CASH,
+      assetProfile: {
+        assetClass: AssetClass.LIQUIDITY,
+        assetSubClass: AssetSubClass.CASH,
+        countries: [],
+        dataSource: undefined,
+        holdings: [],
+        name: currency,
+        sectors: [],
+        symbol: currency
+      },
       countries: [],
       dataSource: undefined,
       dateOfFirstActivity: undefined,

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Included asset profile data in the endpoint `GET api/v1/portfolio/holdings`
+- Included asset profile data in the holdings of the public page
 - Reused the value component in the platform management of the admin control panel
 - Reused the value component in the tag management of the admin control panel
 - Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
