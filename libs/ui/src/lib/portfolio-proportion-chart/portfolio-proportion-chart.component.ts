@@ -85,9 +85,10 @@ export class GfPortfolioProportionChartComponent
 
   protected readonly proportionChartClicked = output<AssetProfileIdentifier>();
 
+  private readonly OTHER_KEY = 'OTHER';
+
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
-  private readonly OTHER_KEY = 'OTHER';
 
   private colorMap: {
     [symbol: string]: string;
