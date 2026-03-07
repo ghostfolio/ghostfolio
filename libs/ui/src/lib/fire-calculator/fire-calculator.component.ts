@@ -55,7 +55,7 @@ import {
   startOfMonth,
   sub
 } from 'date-fns';
-import { isNil, isNumber } from 'lodash';
+import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
 
@@ -303,7 +303,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     }).format(totalAmount)}`;
                   },
                   label: (context) => {
-                    let label = context.dataset.label || '';
+                    let label = context.dataset.label ?? '';
 
                     if (label) {
                       label += ': ';
@@ -473,7 +473,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       'projectedTotalAmount'
     )?.value;
 
-    if (!isNil(projectedTotalAmount)) {
+    if (projectedTotalAmount) {
       return projectedTotalAmount;
     }
 
