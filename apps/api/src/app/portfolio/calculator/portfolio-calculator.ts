@@ -51,6 +51,7 @@ import {
   format,
   isAfter,
   isBefore,
+  isSameYear,
   isWithinInterval,
   min,
   startOfDay,
@@ -778,6 +779,46 @@ export abstract class PortfolioCalculator {
           //   .toNumber()
           // netWorth: 0
         });
+      }
+    }
+
+    return { chart };
+  }
+
+  public async getPerformanceByGroup({
+    endDate,
+    groupBy,
+    startDate
+  }: {
+    endDate: Date;
+    groupBy: GroupBy;
+    startDate: Date;
+  }) {
+    const interval = { start: startDate, end: endDate };
+    const chart: HistoricalDataItem[] = [];
+
+    if (groupBy === 'year') {
+      for (const year of eachYearOfInterval(interval)) {
+        const yearStartDate = startOfYear(year);
+        const yearEndDate = endOfYear(year);
+        const yearIntervalStartDate = isSameYear(startDate, yearStartDate)
+          ? startDate
+          : yearStartDate;
+        const yearIntervalEndDate = isSameYear(endDate, yearEndDate)
+          ? endDate
+          : yearEndDate;
+
+        const { chart: yearChart } = await this.getPerformance({
+          end: yearIntervalEndDate,
+          start: yearIntervalStartDate
+        });
+
+        const yearPerformanceItem = {
+          ...(yearChart.at(-1) ?? ({} as HistoricalDataItem)),
+          date: format(yearStartDate, DATE_FORMAT)
+        };
+
+        chart.push(yearPerformanceItem);
       }
     }
 
