@@ -12,9 +12,9 @@ export const holdings: PortfolioPosition[] = [
       countries: [
         {
           code: 'US',
-          weight: 1,
           continent: 'North America',
-          name: 'United States'
+          name: 'United States',
+          weight: 1
         }
       ],
       dataSource: 'YAHOO',
@@ -32,9 +32,9 @@ export const holdings: PortfolioPosition[] = [
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -76,9 +76,9 @@ export const holdings: PortfolioPosition[] = [
       countries: [
         {
           code: 'DE',
-          weight: 1,
           continent: 'Europe',
-          name: 'Germany'
+          name: 'Germany',
+          weight: 1
         }
       ],
       dataSource: 'YAHOO',
@@ -96,9 +96,9 @@ export const holdings: PortfolioPosition[] = [
     countries: [
       {
         code: 'DE',
-        weight: 1,
         continent: 'Europe',
-        name: 'Germany'
+        name: 'Germany',
+        weight: 1
       }
     ],
     currency: 'EUR',
@@ -140,9 +140,9 @@ export const holdings: PortfolioPosition[] = [
       countries: [
         {
           code: 'US',
-          weight: 1,
           continent: 'North America',
-          name: 'United States'
+          name: 'United States',
+          weight: 1
         }
       ],
       dataSource: 'YAHOO',
@@ -160,9 +160,9 @@ export const holdings: PortfolioPosition[] = [
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -244,9 +244,9 @@ export const holdings: PortfolioPosition[] = [
       countries: [
         {
           code: 'US',
-          weight: 1,
           continent: 'North America',
-          name: 'United States'
+          name: 'United States',
+          weight: 1
         }
       ],
       dataSource: 'YAHOO',
@@ -264,9 +264,9 @@ export const holdings: PortfolioPosition[] = [
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -308,9 +308,9 @@ export const holdings: PortfolioPosition[] = [
       countries: [
         {
           code: 'US',
-          weight: 1,
           continent: 'North America',
-          name: 'United States'
+          name: 'United States',
+          weight: 1
         }
       ],
       dataSource: 'YAHOO',
@@ -328,9 +328,9 @@ export const holdings: PortfolioPosition[] = [
     countries: [
       {
         code: 'US',
-        weight: 1,
         continent: 'North America',
-        name: 'United States'
+        name: 'United States',
+        weight: 1
       }
     ],
     currency: 'USD',
@@ -372,9 +372,9 @@ export const holdings: PortfolioPosition[] = [
       countries: [
         {
           code: 'US',
-          weight: 1,
           continent: 'North America',
-          name: 'United States'
+          name: 'United States',
+          weight: 1
         }
       ],
       dataSource: 'YAHOO',
