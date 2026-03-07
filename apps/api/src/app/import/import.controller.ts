@@ -38,7 +38,7 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.createOrder)
+  @HasPermission(permissions.createActivity)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
