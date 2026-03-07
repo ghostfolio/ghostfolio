@@ -1,4 +1,4 @@
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -18,6 +18,7 @@ import { UserService } from './user.service';
   controllers: [UserController],
   exports: [UserService],
   imports: [
+    ActivitiesModule,
     ConfigurationModule,
     I18nModule,
     ImpersonationModule,
@@ -25,7 +26,6 @@ import { UserService } from './user.service';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }
     }),
-    OrderModule,
     PrismaModule,
     PropertyModule,
     RedactValuesInResponseModule,
