@@ -278,13 +278,15 @@ export class GfPortfolioProportionChartComponent
 
       Object.keys(item.subCategory ?? {}).forEach((subCategory) => {
         if (item.name === UNKNOWN_KEY) {
-          backgroundColorSubCategory.push(item.color);
+          backgroundColorSubCategory.push(item.color ?? '');
         } else {
           backgroundColorSubCategory.push(
             Color(item.color).lighten(lightnessRatio).hex()
           );
         }
-        dataSubCategory.push(item.subCategory[subCategory].value.toNumber());
+        dataSubCategory.push(
+          item.subCategory?.[subCategory].value.toNumber() ?? 0
+        );
         labelSubCategory.push(subCategory);
 
         lightnessRatio += 0.1;
