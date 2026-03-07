@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for column sorting to the data providers management of the admin control panel
+
 ### Changed
 
 - Included asset profile data in the endpoint `GET api/v1/portfolio/holdings`
