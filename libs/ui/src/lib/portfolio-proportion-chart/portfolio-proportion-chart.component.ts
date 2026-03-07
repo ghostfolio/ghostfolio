@@ -18,7 +18,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
@@ -83,11 +83,11 @@ export class GfPortfolioProportionChartComponent
 
   @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
-
   public chart: Chart<'doughnut'>;
   public isLoading = true;
 
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
   private readonly OTHER_KEY = 'OTHER';
 
   private colorMap: {
@@ -336,76 +336,74 @@ export class GfPortfolioProportionChartComponent
       labels
     };
 
-    if (this.chartCanvas) {
-      if (this.chart) {
-        this.chart.data = data;
-        this.chart.options.plugins ??= {};
-        this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration(data);
+    if (this.chart) {
+      this.chart.data = data;
+      this.chart.options.plugins ??= {};
+      this.chart.options.plugins.tooltip =
+        this.getTooltipPluginConfiguration(data);
 
-        this.chart.update();
-      } else {
-        this.chart = new Chart<'doughnut'>(this.chartCanvas.nativeElement, {
-          data,
-          options: {
-            animation: false,
-            cutout: '70%',
-            layout: {
-              padding: this.showLabels === true ? 100 : 0
-            },
-            onClick: (_, activeElements, chart) => {
-              try {
-                const dataIndex = activeElements[0].index;
-                const symbol = chart.data.labels?.[dataIndex] as string;
+      this.chart.update();
+    } else {
+      this.chart = new Chart<'doughnut'>(this.chartCanvas().nativeElement, {
+        data,
+        options: {
+          animation: false,
+          cutout: '70%',
+          layout: {
+            padding: this.showLabels === true ? 100 : 0
+          },
+          onClick: (_, activeElements, chart) => {
+            try {
+              const dataIndex = activeElements[0].index;
+              const symbol = chart.data.labels?.[dataIndex] as string;
 
-                const dataSource = this.data[symbol].dataSource;
+              const dataSource = this.data[symbol].dataSource;
 
-                if (dataSource) {
-                  this.proportionChartClicked.emit({ dataSource, symbol });
-                }
-              } catch {}
-            },
-            onHover: (event, chartElement) => {
-              if (this.cursor) {
-                (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor : 'default';
+              if (dataSource) {
+                this.proportionChartClicked.emit({ dataSource, symbol });
               }
-            },
-            plugins: {
-              datalabels: {
-                color: (context) => {
-                  return this.getColorPalette()[
-                    context.dataIndex % this.getColorPalette().length
-                  ];
-                },
-                display: this.showLabels === true ? 'auto' : false,
-                labels: {
-                  index: {
-                    align: 'end',
-                    anchor: 'end',
-                    formatter: (value, context) => {
-                      const symbol = context.chart.data.labels?.[
-                        context.dataIndex
-                      ] as string;
-
-                      return value > 0
-                        ? isUUID(symbol)
-                          ? (translate(this.data[symbol]?.name) ?? symbol)
-                          : symbol
-                        : '';
-                    },
-                    offset: 8
-                  }
-                }
-              },
-              legend: { display: false },
-              tooltip: this.getTooltipPluginConfiguration(data)
+            } catch {}
+          },
+          onHover: (event, chartElement) => {
+            if (this.cursor) {
+              (event.native?.target as HTMLElement).style.cursor =
+                chartElement[0] ? this.cursor : 'default';
             }
           },
-          plugins: [ChartDataLabels],
-          type: 'doughnut'
-        });
-      }
+          plugins: {
+            datalabels: {
+              color: (context) => {
+                return this.getColorPalette()[
+                  context.dataIndex % this.getColorPalette().length
+                ];
+              },
+              display: this.showLabels === true ? 'auto' : false,
+              labels: {
+                index: {
+                  align: 'end',
+                  anchor: 'end',
+                  formatter: (value, context) => {
+                    const symbol = context.chart.data.labels?.[
+                      context.dataIndex
+                    ] as string;
+
+                    return value > 0
+                      ? isUUID(symbol)
+                        ? (translate(this.data[symbol]?.name) ?? symbol)
+                        : symbol
+                      : '';
+                  },
+                  offset: 8
+                }
+              }
+            },
+            legend: { display: false },
+            tooltip: this.getTooltipPluginConfiguration(data)
+          }
+        },
+        plugins: [ChartDataLabels],
+        type: 'doughnut'
+      });
     }
 
     this.isLoading = false;
