@@ -130,45 +130,45 @@ export class GfPortfolioProportionChartComponent
     };
 
     if (this.keys.length > 0) {
-      Object.keys(this.data).forEach((symbol) => {
-        if (this.data[symbol][this.keys[0]]?.toUpperCase()) {
-          if (chartData[this.data[symbol][this.keys[0]].toUpperCase()]) {
-            chartData[this.data[symbol][this.keys[0]].toUpperCase()].value =
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].value.plus(this.data[symbol].value || 0);
+      const primaryKey = this.keys[0];
+      const secondaryKey = this.keys[1];
 
-            if (
-              chartData[this.data[symbol][this.keys[0]].toUpperCase()]
-                .subCategory[this.data[symbol][this.keys[1]]]
-            ) {
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]]].value = chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]]].value.plus(
-                this.data[symbol].value || 0
-              );
+      Object.keys(this.data).forEach((symbol) => {
+        const asset = this.data[symbol];
+        const assetValue = asset.value || 0;
+        const primaryKeyValue = (asset[primaryKey] as string)?.toUpperCase();
+        const secondaryKeyValue = asset[secondaryKey] as string;
+
+        if (primaryKeyValue) {
+          if (chartData[primaryKeyValue]) {
+            chartData[primaryKeyValue].value =
+              chartData[primaryKeyValue].value.plus(assetValue);
+
+            const targetSubCategory =
+              chartData[primaryKeyValue].subCategory?.[secondaryKeyValue];
+            if (targetSubCategory) {
+              targetSubCategory.value =
+                targetSubCategory.value.plus(assetValue);
             } else {
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]] ?? UNKNOWN_KEY] = {
-                value: new Big(this.data[symbol].value || 0)
-              };
+              if (chartData[primaryKeyValue].subCategory) {
+                chartData[primaryKeyValue].subCategory[
+                  secondaryKeyValue ?? UNKNOWN_KEY
+                ] = {
+                  value: new Big(assetValue)
+                };
+              }
             }
           } else {
-            chartData[this.data[symbol][this.keys[0]].toUpperCase()] = {
-              name: this.data[symbol][this.keys[0]],
+            chartData[primaryKeyValue] = {
+              name: asset[primaryKey] as string,
               subCategory: {},
-              value: new Big(this.data[symbol].value || 0)
+              value: new Big(assetValue)
             };
 
-            if (this.data[symbol][this.keys[1]]) {
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory = {
-                [this.data[symbol][this.keys[1]]]: {
-                  value: new Big(this.data[symbol].value || 0)
+            if (secondaryKeyValue) {
+              chartData[primaryKeyValue].subCategory = {
+                [secondaryKeyValue]: {
+                  value: new Big(assetValue)
                 }
               };
             }
@@ -181,10 +181,10 @@ export class GfPortfolioProportionChartComponent
           } else {
             chartData[UNKNOWN_KEY] = {
               name: this.data[symbol].name,
-              subCategory: this.keys[1]
-                ? { [this.keys[1]]: { value: new Big(0) } }
+              subCategory: secondaryKey
+                ? { [secondaryKey]: { value: new Big(0) } }
                 : undefined,
-              value: new Big(this.data[symbol].value || 0)
+              value: new Big(assetValue)
             };
           }
         }
