@@ -11,7 +11,7 @@ import {
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -50,7 +50,10 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
   public readonly data =
     inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
-  protected readonly marketPrice = signal(this.data.marketPrice);
+  public readonly form = new FormGroup({
+    dateString: new FormControl<string | null>({ value: this.data.dateString, disabled: true }),
+    marketPrice: new FormControl<number | undefined>(this.data.marketPrice)
+  });
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly locale =
@@ -83,14 +86,17 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ marketPrice }) => {
-        this.marketPrice.set(marketPrice);
+        this.form.controls.marketPrice.setValue(marketPrice);
+        this.form.controls.marketPrice.markAsDirty();
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
   public onUpdate() {
-    if (this.marketPrice() === undefined) {
+    const marketPrice = this.form.controls.marketPrice.value;
+
+    if (marketPrice === undefined || marketPrice === null) {
       return;
     }
 
@@ -101,7 +107,7 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
           marketData: [
             {
               date: this.data.dateString,
-              marketPrice: this.marketPrice()
+              marketPrice: marketPrice
             }
           ]
         },
