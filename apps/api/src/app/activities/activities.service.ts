@@ -62,7 +62,7 @@ export class ActivitiesService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    const orders = await this.prismaService.order.findMany({
+    const activities = await this.prismaService.order.findMany({
       where: {
         userId,
         SymbolProfile: {
@@ -73,7 +73,7 @@ export class ActivitiesService {
     });
 
     await Promise.all(
-      orders.map(({ id }) =>
+      activities.map(({ id }) =>
         this.prismaService.order.update({
           data: {
             tags: {
@@ -201,7 +201,7 @@ export class ActivitiesService {
       ? false
       : isAfter(data.date as Date, endOfToday());
 
-    const order = await this.prismaService.order.create({
+    const activity = await this.prismaService.order.create({
       data: {
         ...orderData,
         account,
@@ -235,46 +235,46 @@ export class ActivitiesService {
     this.eventEmitter.emit(
       AssetProfileChangedEvent.getName(),
       new AssetProfileChangedEvent({
-        currency: order.SymbolProfile.currency,
-        dataSource: order.SymbolProfile.dataSource,
-        symbol: order.SymbolProfile.symbol
+        currency: activity.SymbolProfile.currency,
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
       })
     );
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: order.userId
+        userId: activity.userId
       })
     );
 
-    return order;
+    return activity;
   }
 
   public async deleteActivity(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
-    const order = await this.prismaService.order.delete({
+    const activity = await this.prismaService.order.delete({
       where
     });
 
     const [symbolProfile] =
       await this.symbolProfileService.getSymbolProfilesByIds([
-        order.symbolProfileId
+        activity.symbolProfileId
       ]);
 
     if (symbolProfile.activitiesCount === 0) {
-      await this.symbolProfileService.deleteById(order.symbolProfileId);
+      await this.symbolProfileService.deleteById(activity.symbolProfileId);
     }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: order.userId
+        userId: activity.userId
       })
     );
 
-    return order;
+    return activity;
   }
 
   public async deleteActivities({
@@ -764,7 +764,7 @@ export class ActivitiesService {
     /** Whether to include cash activities in the result. */
     withCash?: boolean;
   }) {
-    const orders = await this.getActivities({
+    const activities = await this.getActivities({
       filters,
       userCurrency,
       userId,
@@ -778,18 +778,18 @@ export class ActivitiesService {
         currency: userCurrency
       });
 
-      const cashOrders = await this.getCashActivities({
+      const cashActivities = await this.getCashActivities({
         cashDetails,
         filters,
         userCurrency,
         userId
       });
 
-      orders.activities.push(...cashOrders.activities);
-      orders.count += cashOrders.count;
+      activities.activities.push(...cashActivities.activities);
+      activities.count += cashActivities.count;
     }
 
-    return orders;
+    return activities;
   }
 
   public async getStatisticsByCurrency(
@@ -885,7 +885,7 @@ export class ActivitiesService {
       data: { tags: { set: [] } }
     });
 
-    const order = await this.prismaService.order.update({
+    const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
@@ -899,11 +899,11 @@ export class ActivitiesService {
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: order.userId
+        userId: activity.userId
       })
     );
 
-    return order;
+    return activity;
   }
 
   private async orders(params: {

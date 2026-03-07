@@ -62,7 +62,7 @@ export class ActivitiesController {
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async deleteOrders(
+  public async deleteActivities(
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
@@ -86,13 +86,13 @@ export class ActivitiesController {
   @Delete(':id')
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
-    const order = await this.activitiesService.order({
+  public async deleteActivity(@Param('id') id: string): Promise<OrderModel> {
+    const activity = await this.activitiesService.order({
       id,
       userId: this.request.user.id
     });
 
-    if (!order) {
+    if (!activity) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -109,7 +109,7 @@ export class ActivitiesController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getAllOrders(
+  public async getAllActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
@@ -162,7 +162,7 @@ export class ActivitiesController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getOrderById(
+  public async getActivityById(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
   ): Promise<ActivityResponse> {
@@ -195,7 +195,9 @@ export class ActivitiesController {
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
+  public async createActivity(
+    @Body() data: CreateOrderDto
+  ): Promise<OrderModel> {
     try {
       await this.dataProviderService.validateActivities({
         activitiesDto: [
@@ -278,12 +280,15 @@ export class ActivitiesController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
-    const originalOrder = await this.activitiesService.order({
+  public async updateActivity(
+    @Param('id') id: string,
+    @Body() data: UpdateOrderDto
+  ) {
+    const originalActivity = await this.activitiesService.order({
       id
     });
 
-    if (!originalOrder || originalOrder.userId !== this.request.user.id) {
+    if (!originalActivity || originalActivity.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
