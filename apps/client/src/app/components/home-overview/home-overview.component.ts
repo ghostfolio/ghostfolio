@@ -80,7 +80,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
 
           this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
-            permissions.createOrder
+            permissions.createActivity
           );
 
           this.update();
