@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reused the value component in the tag management of the admin control panel
 - Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
 
+### Fixed
+
+- Fixed an issue in the _FIRE_ calculator to correctly calculate the projected total amount
+
 ## 2.247.0 - 2026-03-04
 
 ### Changed
