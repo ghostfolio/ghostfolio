@@ -1,5 +1,5 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
@@ -28,9 +28,9 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 export class PublicController {
   public constructor(
     private readonly accessService: AccessService,
+    private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
@@ -81,7 +81,7 @@ export class PublicController {
       })
     ]);
 
-    const { activities } = await this.orderService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,

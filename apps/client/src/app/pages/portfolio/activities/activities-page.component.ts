@@ -334,7 +334,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((activity: UpdateOrderDto) => {
         if (activity) {
           this.dataService
-            .putOrder(activity)
+            .putActivity(activity)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
@@ -385,7 +385,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((transaction: CreateOrderDto | null) => {
             if (transaction) {
-              this.dataService.postOrder(transaction).subscribe({
+              this.dataService.postActivity(transaction).subscribe({
                 next: () => {
                   this.userService
                     .get(true)

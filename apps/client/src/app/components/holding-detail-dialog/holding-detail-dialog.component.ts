@@ -581,7 +581,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     };
 
     this.dataService
-      .postOrder(activity)
+      .postActivity(activity)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.router.navigate(
