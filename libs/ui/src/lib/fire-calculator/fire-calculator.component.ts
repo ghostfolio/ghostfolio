@@ -97,24 +97,29 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     projectedTotalAmount: new FormControl<number | null>(null),
     retirementDate: new FormControl<Date | null>(null)
   });
+
   public chart: Chart<'bar'>;
   public isLoading = true;
   public minDate = addDays(new Date(), 1);
   public periodsToRetire = 0;
 
   protected readonly annualInterestRateChanged = output<number>();
+
   protected readonly calculationCompleted =
     output<FireCalculationCompleteEvent>();
+
   protected readonly projectedTotalAmountChanged = output<number>();
   protected readonly retirementDateChanged = output<Date>();
   protected readonly savingsRateChanged = output<number>();
 
-  private readonly chartCanvas =
-    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
   private readonly CONTRIBUTION_PERIOD = 12;
+
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
     addYears(new Date(), 10)
   );
+
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
