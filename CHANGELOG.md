@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added column sorting to the data provider table of the admin control panel
+- Added support for column sorting to the data providers management of the admin control panel
 
 ### Changed
 
