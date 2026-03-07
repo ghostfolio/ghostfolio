@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Reused the value component in the platform management of the admin control panel
+- Reused the value component in the tag management of the admin control panel
+- Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
+
 ## 2.247.0 - 2026-03-04
 
 ### Changed
