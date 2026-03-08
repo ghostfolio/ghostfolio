@@ -1,3 +1,4 @@
+import { BULL_BOARD_COOKIE_NAME } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { Injectable, NestMiddleware } from '@nestjs/common';
@@ -8,11 +9,7 @@ import passport from 'passport';
 @Injectable()
 export class BullBoardAuthMiddleware implements NestMiddleware {
   public use(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.cookie
-      ?.split(';')
-      .map((c) => c.trim())
-      .find((c) => c.startsWith('bull_board_token='))
-      ?.split('=')[1];
+    const token = req.cookies?.[BULL_BOARD_COOKIE_NAME];
 
     if (token) {
       req.headers.authorization = `Bearer ${token}`;

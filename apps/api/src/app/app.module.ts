@@ -11,6 +11,7 @@ import { PropertyModule } from '@ghostfolio/api/services/property/property.modul
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import {
+  BULL_BOARD_ROUTE,
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
@@ -90,7 +91,7 @@ import { UserModule } from './user/user.module';
         }
       },
       middleware: BullBoardAuthMiddleware,
-      route: '/admin/queues'
+      route: BULL_BOARD_ROUTE
     }),
     BullModule.forRoot({
       redis: {
@@ -128,8 +129,8 @@ import { UserModule } from './user/user.module';
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       exclude: [
+        `${BULL_BOARD_ROUTE}/*wildcard`,
         '/.well-known/*wildcard',
-        '/admin/queues/*wildcard',
         '/api/*wildcard',
         '/sitemap.xml'
       ],

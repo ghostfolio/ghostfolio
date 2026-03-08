@@ -1,6 +1,8 @@
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  BULL_BOARD_COOKIE_NAME,
+  BULL_BOARD_ROUTE,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
@@ -184,9 +186,9 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
   public onOpenBullBoard() {
     const token = this.tokenStorageService.getToken();
 
-    document.cookie = `bull_board_token=${token}; path=/admin/queues; SameSite=Strict`;
+    document.cookie = `${BULL_BOARD_COOKIE_NAME}=${token}; path=${BULL_BOARD_ROUTE}; SameSite=Strict`;
 
-    window.open('/admin/queues', '_blank');
+    window.open(BULL_BOARD_ROUTE, '_blank');
   }
 
   public onViewData(aData: AdminJobs['jobs'][0]['data']) {

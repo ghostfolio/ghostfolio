@@ -1,4 +1,5 @@
 import {
+  BULL_BOARD_ROUTE,
   DEFAULT_HOST,
   DEFAULT_PORT,
   STORYBOOK_PATH,
@@ -14,6 +15,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
@@ -46,7 +48,7 @@ async function bootstrap() {
   });
   app.setGlobalPrefix('api', {
     exclude: [
-      'admin/queues{/*wildcard}',
+      `${BULL_BOARD_ROUTE.substring(1)}{/*wildcard}`,
       'sitemap.xml',
       ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
         // Exclude language-specific routes with an optional wildcard
@@ -65,6 +67,8 @@ async function bootstrap() {
 
   // Support 10mb csv/json files for importing activities
   app.useBodyParser('json', { limit: '10mb' });
+
+  app.use(cookieParser());
 
   if (configService.get<string>('ENABLE_FEATURE_SUBSCRIPTION') === 'true') {
     app.use((req: Request, res: Response, next: NextFunction) => {
