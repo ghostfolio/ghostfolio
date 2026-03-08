@@ -136,7 +136,7 @@
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="!form.dirty"
+      [disabled]="!(form.dirty && form.valid)"
     >
       <ng-container i18n>Save</ng-container>
     </button>
