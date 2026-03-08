@@ -9,14 +9,16 @@ import {
   ChangeDetectorRef,
   Component,
   DoCheck,
+  DestroyRef,
   ElementRef,
   Input,
+  inject,
   OnChanges,
-  OnDestroy,
   OnInit,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormsModule,
@@ -35,13 +37,12 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isString } from 'lodash';
-import { Subject, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
-  switchMap,
-  takeUntil
+  switchMap
 } from 'rxjs/operators';
 
 import { translate } from '../i18n';
@@ -77,7 +78,7 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements DoCheck, OnChanges, OnDestroy, OnInit
+  implements DoCheck, OnChanges, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
@@ -91,7 +92,7 @@ export class GfSymbolAutocompleteComponent
   public control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
 
   public constructor(
     public readonly _elementRef: ElementRef,
@@ -120,7 +121,7 @@ export class GfSymbolAutocompleteComponent
     }
 
     this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         if (super.value) {
           super.value.dataSource = null;
@@ -145,7 +146,7 @@ export class GfSymbolAutocompleteComponent
         }),
         debounceTime(400),
         distinctUntilChanged(),
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
             query,
@@ -200,13 +201,6 @@ export class GfSymbolAutocompleteComponent
       dataSource: event.option.value.dataSource,
       symbol: event.option.value.symbol
     } as LookupItem;
-  }
-
-  public ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private showDefaultOptions() {
