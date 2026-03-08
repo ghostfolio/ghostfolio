@@ -1,3 +1,4 @@
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
@@ -41,6 +42,7 @@ import {
   chevronUpCircleOutline,
   ellipsisHorizontal,
   ellipsisVertical,
+  openOutline,
   pauseOutline,
   playOutline,
   removeCircleOutline,
@@ -104,6 +106,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
+    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -126,6 +129,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
       chevronUpCircleOutline,
       ellipsisHorizontal,
       ellipsisVertical,
+      openOutline,
       pauseOutline,
       playOutline,
       removeCircleOutline,
@@ -175,6 +179,14 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.fetchJobs();
       });
+  }
+
+  public onOpenBullBoard() {
+    const token = this.tokenStorageService.getToken();
+
+    document.cookie = `bull_board_token=${token}; path=/admin/queues; SameSite=Strict`;
+
+    window.open('/admin/queues', '_blank');
   }
 
   public onViewData(aData: AdminJobs['jobs'][0]['data']) {

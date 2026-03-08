@@ -13,6 +13,8 @@ import {
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE
 } from '@ghostfolio/common/config';
 
+import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 
@@ -23,6 +25,14 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
   imports: [
     AccountBalanceModule,
     ActivitiesModule,
+    BullBoardModule.forFeature({
+      adapter: BullAdapter,
+      name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
+      options: {
+        displayName: 'Portfolio Snapshot Computation',
+        readOnlyMode: true
+      }
+    }),
     BullModule.registerQueue({
       name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
       settings: {

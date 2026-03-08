@@ -13,15 +13,19 @@ import {
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
+import { ExpressAdapter } from '@bull-board/express';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { StatusCodes } from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
+import passport from 'passport';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
@@ -70,6 +74,51 @@ import { UserModule } from './user/user.module';
     AuthDeviceModule,
     AuthModule,
     BenchmarksModule,
+    BullBoardModule.forRoot({
+      adapter: ExpressAdapter,
+      boardOptions: {
+        uiConfig: {
+          boardLogo: {
+            height: 0,
+            path: '',
+            width: 0
+          },
+          boardTitle: 'Job Queue',
+          favIcon: {
+            alternative: '/assets/favicon-32x32.png',
+            default: '/assets/favicon-32x32.png'
+          }
+        }
+      },
+      middleware: (req, res, next) => {
+        const token = req.headers.cookie
+          ?.split(';')
+          .map((c) => c.trim())
+          .find((c) => c.startsWith('bull_board_token='))
+          ?.split('=')[1];
+
+        if (token) {
+          req.headers.authorization = `Bearer ${token}`;
+        }
+
+        passport.authenticate('jwt', { session: false }, (error, user) => {
+          if (
+            error ||
+            !user ||
+            !hasPermission(user.permissions, permissions.accessAdminControl)
+          ) {
+            res
+              .status(StatusCodes.FORBIDDEN)
+              .json({ message: getReasonPhrase(StatusCodes.FORBIDDEN) });
+
+            return;
+          }
+
+          next();
+        })(req, res, next);
+      },
+      route: '/admin/queues'
+    }),
     BullModule.forRoot({
       redis: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
@@ -105,7 +154,12 @@ import { UserModule } from './user/user.module';
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      exclude: ['/.well-known/*wildcard', '/api/*wildcard', '/sitemap.xml'],
+      exclude: [
+        '/.well-known/*wildcard',
+        '/admin/queues/*wildcard',
+        '/api/*wildcard',
+        '/sitemap.xml'
+      ],
       rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {

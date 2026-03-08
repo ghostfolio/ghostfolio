@@ -46,6 +46,7 @@ async function bootstrap() {
   });
   app.setGlobalPrefix('api', {
     exclude: [
+      'admin/queues{/*wildcard}',
       'sitemap.xml',
       ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
         // Exclude language-specific routes with an optional wildcard
@@ -53,6 +54,7 @@ async function bootstrap() {
       })
     ]
   });
+
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,

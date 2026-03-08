@@ -1,6 +1,15 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      @if (user?.settings?.isExperimentalFeatures) {
+        <div class="d-flex justify-content-end mb-3">
+          <button mat-stroked-button (click)="onOpenBullBoard()">
+            <span><ng-container i18n>Overview</ng-container></span>
+            <ion-icon class="ml-2" name="open-outline" />
+          </button>
+        </div>
+      }
+
       <form class="align-items-center d-flex" [formGroup]="filterForm">
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-select formControlName="status">
