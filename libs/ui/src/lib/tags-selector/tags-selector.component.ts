@@ -9,7 +9,7 @@ import {
   OnChanges,
   OnInit,
   signal,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -64,12 +64,13 @@ export class GfTagsSelectorComponent
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
 
-  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-
   public filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
   public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
   public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
+
+  private readonly tagInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
 
   public constructor() {
     this.tagInputControl.valueChanges
@@ -114,7 +115,7 @@ export class GfTagsSelectorComponent
       this.onTouched();
     }
 
-    this.tagInput.nativeElement.value = '';
+    this.tagInput().nativeElement.value = '';
     this.tagInputControl.setValue(null);
   }
 
