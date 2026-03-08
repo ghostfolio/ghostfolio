@@ -105,6 +105,15 @@ export class GfSymbolAutocompleteComponent
     this.controlType = 'symbol-autocomplete';
   }
 
+  public get empty() {
+    return this.input?.empty;
+  }
+
+  public set value(value: LookupItem) {
+    this.control.setValue(value);
+    super.value = value;
+  }
+
   public ngOnInit() {
     if (this.disabled) {
       this.control.disable();
@@ -168,10 +177,6 @@ export class GfSymbolAutocompleteComponent
     return aLookupItem?.symbol ?? '';
   }
 
-  public get empty() {
-    return this.input?.empty;
-  }
-
   public focus() {
     this.input.focus();
   }
@@ -195,11 +200,6 @@ export class GfSymbolAutocompleteComponent
       dataSource: event.option.value.dataSource,
       symbol: event.option.value.symbol
     } as LookupItem;
-  }
-
-  public set value(value: LookupItem) {
-    this.control.setValue(value);
-    super.value = value;
   }
 
   public ngOnDestroy() {
