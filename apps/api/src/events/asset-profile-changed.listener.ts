@@ -59,13 +59,13 @@ export class AssetProfileChangedListener {
   }
 
   private async processAssetProfileChanged({
+    currency,
     dataSource,
-    symbol,
-    currency
+    symbol
   }: {
+    currency: string;
     dataSource: DataSource;
     symbol: string;
-    currency: string;
   }) {
     Logger.log(
       `Asset profile of ${symbol} (${dataSource}) has changed`,
