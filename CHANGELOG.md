@@ -11,10 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Nx` from version `22.4.5` to `22.5.3`
 
-### Fixed
-
-- Fixed the _Save_ button state in the rule settings dialog on the _X-ray_ page
-
 ## 2.245.0 - 2026-03-01
 
 ### Changed
