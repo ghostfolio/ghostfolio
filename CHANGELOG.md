@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `svgmap` from version `2.16.0` to `2.19.2`
-- Improved the language localization for Dutch (`nl`)
 
 ## 2.248.0 - 2026-03-07
 
