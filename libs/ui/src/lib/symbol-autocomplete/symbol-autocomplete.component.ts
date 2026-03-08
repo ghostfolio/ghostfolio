@@ -16,7 +16,6 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -86,8 +85,6 @@ export class GfSymbolAutocompleteComponent
 
   @Input() private includeIndices = false;
 
-  @ViewChild(MatInput) private input: MatInput;
-
   public readonly control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
@@ -95,6 +92,7 @@ export class GfSymbolAutocompleteComponent
     viewChild.required<MatAutocomplete>('symbolAutocomplete');
 
   private readonly destroyRef = inject(DestroyRef);
+  private readonly input = viewChild.required(MatInput);
 
   public constructor(
     public readonly _elementRef: ElementRef,
@@ -109,7 +107,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public get empty() {
-    return this.input?.empty;
+    return this.input().empty;
   }
 
   public set value(value: LookupItem) {
@@ -181,7 +179,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public focus() {
-    this.input.focus();
+    this.input().focus();
   }
 
   public isValueInOptions(value: string) {
