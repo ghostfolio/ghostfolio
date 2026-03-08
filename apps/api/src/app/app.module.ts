@@ -1,4 +1,5 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
@@ -13,7 +14,6 @@ import {
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
@@ -23,9 +23,8 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
-import passport from 'passport';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
@@ -90,33 +89,7 @@ import { UserModule } from './user/user.module';
           }
         }
       },
-      middleware: (req, res, next) => {
-        const token = req.headers.cookie
-          ?.split(';')
-          .map((c) => c.trim())
-          .find((c) => c.startsWith('bull_board_token='))
-          ?.split('=')[1];
-
-        if (token) {
-          req.headers.authorization = `Bearer ${token}`;
-        }
-
-        passport.authenticate('jwt', { session: false }, (error, user) => {
-          if (
-            error ||
-            !user ||
-            !hasPermission(user.permissions, permissions.accessAdminControl)
-          ) {
-            res
-              .status(StatusCodes.FORBIDDEN)
-              .json({ message: getReasonPhrase(StatusCodes.FORBIDDEN) });
-
-            return;
-          }
-
-          next();
-        })(req, res, next);
-      },
+      middleware: BullBoardAuthMiddleware,
       route: '/admin/queues'
     }),
     BullModule.forRoot({
