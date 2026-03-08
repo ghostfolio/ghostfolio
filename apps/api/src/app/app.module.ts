@@ -25,6 +25,7 @@ import { join } from 'node:path';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
+import { ActivitiesModule } from './activities/activities.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AssetModule } from './asset/asset.module';
@@ -48,7 +49,6 @@ import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { LogoModule } from './logo/logo.module';
-import { OrderModule } from './order/order.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
@@ -62,6 +62,7 @@ import { UserModule } from './user/user.module';
     AdminModule,
     AccessModule,
     AccountModule,
+    ActivitiesModule,
     AiModule,
     ApiKeysModule,
     AssetModule,
@@ -94,7 +95,6 @@ import { UserModule } from './user/user.module';
     InfoModule,
     LogoModule,
     MarketDataModule,
-    OrderModule,
     PlatformModule,
     PlatformsModule,
     PortfolioModule,

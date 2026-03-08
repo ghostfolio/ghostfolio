@@ -23,17 +23,20 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
+import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
 
@@ -52,6 +55,7 @@ import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
     MatCardModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
     RouterModule
@@ -61,6 +65,8 @@ import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
   templateUrl: './admin-settings.component.html'
 })
 export class GfAdminSettingsComponent implements OnDestroy, OnInit {
+  @ViewChild(MatSort) sort: MatSort;
+
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
   public displayedColumns = [
@@ -166,6 +172,8 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
         });
 
         this.dataSource = new MatTableDataSource(filteredProviders);
+        this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = get;
 
         const ghostfolioApiKey = settings[
           PROPERTY_API_KEY_GHOSTFOLIO

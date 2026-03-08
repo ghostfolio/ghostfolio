@@ -16,8 +16,8 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  ViewChild,
-  output
+  output,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -55,7 +55,7 @@ import {
   startOfMonth,
   sub
 } from 'date-fns';
-import { isNil, isNumber } from 'lodash';
+import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
 
@@ -90,8 +90,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;
 
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
-
   public calculatorForm = this.formBuilder.group({
     annualInterestRate: new FormControl<number | null>(null),
     paymentPerPeriod: new FormControl<number | null>(null),
@@ -99,22 +97,29 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     projectedTotalAmount: new FormControl<number | null>(null),
     retirementDate: new FormControl<Date | null>(null)
   });
+
   public chart: Chart<'bar'>;
   public isLoading = true;
   public minDate = addDays(new Date(), 1);
   public periodsToRetire = 0;
 
   protected readonly annualInterestRateChanged = output<number>();
+
   protected readonly calculationCompleted =
     output<FireCalculationCompleteEvent>();
+
   protected readonly projectedTotalAmountChanged = output<number>();
   protected readonly retirementDateChanged = output<Date>();
   protected readonly savingsRateChanged = output<number>();
 
   private readonly CONTRIBUTION_PERIOD = 12;
+
   private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
     addYears(new Date(), 10)
   );
+
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -272,7 +277,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
     const chartData = this.getChartData();
 
-    if (this.chartCanvas) {
+    if (this.chartCanvas()) {
       if (this.chart) {
         this.chart.data.labels = chartData.labels;
 
@@ -282,7 +287,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
         this.chart.update();
       } else {
-        this.chart = new Chart<'bar'>(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'bar'>(this.chartCanvas().nativeElement, {
           data: chartData,
           options: {
             plugins: {
@@ -303,7 +308,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     }).format(totalAmount)}`;
                   },
                   label: (context) => {
-                    let label = context.dataset.label || '';
+                    let label = context.dataset.label ?? '';
 
                     if (label) {
                       label += ': ';
@@ -473,7 +478,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       'projectedTotalAmount'
     )?.value;
 
-    if (!isNil(projectedTotalAmount)) {
+    if (projectedTotalAmount) {
       return projectedTotalAmount;
     }
 
