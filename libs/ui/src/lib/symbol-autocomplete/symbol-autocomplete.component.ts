@@ -16,7 +16,8 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -83,14 +84,15 @@ export class GfSymbolAutocompleteComponent
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
 
-  @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
-
   @Input() private includeIndices = false;
 
   @ViewChild(MatInput) private input: MatInput;
 
-  public control = new FormControl();
+  public readonly control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
+
+  protected readonly symbolAutocomplete =
+    viewChild.required<MatAutocomplete>('symbolAutocomplete');
 
   private readonly destroyRef = inject(DestroyRef);
 
