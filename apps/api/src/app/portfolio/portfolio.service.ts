@@ -627,8 +627,8 @@ export class PortfolioService {
           assetClass: assetProfile.assetClass,
           assetSubClass: assetProfile.assetSubClass,
           countries: assetProfile.countries,
-          dataSource: assetProfile.dataSource,
           currency: assetProfile.currency,
+          dataSource: assetProfile.dataSource,
           holdings: assetProfile.holdings.map(
             ({ allocationInPercentage, name }) => {
               return {
