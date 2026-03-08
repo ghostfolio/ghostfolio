@@ -1,9 +1,8 @@
 import { BULL_BOARD_COOKIE_NAME } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { ForbiddenException, Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import passport from 'passport';
 
 @Injectable()
@@ -18,17 +17,12 @@ export class BullBoardAuthMiddleware implements NestMiddleware {
     passport.authenticate('jwt', { session: false }, (error, user) => {
       if (
         error ||
-        !user ||
-        !hasPermission(user.permissions, permissions.accessAdminControl)
+        !hasPermission(user?.permissions, permissions.accessAdminControl)
       ) {
-        res
-          .status(StatusCodes.FORBIDDEN)
-          .json({ message: getReasonPhrase(StatusCodes.FORBIDDEN) });
-
-        return;
+        next(new ForbiddenException());
+      } else {
+        next();
       }
-
-      next();
     })(req, res, next);
   }
 }
