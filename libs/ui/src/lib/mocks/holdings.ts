@@ -17,6 +17,7 @@ export const holdings: PortfolioPosition[] = [
           weight: 1
         }
       ],
+      currency: 'USD',
       dataSource: 'YAHOO',
       holdings: [],
       sectors: [
@@ -81,6 +82,7 @@ export const holdings: PortfolioPosition[] = [
           weight: 1
         }
       ],
+      currency: 'EUR',
       dataSource: 'YAHOO',
       holdings: [],
       sectors: [
@@ -145,6 +147,7 @@ export const holdings: PortfolioPosition[] = [
           weight: 1
         }
       ],
+      currency: 'USD',
       dataSource: 'YAHOO',
       holdings: [],
       sectors: [
@@ -202,6 +205,7 @@ export const holdings: PortfolioPosition[] = [
       assetClass: 'LIQUIDITY',
       assetSubClass: 'CASH',
       countries: [],
+      currency: 'USD',
       dataSource: 'COINGECKO',
       holdings: [],
       sectors: [],
@@ -249,6 +253,7 @@ export const holdings: PortfolioPosition[] = [
           weight: 1
         }
       ],
+      currency: 'USD',
       dataSource: 'YAHOO',
       holdings: [],
       sectors: [
@@ -313,6 +318,7 @@ export const holdings: PortfolioPosition[] = [
           weight: 1
         }
       ],
+      currency: 'USD',
       dataSource: 'YAHOO',
       holdings: [],
       sectors: [
@@ -377,6 +383,7 @@ export const holdings: PortfolioPosition[] = [
           weight: 1
         }
       ],
+      currency: 'USD',
       dataSource: 'YAHOO',
       holdings: [],
       sectors: [
