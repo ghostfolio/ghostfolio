@@ -7,11 +7,11 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   signal,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormControl,
@@ -30,7 +30,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { Tag } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { addCircleOutline, closeOutline } from 'ionicons/icons';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,7 +57,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent
-  implements ControlValueAccessor, OnChanges, OnDestroy, OnInit
+  implements ControlValueAccessor, OnChanges, OnInit
 {
   @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
@@ -71,11 +71,9 @@ export class GfTagsSelectorComponent
   public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor() {
     this.tagInputControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe((value) => {
         this.filteredOptions.next(this.filterTags(value ?? ''));
       });
@@ -152,11 +150,6 @@ export class GfTagsSelectorComponent
   public writeValue(value: Tag[]) {
     this.tagsSelected.set(value || []);
     this.updateFilters();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private filterTags(query: string = ''): Tag[] {
