@@ -64,7 +64,7 @@ export class GfTagsSelectorComponent
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
 
-  public filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
+  public readonly filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
   public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
   public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
