@@ -27,9 +27,10 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
   public evaluate(ruleSettings: Settings) {
     const holdingsGroupedByAssetClass = this.groupCurrentHoldingsByAttribute(
       this.holdings,
-      'assetClass',
+      'assetProfile.assetClass',
       ruleSettings.baseCurrency
     );
+
     let totalValue = 0;
 
     const fixedIncomeValueInBaseCurrency =

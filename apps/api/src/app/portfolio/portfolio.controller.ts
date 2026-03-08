@@ -141,10 +141,10 @@ export class PortfolioController {
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .filter(({ assetClass, assetSubClass }) => {
+        .filter(({ assetProfile }) => {
           return (
-            assetClass !== AssetClass.LIQUIDITY &&
-            assetSubClass !== AssetSubClass.CASH
+            assetProfile.assetClass !== AssetClass.LIQUIDITY &&
+            assetProfile.assetSubClass !== AssetSubClass.CASH
           );
         })
         .map(({ valueInBaseCurrency }) => {
@@ -212,24 +212,29 @@ export class PortfolioController {
     }
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      const assetProfile = portfolioPosition.assetProfile;
+
       holdings[symbol] = {
         ...portfolioPosition,
-        assetClass:
-          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
-            ? portfolioPosition.assetClass
-            : undefined,
-        assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
-            ? portfolioPosition.assetSubClass
-            : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        holdings: hasDetails ? portfolioPosition.holdings : [],
+        assetProfile: {
+          ...assetProfile,
+          assetClass:
+            hasDetails || assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? assetProfile.assetClass
+              : undefined,
+          assetSubClass:
+            hasDetails || assetProfile.assetSubClass === AssetSubClass.CASH
+              ? assetProfile.assetSubClass
+              : undefined,
+          countries: hasDetails ? assetProfile.countries : [],
+          currency: hasDetails ? assetProfile.currency : undefined,
+          holdings: hasDetails ? assetProfile.holdings : [],
+          sectors: hasDetails ? assetProfile.sectors : []
+        },
         markets: hasDetails ? portfolioPosition.markets : undefined,
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
-          : undefined,
-        sectors: hasDetails ? portfolioPosition.sectors : []
+          : undefined
       };
     }
 

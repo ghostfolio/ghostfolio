@@ -38,18 +38,18 @@
                   <mat-option
                     class="line-height-1"
                     [value]="{
-                      dataSource: holding.dataSource,
-                      name: holding.name,
-                      symbol: holding.symbol
+                      dataSource: holding.assetProfile.dataSource,
+                      name: holding.assetProfile.name,
+                      symbol: holding.assetProfile.symbol
                     }"
                   >
                     <span
-                      ><b>{{ holding.name }}</b></span
+                      ><b>{{ holding.assetProfile.name }}</b></span
                     >
                     <br />
                     <small class="text-muted"
-                      >{{ holding.symbol | gfSymbol }} ·
-                      {{ holding.currency }}</small
+                      >{{ holding.assetProfile.symbol | gfSymbol }} ·
+                      {{ holding.assetProfile.currency }}</small
                     >
                   </mat-option>
                 }

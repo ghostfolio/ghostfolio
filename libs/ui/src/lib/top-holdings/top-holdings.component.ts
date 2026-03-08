@@ -89,8 +89,8 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onClickHolding(assetProfileIdentifier: AssetProfileIdentifier) {
-    this.holdingClicked.emit(assetProfileIdentifier);
+  public onClickHolding({ dataSource, symbol }: AssetProfileIdentifier) {
+    this.holdingClicked.emit({ dataSource, symbol });
   }
 
   public onShowAllHoldings() {

@@ -150,11 +150,11 @@ export class PublicController {
     };
 
     const totalValue = getSum(
-      Object.values(holdings).map(({ currency, marketPrice, quantity }) => {
+      Object.values(holdings).map(({ assetProfile, marketPrice, quantity }) => {
         return new Big(
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
-            currency,
+            assetProfile.currency,
             this.request.user?.settings?.settings.baseCurrency ??
               DEFAULT_CURRENCY
           )
@@ -166,19 +166,11 @@ export class PublicController {
       publicPortfolioResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
-        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
         assetProfile: hasDetails ? portfolioPosition.assetProfile : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        dataSource: portfolioPosition.dataSource,
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
-        name: portfolioPosition.name,
         netPerformancePercentWithCurrencyEffect:
           portfolioPosition.netPerformancePercentWithCurrencyEffect,
-        sectors: hasDetails ? portfolioPosition.sectors : [],
-        symbol: portfolioPosition.symbol,
-        url: portfolioPosition.url,
         valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
       };
     }

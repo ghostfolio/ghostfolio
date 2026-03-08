@@ -278,8 +278,8 @@ export class GfTreemapChartComponent
                 );
               }
 
-              const name = raw._data.name;
-              const symbol = raw._data.symbol;
+              const name = raw._data.assetProfile.name;
+              const symbol = raw._data.assetProfile.symbol;
 
               return [
                 isUUID(symbol) ? (name ?? symbol) : symbol,
@@ -320,8 +320,10 @@ export class GfTreemapChartComponent
                   ['desc']
                 ) as PortfolioPosition[];
 
-                const dataSource: DataSource = dataset[dataIndex].dataSource;
-                const symbol: string = dataset[dataIndex].symbol;
+                const dataSource: DataSource =
+                  dataset[dataIndex].assetProfile.dataSource;
+
+                const symbol: string = dataset[dataIndex].assetProfile.symbol;
 
                 this.treemapChartClicked.emit({ dataSource, symbol });
               } catch {}
@@ -355,10 +357,10 @@ export class GfTreemapChartComponent
       callbacks: {
         label: ({ raw }: GfTreemapTooltipItem) => {
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
-          const name = raw._data.name;
+          const name = raw._data.assetProfile.name;
           const sign =
             raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
-          const symbol = raw._data.symbol;
+          const symbol = raw._data.assetProfile.symbol;
 
           const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 

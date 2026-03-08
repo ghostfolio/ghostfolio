@@ -69,7 +69,11 @@ export class GfPublicPageComponent implements OnInit {
   };
   public pageSize = Number.MAX_SAFE_INTEGER;
   public positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
+    [symbol: string]: {
+      assetProfile: Pick<
+        PortfolioPosition['assetProfile'],
+        'currency' | 'name'
+      >;
       value: number;
     };
   };
@@ -166,19 +170,23 @@ export class GfPublicPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.publicPortfolioDetails.holdings
     )) {
+      const { assetProfile } = position;
+
       this.holdings.push(position);
 
       this.positions[symbol] = {
-        currency: position.currency,
-        name: position.name,
+        assetProfile: {
+          currency: assetProfile.currency,
+          name: assetProfile.name
+        },
         value: position.allocationInPercentage
       };
 
-      if (position.assetClass !== AssetClass.LIQUIDITY) {
+      if (assetProfile.assetClass !== AssetClass.LIQUIDITY) {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
-        if (position.countries.length > 0) {
-          for (const country of position.countries) {
+        if (assetProfile.countries.length > 0) {
+          for (const country of assetProfile.countries) {
             const { code, continent, name, weight } = country;
 
             if (this.continents[continent]?.value) {
@@ -215,8 +223,8 @@ export class GfPublicPageComponent implements OnInit {
             this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
         }
 
-        if (position.sectors.length > 0) {
-          for (const sector of position.sectors) {
+        if (assetProfile.sectors.length > 0) {
+          for (const sector of assetProfile.sectors) {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
@@ -238,7 +246,7 @@ export class GfPublicPageComponent implements OnInit {
       }
 
       this.symbols[prettifySymbol(symbol)] = {
-        name: position.name,
+        name: assetProfile.name,
         symbol: prettifySymbol(symbol),
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
