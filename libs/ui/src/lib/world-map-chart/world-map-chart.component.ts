@@ -9,7 +9,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { svgMap } from 'svgmap';
+import svgMap from 'svgmap';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
