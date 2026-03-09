@@ -8,14 +8,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DoCheck,
   DestroyRef,
+  DoCheck,
   ElementRef,
   Input,
-  inject,
   OnChanges,
   OnInit,
   SimpleChanges,
+  inject,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
