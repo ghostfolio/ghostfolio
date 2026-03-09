@@ -296,15 +296,21 @@ export class GfAppComponent implements OnDestroy, OnInit {
             ),
             hasPermissionToCreateActivity:
               !this.hasImpersonationId &&
-              hasPermission(this.user?.permissions, permissions.createOrder) &&
+              hasPermission(
+                this.user?.permissions,
+                permissions.createActivity
+              ) &&
               !this.user?.settings?.isRestrictedView,
             hasPermissionToReportDataGlitch: hasPermission(
               this.user?.permissions,
               permissions.reportDataGlitch
             ),
-            hasPermissionToUpdateOrder:
+            hasPermissionToUpdateActivity:
               !this.hasImpersonationId &&
-              hasPermission(this.user?.permissions, permissions.updateOrder) &&
+              hasPermission(
+                this.user?.permissions,
+                permissions.updateActivity
+              ) &&
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
           },
