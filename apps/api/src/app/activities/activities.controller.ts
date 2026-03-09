@@ -59,7 +59,7 @@ export class ActivitiesController {
   ) {}
 
   @Delete()
-  @HasPermission(permissions.deleteOrder)
+  @HasPermission(permissions.deleteActivity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
@@ -84,7 +84,7 @@ export class ActivitiesController {
   }
 
   @Delete(':id')
-  @HasPermission(permissions.deleteOrder)
+  @HasPermission(permissions.deleteActivity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteActivity(@Param('id') id: string): Promise<Order> {
     const activity = await this.activitiesService.order({
@@ -191,7 +191,7 @@ export class ActivitiesController {
     return activity;
   }
 
-  @HasPermission(permissions.createOrder)
+  @HasPermission(permissions.createActivity)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
@@ -274,7 +274,7 @@ export class ActivitiesController {
     return activity;
   }
 
-  @HasPermission(permissions.updateOrder)
+  @HasPermission(permissions.updateActivity)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)

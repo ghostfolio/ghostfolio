@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a debounce to the `PortfolioChangedListener` and `AssetProfileChangedListener` to minimize redundant _Redis_ and database operations
 
+### Changed
+
+- Improved the language localization for Dutch (`nl`)
+
 ## 2.248.0 - 2026-03-07
 
 ### Added
