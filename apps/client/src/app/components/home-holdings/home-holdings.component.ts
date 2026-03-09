@@ -107,7 +107,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
 
           this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
-            permissions.createOrder
+            permissions.createActivity
           );
 
           this.initialize();

@@ -11,7 +11,7 @@ export interface HoldingDetailDialogParams {
   hasPermissionToAccessAdminControl: boolean;
   hasPermissionToCreateActivity: boolean;
   hasPermissionToReportDataGlitch: boolean;
-  hasPermissionToUpdateOrder: boolean;
+  hasPermissionToUpdateActivity: boolean;
   locale: string;
   symbol: string;
 }
