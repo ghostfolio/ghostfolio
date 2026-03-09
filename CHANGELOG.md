@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Dutch (`nl`)
+
 ### Fixed
 
 - Fixed false _Redis_ health check failures by using unique keys and increasing the timeout to 5s
