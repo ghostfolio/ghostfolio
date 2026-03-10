@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      @if (user?.settings?.isExperimentalFeatures) {
+      @if (hasPermissionToAccessBullBoard) {
         <div class="d-flex justify-content-end mb-3">
           <button mat-stroked-button (click)="onOpenBullBoard()">
             <span><ng-container i18n>Overview</ng-container></span>

@@ -25,14 +25,18 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
   imports: [
     AccountBalanceModule,
     ActivitiesModule,
-    BullBoardModule.forFeature({
-      adapter: BullAdapter,
-      name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
-      options: {
-        displayName: 'Portfolio Snapshot Computation',
-        readOnlyMode: true
-      }
-    }),
+    ...(process.env.ENABLE_FEATURE_BULL_BOARD === 'true'
+      ? [
+          BullBoardModule.forFeature({
+            adapter: BullAdapter,
+            name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
+            options: {
+              displayName: 'Portfolio Snapshot Computation',
+              readOnlyMode: true
+            }
+          })
+        ]
+      : []),
     BullModule.registerQueue({
       name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
       settings: {

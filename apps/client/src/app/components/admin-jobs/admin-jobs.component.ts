@@ -10,6 +10,7 @@ import {
 } from '@ghostfolio/common/config';
 import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
 import { AdminJobs, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService } from '@ghostfolio/ui/services';
 
@@ -18,10 +19,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -52,8 +54,6 @@ import {
 } from 'ionicons/icons';
 import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,7 +73,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./admin-jobs.scss'],
   templateUrl: './admin-jobs.html'
 })
-export class GfAdminJobsComponent implements OnDestroy, OnInit {
+export class GfAdminJobsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
@@ -85,6 +85,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
   public dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
   public defaultDateTimeFormat: string;
   public filterForm: FormGroup;
+
   public displayedColumns = [
     'index',
     'type',
@@ -97,28 +98,35 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
     'status',
     'actions'
   ];
+
+  public hasPermissionToAccessBullBoard = false;
   public isLoading = false;
   public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
-  public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
+  private user: User;
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    private destroyRef: DestroyRef,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
 
           this.defaultDateTimeFormat = getDateWithTimeFormatString(
             this.user.settings.locale
+          );
+
+          this.hasPermissionToAccessBullBoard = hasPermission(
+            this.user.permissions,
+            permissions.accessAdminControlBullBoard
           );
         }
       });
@@ -145,7 +153,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
     });
 
     this.filterForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         const currentFilter = this.filterForm.get('status').value;
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
@@ -157,7 +165,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
   public onDeleteJob(aId: string) {
     this.adminService
       .deleteJob(aId)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.fetchJobs();
       });
@@ -168,7 +176,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
 
     this.adminService
       .deleteJobs({ status: currentFilter ? [currentFilter] : undefined })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
       });
@@ -177,7 +185,7 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
   public onExecuteJob(aId: string) {
     this.adminService
       .executeJob(aId)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.fetchJobs();
       });
@@ -203,17 +211,12 @@ export class GfAdminJobsComponent implements OnDestroy, OnInit {
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private fetchJobs(aStatus?: JobStatus[]) {
     this.isLoading = true;
 
     this.adminService
       .fetchJobs({ status: aStatus })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
         this.dataSource.sort = this.sort;

@@ -43,6 +43,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_AUTH_GOOGLE: bool({ default: false }),
       ENABLE_FEATURE_AUTH_OIDC: bool({ default: false }),
       ENABLE_FEATURE_AUTH_TOKEN: bool({ default: true }),
+      ENABLE_FEATURE_BULL_BOARD: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: bool({ default: true }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
