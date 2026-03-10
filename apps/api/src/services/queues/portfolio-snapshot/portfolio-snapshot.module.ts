@@ -32,7 +32,7 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
             name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
             options: {
               displayName: 'Portfolio Snapshot Computation',
-              readOnlyMode: true
+              readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
             }
           })
         ]

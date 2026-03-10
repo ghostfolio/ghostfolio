@@ -10,6 +10,7 @@ export interface Environment extends CleanedEnvAccessors {
   API_KEY_FINANCIAL_MODELING_PREP: string;
   API_KEY_OPEN_FIGI: string;
   API_KEY_RAPID_API: string;
+  BULL_BOARD_IS_READ_ONLY: boolean;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
   DATA_SOURCE_EXCHANGE_RATES: string;

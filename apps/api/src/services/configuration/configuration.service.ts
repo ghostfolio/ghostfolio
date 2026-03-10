@@ -30,6 +30,7 @@ export class ConfigurationService {
       API_KEY_FINANCIAL_MODELING_PREP: str({ default: '' }),
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
+      BULL_BOARD_IS_READ_ONLY: bool({ default: true }),
       CACHE_QUOTES_TTL: num({ default: ms('1 minute') }),
       CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),

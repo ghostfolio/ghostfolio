@@ -26,7 +26,7 @@ import { DataGatheringProcessor } from './data-gathering.processor';
             name: DATA_GATHERING_QUEUE,
             options: {
               displayName: 'Data Gathering',
-              readOnlyMode: true
+              readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
             }
           })
         ]
