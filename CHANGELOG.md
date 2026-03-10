@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the _Storybook_ stories of the value component
 - Improved the language localization for Dutch (`nl`)
+- Upgraded `class-validator` from version `0.14.3` to `0.15.1`
 
 ### Fixed
 
