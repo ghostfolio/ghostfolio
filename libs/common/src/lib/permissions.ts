@@ -4,6 +4,7 @@ import { Role } from '@prisma/client';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
+  accessAdminControlBullBoard: 'accessAdminControlBullBoard',
   accessAssistant: 'accessAssistant',
   accessHoldingsChart: 'accessHoldingsChart',
   createAccess: 'createAccess',
