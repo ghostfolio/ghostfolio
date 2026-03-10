@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a debounce to the `PortfolioChangedListener` and `AssetProfileChangedListener` to minimize redundant _Redis_ and database operations
+
 ### Changed
 
 - Improved the _Storybook_ stories of the value component
