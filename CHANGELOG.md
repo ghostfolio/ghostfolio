@@ -5,7 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.249.0 - 2026-03-10
+
+### Added
+
+- Integrated _Bull Dashboard_ for a detailed jobs queue view in the admin control panel (experimental)
+- Added a debounce to the `PortfolioChangedListener` and `AssetProfileChangedListener` to minimize redundant _Redis_ and database operations
+
+### Changed
+
+- Improved the _Storybook_ stories of the value component
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for German (`de`)
+- Upgraded `class-validator` from version `0.14.3` to `0.15.1`
+
+### Fixed
+
+- Fixed false _Redis_ health check failures by using unique keys and increasing the timeout to 5s
+
+## 2.248.0 - 2026-03-07
 
 ### Added
 
@@ -17,7 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included asset profile data in the holdings of the public page
 - Reused the value component in the platform management of the admin control panel
 - Reused the value component in the tag management of the admin control panel
+- Deprecated the `api/v1/order` endpoints in favor of the `api/v1/activities` endpoints
 - Upgraded `jsonpath` from version `1.1.1` to `1.2.1`
+
+### Fixed
+
+- Fixed an issue in the _FIRE_ calculator to correctly calculate the projected total amount
 
 ## 2.247.0 - 2026-03-04
 

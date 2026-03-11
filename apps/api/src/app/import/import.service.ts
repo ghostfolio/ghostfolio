@@ -1,5 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
@@ -44,12 +44,12 @@ import { ImportDataDto } from './import-data.dto';
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
-    private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
     private readonly portfolioService: PortfolioService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -91,7 +91,7 @@ export class ImportService {
             userId,
             withExcludedAccounts: true
           }),
-          this.orderService.getOrders({
+          this.activitiesService.getActivities({
             filters,
             userCurrency,
             userId,
@@ -548,7 +548,7 @@ export class ImportService {
           continue;
         }
 
-        order = await this.orderService.createOrder({
+        order = await this.activitiesService.createActivity({
           comment,
           currency,
           date,
@@ -645,7 +645,7 @@ export class ImportService {
     userId: string;
   }): Promise<Partial<Activity>[]> {
     const { activities: existingActivities } =
-      await this.orderService.getOrders({
+      await this.activitiesService.getActivities({
         userCurrency,
         userId,
         includeDrafts: true,
