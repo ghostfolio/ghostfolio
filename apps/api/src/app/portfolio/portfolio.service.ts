@@ -570,7 +570,6 @@ export class PortfolioService {
 
     for (const {
       activitiesCount,
-      currency,
       dateOfFirstActivity,
       dividend,
       grossPerformance,
@@ -621,7 +620,6 @@ export class PortfolioService {
           ? 0
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
         assetProfile: {
-          currency,
           assetClass: assetProfile.assetClass,
           assetSubClass: assetProfile.assetSubClass,
           countries: assetProfile.countries,
@@ -1681,7 +1679,6 @@ export class PortfolioService {
         currency,
         assetClass: AssetClass.LIQUIDITY,
         assetSubClass: AssetSubClass.CASH,
-        currency,
         countries: [],
         dataSource: undefined,
         holdings: [],
