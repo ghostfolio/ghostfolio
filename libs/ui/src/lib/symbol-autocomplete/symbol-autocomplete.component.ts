@@ -218,6 +218,7 @@ export class GfSymbolAutocompleteComponent
     const requiredCheck = super.required
       ? !super.value?.dataSource || !super.value?.symbol
       : false;
+
     if (requiredCheck) {
       this.ngControl.control?.setErrors({ invalidData: true });
     }
