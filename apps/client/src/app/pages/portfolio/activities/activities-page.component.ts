@@ -407,9 +407,9 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     this.hasPermissionToCreateActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.createOrder);
+      hasPermission(this.user.permissions, permissions.createActivity);
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteOrder);
+      hasPermission(this.user.permissions, permissions.deleteActivity);
   }
 }

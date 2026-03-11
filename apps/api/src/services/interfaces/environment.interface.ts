@@ -10,6 +10,7 @@ export interface Environment extends CleanedEnvAccessors {
   API_KEY_FINANCIAL_MODELING_PREP: string;
   API_KEY_OPEN_FIGI: string;
   API_KEY_RAPID_API: string;
+  BULL_BOARD_IS_READ_ONLY: boolean;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
   DATA_SOURCE_EXCHANGE_RATES: string;
@@ -19,6 +20,7 @@ export interface Environment extends CleanedEnvAccessors {
   ENABLE_FEATURE_AUTH_GOOGLE: boolean;
   ENABLE_FEATURE_AUTH_OIDC: boolean;
   ENABLE_FEATURE_AUTH_TOKEN: boolean;
+  ENABLE_FEATURE_BULL_BOARD: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
   ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: boolean;
   ENABLE_FEATURE_READ_ONLY_MODE: boolean;

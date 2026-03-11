@@ -1,4 +1,5 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
@@ -10,10 +11,13 @@ import { PropertyModule } from '@ghostfolio/api/services/property/property.modul
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import {
+  BULL_BOARD_ROUTE,
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 
+import { ExpressAdapter } from '@bull-board/express';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -70,6 +74,29 @@ import { UserModule } from './user/user.module';
     AuthDeviceModule,
     AuthModule,
     BenchmarksModule,
+    ...(process.env.ENABLE_FEATURE_BULL_BOARD === 'true'
+      ? [
+          BullBoardModule.forRoot({
+            adapter: ExpressAdapter,
+            boardOptions: {
+              uiConfig: {
+                boardLogo: {
+                  height: 0,
+                  path: '',
+                  width: 0
+                },
+                boardTitle: 'Job Queues',
+                favIcon: {
+                  alternative: '/assets/favicon-32x32.png',
+                  default: '/assets/favicon-32x32.png'
+                }
+              }
+            },
+            middleware: BullBoardAuthMiddleware,
+            route: BULL_BOARD_ROUTE
+          })
+        ]
+      : []),
     BullModule.forRoot({
       redis: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
@@ -105,7 +132,12 @@ import { UserModule } from './user/user.module';
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      exclude: ['/.well-known/*wildcard', '/api/*wildcard', '/sitemap.xml'],
+      exclude: [
+        `${BULL_BOARD_ROUTE}/*wildcard`,
+        '/.well-known/*wildcard',
+        '/api/*wildcard',
+        '/sitemap.xml'
+      ],
       rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {
