@@ -16,6 +16,10 @@ export default {
     deviceType: {
       control: 'select',
       options: ['desktop', 'mobile']
+    },
+    size: {
+      control: 'select',
+      options: ['small', 'medium', 'large']
     }
   }
 } as Meta<GfValueComponent>;
@@ -51,7 +55,11 @@ export const Label: Story = {
   args: {
     locale: 'en-US',
     value: 7.25
-  }
+  },
+  render: (args) => ({
+    props: args,
+    template: `<gf-value [locale]="locale" [size]="size" [value]="value">Label</gf-value>`
+  })
 };
 
 export const PerformancePositive: Story = {

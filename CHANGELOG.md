@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.249.0 - 2026-03-10
+
+### Added
+
+- Integrated _Bull Dashboard_ for a detailed jobs queue view in the admin control panel (experimental)
+- Added a debounce to the `PortfolioChangedListener` and `AssetProfileChangedListener` to minimize redundant _Redis_ and database operations
+
+### Changed
+
+- Improved the _Storybook_ stories of the value component
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for German (`de`)
+- Upgraded `class-validator` from version `0.14.3` to `0.15.1`
+
+### Fixed
+
+- Fixed false _Redis_ health check failures by using unique keys and increasing the timeout to 5s
+
 ## 2.248.0 - 2026-03-07
 
 ### Added
