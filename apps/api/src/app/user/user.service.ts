@@ -530,8 +530,14 @@ export class UserService {
       }
     }
 
-    if (!environment.production && hasRole(user, Role.ADMIN)) {
-      currentPermissions.push(permissions.impersonateAllUsers);
+    if (hasRole(user, Role.ADMIN)) {
+      if (this.configurationService.get('ENABLE_FEATURE_BULL_BOARD')) {
+        currentPermissions.push(permissions.accessAdminControlBullBoard);
+      }
+
+      if (!environment.production) {
+        currentPermissions.push(permissions.impersonateAllUsers);
+      }
     }
 
     user.accounts = user.accounts.sort((a, b) => {

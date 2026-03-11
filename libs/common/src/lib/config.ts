@@ -51,6 +51,14 @@ export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.REAL_ESTATE, []]
 ]);
 
+export const BULL_BOARD_COOKIE_NAME = 'bull_board_token';
+
+/**
+ * WARNING: This route is mirrored in `apps/client/proxy.conf.json`.
+ * If you update this value, you must also update the proxy configuration.
+ */
+export const BULL_BOARD_ROUTE = '/admin/queues';
+
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
 

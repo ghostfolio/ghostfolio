@@ -69,10 +69,11 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import {
+  Account,
   AccountBalance,
   DataSource,
   MarketData,
-  Order as OrderModel,
+  Order,
   Tag
 } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
@@ -751,11 +752,11 @@ export class DataService {
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<OrderModel>('/api/v1/access', aAccess);
+    return this.http.post<Access>('/api/v1/access', aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
-    return this.http.post<OrderModel>('/api/v1/account', aAccount);
+    return this.http.post<Account>('/api/v1/account', aAccount);
   }
 
   public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
@@ -766,7 +767,7 @@ export class DataService {
   }
 
   public postActivity(aOrder: CreateOrderDto) {
-    return this.http.post<OrderModel>('/api/v1/activities', aOrder);
+    return this.http.post<Order>('/api/v1/activities', aOrder);
   }
 
   public postApiKey() {
