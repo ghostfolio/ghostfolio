@@ -196,7 +196,7 @@ export class GfAdminJobsComponent implements OnInit {
 
     document.cookie = [
       `${BULL_BOARD_COOKIE_NAME}=${encodeURIComponent(token)}`,
-      `path=${BULL_BOARD_ROUTE}`,
+      `path=/`,
       'SameSite=Strict'
     ].join('; ');
 
