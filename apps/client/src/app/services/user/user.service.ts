@@ -121,6 +121,7 @@ export class UserService extends ObservableStore<UserStoreState> {
   private async clearAllCookies() {
     if (!('cookieStore' in window)) {
       console.warn('Cookie Store API not available in this browser');
+      return;
     }
 
     const cookies = await cookieStore.getAll();
