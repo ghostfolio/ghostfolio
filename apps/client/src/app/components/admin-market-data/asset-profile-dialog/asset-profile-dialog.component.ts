@@ -17,10 +17,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
-import {
-  validateObjectForForm,
-  jsonValidator
-} from '@ghostfolio/common/utils/form.util';
+import { jsonValidator, validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';

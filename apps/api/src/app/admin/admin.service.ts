@@ -625,17 +625,15 @@ export class AdminService {
 
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
         comment,
-        countries,
         currency,
         dataSource,
         holdings,
         isActive,
         scraperConfiguration,
-        sectors,
         symbol,
         symbolMapping,
         ...(dataSource === 'MANUAL'
-          ? { assetClass, assetSubClass, name, url }
+          ? { assetClass, assetSubClass, name, url, countries, sectors }
           : {
               SymbolProfileOverrides: {
                 upsert: {
