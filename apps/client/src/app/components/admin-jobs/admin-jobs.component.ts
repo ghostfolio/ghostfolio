@@ -194,7 +194,11 @@ export class GfAdminJobsComponent implements OnInit {
   public onOpenBullBoard() {
     const token = this.tokenStorageService.getToken();
 
-    document.cookie = `${BULL_BOARD_COOKIE_NAME}=${token}; path=${BULL_BOARD_ROUTE}; SameSite=Strict`;
+    document.cookie = [
+      `${BULL_BOARD_COOKIE_NAME}=${encodeURIComponent(token)}`,
+      `path=${BULL_BOARD_ROUTE}`,
+      'SameSite=Strict'
+    ].join('; ');
 
     window.open(BULL_BOARD_ROUTE, '_blank');
   }
