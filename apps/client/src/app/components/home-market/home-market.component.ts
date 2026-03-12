@@ -1,5 +1,4 @@
 import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -12,6 +11,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectorRef,

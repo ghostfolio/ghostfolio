@@ -1,8 +1,8 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   Component,

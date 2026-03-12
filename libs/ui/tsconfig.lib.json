@@ -7,7 +7,7 @@
     "declarationMap": true,
     "inlineSources": true,
     "types": [],
-    "lib": ["dom", "es2018"]
+    "lib": ["dom", "es2022"]
   },
   "exclude": [
     "src/test-setup.ts",

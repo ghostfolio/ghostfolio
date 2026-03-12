@@ -103,6 +103,7 @@ export class ImportController {
     const activities = await this.importService.getDividends({
       dataSource,
       symbol,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
       userId: this.request.user.id
     });
 

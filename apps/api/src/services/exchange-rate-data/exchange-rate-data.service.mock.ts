@@ -1,5 +1,7 @@
-export const ExchangeRateDataServiceMock = {
-  getExchangeRatesByCurrency: ({ targetCurrency }): Promise<any> => {
+import { ExchangeRateDataService } from './exchange-rate-data.service';
+
+export const ExchangeRateDataServiceMock: Partial<ExchangeRateDataService> = {
+  getExchangeRatesByCurrency: ({ targetCurrency }) => {
     if (targetCurrency === 'CHF') {
       return Promise.resolve({
         CHFCHF: {
@@ -14,7 +16,11 @@ export const ExchangeRateDataServiceMock = {
           '2017-12-31': 0.9787,
           '2018-01-01': 0.97373,
           '2023-01-03': 0.9238,
-          '2023-07-10': 0.8854
+          '2023-07-10': 0.8854,
+          '2023-12-31': 0.85,
+          '2024-01-01': 0.86,
+          '2024-12-31': 0.9,
+          '2025-01-01': 0.91
         }
       });
     } else if (targetCurrency === 'EUR') {

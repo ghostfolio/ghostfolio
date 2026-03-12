@@ -1,4 +1,4 @@
-import { getLocale } from '@ghostfolio/common/helper';
+import { getLocale, getLowercase } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -92,6 +92,8 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
     this.dataSource = new MatTableDataSource(this.holdings);
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = getLowercase;
+
     this.dataSource.sort = this.sort;
 
     if (this.holdings) {

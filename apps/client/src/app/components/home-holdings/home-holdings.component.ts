@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -11,6 +10,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfTreemapChartComponent } from '@ghostfolio/ui/treemap-chart';
 

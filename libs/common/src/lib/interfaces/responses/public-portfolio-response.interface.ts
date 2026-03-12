@@ -39,7 +39,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   })[];
   markets: {
     [key in Market]: Pick<
-      PortfolioDetails['markets'][key],
+      NonNullable<PortfolioDetails['markets']>[key],
       'id' | 'valueInPercentage'
     >;
   };

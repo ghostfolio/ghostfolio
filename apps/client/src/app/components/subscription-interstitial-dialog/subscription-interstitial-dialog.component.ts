@@ -2,7 +2,6 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -31,7 +30,6 @@ import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column flex-grow-1 h-100' },
   imports: [
-    CommonModule,
     GfMembershipCardComponent,
     GfPremiumIndicatorComponent,
     IonIcon,

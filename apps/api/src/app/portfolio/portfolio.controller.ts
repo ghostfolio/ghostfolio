@@ -195,11 +195,13 @@ export class PortfolioController {
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
+        'fireWealth',
         'grossPerformance',
         'grossPerformanceWithCurrencyEffect',
         'interestInBaseCurrency',
         'items',
         'liabilities',
+        'liabilitiesInBaseCurrency',
         'netPerformance',
         'netPerformanceWithCurrencyEffect',
         'totalBuy',
@@ -329,7 +331,7 @@ export class PortfolioController {
       types: ['DIVIDEND']
     });
 
-    let dividends = await this.portfolioService.getDividends({
+    let dividends = this.portfolioService.getDividends({
       activities,
       groupBy
     });

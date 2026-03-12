@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
@@ -7,6 +5,7 @@ import {
   getLocale
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {

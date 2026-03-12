@@ -1,8 +1,8 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   HTTP_INTERCEPTORS,

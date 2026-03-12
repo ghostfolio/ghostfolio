@@ -2,7 +2,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
@@ -15,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
-  imports: [CommonModule, IonIcon, MatTabsModule, RouterModule],
+  imports: [IonIcon, MatTabsModule, RouterModule],
   selector: 'gf-zen-page',
   styleUrls: ['./zen-page.scss'],
   templateUrl: './zen-page.html'

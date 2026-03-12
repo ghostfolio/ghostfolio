@@ -28,9 +28,7 @@ module.exports = [
               onlyDependOnLibsWithTags: ['*']
             }
           ],
-          enforceBuildableLibDependency: true,
-          // Temporary fix, should be removed eventually
-          ignoredCircularDependencies: [['client', 'ui']]
+          enforceBuildableLibDependency: true
         }
       ],
       '@typescript-eslint/no-extra-semi': 'error',

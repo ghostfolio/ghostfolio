@@ -5,7 +5,7 @@ import { InternalRoute } from './interfaces/internal-route.interface';
 import { PublicRoute } from './interfaces/public-route.interface';
 
 if (typeof window !== 'undefined') {
-  import('@angular/localize/init');
+  import('@angular/localize');
 } else {
   (global as any).$localize = (
     messageParts: TemplateStringsArray,

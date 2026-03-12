@@ -215,7 +215,7 @@
                 [deviceType]="data.deviceType"
                 [isDate]="true"
                 [locale]="data.locale"
-                [value]="firstBuyDate"
+                [value]="dateOfFirstActivity"
                 >First Activity</gf-value
               >
             </div>
@@ -377,13 +377,12 @@
         <gf-accounts-table
           [accounts]="accounts"
           [baseCurrency]="user?.settings?.baseCurrency"
-          [deviceType]="data.deviceType"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
+          [showActivitiesCount]="false"
           [showAllocationInPercentage]="user?.settings?.isExperimentalFeatures"
           [showBalance]="false"
           [showFooter]="false"
-          [showTransactions]="false"
           [showValue]="false"
           [showValueInBaseCurrency]="false"
         />
@@ -400,7 +399,7 @@
           <gf-historical-market-data-editor
             [currency]="SymbolProfile?.currency"
             [dataSource]="SymbolProfile?.dataSource"
-            [dateOfFirstActivity]="firstBuyDate"
+            [dateOfFirstActivity]="dateOfFirstActivity"
             [locale]="data.locale"
             [marketData]="marketDataItems"
             [symbol]="SymbolProfile?.symbol"

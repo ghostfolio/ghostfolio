@@ -135,9 +135,17 @@
           <mat-card-title>Which data providers are supported?</mat-card-title>
         </mat-card-header>
         <mat-card-content
-          ><code>COINGECKO</code>, <code>MANUAL</code> and
-          <code>YAHOO</code> are officially supported while all other data
-          providers are considered experimental.</mat-card-content
+          ><code>COINGECKO</code>, <code>GHOSTFOLIO</code> (available with
+          <a
+            class="align-items-center d-inline-flex"
+            target="_blank"
+            [href]="pricingUrl"
+            >Ghostfolio Premium<gf-premium-indicator
+              class="d-inline-block ml-1"
+              [enableLink]="false" /></a
+          >), <code>MANUAL</code>, and <code>YAHOO</code> are officially
+          supported while all other data providers are considered
+          experimental.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -147,7 +155,8 @@
           >
         </mat-card-header>
         <mat-card-content
-          >Yes, access to a professional data provider is included with a
+          >Yes, access to a professional data provider (<code>GHOSTFOLIO</code>)
+          is included with a
           <a
             class="align-items-center d-inline-flex"
             target="_blank"

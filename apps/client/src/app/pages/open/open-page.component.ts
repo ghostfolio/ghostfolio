@@ -1,9 +1,8 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Statistics, User } from '@ghostfolio/common/interfaces';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -16,7 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
-  imports: [CommonModule, GfValueComponent, MatCardModule],
+  imports: [GfValueComponent, MatCardModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-open-page',
   styleUrls: ['./open-page.scss'],

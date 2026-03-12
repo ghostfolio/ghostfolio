@@ -1,6 +1,5 @@
 import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
@@ -13,6 +12,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {

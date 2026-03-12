@@ -1,6 +1,4 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PROPERTY_COUPONS,
@@ -20,6 +18,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -74,6 +73,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class GfAdminOverviewComponent implements OnDestroy, OnInit {
+  public activitiesCount: number;
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
   public hasPermissionForSubscription: boolean;
@@ -84,7 +84,6 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
   public isDataGatheringEnabled: boolean;
   public permissions = permissions;
   public systemMessage: SystemMessage;
-  public transactionCount: number;
   public userCount: number;
   public user: User;
   public version: string;
@@ -290,12 +289,12 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ settings, transactionCount, userCount, version }) => {
+      .subscribe(({ activitiesCount, settings, userCount, version }) => {
+        this.activitiesCount = activitiesCount;
         this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
         this.isDataGatheringEnabled =
           settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
         this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
-        this.transactionCount = transactionCount;
         this.userCount = userCount;
         this.version = version;
 

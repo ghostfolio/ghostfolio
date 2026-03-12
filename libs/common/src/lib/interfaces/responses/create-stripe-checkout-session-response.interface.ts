@@ -1,3 +1,3 @@
 export interface CreateStripeCheckoutSessionResponse {
-  sessionId: string;
+  sessionUrl: string;
 }

@@ -3,7 +3,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +17,7 @@ import { openOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfLogoComponent, IonIcon, RouterModule],
+  imports: [GfLogoComponent, IonIcon, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-footer',
   styleUrls: ['./footer.component.scss'],

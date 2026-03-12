@@ -11,7 +11,21 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { ca, de, es, fr, it, nl, pl, pt, tr, uk, zhCN } from 'date-fns/locale';
+import {
+  ca,
+  de,
+  es,
+  fr,
+  it,
+  ko,
+  nl,
+  pl,
+  pt,
+  tr,
+  uk,
+  zhCN
+} from 'date-fns/locale';
+import { get, isNil, isString } from 'lodash';
 
 import {
   DEFAULT_CURRENCY,
@@ -130,7 +144,7 @@ export function extractNumberFromString({
 }: {
   locale?: string;
   value: string;
-}): number {
+}): number | undefined {
   try {
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
@@ -184,6 +198,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return fr;
   } else if (aLanguageCode === 'it') {
     return it;
+  } else if (aLanguageCode === 'ko') {
+    return ko;
   } else if (aLanguageCode === 'nl') {
     return nl;
   } else if (aLanguageCode === 'pl') {
@@ -207,8 +223,8 @@ export function getDateFormatString(aLocale?: string) {
   );
 
   return formatObject
-    .map((object) => {
-      switch (object.type) {
+    .map(({ type, value }) => {
+      switch (type) {
         case 'day':
           return 'dd';
         case 'month':
@@ -216,7 +232,7 @@ export function getDateFormatString(aLocale?: string) {
         case 'year':
           return 'yyyy';
         default:
-          return object.value;
+          return value;
       }
     })
     .join('');
@@ -242,12 +258,22 @@ export function getLocale() {
   return navigator.language ?? locale;
 }
 
+export function getLowercase(object: object, path: string) {
+  const value = get(object, path);
+
+  if (isNil(value)) {
+    return '';
+  }
+
+  return isString(value) ? value.toLocaleLowerCase() : value;
+}
+
 export function getNumberFormatDecimal(aLocale?: string) {
   const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
 
-  return formatObject.find((object) => {
-    return object.type === 'decimal';
-  }).value;
+  return formatObject.find(({ type }) => {
+    return type === 'decimal';
+  })?.value;
 }
 
 export function getNumberFormatGroup(aLocale = getLocale()) {
@@ -255,9 +281,9 @@ export function getNumberFormatGroup(aLocale = getLocale()) {
     useGrouping: true
   }).formatToParts(9999.99);
 
-  return formatObject.find((object) => {
-    return object.type === 'group';
-  }).value;
+  return formatObject.find(({ type }) => {
+    return type === 'group';
+  })?.value;
 }
 
 export function getStartOfUtcDate(aDate: Date) {
@@ -368,7 +394,7 @@ export function isRootCurrency(aCurrency: string) {
   });
 }
 
-export function parseDate(date: string): Date {
+export function parseDate(date: string): Date | undefined {
   if (!date) {
     return undefined;
   }
