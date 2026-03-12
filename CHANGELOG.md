@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
-- Eliminate OnDestroy lifecycle hook from FIRE page
 
 ## 2.249.0 - 2026-03-10
 
