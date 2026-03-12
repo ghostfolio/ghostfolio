@@ -4,29 +4,27 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-auth-page',
   styleUrls: ['./auth-page.scss'],
   templateUrl: './auth-page.html'
 })
-export class GfAuthPageComponent implements OnDestroy, OnInit {
-  private unsubscribeSubject = new Subject<void>();
-
+export class GfAuthPageComponent implements OnInit {
   public constructor(
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private destroyRef: DestroyRef
   ) {}
 
   public ngOnInit() {
     this.route.params
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         const jwt = params['jwt'];
 
@@ -37,10 +35,5 @@ export class GfAuthPageComponent implements OnDestroy, OnInit {
 
         this.router.navigate(['/']);
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
