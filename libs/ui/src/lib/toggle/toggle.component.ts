@@ -23,8 +23,7 @@ export class GfToggleComponent implements OnChanges {
   @Input() isLoading: boolean;
   @Input() options: ToggleOption[] = [];
 
-  public optionFormControl = new FormControl<string | null>(null);
-
+  protected readonly optionFormControl = new FormControl<string | null>(null);
   protected readonly valueChange = output<Pick<ToggleOption, 'value'>>();
 
   public ngOnChanges() {
