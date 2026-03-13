@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
+  effect,
   input,
   output
 } from '@angular/core';
@@ -18,7 +18,7 @@ import { MatRadioModule } from '@angular/material/radio';
   styleUrls: ['./toggle.component.scss'],
   templateUrl: './toggle.component.html'
 })
-export class GfToggleComponent implements OnChanges {
+export class GfToggleComponent {
   public readonly defaultValue = input.required<string>();
   public readonly isLoading = input<boolean>(false);
   public readonly options = input<ToggleOption[]>([]);
@@ -26,8 +26,10 @@ export class GfToggleComponent implements OnChanges {
   protected readonly optionFormControl = new FormControl<string | null>(null);
   protected readonly valueChange = output<Pick<ToggleOption, 'value'>>();
 
-  public ngOnChanges() {
-    this.optionFormControl.setValue(this.defaultValue());
+  constructor() {
+    effect(() => {
+      this.optionFormControl.setValue(this.defaultValue());
+    });
   }
 
   public onValueChange() {
