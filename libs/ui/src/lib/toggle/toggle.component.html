@@ -9,7 +9,8 @@
       [disabled]="isLoading()"
       [ngClass]="{
         'cursor-default': option.value === optionFormControl.value,
-        'cursor-pointer': !isLoading() && option.value !== optionFormControl.value
+        'cursor-pointer':
+          !isLoading() && option.value !== optionFormControl.value
       }"
       [value]="option.value"
       >{{ option.label }}</mat-radio-button
