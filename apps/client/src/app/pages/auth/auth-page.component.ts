@@ -15,11 +15,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class GfAuthPageComponent implements OnInit {
   public constructor(
+    private destroyRef: DestroyRef,
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService,
-    private destroyRef: DestroyRef
+    private tokenStorageService: TokenStorageService
   ) {}
 
   public ngOnInit() {
