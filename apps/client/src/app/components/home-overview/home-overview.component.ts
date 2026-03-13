@@ -61,6 +61,8 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public showDetails = false;
   public unit: string;
   public user: User;
+  private graph_type: string;
+  public graph_unit: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -97,6 +99,11 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
 
     this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
 
+    this.graph_type = !this.showDetails
+      ? 'netPerformanceInPercentageWithCurrencyEffect'
+      : (localStorage.getItem('home_overview_graph_type') ??
+        'netPerformanceInPercentageWithCurrencyEffect');
+
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -131,14 +138,21 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
         this.errors = errors;
         this.performance = performance;
 
-        this.historicalDataItems = chart.map(
-          ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
-            return {
-              date,
-              value: netPerformanceInPercentageWithCurrencyEffect * 100
-            };
-          }
-        );
+        const graph_multiplier =
+          this.graph_type === 'netPerformanceInPercentageWithCurrencyEffect'
+            ? 100
+            : 1;
+        this.graph_unit =
+          this.graph_type === 'netPerformanceInPercentageWithCurrencyEffect'
+            ? '%'
+            : this.unit;
+
+        this.historicalDataItems = chart.map((item) => {
+          return {
+            date: item.date,
+            value: item[this.graph_type] * graph_multiplier
+          };
+        });
 
         if (
           this.deviceType === 'mobile' &&
@@ -154,5 +168,13 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  public onMetricClick(selectedgraph_type: string): void {
+    if (this.graph_type !== selectedgraph_type) {
+      this.graph_type = selectedgraph_type;
+      localStorage.setItem('home_overview_graph_type', this.graph_type);
+      this.update();
+    }
   }
 }
