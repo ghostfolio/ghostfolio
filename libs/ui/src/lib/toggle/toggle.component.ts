@@ -26,7 +26,7 @@ export class GfToggleComponent {
   protected readonly optionFormControl = new FormControl<string | null>(null);
   protected readonly valueChange = output<Pick<ToggleOption, 'value'>>();
 
-  constructor() {
+  public constructor() {
     effect(() => {
       this.optionFormControl.setValue(this.defaultValue());
     });
