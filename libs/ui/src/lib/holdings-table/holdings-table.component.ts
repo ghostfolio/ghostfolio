@@ -9,12 +9,11 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
-  Output,
   computed,
   effect,
   input,
+  output,
   viewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,13 +48,14 @@ import { GfValueComponent } from '../value/value.component';
 export class GfHoldingsTableComponent {
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
-  @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
-
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
   public readonly holdings = input.required<PortfolioPosition[]>();
   public readonly locale = input(getLocale());
+
+  public readonly holdingClicked = output<AssetProfileIdentifier>();
+
   public readonly paginator = viewChild.required(MatPaginator);
   public readonly sort = viewChild.required(MatSort);
 
