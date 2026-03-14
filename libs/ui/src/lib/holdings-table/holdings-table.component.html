@@ -193,7 +193,7 @@
   </table>
 </div>
 
-<mat-paginator class="d-none" [pageSize]="pageSize" />
+<mat-paginator class="d-none" [pageSize]="pageSize()" />
 
 @if (isLoading()) {
   <ngx-skeleton-loader
@@ -206,7 +206,7 @@
   />
 }
 
-@if (dataSource.data.length > pageSize && !isLoading()) {
+@if (dataSource.data.length > pageSize() && !isLoading()) {
   <div class="my-3 text-center">
     <button mat-stroked-button (click)="onShowAllHoldings()">
       <ng-container i18n>Show all</ng-container>
