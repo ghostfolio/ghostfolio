@@ -16,13 +16,15 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -34,7 +36,6 @@ import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, takeUntil } from 'rxjs';
 
 import { translate } from '../i18n';
 import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.component';
@@ -61,7 +62,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent implements OnChanges, OnDestroy {
+export class GfBenchmarkComponent implements OnChanges {
   @Input() benchmarks: Benchmark[];
   @Input() deviceType: string;
   @Input() hasPermissionToDeleteItem: boolean;
@@ -86,7 +87,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   public resolveMarketCondition = resolveMarketCondition;
   public translate = translate;
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
 
   public constructor(
     private dialog: MatDialog,
@@ -95,7 +96,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     private router: Router
   ) {
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (
           params['benchmarkDetailDialog'] &&
@@ -151,11 +152,6 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private openBenchmarkDetailDialog({
     dataSource,
     symbol
@@ -177,7 +173,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });
