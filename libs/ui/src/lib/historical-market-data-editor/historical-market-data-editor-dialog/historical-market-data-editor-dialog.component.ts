@@ -7,8 +7,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   OnInit,
-  inject,
-  signal
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
