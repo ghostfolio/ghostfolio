@@ -17,9 +17,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  Input,
-  OnChanges,
+  computed,
+  effect,
   inject,
+  input,
   output,
   viewChild
 } from '@angular/core';
@@ -61,26 +62,31 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent implements OnChanges {
-  @Input() benchmarks: Benchmark[];
-  @Input() deviceType: string;
-  @Input() hasPermissionToDeleteItem: boolean;
-  @Input() locale = getLocale();
-  @Input() showSymbol = true;
-  @Input() user: User;
+export class GfBenchmarkComponent {
+  public readonly benchmarks = input.required<Benchmark[]>();
+  public readonly deviceType = input.required<string>();
+  public readonly hasPermissionToDeleteItem = input<boolean>();
+  public readonly locale = input(getLocale());
+  public readonly showSymbol = input(true);
+  public readonly user = input<User>();
 
   public readonly itemDeleted = output<AssetProfileIdentifier>();
 
   protected readonly sort = viewChild(MatSort);
 
   protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
-  protected displayedColumns = [
-    'name',
-    'date',
-    'change',
-    'marketCondition',
-    'actions'
-  ];
+  protected readonly displayedColumns = computed(() => {
+    return [
+      'name',
+      ...(this.user()?.settings?.isExperimentalFeatures
+        ? ['trend50d', 'trend200d']
+        : []),
+      'date',
+      'change',
+      'marketCondition',
+      'actions'
+    ];
+  });
   protected isLoading = true;
   protected readonly isNumber = isNumber;
   protected readonly resolveMarketCondition = resolveMarketCondition;
@@ -93,6 +99,19 @@ export class GfBenchmarkComponent implements OnChanges {
   private readonly router = inject(Router);
 
   public constructor() {
+    effect(() => {
+      const benchmarks = this.benchmarks();
+
+      if (benchmarks) {
+        this.dataSource.data = benchmarks;
+        this.dataSource.sortingDataAccessor = getLowercase;
+
+        this.dataSource.sort = this.sort() ?? null;
+
+        this.isLoading = false;
+      }
+    });
+
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
@@ -109,29 +128,6 @@ export class GfBenchmarkComponent implements OnChanges {
       });
 
     addIcons({ ellipsisHorizontal, trashOutline });
-  }
-
-  public ngOnChanges() {
-    if (this.benchmarks) {
-      this.dataSource.data = this.benchmarks;
-      this.dataSource.sortingDataAccessor = getLowercase;
-
-      this.dataSource.sort = this.sort();
-
-      this.isLoading = false;
-    }
-
-    if (this.user?.settings?.isExperimentalFeatures) {
-      this.displayedColumns = [
-        'name',
-        'trend50d',
-        'trend200d',
-        'date',
-        'change',
-        'marketCondition',
-        'actions'
-      ];
-    }
   }
 
   protected onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -164,12 +160,12 @@ export class GfBenchmarkComponent implements OnChanges {
       data: {
         dataSource,
         symbol,
-        colorScheme: this.user?.settings?.colorScheme,
-        deviceType: this.deviceType,
-        locale: this.locale
+        colorScheme: this.user()?.settings?.colorScheme,
+        deviceType: this.deviceType(),
+        locale: this.locale()
       },
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
