@@ -43,6 +43,11 @@ import {
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
+import {
+  isSameTopHoldingName,
+  normalizeTopHoldingName
+} from './top-holdings.util';
+
 @Component({
   imports: [
     GfPortfolioProportionChartComponent,
@@ -408,14 +413,17 @@ export class GfAllocationsPageComponent implements OnInit {
           for (const holding of position.holdings) {
             const { allocationInPercentage, name, valueInBaseCurrency } =
               holding;
+            const topHoldingKey = normalizeTopHoldingName(name);
 
-            if (this.topHoldingsMap[name]?.value) {
-              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+            if (this.topHoldingsMap[topHoldingKey]?.value) {
+              this.topHoldingsMap[topHoldingKey].value += isNumber(
+                valueInBaseCurrency
+              )
                 ? valueInBaseCurrency
                 : allocationInPercentage *
                   this.portfolioDetails.holdings[symbol].valueInPercentage;
             } else {
-              this.topHoldingsMap[name] = {
+              this.topHoldingsMap[topHoldingKey] = {
                 name,
                 value: isNumber(valueInBaseCurrency)
                   ? valueInBaseCurrency
@@ -518,7 +526,7 @@ export class GfAllocationsPageComponent implements OnInit {
               if (holding.holdings.length > 0) {
                 const currentParentHolding = holding.holdings.find(
                   (parentHolding) => {
-                    return parentHolding.name === name;
+                    return isSameTopHoldingName(parentHolding.name, name);
                   }
                 );
 
