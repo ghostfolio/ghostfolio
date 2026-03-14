@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
 - Pinned the _Node.js_ version in the _Build code_ _GitHub Action_ to ensure environment consistency for tests
 
+### Fixed
+
+- Fixed an issue with the detection of the thousand separator for the `de-CH` locale
+
 ## 2.249.0 - 2026-03-10
 
 ### Added

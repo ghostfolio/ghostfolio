@@ -25,7 +25,7 @@ describe('Helper', () => {
 
     it('Get decimal number with group (dot notation)', () => {
       expect(
-        extractNumberFromString({ locale: 'de-CH', value: '99’999.99' })
+        extractNumberFromString({ locale: 'de-CH', value: `99'999.99` })
       ).toEqual(99999.99);
     });
 
@@ -59,7 +59,7 @@ describe('Helper', () => {
 
     it('Get de-CH number format group when it is default', () => {
       languageGetter.mockReturnValue('de-CH');
-      expect(getNumberFormatGroup()).toEqual('’');
+      expect(getNumberFormatGroup()).toEqual(`'`);
     });
 
     it('Get de-DE number format group', () => {
