@@ -132,7 +132,7 @@ export class AdminService {
   public fetchJobs({ status }: { status?: JobStatus[] }) {
     let params = new HttpParams();
 
-    if (status?.length > 0) {
+    if (status && status.length > 0) {
       params = params.append('status', status.join(','));
     }
 
@@ -153,7 +153,7 @@ export class AdminService {
     skip,
     take = DEFAULT_PAGE_SIZE
   }: {
-    skip?: number;
+    skip: number;
     take?: number;
   }) {
     let params = new HttpParams();
