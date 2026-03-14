@@ -72,29 +72,28 @@ export class GfBenchmarkComponent implements OnChanges {
 
   @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) protected sort: MatSort;
 
-  public dataSource = new MatTableDataSource<Benchmark>([]);
-  public displayedColumns = [
+  protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
+  protected displayedColumns = [
     'name',
     'date',
     'change',
     'marketCondition',
     'actions'
   ];
-  public isLoading = true;
-  public isNumber = isNumber;
-  public resolveMarketCondition = resolveMarketCondition;
-  public translate = translate;
+  protected isLoading = true;
+  protected readonly isNumber = isNumber;
+  protected readonly resolveMarketCondition = resolveMarketCondition;
+  protected readonly translate = translate;
 
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  public constructor(
-    private dialog: MatDialog,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
+  public constructor() {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
@@ -136,7 +135,7 @@ export class GfBenchmarkComponent implements OnChanges {
     }
   }
 
-  public onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.itemDeleted.emit({ dataSource, symbol });
@@ -146,7 +145,10 @@ export class GfBenchmarkComponent implements OnChanges {
     });
   }
 
-  public onOpenBenchmarkDialog({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onOpenBenchmarkDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
     });
