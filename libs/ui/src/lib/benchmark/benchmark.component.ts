@@ -21,8 +21,8 @@ import {
   Input,
   OnChanges,
   Output,
-  ViewChild,
-  inject
+  inject,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -72,7 +72,7 @@ export class GfBenchmarkComponent implements OnChanges {
 
   @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild(MatSort) protected sort: MatSort;
+  protected readonly sort = viewChild(MatSort);
 
   protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
   protected displayedColumns = [
@@ -117,7 +117,7 @@ export class GfBenchmarkComponent implements OnChanges {
       this.dataSource.data = this.benchmarks;
       this.dataSource.sortingDataAccessor = getLowercase;
 
-      this.dataSource.sort = this.sort;
+      this.dataSource.sort = this.sort();
 
       this.isLoading = false;
     }
