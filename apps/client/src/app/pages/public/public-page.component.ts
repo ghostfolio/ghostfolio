@@ -248,5 +248,4 @@ export class GfPublicPageComponent implements OnInit {
       };
     }
   }
-
 }
