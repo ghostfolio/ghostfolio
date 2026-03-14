@@ -17,11 +17,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  EventEmitter,
   Input,
   OnChanges,
-  Output,
   inject,
+  output,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -70,7 +69,7 @@ export class GfBenchmarkComponent implements OnChanges {
   @Input() showSymbol = true;
   @Input() user: User;
 
-  @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
+  public readonly itemDeleted = output<AssetProfileIdentifier>();
 
   protected readonly sort = viewChild(MatSort);
 
