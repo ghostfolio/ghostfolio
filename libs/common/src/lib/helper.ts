@@ -148,10 +148,15 @@ export function extractNumberFromString({
   try {
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
+    const groupSeparator = getNumberFormatGroup(locale);
+    const normalizedNumericValue =
+      groupSeparator === "'" || groupSeparator === '’'
+        ? numericValue.replace(/['’]/g, groupSeparator)
+        : numericValue;
 
     const parser = new NumberParser(locale);
 
-    return parser.parse(numericValue);
+    return parser.parse(normalizedNumericValue);
   } catch {
     return undefined;
   }

@@ -3,6 +3,8 @@ import {
   getNumberFormatGroup
 } from '@ghostfolio/common/helper';
 
+const DE_CH_GROUP_SEPARATORS = ["'", '’'];
+
 describe('Helper', () => {
   describe('Extract number from string', () => {
     it('Get decimal number', () => {
@@ -26,6 +28,12 @@ describe('Helper', () => {
     it('Get decimal number with group (dot notation)', () => {
       expect(
         extractNumberFromString({ locale: 'de-CH', value: '99’999.99' })
+      ).toEqual(99999.99);
+    });
+
+    it('Get decimal number with straight apostrophe group (dot notation)', () => {
+      expect(
+        extractNumberFromString({ locale: 'de-CH', value: "99'999.99" })
       ).toEqual(99999.99);
     });
 
@@ -54,12 +62,12 @@ describe('Helper', () => {
     });
 
     it('Get de-CH number format group', () => {
-      expect(getNumberFormatGroup('de-CH')).toEqual('’');
+      expect(DE_CH_GROUP_SEPARATORS).toContain(getNumberFormatGroup('de-CH'));
     });
 
     it('Get de-CH number format group when it is default', () => {
       languageGetter.mockReturnValue('de-CH');
-      expect(getNumberFormatGroup()).toEqual('’');
+      expect(DE_CH_GROUP_SEPARATORS).toContain(getNumberFormatGroup());
     });
 
     it('Get de-DE number format group', () => {
