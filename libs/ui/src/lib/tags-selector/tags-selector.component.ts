@@ -32,6 +32,8 @@ import { addIcons } from 'ionicons';
 import { addCircleOutline, closeOutline } from 'ionicons/icons';
 import { BehaviorSubject, Subject } from 'rxjs';
 
+import { SelectedTag } from './interfaces/interfaces';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -61,13 +63,15 @@ export class GfTagsSelectorComponent
 {
   @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
-  @Input() tags: Tag[];
-  @Input() tagsAvailable: Tag[];
+  @Input() tags: SelectedTag[];
+  @Input() tagsAvailable: SelectedTag[];
 
-  public readonly filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
+  public readonly filteredOptions: Subject<SelectedTag[]> = new BehaviorSubject(
+    []
+  );
   public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
   public readonly tagInputControl = new FormControl('');
-  public readonly tagsSelected = signal<Tag[]>([]);
+  public readonly tagsSelected = signal<SelectedTag[]>([]);
 
   private readonly tagInput =
     viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
@@ -99,7 +103,7 @@ export class GfTagsSelectorComponent
 
     if (!tag && this.hasPermissionToCreateTag) {
       tag = {
-        id: '',
+        id: undefined,
         name: event.option.value as string,
         userId: null
       };
@@ -132,7 +136,7 @@ export class GfTagsSelectorComponent
     this.updateFilters();
   }
 
-  public registerOnChange(fn: (value: Tag[]) => void) {
+  public registerOnChange(fn: (value: SelectedTag[]) => void) {
     this.onChange = fn;
   }
 
@@ -148,12 +152,12 @@ export class GfTagsSelectorComponent
     }
   }
 
-  public writeValue(value: Tag[]) {
+  public writeValue(value: SelectedTag[]) {
     this.tagsSelected.set(value || []);
     this.updateFilters();
   }
 
-  private filterTags(query: string = ''): Tag[] {
+  private filterTags(query: string = ''): SelectedTag[] {
     const tags = this.tagsSelected() ?? [];
     const tagIds = tags.map(({ id }) => {
       return id;
@@ -167,7 +171,7 @@ export class GfTagsSelectorComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onChange = (_value: Tag[]): void => {
+  private onChange = (_value: SelectedTag[]): void => {
     // ControlValueAccessor onChange callback
   };
 
