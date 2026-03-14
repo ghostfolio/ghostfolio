@@ -56,8 +56,8 @@ export class GfHoldingsTableComponent {
 
   public readonly holdingClicked = output<AssetProfileIdentifier>();
 
-  public readonly paginator = viewChild.required(MatPaginator);
-  public readonly sort = viewChild.required(MatSort);
+  protected readonly paginator = viewChild.required(MatPaginator);
+  protected readonly sort = viewChild.required(MatSort);
 
   protected readonly dataSource = new MatTableDataSource<PortfolioPosition>([]);
 
