@@ -53,7 +53,7 @@ export class GfHomeMarketComponent implements OnInit {
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
-    this.deviceType = this.deviceService.deviceInfo().deviceType;
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
