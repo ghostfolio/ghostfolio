@@ -15,7 +15,7 @@
         <div class="text-truncate">
           {{ element?.name }}
         </div>
-        @if (showSymbol) {
+        @if (showSymbol()) {
           <div>
             <small class="text-muted">{{ element?.symbol }}</small>
           </div>
@@ -98,7 +98,7 @@
           @if (element?.performances?.allTimeHigh?.date) {
             <gf-value
               [isDate]="true"
-              [locale]="locale"
+              [locale]="locale()"
               [value]="element?.performances?.allTimeHigh?.date"
             />
           }
@@ -123,7 +123,7 @@
           <gf-value
             class="d-inline-block justify-content-end"
             [isPercent]="true"
-            [locale]="locale"
+            [locale]="locale()"
             [ngClass]="{
               'text-danger':
                 element?.performances?.allTimeHigh?.performancePercent < 0,
@@ -150,7 +150,7 @@
     <ng-container matColumnDef="actions" stickyEnd>
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        @if (hasPermissionToDeleteItem) {
+        @if (hasPermissionToDeleteItem()) {
           <button
             class="mx-1 no-min-width px-2"
             mat-button
@@ -163,7 +163,7 @@
         <mat-menu #benchmarkMenu="matMenu" xPosition="before">
           <button
             mat-menu-item
-            [disabled]="!hasPermissionToDeleteItem"
+            [disabled]="!hasPermissionToDeleteItem()"
             (click)="
               onDeleteItem({
                 dataSource: element.dataSource,
@@ -180,9 +180,9 @@
       </td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns()"
       class="cursor-pointer"
       mat-row
       (click)="
@@ -204,7 +204,7 @@
       width: '100%'
     }"
   />
-} @else if (benchmarks?.length === 0) {
+} @else if (benchmarks()?.length === 0) {
   <div class="p-3 text-center text-muted">
     <small i18n>No data available</small>
   </div>
