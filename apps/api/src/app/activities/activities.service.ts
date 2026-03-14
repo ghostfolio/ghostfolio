@@ -702,32 +702,34 @@ export class ActivitiesService {
           feeInBaseCurrency,
           unitPriceInAssetProfileCurrency,
           valueInBaseCurrency
-        ] = await Promise.all([
-          this.exchangeRateDataService.toCurrencyAtDate(
-            order.fee,
-            order.currency ?? order.SymbolProfile.currency,
-            order.SymbolProfile.currency,
-            order.date
-          ),
-          this.exchangeRateDataService.toCurrencyAtDate(
-            order.fee,
-            order.currency ?? order.SymbolProfile.currency,
-            userCurrency,
-            order.date
-          ),
-          this.exchangeRateDataService.toCurrencyAtDate(
-            order.unitPrice,
-            order.currency ?? order.SymbolProfile.currency,
-            order.SymbolProfile.currency,
-            order.date
-          ),
-          this.exchangeRateDataService.toCurrencyAtDate(
-            value,
-            order.currency ?? order.SymbolProfile.currency,
-            userCurrency,
-            order.date
-          )
-        ]);
+        ] = (
+          await Promise.all([
+            this.exchangeRateDataService.toCurrencyAtDate(
+              order.fee,
+              order.currency ?? order.SymbolProfile.currency,
+              order.SymbolProfile.currency,
+              order.date
+            ),
+            this.exchangeRateDataService.toCurrencyAtDate(
+              order.fee,
+              order.currency ?? order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            ),
+            this.exchangeRateDataService.toCurrencyAtDate(
+              order.unitPrice,
+              order.currency ?? order.SymbolProfile.currency,
+              order.SymbolProfile.currency,
+              order.date
+            ),
+            this.exchangeRateDataService.toCurrencyAtDate(
+              value,
+              order.currency ?? order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            )
+          ])
+        ).map((result) => result ?? 0);
 
         return {
           ...order,
