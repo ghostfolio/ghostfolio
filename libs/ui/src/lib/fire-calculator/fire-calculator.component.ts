@@ -12,6 +12,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   Input,
   OnChanges,
@@ -123,6 +124,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private destroyRef: DestroyRef,
     private fireCalculatorService: FireCalculatorService,
     private formBuilder: FormBuilder
   ) {
@@ -135,13 +137,13 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     );
 
     this.calculatorForm.valueChanges
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();
       });
 
     this.calculatorForm.valueChanges
-      .pipe(debounceTime(500), takeUntilDestroyed())
+      .pipe(debounceTime(500), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         const { projectedTotalAmount, retirementDate } =
           this.calculatorForm.getRawValue();
@@ -156,7 +158,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
     this.calculatorForm
       .get('annualInterestRate')
-      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((annualInterestRate) => {
         if (annualInterestRate !== null) {
           this.annualInterestRateChanged.emit(annualInterestRate);
@@ -164,7 +169,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
     this.calculatorForm
       .get('paymentPerPeriod')
-      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((savingsRate) => {
         if (savingsRate !== null) {
           this.savingsRateChanged.emit(savingsRate);
@@ -172,7 +180,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
     this.calculatorForm
       .get('projectedTotalAmount')
-      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((projectedTotalAmount) => {
         if (projectedTotalAmount !== null) {
           this.projectedTotalAmountChanged.emit(projectedTotalAmount);
@@ -180,7 +191,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
     this.calculatorForm
       .get('retirementDate')
-      ?.valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((retirementDate) => {
         if (retirementDate !== null) {
           this.retirementDateChanged.emit(retirementDate);
