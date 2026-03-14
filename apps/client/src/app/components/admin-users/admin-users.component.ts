@@ -25,10 +25,11 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -55,8 +56,7 @@ import {
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
-import { switchMap, takeUntil, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -75,7 +75,7 @@ import { switchMap, takeUntil, tap } from 'rxjs/operators';
   styleUrls: ['./admin-users.scss'],
   templateUrl: './admin-users.html'
 })
-export class GfAdminUsersComponent implements OnDestroy, OnInit {
+export class GfAdminUsersComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
@@ -93,12 +93,11 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
   public totalItems = 0;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
@@ -139,7 +138,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
     this.userService.stateChanged
       .pipe(
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         tap((state) => {
           if (state?.user) {
             this.user = state.user;
@@ -204,7 +203,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       confirmFn: () => {
         this.dataService
           .deleteUser(aId)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
             this.router.navigate(['..'], { relativeTo: this.route });
           });
@@ -222,7 +221,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
       confirmFn: () => {
         this.dataService
           .updateUserAccessToken(aUserId)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(({ accessToken }) => {
             this.notificationService.alert({
               discardFn: () => {
@@ -258,11 +257,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     );
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
     this.isLoading = true;
 
@@ -275,7 +269,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
         skip: pageIndex * this.pageSize,
         take: this.pageSize
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ count, users }) => {
         this.dataSource = new MatTableDataSource(users);
         this.totalItems = count;
@@ -305,7 +299,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         if (data?.action === 'delete' && data?.userId) {
           this.onDeleteUser(data.userId);
