@@ -1,4 +1,5 @@
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
@@ -42,11 +43,12 @@ export class GfRegisterPageComponent implements OnInit {
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
 
-    this.tokenStorageService.signOut();
+    this.userService.signOut();
   }
 
   public ngOnInit() {
