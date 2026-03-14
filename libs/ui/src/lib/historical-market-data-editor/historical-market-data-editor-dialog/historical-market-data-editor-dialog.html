@@ -6,10 +6,10 @@
         <mat-label i18n>Date</mat-label>
         <input
           disabled
+          formControlName="dateString"
           matInput
           name="date"
           [matDatepicker]="date"
-          formControlName="dateString"
         />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
@@ -25,10 +25,10 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
         <input
+          formControlName="marketPrice"
           matInput
           name="marketPrice"
           type="number"
-          formControlName="marketPrice"
         />
         <span class="ml-2" matTextSuffix>{{ data.currency }}</span>
       </mat-form-field>
@@ -47,7 +47,7 @@
     <button
       color="primary"
       mat-flat-button
-      [disabled]="!form.dirty"
+      [disabled]="!(form.dirty && form.valid)"
       (click)="onUpdate()"
     >
       <ng-container i18n>Save</ng-container>
