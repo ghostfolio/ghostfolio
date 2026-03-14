@@ -151,12 +151,15 @@ export class AdminService {
     skip,
     take = DEFAULT_PAGE_SIZE
   }: {
-    skip: number;
+    skip?: number;
     take?: number;
   }) {
     let params = new HttpParams();
 
-    params = params.append('skip', skip);
+    if (skip) {
+      params = params.append('skip', skip);
+    }
+
     params = params.append('take', take);
 
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
