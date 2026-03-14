@@ -1,7 +1,6 @@
 import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
@@ -106,7 +105,6 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
     private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
@@ -229,8 +227,7 @@ export class GfAdminUsersComponent implements OnDestroy, OnInit {
             this.notificationService.alert({
               discardFn: () => {
                 if (aUserId === this.user.id) {
-                  this.tokenStorageService.signOut();
-                  this.userService.remove();
+                  this.userService.signOut();
 
                   document.location.href = `/${document.documentElement.lang}`;
                 }
