@@ -9,10 +9,10 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
-  Input,
   computed,
   effect,
   input,
+  model,
   output,
   viewChild
 } from '@angular/core';
@@ -46,13 +46,12 @@ import { GfValueComponent } from '../value/value.component';
   templateUrl: './holdings-table.component.html'
 })
 export class GfHoldingsTableComponent {
-  @Input() pageSize = Number.MAX_SAFE_INTEGER;
-
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
   public readonly holdings = input.required<PortfolioPosition[]>();
   public readonly locale = input(getLocale());
+  public readonly pageSize = model(Number.MAX_SAFE_INTEGER);
 
   public readonly holdingClicked = output<AssetProfileIdentifier>();
 
@@ -118,7 +117,7 @@ export class GfHoldingsTableComponent {
   }
 
   protected onShowAllHoldings() {
-    this.pageSize = Number.MAX_SAFE_INTEGER;
+    this.pageSize.set(Number.MAX_SAFE_INTEGER);
 
     setTimeout(() => {
       this.dataSource.paginator = this.paginator();
