@@ -21,11 +21,11 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
-import { GF_ENVIRONMENT, GfEnvironment } from '@ghostfolio/ui/environment';
+import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
@@ -34,11 +34,9 @@ import { JobStatus } from 'bull';
   providedIn: 'root'
 })
 export class AdminService {
-  public constructor(
-    private dataService: DataService,
-    @Inject(GF_ENVIRONMENT) private environment: GfEnvironment,
-    private http: HttpClient
-  ) {}
+  private readonly dataService = inject(DataService);
+  private readonly environment = inject(GF_ENVIRONMENT);
+  private readonly http = inject(HttpClient);
 
   public addAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.post<void>(
