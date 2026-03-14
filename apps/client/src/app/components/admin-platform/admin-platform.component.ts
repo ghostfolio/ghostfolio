@@ -11,8 +11,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   DestroyRef,
+  Input,
   OnInit,
   ViewChild
 } from '@angular/core';
