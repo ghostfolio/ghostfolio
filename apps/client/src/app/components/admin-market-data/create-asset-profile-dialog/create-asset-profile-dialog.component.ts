@@ -65,7 +65,7 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
     public readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
-    private destroyRef: DestroyRef,
+    private readonly destroyRef: DestroyRef,
     public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
     public readonly formBuilder: FormBuilder
   ) {}

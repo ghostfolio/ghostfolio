@@ -37,9 +37,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   Inject,
-  DestroyRef,
   OnInit,
   ViewChild
 } from '@angular/core';
