@@ -26,10 +26,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -63,7 +64,7 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
-import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
 import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
@@ -95,9 +96,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'
 })
-export class GfAdminMarketDataComponent
-  implements AfterViewInit, OnDestroy, OnInit
-{
+export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -166,13 +165,12 @@ export class GfAdminMarketDataComponent
   public totalItems = 0;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -209,7 +207,7 @@ export class GfAdminMarketDataComponent
     this.displayedColumns.push('actions');
 
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (
           params['assetProfileDialog'] &&
@@ -226,7 +224,7 @@ export class GfAdminMarketDataComponent
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -238,7 +236,7 @@ export class GfAdminMarketDataComponent
       });
 
     this.filters$
-      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
       .subscribe((filters) => {
         this.activeFilters = filters;
 
@@ -302,7 +300,7 @@ export class GfAdminMarketDataComponent
   public onGather7Days() {
     this.adminService
       .gather7Days()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         setTimeout(() => {
           window.location.reload();
@@ -313,7 +311,7 @@ export class GfAdminMarketDataComponent
   public onGatherMax() {
     this.adminService
       .gatherMax()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         setTimeout(() => {
           window.location.reload();
@@ -324,7 +322,7 @@ export class GfAdminMarketDataComponent
   public onGatherProfileData() {
     this.adminService
       .gatherProfileData()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
@@ -334,14 +332,14 @@ export class GfAdminMarketDataComponent
   }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
   public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
@@ -356,11 +354,6 @@ export class GfAdminMarketDataComponent
         assetProfileDialog: true
       }
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private loadData(
@@ -399,7 +392,7 @@ export class GfAdminMarketDataComponent
         skip: pageIndex * this.pageSize,
         take: this.pageSize
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ count, marketData }) => {
         this.totalItems = count;
 
@@ -430,7 +423,7 @@ export class GfAdminMarketDataComponent
   }) {
     this.userService
       .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         this.user = user;
 
@@ -452,7 +445,7 @@ export class GfAdminMarketDataComponent
 
         dialogRef
           .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(
             (newAssetProfileIdentifier: AssetProfileIdentifier | undefined) => {
               if (newAssetProfileIdentifier) {
@@ -468,7 +461,7 @@ export class GfAdminMarketDataComponent
   private openCreateAssetProfileDialog() {
     this.userService
       .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         this.user = user;
 
@@ -486,7 +479,7 @@ export class GfAdminMarketDataComponent
 
         dialogRef
           .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((result) => {
             if (!result) {
               this.router.navigate(['.'], { relativeTo: this.route });
@@ -499,7 +492,7 @@ export class GfAdminMarketDataComponent
             if (addAssetProfile && dataSource && symbol) {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })
-                .pipe(takeUntil(this.unsubscribeSubject))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
                   this.loadData();
                 });
