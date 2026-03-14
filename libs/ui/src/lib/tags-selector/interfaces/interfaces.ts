@@ -4,4 +4,4 @@ export interface NewTag extends Omit<Tag, 'id'> {
   id: undefined;
 }
 
-export type SelectedTag = Tag | NewTag;
+export type SelectedTag = NewTag | Tag;
