@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Consolidated the sign-out logic within the user service to unify cookie, state and token clearance
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
 
 ## 2.249.0 - 2026-03-10

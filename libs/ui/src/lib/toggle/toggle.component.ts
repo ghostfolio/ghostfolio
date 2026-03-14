@@ -4,10 +4,9 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
+  effect,
+  input,
+  output
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
@@ -19,22 +18,25 @@ import { MatRadioModule } from '@angular/material/radio';
   styleUrls: ['./toggle.component.scss'],
   templateUrl: './toggle.component.html'
 })
-export class GfToggleComponent implements OnChanges {
-  @Input() defaultValue: string;
-  @Input() isLoading: boolean;
-  @Input() options: ToggleOption[] = [];
+export class GfToggleComponent {
+  public readonly defaultValue = input.required<string>();
+  public readonly isLoading = input<boolean>(false);
+  public readonly options = input<ToggleOption[]>([]);
 
-  @Output() valueChange = new EventEmitter<Pick<ToggleOption, 'value'>>();
+  protected readonly optionFormControl = new FormControl<string | null>(null);
+  protected readonly valueChange = output<Pick<ToggleOption, 'value'>>();
 
-  public optionFormControl = new FormControl<string | null>(null);
-
-  public ngOnChanges() {
-    this.optionFormControl.setValue(this.defaultValue);
+  public constructor() {
+    effect(() => {
+      this.optionFormControl.setValue(this.defaultValue());
+    });
   }
 
   public onValueChange() {
-    if (this.optionFormControl.value !== null) {
-      this.valueChange.emit({ value: this.optionFormControl.value });
+    const value = this.optionFormControl.value;
+
+    if (value !== null) {
+      this.valueChange.emit({ value });
     }
   }
 }

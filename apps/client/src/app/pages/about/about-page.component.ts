@@ -8,9 +8,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -24,8 +25,6 @@ import {
   sparklesOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
@@ -35,17 +34,16 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./about-page.scss'],
   templateUrl: './about-page.html'
 })
-export class AboutPageComponent implements OnDestroy, OnInit {
+export class AboutPageComponent implements OnInit {
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
@@ -57,7 +55,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     );
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         this.tabs = [
           {
@@ -117,10 +115,5 @@ export class AboutPageComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

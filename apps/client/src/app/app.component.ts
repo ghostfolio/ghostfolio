@@ -38,7 +38,6 @@ import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
 import { HoldingDetailDialogParams } from './components/holding-detail-dialog/interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
-import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
 
 @Component({
@@ -82,7 +81,6 @@ export class GfAppComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private title: Title,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     this.initializeTheme();
@@ -236,12 +234,11 @@ export class GfAppComponent implements OnDestroy, OnInit {
   }
 
   public onCreateAccount() {
-    this.tokenStorageService.signOut();
+    this.userService.signOut();
   }
 
   public onSignOut() {
-    this.tokenStorageService.signOut();
-    this.userService.remove();
+    this.userService.signOut();
 
     document.location.href = `/${document.documentElement.lang}`;
   }
