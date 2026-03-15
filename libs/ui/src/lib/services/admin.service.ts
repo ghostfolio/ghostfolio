@@ -29,6 +29,7 @@ import { Inject, Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
+import { isNumber } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -158,8 +159,13 @@ export class AdminService {
   }) {
     let params = new HttpParams();
 
-    if (skip) params = params.append('skip', skip);
-    if (take) params = params.append('take', take);
+    if (isNumber(skip)) {
+      params = params.append('skip', skip);
+    }
+
+    if (isNumber(take)) {
+      params = params.append('take', take);
+    }
 
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
