@@ -53,7 +53,7 @@ export const IsinWithLabel: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<gf-value [locale]="locale" [size]="size" [value]="value">ISIN</gf-value>`
+    template: `<gf-value [enableCopyToClipboardButton]="enableCopyToClipboardButton" [locale]="locale" [size]="size" [value]="value">ISIN</gf-value>`
   }),
   name: 'With Label and Copy'
 };
