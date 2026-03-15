@@ -114,8 +114,8 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
         marketData: {
           marketData: [
             {
-              date: this.data.dateString,
-              marketPrice
+              marketPrice,
+              date: this.data.dateString
             }
           ]
         },
