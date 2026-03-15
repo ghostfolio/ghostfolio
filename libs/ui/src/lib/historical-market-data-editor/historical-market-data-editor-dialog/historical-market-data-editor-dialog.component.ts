@@ -7,11 +7,15 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   OnInit,
-  inject,
-  signal
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,6 +29,7 @@ import { MatInputModule } from '@angular/material/input';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
+import { isNil } from 'lodash';
 
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 
@@ -50,7 +55,13 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
   public readonly data =
     inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
-  protected readonly marketPrice = signal(this.data.marketPrice);
+  public readonly form = new FormGroup({
+    dateString: new FormControl<string | null>({
+      value: this.data.dateString,
+      disabled: true
+    }),
+    marketPrice: new FormControl<number | undefined>(this.data.marketPrice)
+  });
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly locale =
@@ -83,14 +94,17 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ marketPrice }) => {
-        this.marketPrice.set(marketPrice);
+        this.form.controls.marketPrice.setValue(marketPrice);
+        this.form.controls.marketPrice.markAsDirty();
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
   public onUpdate() {
-    if (this.marketPrice() === undefined) {
+    const marketPrice = this.form.controls.marketPrice.value;
+
+    if (isNil(marketPrice)) {
       return;
     }
 
@@ -100,8 +114,8 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
         marketData: {
           marketData: [
             {
-              date: this.data.dateString,
-              marketPrice: this.marketPrice()
+              marketPrice,
+              date: this.data.dateString
             }
           ]
         },
