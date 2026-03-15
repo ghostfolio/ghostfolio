@@ -7,11 +7,11 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   signal,
-  ViewChild
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlValueAccessor,
   FormControl,
@@ -30,7 +30,9 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { Tag } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { addCircleOutline, closeOutline } from 'ionicons/icons';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+
+import { SelectedTag } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,25 +59,26 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent
-  implements ControlValueAccessor, OnChanges, OnDestroy, OnInit
+  implements ControlValueAccessor, OnChanges, OnInit
 {
   @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
-  @Input() tags: Tag[];
-  @Input() tagsAvailable: Tag[];
+  @Input() tags: SelectedTag[];
+  @Input() tagsAvailable: SelectedTag[];
 
-  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-
-  public filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
+  public readonly filteredOptions: Subject<SelectedTag[]> = new BehaviorSubject(
+    []
+  );
   public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
   public readonly tagInputControl = new FormControl('');
-  public readonly tagsSelected = signal<Tag[]>([]);
+  public readonly tagsSelected = signal<SelectedTag[]>([]);
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly tagInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
 
   public constructor() {
     this.tagInputControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe((value) => {
         this.filteredOptions.next(this.filterTags(value ?? ''));
       });
@@ -110,12 +113,13 @@ export class GfTagsSelectorComponent
       this.tagsSelected.update((tags) => {
         return [...(tags ?? []), tag];
       });
+
+      const newTags = this.tagsSelected();
+      this.onChange(newTags);
+      this.onTouched();
     }
 
-    const newTags = this.tagsSelected();
-    this.onChange(newTags);
-    this.onTouched();
-    this.tagInput.nativeElement.value = '';
+    this.tagInput().nativeElement.value = '';
     this.tagInputControl.setValue(null);
   }
 
@@ -132,7 +136,7 @@ export class GfTagsSelectorComponent
     this.updateFilters();
   }
 
-  public registerOnChange(fn: (value: Tag[]) => void) {
+  public registerOnChange(fn: (value: SelectedTag[]) => void) {
     this.onChange = fn;
   }
 
@@ -148,17 +152,12 @@ export class GfTagsSelectorComponent
     }
   }
 
-  public writeValue(value: Tag[]) {
+  public writeValue(value: SelectedTag[]) {
     this.tagsSelected.set(value || []);
     this.updateFilters();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  private filterTags(query: string = ''): Tag[] {
+  private filterTags(query: string = ''): SelectedTag[] {
     const tags = this.tagsSelected() ?? [];
     const tagIds = tags.map(({ id }) => {
       return id;
@@ -172,7 +171,7 @@ export class GfTagsSelectorComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onChange = (_value: Tag[]): void => {
+  private onChange = (_value: SelectedTag[]): void => {
     // ControlValueAccessor onChange callback
   };
 
