@@ -89,53 +89,44 @@ export class AiService {
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })
-      .map(
-        ({
-          allocationInPercentage,
-          assetClass,
-          assetSubClass,
-          currency,
-          name: label,
-          symbol
-        }) => {
-          return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
-            (row, { key, name }) => {
-              switch (key) {
-                case 'ALLOCATION_PERCENTAGE':
-                  row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
-                  break;
+      .map(({ allocationInPercentage, assetProfile }) => {
+        return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
+          (row, { key, name }) => {
+            switch (key) {
+              case 'ALLOCATION_PERCENTAGE':
+                row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
+                break;
 
-                case 'ASSET_CLASS':
-                  row[name] = assetClass ?? '';
-                  break;
+              case 'ASSET_CLASS':
+                row[name] = assetProfile?.assetClass ?? '';
+                break;
 
-                case 'ASSET_SUB_CLASS':
-                  row[name] = assetSubClass ?? '';
-                  break;
+              case 'ASSET_SUB_CLASS':
+                row[name] = assetProfile?.assetSubClass ?? '';
+                break;
 
-                case 'CURRENCY':
-                  row[name] = currency;
-                  break;
+              case 'CURRENCY':
+                row[name] = assetProfile?.currency ?? '';
+                break;
 
-                case 'NAME':
-                  row[name] = label;
-                  break;
+              case 'NAME':
+                row[name] = assetProfile?.name ?? '';
+                break;
 
-                case 'SYMBOL':
-                  row[name] = symbol;
-                  break;
+              case 'SYMBOL':
+                row[name] = assetProfile?.symbol ?? '';
+                break;
 
-                default:
-                  row[name] = '';
-                  break;
-              }
+              default:
+                row[name] = '';
+                break;
+            }
 
-              return row;
-            },
-            {} as Record<string, string>
-          );
-        }
-      );
+            return row;
+          },
+          {} as Record<string, string>
+        );
+      });
 
     // Dynamic import to load ESM module from CommonJS context
     // eslint-disable-next-line @typescript-eslint/no-implied-eval

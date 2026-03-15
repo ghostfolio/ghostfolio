@@ -102,10 +102,10 @@ export class GfHoldingsTableComponent {
     });
   }
 
-  protected canShowDetails(holding: PortfolioPosition): boolean {
+  protected canShowDetails({ assetProfile }: PortfolioPosition): boolean {
     return (
       this.hasPermissionToOpenDetails() &&
-      !this.ignoreAssetSubClasses.includes(holding.assetProfile.assetSubClass)
+      !this.ignoreAssetSubClasses.includes(assetProfile.assetSubClass)
     );
   }
 

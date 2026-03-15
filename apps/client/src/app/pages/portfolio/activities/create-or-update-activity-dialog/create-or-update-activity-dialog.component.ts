@@ -136,34 +136,25 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
         this.defaultLookupItems = holdings
-          .filter(({ assetSubClass }) => {
-            return !['CASH'].includes(assetSubClass);
+          .filter(({ assetProfile }) => {
+            return !['CASH'].includes(assetProfile.assetSubClass);
           })
           .sort((a, b) => {
-            return a.name?.localeCompare(b.name);
+            return a.assetProfile.name?.localeCompare(b.assetProfile.name);
           })
-          .map(
-            ({
-              assetClass,
-              assetSubClass,
-              currency,
-              dataSource,
-              name,
-              symbol
-            }) => {
-              return {
-                assetClass,
-                assetSubClass,
-                currency,
-                dataSource,
-                name,
-                symbol,
-                dataProviderInfo: {
-                  isPremium: false
-                }
-              };
-            }
-          );
+          .map(({ assetProfile }) => {
+            return {
+              assetClass: assetProfile.assetClass,
+              assetSubClass: assetProfile.assetSubClass,
+              currency: assetProfile.currency,
+              dataProviderInfo: {
+                isPremium: false
+              },
+              dataSource: assetProfile.dataSource,
+              name: assetProfile.name,
+              symbol: assetProfile.symbol
+            };
+          });
 
         this.changeDetectorRef.markForCheck();
       });

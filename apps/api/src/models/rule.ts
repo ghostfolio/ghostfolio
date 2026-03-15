@@ -1,6 +1,5 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { groupBy } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
   PortfolioReportRule,
@@ -9,6 +8,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
+import { groupBy } from 'lodash';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
@@ -41,10 +41,12 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
 
   public groupCurrentHoldingsByAttribute(
     holdings: PortfolioPosition[],
-    attribute: keyof PortfolioPosition,
+    attribute:
+      | keyof PortfolioPosition
+      | `assetProfile.${Extract<keyof PortfolioPosition['assetProfile'], string>}`,
     baseCurrency: string
   ) {
-    return Array.from(groupBy(attribute, holdings).entries()).map(
+    return Object.entries(groupBy(holdings, attribute)).map(
       ([attributeValue, objs]) => ({
         groupKey: attributeValue,
         investment: objs.reduce(
@@ -59,7 +61,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
               new Big(currentValue.quantity)
                 .mul(currentValue.marketPrice ?? 0)
                 .toNumber(),
-              currentValue.currency,
+              currentValue.assetProfile.currency,
               baseCurrency
             ),
           0

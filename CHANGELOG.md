@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Switched to using asset profile data from the endpoint `GET api/v1/portfolio/holdings`
+- Switched to using asset profile data from the holdings of the public page
 - Consolidated the sign-out logic within the user service to unify cookie, state and token clearance
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@ionic/angular` from version `8.7.3` to `8.8.1`

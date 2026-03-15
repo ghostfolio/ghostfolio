@@ -27,7 +27,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   public evaluate(ruleSettings: Settings) {
     const holdingsGroupedByCurrency = this.groupCurrentHoldingsByAttribute(
       this.holdings,
-      'currency',
+      'assetProfile.currency',
       ruleSettings.baseCurrency
     );
 

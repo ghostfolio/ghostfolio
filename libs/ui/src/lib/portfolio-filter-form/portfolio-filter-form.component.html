@@ -29,18 +29,22 @@
         [compareWith]="holdingComparisonFunction"
       >
         <mat-select-trigger>{{
-          filterForm.get('holding')?.value?.name
+          filterForm.get('holding')?.value?.assetProfile?.name
         }}</mat-select-trigger>
         <mat-option [value]="null" />
-        @for (holding of holdings(); track holding.name) {
+        @for (
+          holding of holdings();
+          track getAssetProfileIdentifier(holding.assetProfile)
+        ) {
           <mat-option [value]="holding">
             <div class="line-height-1 text-truncate">
               <span
-                ><b>{{ holding.name }}</b></span
+                ><b>{{ holding.assetProfile.name }}</b></span
               >
               <br />
               <small class="text-muted"
-                >{{ holding.symbol | gfSymbol }} · {{ holding.currency }}</small
+                >{{ holding.assetProfile.symbol | gfSymbol }} ·
+                {{ holding.currency }}</small
               >
             </div>
           </mat-option>

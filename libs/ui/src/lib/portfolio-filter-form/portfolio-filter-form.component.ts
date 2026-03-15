@@ -63,6 +63,8 @@ export class GfPortfolioFilterFormComponent
   public readonly holdings = input<PortfolioPosition[]>([]);
   public readonly tags = input<Filter[]>([]);
 
+  public getAssetProfileIdentifier = getAssetProfileIdentifier;
+
   public filterForm: FormGroup<{
     account: FormControl<string | null>;
     assetClass: FormControl<string | null>;
@@ -109,7 +111,8 @@ export class GfPortfolioFilterFormComponent
     }
 
     return (
-      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
+      getAssetProfileIdentifier(option.assetProfile) ===
+      getAssetProfileIdentifier(value.assetProfile)
     );
   }
 
