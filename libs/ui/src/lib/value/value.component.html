@@ -4,7 +4,23 @@
   </div>
 }
 <div class="d-flex flex-column w-100">
-  <ng-template #label><ng-content /></ng-template>
+  <ng-template #label
+    ><span #labelContent>
+      <ng-content></ng-content>
+    </span>
+  </ng-template>
+  <ng-template #copyIcon>
+    @if (enableCopyToClipboardButton) {
+      <a
+        class="cursor-pointer"
+        ng-if="label"
+        (click)="onCopyValueToClipboard()"
+      >
+        <ion-icon class="ml-1 mdc-copy" name="copy-outline" role="img" />
+      </a>
+    }
+  </ng-template>
+
   @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
@@ -71,6 +87,9 @@
           {{ formattedValue }}
         </div>
       }
+      @if (!hasLabel) {
+        <ng-container *ngTemplateOutlet="copyIcon" />
+      }
     </div>
   }
 
@@ -88,6 +107,9 @@
   @if (size === 'large') {
     <div class="text-truncate">
       <span class="h6"><ng-container *ngTemplateOutlet="label" /></span>
+      @if (hasLabel) {
+        <ng-container *ngTemplateOutlet="copyIcon" />
+      }
       @if (subLabel) {
         <span class="text-muted"> {{ subLabel }}</span>
       }
@@ -95,6 +117,9 @@
   } @else {
     <small class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label" />
+      @if (hasLabel) {
+        <ng-container *ngTemplateOutlet="copyIcon" />
+      }
     </small>
   }
 </div>
