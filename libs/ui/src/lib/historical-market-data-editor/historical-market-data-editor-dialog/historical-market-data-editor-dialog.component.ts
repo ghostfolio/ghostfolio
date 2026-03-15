@@ -10,7 +10,12 @@ import {
   inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -51,7 +56,10 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
     inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
   public readonly form = new FormGroup({
-    dateString: new FormControl<string | null>({ value: this.data.dateString, disabled: true }),
+    dateString: new FormControl<string | null>({
+      value: this.data.dateString,
+      disabled: true
+    }),
     marketPrice: new FormControl<number | undefined>(this.data.marketPrice)
   });
 
