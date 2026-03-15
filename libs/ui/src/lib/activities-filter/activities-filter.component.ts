@@ -7,6 +7,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Input,
   OnChanges,
@@ -69,9 +70,9 @@ export class GfActivitiesFilterComponent implements OnChanges {
   protected selectedFilters: Filter[] = [];
   protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  public constructor() {
+  public constructor(private destroyRef: DestroyRef) {
     this.searchControl.valueChanges
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((filterOrSearchTerm) => {
         if (filterOrSearchTerm) {
           const searchTerm =
