@@ -65,16 +65,19 @@ import type {
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import {
+  Access as AccessModel,
   Account,
   AccountBalance,
   DataSource,
   MarketData,
   Order,
-  Tag
+  SymbolProfile,
+  Tag,
+  User as UserModel
 } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -85,12 +88,12 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DataService {
-  public constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();
 
-    if (filters?.length > 0) {
+    if (filters && filters.length > 0) {
       const {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
@@ -308,45 +311,47 @@ export class DataService {
   }
 
   public deleteAccess(aId: string) {
-    return this.http.delete<any>(`/api/v1/access/${aId}`);
+    return this.http.delete<AccessModel>(`/api/v1/access/${aId}`);
   }
 
   public deleteAccount(aId: string) {
-    return this.http.delete<any>(`/api/v1/account/${aId}`);
+    return this.http.delete<Account>(`/api/v1/account/${aId}`);
   }
 
   public deleteAccountBalance(aId: string) {
-    return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
+    return this.http.delete<AccountBalance>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteActivities({ filters }) {
+  public deleteActivities({ filters }: { filters?: Filter[] }) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
-    return this.http.delete<any>('/api/v1/activities', { params });
+    return this.http.delete<number>('/api/v1/activities', { params });
   }
 
   public deleteActivity(aId: string) {
-    return this.http.delete<any>(`/api/v1/activities/${aId}`);
+    return this.http.delete<Order>(`/api/v1/activities/${aId}`);
   }
 
   public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.http.delete<any>(`/api/v1/benchmarks/${dataSource}/${symbol}`);
+    return this.http.delete<Partial<SymbolProfile>>(
+      `/api/v1/benchmarks/${dataSource}/${symbol}`
+    );
   }
 
   public deleteOwnUser(aData: DeleteOwnUserDto) {
-    return this.http.delete<any>(`/api/v1/user`, { body: aData });
+    return this.http.delete<UserModel>(`/api/v1/user`, { body: aData });
   }
 
   public deleteTag(aId: string) {
-    return this.http.delete<void>(`/api/v1/tags/${aId}`);
+    return this.http.delete<Tag>(`/api/v1/tags/${aId}`);
   }
 
   public deleteUser(aId: string) {
-    return this.http.delete<any>(`/api/v1/user/${aId}`);
+    return this.http.delete<UserModel>(`/api/v1/user/${aId}`);
   }
 
   public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.http.delete<any>(`/api/v1/watchlist/${dataSource}/${symbol}`);
+    return this.http.delete<void>(`/api/v1/watchlist/${dataSource}/${symbol}`);
   }
 
   public fetchAccesses() {
