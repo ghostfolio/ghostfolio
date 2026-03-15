@@ -103,7 +103,7 @@ export class GfTagsSelectorComponent
 
     if (!tag && this.hasPermissionToCreateTag) {
       tag = {
-        id: '',
+        id: undefined,
         name: event.option.value as string,
         userId: null
       };
