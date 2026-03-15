@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@ionic/angular` from version `8.7.3` to `8.8.1`
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
+- Added copy-to-clipboard functionality to value component
 
 ## 2.249.0 - 2026-03-10
 
