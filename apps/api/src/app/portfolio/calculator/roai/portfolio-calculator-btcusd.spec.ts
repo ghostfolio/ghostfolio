@@ -137,12 +137,10 @@ describe('PortfolioCalculator', () => {
         groupBy: 'year'
       });
 
-      const performanceByYear = await portfolioCalculator.getPerformanceByGroup(
-        {
-          data: portfolioSnapshot.historicalData,
-          groupBy: 'year'
-        }
-      );
+      const performanceByYear = portfolioCalculator.getPerformanceByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
+      });
 
       expect(portfolioSnapshot.historicalData[0]).toEqual({
         date: '2021-12-11',

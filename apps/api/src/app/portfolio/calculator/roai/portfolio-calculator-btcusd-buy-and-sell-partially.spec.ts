@@ -151,12 +151,10 @@ describe('PortfolioCalculator', () => {
         groupBy: 'year'
       });
 
-      const performanceByYear = await portfolioCalculator.getPerformanceByGroup(
-        {
-          data: portfolioSnapshot.historicalData,
-          groupBy: 'year'
-        }
-      );
+      const performanceByYear = portfolioCalculator.getPerformanceByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
+      });
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('13298.425356'),

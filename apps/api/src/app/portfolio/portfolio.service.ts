@@ -1055,18 +1055,19 @@ export class PortfolioService {
       return !isBefore(date, startDate) && !isAfter(date, endDate);
     });
 
-    const { chart: intervalChart } = await portfolioCalculator.getPerformance({
+    const { chart: intervalChart } = portfolioCalculator.getPerformance({
       data: items
     });
 
     let chart = intervalChart;
 
     if (groupBy) {
-      const { chart: groupedChart } =
-        await portfolioCalculator.getPerformanceByGroup({
+      const { chart: groupedChart } = portfolioCalculator.getPerformanceByGroup(
+        {
           data: items,
           groupBy
-        });
+        }
+      );
 
       chart = groupedChart;
     }

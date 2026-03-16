@@ -711,7 +711,7 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
-  public async getPerformance({ data }: { data: HistoricalDataItem[] }) {
+  public getPerformance({ data }: { data: HistoricalDataItem[] }) {
     const chart: HistoricalDataItem[] = [];
 
     let netPerformanceAtStartDate: number;
@@ -771,7 +771,7 @@ export abstract class PortfolioCalculator {
     return { chart };
   }
 
-  public async getPerformanceByGroup({
+  public getPerformanceByGroup({
     data,
     groupBy
   }: {
@@ -784,7 +784,7 @@ export abstract class PortfolioCalculator {
       const dataByYear = ldGroupBy(data, (item) => item.date.slice(0, 4));
 
       for (const year of Object.keys(dataByYear)) {
-        const { chart: yearChart } = await this.getPerformance({
+        const { chart: yearChart } = this.getPerformance({
           data: Object.values(dataByYear[year])
         });
 
