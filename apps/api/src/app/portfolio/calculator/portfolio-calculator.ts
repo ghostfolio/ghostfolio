@@ -143,10 +143,10 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
-            fee: new Big(feeInAssetProfileCurrency),
-            feeInBaseCurrency: new Big(feeInBaseCurrency),
-            quantity: new Big(quantity),
-            unitPrice: new Big(unitPriceInAssetProfileCurrency)
+            fee: new Big(feeInAssetProfileCurrency ?? 0),
+            feeInBaseCurrency: new Big(feeInBaseCurrency ?? 0),
+            quantity: new Big(quantity ?? 0),
+            unitPrice: new Big(unitPriceInAssetProfileCurrency ?? 0)
           };
         }
       )
