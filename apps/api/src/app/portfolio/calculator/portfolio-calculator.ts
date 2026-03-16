@@ -18,12 +18,7 @@ import {
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
 } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  getSum,
-  parseDate,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier,
@@ -51,14 +46,13 @@ import {
   format,
   isAfter,
   isBefore,
-  isSameYear,
   isWithinInterval,
   min,
   startOfDay,
   startOfYear,
   subDays
 } from 'date-fns';
-import { isNumber, sortBy, sum, uniqBy } from 'lodash';
+import { groupBy as ldGroupBy, isNumber, sortBy, sum, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -717,105 +711,86 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
-  public async getPerformance({ end, start }) {
-    await this.snapshotPromise;
-
-    const { historicalData } = this.snapshot;
-
+  public async getPerformance({ data }: { data: HistoricalDataItem[] }) {
     const chart: HistoricalDataItem[] = [];
 
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
     const totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
-    for (const historicalDataItem of historicalData) {
-      const date = resetHours(parseDate(historicalDataItem.date));
+    for (const historicalDataItem of data) {
+      if (!isNumber(netPerformanceAtStartDate)) {
+        netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
-      if (!isBefore(date, start) && !isAfter(date, end)) {
-        if (!isNumber(netPerformanceAtStartDate)) {
-          netPerformanceAtStartDate = historicalDataItem.netPerformance;
-
-          netPerformanceWithCurrencyEffectAtStartDate =
-            historicalDataItem.netPerformanceWithCurrencyEffect;
-        }
-
-        const netPerformanceSinceStartDate =
-          historicalDataItem.netPerformance - netPerformanceAtStartDate;
-
-        const netPerformanceWithCurrencyEffectSinceStartDate =
-          historicalDataItem.netPerformanceWithCurrencyEffect -
-          netPerformanceWithCurrencyEffectAtStartDate;
-
-        if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-          totalInvestmentValuesWithCurrencyEffect.push(
-            historicalDataItem.totalInvestmentValueWithCurrencyEffect
-          );
-        }
-
-        const timeWeightedInvestmentValue =
-          totalInvestmentValuesWithCurrencyEffect.length > 0
-            ? sum(totalInvestmentValuesWithCurrencyEffect) /
-              totalInvestmentValuesWithCurrencyEffect.length
-            : 0;
-
-        chart.push({
-          ...historicalDataItem,
-          netPerformance:
-            historicalDataItem.netPerformance - netPerformanceAtStartDate,
-          netPerformanceWithCurrencyEffect:
-            netPerformanceWithCurrencyEffectSinceStartDate,
-          netPerformanceInPercentage:
-            timeWeightedInvestmentValue === 0
-              ? 0
-              : netPerformanceSinceStartDate / timeWeightedInvestmentValue,
-          netPerformanceInPercentageWithCurrencyEffect:
-            timeWeightedInvestmentValue === 0
-              ? 0
-              : netPerformanceWithCurrencyEffectSinceStartDate /
-                timeWeightedInvestmentValue
-          // TODO: Add net worth
-          // netWorth: totalCurrentValueWithCurrencyEffect
-          //   .plus(totalAccountBalanceWithCurrencyEffect)
-          //   .toNumber()
-          // netWorth: 0
-        });
+        netPerformanceWithCurrencyEffectAtStartDate =
+          historicalDataItem.netPerformanceWithCurrencyEffect;
       }
+
+      const netPerformanceSinceStartDate =
+        historicalDataItem.netPerformance - netPerformanceAtStartDate;
+
+      const netPerformanceWithCurrencyEffectSinceStartDate =
+        historicalDataItem.netPerformanceWithCurrencyEffect -
+        netPerformanceWithCurrencyEffectAtStartDate;
+
+      if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
+        totalInvestmentValuesWithCurrencyEffect.push(
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect
+        );
+      }
+
+      const timeWeightedInvestmentValue =
+        totalInvestmentValuesWithCurrencyEffect.length > 0
+          ? sum(totalInvestmentValuesWithCurrencyEffect) /
+            totalInvestmentValuesWithCurrencyEffect.length
+          : 0;
+
+      chart.push({
+        ...historicalDataItem,
+        netPerformance:
+          historicalDataItem.netPerformance - netPerformanceAtStartDate,
+        netPerformanceWithCurrencyEffect:
+          netPerformanceWithCurrencyEffectSinceStartDate,
+        netPerformanceInPercentage:
+          timeWeightedInvestmentValue === 0
+            ? 0
+            : netPerformanceSinceStartDate / timeWeightedInvestmentValue,
+        netPerformanceInPercentageWithCurrencyEffect:
+          timeWeightedInvestmentValue === 0
+            ? 0
+            : netPerformanceWithCurrencyEffectSinceStartDate /
+              timeWeightedInvestmentValue
+        // TODO: Add net worth
+        // netWorth: totalCurrentValueWithCurrencyEffect
+        //   .plus(totalAccountBalanceWithCurrencyEffect)
+        //   .toNumber()
+        // netWorth: 0
+      });
     }
 
     return { chart };
   }
 
   public async getPerformanceByGroup({
-    endDate,
-    groupBy,
-    startDate
+    data,
+    groupBy
   }: {
-    endDate: Date;
-    groupBy: GroupBy;
-    startDate: Date;
+    data: HistoricalDataItem[];
+    groupBy: Extract<GroupBy, 'year'>;
   }) {
-    const interval = { start: startDate, end: endDate };
     const chart: HistoricalDataItem[] = [];
 
     if (groupBy === 'year') {
-      for (const year of eachYearOfInterval(interval)) {
-        const yearStartDate = startOfYear(year);
-        const yearEndDate = endOfYear(year);
-        const yearIntervalStartDate = isSameYear(startDate, yearStartDate)
-          ? startDate
-          : yearStartDate;
-        const yearIntervalEndDate = isSameYear(endDate, yearEndDate)
-          ? endDate
-          : yearEndDate;
+      const dataByYear = ldGroupBy(data, (item) => item.date.slice(0, 4));
 
+      for (const year of Object.keys(dataByYear)) {
         const { chart: yearChart } = await this.getPerformance({
-          end: yearIntervalEndDate,
-          start: yearIntervalStartDate
+          data: Object.values(dataByYear[year])
         });
 
         const yearPerformanceItem = {
           ...(yearChart.at(-1) ?? ({} as HistoricalDataItem)),
-          date: format(yearStartDate, DATE_FORMAT)
+          date: format(startOfYear(year), DATE_FORMAT)
         };
 
         chart.push(yearPerformanceItem);

@@ -134,6 +134,13 @@ describe('PortfolioCalculator', () => {
         groupBy: 'year'
       });
 
+      const performanceByYear = await portfolioCalculator.getPerformanceByGroup(
+        {
+          data: portfolioSnapshot.historicalData,
+          groupBy: 'year'
+        }
+      );
+
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('87.8'),
         errors: [],
@@ -207,6 +214,16 @@ describe('PortfolioCalculator', () => {
 
       expect(investmentsByYear).toEqual([
         { date: '2022-01-01', investment: 75.8 }
+      ]);
+
+      expect(performanceByYear.chart).toEqual([
+        expect.objectContaining({
+          date: '2022-01-01',
+          netPerformance: 17.68,
+          netPerformanceInPercentage: 0.12348284960422161,
+          netPerformanceInPercentageWithCurrencyEffect: 0.12348284960422161,
+          netPerformanceWithCurrencyEffect: 17.68
+        })
       ]);
     });
   });

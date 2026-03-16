@@ -1006,6 +1006,8 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+
     const [accountBalanceItems, { activities }] = await Promise.all([
       this.accountBalanceService.getAccountBalanceItems({
         filters,
@@ -1049,11 +1051,12 @@ export class PortfolioService {
     const { errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
 
-    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const items = historicalData.filter(({ date }) => {
+      return !isBefore(date, startDate) && !isAfter(date, endDate);
+    });
 
     const { chart: intervalChart } = await portfolioCalculator.getPerformance({
-      end: endDate,
-      start: startDate
+      data: items
     });
 
     let chart = intervalChart;
@@ -1061,8 +1064,7 @@ export class PortfolioService {
     if (groupBy) {
       const { chart: groupedChart } =
         await portfolioCalculator.getPerformanceByGroup({
-          startDate,
-          endDate,
+          data: items,
           groupBy
         });
 
