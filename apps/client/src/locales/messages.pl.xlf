@@ -5049,7 +5049,7 @@
       </trans-unit>
       <trans-unit id="3441715041566940420" datatype="html">
         <source>Interest</source>
-        <target state="translated">Udział</target>
+        <target state="translated">Odsetki</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">69</context>
@@ -6982,7 +6982,7 @@
       </trans-unit>
       <trans-unit id="7522916136412124285" datatype="html">
         <source>to use our referral link and get a Ghostfolio Premium membership for one year</source>
-        <target state="new">to use our referral link and get a Ghostfolio Premium membership for one year</target>
+        <target state="new">aby skorzystać z naszego linku polecającego i otrzymać roczną subskrypcję Ghostfolio Premium</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">340</context>
@@ -6990,7 +6990,7 @@
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be self-hosted</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> może być hostowany samodzielnie</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> może być hostowana samodzielnie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">178</context>
@@ -7014,7 +7014,7 @@
       </trans-unit>
       <trans-unit id="7900108539442184659" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be used anonymously</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> może być używany anonimowo</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> może być używana anonimowo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">217</context>
@@ -7026,7 +7026,7 @@
       </trans-unit>
       <trans-unit id="4605555143173907624" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be used anonymously</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> nie może być używany anonimowo</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> nie może być używana anonimowo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">224</context>
@@ -8072,7 +8072,7 @@
       </trans-unit>
       <trans-unit id="7383756232563820625" datatype="html">
         <source>Current month</source>
-        <target state="new">Current month</target>
+        <target state="new">Bieżący miesiąc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">200</context>
@@ -8397,7 +8397,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.min" datatype="html">
         <source>Your buying power is below ${thresholdMin} ${baseCurrency}</source>
-        <target state="new">Your buying power is below ${thresholdMin} ${baseCurrency}</target>
+        <target state="new">Twoja siła nabywcza jest niższa niż ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">73</context>
@@ -8405,7 +8405,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.zero" datatype="html">
         <source>Your buying power is 0 ${baseCurrency}</source>
-        <target state="new">Your buying power is 0 ${baseCurrency}</target>
+        <target state="new">Twoja siła nabywcza to 0 ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">77</context>
@@ -8429,7 +8429,7 @@
       </trans-unit>
       <trans-unit id="5815936665222001383" datatype="html">
         <source>No results found...</source>
-        <target state="new">No results found...</target>
+        <target state="new">Nie znaleziono wyników...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">51</context>
@@ -8445,7 +8445,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
         <source>The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynków rozwiniętych w Twojej obecnej inwestycji (${developedMarketsValueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">112</context>
@@ -8453,7 +8453,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
         <source>The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynków rozwiniętych w Twojej obecnej inwestycji (${developedMarketsValueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">117</context>
@@ -8461,7 +8461,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
         <source>The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynków rozwiniętych w Twojej obecnej inwestycji (${developedMarketsValueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">122</context>
@@ -8477,7 +8477,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source>The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynków wschodzących w obecnej inwestycji (${emergingMarketsValueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">130</context>
@@ -8485,7 +8485,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source>The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynków wschodzących w obecnej inwestycji (${emergingMarketsValueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">135</context>
@@ -8493,7 +8493,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source>The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynków wschodzących w obecnej inwestycji (${emergingMarketsValueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">140</context>
@@ -8501,7 +8501,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false.invalid" datatype="html">
         <source>No accounts have been set up</source>
-        <target state="new">No accounts have been set up</target>
+        <target state="new">Nie utworzono żadnych kont</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">21</context>
@@ -8509,7 +8509,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
         <source>Your net worth is managed by 0 accounts</source>
-        <target state="new">Your net worth is managed by 0 accounts</target>
+        <target state="new">Twój majątek jest zarządzany przez 0 kont</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">33</context>
@@ -8525,7 +8525,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.max" datatype="html">
         <source>The Asia-Pacific market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Asia-Pacific market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynku Azji i Pacyfiku w Twojej obecnej inwestycji (${valueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">167</context>
@@ -8533,7 +8533,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.min" datatype="html">
         <source>The Asia-Pacific market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Asia-Pacific market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynku Azji i Pacyfiku w Twojej obecnej inwestycji (${valueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">171</context>
@@ -8541,7 +8541,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.true" datatype="html">
         <source>The Asia-Pacific market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Asia-Pacific market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynku Azji i Pacyfiku w Twojej obecnej inwestycji (${valueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">175</context>
@@ -8549,7 +8549,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets" datatype="html">
         <source>Emerging Markets</source>
-        <target state="new">Emerging Markets</target>
+        <target state="new">Rynki wschodzące</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">180</context>
@@ -8557,7 +8557,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source>The Emerging Markets contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Emerging Markets contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynków wschodzących w Twojej obecnej inwestycji (${valueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">183</context>
@@ -8565,7 +8565,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source>The Emerging Markets contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Emerging Markets contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynków wschodzących w Twojej obecnej inwestycji (${valueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">187</context>
@@ -8573,7 +8573,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source>The Emerging Markets contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Emerging Markets contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynków wschodzących w Twojej obecnej inwestycji (${valueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">191</context>
@@ -8589,7 +8589,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.max" datatype="html">
         <source>The Europe market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Europe market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynku europejskiego w obecnej inwestycji (${valueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">197</context>
@@ -8597,7 +8597,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.min" datatype="html">
         <source>The Europe market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Europe market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynku europejskiego w obecnej inwestycji (${valueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">201</context>
@@ -8605,7 +8605,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.true" datatype="html">
         <source>The Europe market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Europe market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynku europejskiego w obecnej inwestycji (${valueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">205</context>
@@ -8621,7 +8621,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
         <source>The Japan market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Japan market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynku japońskiego w obecnej inwestycj (${valueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">211</context>
@@ -8629,7 +8629,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
         <source>The Japan market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Japan market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynku japońskiego w obecnej inwestycj (${valueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">215</context>
@@ -8637,7 +8637,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
         <source>The Japan market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Japan market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynku japońskiego w obecnej inwestycj (${valueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">219</context>
@@ -8653,7 +8653,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
         <source>The North America market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The North America market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="new">Udział rynku Ameryki Północnej w obecnej inwestycji (${valueRatio}%) przekracza ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">225</context>
@@ -8661,7 +8661,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
         <source>The North America market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The North America market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="new">Udział rynku Ameryki Północnej w obecnej inwestycji (${valueRatio}%) jest poniżej ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">229</context>
@@ -8669,7 +8669,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
         <source>The North America market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The North America market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="new">Udział rynku Ameryki Północnej w obecnej inwestycji (${valueRatio}%) mieści się w zakresie ${thresholdMin}% i ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">233</context>
@@ -8677,7 +8677,7 @@
       </trans-unit>
       <trans-unit id="2305116864852661861" datatype="html">
         <source>Find Ghostfolio on GitHub</source>
-        <target state="new">Find Ghostfolio on GitHub</target>
+        <target state="new">Znajdź Ghostfolio na GitHub</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">99</context>
@@ -8689,7 +8689,7 @@
       </trans-unit>
       <trans-unit id="5606994816647505945" datatype="html">
         <source>Join the Ghostfolio Slack community</source>
-        <target state="new">Join the Ghostfolio Slack community</target>
+        <target state="new">Dołącz do społeczności Ghostfolio na Slacku</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">109</context>
@@ -8697,7 +8697,7 @@
       </trans-unit>
       <trans-unit id="2555424753565986929" datatype="html">
         <source>Follow Ghostfolio on X (formerly Twitter)</source>
-        <target state="new">Follow Ghostfolio on X (formerly Twitter)</target>
+        <target state="new">Śledź Ghostfolio na X (poprzednio Twitter)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">118</context>
@@ -8705,7 +8705,7 @@
       </trans-unit>
       <trans-unit id="3375362149606316745" datatype="html">
         <source>Send an e-mail</source>
-        <target state="new">Send an e-mail</target>
+        <target state="new">Wyślij e-mail</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">89</context>
@@ -8717,7 +8717,7 @@
       </trans-unit>
       <trans-unit id="339860602695747533" datatype="html">
         <source>Registration Date</source>
-        <target state="new">Registration Date</target>
+        <target state="new">Data rejestracji</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">45</context>
@@ -8725,7 +8725,7 @@
       </trans-unit>
       <trans-unit id="5162138648470294706" datatype="html">
         <source>Follow Ghostfolio on LinkedIn</source>
-        <target state="new">Follow Ghostfolio on LinkedIn</target>
+        <target state="new">Śledź Ghostfolio na LinkedIn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">147</context>
@@ -8733,7 +8733,7 @@
       </trans-unit>
       <trans-unit id="4170353658096790081" datatype="html">
         <source>Ghostfolio is an independent &amp; bootstrapped business</source>
-        <target state="new">Ghostfolio is an independent &amp; bootstrapped business</target>
+        <target state="new">Ghostfolio to niezależna &amp; samofinansująca się firma</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">157</context>
@@ -8741,7 +8741,7 @@
       </trans-unit>
       <trans-unit id="1184917049575486230" datatype="html">
         <source>Support Ghostfolio</source>
-        <target state="new">Support Ghostfolio</target>
+        <target state="new">Wesprzyj Ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">166</context>
