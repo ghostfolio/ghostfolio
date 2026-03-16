@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.filter-field {
+  min-width: 10rem;
+}
+
+.form-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.status-badge {
+  border-radius: 12px;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+
+.status-DRAFT {
+  background: #e0e0e0;
+  color: #616161;
+}
+
+.status-ESTIMATED {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-FINAL {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -11,6 +11,9 @@ services:
       - no-new-privileges:true
     env_file:
       - ../.env
+    environment:
+      - UPLOAD_DIR=${UPLOAD_DIR:-/app/uploads}
+      - MAX_UPLOAD_SIZE=${MAX_UPLOAD_SIZE:-10485760}
     ports:
       - 3333:3333
     depends_on:
@@ -23,6 +26,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - uploads:/app/uploads
 
   postgres:
     image: docker.io/library/postgres:15-alpine
@@ -73,3 +78,4 @@ services:
 
 volumes:
   postgres:
+  uploads:

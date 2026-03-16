@@ -39,6 +39,9 @@ npm-debug.log
 testem.log
 /typings
 
+# Uploads
+/uploads
+
 # System Files
 .DS_Store
 Thumbs.db

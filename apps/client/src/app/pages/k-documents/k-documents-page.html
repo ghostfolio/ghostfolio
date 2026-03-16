@@ -1,0 +1,199 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>
+        K-1 / K-3 Documents
+      </h1>
+
+      @if (showForm) {
+        <div class="form-container">
+          <div class="align-items-center d-flex mb-3">
+            <button mat-icon-button (click)="cancelForm()">
+              <ion-icon name="arrow-back-outline" />
+            </button>
+            <h2 class="h5 mb-0 ms-2">
+              {{ editingDoc ? 'Edit K-Document' : 'New K-Document' }}
+            </h2>
+          </div>
+
+          @if (!editingDoc) {
+            <div class="align-items-center d-flex flex-wrap gap-3 mb-3">
+              <mat-form-field appearance="outline" class="filter-field">
+                <mat-label i18n>Partnership</mat-label>
+                <mat-select [(value)]="newDocPartnershipId">
+                  @for (p of partnerships; track p.id) {
+                    <mat-option [value]="p.id">{{ p.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="filter-field">
+                <mat-label i18n>Type</mat-label>
+                <mat-select [(value)]="newDocType">
+                  <mat-option value="K1">K-1</mat-option>
+                  <mat-option value="K3">K-3</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="filter-field">
+                <mat-label i18n>Tax Year</mat-label>
+                <mat-select [(value)]="newDocTaxYear">
+                  @for (year of taxYearOptions; track year) {
+                    <mat-option [value]="year">{{ year }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          }
+
+          <gf-k-document-form
+            [data]="editingDoc?.data || null"
+            [filingStatus]="editingDoc?.filingStatus || 'DRAFT'"
+            [isEditMode]="!!editingDoc"
+            (cancelled)="cancelForm()"
+            (submitted)="onFormSubmit($event)"
+          />
+        </div>
+      } @else {
+        <div class="align-items-center d-flex flex-wrap gap-3 mb-3">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label i18n>Partnership</mat-label>
+            <mat-select
+              [(value)]="filterPartnershipId"
+              (selectionChange)="fetchKDocuments()"
+            >
+              <mat-option [value]="null">All</mat-option>
+              @for (p of partnerships; track p.id) {
+                <mat-option [value]="p.id">{{ p.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label i18n>Tax Year</mat-label>
+            <mat-select
+              [(value)]="filterTaxYear"
+              (selectionChange)="fetchKDocuments()"
+            >
+              <mat-option [value]="null">All</mat-option>
+              @for (year of taxYearOptions; track year) {
+                <mat-option [value]="year">{{ year }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label i18n>Status</mat-label>
+            <mat-select
+              [(value)]="filterStatus"
+              (selectionChange)="fetchKDocuments()"
+            >
+              <mat-option [value]="null">All</mat-option>
+              <mat-option value="DRAFT">Draft</mat-option>
+              <mat-option value="ESTIMATED">Estimated</mat-option>
+              <mat-option value="FINAL">Final</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        @if (isLoading) {
+          <ngx-skeleton-loader
+            animation="pulse"
+            [theme]="{ height: '3rem', width: '100%' }"
+          />
+        } @else if (kDocuments.length === 0) {
+          <p class="p-3 text-center text-muted" i18n>No K-documents found.</p>
+        } @else {
+          <table
+            class="gf-table w-100"
+            mat-table
+            matSort
+            [dataSource]="dataSource"
+          >
+            <ng-container matColumnDef="partnershipName">
+              <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>
+                Partnership
+              </th>
+              <td *matCellDef="let row" mat-cell>
+                {{ row.partnershipName }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th *matHeaderCellDef i18n mat-header-cell>Type</th>
+              <td *matCellDef="let row" mat-cell>{{ row.type }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="taxYear">
+              <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>
+                Tax Year
+              </th>
+              <td *matCellDef="let row" mat-cell>{{ row.taxYear }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="filingStatus">
+              <th *matHeaderCellDef i18n mat-header-cell>Status</th>
+              <td *matCellDef="let row" mat-cell>
+                <span
+                  class="status-badge"
+                  [ngClass]="'status-' + row.filingStatus"
+                >
+                  {{ row.filingStatus }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ordinaryIncome">
+              <th
+                *matHeaderCellDef
+                class="d-none d-lg-table-cell text-right"
+                i18n
+                mat-header-cell
+              >
+                Ordinary Income
+              </th>
+              <td
+                *matCellDef="let row"
+                class="d-none d-lg-table-cell text-right"
+                mat-cell
+              >
+                {{
+                  row.data?.ordinaryIncome
+                    | currency: 'USD' : 'symbol' : '1.0-0'
+                }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th *matHeaderCellDef class="text-right" mat-header-cell></th>
+              <td *matCellDef="let row" class="text-right" mat-cell>
+                <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                  <ion-icon name="ellipsis-vertical-outline" />
+                </button>
+                <mat-menu #actionMenu="matMenu">
+                  <button mat-menu-item (click)="editDoc(row)">Edit</button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+            <tr
+              *matRowDef="let row; columns: displayedColumns"
+              class="cursor-pointer"
+              mat-row
+              (click)="editDoc(row)"
+            ></tr>
+          </table>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+@if (!showForm) {
+  <div class="fab-container">
+    <a mat-fab (click)="startCreate()">
+      <ion-icon name="add-outline" size="large" />
+    </a>
+  </div>
+}

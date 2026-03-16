@@ -1,0 +1,278 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="align-items-center d-flex mb-4">
+        <a class="me-3" mat-icon-button routerLink="/partnerships">
+          <ion-icon name="arrow-back-outline" />
+        </a>
+        <h1 class="h3 mb-0">{{ partnership?.name }}</h1>
+        <span class="badge bg-primary ms-3">{{ partnership?.type }}</span>
+        @if (partnership?.currency) {
+          <span class="ms-3 text-muted small">
+            {{ partnership.currency }}
+          </span>
+        }
+      </div>
+
+      <mat-tab-group>
+        <!-- Members Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>Members</span>
+            <span class="badge bg-secondary ms-2">{{
+              partnership?.members?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            <table
+              class="gf-table w-100"
+              mat-table
+              [dataSource]="partnership?.members ?? []"
+            >
+              <ng-container matColumnDef="entityName">
+                <th *matHeaderCellDef i18n mat-header-cell>Entity</th>
+                <td *matCellDef="let row" mat-cell>{{ row.entityName }}</td>
+              </ng-container>
+              <ng-container matColumnDef="classType">
+                <th *matHeaderCellDef i18n mat-header-cell>Class</th>
+                <td *matCellDef="let row" mat-cell>{{ row.classType }}</td>
+              </ng-container>
+              <ng-container matColumnDef="ownershipPercent">
+                <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+                  Ownership %
+                </th>
+                <td *matCellDef="let row" class="text-right" mat-cell>
+                  {{ row.ownershipPercent }}%
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="capitalCommitment">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell text-right"
+                  i18n
+                  mat-header-cell
+                >
+                  Commitment
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell text-right"
+                  mat-cell
+                >
+                  {{
+                    row.capitalCommitment != null
+                      ? (row.capitalCommitment
+                        | currency: partnership?.currency : 'symbol' : '1.0-0')
+                      : '—'
+                  }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="capitalContributed">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell text-right"
+                  i18n
+                  mat-header-cell
+                >
+                  Contributed
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell text-right"
+                  mat-cell
+                >
+                  {{
+                    row.capitalContributed != null
+                      ? (row.capitalContributed
+                        | currency: partnership?.currency : 'symbol' : '1.0-0')
+                      : '—'
+                  }}
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="memberColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: memberColumns" mat-row></tr>
+            </table>
+
+            @if (partnership?.members?.length === 0) {
+              <p class="p-3 text-center text-muted" i18n>No members yet.</p>
+            }
+
+            @if (hasPermissionToUpdate) {
+              <div class="mt-3">
+                <button
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onAddMember()"
+                >
+                  <ion-icon class="me-1" name="add-outline" />
+                  Add Member
+                </button>
+              </div>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- Assets Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>Assets</span>
+            <span class="badge bg-secondary ms-2">{{
+              partnership?.assets?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            <table
+              class="gf-table w-100"
+              mat-table
+              [dataSource]="partnership?.assets ?? []"
+            >
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef i18n mat-header-cell>Name</th>
+                <td *matCellDef="let row" mat-cell>{{ row.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="assetType">
+                <th *matHeaderCellDef i18n mat-header-cell>Type</th>
+                <td *matCellDef="let row" mat-cell>{{ row.assetType }}</td>
+              </ng-container>
+              <ng-container matColumnDef="acquisitionCost">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell text-right"
+                  i18n
+                  mat-header-cell
+                >
+                  Acquisition Cost
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell text-right"
+                  mat-cell
+                >
+                  {{
+                    row.acquisitionCost != null
+                      ? (row.acquisitionCost
+                        | currency
+                          : row.currency ?? partnership?.currency
+                          : 'symbol'
+                          : '1.0-0')
+                      : '—'
+                  }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="currentValue">
+                <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+                  Current Value
+                </th>
+                <td *matCellDef="let row" class="text-right" mat-cell>
+                  {{
+                    row.currentValue != null
+                      ? (row.currentValue
+                        | currency
+                          : row.currency ?? partnership?.currency
+                          : 'symbol'
+                          : '1.0-0')
+                      : '—'
+                  }}
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="assetColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: assetColumns" mat-row></tr>
+            </table>
+
+            @if (partnership?.assets?.length === 0) {
+              <p class="p-3 text-center text-muted" i18n>No assets yet.</p>
+            }
+
+            @if (hasPermissionToUpdate) {
+              <div class="mt-3">
+                <button
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onAddAsset()"
+                >
+                  <ion-icon class="me-1" name="add-outline" />
+                  Add Asset
+                </button>
+              </div>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- NAV History Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>NAV History</span>
+            <span class="badge bg-secondary ms-2">{{
+              valuations?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            <table class="gf-table w-100" mat-table [dataSource]="valuations">
+              <ng-container matColumnDef="date">
+                <th *matHeaderCellDef i18n mat-header-cell>Date</th>
+                <td *matCellDef="let row" mat-cell>
+                  {{ row.date | date }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nav">
+                <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+                  NAV
+                </th>
+                <td *matCellDef="let row" class="text-right" mat-cell>
+                  {{
+                    row.nav
+                      | currency
+                        : partnership?.currency ?? 'USD'
+                        : 'symbol'
+                        : '1.0-0'
+                  }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="source">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell"
+                  i18n
+                  mat-header-cell
+                >
+                  Source
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell"
+                  mat-cell
+                >
+                  {{ row.source }}
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="valuationColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: valuationColumns" mat-row></tr>
+            </table>
+
+            @if (valuations?.length === 0) {
+              <p class="p-3 text-center text-muted" i18n>
+                No valuations recorded.
+              </p>
+            }
+
+            @if (hasPermissionToUpdate) {
+              <div class="mt-3">
+                <button
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onRecordValuation()"
+                >
+                  <ion-icon class="me-1" name="add-outline" />
+                  Record Valuation
+                </button>
+              </div>
+            }
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
