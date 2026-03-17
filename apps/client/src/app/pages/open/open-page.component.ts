@@ -7,11 +7,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -21,11 +20,9 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./open-page.scss'],
   templateUrl: './open-page.html'
 })
-export class GfOpenPageComponent implements OnDestroy, OnInit {
+export class GfOpenPageComponent implements OnInit {
   public statistics: Statistics;
   public user: User;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -35,11 +32,9 @@ export class GfOpenPageComponent implements OnDestroy, OnInit {
     const { statistics } = this.dataService.fetchInfo();
 
     this.statistics = statistics;
-  }
 
-  public ngOnInit() {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed())
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -49,8 +44,5 @@ export class GfOpenPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
+  public ngOnInit() {}
 }
