@@ -49,6 +49,7 @@ import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
+import { shouldEnableUpdateAccountBalance } from './create-or-update-activity-dialog.helper';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
 
@@ -272,12 +273,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
         this.activityForm.get('currencyOfUnitPrice').setValue(currency);
 
         if (['FEE', 'INTEREST'].includes(type)) {
-          if (this.activityForm.get('accountId').value) {
-            this.activityForm.get('updateAccountBalance').enable();
-          } else {
-            this.activityForm.get('updateAccountBalance').disable();
-            this.activityForm.get('updateAccountBalance').setValue(false);
-          }
+          this.updateAccountBalanceState();
         }
       }
     });
@@ -303,13 +299,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
       });
 
     this.activityForm.get('date').valueChanges.subscribe(() => {
-      if (isToday(this.activityForm.get('date').value)) {
-        this.activityForm.get('updateAccountBalance').enable();
-      } else {
-        this.activityForm.get('updateAccountBalance').disable();
-        this.activityForm.get('updateAccountBalance').setValue(false);
-      }
-
       this.changeDetectorRef.markForCheck();
     });
 
@@ -388,8 +377,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
             .get('searchSymbol')
             .removeValidators(Validators.required);
           this.activityForm.get('searchSymbol').updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance').disable();
-          this.activityForm.get('updateAccountBalance').setValue(false);
+          this.updateAccountBalanceState();
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           const currency =
             this.data.accounts.find(({ id }) => {
@@ -426,15 +414,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
             this.activityForm.get('unitPrice').setValue(0);
           }
 
-          if (
-            ['FEE', 'INTEREST'].includes(type) &&
-            this.activityForm.get('accountId').value
-          ) {
-            this.activityForm.get('updateAccountBalance').enable();
-          } else {
-            this.activityForm.get('updateAccountBalance').disable();
-            this.activityForm.get('updateAccountBalance').setValue(false);
-          }
+          this.updateAccountBalanceState();
         } else {
           this.activityForm
             .get('dataSource')
@@ -446,7 +426,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
             .get('searchSymbol')
             .setValidators(Validators.required);
           this.activityForm.get('searchSymbol').updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance').enable();
+          this.updateAccountBalanceState();
         }
 
         this.changeDetectorRef.markForCheck();
@@ -560,6 +540,21 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private updateAccountBalanceState() {
+    if (
+      shouldEnableUpdateAccountBalance({
+        accountId: this.activityForm.get('accountId').value,
+        dataSource: this.activityForm.get('dataSource').value,
+        type: this.activityForm.get('type').value
+      })
+    ) {
+      this.activityForm.get('updateAccountBalance').enable();
+    } else {
+      this.activityForm.get('updateAccountBalance').disable();
+      this.activityForm.get('updateAccountBalance').setValue(false);
+    }
   }
 
   private updateAssetProfile() {
