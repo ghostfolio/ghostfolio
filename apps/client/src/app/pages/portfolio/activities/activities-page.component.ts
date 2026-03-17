@@ -132,9 +132,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public fetchActivities() {
     const dateRange = this.user?.settings?.dateRange;
 
-    const range = this.isCalendarYear(this.user?.settings?.dateRange)
-      ? dateRange
-      : undefined;
+    const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
 
     this.dataService
       .fetchActivities({
@@ -360,12 +358,12 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private isCalendarYear(range: DateRange) {
-    if (!range) {
+  private isCalendarYear(dateRange: DateRange) {
+    if (!dateRange) {
       return false;
     }
 
-    return /^\d{4}$/.test(range);
+    return /^\d{4}$/.test(dateRange);
   }
 
   private openCreateActivityDialog(aActivity?: Activity) {
