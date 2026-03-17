@@ -7,7 +7,8 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnInit
+  inject,
+  DestroyRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
@@ -20,9 +21,11 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./open-page.scss'],
   templateUrl: './open-page.html'
 })
-export class GfOpenPageComponent implements OnInit {
+export class GfOpenPageComponent {
   public statistics: Statistics;
   public user: User;
+
+  private destroyRef = inject(DestroyRef);
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -34,7 +37,7 @@ export class GfOpenPageComponent implements OnInit {
     this.statistics = statistics;
 
     this.userService.stateChanged
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -43,6 +46,4 @@ export class GfOpenPageComponent implements OnInit {
         }
       });
   }
-
-  public ngOnInit() {}
 }
