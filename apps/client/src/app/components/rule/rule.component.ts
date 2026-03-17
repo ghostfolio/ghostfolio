@@ -9,11 +9,13 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   Input,
   OnInit,
   Output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -29,7 +31,6 @@ import {
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, takeUntil } from 'rxjs';
 
 import { RuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
 import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-settings-dialog.component';
@@ -58,9 +59,8 @@ export class GfRuleComponent implements OnInit {
   @Output() ruleUpdated = new EventEmitter<UpdateUserSettingDto>();
 
   private deviceType: string;
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog
   ) {
@@ -94,7 +94,7 @@ export class GfRuleComponent implements OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((settings: RuleSettings) => {
         if (settings) {
           this.ruleUpdated.emit({
@@ -114,10 +114,5 @@ export class GfRuleComponent implements OnInit {
     };
 
     this.ruleUpdated.emit(settings);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
