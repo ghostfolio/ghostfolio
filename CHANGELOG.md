@@ -5,19 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.250.0 - 2026-03-17
+
+### Added
+
+- Added support for specific calendar year date ranges (`2025`, `2024`, `2023`, etc.) on the portfolio activities page
 
 ### Changed
 
 - Consolidated the sign-out logic within the user service to unify cookie, state and token clearance
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@ionic/angular` from version `8.7.3` to `8.8.1`
+- Upgraded `replace-in-file` from version `8.3.0` to `8.4.0`
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
 - Pinned the _Node.js_ version in the _Build code_ _GitHub Action_ to ensure environment consistency for tests
 
 ### Fixed
 
 - Fixed an issue with the detection of the thousand separator for the `de-CH` locale
+- Fixed an issue in the _Storybook_ stories of the symbol autocomplete component caused by a circular dependency
 
 ## 2.249.0 - 2026-03-10
 

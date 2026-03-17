@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.249.0",
+  "version": "2.250.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -198,7 +198,7 @@
     "prisma": "6.19.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "replace-in-file": "8.3.0",
+    "replace-in-file": "8.4.0",
     "shx": "0.4.0",
     "storybook": "10.1.10",
     "ts-jest": "29.4.0",

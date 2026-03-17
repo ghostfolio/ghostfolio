@@ -22,7 +22,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
-import { DataService } from '@ghostfolio/ui/services';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
@@ -30,6 +29,8 @@ import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { isNumber } from 'lodash';
+
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
