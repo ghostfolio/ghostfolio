@@ -53,6 +53,15 @@ export interface K1ExtractedField {
 
   /** Whether user has explicitly reviewed this field (required for medium/low confidence) */
   isReviewed: boolean;
+
+  /** Subtype code for boxes that support them (e.g., "ZZ*", "A", "B", "*"). Null for simple boxes. */
+  subtype?: string | null;
+
+  /** Field category: PART_III, METADATA, SECTION_J, SECTION_K, SECTION_L, SECTION_M, SECTION_N, CHECKBOX */
+  fieldCategory?: string;
+
+  /** Whether this field is a boolean checkbox value */
+  isCheckbox?: boolean;
 }
 
 export interface K1UnmappedItem {
@@ -76,6 +85,15 @@ export interface K1UnmappedItem {
 
   /** If assigned, the box number it was assigned to */
   assignedBoxNumber: string | null;
+
+  /** X position in PDF points */
+  x?: number;
+
+  /** Y position in PDF points */
+  y?: number;
+
+  /** PDF font identifier for debugging */
+  fontName?: string;
 }
 
 export interface K1ConfirmationRequest {

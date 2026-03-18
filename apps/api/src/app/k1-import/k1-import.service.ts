@@ -633,7 +633,11 @@ export class K1ImportService {
     // Build KDocument data from verified fields
     const kDocumentData: Record<string, number | null> = {};
     for (const field of verifiedData.fields) {
-      kDocumentData[field.boxNumber] = field.numericValue ?? null;
+      // For subtype fields (e.g., box 11 "ZZ*", box 20 "A"), create unique key
+      const key = field.subtype
+        ? `${field.boxNumber}-${field.subtype}`
+        : field.boxNumber;
+      kDocumentData[key] = field.numericValue ?? null;
     }
 
     // FR-012: Create or update KDocument

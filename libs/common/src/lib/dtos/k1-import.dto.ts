@@ -50,6 +50,18 @@ export class K1ExtractedFieldDto {
 
   @IsBoolean()
   isReviewed: boolean;
+
+  @IsOptional()
+  @IsString()
+  subtype?: string | null;
+
+  @IsOptional()
+  @IsString()
+  fieldCategory?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isCheckbox?: boolean;
 }
 
 export class K1UnmappedItemDto {
@@ -75,6 +87,18 @@ export class K1UnmappedItemDto {
   @IsOptional()
   @IsString()
   assignedBoxNumber?: string;
+
+  @IsOptional()
+  @IsNumber()
+  x?: number;
+
+  @IsOptional()
+  @IsNumber()
+  y?: number;
+
+  @IsOptional()
+  @IsString()
+  fontName?: string;
 }
 
 export class VerifyK1ImportDto {
