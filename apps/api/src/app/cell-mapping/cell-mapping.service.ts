@@ -253,7 +253,7 @@ export class CellMappingService implements OnModuleInit {
       where: { partnershipId }
     });
 
-    const results = await this.prismaService.cellAggregationRule.createMany({
+    await this.prismaService.cellAggregationRule.createMany({
       data: rules.map((rule, i) => ({
         partnershipId,
         name: rule.name,

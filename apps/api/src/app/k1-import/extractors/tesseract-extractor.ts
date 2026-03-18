@@ -55,10 +55,11 @@ export class TesseractExtractor implements K1Extractor {
 
       // Fallback: try pdf-parse to at least get any embedded text
       try {
-        const pdfParse = await import('pdf-parse');
-        const parsed = await pdfParse.default(buffer);
+        const { PDFParse } = await import('pdf-parse');
+        const parser = new PDFParse({ data: buffer });
+        const parsed = await parser.getText();
         text = parsed.text;
-        pageCount = parsed.numpages;
+        pageCount = parsed.total;
       } catch (parseError) {
         this.logger.error(
           `Both Tesseract and pdf-parse failed: ${parseError}`

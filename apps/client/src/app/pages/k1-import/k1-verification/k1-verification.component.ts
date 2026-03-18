@@ -89,8 +89,6 @@ export class K1VerificationComponent implements OnInit {
   // Available box numbers for assigning unmapped items
   public availableBoxNumbers: string[] = [];
 
-  private partnershipId: string;
-
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -294,7 +292,6 @@ export class K1VerificationComponent implements OnInit {
           }
 
           this.taxYear = session.taxYear;
-          this.partnershipId = session.partnershipId;
 
           const extraction = session.rawExtraction || session.verifiedData;
           if (extraction) {

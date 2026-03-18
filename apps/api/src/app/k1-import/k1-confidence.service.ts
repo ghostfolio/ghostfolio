@@ -16,7 +16,7 @@ export class K1ConfidenceService {
    */
   public scoreFields(
     fields: K1ExtractedField[],
-    method: 'pdf-parse' | 'azure' | 'tesseract'
+    _method: 'pdf-parse' | 'azure' | 'tesseract'
   ): K1ExtractedField[] {
     const scored = fields.map((field) => ({
       ...field,

@@ -7,14 +7,11 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { CellMappingService } from '../cell-mapping/cell-mapping.service';
 import { UploadService } from '../upload/upload.service';
 import { AzureExtractor } from './extractors/azure-extractor';
 import { PdfParseExtractor } from './extractors/pdf-parse-extractor';
 import { TesseractExtractor } from './extractors/tesseract-extractor';
-import { K1AggregationService } from './k1-aggregation.service';
 import { K1AllocationService } from './k1-allocation.service';
-import { K1ConfidenceService } from './k1-confidence.service';
 import { K1FieldMapperService } from './k1-field-mapper.service';
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
@@ -26,11 +23,8 @@ export class K1ImportService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly uploadService: UploadService,
-    private readonly cellMappingService: CellMappingService,
     private readonly fieldMapperService: K1FieldMapperService,
-    private readonly confidenceService: K1ConfidenceService,
     private readonly allocationService: K1AllocationService,
-    private readonly aggregationService: K1AggregationService,
     private readonly pdfParseExtractor: PdfParseExtractor,
     private readonly azureExtractor: AzureExtractor,
     private readonly tesseractExtractor: TesseractExtractor
@@ -74,8 +68,10 @@ export class K1ImportService {
         userId
       },
       include: {
-        memberships: {
-          where: { isActive: true }
+        members: {
+          where: {
+            endDate: null
+          }
         }
       }
     });
@@ -87,7 +83,7 @@ export class K1ImportService {
       );
     }
 
-    if (!partnership.memberships || partnership.memberships.length === 0) {
+    if (!partnership.members || partnership.members.length === 0) {
       throw new HttpException(
         'Partnership has no active members',
         StatusCodes.BAD_REQUEST
@@ -585,7 +581,7 @@ export class K1ImportService {
       await this.prismaService.partnershipMembership.findMany({
         where: {
           partnershipId: session.partnershipId,
-          isActive: true
+          endDate: null
         },
         include: { entity: true }
       });
@@ -768,8 +764,9 @@ export class K1ImportService {
    */
   private async checkPasswordProtected(buffer: Buffer): Promise<void> {
     try {
-      const pdfParse = await import('pdf-parse');
-      await pdfParse.default(buffer);
+      const { PDFParse } = await import('pdf-parse');
+      const parser = new PDFParse({ data: buffer });
+      await parser.getText();
     } catch (error) {
       if (
         error?.message?.includes('password') ||
@@ -793,8 +790,9 @@ export class K1ImportService {
     entityCount: number;
   }> {
     try {
-      const pdfParse = await import('pdf-parse');
-      const parsed = await pdfParse.default(buffer);
+      const { PDFParse } = await import('pdf-parse');
+      const parser = new PDFParse({ data: buffer });
+      const parsed = await parser.getText();
       const text = parsed.text || '';
 
       // Count "Schedule K-1" header occurrences

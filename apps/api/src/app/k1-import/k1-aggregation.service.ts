@@ -1,7 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import type { K1AggregationResult } from '@ghostfolio/common/interfaces';
 
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { CellMappingService } from '../cell-mapping/cell-mapping.service';
@@ -13,8 +13,6 @@ import { CellMappingService } from '../cell-mapping/cell-mapping.service';
  */
 @Injectable()
 export class K1AggregationService {
-  private readonly logger = new Logger(K1AggregationService.name);
-
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly cellMappingService: CellMappingService

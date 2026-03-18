@@ -1,5 +1,4 @@
 import type {
-  K1ExtractionResult,
   K1ImportSessionSummary,
   K1AggregationResult
 } from '@ghostfolio/common/interfaces';

@@ -1,7 +1,7 @@
-import type { K1ExtractionResult, K1ExtractedField, K1UnmappedItem } from '@ghostfolio/common/interfaces';
+import type { K1ExtractionResult, K1ExtractedField } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
-import * as pdfParse from 'pdf-parse';
+import { PDFParse } from 'pdf-parse';
 
 import type { K1Extractor } from './k1-extractor.interface';
 
@@ -245,9 +245,10 @@ export class PdfParseExtractor implements K1Extractor {
   ): Promise<K1ExtractionResult> {
     this.logger.log(`Extracting from digital PDF: ${fileName}`);
 
-    const parsed = await pdfParse(buffer);
+    const parser = new PDFParse({ data: buffer });
+    const parsed = await parser.getText();
     const text = parsed.text;
-    const pageCount = parsed.numpages;
+    const pageCount = parsed.total;
 
     // Extract metadata
     const metadata = this.extractMetadata(text);
@@ -394,7 +395,8 @@ export class PdfParseExtractor implements K1Extractor {
    */
   public async isDigitalK1(buffer: Buffer): Promise<boolean> {
     try {
-      const parsed = await pdfParse(buffer);
+      const parser = new PDFParse({ data: buffer });
+      const parsed = await parser.getText();
       const text = parsed.text || '';
 
       if (text.length < 100) return false;
