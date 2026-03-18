@@ -476,16 +476,18 @@ export class K1ImportService {
 
     // Read file from disk and run extraction asynchronously
     const fs = await import('fs/promises');
-    const filePath = (document as any).url || (document as any).filePath;
+    const relativePath = (document as any).filePath;
 
-    if (!filePath) {
+    if (!relativePath) {
       throw new HttpException(
         'Cannot determine file path for stored document',
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
 
-    const fileBuffer = await fs.readFile(filePath);
+    const uploadDir = this.uploadService.getUploadDir();
+    const fullPath = join(uploadDir, relativePath);
+    const fileBuffer = await fs.readFile(fullPath);
     const file = {
       buffer: fileBuffer,
       originalname: originalSession.fileName,

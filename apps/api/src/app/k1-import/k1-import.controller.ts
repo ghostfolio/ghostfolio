@@ -26,7 +26,7 @@ import { ConfirmK1Dto } from './dto/confirm-k1.dto';
 import { VerifyK1Dto } from './dto/verify-k1.dto';
 import { K1ImportService } from './k1-import.service';
 
-@Controller('api/v1/k1-import')
+@Controller('k1-import')
 export class K1ImportController {
   public constructor(
     private readonly k1ImportService: K1ImportService,
