@@ -196,6 +196,13 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'portfolio-views',
+    loadChildren: () =>
+      import('./pages/portfolio-views/portfolio-views-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
     // wildcard, if requested url doesn't match any paths for routes defined
     // earlier
     path: '**',

@@ -1,0 +1,692 @@
+<div class="container">
+  <!-- Page Header with Period Controls -->
+  <div class="page-header">
+    <h1 i18n>Portfolio Views</h1>
+
+    <div class="period-controls">
+      <!-- Period Mode Toggle -->
+      <mat-button-toggle-group
+        [(ngModel)]="periodMode"
+        (change)="onPeriodModeChange()"
+        class="period-mode-toggle"
+        appearance="standard"
+      >
+        <mat-button-toggle value="QUARTERLY">Quarterly</mat-button-toggle>
+        <mat-button-toggle value="YEARLY">Yearly</mat-button-toggle>
+        <mat-button-toggle value="ALL_TIME">All-Time</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <!-- Year Selector (hidden for ALL_TIME) -->
+      @if (periodMode !== 'ALL_TIME') {
+        <mat-form-field appearance="outline" class="year-filter">
+          <mat-label i18n>Year</mat-label>
+          <mat-select
+            [(ngModel)]="valuationYear"
+            (selectionChange)="onValuationYearChange()"
+          >
+            @for (year of availableYears; track year) {
+              <mat-option [value]="year">{{ year }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <!-- Quarter Selector (only for QUARTERLY) -->
+      @if (periodMode === 'QUARTERLY') {
+        <mat-form-field appearance="outline" class="quarter-filter">
+          <mat-label i18n>Quarter</mat-label>
+          <mat-select
+            [(ngModel)]="selectedQuarter"
+            (selectionChange)="onQuarterChange()"
+          >
+            @for (q of availableQuarters; track q.value) {
+              <mat-option [value]="q.value">{{ q.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <!-- Comparison Toggle -->
+      @if (periodMode !== 'ALL_TIME') {
+        <div class="comparison-toggle">
+          <mat-slide-toggle
+            [(ngModel)]="comparisonEnabled"
+            (change)="onComparisonToggle()"
+            color="primary"
+          >
+            Compare
+          </mat-slide-toggle>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Comparison Period Selector -->
+  @if (comparisonEnabled && periodMode !== 'ALL_TIME') {
+    <div class="comparison-bar">
+      <mat-icon class="compare-icon">compare_arrows</mat-icon>
+      <span class="compare-label" i18n>Comparing <strong>{{ periodLabel }}</strong> vs</span>
+
+      <mat-form-field appearance="outline" class="year-filter">
+        <mat-label i18n>Year</mat-label>
+        <mat-select
+          [(ngModel)]="comparisonYear"
+          (selectionChange)="onComparisonPeriodChange()"
+        >
+          @for (year of availableYears; track year) {
+            <mat-option [value]="year">{{ year }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      @if (periodMode === 'QUARTERLY') {
+        <mat-form-field appearance="outline" class="quarter-filter">
+          <mat-label i18n>Quarter</mat-label>
+          <mat-select
+            [(ngModel)]="comparisonQuarter"
+            (selectionChange)="onComparisonPeriodChange()"
+          >
+            @for (q of availableQuarters; track q.value) {
+              <mat-option [value]="q.value">{{ q.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+    </div>
+  }
+
+  <mat-tab-group
+    [selectedIndex]="activeTabIndex"
+    (selectedIndexChange)="onTabChange($event)"
+    animationDuration="200ms"
+    mat-stretch-tabs="false"
+  >
+    <!-- Tab 1: Portfolio Summary -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">account_balance</mat-icon>
+        <span i18n>Portfolio Summary</span>
+      </ng-template>
+
+      <!-- Comparison Delta Panel -->
+      @if (comparisonEnabled && portfolioDeltas.length > 0) {
+        <div class="comparison-panel">
+          <div class="comparison-panel-header">
+            <span class="period-badge primary-badge">{{ periodLabel }}</span>
+            <mat-icon>compare_arrows</mat-icon>
+            <span class="period-badge comparison-badge">{{ comparisonPeriodLabel }}</span>
+          </div>
+          <div class="delta-grid">
+            @for (d of portfolioDeltas; track d.label) {
+              <div class="delta-card" [class]="getDeltaClass(d.delta)">
+                <div class="delta-label">{{ d.label }}</div>
+                <div class="delta-values">
+                  <span class="delta-primary">
+                    @switch (d.format) {
+                      @case ('currency') { {{ d.primaryValue | gfAccountingNumber }} }
+                      @case ('multiple') { {{ d.primaryValue | number:'1.2-2' }}x }
+                      @case ('percent') {
+                        @if (d.primaryValue !== null) {
+                          {{ d.primaryValue | percent:'1.2-2' }}
+                        } @else { N/A }
+                      }
+                    }
+                  </span>
+                  <span class="delta-vs">vs</span>
+                  <span class="delta-comparison">
+                    @switch (d.format) {
+                      @case ('currency') { {{ d.comparisonValue | gfAccountingNumber }} }
+                      @case ('multiple') { {{ d.comparisonValue | number:'1.2-2' }}x }
+                      @case ('percent') {
+                        @if (d.comparisonValue !== null) {
+                          {{ d.comparisonValue | percent:'1.2-2' }}
+                        } @else { N/A }
+                      }
+                    }
+                  </span>
+                </div>
+                <div class="delta-change" [class]="getDeltaClass(d.delta)">
+                  @if (d.delta !== null) {
+                    <mat-icon class="delta-icon">{{ getDeltaIcon(d.delta) }}</mat-icon>
+                    @switch (d.format) {
+                      @case ('currency') { {{ d.delta | gfAccountingNumber }} }
+                      @case ('multiple') { {{ d.delta | number:'1.2-2' }} }
+                      @case ('percent') { {{ d.delta | percent:'1.2-2' }} }
+                    }
+                    @if (d.deltaPercent !== null) {
+                      <span class="delta-pct">({{ d.deltaPercent | percent:'1.1-1' }})</span>
+                    }
+                  } @else {
+                    <span>—</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (isLoadingPortfolio) {
+        <div class="loading-container">
+          <mat-spinner diameter="48"></mat-spinner>
+        </div>
+      }
+
+      @if (!isLoadingPortfolio && portfolioSummary) {
+        @if (portfolioSummary.entities.length === 0) {
+          <div class="empty-state">
+            <mat-icon>info_outline</mat-icon>
+            <p i18n>No portfolio data available for {{ periodLabel }}.</p>
+          </div>
+        } @else {
+          <div class="table-container">
+            <table mat-table [dataSource]="portfolioSummary.entities" class="performance-table">
+              <ng-container matColumnDef="entityName">
+                <th mat-header-cell *matHeaderCellDef i18n>Entity</th>
+                <td mat-cell *matCellDef="let row" class="entity-name clickable">{{ row.entityName }}</td>
+                <td mat-footer-cell *matFooterCellDef class="totals-label"><strong i18n>All Entities</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="originalCommitment">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Original Commitment</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.originalCommitment | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.originalCommitment | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="percentCalled">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>% Called</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.percentCalled !== null) {
+                    {{ row.percentCalled / 100 | percent:'1.0-0' }}
+                  } @else {
+                    N/A
+                  }
+                </td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value">
+                  <strong>
+                    @if (portfolioSummary.totals.percentCalled !== null) {
+                      {{ portfolioSummary.totals.percentCalled / 100 | percent:'1.0-0' }}
+                    } @else {
+                      N/A
+                    }
+                  </strong>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="unfundedCommitment">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Unfunded</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.unfundedCommitment | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.unfundedCommitment | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="paidIn">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Paid-In</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.paidIn | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.paidIn | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="distributions">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Distributions</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.distributions | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.distributions | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="residualUsed">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Residual Used</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.residualUsed | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.residualUsed | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="dpi">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>DPI</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.dpi | number:'1.2-2' }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.dpi | number:'1.2-2' }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="rvpi">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>RVPI</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.rvpi | number:'1.2-2' }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.rvpi | number:'1.2-2' }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="tvpi">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>TVPI</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.tvpi | number:'1.2-2' }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ portfolioSummary.totals.tvpi | number:'1.2-2' }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="irr">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>IRR</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.irr !== null) {
+                    {{ row.irr | percent:'1.2-2' }}
+                  } @else {
+                    N/A
+                  }
+                </td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value">
+                  <strong>
+                    @if (portfolioSummary.totals.irr !== null) {
+                      {{ portfolioSummary.totals.irr | percent:'1.2-2' }}
+                    } @else {
+                      N/A
+                    }
+                  </strong>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="portfolioSummaryColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: portfolioSummaryColumns;"
+                  class="clickable-row"
+                  (click)="onEntityRowClick(row.entityId)"></tr>
+              <tr mat-footer-row *matFooterRowDef="portfolioSummaryColumns" class="totals-row"></tr>
+            </table>
+          </div>
+        }
+      }
+    </mat-tab>
+
+    <!-- Tab 2: Asset Class Summary -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">pie_chart</mat-icon>
+        <span i18n>Asset Class Summary</span>
+      </ng-template>
+
+      <!-- Comparison Delta Panel -->
+      @if (comparisonEnabled && assetClassDeltas.length > 0) {
+        <div class="comparison-panel">
+          <div class="comparison-panel-header">
+            <span class="period-badge primary-badge">{{ periodLabel }}</span>
+            <mat-icon>compare_arrows</mat-icon>
+            <span class="period-badge comparison-badge">{{ comparisonPeriodLabel }}</span>
+          </div>
+          <div class="delta-grid">
+            @for (d of assetClassDeltas; track d.label) {
+              <div class="delta-card" [class]="getDeltaClass(d.delta)">
+                <div class="delta-label">{{ d.label }}</div>
+                <div class="delta-values">
+                  <span class="delta-primary">
+                    @switch (d.format) {
+                      @case ('currency') { {{ d.primaryValue | gfAccountingNumber }} }
+                      @case ('multiple') { {{ d.primaryValue | number:'1.2-2' }}x }
+                      @case ('percent') {
+                        @if (d.primaryValue !== null) {
+                          {{ d.primaryValue | percent:'1.2-2' }}
+                        } @else { N/A }
+                      }
+                    }
+                  </span>
+                  <span class="delta-vs">vs</span>
+                  <span class="delta-comparison">
+                    @switch (d.format) {
+                      @case ('currency') { {{ d.comparisonValue | gfAccountingNumber }} }
+                      @case ('multiple') { {{ d.comparisonValue | number:'1.2-2' }}x }
+                      @case ('percent') {
+                        @if (d.comparisonValue !== null) {
+                          {{ d.comparisonValue | percent:'1.2-2' }}
+                        } @else { N/A }
+                      }
+                    }
+                  </span>
+                </div>
+                <div class="delta-change" [class]="getDeltaClass(d.delta)">
+                  @if (d.delta !== null) {
+                    <mat-icon class="delta-icon">{{ getDeltaIcon(d.delta) }}</mat-icon>
+                    @switch (d.format) {
+                      @case ('currency') { {{ d.delta | gfAccountingNumber }} }
+                      @case ('multiple') { {{ d.delta | number:'1.2-2' }} }
+                      @case ('percent') { {{ d.delta | percent:'1.2-2' }} }
+                    }
+                    @if (d.deltaPercent !== null) {
+                      <span class="delta-pct">({{ d.deltaPercent | percent:'1.1-1' }})</span>
+                    }
+                  } @else {
+                    <span>—</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (isLoadingAssetClass) {
+        <div class="loading-container">
+          <mat-spinner diameter="48"></mat-spinner>
+        </div>
+      }
+
+      @if (!isLoadingAssetClass && assetClassSummary) {
+        @if (assetClassSummary.assetClasses.length === 0) {
+          <div class="empty-state">
+            <mat-icon>info_outline</mat-icon>
+            <p i18n>No asset class data available for {{ periodLabel }}.</p>
+          </div>
+        } @else {
+          <div class="table-container">
+            <table mat-table [dataSource]="assetClassSummary.assetClasses" class="performance-table">
+              <ng-container matColumnDef="assetClassLabel">
+                <th mat-header-cell *matHeaderCellDef i18n>Asset Class</th>
+                <td mat-cell *matCellDef="let row" class="asset-class-name clickable">{{ row.assetClassLabel }}</td>
+                <td mat-footer-cell *matFooterCellDef class="totals-label"><strong i18n>All Asset Classes</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="originalCommitment">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Original Commitment</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.originalCommitment | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.originalCommitment | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="percentCalled">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>% Called</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.percentCalled !== null) {
+                    {{ row.percentCalled / 100 | percent:'1.0-0' }}
+                  } @else {
+                    N/A
+                  }
+                </td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value">
+                  <strong>
+                    @if (assetClassSummary.totals.percentCalled !== null) {
+                      {{ assetClassSummary.totals.percentCalled / 100 | percent:'1.0-0' }}
+                    } @else {
+                      N/A
+                    }
+                  </strong>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="unfundedCommitment">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Unfunded</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.unfundedCommitment | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.unfundedCommitment | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="paidIn">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Paid-In</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.paidIn | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.paidIn | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="distributions">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Distributions</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.distributions | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.distributions | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="residualUsed">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Residual Used</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.residualUsed | gfAccountingNumber }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.residualUsed | gfAccountingNumber }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="dpi">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>DPI</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.dpi | number:'1.2-2' }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.dpi | number:'1.2-2' }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="rvpi">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>RVPI</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.rvpi | number:'1.2-2' }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.rvpi | number:'1.2-2' }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="tvpi">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>TVPI</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.tvpi | number:'1.2-2' }}</td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value"><strong>{{ assetClassSummary.totals.tvpi | number:'1.2-2' }}</strong></td>
+              </ng-container>
+
+              <ng-container matColumnDef="irr">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>IRR</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.irr !== null) {
+                    {{ row.irr | percent:'1.2-2' }}
+                  } @else {
+                    N/A
+                  }
+                </td>
+                <td mat-footer-cell *matFooterCellDef class="numeric totals-value">
+                  <strong>
+                    @if (assetClassSummary.totals.irr !== null) {
+                      {{ assetClassSummary.totals.irr | percent:'1.2-2' }}
+                    } @else {
+                      N/A
+                    }
+                  </strong>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="assetClassSummaryColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: assetClassSummaryColumns;"
+                  class="clickable-row"
+                  (click)="onAssetClassRowClick(row.assetClass)"></tr>
+              <tr mat-footer-row *matFooterRowDef="assetClassSummaryColumns" class="totals-row"></tr>
+            </table>
+          </div>
+        }
+      }
+    </mat-tab>
+
+    <!-- Tab 3: Activity Detail -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">receipt_long</mat-icon>
+        <span i18n>Activity Detail</span>
+      </ng-template>
+
+      <!-- Activity Filters -->
+      <div class="activity-filters">
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Entity</mat-label>
+          <mat-select [(ngModel)]="activityEntityFilter" (selectionChange)="onActivityFilterChange()">
+            <mat-option value="" i18n>All Entities</mat-option>
+            @if (activityDetail?.filters?.entities) {
+              @for (entity of activityDetail.filters.entities; track entity.id) {
+                <mat-option [value]="entity.id">{{ entity.name }}</mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Partnership</mat-label>
+          <mat-select [(ngModel)]="activityPartnershipFilter" (selectionChange)="onActivityFilterChange()">
+            <mat-option value="" i18n>All Partnerships</mat-option>
+            @if (activityDetail?.filters?.partnerships) {
+              @for (partnership of activityDetail.filters.partnerships; track partnership.id) {
+                <mat-option [value]="partnership.id">{{ partnership.name }}</mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Year</mat-label>
+          <mat-select [(ngModel)]="activityYearFilter" (selectionChange)="onActivityFilterChange()">
+            <mat-option [value]="null" i18n>All Years</mat-option>
+            @if (activityDetail?.filters?.years) {
+              @for (year of activityDetail.filters.years; track year) {
+                <mat-option [value]="year">{{ year }}</mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (isLoadingActivity) {
+        <div class="loading-container">
+          <mat-spinner diameter="48"></mat-spinner>
+        </div>
+      }
+
+      @if (!isLoadingActivity && activityDetail) {
+        @if (activityDetail.rows.length === 0) {
+          <div class="empty-state">
+            <mat-icon>info_outline</mat-icon>
+            <p i18n>No activity data available for the selected filters.</p>
+          </div>
+        } @else {
+          <div class="table-container activity-table-container">
+            <table mat-table [dataSource]="activityDetail.rows" class="activity-table">
+              <ng-container matColumnDef="year">
+                <th mat-header-cell *matHeaderCellDef i18n>Year</th>
+                <td mat-cell *matCellDef="let row">{{ row.year }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="entityName">
+                <th mat-header-cell *matHeaderCellDef i18n>Entity</th>
+                <td mat-cell *matCellDef="let row">{{ row.entityName }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="partnershipName">
+                <th mat-header-cell *matHeaderCellDef i18n>Partnership</th>
+                <td mat-cell *matCellDef="let row">{{ row.partnershipName }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="beginningBasis">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Beg Basis</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.beginningBasis | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="contributions">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Contributions</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.contributions | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="interest">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Interest</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.interest | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="dividends">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Dividends</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.dividends | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="capitalGains">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Cap Gains</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.capitalGains | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="remainingK1IncomeDed">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Remaining K-1</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.remainingK1IncomeDed | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalIncome">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Total Income</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.totalIncome | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="distributions">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Distributions</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.distributions | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="otherAdjustments">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Other Adj</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.otherAdjustments | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="endingTaxBasis">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Ending Tax Basis</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.endingTaxBasis | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="endingGLBalance">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Ending GL Bal</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.endingGLBalance !== null) {
+                    {{ row.endingGLBalance | gfAccountingNumber }}
+                  } @else {
+                    -
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="bookToTaxAdj">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Book-to-Tax Adj</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.bookToTaxAdj !== null) {
+                    {{ row.bookToTaxAdj | gfAccountingNumber }}
+                  } @else {
+                    -
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="endingK1CapitalAccount">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>K-1 Capital Acct</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.endingK1CapitalAccount !== null) {
+                    {{ row.endingK1CapitalAccount | gfAccountingNumber }}
+                  } @else {
+                    -
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="k1CapitalVsTaxBasisDiff">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>K-1 vs Tax Diff</th>
+                <td mat-cell *matCellDef="let row" class="numeric">
+                  @if (row.k1CapitalVsTaxBasisDiff !== null) {
+                    {{ row.k1CapitalVsTaxBasisDiff | gfAccountingNumber }}
+                  } @else {
+                    -
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="excessDistribution">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Excess Dist</th>
+                <td mat-cell *matCellDef="let row" class="numeric"
+                    [class.excess-distribution]="row.excessDistribution > 0">
+                  @if (row.excessDistribution > 0) {
+                    <strong>{{ row.excessDistribution | gfAccountingNumber }}</strong>
+                  } @else {
+                    {{ row.excessDistribution | gfAccountingNumber }}
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="negativeBasis">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Neg Basis?</th>
+                <td mat-cell *matCellDef="let row" class="numeric"
+                    [class.negative-basis-flag]="row.negativeBasis">
+                  {{ row.negativeBasis ? 'YES' : '' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="deltaEndingBasis">
+                <th mat-header-cell *matHeaderCellDef class="numeric" i18n>Δ Ending Basis</th>
+                <td mat-cell *matCellDef="let row" class="numeric">{{ row.deltaEndingBasis | gfAccountingNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="notes">
+                <th mat-header-cell *matHeaderCellDef i18n>Notes</th>
+                <td mat-cell *matCellDef="let row">{{ row.notes ?? '' }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="activityColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: activityColumns;"
+                  [class.negative-basis-row]="row.negativeBasis"></tr>
+            </table>
+          </div>
+
+          <mat-paginator
+            [length]="activityDetail.totalCount"
+            [pageIndex]="activityPageIndex"
+            [pageSize]="activityPageSize"
+            [pageSizeOptions]="[25, 50, 100]"
+            (page)="onActivityPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+        }
+      }
+    </mat-tab>
+  </mat-tab-group>
+</div>

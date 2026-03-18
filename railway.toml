@@ -1,0 +1,11 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+watchPatterns = ["apps/**", "libs/**", "prisma/**", "package.json", "package-lock.json"]
+
+[deploy]
+startCommand = "/ghostfolio/entrypoint.sh"
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3

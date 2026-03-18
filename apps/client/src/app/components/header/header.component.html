@@ -110,6 +110,19 @@
           >K-1 Documents</a
         >
       </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/portfolio-views"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'portfolio-views',
+            'text-decoration-underline': currentRoute === 'portfolio-views'
+          }"
+          >Portfolio Views</a
+        >
+      </li>
       @if (hasPermissionToAccessAdminControl) {
         <li class="list-inline-item">
           <a
@@ -350,6 +363,14 @@
             routerLink="/k-documents"
             [ngClass]="{ 'font-weight-bold': currentRoute === 'k-documents' }"
             >K-1 Documents</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/portfolio-views"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'portfolio-views' }"
+            >Portfolio Views</a
           >
           <a
             i18n

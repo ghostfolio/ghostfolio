@@ -25,6 +25,62 @@ export class FamilyOfficeController {
     });
   }
 
+  @Get('portfolio-summary')
+  @HasPermission(permissions.readEntity)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getPortfolioSummary(
+    @Query('quarter') quarter?: string,
+    @Query('valuationYear') valuationYear?: string
+  ) {
+    const year = valuationYear
+      ? parseInt(valuationYear, 10)
+      : new Date().getFullYear();
+
+    return this.familyOfficeService.getPortfolioSummary({
+      quarter: quarter ? parseInt(quarter, 10) : undefined,
+      userId: this.request.user.id,
+      valuationYear: year
+    });
+  }
+
+  @Get('asset-class-summary')
+  @HasPermission(permissions.readEntity)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getAssetClassSummary(
+    @Query('quarter') quarter?: string,
+    @Query('valuationYear') valuationYear?: string
+  ) {
+    const year = valuationYear
+      ? parseInt(valuationYear, 10)
+      : new Date().getFullYear();
+
+    return this.familyOfficeService.getAssetClassSummary({
+      quarter: quarter ? parseInt(quarter, 10) : undefined,
+      userId: this.request.user.id,
+      valuationYear: year
+    });
+  }
+
+  @Get('activity')
+  @HasPermission(permissions.readEntity)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getActivity(
+    @Query('entityId') entityId?: string,
+    @Query('partnershipId') partnershipId?: string,
+    @Query('year') year?: string,
+    @Query('skip') skip?: string,
+    @Query('take') take?: string
+  ) {
+    return this.familyOfficeService.getActivity({
+      entityId,
+      partnershipId,
+      skip: skip ? parseInt(skip, 10) : undefined,
+      take: take ? parseInt(take, 10) : undefined,
+      userId: this.request.user.id,
+      year: year ? parseInt(year, 10) : undefined
+    });
+  }
+
   @Get('report')
   @HasPermission(permissions.readEntity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)

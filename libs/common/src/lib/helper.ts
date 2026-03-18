@@ -34,11 +34,35 @@ import {
   locale
 } from './config';
 import { AssetProfileIdentifier, Benchmark } from './interfaces';
+import { FamilyOfficeAssetType } from './enums';
 import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
+
+export const FAMILY_OFFICE_ASSET_TYPE_LABELS: Record<
+  FamilyOfficeAssetType,
+  string
+> = {
+  [FamilyOfficeAssetType.REAL_ESTATE]: 'Real Estate',
+  [FamilyOfficeAssetType.VENTURE_CAPITAL]: 'Venture Capital',
+  [FamilyOfficeAssetType.PRIVATE_EQUITY]: 'Private Equity',
+  [FamilyOfficeAssetType.HEDGE_FUND]: 'Hedge Fund',
+  [FamilyOfficeAssetType.FIXED_INCOME]: 'Credit',
+  [FamilyOfficeAssetType.COMMODITY]: 'Natural Resources',
+  [FamilyOfficeAssetType.OTHER]: 'Other',
+  [FamilyOfficeAssetType.PUBLIC_EQUITY]: 'Public Equity',
+  [FamilyOfficeAssetType.ART_COLLECTIBLE]: 'Art & Collectibles',
+  [FamilyOfficeAssetType.CRYPTOCURRENCY]: 'Cryptocurrency',
+  [FamilyOfficeAssetType.CASH]: 'Cash'
+};
+
+export function getFamilyOfficeAssetTypeLabel(
+  assetType: FamilyOfficeAssetType
+): string {
+  return FAMILY_OFFICE_ASSET_TYPE_LABELS[assetType] ?? 'Other';
+}
 
 export function calculateBenchmarkTrend({
   days,

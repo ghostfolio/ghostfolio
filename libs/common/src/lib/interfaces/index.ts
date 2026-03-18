@@ -29,9 +29,16 @@ import type {
   IOwnership
 } from './entity.interface';
 import type {
+  IActivityDetail,
+  IActivityRow,
+  IAssetClassPerformanceRow,
+  IAssetClassSummary,
+  IEntityPerformanceRow,
   IFamilyOfficeDashboard,
   IFamilyOfficeReport,
-  IPerformanceMetrics
+  IPerformanceMetrics,
+  IPerformanceRow,
+  IPortfolioSummary
 } from './family-office.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
@@ -175,6 +182,11 @@ export {
   IEntityMembership,
   IEntityPortfolio,
   IEntityWithRelations,
+  IActivityDetail,
+  IActivityRow,
+  IAssetClassPerformanceRow,
+  IAssetClassSummary,
+  IEntityPerformanceRow,
   IFamilyOfficeDashboard,
   IFamilyOfficeReport,
   IKDocument,
@@ -187,6 +199,8 @@ export {
   IPartnershipPerformance,
   IPartnershipValuation,
   IPerformanceMetrics,
+  IPerformanceRow,
+  IPortfolioSummary,
   ExportResponse,
   Filter,
   FilterGroup,

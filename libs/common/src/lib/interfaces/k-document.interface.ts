@@ -21,6 +21,14 @@ export interface K1Data {
   alternativeMinimumTaxItems: number;
   distributionsCash: number;
   distributionsProperty: number;
+
+  // Tax basis tracking fields (optional for backward compatibility)
+  beginningTaxBasis?: number;
+  endingTaxBasis?: number;
+  endingGLBalance?: number;
+  k1CapitalAccount?: number;
+  otherAdjustments?: number;
+  activityNotes?: string;
 }
 
 export interface IKDocumentAllocation {

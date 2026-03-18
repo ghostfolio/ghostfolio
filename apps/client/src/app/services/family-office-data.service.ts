@@ -1,4 +1,6 @@
 import {
+  IActivityDetail,
+  IAssetClassSummary,
   IDistributionListResponse,
   IEntity,
   IEntityPortfolio,
@@ -9,7 +11,8 @@ import {
   IPartnership,
   IPartnershipDetail,
   IPartnershipPerformance,
-  IPartnershipValuation
+  IPartnershipValuation,
+  IPortfolioSummary
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -359,6 +362,87 @@ export class FamilyOfficeDataService {
   public fetchDashboard(): Observable<IFamilyOfficeDashboard> {
     return this.http.get<IFamilyOfficeDashboard>(
       '/api/v1/family-office/dashboard'
+    );
+  }
+
+  public fetchPortfolioSummary(params?: {
+    quarter?: number;
+    valuationYear?: number;
+  }): Observable<IPortfolioSummary> {
+    let httpParams = new HttpParams();
+
+    if (params?.valuationYear) {
+      httpParams = httpParams.set(
+        'valuationYear',
+        params.valuationYear.toString()
+      );
+    }
+
+    if (params?.quarter) {
+      httpParams = httpParams.set('quarter', params.quarter.toString());
+    }
+
+    return this.http.get<IPortfolioSummary>(
+      '/api/v1/family-office/portfolio-summary',
+      { params: httpParams }
+    );
+  }
+
+  public fetchAssetClassSummary(params?: {
+    quarter?: number;
+    valuationYear?: number;
+  }): Observable<IAssetClassSummary> {
+    let httpParams = new HttpParams();
+
+    if (params?.valuationYear) {
+      httpParams = httpParams.set(
+        'valuationYear',
+        params.valuationYear.toString()
+      );
+    }
+
+    if (params?.quarter) {
+      httpParams = httpParams.set('quarter', params.quarter.toString());
+    }
+
+    return this.http.get<IAssetClassSummary>(
+      '/api/v1/family-office/asset-class-summary',
+      { params: httpParams }
+    );
+  }
+
+  public fetchActivity(params?: {
+    entityId?: string;
+    partnershipId?: string;
+    skip?: number;
+    take?: number;
+    year?: number;
+  }): Observable<IActivityDetail> {
+    let httpParams = new HttpParams();
+
+    if (params?.entityId) {
+      httpParams = httpParams.set('entityId', params.entityId);
+    }
+
+    if (params?.partnershipId) {
+      httpParams = httpParams.set('partnershipId', params.partnershipId);
+    }
+
+    if (params?.year) {
+      httpParams = httpParams.set('year', params.year.toString());
+    }
+
+    if (params?.skip != null) {
+      httpParams = httpParams.set('skip', params.skip.toString());
+    }
+
+    if (params?.take != null) {
+      httpParams = httpParams.set('take', params.take.toString());
+    }
+
+    return this.http.get<IActivityDetail>(
+      '/api/v1/family-office/activity',
+      { params: httpParams }
     );
   }
 

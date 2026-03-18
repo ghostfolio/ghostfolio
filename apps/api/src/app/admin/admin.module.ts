@@ -16,6 +16,7 @@ import { Module } from '@nestjs/common';
 
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
+import { DevSeedService } from './dev-seed.service';
 import { QueueModule } from './queue/queue.module';
 
 @Module({
@@ -36,7 +37,7 @@ import { QueueModule } from './queue/queue.module';
     TransformDataSourceInRequestModule
   ],
   controllers: [AdminController],
-  providers: [AdminService],
+  providers: [AdminService, DevSeedService],
   exports: [AdminService]
 })
 export class AdminModule {}
