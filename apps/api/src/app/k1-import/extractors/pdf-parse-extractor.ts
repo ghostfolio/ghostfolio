@@ -339,14 +339,17 @@ export class PdfParseExtractor implements K1Extractor {
         r.valueType !== 'checkbox'
     );
 
-    for (const region of partIIIRegions) {
-      if (region.hasSubtype) {
-        // T008-T009: Subtype pairing
-        this.extractSubtypeField(dataItems, fields, region);
-      } else {
-        // Simple value matching
-        this.extractSimpleField(dataItems, fields, region);
-      }
+    // CRITICAL: Process subtype regions FIRST (right column boxes 14-21
+    // and left column boxes 11-13). This prevents left-column simple
+    // regions from stealing right-column subtype codes at x~455.
+    const subtypeRegions = partIIIRegions.filter((r) => r.hasSubtype);
+    const simpleRegions = partIIIRegions.filter((r) => !r.hasSubtype);
+
+    for (const region of subtypeRegions) {
+      this.extractSubtypeField(dataItems, fields, region);
+    }
+    for (const region of simpleRegions) {
+      this.extractSimpleField(dataItems, fields, region);
     }
   }
 
@@ -508,8 +511,8 @@ export class PdfParseExtractor implements K1Extractor {
     const taxYearItems: DataItem[] = [];
     for (const item of dataItems) {
       if (item.matched) continue;
-      // Tax year region: near top of page (y > 760), x around 245-310
-      if (item.y > 745 && item.x > 200 && item.x < 350) {
+      // Tax year region: near top of page, x around 200-350
+      if (item.y > 710 && item.x > 200 && item.x < 350) {
         // Look for 2-digit or 4-digit year fragments
         if (/^\d{2,4}$/.test(item.text)) {
           taxYearItems.push(item);
@@ -617,6 +620,8 @@ export class PdfParseExtractor implements K1Extractor {
 
   // ==========================================================================
   // T015-T018 (US3): Section J/K/L/M/N extraction
+  // Uses closest-center assignment so closely-spaced rows (Section L has
+  // 12pt row spacing, smaller than POSITION_TOLERANCE=15) get correct mapping.
   // ==========================================================================
   private extractSections(
     dataItems: DataItem[],
@@ -632,39 +637,15 @@ export class PdfParseExtractor implements K1Extractor {
 
     for (const category of sectionCategories) {
       const regions = K1_POSITION_REGIONS.filter(
-        (r) => r.fieldCategory === category
+        (r) =>
+          r.fieldCategory === category &&
+          r.valueType !== 'checkbox'
       );
-      for (const region of regions) {
-        if (region.valueType === 'checkbox') {
-          // Handled in extractCheckboxes
-          continue;
-        }
-        this.extractSimpleField(dataItems, fields, region);
-      }
-    }
-  }
 
-  // ==========================================================================
-  // T019-T020 (US4): Checkbox extraction
-  // ==========================================================================
-  private extractCheckboxes(
-    dataItems: DataItem[],
-    fields: K1ExtractedField[],
-    metadata: K1ExtractionResult['metadata']
-  ): void {
-    const checkboxRegions = K1_POSITION_REGIONS.filter(
-      (r) => r.valueType === 'checkbox'
-    );
+      const assignments = this.assignItemsToRegions(dataItems, regions);
 
-    for (const region of checkboxRegions) {
-      const item = this.findBestItemInRegion(dataItems, region);
-      const isChecked =
-        item !== null &&
-        (item.text.toUpperCase() === 'X' ||
-          item.text.toUpperCase() === '✓' ||
-          item.text.toUpperCase() === '✗');
-
-      if (isChecked && item) {
+      for (const [region, item] of assignments) {
+        const numericValue = this.parseNumericValue(item.text);
         const { confidence, confidenceLevel } = this.computeConfidence(
           item.x,
           item.y,
@@ -675,25 +656,74 @@ export class PdfParseExtractor implements K1Extractor {
           boxNumber: region.boxNumber,
           label: region.label,
           customLabel: null,
-          rawValue: 'X',
-          numericValue: null,
+          rawValue: item.text,
+          numericValue,
           confidence,
           confidenceLevel,
           isUserEdited: false,
           isReviewed: false,
           subtype: null,
-          fieldCategory: 'CHECKBOX',
-          isCheckbox: true
+          fieldCategory: region.fieldCategory,
+          isCheckbox: false
         });
 
         item.matched = true;
+      }
+    }
+  }
 
-        // Set metadata flags for known checkboxes
-        if (region.fieldId === 'FINAL_K1') {
-          metadata.isFinal = true;
-        } else if (region.fieldId === 'AMENDED_K1') {
-          metadata.isAmended = true;
-        }
+  // ==========================================================================
+  // T019-T020 (US4): Checkbox extraction
+  // Uses closest-center assignment to prevent adjacent checkbox regions
+  // (e.g., G_GENERAL/G_LIMITED, M_YES/M_NO) from stealing each other's marks.
+  // ==========================================================================
+  private extractCheckboxes(
+    dataItems: DataItem[],
+    fields: K1ExtractedField[],
+    metadata: K1ExtractionResult['metadata']
+  ): void {
+    const checkboxRegions = K1_POSITION_REGIONS.filter(
+      (r) => r.valueType === 'checkbox'
+    );
+
+    const assignments = this.assignItemsToRegions(dataItems, checkboxRegions);
+
+    for (const [region, item] of assignments) {
+      const isChecked =
+        item.text.toUpperCase() === 'X' ||
+        item.text.toUpperCase() === '✓' ||
+        item.text.toUpperCase() === '✗';
+
+      if (!isChecked) continue;
+
+      const { confidence, confidenceLevel } = this.computeConfidence(
+        item.x,
+        item.y,
+        region
+      );
+
+      fields.push({
+        boxNumber: region.boxNumber,
+        label: region.label,
+        customLabel: null,
+        rawValue: 'X',
+        numericValue: null,
+        confidence,
+        confidenceLevel,
+        isUserEdited: false,
+        isReviewed: false,
+        subtype: null,
+        fieldCategory: 'CHECKBOX',
+        isCheckbox: true
+      });
+
+      item.matched = true;
+
+      // Set metadata flags for known checkboxes
+      if (region.fieldId === 'FINAL_K1') {
+        metadata.isFinal = true;
+      } else if (region.fieldId === 'AMENDED_K1') {
+        metadata.isAmended = true;
       }
     }
   }
@@ -732,8 +762,13 @@ export class PdfParseExtractor implements K1Extractor {
   }
 
   // ==========================================================================
-  // T005: Position matching helper
+  // T005: Position matching helpers
   // ==========================================================================
+
+  /**
+   * Find the single best (closest to center) unmatched item in a region.
+   * Used for isolated fields where only one region is being checked.
+   */
   private findBestItemInRegion(
     dataItems: DataItem[],
     region: K1PositionRegion
@@ -764,6 +799,62 @@ export class PdfParseExtractor implements K1Extractor {
     }
 
     return bestItem;
+  }
+
+  /**
+   * Closest-center assignment across a batch of regions.
+   * Builds all (item, region, distance) candidates, then greedily assigns
+   * by smallest distance first. Each region gets at most one item and each
+   * item is used at most once. This prevents adjacent/overlapping regions
+   * (e.g., G_GENERAL/G_LIMITED at boundary x=178, Section L rows 12pt apart)
+   * from stealing each other's data via tolerance-window overlap.
+   */
+  private assignItemsToRegions(
+    dataItems: DataItem[],
+    regions: K1PositionRegion[]
+  ): Map<K1PositionRegion, DataItem> {
+    const candidates: {
+      item: DataItem;
+      region: K1PositionRegion;
+      distance: number;
+    }[] = [];
+
+    for (const item of dataItems) {
+      if (item.matched) continue;
+      for (const region of regions) {
+        if (
+          item.x >= region.xMin - POSITION_TOLERANCE &&
+          item.x <= region.xMax + POSITION_TOLERANCE &&
+          item.y >= region.yMin - POSITION_TOLERANCE &&
+          item.y <= region.yMax + POSITION_TOLERANCE
+        ) {
+          const cx = (region.xMin + region.xMax) / 2;
+          const cy = (region.yMin + region.yMax) / 2;
+          const dx = Math.abs(item.x - cx);
+          const dy = Math.abs(item.y - cy);
+          candidates.push({
+            item,
+            region,
+            distance: Math.sqrt(dx * dx + dy * dy)
+          });
+        }
+      }
+    }
+
+    // Sort by distance — closest matches first
+    candidates.sort((a, b) => a.distance - b.distance);
+
+    // Greedy assignment: each region and item used at most once
+    const result = new Map<K1PositionRegion, DataItem>();
+    const usedItems = new Set<DataItem>();
+
+    for (const { item, region } of candidates) {
+      if (usedItems.has(item) || result.has(region)) continue;
+      result.set(region, item);
+      usedItems.add(item);
+    }
+
+    return result;
   }
 
   // ==========================================================================
