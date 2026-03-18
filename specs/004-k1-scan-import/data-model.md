@@ -1,10 +1,10 @@
 # Data Model: K-1 PDF Scan Import
 
-**Phase 1 Output** | **Date**: 2026-03-18
+**Phase 1 Output** | **Date**: 2026-03-18 | **Updated**: 2026-03-18 (post-clarification)
 
 ## Overview
 
-This feature adds 2 new Prisma models and 1 new enum to support K-1 PDF scanning, import session tracking, and cell mapping configuration. It extends the existing models from spec 001-family-office-transform (KDocument, Distribution, Document, PartnershipMembership) with automatic creation from scanned data.
+This feature adds 3 new Prisma models and 1 new enum to support K-1 PDF scanning, import session tracking, cell mapping configuration, and aggregation rules. It extends the existing models from spec 001-family-office-transform (KDocument, Distribution, Document, PartnershipMembership) with automatic creation from scanned data.
 
 ### Entity Relationship Diagram (Conceptual)
 
@@ -18,9 +18,12 @@ User (existing)
       │    └── [K-1 allocations computed at confirm time]
       ├── KDocument[] (existing from 001)
       │    └── Distribution[] (auto-created from Box 19, existing from 001)
-      └── CellMapping[] (new model, per-partnership overrides)
+      ├── CellMapping[] (new model, per-partnership overrides)
+      └── CellAggregationRule[] (new model, per-partnership or global)
+           └── [computed totals derived dynamically from raw box values]
 
 Global CellMapping (partnershipId = null) ── IRS default box definitions
+Global CellAggregationRule (partnershipId = null) ── default summary rules
 ```
 
 ## New Enum
@@ -93,16 +96,40 @@ A configuration defining how K-1 box numbers map to labels. Supports a global IR
 
 **Unique constraint**: `@@unique([partnershipId, boxNumber])` — one mapping per box per partnership (or per box globally when partnershipId is null).
 
+### CellAggregationRule
+
+A named rule that combines multiple K-1 cells into a computed summary value. Computed totals are NOT stored — they are derived dynamically from raw box values each time they are displayed (FR-039).
+
+| Field           | Type       | Constraints                            | Description                                                     |
+| --------------- | ---------- | -------------------------------------- | --------------------------------------------------------------- |
+| `id`            | `String`   | PK, UUID, auto-generated               | Unique identifier                                               |
+| `partnershipId` | `String?`  | FK → Partnership.id, optional, indexed | Partnership this rule applies to (null = global default)        |
+| `name`          | `String`   | Required                               | Display name (e.g., "Income Summary", "Total Capital Gains")    |
+| `operation`     | `String`   | Required, Default: "SUM"               | Aggregation operation (SUM for V1; future: AVG, MIN, MAX)       |
+| `sourceCells`   | `Json`     | Required                               | Array of box numbers to aggregate (e.g., ["1", "2", "3"])      |
+| `sortOrder`     | `Int`      | Required                               | Display order in the aggregation summary section                |
+| `createdAt`     | `DateTime` | Default: now()                         | Creation timestamp                                              |
+| `updatedAt`     | `DateTime` | Auto-updated                           | Last modification timestamp                                     |
+
+**Relations**:
+
+- `partnership` → `Partnership?` (many-to-one, optional, cascade delete)
+
+**Unique constraint**: `@@unique([partnershipId, name])` — one rule per name per partnership (or globally).
+
+**Note**: No `computedValue` column. Totals are always computed on-the-fly from the KDocument's raw box values using the `sourceCells` array and `operation`. This ensures summaries auto-update when underlying values change (e.g., estimated→final K-1 transition).
+
 ## Modifications to Existing Models
 
 ### Partnership (from spec 001)
 
 Add back-references — no column changes:
 
-| New Field         | Type                 | Description                          |
-| ----------------- | -------------------- | ------------------------------------ |
-| `importSessions`  | `K1ImportSession[]`  | Import attempts for this partnership |
-| `cellMappings`    | `CellMapping[]`      | Custom cell mapping configurations   |
+| New Field            | Type                     | Description                          |
+| -------------------- | ------------------------ | ------------------------------------ |
+| `importSessions`     | `K1ImportSession[]`      | Import attempts for this partnership |
+| `cellMappings`       | `CellMapping[]`          | Custom cell mapping configurations   |
+| `aggregationRules`   | `CellAggregationRule[]`  | Custom aggregation rule definitions  |
 
 ### KDocument (from spec 001)
 
@@ -131,8 +158,11 @@ interface K1ExtractionResult {
     isFinal: boolean;
   };
 
-  /** Extracted box values */
+  /** Extracted box values — mapped to known cells */
   fields: K1ExtractedField[];
+
+  /** Extracted values that didn't match any configured cell mapping */
+  unmappedItems: K1UnmappedItem[];
 
   /** Overall extraction confidence (0.0–1.0) */
   overallConfidence: number;
@@ -168,6 +198,32 @@ interface K1ExtractedField {
 
   /** Whether user has manually edited this value */
   isUserEdited: boolean;
+
+  /** Whether user has explicitly reviewed this field (required for medium/low confidence) */
+  isReviewed: boolean;
+}
+
+interface K1UnmappedItem {
+  /** Raw text label extracted from the PDF */
+  rawLabel: string;
+
+  /** Raw text value extracted */
+  rawValue: string;
+
+  /** Parsed numeric value (null if unparseable) */
+  numericValue: number | null;
+
+  /** Confidence score (0.0–1.0) */
+  confidence: number;
+
+  /** Page number where this was extracted */
+  pageNumber: number;
+
+  /** User action: 'assigned' (to a cell), 'discarded', or null (pending) */
+  resolution: 'assigned' | 'discarded' | null;
+
+  /** If assigned, the box number it was assigned to */
+  assignedBoxNumber: string | null;
 }
 ```
 
@@ -239,3 +295,6 @@ The standard box definitions seeded as global CellMapping records (partnershipId
 6. **Confirmation prerequisites**: Can only confirm when status is VERIFIED, partnership has at least one active member, and verifiedData is not null.
 7. **Duplicate KDocument check**: Before creating a KDocument, check for existing (partnershipId, type=K1, taxYear). If found, require explicit user decision (update existing or reject).
 8. **Distribution allocation**: Box 19a/19b amounts are allocated to members by ownership percentage as of the tax year's fiscal year end. Allocation amounts must sum exactly to the partnership-level total (handle rounding by adjusting the largest member's allocation).
+9. **Aggregation rule source cells**: All box numbers in `sourceCells` must reference valid cell mapping entries. If a source cell has no value in the KDocument, it contributes 0 to the aggregate.
+10. **Unmapped items resolution**: All unmapped items must be resolved (assigned to a cell or discarded) before the import session can transition to VERIFIED status.
+11. **Review requirement**: All medium and low-confidence fields must have `isReviewed: true` before confirmation is allowed (FR-035). High-confidence fields are auto-set to `isReviewed: true`.

@@ -1,6 +1,6 @@
 # API Contracts: K-1 Import
 
-**Phase 1 Output** | **Date**: 2026-03-18
+**Phase 1 Output** | **Date**: 2026-03-18 | **Updated**: 2026-03-18 (post-clarification)
 
 ## Base Path
 
@@ -136,7 +136,8 @@ Submit user-verified/edited extraction data. Transitions status from EXTRACTED t
       "numericValue": 52340,
       "confidence": 0.95,
       "confidenceLevel": "HIGH",
-      "isUserEdited": false
+      "isUserEdited": false,
+      "isReviewed": true
     },
     {
       "boxNumber": "11",
@@ -146,7 +147,19 @@ Submit user-verified/edited extraction data. Transitions status from EXTRACTED t
       "numericValue": 8200,
       "confidence": 0.72,
       "confidenceLevel": "MEDIUM",
-      "isUserEdited": true
+      "isUserEdited": true,
+      "isReviewed": true
+    }
+  ],
+  "unmappedItems": [
+    {
+      "rawLabel": "State tax adjustment",
+      "rawValue": "$1,200",
+      "numericValue": 1200,
+      "confidence": 0.65,
+      "pageNumber": 3,
+      "resolution": "discarded",
+      "assignedBoxNumber": null
     }
   ]
 }
@@ -160,6 +173,8 @@ Submit user-verified/edited extraction data. Transitions status from EXTRACTED t
 | ------ | ----------------------------------------------- |
 | 400    | Import session is not in EXTRACTED status        |
 | 400    | Fields array is empty                            |
+| 400    | Medium/low-confidence fields not all reviewed (isReviewed must be true) |
+| 400    | Unmapped items not all resolved (each must be 'assigned' or 'discarded') |
 | 404    | Import session not found                         |
 
 ---
@@ -379,3 +394,132 @@ Reset a partnership's cell mappings to IRS defaults (deletes all custom mappings
 | `partnershipId` | `string` | Yes      | Partnership UUID   |
 
 **Response**: `200 OK`
+
+---
+
+## Aggregation Rule Endpoints
+
+### GET /api/v1/cell-mapping/aggregation-rules
+
+Get aggregation rules for a partnership (with global defaults for partnerships without custom rules).
+
+**Permission**: `readKDocument`
+
+**Query Parameters**:
+
+| Param           | Type     | Required | Description                                    |
+| --------------- | -------- | -------- | ---------------------------------------------- |
+| `partnershipId` | `string` | No       | Partnership UUID (omit for global defaults)     |
+
+**Response**: `200 OK`
+
+```json
+[
+  {
+    "id": "uuid",
+    "partnershipId": null,
+    "name": "Total Ordinary Income",
+    "operation": "SUM",
+    "sourceCells": ["1"],
+    "sortOrder": 1
+  },
+  {
+    "id": "uuid",
+    "partnershipId": null,
+    "name": "Total Capital Gains",
+    "operation": "SUM",
+    "sourceCells": ["8", "9a", "9b", "9c", "10"],
+    "sortOrder": 2
+  },
+  {
+    "id": "uuid",
+    "partnershipId": null,
+    "name": "Total Deductions",
+    "operation": "SUM",
+    "sourceCells": ["12", "13"],
+    "sortOrder": 3
+  }
+]
+```
+
+---
+
+### PUT /api/v1/cell-mapping/aggregation-rules
+
+Create or update aggregation rules for a partnership.
+
+**Permission**: `updateKDocument`
+
+**Request**: `application/json`
+
+```json
+{
+  "partnershipId": "uuid",
+  "rules": [
+    {
+      "name": "Income Summary",
+      "operation": "SUM",
+      "sourceCells": ["1", "2", "3", "4b", "5", "6a", "7"]
+    },
+    {
+      "name": "Total Capital Gains",
+      "operation": "SUM",
+      "sourceCells": ["8", "9a", "10"]
+    }
+  ]
+}
+```
+
+**Response**: `200 OK` — Updated rules array
+
+**Errors**:
+
+| Status | Condition                                            |
+| ------ | ---------------------------------------------------- |
+| 400    | Source cell box number not found in cell mappings     |
+| 400    | Duplicate rule name for the same partnership          |
+| 400    | Empty sourceCells array                               |
+
+---
+
+### GET /api/v1/cell-mapping/aggregation-rules/compute
+
+Compute aggregation values for a specific KDocument's data. Returns the dynamically calculated totals.
+
+**Permission**: `readKDocument`
+
+**Query Parameters**:
+
+| Param           | Type     | Required | Description                                    |
+| --------------- | -------- | -------- | ---------------------------------------------- |
+| `kDocumentId`   | `string` | Yes      | KDocument UUID to compute aggregates for        |
+| `partnershipId` | `string` | No       | Override which partnership's rules to use        |
+
+**Response**: `200 OK`
+
+```json
+[
+  {
+    "ruleId": "uuid",
+    "name": "Income Summary",
+    "operation": "SUM",
+    "sourceCells": ["1", "2", "3", "4b", "5", "6a", "7"],
+    "computedValue": 187520.00,
+    "breakdown": {
+      "1": 52340,
+      "2": 35000,
+      "3": 0,
+      "4b": 15000,
+      "5": 8200,
+      "6a": 72980,
+      "7": 4000
+    }
+  }
+]
+```
+
+**Errors**:
+
+| Status | Condition                   |
+| ------ | --------------------------- |
+| 404    | KDocument not found         |

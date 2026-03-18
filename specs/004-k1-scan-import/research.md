@@ -152,3 +152,54 @@ AZURE_DOCUMENT_INTELLIGENCE_KEY       — Azure API key
 **Alternatives Considered**:
 - `pdfjs-dist` directly instead of `pdf-parse` — more boilerplate, `pdf-parse` wraps it with a simpler API
 - Only cloud OCR — loses the self-hosted story and adds cost for digital PDFs
+
+---
+
+## Decision 10: Cell Aggregation Rules — Dynamic Computation
+
+**Decision**: Persist only aggregation rule definitions (name, source cells, operation). Compute totals dynamically from raw K-1 box values at display time. Do NOT store computed totals.
+
+**Rationale**:
+- K-1 values can change during the import lifecycle (estimated → final transitions, manual edits after confirmation)
+- Storing computed totals creates a denormalization risk — stale aggregates when underlying values change
+- Computation is trivial (summing a handful of numbers) with no performance concern at family office scale
+- Keeps a single source of truth: the raw box values in K1Data
+- Aggregation rules are displayed on both the verification screen (FR-033) and KDocument detail view (FR-036)
+
+**Alternatives Considered**:
+- Persist computed totals alongside raw data — creates stale data risk, requires update triggers
+- Persist both (snapshot + live) for audit — adds complexity V1 doesn't need; audit trail exists in import session history
+
+---
+
+## Decision 11: Unmapped Items Handling
+
+**Decision**: Display extracted values that don't match any configured cell mapping in a separate "Unmapped Items" section on the verification screen. Administrator can assign to an existing cell, create a new custom cell, or discard.
+
+**Rationale**:
+- OCR/extraction may pull supplemental schedule items, footnotes, state-specific addenda
+- Silently discarding loses potentially important data
+- Auto-creating cells for every unmatched value creates noise
+- Explicit user decision preserves data integrity while keeping mapped cells clean
+- Assigned unmapped items update the cell mapping for future imports (learning effect)
+
+**Alternatives Considered**:
+- Silent discard — loses data, violates user's expectation of completeness
+- Auto-create custom cells — too noisy; PDF footnotes and headers would create junk cells
+
+---
+
+## Decision 12: Verification Auto-Accept Strategy
+
+**Decision**: Auto-accept (pre-check) high-confidence values on the verification screen. Require explicit review (acknowledge or edit) for medium and low-confidence values before allowing confirmation.
+
+**Rationale**:
+- V1 is "partially manual, partially automated" per user intent
+- High-confidence values (≥ 0.85) from digital PDFs are reliably accurate (90%+ per SC-002)
+- Forcing explicit review of every cell wastes time on correct values
+- Blocking confirmation until medium/low-confidence fields are reviewed catches the errors
+- All values remain visible and editable — user can override any pre-accepted value
+
+**Alternatives Considered**:
+- Every cell requires explicit accept — too slow for 15+ fields, doesn't match "partially automated" intent
+- Spot-check model (everything auto-accepted) — too risky for tax data; OCR errors would go unreviewed

@@ -1,6 +1,6 @@
 # Quickstart: K-1 PDF Scan Import
 
-**Phase 1 Output** | **Date**: 2026-03-18
+**Phase 1 Output** | **Date**: 2026-03-18 | **Updated**: 2026-03-18 (post-clarification)
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ npm install -D @types/pdf-parse
 
 ## Database Migration
 
-After adding the new Prisma models (`K1ImportSession`, `CellMapping`, `K1ImportStatus` enum):
+After adding the new Prisma models (`K1ImportSession`, `CellMapping`, `CellAggregationRule`, `K1ImportStatus` enum):
 
 ```bash
 npx prisma db push          # Development: sync schema
@@ -36,7 +36,7 @@ npx prisma db push          # Development: sync schema
 npx prisma migrate dev      # Create a migration file
 ```
 
-Seed the default IRS cell mappings (28 rows with partnershipId = null) via the existing seed mechanism or a dedicated seed script.
+Seed the default IRS cell mappings (28 rows with partnershipId = null) and default aggregation rules (e.g., "Total Ordinary Income", "Total Capital Gains", "Total Deductions") via the existing seed mechanism or a dedicated seed script.
 
 ## Key Files to Create
 
@@ -58,12 +58,13 @@ app/k1-import/
 │   └── tesseract-extractor.ts       # Tier 2 fallback: tesseract.js OCR
 ├── k1-field-mapper.service.ts       # Maps raw extraction → K1ExtractedField[]
 ├── k1-allocation.service.ts         # Allocates K-1 amounts to members by ownership %
-└── k1-confidence.service.ts         # Computes confidence scores with validation heuristics
+├── k1-confidence.service.ts         # Computes confidence scores with validation heuristics
+└── k1-aggregation.service.ts        # Dynamically computes aggregation summaries from rules
 
 app/cell-mapping/
 ├── cell-mapping.module.ts           # NestJS module
-├── cell-mapping.controller.ts       # CRUD for cell mappings
-└── cell-mapping.service.ts          # Cell mapping business logic + seed data
+├── cell-mapping.controller.ts       # CRUD for cell mappings + aggregation rules
+└── cell-mapping.service.ts          # Cell mapping + aggregation rule business logic + seed data
 ```
 
 ### Shared Types (libs/common/src/lib/)
@@ -87,7 +88,7 @@ pages/k1-import/
 ├── k1-import-page.scss
 ├── k1-import-page.routes.ts
 ├── k1-verification/
-│   ├── k1-verification.component.ts # Verification/edit screen
+│   ├── k1-verification.component.ts # Verification/edit screen (mapped + unmapped + aggregations)
 │   ├── k1-verification.html
 │   └── k1-verification.scss
 └── k1-confirmation/
@@ -96,7 +97,7 @@ pages/k1-import/
     └── k1-confirmation.scss
 
 pages/cell-mapping/
-├── cell-mapping-page.component.ts   # Cell mapping configuration UI
+├── cell-mapping-page.component.ts   # Cell mapping + aggregation rule configuration UI
 ├── cell-mapping-page.html
 └── cell-mapping-page.routes.ts
 
@@ -108,13 +109,18 @@ services/
 
 1. **Upload**: User selects PDF → `POST /api/v1/k1-import/upload` → session created with status PROCESSING
 2. **Extract**: Backend detects PDF type (digital vs. scanned) → routes to appropriate extractor → status becomes EXTRACTED
-3. **Review**: Frontend polls/fetches session → displays verification screen with extracted fields, confidence indicators
-4. **Edit**: User corrects values, overrides labels → `PUT /api/v1/k1-import/:id/verify` → status becomes VERIFIED
+3. **Review**: Frontend polls/fetches session → displays verification screen with:
+   - **Mapped cells**: extracted fields with confidence indicators. High-confidence values are pre-accepted. Medium/low-confidence values require explicit review (acknowledge or edit).
+   - **Unmapped items**: separate section for values that didn't match any cell. User assigns to a cell or discards.
+   - **Aggregation summaries**: dynamically computed from mapped values using aggregation rules. Recalculate live when cell values are edited.
+4. **Verify**: User reviews all medium/low fields and resolves unmapped items → `PUT /api/v1/k1-import/:id/verify` → status becomes VERIFIED
 5. **Confirm**: User clicks "Confirm & Save" → `POST /api/v1/k1-import/:id/confirm` → KDocument + Distributions + Document created → status becomes CONFIRMED
 
 ## Testing Strategy
 
-- **Unit tests**: Extractors (pdf-parse, azure, tesseract), field mapper, confidence scoring, allocation math
+- **Unit tests**: Extractors (pdf-parse, azure, tesseract), field mapper, confidence scoring, allocation math, aggregation computation
 - **Integration tests**: Full upload → extract → verify → confirm flow with test PDF fixtures
 - **Test fixtures**: Include sample K-1 PDFs (digital and scanned) in `test/import/` directory
 - **Allocation accuracy**: Verify rounding behavior — allocated amounts must sum exactly to partnership total
+- **Aggregation tests**: Verify dynamic computation from rules, auto-recalculation on value edit, behavior when source cells are empty
+- **Review enforcement**: Verify confirmation blocked when medium/low-confidence fields not reviewed or unmapped items unresolved
