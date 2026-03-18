@@ -62,15 +62,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Implement pdf-parse extractor (Tier 1 — digital PDFs with regex-based box extraction) in apps/api/src/app/k1-import/extractors/pdf-parse-extractor.ts
-- [ ] T015 [P] [US1] Implement Azure Document Intelligence extractor (Tier 2 — scanned PDFs with key-value pair extraction) in apps/api/src/app/k1-import/extractors/azure-extractor.ts
-- [ ] T016 [P] [US1] Implement tesseract.js OCR extractor (Tier 2 fallback — self-hosted scanned PDF extraction) in apps/api/src/app/k1-import/extractors/tesseract-extractor.ts
-- [ ] T017 [P] [US1] Implement K1 confidence scoring service (three-level HIGH/MEDIUM/LOW with validation heuristics per research.md Decision 5) in apps/api/src/app/k1-import/k1-confidence.service.ts
-- [ ] T018 [US1] Implement K1 field mapper service (raw extraction → K1ExtractedField[] using cell mapping configuration, PDF type detection heuristic) in apps/api/src/app/k1-import/k1-field-mapper.service.ts
-- [ ] T019 [P] [US1] Create upload DTO (file, partnershipId, taxYear with validation decorators) in apps/api/src/app/k1-import/dto/upload-k1.dto.ts
-- [ ] T020 [US1] Implement K1 import service upload and extraction orchestration (PDF validation FR-003/FR-028, type detection, extractor routing, session lifecycle) in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T021 [US1] Implement K1 import controller with POST /api/v1/k1-import/upload (multipart) and GET /api/v1/k1-import/:id endpoints in apps/api/src/app/k1-import/k1-import.controller.ts
-- [ ] T022 [US1] Create K1 import page component (PDF upload UI with partnership selector, tax year input, upload progress, extraction status polling) in apps/client/src/app/pages/k1-import/k1-import-page.component.ts
+- [X] T014 [P] [US1] Implement pdf-parse extractor (Tier 1 — digital PDFs with regex-based box extraction) in apps/api/src/app/k1-import/extractors/pdf-parse-extractor.ts
+- [X] T015 [P] [US1] Implement Azure Document Intelligence extractor (Tier 2 — scanned PDFs with key-value pair extraction) in apps/api/src/app/k1-import/extractors/azure-extractor.ts
+- [X] T016 [P] [US1] Implement tesseract.js OCR extractor (Tier 2 fallback — self-hosted scanned PDF extraction) in apps/api/src/app/k1-import/extractors/tesseract-extractor.ts
+- [X] T017 [P] [US1] Implement K1 confidence scoring service (three-level HIGH/MEDIUM/LOW with validation heuristics per research.md Decision 5) in apps/api/src/app/k1-import/k1-confidence.service.ts
+- [X] T018 [US1] Implement K1 field mapper service (raw extraction → K1ExtractedField[] using cell mapping configuration, PDF type detection heuristic) in apps/api/src/app/k1-import/k1-field-mapper.service.ts
+- [X] T019 [P] [US1] Create upload DTO (file, partnershipId, taxYear with validation decorators) in apps/api/src/app/k1-import/dto/upload-k1.dto.ts
+- [X] T020 [US1] Implement K1 import service upload and extraction orchestration (PDF validation FR-003/FR-028, type detection, extractor routing, session lifecycle) in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T021 [US1] Implement K1 import controller with POST /api/v1/k1-import/upload (multipart) and GET /api/v1/k1-import/:id endpoints in apps/api/src/app/k1-import/k1-import.controller.ts
+- [X] T022 [US1] Create K1 import page component (PDF upload UI with partnership selector, tax year input, upload progress, extraction status polling) in apps/client/src/app/pages/k1-import/k1-import-page.component.ts
 
 **Checkpoint**: At this point, User Story 1 should be fully functional — PDF upload triggers extraction and results are retrievable via GET /:id
 

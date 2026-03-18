@@ -1,0 +1,99 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center">K-1 PDF Import</h1>
+
+      @if (error) {
+        <div class="alert alert-danger mb-3">
+          {{ error }}
+        </div>
+      }
+
+      @if (!sessionId) {
+        <!-- Upload Form -->
+        <div class="upload-form mx-auto">
+          <div class="mb-3">
+            <mat-form-field class="w-100">
+              <mat-label>Partnership</mat-label>
+              <mat-select [(ngModel)]="selectedPartnershipId">
+                @for (p of partnerships; track p.id) {
+                  <mat-option [value]="p.id">{{ p.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="mb-3">
+            <mat-form-field class="w-100">
+              <mat-label>Tax Year</mat-label>
+              <mat-select [(ngModel)]="taxYear">
+                @for (y of taxYearOptions; track y) {
+                  <mat-option [value]="y">{{ y }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="mb-3">
+            <div class="upload-dropzone text-center p-4"
+                 (click)="fileInput.click()"
+                 (dragover)="$event.preventDefault()"
+                 (drop)="$event.preventDefault(); onFileSelected($event)">
+              <input #fileInput
+                     accept="application/pdf"
+                     hidden
+                     type="file"
+                     (change)="onFileSelected($event)" />
+
+              @if (selectedFile) {
+                <ion-icon name="document-text-outline" size="large"></ion-icon>
+                <p class="mt-2 mb-0">{{ selectedFile.name }}</p>
+                <small class="text-muted">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</small>
+              } @else {
+                <ion-icon name="cloud-upload-outline" size="large"></ion-icon>
+                <p class="mt-2 mb-0">Click or drag a K-1 PDF file here</p>
+                <small class="text-muted">Maximum 25 MB</small>
+              }
+            </div>
+          </div>
+
+          <button
+            [disabled]="!selectedFile || !selectedPartnershipId || !taxYear || isUploading"
+            class="w-100"
+            color="primary"
+            mat-flat-button
+            (click)="uploadK1()">
+            @if (isUploading) {
+              Uploading...
+            } @else {
+              Upload & Scan K-1
+            }
+          </button>
+        </div>
+      } @else {
+        <!-- Extraction Progress -->
+        <div class="processing-status text-center mx-auto">
+          <h3>Processing K-1</h3>
+
+          @if (extractionStatus === 'Processing...' || extractionStatus === 'PROCESSING') {
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <p class="mt-3">Extracting data from your K-1 PDF...</p>
+            <p class="text-muted">This usually takes less than 30 seconds.</p>
+          } @else if (extractionStatus === 'EXTRACTED') {
+            <p class="text-success">Extraction complete! Redirecting to verification...</p>
+          } @else if (extractionStatus === 'FAILED') {
+            <p class="text-danger">Extraction failed.</p>
+          }
+
+          <button
+            class="mt-3"
+            color="warn"
+            mat-stroked-button
+            (click)="resetForm()">
+            Cancel & Start Over
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

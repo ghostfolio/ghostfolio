@@ -1,3 +1,4 @@
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 
 import { Module } from '@nestjs/common';
@@ -17,7 +18,7 @@ import { TesseractExtractor } from './extractors/tesseract-extractor';
 @Module({
   controllers: [K1ImportController],
   exports: [K1ImportService],
-  imports: [CellMappingModule, PrismaModule, UploadModule],
+  imports: [CellMappingModule, ConfigurationModule, PrismaModule, UploadModule],
   providers: [
     AzureExtractor,
     K1AggregationService,

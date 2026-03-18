@@ -18,7 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { CellMappingService } from './cell-mapping.service';
 
-@Controller('cell-mapping')
+@Controller('api/v1/cell-mapping')
 export class CellMappingController {
   public constructor(
     private readonly cellMappingService: CellMappingService,
