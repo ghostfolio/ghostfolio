@@ -14,25 +14,23 @@
 1. Run `npm install`
 1. Run `docker compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `npm run database:setup` to initialize the database schema
-1. Start the [server](#start-server) and the [client](#start-client)
+1. Start the [development environment](#start-development-environment) (recommended) or start [server](#start-server) and [client](#start-client) separately
 1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
-### Start Server
+### Start Development Environment
+
+#### Parallel Development (Recommended)
+
+Run `npm run dev` to start both server and client simultaneously with hot reload:
+
+#### English (Default)
+
+- Client: https://localhost:4200/en
 
 #### Debug
 
 Run `npm run watch:server` and click _Debug API_ in [Visual Studio Code](https://code.visualstudio.com)
-
-#### Serve
-
-Run `npm run start:server`
-
-### Start Client
-
-#### English (Default)
-
-Run `npm run start:client` and open https://localhost:4200/en in your browser.
 
 #### Other Languages
 
