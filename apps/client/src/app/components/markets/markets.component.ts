@@ -18,8 +18,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  CUSTOM_ELEMENTS_SCHEMA,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
