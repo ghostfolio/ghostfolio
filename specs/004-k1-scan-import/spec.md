@@ -35,7 +35,7 @@ After the K-1 PDF is scanned, the administrator sees a verification screen showi
 
 **Acceptance Scenarios**:
 
-1. **Given** a scanned K-1 with extracted values, **When** the verification screen loads, **Then** each extracted value shows the box number, label, extracted amount, and a confidence score (high/medium/low).
+1. **Given** a scanned K-1 with extracted values, **When** the verification screen loads, **Then** each extracted value shows the box number, label, extracted amount, and a confidence score (high/medium/low). High-confidence values are pre-accepted; medium/low-confidence values require explicit review before confirmation is allowed.
 2. **Given** the verification screen, **When** the administrator edits an extracted value (e.g., changes Box 1 from $50,000 to $52,000), **Then** the corrected value is reflected immediately and will be used when saving.
 3. **Given** the verification screen, **When** the administrator overrides a cell name (e.g., renames "Box 11 - Other income" to "Box 11 - Section 1256 contracts"), **Then** the custom label is saved alongside the value.
 4. **Given** a low-confidence extraction for a specific box, **When** the verification screen displays it, **Then** the field is visually highlighted to draw the administrator's attention for manual review.
@@ -107,6 +107,7 @@ The administrator can view a history of all K-1 imports for a partnership, inclu
 - What happens when the extracted tax year does not match the expected year? The system must highlight the discrepancy and allow the user to confirm or override the tax year.
 - What happens when ownership percentages have changed during the tax year? The system must use the ownership percentage as of the K-1's tax year end date for allocation calculations.
 - What happens when the upload exceeds the maximum file size (e.g., large scanned documents)? The system must enforce a file size limit and provide a clear error message.
+- What happens when extracted values don't match any configured cell mapping (e.g., footnotes, supplemental schedule items, state-specific addenda)? The system displays them in a separate "Unmapped Items" section on the verification screen where the administrator can assign them to a cell or discard them.
 
 ## Requirements _(mandatory)_
 
@@ -122,11 +123,14 @@ The administrator can view a history of all K-1 imports for a partnership, inclu
 
 **Verification & Manual Review**
 
-- **FR-006**: System MUST display a verification screen after extraction showing each extracted value with its mapped K-1 box number, label, value, and confidence level (high/medium/low).
-- **FR-007**: System MUST allow the administrator to edit any extracted value before confirmation.
+- **FR-006**: System MUST display a verification screen after extraction showing each extracted value with its mapped K-1 box number, label, value, and confidence level (high/medium/low). High-confidence values MUST be pre-accepted (shown as checked/approved) by default.
+- **FR-007**: System MUST allow the administrator to edit any extracted value before confirmation, including overriding pre-accepted high-confidence values.
 - **FR-008**: System MUST allow the administrator to override/rename any cell label on the verification screen.
-- **FR-009**: System MUST visually highlight low-confidence extractions to draw attention for manual review.
+- **FR-009**: System MUST visually highlight medium and low-confidence extractions as requiring explicit review. Low-confidence fields MUST be flagged with a warning indicator; medium-confidence fields MUST be flagged with a review indicator.
 - **FR-010**: System MUST require explicit confirmation ("Confirm & Save") before creating any model objects from extracted data.
+- **FR-035**: System MUST NOT allow confirmation until all medium and low-confidence fields have been explicitly reviewed (acknowledged or edited) by the administrator. High-confidence fields do not require explicit review but remain editable.
+- **FR-037**: When extracted data contains values that do not match any configured cell in the mapping, the system MUST display them in a separate "Unmapped Items" section on the verification screen, distinct from the mapped cells.
+- **FR-038**: For each unmapped item, the administrator MUST be able to either assign it to an existing or new cell mapping, or explicitly discard it. Discarded unmapped items are not persisted to the KDocument.
 - **FR-011**: System MUST allow the administrator to cancel/discard the extraction without saving any data.
 
 **Automatic Model Object Creation**
@@ -144,6 +148,16 @@ The administrator can view a history of all K-1 imports for a partnership, inclu
 - **FR-019**: System MUST allow the administrator to rename/relabel any cell in the mapping.
 - **FR-020**: System MUST support saving cell mapping configurations per partnership for reuse across tax years.
 - **FR-021**: System MUST allow resetting a partnership's cell mapping to the IRS default.
+
+**Cell Aggregation Rules**
+
+- **FR-030**: System MUST allow the administrator to define aggregation rules that combine multiple K-1 cells into computed summary values (e.g., "Total Ordinary Income" = Box 1, "Total Capital Gains" = Box 8a + Box 9a + Box 10).
+- **FR-031**: Each aggregation rule MUST specify a name, a list of source cell references (box numbers), and an aggregation operation (sum for V1; additional operations deferred).
+- **FR-032**: Aggregation rules MUST be saved per partnership (or globally) alongside cell mappings and reused across tax years.
+- **FR-033**: On the verification screen, computed summary values MUST be displayed alongside individual cell values, clearly distinguished as derived/aggregated rather than directly extracted.
+- **FR-034**: When an individual cell value is edited during verification, any aggregation that includes that cell MUST automatically recalculate.
+- **FR-036**: On the KDocument detail view, aggregated summary values MUST be displayed alongside the raw box values. The summary section shows each named aggregation rule with its computed total, so the administrator can reference combined values (e.g., "Income Summary", "Total Capital Gains") when reviewing any K-1 record after import.
+- **FR-039**: Aggregation summary values MUST be computed dynamically from the raw box values each time they are displayed (on the verification screen and KDocument detail view). Only the aggregation rules (name, source cells, operation) are persisted — not the computed totals. This ensures summaries auto-update when underlying box values change (e.g., during estimated-to-final K-1 transitions).
 
 **Import History & Audit**
 
@@ -163,6 +177,7 @@ The administrator can view a history of all K-1 imports for a partnership, inclu
 
 - **K1ImportSession**: A record of a single K-1 PDF import attempt. Tracks the uploaded file, extraction status (processing/extracted/verified/confirmed/cancelled), raw extraction results, verified results after user edits, and the resulting KDocument if confirmed. Linked to a Partnership and a User. Enables import history and re-processing.
 - **CellMapping**: A configuration defining how K-1 box numbers map to labels and extraction regions. Has a default IRS-standard set and supports per-partnership customization. Key attributes: box number, label, description, custom flag, partnership (optional — null means global default).
+- **CellAggregationRule**: A named rule that combines multiple CellMapping entries into a computed summary value. Key attributes: name (e.g., "Income Summary"), source cell references (list of box numbers), aggregation operation (SUM for V1), partnership (optional — null means global default). Computed totals are NOT persisted — they are derived dynamically from raw box values each time. Displayed on the verification screen and KDocument detail view as derived rows.
 - **KDocument** (existing from 001-family-office-transform): Extended to be auto-created from verified scan data rather than only manual entry. The structured `data` JSON field stores the K1Data interface values.
 - **Distribution** (existing from 001-family-office-transform): Auto-created from Box 19 data during K-1 import confirmation, allocated to members by ownership percentage.
 - **Document** (existing from 001-family-office-transform): Created automatically for the uploaded K-1 PDF and linked to the KDocument.
@@ -181,6 +196,16 @@ The administrator can view a history of all K-1 imports for a partnership, inclu
 - **SC-008**: Re-processing a previously uploaded K-1 PDF produces results within 30 seconds and shows the updated extraction on the verification screen.
 - **SC-009**: Cell mapping customizations persist across sessions and are correctly applied to subsequent K-1 imports for the same partnership.
 - **SC-010**: Import history accurately reflects all import attempts, with correct status and links to resulting KDocuments.
+
+## Clarifications
+
+### Session 2026-03-18
+
+- Q: How should data points be combined — fixed IRS categories, custom administrator-defined aggregations, or cross-partnership rollup? → A: Each K-1 box maps 1:1 to a data point, AND the administrator can define custom aggregation rules that combine multiple cells into computed summary values (e.g., "Income Summary" = Box 1 + Box 2 + Box 3). Both individual cell values and aggregated summaries are displayed.
+- Q: Should the verification screen require explicit review of every cell, or auto-accept high-confidence values? → A: Auto-accept high-confidence values (pre-checked); user must explicitly review medium/low-confidence fields only. High-confidence values remain visible and editable but do not block confirmation.
+- Q: Where should aggregated summary values be visible after import confirmation? → A: On the KDocument detail view, alongside raw box values. The administrator can always reference combined values when viewing any K-1 record, not just during import.
+- Q: What happens with extracted data that doesn't match any configured cell mapping? → A: Show unmatched values in a separate "Unmapped Items" section on the verification screen. Administrator can assign them to a cell or discard. No silent data loss.
+- Q: Should aggregation summary values be persisted or computed dynamically? → A: Computed dynamically from raw box values each time. Only the aggregation rules are persisted, not the totals. This ensures summaries auto-update when underlying values change (e.g., estimated→final transitions).
 
 ## Assumptions
 
