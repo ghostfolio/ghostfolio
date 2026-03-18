@@ -23,6 +23,8 @@ export class ConfigurationService {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
       API_KEY_ALPHA_VANTAGE: str({ default: '' }),
+      AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT: str({ default: '' }),
+      AZURE_DOCUMENT_INTELLIGENCE_KEY: str({ default: '' }),
       API_KEY_BETTER_UPTIME: str({ default: '' }),
       API_KEY_COINGECKO_DEMO: str({ default: '' }),
       API_KEY_COINGECKO_PRO: str({ default: '' }),

@@ -27,12 +27,12 @@
 
 **Purpose**: Install dependencies, define database schema, create shared types and configuration
 
-- [ ] T001 Install npm dependencies: pdf-parse, @azure/ai-form-recognizer, tesseract.js, @types/pdf-parse in package.json
-- [ ] T002 [P] Add K1ImportStatus enum (PROCESSING, EXTRACTED, VERIFIED, CONFIRMED, CANCELLED, FAILED), K1ImportSession model, CellMapping model, and CellAggregationRule model to prisma/schema.prisma
-- [ ] T003 [P] Create shared K-1 TypeScript interfaces (K1ExtractionResult, K1ExtractedField, K1UnmappedItem, K1ConfirmationRequest) in libs/common/src/lib/interfaces/k1-import.interface.ts
-- [ ] T004 [P] Register AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT and AZURE_DOCUMENT_INTELLIGENCE_KEY environment variables in apps/api/src/app/configuration/configuration.service.ts
-- [ ] T005 Run Prisma migration to create K-1 import tables and K1ImportStatus enum
-- [ ] T006 [P] Create shared DTOs (CreateK1ImportDto, VerifyK1ImportDto, ConfirmK1ImportDto) in libs/common/src/lib/dtos/k1-import/
+- [X] T001 Install npm dependencies: pdf-parse, @azure/ai-form-recognizer, tesseract.js, @types/pdf-parse in package.json
+- [X] T002 [P] Add K1ImportStatus enum (PROCESSING, EXTRACTED, VERIFIED, CONFIRMED, CANCELLED, FAILED), K1ImportSession model, CellMapping model, and CellAggregationRule model to prisma/schema.prisma
+- [X] T003 [P] Create shared K-1 TypeScript interfaces (K1ExtractionResult, K1ExtractedField, K1UnmappedItem, K1ConfirmationRequest) in libs/common/src/lib/interfaces/k1-import.interface.ts
+- [X] T004 [P] Register AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT and AZURE_DOCUMENT_INTELLIGENCE_KEY environment variables in apps/api/src/app/configuration/configuration.service.ts
+- [X] T005 Run Prisma migration to create K-1 import tables and K1ImportStatus enum
+- [X] T006 [P] Create shared DTOs (CreateK1ImportDto, VerifyK1ImportDto, ConfirmK1ImportDto) in libs/common/src/lib/dtos/k1-import/
 
 ---
 
