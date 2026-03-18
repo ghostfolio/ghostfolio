@@ -1,0 +1,43 @@
+K-1 Test Fixture: Digital PDF
+================================
+This file documents the expected test data for a digital (text-based) K-1 PDF.
+Replace this file with an actual PDF for integration testing.
+
+Expected Extraction Method: pdf-parse (Tier 1)
+Expected Confidence: HIGH (>= 0.85) for all fields
+
+--- Form Header ---
+Schedule K-1 (Form 1065)
+Partner's Share of Income, Deductions, Credits, etc.
+Tax Year: 2024
+Partnership EIN: 12-3456789
+Partnership Name: Test Investment Partners, LP
+Partner Name: Test Entity LLC
+Partner EIN: 98-7654321
+
+--- Part III: Partner's Share ---
+Box 1  - Ordinary business income (loss):   125,000
+Box 2  - Net rental real estate income (loss):   -15,000
+Box 3  - Other net rental income (loss):   0
+Box 4  - Guaranteed payments for services:   50,000
+Box 5  - Interest income:   8,500
+Box 6a - Ordinary dividends:   12,000
+Box 6b - Qualified dividends:   9,500
+Box 7  - Royalties:   0
+Box 8  - Net short-term capital gain (loss):   3,200
+Box 9a - Net long-term capital gain (loss):   45,000
+Box 9b - Collectibles (28%) gain (loss):   0
+Box 9c - Unrecaptured section 1250 gain:   2,100
+Box 10 - Net section 1231 gain (loss):   0
+Box 11 - Other income (loss):   1,500
+Box 12 - Section 179 deduction:   0
+Box 13 - Other deductions:   -4,200
+Box 14 - Self-employment earnings (loss):   50,000
+Box 15 - Credits:   0
+Box 16 - Foreign transactions:   0
+Box 17 - Alternative minimum tax (AMT) items:   0
+Box 18 - Tax-exempt income and nondeductible expenses:   0
+Box 19a - Distributions (cash):   75,000
+Box 19b - Distributions (property):   0
+Box 20 - Other information:   0
+Box 21 - Foreign taxes paid or accrued:   0

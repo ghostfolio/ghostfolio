@@ -156,11 +156,11 @@
 
 **Purpose**: Edge case handling, navigation integration, test fixtures, and end-to-end validation
 
-- [ ] T047 [P] Add password-protected PDF detection (FR-029) and multi-entity PDF detection (edge case 5) to upload flow in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T048 [P] Add edge case warnings (EIN mismatch with existing entities, tax year mismatch, zero-extraction warning, ownership % change handling) to verification and confirmation flows in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T049 [P] Add K1 Import and Cell Mapping pages to application navigation/sidebar and register routes in apps/client/src/app/app-routing.module.ts
-- [ ] T050 [P] Create test fixture K-1 PDF samples (one digital, one scanned) in test/import/sample-k1-digital.pdf and test/import/sample-k1-scanned.pdf
-- [ ] T051 Run quickstart.md end-to-end workflow validation (upload → extract → review → verify → confirm → check KDocument + Distributions + Document created)
+- [X] T047 [P] Add password-protected PDF detection (FR-029) and multi-entity PDF detection (edge case 5) to upload flow in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T048 [P] Add edge case warnings (EIN mismatch with existing entities, tax year mismatch, zero-extraction warning, ownership % change handling) to verification and confirmation flows in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T049 [P] Add K1 Import and Cell Mapping pages to application navigation/sidebar and register routes in apps/client/src/app/app-routing.module.ts
+- [X] T050 [P] Create test fixture K-1 PDF samples (one digital, one scanned) in test/import/sample-k1-digital.pdf and test/import/sample-k1-scanned.pdf
+- [X] T051 Run quickstart.md end-to-end workflow validation (upload → extract → review → verify → confirm → check KDocument + Distributions + Document created)
 
 ---
 

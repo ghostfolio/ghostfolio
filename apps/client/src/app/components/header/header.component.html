@@ -115,6 +115,32 @@
           class="d-none d-sm-block"
           i18n
           mat-flat-button
+          routerLink="/k1-import"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'k1-import',
+            'text-decoration-underline': currentRoute === 'k1-import'
+          }"
+          >K-1 Import</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/cell-mapping"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'cell-mapping',
+            'text-decoration-underline': currentRoute === 'cell-mapping'
+          }"
+          >Cell Mapping</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
           routerLink="/portfolio-views"
           [ngClass]="{
             'font-weight-bold': currentRoute === 'portfolio-views',
@@ -363,6 +389,22 @@
             routerLink="/k-documents"
             [ngClass]="{ 'font-weight-bold': currentRoute === 'k-documents' }"
             >K-1 Documents</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/k1-import"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'k1-import' }"
+            >K-1 Import</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/cell-mapping"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'cell-mapping' }"
+            >Cell Mapping</a
           >
           <a
             class="d-flex d-sm-none"

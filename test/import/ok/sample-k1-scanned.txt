@@ -1,0 +1,50 @@
+K-1 Test Fixture: Scanned PDF
+================================
+This file documents the expected test data for a scanned (image-based) K-1 PDF.
+Replace this file with an actual scanned PDF for integration testing.
+
+Expected Extraction Method: azure (Tier 2) or tesseract (Tier 2 fallback)
+Expected Confidence: MEDIUM (0.60-0.84) for most fields due to OCR uncertainty
+
+--- Form Header ---
+Schedule K-1 (Form 1065)
+Partner's Share of Income, Deductions, Credits, etc.
+Tax Year: 2023
+Partnership EIN: 55-1234567
+Partnership Name: Scanned Capital Fund, LP
+Partner Name: Member Entity Inc.
+Partner EIN: 77-9876543
+
+--- Part III: Partner's Share ---
+Box 1  - Ordinary business income (loss):   -32,500
+Box 2  - Net rental real estate income (loss):   0
+Box 3  - Other net rental income (loss):   0
+Box 4  - Guaranteed payments for services:   0
+Box 5  - Interest income:   2,100
+Box 6a - Ordinary dividends:   5,800
+Box 6b - Qualified dividends:   4,200
+Box 7  - Royalties:   0
+Box 8  - Net short-term capital gain (loss):   -1,500
+Box 9a - Net long-term capital gain (loss):   18,750
+Box 9b - Collectibles (28%) gain (loss):   0
+Box 9c - Unrecaptured section 1250 gain:   0
+Box 10 - Net section 1231 gain (loss):   0
+Box 11 - Other income (loss):   0
+Box 12 - Section 179 deduction:   0
+Box 13 - Other deductions:   -2,800
+Box 14 - Self-employment earnings (loss):   0
+Box 15 - Credits:   0
+Box 16 - Foreign transactions:   0
+Box 17 - Alternative minimum tax (AMT) items:   0
+Box 18 - Tax-exempt income and nondeductible expenses:   750
+Box 19a - Distributions (cash):   25,000
+Box 19b - Distributions (property):   0
+Box 20 - Other information:   0
+Box 21 - Foreign taxes paid or accrued:   350
+
+--- OCR Simulation Notes ---
+This fixture simulates a scanned PDF where:
+- Some numeric values may have OCR artifacts (e.g., "l" vs "1", "O" vs "0")
+- Confidence scores should reflect Tier 2 extraction uncertainty
+- The Azure DI or tesseract extractors handle these ambiguities
+- Expected to generate MEDIUM confidence for most fields

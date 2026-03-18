@@ -252,13 +252,30 @@ export class K1ImportService {
         partnershipId
       );
 
-      // Update session with extraction results
+      // Generate edge case warnings (FR-029, Edge Cases 3-6)
+      const warnings = await this.generateWarnings(
+        sessionId,
+        completeResult,
+        partnershipId,
+        buffer
+      );
+
+      if (warnings.length > 0) {
+        this.logger.warn(
+          `Session ${sessionId}: ${warnings.length} warning(s) detected: ${warnings.join('; ')}`
+        );
+      }
+
+      // Update session with extraction results and warnings
       await this.prismaService.k1ImportSession.update({
         where: { id: sessionId },
         data: {
           status: K1ImportStatus.EXTRACTED,
           extractionMethod: method,
-          rawExtraction: completeResult as any
+          rawExtraction: {
+            ...completeResult,
+            warnings
+          } as any
         }
       });
 
@@ -561,6 +578,42 @@ export class K1ImportService {
       );
     }
 
+    // Edge Case 7: Ownership % change handling
+    // Compare current memberships with tax year end memberships
+    const confirmWarnings: string[] = [];
+    const currentMemberships =
+      await this.prismaService.partnershipMembership.findMany({
+        where: {
+          partnershipId: session.partnershipId,
+          isActive: true
+        },
+        include: { entity: true }
+      });
+
+    for (const taxYearMember of memberships) {
+      const currentMember = currentMemberships.find(
+        (cm) => cm.entityId === taxYearMember.entityId
+      );
+      if (!currentMember) {
+        confirmWarnings.push(
+          `Member ${taxYearMember.entity?.name || taxYearMember.entityId} was active at tax year end (${session.taxYear}) but is no longer an active member.`
+        );
+      } else if (
+        (currentMember as any).ownershipPercent !==
+        (taxYearMember as any).ownershipPercent
+      ) {
+        confirmWarnings.push(
+          `Ownership for ${taxYearMember.entity?.name || taxYearMember.entityId} changed from ${(taxYearMember as any).ownershipPercent}% (tax year ${session.taxYear}) to ${(currentMember as any).ownershipPercent}% (current). Allocations use the tax year end percentage.`
+        );
+      }
+    }
+
+    if (confirmWarnings.length > 0) {
+      this.logger.warn(
+        `Session ${sessionId}: Confirm warnings: ${confirmWarnings.join('; ')}`
+      );
+    }
+
     // FR-016: Check for existing KDocument (duplicate detection)
     const existingKDocument = await this.prismaService.kDocument.findUnique({
       where: {
@@ -705,7 +758,8 @@ export class K1ImportService {
       })),
       document: session.documentId
         ? { id: session.documentId, type: 'K1', name: session.fileName }
-        : null
+        : null,
+      warnings: confirmWarnings
     };
   }
 
@@ -728,5 +782,117 @@ export class K1ImportService {
       }
       // Other parse errors are not password-related, continue
     }
+  }
+
+  /**
+   * Detect if a PDF contains multiple K-1 forms for different entities (Edge Case 5).
+   * Counts occurrences of "Schedule K-1" headers and unique EINs to detect multi-entity PDFs.
+   */
+  private async detectMultiEntityPdf(buffer: Buffer): Promise<{
+    isMultiEntity: boolean;
+    entityCount: number;
+  }> {
+    try {
+      const pdfParse = await import('pdf-parse');
+      const parsed = await pdfParse.default(buffer);
+      const text = parsed.text || '';
+
+      // Count "Schedule K-1" header occurrences
+      const k1HeaderMatches = text.match(/Schedule\s+K-1/gi) || [];
+      // Count unique EINs (XX-XXXXXXX format)
+      const einMatches = text.match(/\d{2}-\d{7}/g) || [];
+      const uniqueEins = new Set(einMatches);
+
+      // If multiple K-1 headers or >2 unique EINs (partnership + multiple partners)
+      const entityCount = Math.max(
+        Math.floor(k1HeaderMatches.length / 2), // K-1 header appears in header and footer
+        uniqueEins.size > 2 ? uniqueEins.size - 1 : 1
+      );
+
+      return {
+        isMultiEntity: entityCount > 1,
+        entityCount: Math.max(entityCount, 1)
+      };
+    } catch {
+      return { isMultiEntity: false, entityCount: 1 };
+    }
+  }
+
+  /**
+   * Generate edge case warnings based on extraction results and session context.
+   * Edge cases: EIN mismatch, tax year mismatch, zero-extraction, multi-entity.
+   */
+  private async generateWarnings(
+    sessionId: string,
+    extractionResult: K1ExtractionResult,
+    partnershipId: string,
+    buffer: Buffer
+  ): Promise<string[]> {
+    const warnings: string[] = [];
+
+    // Edge Case 5: Multi-entity PDF detection
+    const multiEntity = await this.detectMultiEntityPdf(buffer);
+    if (multiEntity.isMultiEntity) {
+      warnings.push(
+        `This PDF appears to contain ${multiEntity.entityCount} K-1 forms for different entities. ` +
+          'Only the first entity will be processed. Upload separate PDFs for each entity.'
+      );
+    }
+
+    // Edge Case 3: Zero-extraction warning
+    const nonZeroFields = extractionResult.fields.filter(
+      (f) => f.numericValue !== null && f.numericValue !== 0
+    );
+    if (nonZeroFields.length === 0) {
+      warnings.push(
+        'All extracted values are zero or empty. The PDF may not be readable or may not contain K-1 data. ' +
+          'Please verify the PDF quality and try again.'
+      );
+    }
+
+    // Edge Case 4: EIN mismatch with existing partnership
+    const session = await this.prismaService.k1ImportSession.findUnique({
+      where: { id: sessionId }
+    });
+    if (session) {
+      const partnership = await this.prismaService.partnership.findUnique({
+        where: { id: partnershipId }
+      });
+      if (partnership && (partnership as any).ein) {
+        const extractedEin = extractionResult.fields.find(
+          (f) =>
+            f.label?.toLowerCase().includes('ein') ||
+            f.boxNumber?.toLowerCase() === 'ein'
+        );
+        if (
+          extractedEin?.rawValue &&
+          extractedEin.rawValue !== (partnership as any).ein
+        ) {
+          warnings.push(
+            `Extracted EIN (${extractedEin.rawValue}) does not match partnership EIN (${(partnership as any).ein}). ` +
+              'Verify you uploaded the correct K-1 for this partnership.'
+          );
+        }
+      }
+
+      // Edge Case 6: Tax year mismatch
+      const extractedYear = extractionResult.fields.find(
+        (f) =>
+          f.label?.toLowerCase().includes('tax year') ||
+          f.label?.toLowerCase().includes('calendar year') ||
+          f.boxNumber?.toLowerCase() === 'taxyear'
+      );
+      if (extractedYear?.rawValue) {
+        const parsedYear = parseInt(extractedYear.rawValue, 10);
+        if (!isNaN(parsedYear) && parsedYear !== session.taxYear) {
+          warnings.push(
+            `Extracted tax year (${parsedYear}) does not match expected tax year (${session.taxYear}). ` +
+              'You can override the tax year during verification if needed.'
+          );
+        }
+      }
+    }
+
+    return warnings;
   }
 }
