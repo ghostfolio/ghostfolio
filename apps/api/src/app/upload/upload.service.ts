@@ -51,7 +51,7 @@ export class UploadService {
       await mkdir(subDir, { recursive: true });
     }
 
-    const relativePath = `/${yearDir}/${monthDir}/${file.filename}`;
+    const relativePath = `${yearDir}/${monthDir}/${file.filename}`;
 
     return this.prismaService.document.create({
       data: {
