@@ -106,12 +106,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T032 [P] [US3] Create confirm DTO (filingStatus, existingKDocumentAction) in apps/api/src/app/k1-import/dto/confirm-k1.dto.ts
-- [ ] T033 [US3] Implement K1 allocation service (allocate line items to members by ownership % as of tax year end, rounding adjustment on largest member per validation rule 8) in apps/api/src/app/k1-import/k1-allocation.service.ts
-- [ ] T034 [US3] Implement confirmation logic in K1 import service (create KDocument with type K1 and verified box values, create Distribution records for Box 19a/19b, create Document record for PDF, link all records per FR-012 through FR-015) in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T035 [US3] Implement duplicate KDocument detection (check existing partnershipId + type K1 + taxYear, prompt UPDATE vs CREATE_NEW per FR-016) in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T036 [US3] Add POST /api/v1/k1-import/:id/confirm endpoint to apps/api/src/app/k1-import/k1-import.controller.ts
-- [ ] T037 [US3] Create K1 confirmation result component (displays created KDocument summary, member allocations table, distribution records, linked Document) in apps/client/src/app/pages/k1-import/k1-confirmation/k1-confirmation.component.ts
+- [X] T032 [P] [US3] Create confirm DTO (filingStatus, existingKDocumentAction) in apps/api/src/app/k1-import/dto/confirm-k1.dto.ts
+- [X] T033 [US3] Implement K1 allocation service (allocate line items to members by ownership % as of tax year end, rounding adjustment on largest member per validation rule 8) in apps/api/src/app/k1-import/k1-allocation.service.ts
+- [X] T034 [US3] Implement confirmation logic in K1 import service (create KDocument with type K1 and verified box values, create Distribution records for Box 19a/19b, create Document record for PDF, link all records per FR-012 through FR-015) in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T035 [US3] Implement duplicate KDocument detection (check existing partnershipId + type K1 + taxYear, prompt UPDATE vs CREATE_NEW per FR-016) in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T036 [US3] Add POST /api/v1/k1-import/:id/confirm endpoint to apps/api/src/app/k1-import/k1-import.controller.ts
+- [X] T037 [US3] Create K1 confirmation result component (displays created KDocument summary, member allocations table, distribution records, linked Document) in apps/client/src/app/pages/k1-import/k1-confirmation/k1-confirmation.component.ts
 
 **Checkpoint**: At this point, the complete K-1 import pipeline (upload → extract → verify → confirm → auto-create) is functional — this is the MVP
 

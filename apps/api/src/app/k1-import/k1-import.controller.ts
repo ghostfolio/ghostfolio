@@ -21,6 +21,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StatusCodes } from 'http-status-codes';
 
+import { ConfirmK1Dto } from './dto/confirm-k1.dto';
 import { VerifyK1Dto } from './dto/verify-k1.dto';
 import { K1ImportService } from './k1-import.service';
 
@@ -87,5 +88,20 @@ export class K1ImportController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async cancelImportSession(@Param('id') id: string) {
     return this.k1ImportService.cancel(id, this.request.user.id);
+  }
+
+  /**
+   * POST /api/v1/k1-import/:id/confirm
+   * Confirm verified data and trigger auto-creation of model objects.
+   */
+  @HasPermission(permissions.createKDocument)
+  @Post(':id/confirm')
+  @HttpCode(StatusCodes.CREATED)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async confirmImportSession(
+    @Param('id') id: string,
+    @Body() data: ConfirmK1Dto
+  ) {
+    return this.k1ImportService.confirm(id, this.request.user.id, data);
   }
 }

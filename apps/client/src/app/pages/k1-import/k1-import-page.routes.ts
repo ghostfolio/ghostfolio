@@ -20,5 +20,14 @@ export const routes: Routes = [
       ),
     path: ':id/verify',
     title: 'Verify K-1 Import'
+  },
+  {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./k1-confirmation/k1-confirmation.component').then(
+        (c) => c.K1ConfirmationComponent
+      ),
+    path: ':id/confirm',
+    title: 'Confirm K-1 Import'
   }
 ];

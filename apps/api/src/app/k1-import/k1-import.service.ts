@@ -2,7 +2,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import type { K1ExtractionResult } from '@ghostfolio/common/interfaces';
 
 import { HttpException, Injectable, Logger } from '@nestjs/common';
-import { K1ImportStatus } from '@prisma/client';
+import { K1ImportStatus, KDocumentStatus } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -387,6 +387,202 @@ export class K1ImportService {
     this.logger.log(`Session ${sessionId}: Cancelled`);
 
     return updated;
+  }
+
+  /**
+   * Confirm verified data and auto-create model objects.
+   * VERIFIED → CONFIRMED transition.
+   * FR-012 (KDocument), FR-013 (allocations), FR-014 (Distributions), FR-015 (Document linkage), FR-016 (duplicate detection).
+   */
+  public async confirm(
+    sessionId: string,
+    userId: string,
+    data: {
+      filingStatus: KDocumentStatus;
+      existingKDocumentAction?: 'UPDATE' | 'CREATE_NEW';
+    }
+  ) {
+    const session = await this.getSession(sessionId, userId);
+
+    // Only VERIFIED sessions can be confirmed
+    if (session.status !== K1ImportStatus.VERIFIED) {
+      throw new HttpException(
+        'Session must be in VERIFIED status to confirm',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const verifiedData = session.verifiedData as any;
+    if (!verifiedData?.fields || verifiedData.fields.length === 0) {
+      throw new HttpException(
+        'No verified data available',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // Check for active members (FR-013)
+    const memberships =
+      await this.prismaService.partnershipMembership.findMany({
+        where: {
+          partnershipId: session.partnershipId,
+          effectiveDate: {
+            lte: new Date(session.taxYear, 11, 31)
+          },
+          OR: [
+            { endDate: null },
+            { endDate: { gte: new Date(session.taxYear, 11, 31) } }
+          ]
+        },
+        include: { entity: true }
+      });
+
+    if (memberships.length === 0) {
+      throw new HttpException(
+        'Partnership has no active members',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // FR-016: Check for existing KDocument (duplicate detection)
+    const existingKDocument = await this.prismaService.kDocument.findUnique({
+      where: {
+        partnershipId_type_taxYear: {
+          partnershipId: session.partnershipId,
+          type: 'K1',
+          taxYear: session.taxYear
+        }
+      }
+    });
+
+    if (existingKDocument && !data.existingKDocumentAction) {
+      throw new HttpException(
+        'A KDocument already exists for this partnership, type, and tax year. Specify existingKDocumentAction (UPDATE or CREATE_NEW).',
+        StatusCodes.CONFLICT
+      );
+    }
+
+    // Build KDocument data from verified fields
+    const kDocumentData: Record<string, number | null> = {};
+    for (const field of verifiedData.fields) {
+      kDocumentData[field.boxNumber] = field.numericValue ?? null;
+    }
+
+    // FR-012: Create or update KDocument
+    let kDocument;
+    if (existingKDocument && data.existingKDocumentAction === 'UPDATE') {
+      kDocument = await this.prismaService.kDocument.update({
+        where: { id: existingKDocument.id },
+        data: {
+          filingStatus: data.filingStatus,
+          data: kDocumentData as any,
+          documentFileId: session.documentId
+        }
+      });
+    } else {
+      // CREATE_NEW or no existing document
+      if (existingKDocument && data.existingKDocumentAction === 'CREATE_NEW') {
+        // Delete existing unique constraint holder to create new
+        await this.prismaService.kDocument.delete({
+          where: { id: existingKDocument.id }
+        });
+      }
+
+      kDocument = await this.prismaService.kDocument.create({
+        data: {
+          partnershipId: session.partnershipId,
+          type: 'K1',
+          taxYear: session.taxYear,
+          filingStatus: data.filingStatus,
+          data: kDocumentData as any,
+          documentFileId: session.documentId
+        }
+      });
+    }
+
+    // FR-013: Allocate K-1 amounts to members
+    const allocations = await this.allocationService.allocateToMembers(
+      session.partnershipId,
+      session.taxYear,
+      verifiedData.fields
+    );
+
+    // FR-014: Create Distribution records for Box 19a and Box 19b
+    const distributions: any[] = [];
+    const distributionDate = new Date(session.taxYear, 11, 31); // Dec 31
+
+    for (const allocation of allocations) {
+      // Box 19a: Cash and marketable securities
+      const box19a = allocation.allocatedValues['19a'];
+      if (box19a && box19a !== 0) {
+        const dist = await this.prismaService.distribution.create({
+          data: {
+            partnershipId: session.partnershipId,
+            entityId: allocation.entityId,
+            type: 'RETURN_OF_CAPITAL',
+            amount: box19a,
+            date: distributionDate,
+            currency: 'USD',
+            notes: `K-1 Box 19a (Cash distributions) - Tax Year ${session.taxYear}`
+          }
+        });
+        distributions.push(dist);
+      }
+
+      // Box 19b: Other property distributions
+      const box19b = allocation.allocatedValues['19b'];
+      if (box19b && box19b !== 0) {
+        const dist = await this.prismaService.distribution.create({
+          data: {
+            partnershipId: session.partnershipId,
+            entityId: allocation.entityId,
+            type: 'RETURN_OF_CAPITAL',
+            amount: box19b,
+            date: distributionDate,
+            currency: 'USD',
+            notes: `K-1 Box 19b (Property distributions) - Tax Year ${session.taxYear}`
+          }
+        });
+        distributions.push(dist);
+      }
+    }
+
+    // Update session to CONFIRMED and link KDocument
+    await this.prismaService.k1ImportSession.update({
+      where: { id: sessionId },
+      data: {
+        status: K1ImportStatus.CONFIRMED,
+        kDocumentId: kDocument.id
+      }
+    });
+
+    this.logger.log(
+      `Session ${sessionId}: Confirmed. KDocument ${kDocument.id} created, ${distributions.length} distributions, ${allocations.length} member allocations`
+    );
+
+    return {
+      importSession: {
+        id: sessionId,
+        status: 'CONFIRMED'
+      },
+      kDocument: {
+        id: kDocument.id,
+        partnershipId: kDocument.partnershipId,
+        type: kDocument.type,
+        taxYear: kDocument.taxYear,
+        filingStatus: kDocument.filingStatus,
+        data: kDocument.data
+      },
+      distributions,
+      allocations: allocations.map((a) => ({
+        entityId: a.entityId,
+        entityName: a.entityName,
+        ownershipPercent: a.ownershipPercent,
+        allocatedValues: a.allocatedValues
+      })),
+      document: session.documentId
+        ? { id: session.documentId, type: 'K1', name: session.fileName }
+        : null
+    };
   }
 
   /**
