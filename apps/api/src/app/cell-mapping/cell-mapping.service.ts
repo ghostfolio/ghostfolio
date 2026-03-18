@@ -1,6 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, Injectable, OnModuleInit } from '@nestjs/common';
+import { StatusCodes } from 'http-status-codes';
 
 /** Default IRS K-1 (Form 1065) cell mappings */
 const IRS_DEFAULT_MAPPINGS: Array<{
@@ -177,5 +178,91 @@ export class CellMappingService implements OnModuleInit {
       where: { partnershipId: null },
       orderBy: { sortOrder: 'asc' }
     });
+  }
+
+  /**
+   * Upsert cell mappings for a partnership.
+   * Creates partnership-specific overrides; does not modify global defaults.
+   */
+  public async updateMappings(
+    partnershipId: string,
+    mappings: Array<{
+      boxNumber: string;
+      label: string;
+      description?: string;
+      isCustom: boolean;
+    }>
+  ) {
+    const results = [];
+
+    for (let i = 0; i < mappings.length; i++) {
+      const mapping = mappings[i];
+      const result = await this.prismaService.cellMapping.upsert({
+        where: {
+          partnershipId_boxNumber: {
+            partnershipId,
+            boxNumber: mapping.boxNumber
+          }
+        },
+        update: {
+          label: mapping.label,
+          description: mapping.description || null,
+          isCustom: mapping.isCustom,
+          sortOrder: i + 1
+        },
+        create: {
+          partnershipId,
+          boxNumber: mapping.boxNumber,
+          label: mapping.label,
+          description: mapping.description || null,
+          isCustom: mapping.isCustom,
+          sortOrder: i + 1
+        }
+      });
+      results.push(result);
+    }
+
+    return results;
+  }
+
+  /**
+   * Reset a partnership's mappings to IRS defaults.
+   * Deletes all partnership-specific overrides.
+   */
+  public async resetMappings(partnershipId: string) {
+    await this.prismaService.cellMapping.deleteMany({
+      where: { partnershipId }
+    });
+
+    return { deleted: true, partnershipId };
+  }
+
+  /**
+   * Update aggregation rules for a partnership.
+   */
+  public async updateAggregationRules(
+    partnershipId: string,
+    rules: Array<{
+      name: string;
+      operation: string;
+      sourceCells: string[];
+    }>
+  ) {
+    // Delete existing partnership rules and recreate
+    await this.prismaService.cellAggregationRule.deleteMany({
+      where: { partnershipId }
+    });
+
+    const results = await this.prismaService.cellAggregationRule.createMany({
+      data: rules.map((rule, i) => ({
+        partnershipId,
+        name: rule.name,
+        operation: rule.operation,
+        sourceCells: rule.sourceCells,
+        sortOrder: i + 1
+      }))
+    });
+
+    return this.getAggregationRules(partnershipId);
   }
 }

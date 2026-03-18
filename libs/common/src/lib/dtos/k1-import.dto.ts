@@ -1,11 +1,10 @@
-import { K1ImportStatus, KDocumentStatus } from '@prisma/client';
+import { KDocumentStatus } from '@prisma/client';
 import {
   IsArray,
   IsBoolean,
   IsEnum,
   IsInt,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
   Min,

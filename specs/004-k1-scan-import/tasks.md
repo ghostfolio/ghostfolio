@@ -125,10 +125,10 @@
 
 ### Implementation for User Story 4
 
-- [ ] T038 [US4] Implement cell mapping service CRUD (get mappings with global fallback, upsert per-partnership mappings, reset to IRS default, aggregation rule CRUD, compute aggregates for a KDocument) in apps/api/src/app/cell-mapping/cell-mapping.service.ts
-- [ ] T039 [US4] Implement cell mapping controller (GET /cell-mapping, PUT /cell-mapping, DELETE /cell-mapping/reset, GET /aggregation-rules, PUT /aggregation-rules, GET /aggregation-rules/compute) in apps/api/src/app/cell-mapping/cell-mapping.controller.ts
-- [ ] T040 [US4] Create cell mapping page component (view/edit cell labels, add custom cells with isCustom flag, manage aggregation rules with source cell selection, reset to defaults button) in apps/client/src/app/pages/cell-mapping/cell-mapping-page.component.ts
-- [ ] T041 [US4] Integrate per-partnership custom cell mappings into extraction pipeline (field mapper loads partnership-specific mappings, falls back to global defaults for unmapped boxes) in apps/api/src/app/k1-import/k1-field-mapper.service.ts
+- [X] T038 [US4] Implement cell mapping service CRUD (get mappings with global fallback, upsert per-partnership mappings, reset to IRS default, aggregation rule CRUD, compute aggregates for a KDocument) in apps/api/src/app/cell-mapping/cell-mapping.service.ts
+- [X] T039 [US4] Implement cell mapping controller (GET /cell-mapping, PUT /cell-mapping, DELETE /cell-mapping/reset, GET /aggregation-rules, PUT /aggregation-rules, GET /aggregation-rules/compute) in apps/api/src/app/cell-mapping/cell-mapping.controller.ts
+- [X] T040 [US4] Create cell mapping page component (view/edit cell labels, add custom cells with isCustom flag, manage aggregation rules with source cell selection, reset to defaults button) in apps/client/src/app/pages/cell-mapping/cell-mapping-page.component.ts
+- [X] T041 [US4] Integrate per-partnership custom cell mappings into extraction pipeline (field mapper loads partnership-specific mappings, falls back to global defaults for unmapped boxes) in apps/api/src/app/k1-import/k1-field-mapper.service.ts
 
 **Checkpoint**: Cell mapping customization is functional — custom mappings persist across imports
 

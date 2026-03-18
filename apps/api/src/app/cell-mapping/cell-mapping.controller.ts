@@ -24,4 +24,92 @@ export class CellMappingController {
     private readonly cellMappingService: CellMappingService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
+
+  /**
+   * GET /api/v1/cell-mapping
+   * Get cell mappings for a partnership (with global defaults).
+   */
+  @HasPermission(permissions.readKDocument)
+  @Get()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getMappings(
+    @Query('partnershipId') partnershipId?: string
+  ) {
+    return this.cellMappingService.getMappings(partnershipId);
+  }
+
+  /**
+   * PUT /api/v1/cell-mapping
+   * Update or create cell mappings for a partnership.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Put()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateMappings(
+    @Body()
+    data: {
+      partnershipId: string;
+      mappings: Array<{
+        boxNumber: string;
+        label: string;
+        description?: string;
+        isCustom: boolean;
+      }>;
+    }
+  ) {
+    return this.cellMappingService.updateMappings(
+      data.partnershipId,
+      data.mappings
+    );
+  }
+
+  /**
+   * DELETE /api/v1/cell-mapping/reset
+   * Reset a partnership's cell mappings to IRS defaults.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Delete('reset')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async resetMappings(
+    @Query('partnershipId') partnershipId: string
+  ) {
+    return this.cellMappingService.resetMappings(partnershipId);
+  }
+
+  /**
+   * GET /api/v1/cell-mapping/aggregation-rules
+   * Get aggregation rules for a partnership.
+   */
+  @HasPermission(permissions.readKDocument)
+  @Get('aggregation-rules')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getAggregationRules(
+    @Query('partnershipId') partnershipId?: string
+  ) {
+    return this.cellMappingService.getAggregationRules(partnershipId);
+  }
+
+  /**
+   * PUT /api/v1/cell-mapping/aggregation-rules
+   * Update aggregation rules for a partnership.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Put('aggregation-rules')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateAggregationRules(
+    @Body()
+    data: {
+      partnershipId: string;
+      rules: Array<{
+        name: string;
+        operation: string;
+        sourceCells: string[];
+      }>;
+    }
+  ) {
+    return this.cellMappingService.updateAggregationRules(
+      data.partnershipId,
+      data.rules
+    );
+  }
 }
