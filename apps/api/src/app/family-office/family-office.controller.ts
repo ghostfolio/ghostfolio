@@ -3,7 +3,14 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Inject,
+  Query,
+  UseGuards
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -92,17 +99,17 @@ export class FamilyOfficeController {
     @Query('year') year?: string
   ) {
     if (!period || !year) {
-      return {
-        error: 'period and year are required query parameters'
-      };
+      throw new BadRequestException(
+        'period and year are required query parameters'
+      );
     }
 
     const validPeriods = ['MONTHLY', 'QUARTERLY', 'YEARLY'];
 
     if (!validPeriods.includes(period)) {
-      return {
-        error: `period must be one of: ${validPeriods.join(', ')}`
-      };
+      throw new BadRequestException(
+        `period must be one of: ${validPeriods.join(', ')}`
+      );
     }
 
     const yearNum = parseInt(year, 10);

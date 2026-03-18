@@ -62,10 +62,11 @@ import { MatSelectModule } from '@angular/material/select';
           <mat-form-field appearance="outline" class="w-100">
             <mat-label i18n>Source</mat-label>
             <mat-select formControlName="source" required>
-              <mat-option value="STATEMENT">Statement</mat-option>
+              <mat-option value="NAV_STATEMENT">Statement</mat-option>
               <mat-option value="MANUAL">Manual Entry</mat-option>
-              <mat-option value="AUDITOR">Auditor</mat-option>
+              <mat-option value="APPRAISAL">Appraisal</mat-option>
               <mat-option value="FUND_ADMIN">Fund Admin</mat-option>
+              <mat-option value="MARKET">Market</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -108,7 +109,7 @@ export class GfRecordValuationDialogComponent implements OnInit {
         Validators.required
       ]),
       nav: new FormControl(null, [Validators.required, Validators.min(0)]),
-      source: new FormControl('STATEMENT', [Validators.required]),
+      source: new FormControl('NAV_STATEMENT', [Validators.required]),
       notes: new FormControl('')
     });
   }

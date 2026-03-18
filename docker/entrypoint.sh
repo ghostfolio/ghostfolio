@@ -5,8 +5,10 @@ set -e
 echo "==> Running database migrations"
 npx prisma migrate deploy
 
-echo "==> Ensuring schema is fully synced"
-npx prisma db push --skip-generate --accept-data-loss 2>/dev/null || echo "    (db push skipped â€” schema already in sync)"
+if [ "${DB_PUSH_ON_STARTUP}" = "true" ]; then
+  echo "==> Syncing schema (DB_PUSH_ON_STARTUP=true)"
+  npx prisma db push --skip-generate --accept-data-loss || echo "    (db push failed -- check schema and database state)"
+fi
 
 echo "==> Seeding the database (if applicable)"
 npx prisma db seed || echo "    (seed skipped or already applied)"

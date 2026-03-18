@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { extname, join } from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 
 import { UploadController } from './upload.controller';
@@ -38,8 +38,8 @@ if (!existsSync(uploadDir)) {
           cb(null, subDir);
         },
         filename: (_req, file, cb) => {
-          const ext = file.originalname.split('.').pop();
-          cb(null, `${uuidv4()}.${ext}`);
+          const ext = extname(file.originalname);
+          cb(null, ext ? `${uuidv4()}${ext}` : uuidv4());
         }
       })
     }),

@@ -9,6 +9,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfPartnershipsPageComponent,
     path: '',
-    title: 'Partnerships'
+    title: $localize`Partnerships`
   }
 ];

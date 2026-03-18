@@ -4,6 +4,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
+  BadRequestException,
   Controller,
   Get,
   Inject,
@@ -35,6 +36,14 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   public async uploadDocument(@UploadedFile() file: any) {
     const body = this.request.body as any;
+
+    const validDocumentTypes = Object.values(DocumentType);
+
+    if (!body.type || !validDocumentTypes.includes(body.type as DocumentType)) {
+      throw new BadRequestException(
+        `type must be one of: ${validDocumentTypes.join(', ')}`
+      );
+    }
 
     return this.uploadService.createDocument({
       file,
