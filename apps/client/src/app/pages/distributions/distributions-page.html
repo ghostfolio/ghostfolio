@@ -1,0 +1,141 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Distributions</h1>
+
+      <div class="align-items-center d-flex flex-wrap gap-3 mb-3">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label i18n>Type</mat-label>
+          <mat-select
+            [(ngModel)]="filterType"
+            (selectionChange)="fetchDistributions()"
+          >
+            <mat-option [value]="undefined">All</mat-option>
+            <mat-option value="RETURN_OF_CAPITAL">Return of Capital</mat-option>
+            <mat-option value="INCOME">Income</mat-option>
+            <mat-option value="CAPITAL_GAIN">Capital Gain</mat-option>
+            <mat-option value="DIVIDEND">Dividend</mat-option>
+            <mat-option value="INTEREST">Interest</mat-option>
+            <mat-option value="OTHER">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label i18n>Group By</mat-label>
+          <mat-select
+            [(ngModel)]="groupBy"
+            (selectionChange)="fetchDistributions()"
+          >
+            <mat-option [value]="undefined">None</mat-option>
+            <mat-option value="MONTHLY">Monthly</mat-option>
+            <mat-option value="QUARTERLY">Quarterly</mat-option>
+            <mat-option value="YEARLY">Yearly</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{ height: '3rem', width: '100%' }"
+        />
+      } @else {
+        <table
+          class="gf-table w-100"
+          mat-table
+          matSort
+          [dataSource]="dataSource"
+        >
+          <ng-container matColumnDef="date">
+            <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Date</th>
+            <td *matCellDef="let row" mat-cell>{{ row.date | date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="entityName">
+            <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>
+              Entity
+            </th>
+            <td *matCellDef="let row" mat-cell>{{ row.entityName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="partnershipName">
+            <th
+              *matHeaderCellDef
+              class="d-none d-lg-table-cell"
+              i18n
+              mat-header-cell
+            >
+              Partnership
+            </th>
+            <td *matCellDef="let row" class="d-none d-lg-table-cell" mat-cell>
+              {{ row.partnershipName ?? '—' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Type</th>
+            <td *matCellDef="let row" mat-cell>{{ row.type }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+              Amount
+            </th>
+            <td *matCellDef="let row" class="text-right" mat-cell>
+              {{ row.amount | currency: row.currency : 'symbol' : '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="netAmount">
+            <th
+              *matHeaderCellDef
+              class="d-none d-lg-table-cell text-right"
+              i18n
+              mat-header-cell
+            >
+              Net
+            </th>
+            <td
+              *matCellDef="let row"
+              class="d-none d-lg-table-cell text-right"
+              mat-cell
+            >
+              {{ row.netAmount | currency: row.currency : 'symbol' : '1.2-2' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef class="text-right" mat-header-cell></th>
+            <td *matCellDef="let row" class="text-right" mat-cell>
+              @if (hasPermissionToDelete) {
+                <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                  <ion-icon name="ellipsis-vertical-outline" />
+                </button>
+                <mat-menu #actionMenu="matMenu">
+                  <button mat-menu-item (click)="onDeleteDistribution(row.id)">
+                    Delete
+                  </button>
+                </mat-menu>
+              }
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+        </table>
+
+        @if (dataSource.data.length === 0) {
+          <p class="p-3 text-center text-muted" i18n>No distributions found.</p>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+@if (hasPermissionToCreate) {
+  <div class="fab-container">
+    <a mat-fab [queryParams]="{ createDialog: true }" [routerLink]="[]">
+      <ion-icon name="add-outline" size="large" />
+    </a>
+  </div>
+}

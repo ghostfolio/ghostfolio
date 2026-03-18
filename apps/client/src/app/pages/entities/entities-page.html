@@ -1,0 +1,126 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Entities</h1>
+      <table
+        class="gf-table w-100"
+        mat-table
+        matSort
+        matSortActive="name"
+        matSortDirection="asc"
+        [dataSource]="dataSource"
+      >
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+          <td *matCellDef="let row" mat-cell>{{ row.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Type</th>
+          <td *matCellDef="let row" mat-cell>{{ row.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="taxId">
+          <th *matHeaderCellDef class="d-none d-lg-table-cell" mat-header-cell>
+            Tax ID
+          </th>
+          <td *matCellDef="let row" class="d-none d-lg-table-cell" mat-cell>
+            {{ row.taxId ?? '—' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ownershipsCount">
+          <th
+            *matHeaderCellDef
+            class="d-none d-lg-table-cell text-right"
+            mat-header-cell
+          >
+            Accounts
+          </th>
+          <td
+            *matCellDef="let row"
+            class="d-none d-lg-table-cell text-right"
+            mat-cell
+          >
+            {{ row.ownershipsCount ?? 0 }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="membershipsCount">
+          <th
+            *matHeaderCellDef
+            class="d-none d-lg-table-cell text-right"
+            mat-header-cell
+          >
+            Partnerships
+          </th>
+          <td
+            *matCellDef="let row"
+            class="d-none d-lg-table-cell text-right"
+            mat-cell
+          >
+            {{ row.membershipsCount ?? 0 }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td *matCellDef="let row" class="text-right" mat-cell>
+            @if (showActions) {
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="entityMenu"
+                (click)="$event.stopPropagation()"
+              >
+                <ion-icon name="ellipsis-vertical-outline" />
+              </button>
+              <mat-menu #entityMenu="matMenu">
+                <button mat-menu-item (click)="onUpdateEntity(row)">
+                  Edit
+                </button>
+                <button mat-menu-item (click)="onDeleteEntity(row.id)">
+                  Delete
+                </button>
+              </mat-menu>
+            }
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr
+          *matRowDef="let row; columns: displayedColumns"
+          class="cursor-pointer"
+          mat-row
+          (click)="onEntityClicked(row)"
+        ></tr>
+      </table>
+
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{ height: '3rem', width: '100%' }"
+        />
+      }
+
+      @if (!isLoading && entities?.length === 0) {
+        <div class="p-3 text-center" style="opacity: 0.6">
+          <p i18n>No entities yet. Create your first entity to get started.</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (hasPermissionToCreate) {
+    <div class="fab-container">
+      <a
+        class="align-items-center d-flex justify-content-center"
+        color="primary"
+        mat-fab
+        [queryParams]="{ createDialog: true }"
+        [routerLink]="[]"
+      >
+        <ion-icon name="add-outline" size="large" />
+      </a>
+    </div>
+  }
+</div>

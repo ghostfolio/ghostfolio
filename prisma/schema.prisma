@@ -36,6 +36,7 @@ model Account {
   id         String           @default(uuid())
   isExcluded Boolean          @default(false)
   name       String?
+  ownerships Ownership[]
   platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
   updatedAt  DateTime         @updatedAt
@@ -269,7 +270,9 @@ model User {
   authChallenge String?
   authDevices   AuthDevice[]
   createdAt     DateTime        @default(now())
+  entities      Entity[]
   id            String          @id @default(uuid())
+  partnerships  Partnership[]
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
   settings      Settings?
@@ -357,4 +360,268 @@ enum Type {
 enum ViewMode {
   DEFAULT
   ZEN
+}
+
+enum EntityType {
+  INDIVIDUAL
+  TRUST
+  LLC
+  LP
+  CORPORATION
+  FOUNDATION
+  ESTATE
+}
+
+enum PartnershipType {
+  LP
+  GP
+  LLC
+  JOINT_VENTURE
+  FUND
+}
+
+enum DistributionType {
+  INCOME
+  RETURN_OF_CAPITAL
+  CAPITAL_GAIN
+  GUARANTEED_PAYMENT
+  DIVIDEND
+  INTEREST
+}
+
+enum KDocumentType {
+  K1
+  K3
+}
+
+enum KDocumentStatus {
+  DRAFT
+  ESTIMATED
+  FINAL
+}
+
+enum FamilyOfficeAssetType {
+  PUBLIC_EQUITY
+  PRIVATE_EQUITY
+  REAL_ESTATE
+  HEDGE_FUND
+  VENTURE_CAPITAL
+  FIXED_INCOME
+  COMMODITY
+  ART_COLLECTIBLE
+  CRYPTOCURRENCY
+  CASH
+  OTHER
+}
+
+enum ValuationSource {
+  APPRAISAL
+  MARKET
+  MANUAL
+  NAV_STATEMENT
+  FUND_ADMIN
+}
+
+enum DocumentType {
+  K1
+  K3
+  CAPITAL_CALL
+  DISTRIBUTION_NOTICE
+  NAV_STATEMENT
+  APPRAISAL
+  TAX_RETURN
+  SUBSCRIPTION_AGREEMENT
+  OTHER
+}
+
+model Entity {
+  id                    String                  @id @default(uuid())
+  name                  String
+  type                  EntityType
+  taxId                 String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  userId                String
+  user                  User                    @relation(fields: [userId], onDelete: Cascade, references: [id])
+  ownerships            Ownership[]
+  memberships           PartnershipMembership[]
+  distributionsReceived Distribution[]
+  documents             Document[]
+
+  @@index([name])
+  @@index([type])
+  @@index([userId])
+}
+
+model Partnership {
+  id            String                  @id @default(uuid())
+  name          String
+  type          PartnershipType
+  inceptionDate DateTime
+  fiscalYearEnd Int                     @default(12)
+  currency      String
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  userId        String
+  user          User                    @relation(fields: [userId], onDelete: Cascade, references: [id])
+  members       PartnershipMembership[]
+  assets        PartnershipAsset[]
+  valuations    PartnershipValuation[]
+  distributions Distribution[]
+  kDocuments    KDocument[]
+  documents     Document[]
+
+  @@index([name])
+  @@index([type])
+  @@index([userId])
+}
+
+model PartnershipMembership {
+  id                 String      @id @default(uuid())
+  entityId           String
+  entity             Entity      @relation(fields: [entityId], onDelete: Cascade, references: [id])
+  partnershipId      String
+  partnership        Partnership @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  ownershipPercent   Decimal
+  capitalCommitment  Decimal?
+  capitalContributed Decimal?
+  classType          String?
+  effectiveDate      DateTime
+  endDate            DateTime?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@unique([entityId, partnershipId, effectiveDate])
+  @@index([entityId])
+  @@index([partnershipId])
+}
+
+model Ownership {
+  id               String   @id @default(uuid())
+  entityId         String
+  entity           Entity   @relation(fields: [entityId], onDelete: Cascade, references: [id])
+  accountId        String
+  accountUserId    String
+  account          Account  @relation(fields: [accountId, accountUserId], onDelete: Cascade, references: [id, userId])
+  ownershipPercent Decimal
+  acquisitionDate  DateTime?
+  costBasis        Decimal?
+  effectiveDate    DateTime
+  endDate          DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([entityId, accountId, accountUserId, effectiveDate])
+  @@index([entityId])
+  @@index([accountId])
+}
+
+model Distribution {
+  id            String           @id @default(uuid())
+  partnershipId String?
+  partnership   Partnership?     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  entityId      String
+  entity        Entity           @relation(fields: [entityId], onDelete: Cascade, references: [id])
+  type          DistributionType
+  amount        Decimal
+  date          DateTime
+  currency      String
+  taxWithheld   Decimal?         @default(0)
+  notes         String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([partnershipId])
+  @@index([entityId])
+  @@index([date])
+}
+
+model KDocument {
+  id             String          @id @default(uuid())
+  partnershipId  String
+  partnership    Partnership     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  type           KDocumentType
+  taxYear        Int
+  filingStatus   KDocumentStatus @default(DRAFT)
+  data           Json
+  documentFileId String?
+  documentFile   Document?       @relation(fields: [documentFileId], references: [id])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@unique([partnershipId, type, taxYear])
+  @@index([partnershipId])
+  @@index([taxYear])
+}
+
+model PartnershipAsset {
+  id              String                @id @default(uuid())
+  partnershipId   String
+  partnership     Partnership           @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  assetType       FamilyOfficeAssetType
+  name            String
+  description     String?
+  acquisitionDate DateTime?
+  acquisitionCost Decimal?
+  currentValue    Decimal?
+  currency        String
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  valuations      AssetValuation[]
+
+  @@index([partnershipId])
+  @@index([assetType])
+}
+
+model AssetValuation {
+  id                 String           @id @default(uuid())
+  partnershipAssetId String
+  partnershipAsset   PartnershipAsset @relation(fields: [partnershipAssetId], onDelete: Cascade, references: [id])
+  date               DateTime
+  value              Decimal
+  source             ValuationSource
+  notes              String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@unique([partnershipAssetId, date])
+  @@index([partnershipAssetId])
+  @@index([date])
+}
+
+model PartnershipValuation {
+  id            String          @id @default(uuid())
+  partnershipId String
+  partnership   Partnership     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  date          DateTime
+  nav           Decimal
+  source        ValuationSource
+  notes         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@unique([partnershipId, date])
+  @@index([partnershipId])
+  @@index([date])
+}
+
+model Document {
+  id            String       @id @default(uuid())
+  entityId      String?
+  entity        Entity?      @relation(fields: [entityId], onDelete: Cascade, references: [id])
+  partnershipId String?
+  partnership   Partnership? @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  type          DocumentType
+  name          String
+  filePath      String
+  fileSize      Int?
+  mimeType      String?
+  taxYear       Int?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  kDocuments    KDocument[]
+
+  @@index([entityId])
+  @@index([partnershipId])
 }

@@ -46,6 +46,13 @@ export class AdminService {
     );
   }
 
+  public clearFamilyOfficeData() {
+    return this.http.delete<{ deleted: Record<string, number> }>(
+      '/api/v1/admin/family-office-data'
+    );
+  }
+
+
   public deleteJob(aId: string) {
     return this.http.delete<void>(`/api/v1/admin/queue/job/${aId}`);
   }
@@ -274,6 +281,14 @@ export class AdminService {
   public syncDemoUserAccount() {
     return this.http.get<void>(`/api/v1/admin/demo-user/sync`);
   }
+
+  public seedFamilyOfficeData() {
+    return this.http.post<{ created: Record<string, number> }>(
+      '/api/v1/admin/family-office-data/seed',
+      {}
+    );
+  }
+
 
   public testMarketData({
     dataSource,

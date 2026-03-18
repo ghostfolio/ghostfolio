@@ -58,6 +58,71 @@
           >Accounts</a
         >
       </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/entities"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'entities',
+            'text-decoration-underline': currentRoute === 'entities'
+          }"
+          >Entities</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/partnerships"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'partnerships',
+            'text-decoration-underline': currentRoute === 'partnerships'
+          }"
+          >Partnerships</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/distributions"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'distributions',
+            'text-decoration-underline': currentRoute === 'distributions'
+          }"
+          >Distributions</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/k-documents"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'k-documents',
+            'text-decoration-underline': currentRoute === 'k-documents'
+          }"
+          >K-1 Documents</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          routerLink="/portfolio-views"
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'portfolio-views',
+            'text-decoration-underline': currentRoute === 'portfolio-views'
+          }"
+          >Portfolio Views</a
+        >
+      </li>
       @if (hasPermissionToAccessAdminControl) {
         <li class="list-inline-item">
           <a
@@ -266,6 +331,46 @@
             }"
             [routerLink]="routerLinkAccounts"
             >Accounts</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/entities"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'entities' }"
+            >Entities</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/partnerships"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'partnerships' }"
+            >Partnerships</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/distributions"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'distributions' }"
+            >Distributions</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/k-documents"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'k-documents' }"
+            >K-1 Documents</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/portfolio-views"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'portfolio-views' }"
+            >Portfolio Views</a
           >
           <a
             i18n

@@ -36,6 +36,7 @@ import { AssetModule } from './asset/asset.module';
 import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
+import { DistributionModule } from './distribution/distribution.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
 import { AssetsModule } from './endpoints/assets/assets.module';
@@ -47,17 +48,22 @@ import { PublicModule } from './endpoints/public/public.module';
 import { SitemapModule } from './endpoints/sitemap/sitemap.module';
 import { TagsModule } from './endpoints/tags/tags.module';
 import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
+import { EntityModule } from './entity/entity.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
+import { FamilyOfficeModule } from './family-office/family-office.module';
 import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
+import { KDocumentModule } from './k-document/k-document.module';
 import { LogoModule } from './logo/logo.module';
+import { PartnershipModule } from './partnership/partnership.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
+import { UploadModule } from './upload/upload.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -111,17 +117,22 @@ import { UserModule } from './user/user.module';
     CronModule,
     DataGatheringModule,
     DataProviderModule,
+    DistributionModule,
     EventEmitterModule.forRoot(),
     EventsModule,
+    EntityModule,
     ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
+    FamilyOfficeModule,
     GhostfolioModule,
     HealthModule,
     ImportModule,
     InfoModule,
+    KDocumentModule,
     LogoModule,
     MarketDataModule,
+    PartnershipModule,
     PlatformModule,
     PlatformsModule,
     PortfolioModule,
@@ -168,6 +179,7 @@ import { UserModule } from './user/user.module';
     SubscriptionModule,
     SymbolModule,
     TagsModule,
+    UploadModule,
     UserModule,
     WatchlistModule
   ],

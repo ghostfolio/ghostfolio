@@ -15,7 +15,31 @@ import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
+import type {
+  IDistribution,
+  IDistributionListResponse,
+  IDistributionSummary
+} from './distribution.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
+import type {
+  IEntity,
+  IEntityMembership,
+  IEntityPortfolio,
+  IEntityWithRelations,
+  IOwnership
+} from './entity.interface';
+import type {
+  IActivityDetail,
+  IActivityRow,
+  IAssetClassPerformanceRow,
+  IAssetClassSummary,
+  IEntityPerformanceRow,
+  IFamilyOfficeDashboard,
+  IFamilyOfficeReport,
+  IPerformanceMetrics,
+  IPerformanceRow,
+  IPortfolioSummary
+} from './family-office.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { FireCalculationCompleteEvent } from './fire-calculation-complete-event.interface';
@@ -25,9 +49,22 @@ import type { HoldingWithParents } from './holding-with-parents.interface';
 import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
+import type {
+  IKDocument,
+  IKDocumentAllocation,
+  K1Data
+} from './k-document.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
+import type {
+  IPartnership,
+  IPartnershipAsset,
+  IPartnershipDetail,
+  IPartnershipMembership,
+  IPartnershipPerformance,
+  IPartnershipValuation
+} from './partnership.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
@@ -138,6 +175,32 @@ export {
   DataProviderResponse,
   DividendsResponse,
   EnhancedSymbolProfile,
+  IDistribution,
+  IDistributionListResponse,
+  IDistributionSummary,
+  IEntity,
+  IEntityMembership,
+  IEntityPortfolio,
+  IEntityWithRelations,
+  IActivityDetail,
+  IActivityRow,
+  IAssetClassPerformanceRow,
+  IAssetClassSummary,
+  IEntityPerformanceRow,
+  IFamilyOfficeDashboard,
+  IFamilyOfficeReport,
+  IKDocument,
+  IKDocumentAllocation,
+  IOwnership,
+  IPartnership,
+  IPartnershipAsset,
+  IPartnershipDetail,
+  IPartnershipMembership,
+  IPartnershipPerformance,
+  IPartnershipValuation,
+  IPerformanceMetrics,
+  IPerformanceRow,
+  IPortfolioSummary,
   ExportResponse,
   Filter,
   FilterGroup,
@@ -186,6 +249,7 @@ export {
   SystemMessage,
   TabConfiguration,
   ToggleOption,
+  K1Data,
   User,
   UserItem,
   UserSettings,

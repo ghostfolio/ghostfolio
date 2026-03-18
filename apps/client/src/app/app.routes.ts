@@ -137,6 +137,72 @@ export const routes: Routes = [
       import('./pages/zen/zen-page.routes').then((m) => m.routes)
   },
   {
+    path: 'entities',
+    loadChildren: () =>
+      import('./pages/entities/entities-page.routes').then((m) => m.routes)
+  },
+  {
+    path: 'entities/:id',
+    loadChildren: () =>
+      import('./pages/entity-detail/entity-detail-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'partnerships',
+    loadChildren: () =>
+      import('./pages/partnerships/partnerships-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'partnerships/:id',
+    loadChildren: () =>
+      import('./pages/partnership-detail/partnership-detail-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'partnerships/:id/performance',
+    loadChildren: () =>
+      import('./pages/partnership-performance/partnership-performance-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'distributions',
+    loadChildren: () =>
+      import('./pages/distributions/distributions-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'k-documents',
+    loadChildren: () =>
+      import('./pages/k-documents/k-documents-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'reports',
+    loadChildren: () =>
+      import('./pages/reports/report-page.routes').then((m) => m.routes)
+  },
+  {
+    path: 'family-office',
+    loadChildren: () =>
+      import('./pages/family-dashboard/dashboard-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'portfolio-views',
+    loadChildren: () =>
+      import('./pages/portfolio-views/portfolio-views-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
     // wildcard, if requested url doesn't match any paths for routes defined
     // earlier
     path: '**',

@@ -16,5 +16,9 @@ services:
     ports:
       - ${REDIS_PORT:-6379}:6379
 
+  # Family Office Upload Configuration:
+  # UPLOAD_DIR: Directory for document uploads (default: ./uploads in project root)
+  # MAX_UPLOAD_SIZE: Maximum upload file size in bytes (default: 10485760 = 10MB)
+
 volumes:
   postgres:

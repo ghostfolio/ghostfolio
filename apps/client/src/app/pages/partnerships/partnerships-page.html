@@ -1,0 +1,124 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Partnerships</h1>
+      <table
+        class="gf-table w-100"
+        mat-table
+        matSort
+        matSortActive="name"
+        matSortDirection="asc"
+        [dataSource]="dataSource"
+      >
+        <ng-container matColumnDef="name">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Name</th>
+          <td *matCellDef="let row" mat-cell>{{ row.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Type</th>
+          <td *matCellDef="let row" mat-cell>{{ row.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="currency">
+          <th *matHeaderCellDef class="d-none d-lg-table-cell" mat-header-cell>
+            Currency
+          </th>
+          <td *matCellDef="let row" class="d-none d-lg-table-cell" mat-cell>
+            {{ row.currency }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="latestNav">
+          <th *matHeaderCellDef class="text-right" mat-header-cell>
+            Latest NAV
+          </th>
+          <td *matCellDef="let row" class="text-right" mat-cell>
+            {{
+              row.latestNav != null
+                ? (row.latestNav | currency: row.currency : 'symbol' : '1.0-0')
+                : '—'
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="membersCount">
+          <th
+            *matHeaderCellDef
+            class="d-none d-lg-table-cell text-right"
+            mat-header-cell
+          >
+            Members
+          </th>
+          <td
+            *matCellDef="let row"
+            class="d-none d-lg-table-cell text-right"
+            mat-cell
+          >
+            {{ row.membersCount ?? 0 }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td *matCellDef="let row" class="text-right" mat-cell>
+            @if (showActions) {
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="partnershipMenu"
+                (click)="$event.stopPropagation()"
+              >
+                <ion-icon name="ellipsis-vertical-outline" />
+              </button>
+              <mat-menu #partnershipMenu="matMenu">
+                <button mat-menu-item (click)="onUpdatePartnership(row)">
+                  Edit
+                </button>
+                <button mat-menu-item (click)="onDeletePartnership(row.id)">
+                  Delete
+                </button>
+              </mat-menu>
+            }
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr
+          *matRowDef="let row; columns: displayedColumns"
+          class="cursor-pointer"
+          mat-row
+          (click)="onPartnershipClicked(row)"
+        ></tr>
+      </table>
+
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{ height: '3rem', width: '100%' }"
+        />
+      }
+
+      @if (!isLoading && partnerships?.length === 0) {
+        <div class="p-3 text-center" style="opacity: 0.6">
+          <p i18n>
+            No partnerships yet. Create your first partnership to get started.
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (hasPermissionToCreate) {
+    <div class="fab-container">
+      <a
+        class="align-items-center d-flex justify-content-center"
+        color="primary"
+        mat-fab
+        [queryParams]="{ createDialog: true }"
+        [routerLink]="[]"
+      >
+        <ion-icon name="add-outline" size="large" />
+      </a>
+    </div>
+  }
+</div>

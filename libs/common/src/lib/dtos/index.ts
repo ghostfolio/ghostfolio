@@ -5,16 +5,28 @@ import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto
 import { CreateAccountDto } from './create-account.dto';
 import { CreateAssetProfileWithMarketDataDto } from './create-asset-profile-with-market-data.dto';
 import { CreateAssetProfileDto } from './create-asset-profile.dto';
+import { CreateDistributionDto } from './create-distribution.dto';
+import { CreateEntityDto } from './create-entity.dto';
 import { CreateOrderDto } from './create-order.dto';
+import { CreateOwnershipDto } from './create-ownership.dto';
 import { CreatePlatformDto } from './create-platform.dto';
 import { CreateTagDto } from './create-tag.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
+import { CreateKDocumentDto, UpdateKDocumentDto } from './k-document.dto';
+import {
+  CreatePartnershipAssetDto,
+  CreatePartnershipDto,
+  CreatePartnershipMembershipDto,
+  CreatePartnershipValuationDto,
+  UpdatePartnershipDto
+} from './partnership.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
+import { UpdateEntityDto } from './update-entity.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
 import { UpdateOrderDto } from './update-order.dto';
 import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
@@ -31,7 +43,15 @@ export {
   CreateAccountWithBalancesDto,
   CreateAssetProfileDto,
   CreateAssetProfileWithMarketDataDto,
+  CreateDistributionDto,
+  CreateEntityDto,
+  CreateKDocumentDto,
   CreateOrderDto,
+  CreateOwnershipDto,
+  CreatePartnershipAssetDto,
+  CreatePartnershipDto,
+  CreatePartnershipMembershipDto,
+  CreatePartnershipValuationDto,
   CreatePlatformDto,
   CreateTagDto,
   CreateWatchlistItemDto,
@@ -41,9 +61,12 @@ export {
   UpdateAccountDto,
   UpdateAssetProfileDto,
   UpdateBulkMarketDataDto,
+  UpdateEntityDto,
+  UpdateKDocumentDto,
   UpdateMarketDataDto,
   UpdateOrderDto,
   UpdateOwnAccessTokenDto,
+  UpdatePartnershipDto,
   UpdatePlatformDto,
   UpdatePropertyDto,
   UpdateTagDto,

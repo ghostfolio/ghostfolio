@@ -1,0 +1,256 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="align-items-center d-flex mb-4">
+        <a class="me-3" mat-icon-button routerLink="/entities">
+          <ion-icon name="arrow-back-outline" />
+        </a>
+        <h1 class="h3 mb-0">{{ entity?.name }}</h1>
+        <span class="badge bg-primary ms-3">{{ entity?.type }}</span>
+        @if (entity?.taxId) {
+          <span class="ms-3 text-muted small">
+            Tax ID: {{ entity.taxId }}
+          </span>
+        }
+      </div>
+
+      <mat-tab-group>
+        <!-- Ownerships Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>Ownerships</span>
+            <span class="badge bg-secondary ms-2">{{
+              entity?.ownerships?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            <table
+              class="gf-table w-100"
+              mat-table
+              [dataSource]="entity?.ownerships ?? []"
+            >
+              <ng-container matColumnDef="accountName">
+                <th *matHeaderCellDef mat-header-cell>Account</th>
+                <td *matCellDef="let row" mat-cell>{{ row.accountName }}</td>
+              </ng-container>
+              <ng-container matColumnDef="ownershipPercent">
+                <th *matHeaderCellDef class="text-right" mat-header-cell>
+                  Ownership %
+                </th>
+                <td *matCellDef="let row" class="text-right" mat-cell>
+                  {{ row.ownershipPercent }}%
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="effectiveDate">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell"
+                  mat-header-cell
+                >
+                  Effective Date
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell"
+                  mat-cell
+                >
+                  {{ row.effectiveDate | date }}
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="ownershipColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: ownershipColumns" mat-row></tr>
+            </table>
+
+            @if (entity?.ownerships?.length === 0) {
+              <p class="p-3 text-center text-muted" i18n>
+                No account ownerships yet.
+              </p>
+            }
+
+            @if (hasPermissionToCreate) {
+              <div class="mt-3">
+                <button
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onAddOwnership()"
+                >
+                  <ion-icon class="me-1" name="add-outline" />
+                  Add Ownership
+                </button>
+              </div>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- Partnership Memberships Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>Partnerships</span>
+            <span class="badge bg-secondary ms-2">{{
+              entity?.memberships?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            <table
+              class="gf-table w-100"
+              mat-table
+              [dataSource]="entity?.memberships ?? []"
+            >
+              <ng-container matColumnDef="partnershipName">
+                <th *matHeaderCellDef mat-header-cell>Partnership</th>
+                <td *matCellDef="let row" mat-cell>
+                  {{ row.partnershipName }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ownershipPercent">
+                <th *matHeaderCellDef class="text-right" mat-header-cell>
+                  Ownership %
+                </th>
+                <td *matCellDef="let row" class="text-right" mat-cell>
+                  {{ row.ownershipPercent }}%
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="allocatedNav">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell text-right"
+                  mat-header-cell
+                >
+                  Allocated NAV
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell text-right"
+                  mat-cell
+                >
+                  {{
+                    row.allocatedNav != null
+                      ? (row.allocatedNav
+                        | currency: 'USD' : 'symbol' : '1.0-0')
+                      : '—'
+                  }}
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="membershipColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: membershipColumns" mat-row></tr>
+            </table>
+
+            @if (entity?.memberships?.length === 0) {
+              <p class="p-3 text-center text-muted" i18n>
+                No partnership memberships yet.
+              </p>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- Distributions Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>Distributions</span>
+            <span class="badge bg-secondary ms-2">{{
+              distributions?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            @if (distributions?.length > 0) {
+              <table
+                class="gf-table w-100"
+                mat-table
+                [dataSource]="distributions"
+              >
+                <ng-container matColumnDef="partnershipName">
+                  <th *matHeaderCellDef mat-header-cell>Partnership</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.partnership?.name ?? '—' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th *matHeaderCellDef mat-header-cell>Type</th>
+                  <td *matCellDef="let row" mat-cell>{{ row.type }}</td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                  <th *matHeaderCellDef class="text-right" mat-header-cell>
+                    Amount
+                  </th>
+                  <td *matCellDef="let row" class="text-right" mat-cell>
+                    {{ row.amount | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="date">
+                  <th
+                    *matHeaderCellDef
+                    class="d-none d-lg-table-cell"
+                    mat-header-cell
+                  >
+                    Date
+                  </th>
+                  <td
+                    *matCellDef="let row"
+                    class="d-none d-lg-table-cell"
+                    mat-cell
+                  >
+                    {{ row.date | date }}
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="distributionColumns" mat-header-row></tr>
+                <tr
+                  *matRowDef="let row; columns: distributionColumns"
+                  mat-row
+                ></tr>
+              </table>
+            } @else {
+              <p class="p-3 text-center text-muted" i18n>
+                No distributions yet.
+              </p>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- K-1 Documents Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>K-1 Documents</span>
+            <span class="badge bg-secondary ms-2">{{
+              kDocuments?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            @if (kDocuments?.length > 0) {
+              <table class="gf-table w-100" mat-table [dataSource]="kDocuments">
+                <ng-container matColumnDef="taxYear">
+                  <th *matHeaderCellDef mat-header-cell>Tax Year</th>
+                  <td *matCellDef="let row" mat-cell>{{ row.taxYear }}</td>
+                </ng-container>
+                <ng-container matColumnDef="partnershipName">
+                  <th *matHeaderCellDef mat-header-cell>Partnership</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.partnership?.name ?? '—' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th *matHeaderCellDef mat-header-cell>Status</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.filingStatus ?? row.status }}
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="kDocumentColumns" mat-header-row></tr>
+                <tr
+                  *matRowDef="let row; columns: kDocumentColumns"
+                  mat-row
+                ></tr>
+              </table>
+            } @else {
+              <p class="p-3 text-center text-muted" i18n>
+                No K-1 documents yet.
+              </p>
+            }
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

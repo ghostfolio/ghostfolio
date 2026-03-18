@@ -1,0 +1,401 @@
+:host {
+  display: block;
+}
+
+.container {
+  max-width: 100%;
+  padding: 1.5rem;
+}
+
+// ── Page Header & Period Controls ─────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+.period-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.period-mode-toggle {
+  ::ng-deep .mat-button-toggle-label-content {
+    padding: 0 12px;
+    font-size: 13px;
+    line-height: 34px;
+  }
+}
+
+.year-filter {
+  width: 120px;
+}
+
+.quarter-filter {
+  width: 160px;
+}
+
+.comparison-toggle {
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+// ── Comparison Bar ────────────────────────────────────────────────
+
+.comparison-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: rgba(63, 81, 181, 0.04);
+  border: 1px solid rgba(63, 81, 181, 0.15);
+  border-radius: 8px;
+
+  .compare-icon {
+    color: rgba(63, 81, 181, 0.7);
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+
+  .compare-label {
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.7);
+    white-space: nowrap;
+  }
+}
+
+// ── Comparison Delta Panel ────────────────────────────────────────
+
+.comparison-panel {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+.comparison-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+
+  mat-icon {
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.period-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.primary-badge {
+  background: rgba(63, 81, 181, 0.12);
+  color: #3f51b5;
+}
+
+.comparison-badge {
+  background: rgba(156, 39, 176, 0.12);
+  color: #9c27b0;
+}
+
+.delta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.delta-card {
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .delta-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(0, 0, 0, 0.54);
+    margin-bottom: 0.375rem;
+  }
+
+  .delta-values {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    margin-bottom: 0.375rem;
+    font-variant-numeric: tabular-nums;
+
+    .delta-primary {
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.87);
+    }
+
+    .delta-vs {
+      font-size: 0.6875rem;
+      color: rgba(0, 0, 0, 0.38);
+    }
+
+    .delta-comparison {
+      color: rgba(0, 0, 0, 0.54);
+    }
+  }
+
+  .delta-change {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+
+    .delta-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+    }
+
+    .delta-pct {
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.7;
+    }
+  }
+}
+
+// ── Delta color classes ───────────────────────────────────────────
+
+.delta-positive {
+  &.delta-change,
+  & .delta-change {
+    color: #2e7d32;
+  }
+
+  .delta-icon {
+    color: #2e7d32;
+  }
+}
+
+.delta-negative {
+  &.delta-change,
+  & .delta-change {
+    color: #c62828;
+  }
+
+  .delta-icon {
+    color: #c62828;
+  }
+}
+
+.delta-neutral {
+  &.delta-change,
+  & .delta-change {
+    color: rgba(0, 0, 0, 0.38);
+  }
+}
+
+// ── Tab Styles ────────────────────────────────────────────────────
+
+::ng-deep .mat-mdc-tab-group {
+  .mat-mdc-tab {
+    min-width: unset;
+    padding: 0 24px;
+  }
+
+  .mdc-tab__text-label {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: nowrap;
+  }
+}
+
+.tab-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+// ── Loading / Empty ───────────────────────────────────────────────
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: rgba(0, 0, 0, 0.54);
+
+  mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
+
+// ── Tables ────────────────────────────────────────────────────────
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.performance-table,
+.activity-table {
+  width: 100%;
+
+  .numeric {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .clickable,
+  .entity-name,
+  .asset-class-name {
+    cursor: pointer;
+    font-weight: 500;
+  }
+}
+
+.clickable-row {
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+// Totals row
+.totals-row {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-top: 2px solid rgba(0, 0, 0, 0.12);
+
+  .totals-label {
+    font-weight: 700;
+  }
+
+  .totals-value {
+    font-weight: 700;
+  }
+}
+
+// ── Activity-specific ─────────────────────────────────────────────
+
+.activity-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  mat-form-field {
+    min-width: 160px;
+  }
+}
+
+.activity-table-container {
+  overflow-x: auto;
+
+  .activity-table {
+    min-width: 1800px;
+  }
+}
+
+// Flags
+.negative-basis-row {
+  background-color: rgba(244, 67, 54, 0.08);
+}
+
+.negative-basis-flag {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.excess-distribution {
+  color: #e65100;
+  font-weight: 600;
+}
+
+// ── Responsive ────────────────────────────────────────────────────
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .period-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .comparison-toggle {
+    border-left: none;
+    padding-left: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    width: 100%;
+  }
+
+  .comparison-bar {
+    flex-wrap: wrap;
+  }
+
+  .delta-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .activity-filters {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .delta-grid {
+    grid-template-columns: 1fr;
+  }
+}

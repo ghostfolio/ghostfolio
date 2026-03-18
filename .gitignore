@@ -28,6 +28,7 @@ npm-debug.log
 .cursor/rules/nx-rules.mdc
 .env
 .env.prod
+.env.railway
 .github/instructions/nx.instructions.md
 .nx/cache
 .nx/workspace-data
@@ -38,6 +39,9 @@ npm-debug.log
 /libpeerconnection.log
 testem.log
 /typings
+
+# Uploads
+/uploads
 
 # System Files
 .DS_Store

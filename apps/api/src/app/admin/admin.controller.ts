@@ -55,6 +55,7 @@ import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { DevSeedService } from './dev-seed.service';
 
 @Controller('admin')
 export class AdminController {
@@ -63,6 +64,7 @@ export class AdminController {
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly demoService: DemoService,
+    private readonly devSeedService: DevSeedService,
     private readonly manualService: ManualService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -333,5 +335,21 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getUser(@Param('id') id: string): Promise<AdminUserResponse> {
     return this.adminService.getUser(id);
+  }
+
+  @Delete('family-office-data')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async clearFamilyOfficeData() {
+    return this.devSeedService.clearDatabase();
+  }
+
+  @Post('family-office-data/seed')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async seedFamilyOfficeData() {
+    return this.devSeedService.populateDummyData({
+      userId: this.request.user.id
+    });
   }
 }

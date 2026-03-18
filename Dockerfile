@@ -60,7 +60,16 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
 
 COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps/
 COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/
+RUN sed -i 's/\r$//' /ghostfolio/entrypoint.sh && chmod +x /ghostfolio/entrypoint.sh
+
 WORKDIR /ghostfolio/apps/api
-EXPOSE ${PORT:-3333}
+
+# Railway dynamically assigns PORT; default to 3333 for local usage
+ENV PORT=3333
+EXPOSE ${PORT}
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:${PORT}/api/v1/health || exit 1
+
 USER node
 CMD [ "/ghostfolio/entrypoint.sh" ]

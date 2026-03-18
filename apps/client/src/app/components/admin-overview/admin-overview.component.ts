@@ -46,6 +46,8 @@ import {
   closeCircleOutline,
   ellipsisHorizontal,
   informationCircleOutline,
+  nuclearOutline,
+  sparklesOutline,
   syncOutline,
   trashOutline
 } from 'ionicons/icons';
@@ -133,6 +135,8 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
       closeCircleOutline,
       ellipsisHorizontal,
       informationCircleOutline,
+      nuclearOutline,
+      sparklesOutline,
       syncOutline,
       trashOutline
     });
@@ -228,6 +232,54 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to flush the cache?`
+    });
+  }
+
+  public onClearFamilyOfficeData() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.adminService
+          .clearFamilyOfficeData()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(({ deleted }) => {
+            const total = Object.values(deleted).reduce((a, b) => a + b, 0);
+
+            this.snackBar.open(
+              '✅ ' +
+                $localize`Family office data cleared (${total} records removed).`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to clear all family office data?`
+    });
+  }
+
+  public onPopulateDummyData() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.adminService
+          .seedFamilyOfficeData()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(({ created }) => {
+            const total = Object.values(created).reduce((a, b) => a + b, 0);
+
+            this.snackBar.open(
+              '✅ ' +
+                $localize`Dummy data populated (${total} records created).`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to populate dummy family office data?`
     });
   }
 
