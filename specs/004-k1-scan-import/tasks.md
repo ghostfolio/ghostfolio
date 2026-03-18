@@ -42,13 +42,13 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Create K1Import NestJS module skeleton (module, empty controller, empty service) in apps/api/src/app/k1-import/k1-import.module.ts
-- [ ] T008 [P] Create CellMapping NestJS module skeleton (module, empty controller, empty service) in apps/api/src/app/cell-mapping/cell-mapping.module.ts
-- [ ] T009 Register K1ImportModule and CellMappingModule in apps/api/src/app/app.module.ts
-- [ ] T010 Create K1 extractor interface (K1Extractor with extract method returning K1ExtractionResult) in apps/api/src/app/k1-import/extractors/k1-extractor.interface.ts
-- [ ] T011 Implement cell mapping seed logic (28 IRS default rows + 3 default aggregation rules) in apps/api/src/app/cell-mapping/cell-mapping.service.ts
-- [ ] T012 [P] Create K1 import frontend data service (HTTP client for all k1-import and cell-mapping endpoints) in apps/client/src/app/services/k1-import-data.service.ts
-- [ ] T013 [P] Create frontend route configurations for K1 import pages in apps/client/src/app/pages/k1-import/k1-import-page.routes.ts and cell mapping pages in apps/client/src/app/pages/cell-mapping/cell-mapping-page.routes.ts
+- [X] T007 Create K1Import NestJS module skeleton (module, empty controller, empty service) in apps/api/src/app/k1-import/k1-import.module.ts
+- [X] T008 [P] Create CellMapping NestJS module skeleton (module, empty controller, empty service) in apps/api/src/app/cell-mapping/cell-mapping.module.ts
+- [X] T009 Register K1ImportModule and CellMappingModule in apps/api/src/app/app.module.ts
+- [X] T010 Create K1 extractor interface (K1Extractor with extract method returning K1ExtractionResult) in apps/api/src/app/k1-import/extractors/k1-extractor.interface.ts
+- [X] T011 Implement cell mapping seed logic (28 IRS default rows + 3 default aggregation rules) in apps/api/src/app/cell-mapping/cell-mapping.service.ts
+- [X] T012 [P] Create K1 import frontend data service (HTTP client for all k1-import and cell-mapping endpoints) in apps/client/src/app/services/k1-import-data.service.ts
+- [X] T013 [P] Create frontend route configurations for K1 import pages in apps/client/src/app/pages/k1-import/k1-import-page.routes.ts and cell mapping pages in apps/client/src/app/pages/cell-mapping/cell-mapping-page.routes.ts
 
 **Checkpoint**: Foundation ready — user story implementation can now begin in parallel
 
