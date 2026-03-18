@@ -10,6 +10,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfLicensePageComponent,
     path: '',
-    title: publicRoutes.about.subRoutes.license.title
+    title: publicRoutes.about.subRoutes?.license.title
   }
 ];

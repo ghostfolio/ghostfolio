@@ -8,6 +8,6 @@ export const routes: Routes = [
   {
     component: ResourcesMarketsComponent,
     path: '',
-    title: publicRoutes.resources.subRoutes.markets.title
+    title: publicRoutes.resources.subRoutes?.markets.title
   }
 ];
