@@ -1,0 +1,246 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center">
+        Verify K-1 Extraction ({{ taxYear }})
+      </h1>
+
+      @if (error) {
+        <div class="alert alert-danger mb-3">
+          {{ error }}
+        </div>
+      }
+
+      @if (isLoading) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      } @else {
+        <!-- Extracted Fields Table -->
+        <section class="fields-section mb-4">
+          <h2 class="h5 mb-3">Extracted Values</h2>
+
+          <div class="table-responsive">
+            <table mat-table [dataSource]="fields" class="w-100">
+              <!-- Box Number Column -->
+              <ng-container matColumnDef="boxNumber">
+                <th mat-header-cell *matHeaderCellDef>Box</th>
+                <td mat-cell *matCellDef="let field">
+                  <strong>{{ field.boxNumber }}</strong>
+                </td>
+              </ng-container>
+
+              <!-- Label Column -->
+              <ng-container matColumnDef="label">
+                <th mat-header-cell *matHeaderCellDef>Label</th>
+                <td mat-cell *matCellDef="let field">
+                  @if (field.isEditing) {
+                    <mat-form-field class="compact-field">
+                      <input matInput [(ngModel)]="field.editLabel" />
+                    </mat-form-field>
+                  } @else {
+                    <span>{{ field.customLabel || field.label }}</span>
+                    @if (field.customLabel) {
+                      <small class="text-muted d-block">
+                        (original: {{ field.label }})
+                      </small>
+                    }
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Raw Value Column -->
+              <ng-container matColumnDef="rawValue">
+                <th mat-header-cell *matHeaderCellDef>Value</th>
+                <td mat-cell *matCellDef="let field">
+                  @if (field.isEditing) {
+                    <mat-form-field class="compact-field">
+                      <input matInput [(ngModel)]="field.editValue" />
+                    </mat-form-field>
+                  } @else {
+                    <span [class.user-edited]="field.isUserEdited">
+                      {{ field.rawValue }}
+                    </span>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Numeric Value Column -->
+              <ng-container matColumnDef="numericValue">
+                <th mat-header-cell *matHeaderCellDef>Parsed</th>
+                <td mat-cell *matCellDef="let field">
+                  @if (field.numericValue !== null && field.numericValue !== undefined) {
+                    {{ field.numericValue | number:'1.2-2' }}
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Confidence Column -->
+              <ng-container matColumnDef="confidence">
+                <th mat-header-cell *matHeaderCellDef>Confidence</th>
+                <td mat-cell *matCellDef="let field">
+                  <span
+                    class="confidence-badge"
+                    [ngClass]="getConfidenceClass(field.confidenceLevel)"
+                    [matTooltip]="(field.confidence * 100).toFixed(0) + '%'">
+                    {{ field.confidenceLevel }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Reviewed Column -->
+              <ng-container matColumnDef="reviewed">
+                <th mat-header-cell *matHeaderCellDef>Reviewed</th>
+                <td mat-cell *matCellDef="let field">
+                  <mat-checkbox
+                    [checked]="field.isReviewed"
+                    [disabled]="field.confidenceLevel === 'HIGH'"
+                    (change)="toggleReviewed(field)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let field">
+                  @if (field.isEditing) {
+                    <button mat-icon-button color="primary" (click)="saveEdit(field)"
+                            matTooltip="Save">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="cancelEdit(field)"
+                            matTooltip="Cancel">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  } @else {
+                    <button mat-icon-button (click)="startEditing(field)"
+                            matTooltip="Edit">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                  [ngClass]="{
+                    'row-low': row.confidenceLevel === 'LOW' && !row.isReviewed,
+                    'row-medium': row.confidenceLevel === 'MEDIUM' && !row.isReviewed
+                  }">
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <!-- Unmapped Items Section (FR-037, FR-038) -->
+        @if (unmappedItems.length > 0) {
+          <section class="unmapped-section mb-4">
+            <h2 class="h5 mb-3">
+              Unmapped Items
+              <small class="text-muted">({{ unmappedItems.length }} items)</small>
+            </h2>
+
+            <div class="unmapped-list">
+              @for (item of unmappedItems; track item.rawLabel) {
+                <div class="unmapped-item p-3 mb-2" [ngClass]="{
+                  'resolved': item.resolution !== null
+                }">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>{{ item.rawLabel }}</strong>
+                      <span class="ms-2">{{ item.rawValue }}</span>
+                      @if (item.numericValue !== null) {
+                        <small class="text-muted ms-1">
+                          ({{ item.numericValue | number:'1.2-2' }})
+                        </small>
+                      }
+                      <small class="text-muted d-block">Page {{ item.pageNumber }}</small>
+                    </div>
+                    <div class="unmapped-actions d-flex align-items-center gap-2">
+                      @if (item.resolution === null) {
+                        <mat-form-field class="compact-field">
+                          <mat-label>Assign to box</mat-label>
+                          <mat-select (selectionChange)="assignUnmappedItem(item, $event.value)">
+                            @for (box of availableBoxNumbers; track box) {
+                              <mat-option [value]="box">Box {{ box }}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                        <button mat-icon-button color="warn"
+                                matTooltip="Discard"
+                                (click)="discardUnmappedItem(item)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      } @else {
+                        <span class="resolution-badge">
+                          @if (item.resolution === 'assigned') {
+                            Assigned to Box {{ item.assignedBoxNumber }}
+                          } @else {
+                            Discarded
+                          }
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Aggregation Summary (FR-033, FR-034) -->
+        @if (aggregations.length > 0) {
+          <section class="aggregation-section mb-4">
+            <h2 class="h5 mb-3">Aggregation Summary</h2>
+
+            <div class="aggregation-list">
+              @for (agg of aggregations; track agg.ruleId) {
+                <div class="aggregation-row d-flex justify-content-between p-2">
+                  <div>
+                    <strong>{{ agg.name }}</strong>
+                    <small class="text-muted ms-2">
+                      ({{ agg.operation }} of
+                      @for (box of agg.sourceCells; track box; let last = $last) {
+                        Box {{ box }}@if (!last) {, }
+                      })
+                    </small>
+                  </div>
+                  <div class="aggregation-value">
+                    <strong>{{ agg.computedValue | number:'1.2-2' }}</strong>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Review Status Banner (FR-035) -->
+        @if (!canConfirm) {
+          <div class="alert alert-warning mb-3">
+            <strong>Review Required:</strong> Please review all medium/low-confidence
+            fields and resolve all unmapped items before submitting.
+          </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="actions d-flex justify-content-between mt-4">
+          <button mat-stroked-button color="warn" (click)="cancelImport()">
+            Cancel Import
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!canConfirm || isSaving"
+            (click)="submitVerification()">
+            @if (isSaving) {
+              Saving...
+            } @else {
+              Confirm & Continue
+            }
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

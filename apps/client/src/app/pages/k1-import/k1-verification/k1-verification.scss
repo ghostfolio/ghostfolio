@@ -1,0 +1,116 @@
+:host {
+  display: block;
+}
+
+.fields-section {
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .compact-field {
+    width: 160px;
+
+    .mat-mdc-form-field-infix {
+      padding: 4px 0;
+    }
+  }
+
+  .user-edited {
+    font-style: italic;
+    color: var(--primary-color, #1976d2);
+  }
+}
+
+// Confidence badge styles
+.confidence-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.confidence-high {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+}
+
+.confidence-medium {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #f57f17;
+}
+
+.confidence-low {
+  background-color: rgba(244, 67, 54, 0.15);
+  color: #c62828;
+}
+
+// Row highlighting for unreviewed medium/low
+.row-low {
+  background-color: rgba(244, 67, 54, 0.05) !important;
+}
+
+.row-medium {
+  background-color: rgba(255, 193, 7, 0.05) !important;
+}
+
+// Unmapped items
+.unmapped-section {
+  .unmapped-item {
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+
+    &.resolved {
+      opacity: 0.7;
+      background-color: rgba(76, 175, 80, 0.05);
+    }
+  }
+
+  .resolution-badge {
+    font-size: 0.85rem;
+    color: var(--text-muted, #666);
+    font-style: italic;
+  }
+
+  .compact-field {
+    width: 140px;
+  }
+}
+
+// Aggregation summary
+.aggregation-section {
+  .aggregation-row {
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .aggregation-value {
+    font-size: 1.1rem;
+  }
+}
+
+// Alerts
+.alert-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #f44336;
+  padding: 12px 16px;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 4px;
+  color: #e65100;
+  padding: 12px 16px;
+}
+
+.actions {
+  padding-bottom: 2rem;
+}

@@ -282,6 +282,114 @@ export class K1ImportService {
   }
 
   /**
+   * Verify extraction results.
+   * EXTRACTED → VERIFIED transition.
+   * FR-006 through FR-010, FR-035 (block if unreviewed medium/low), validation rule 10
+   */
+  public async verify(
+    sessionId: string,
+    userId: string,
+    data: {
+      taxYear: number;
+      fields: any[];
+      unmappedItems?: any[];
+    }
+  ) {
+    const session = await this.getSession(sessionId, userId);
+
+    // Only EXTRACTED sessions can be verified
+    if (session.status !== K1ImportStatus.EXTRACTED) {
+      throw new HttpException(
+        'Session must be in EXTRACTED status to verify',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // Validate fields not empty
+    if (!data.fields || data.fields.length === 0) {
+      throw new HttpException(
+        'Fields array cannot be empty',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // FR-035: All medium/low-confidence fields must be reviewed
+    const unreviewedFields = data.fields.filter(
+      (f) =>
+        (f.confidenceLevel === 'MEDIUM' || f.confidenceLevel === 'LOW') &&
+        !f.isReviewed
+    );
+    if (unreviewedFields.length > 0) {
+      throw new HttpException(
+        `${unreviewedFields.length} medium/low-confidence fields have not been reviewed`,
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // Validation rule 10: All unmapped items must be resolved
+    if (data.unmappedItems && data.unmappedItems.length > 0) {
+      const unresolvedItems = data.unmappedItems.filter(
+        (item) => !item.resolution || item.resolution === null
+      );
+      if (unresolvedItems.length > 0) {
+        throw new HttpException(
+          `${unresolvedItems.length} unmapped items have not been resolved`,
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    }
+
+    // Transition to VERIFIED and store verified data
+    const updated = await this.prismaService.k1ImportSession.update({
+      where: { id: sessionId },
+      data: {
+        status: K1ImportStatus.VERIFIED,
+        taxYear: data.taxYear,
+        verifiedData: {
+          fields: data.fields,
+          unmappedItems: data.unmappedItems || []
+        } as any
+      }
+    });
+
+    this.logger.log(
+      `Session ${sessionId}: Verified with ${data.fields.length} fields`
+    );
+
+    return updated;
+  }
+
+  /**
+   * Cancel an import session.
+   * FR-011: Discard extraction data, status → CANCELLED.
+   */
+  public async cancel(sessionId: string, userId: string) {
+    const session = await this.getSession(sessionId, userId);
+
+    // Cannot cancel already CONFIRMED or CANCELLED sessions
+    if (
+      session.status === K1ImportStatus.CONFIRMED ||
+      session.status === K1ImportStatus.CANCELLED
+    ) {
+      throw new HttpException(
+        `Cannot cancel a session in ${session.status} status`,
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const updated = await this.prismaService.k1ImportSession.update({
+      where: { id: sessionId },
+      data: {
+        status: K1ImportStatus.CANCELLED
+      }
+    });
+
+    this.logger.log(`Session ${sessionId}: Cancelled`);
+
+    return updated;
+  }
+
+  /**
    * Check if a PDF is password-protected (FR-029).
    */
   private async checkPasswordProtected(buffer: Buffer): Promise<void> {

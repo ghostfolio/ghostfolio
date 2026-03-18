@@ -84,15 +84,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T023 [P] [US2] Create verify DTO (fields array with isReviewed flags, unmappedItems array with resolution status, taxYear override) in apps/api/src/app/k1-import/dto/verify-k1.dto.ts
-- [ ] T024 [US2] Implement verification logic in K1 import service (EXTRACTED → VERIFIED transition, enforce all medium/low-confidence isReviewed=true per FR-035, validate all unmapped items resolved per validation rule 10) in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T025 [US2] Implement cancel logic in K1 import service (status → CANCELLED, discard extraction data per FR-011) in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T026 [US2] Add PUT /api/v1/k1-import/:id/verify and POST /api/v1/k1-import/:id/cancel endpoints to apps/api/src/app/k1-import/k1-import.controller.ts
-- [ ] T027 [P] [US2] Implement K1 aggregation service (dynamic SUM computation from CellAggregationRule records, auto-recalculate when cell values change per FR-034/FR-039) in apps/api/src/app/k1-import/k1-aggregation.service.ts
-- [ ] T028 [US2] Create K1 verification component with mapped cells table (box number, label, value, confidence indicator, inline edit, isReviewed checkbox, custom label override) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.component.ts
-- [ ] T029 [US2] Add unmapped items section to verification view (assign to existing/new cell or discard, with resolution tracking per FR-037/FR-038) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.html
-- [ ] T030 [US2] Add aggregation summary display to verification view (derived rows distinguished from extracted values, live recalculation on cell edit per FR-033/FR-034) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.html
-- [ ] T031 [US2] Implement review enforcement UI (disable Confirm button until all medium/low-confidence fields have isReviewed=true AND all unmapped items resolved per FR-035) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.component.ts
+- [X] T023 [P] [US2] Create verify DTO (fields array with isReviewed flags, unmappedItems array with resolution status, taxYear override) in apps/api/src/app/k1-import/dto/verify-k1.dto.ts
+- [X] T024 [US2] Implement verification logic in K1 import service (EXTRACTED → VERIFIED transition, enforce all medium/low-confidence isReviewed=true per FR-035, validate all unmapped items resolved per validation rule 10) in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T025 [US2] Implement cancel logic in K1 import service (status → CANCELLED, discard extraction data per FR-011) in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T026 [US2] Add PUT /api/v1/k1-import/:id/verify and POST /api/v1/k1-import/:id/cancel endpoints to apps/api/src/app/k1-import/k1-import.controller.ts
+- [X] T027 [P] [US2] Implement K1 aggregation service (dynamic SUM computation from CellAggregationRule records, auto-recalculate when cell values change per FR-034/FR-039) in apps/api/src/app/k1-import/k1-aggregation.service.ts
+- [X] T028 [US2] Create K1 verification component with mapped cells table (box number, label, value, confidence indicator, inline edit, isReviewed checkbox, custom label override) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.component.ts
+- [X] T029 [US2] Add unmapped items section to verification view (assign to existing/new cell or discard, with resolution tracking per FR-037/FR-038) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.html
+- [X] T030 [US2] Add aggregation summary display to verification view (derived rows distinguished from extracted values, live recalculation on cell edit per FR-033/FR-034) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.html
+- [X] T031 [US2] Implement review enforcement UI (disable Confirm button until all medium/low-confidence fields have isReviewed=true AND all unmapped items resolved per FR-035) in apps/client/src/app/pages/k1-import/k1-verification/k1-verification.component.ts
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work — upload → extract → verify flow is complete
 

@@ -4,12 +4,14 @@ import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   Inject,
   Param,
   Post,
+  Put,
   UploadedFile,
   UseGuards,
   UseInterceptors
@@ -19,6 +21,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StatusCodes } from 'http-status-codes';
 
+import { VerifyK1Dto } from './dto/verify-k1.dto';
 import { K1ImportService } from './k1-import.service';
 
 @Controller('api/v1/k1-import')
@@ -58,5 +61,31 @@ export class K1ImportController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getImportSession(@Param('id') id: string) {
     return this.k1ImportService.getSession(id, this.request.user.id);
+  }
+
+  /**
+   * PUT /api/v1/k1-import/:id/verify
+   * Submit user-verified extraction data.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Put(':id/verify')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async verifyImportSession(
+    @Param('id') id: string,
+    @Body() data: VerifyK1Dto
+  ) {
+    return this.k1ImportService.verify(id, this.request.user.id, data);
+  }
+
+  /**
+   * POST /api/v1/k1-import/:id/cancel
+   * Cancel an import session.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Post(':id/cancel')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async cancelImportSession(@Param('id') id: string) {
+    return this.k1ImportService.cancel(id, this.request.user.id);
   }
 }
