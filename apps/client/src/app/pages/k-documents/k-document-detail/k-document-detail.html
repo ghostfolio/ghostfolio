@@ -1,0 +1,102 @@
+<div class="container">
+  <div class="d-flex align-items-center mb-3">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1 class="h3 mb-0 ms-2">K-Document Detail</h1>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @if (kDocument) {
+    <!-- Summary Card -->
+    <mat-card class="mb-4">
+      <mat-card-header>
+        <mat-card-title>{{ kDocument.partnershipName || kDocument.partnershipId }}</mat-card-title>
+        <mat-card-subtitle>
+          {{ kDocument.type }} — Tax Year {{ kDocument.taxYear }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="detail-row">
+          <span class="label">Filing Status:</span>
+          <mat-chip-set>
+            <mat-chip [class.chip-draft]="kDocument.filingStatus === 'DRAFT'"
+                      [class.chip-estimated]="kDocument.filingStatus === 'ESTIMATED'"
+                      [class.chip-final]="kDocument.filingStatus === 'FINAL'">
+              {{ kDocument.filingStatus }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+        <div class="detail-row">
+          <span class="label">Created:</span>
+          <span>{{ kDocument.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Updated:</span>
+          <span>{{ kDocument.updatedAt | date:'medium' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Aggregation Summary (FR-036) -->
+    @if (aggregations.length > 0) {
+      <h2 class="h5 mb-3">Aggregation Summary</h2>
+      <div class="aggregation-cards mb-4">
+        @for (agg of aggregations; track agg.name) {
+          <mat-card class="aggregation-card">
+            <mat-card-header>
+              <mat-card-title>{{ agg.name }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="aggregation-value">
+                {{ agg.value | currency:'USD':'symbol':'1.2-2' }}
+              </div>
+              @if (agg.breakdown && agg.breakdown.length > 0) {
+                <div class="breakdown">
+                  @for (item of agg.breakdown; track item.boxNumber) {
+                    <div class="breakdown-row">
+                      <span class="box-label">Box {{ item.boxNumber }}:</span>
+                      <span class="box-value">{{ item.value | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+
+    <!-- Raw Box Values -->
+    <h2 class="h5 mb-3">Box Values</h2>
+    @if (boxData.length > 0) {
+      <table mat-table [dataSource]="boxData" class="w-100 box-table">
+        <ng-container matColumnDef="boxNumber">
+          <th mat-header-cell *matHeaderCellDef>Box #</th>
+          <td mat-cell *matCellDef="let row">{{ row.boxNumber }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Value</th>
+          <td mat-cell *matCellDef="let row">
+            @if (row.value !== null) {
+              {{ row.value | currency:'USD':'symbol':'1.2-2' }}
+            } @else {
+              <span class="text-muted">—</span>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="boxColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: boxColumns;"></tr>
+      </table>
+    } @else {
+      <p class="text-muted">No box values available.</p>
+    }
+  } @else if (!error) {
+    <p>Loading...</p>
+  }
+</div>

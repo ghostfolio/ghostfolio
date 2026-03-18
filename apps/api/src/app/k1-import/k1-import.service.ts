@@ -390,6 +390,124 @@ export class K1ImportService {
   }
 
   /**
+   * Get import history for a partnership, optionally filtered by tax year.
+   * FR-022: History of all K-1 import attempts per partnership.
+   */
+  public async getHistory(
+    userId: string,
+    partnershipId: string,
+    taxYear?: number
+  ) {
+    const where: any = { userId, partnershipId };
+    if (taxYear) {
+      where.taxYear = taxYear;
+    }
+
+    const sessions = await this.prismaService.k1ImportSession.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        partnershipId: true,
+        status: true,
+        taxYear: true,
+        fileName: true,
+        extractionMethod: true,
+        kDocumentId: true,
+        createdAt: true
+      }
+    });
+
+    return sessions;
+  }
+
+  /**
+   * Re-process a previously uploaded K-1 PDF with the current cell mapping.
+   * FR-023: Creates a new import session using the stored document from the original session.
+   */
+  public async reprocess(sessionId: string, userId: string) {
+    const originalSession = await this.getSession(sessionId, userId);
+
+    if (!originalSession.documentId) {
+      throw new HttpException(
+        'Original session has no stored document to re-process',
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // Read the stored file from uploads directory
+    const document = await this.prismaService.document.findUnique({
+      where: { id: originalSession.documentId }
+    });
+
+    if (!document) {
+      throw new HttpException(
+        'Stored document not found',
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    // Create a new import session in PROCESSING status
+    const newSession = await this.prismaService.k1ImportSession.create({
+      data: {
+        partnershipId: originalSession.partnershipId,
+        userId,
+        status: K1ImportStatus.PROCESSING,
+        taxYear: originalSession.taxYear,
+        fileName: originalSession.fileName,
+        fileSize: originalSession.fileSize,
+        extractionMethod: 'pending',
+        documentId: originalSession.documentId
+      }
+    });
+
+    // Read file from disk and run extraction asynchronously
+    const fs = await import('fs/promises');
+    const filePath = (document as any).url || (document as any).filePath;
+
+    if (!filePath) {
+      throw new HttpException(
+        'Cannot determine file path for stored document',
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    const fileBuffer = await fs.readFile(filePath);
+    const file = {
+      buffer: fileBuffer,
+      originalname: originalSession.fileName,
+      mimetype: 'application/pdf',
+      size: originalSession.fileSize
+    };
+
+    this.runExtraction(
+      newSession.id,
+      file,
+      originalSession.partnershipId
+    ).catch((err) => {
+      this.logger.error(
+        `Reprocess extraction failed for session ${newSession.id}: ${err.message}`,
+        err.stack
+      );
+    });
+
+    this.logger.log(
+      `Session ${sessionId}: Re-processing started as new session ${newSession.id}`
+    );
+
+    return {
+      id: newSession.id,
+      partnershipId: newSession.partnershipId,
+      status: newSession.status,
+      taxYear: newSession.taxYear,
+      fileName: newSession.fileName,
+      fileSize: newSession.fileSize,
+      extractionMethod: newSession.extractionMethod,
+      createdAt: newSession.createdAt
+    };
+  }
+
+  /**
    * Confirm verified data and auto-create model objects.
    * VERIFIED → CONFIRMED transition.
    * FR-012 (KDocument), FR-013 (allocations), FR-014 (Distributions), FR-015 (Document linkage), FR-016 (duplicate detection).
@@ -470,11 +588,17 @@ export class K1ImportService {
     // FR-012: Create or update KDocument
     let kDocument;
     if (existingKDocument && data.existingKDocumentAction === 'UPDATE') {
+      // FR-025: Preserve previous values for audit trail
+      const previousData = existingKDocument.data;
+      const previousFilingStatus = existingKDocument.filingStatus;
+
       kDocument = await this.prismaService.kDocument.update({
         where: { id: existingKDocument.id },
         data: {
           filingStatus: data.filingStatus,
           data: kDocumentData as any,
+          previousData: previousData as any,
+          previousFilingStatus,
           documentFileId: session.documentId
         }
       });

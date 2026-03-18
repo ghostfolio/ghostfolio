@@ -10,5 +10,14 @@ export const routes: Routes = [
     component: KDocumentsPageComponent,
     path: '',
     title: 'K-1 / K-3 Documents'
+  },
+  {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./k-document-detail/k-document-detail.component').then(
+        (c) => c.KDocumentDetailComponent
+      ),
+    path: ':id',
+    title: 'K-Document Detail'
   }
 ];

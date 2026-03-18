@@ -265,4 +265,47 @@ export class CellMappingService implements OnModuleInit {
 
     return this.getAggregationRules(partnershipId);
   }
+
+  /**
+   * Compute aggregation values for a specific KDocument (FR-036).
+   */
+  public async computeAggregations(
+    kDocumentId: string,
+    partnershipId?: string
+  ) {
+    const kDocument = await this.prismaService.kDocument.findUnique({
+      where: { id: kDocumentId }
+    });
+
+    if (!kDocument) {
+      throw new HttpException('KDocument not found', StatusCodes.NOT_FOUND);
+    }
+
+    const pId = partnershipId || kDocument.partnershipId;
+    const rules = await this.getAggregationRules(pId);
+    const data = kDocument.data as Record<string, any>;
+
+    return rules.map((rule: any) => {
+      const sourceCells = (rule.sourceCells || []) as string[];
+      const breakdown = sourceCells.map((boxNumber: string) => ({
+        boxNumber,
+        value: typeof data[boxNumber] === 'number' ? data[boxNumber] : 0
+      }));
+
+      let value = 0;
+      if (rule.operation === 'SUM') {
+        value = breakdown.reduce(
+          (sum: number, item: any) => sum + item.value,
+          0
+        );
+      }
+
+      return {
+        name: rule.name,
+        operation: rule.operation,
+        value,
+        breakdown
+      };
+    });
+  }
 }

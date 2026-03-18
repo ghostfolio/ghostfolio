@@ -112,4 +112,21 @@ export class CellMappingController {
       data.rules
     );
   }
+
+  /**
+   * GET /api/v1/cell-mapping/aggregation-rules/compute
+   * Compute aggregation values for a specific KDocument (FR-036).
+   */
+  @HasPermission(permissions.readKDocument)
+  @Get('aggregation-rules/compute')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async computeAggregations(
+    @Query('kDocumentId') kDocumentId: string,
+    @Query('partnershipId') partnershipId?: string
+  ) {
+    return this.cellMappingService.computeAggregations(
+      kDocumentId,
+      partnershipId
+    );
+  }
 }

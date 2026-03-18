@@ -142,11 +142,11 @@
 
 ### Implementation for User Story 5
 
-- [ ] T042 [US5] Implement import history query (filter by partnershipId and optional taxYear, order by createdAt desc) in apps/api/src/app/k1-import/k1-import.service.ts and GET /api/v1/k1-import/history endpoint in k1-import.controller.ts
-- [ ] T043 [US5] Implement reprocess endpoint (re-extract stored PDF with current cell mapping, create new session, original session unchanged) in apps/api/src/app/k1-import/k1-import.service.ts and POST /api/v1/k1-import/:id/reprocess in k1-import.controller.ts
-- [ ] T044 [US5] Add import history list view (date, filename, status, tax year, link to KDocument) to K1 import page in apps/client/src/app/pages/k1-import/k1-import-page.component.ts
-- [ ] T045 [US5] Implement KDocument status transitions (DRAFT → ESTIMATED → FINAL) with previous value preservation for audit trail (FR-024/FR-025) in apps/api/src/app/k1-import/k1-import.service.ts
-- [ ] T046 [US5] Extend KDocument detail view with aggregation summary section (display named aggregation totals alongside raw box values per FR-036) in apps/client/src/app/pages/k-document/k-document-detail/
+- [X] T042 [US5] Implement import history query (filter by partnershipId and optional taxYear, order by createdAt desc) in apps/api/src/app/k1-import/k1-import.service.ts and GET /api/v1/k1-import/history endpoint in k1-import.controller.ts
+- [X] T043 [US5] Implement reprocess endpoint (re-extract stored PDF with current cell mapping, create new session, original session unchanged) in apps/api/src/app/k1-import/k1-import.service.ts and POST /api/v1/k1-import/:id/reprocess in k1-import.controller.ts
+- [X] T044 [US5] Add import history list view (date, filename, status, tax year, link to KDocument) to K1 import page in apps/client/src/app/pages/k1-import/k1-import-page.component.ts
+- [X] T045 [US5] Implement KDocument status transitions (DRAFT → ESTIMATED → FINAL) with previous value preservation for audit trail (FR-024/FR-025) in apps/api/src/app/k1-import/k1-import.service.ts
+- [X] T046 [US5] Extend KDocument detail view with aggregation summary section (display named aggregation totals alongside raw box values per FR-036) in apps/client/src/app/pages/k-document/k-document-detail/
 
 **Checkpoint**: All user stories should now be independently functional
 

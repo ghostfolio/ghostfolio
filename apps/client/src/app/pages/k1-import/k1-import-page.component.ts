@@ -16,7 +16,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
-import { Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router, RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   cloudUploadOutline,
@@ -33,7 +35,10 @@ import {
     MatFormFieldModule,
     MatIconModule,
     MatProgressBarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTableModule,
+    MatTooltipModule,
+    RouterModule
   ],
   selector: 'gf-k1-import-page',
   styleUrls: ['./k1-import-page.scss'],
@@ -42,6 +47,8 @@ import {
 export class K1ImportPageComponent implements OnInit {
   public error: string | null = null;
   public extractionStatus: string | null = null;
+  public historyColumns = ['createdAt', 'fileName', 'taxYear', 'status', 'kDocument', 'actions'];
+  public importHistory: any[] = [];
   public isUploading = false;
   public partnerships: Array<{ id: string; name: string }> = [];
   public selectedFile: File | null = null;
@@ -70,6 +77,51 @@ export class K1ImportPageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.fetchPartnerships();
+  }
+
+  public onPartnershipChange(): void {
+    if (this.selectedPartnershipId) {
+      this.loadImportHistory();
+    }
+  }
+
+  public loadImportHistory(): void {
+    if (!this.selectedPartnershipId) {
+      return;
+    }
+
+    this.k1ImportDataService
+      .fetchImportHistory({ partnershipId: this.selectedPartnershipId })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (history) => {
+          this.importHistory = history;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: () => {
+          this.importHistory = [];
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+
+  public reprocessSession(sessionId: string): void {
+    this.k1ImportDataService
+      .reprocessImportSession(sessionId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          this.sessionId = result.id;
+          this.extractionStatus = 'Processing...';
+          this.changeDetectorRef.markForCheck();
+          this.startPolling(result.id);
+        },
+        error: (err) => {
+          this.error =
+            err?.error?.message || err?.message || 'Re-processing failed.';
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   public onFileSelected(event: Event): void {

@@ -541,17 +541,19 @@ model Distribution {
 }
 
 model KDocument {
-  id             String          @id @default(uuid())
-  partnershipId  String
-  partnership    Partnership     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
-  type           KDocumentType
-  taxYear        Int
-  filingStatus   KDocumentStatus @default(DRAFT)
-  data           Json
-  documentFileId String?
-  documentFile   Document?       @relation(fields: [documentFileId], references: [id])
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id                    String          @id @default(uuid())
+  partnershipId         String
+  partnership           Partnership     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  type                  KDocumentType
+  taxYear               Int
+  filingStatus          KDocumentStatus @default(DRAFT)
+  data                  Json
+  previousData          Json?
+  previousFilingStatus  KDocumentStatus?
+  documentFileId        String?
+  documentFile          Document?       @relation(fields: [documentFileId], references: [id])
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
 
   importSession K1ImportSession?
 

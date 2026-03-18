@@ -12,6 +12,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors
@@ -54,6 +55,24 @@ export class K1ImportController {
   }
 
   /**
+   * GET /api/v1/k1-import/history
+   * Get import history for a partnership.
+   */
+  @HasPermission(permissions.readKDocument)
+  @Get('history')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getImportHistory(
+    @Query('partnershipId') partnershipId: string,
+    @Query('taxYear') taxYear?: string
+  ) {
+    return this.k1ImportService.getHistory(
+      this.request.user.id,
+      partnershipId,
+      taxYear ? parseInt(taxYear, 10) : undefined
+    );
+  }
+
+  /**
    * GET /api/v1/k1-import/:id
    * Get the current state of an import session.
    */
@@ -88,6 +107,18 @@ export class K1ImportController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async cancelImportSession(@Param('id') id: string) {
     return this.k1ImportService.cancel(id, this.request.user.id);
+  }
+
+  /**
+   * POST /api/v1/k1-import/:id/reprocess
+   * Re-process a previously uploaded K-1 PDF with current cell mapping.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Post(':id/reprocess')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async reprocessImportSession(@Param('id') id: string) {
+    return this.k1ImportService.reprocess(id, this.request.user.id);
   }
 
   /**
