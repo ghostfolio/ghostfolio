@@ -127,6 +127,10 @@ export class PdfParseExtractor implements K1Extractor {
       const fields: K1ExtractedField[] = [];
       const metadata = this.initMetadata();
 
+      // Checkboxes first — consume "X" marks before Part III so the
+      // BOX_16_K3 checkbox doesn't get grabbed as a BOX_16 value.
+      this.extractCheckboxes(dataItems, fields, metadata);
+
       // T007-T010 (US1): Part III extraction
       this.extractPartIII(dataItems, fields);
 
@@ -135,9 +139,6 @@ export class PdfParseExtractor implements K1Extractor {
 
       // T015-T018 (US3): Sections J/K/L/M/N
       this.extractSections(dataItems, fields);
-
-      // T019-T020 (US4): Checkbox detection
-      this.extractCheckboxes(dataItems, fields, metadata);
 
       // T021 (US5): Unmapped items
       const unmappedItems = this.collectUnmappedItems(dataItems);
@@ -543,9 +544,8 @@ export class PdfParseExtractor implements K1Extractor {
     this.extractTextMetadata(dataItems, 'C_IRS_CENTER', metadata, null);
 
     // Part II: Partner info
-    this.extractTextMetadata(dataItems, 'D_PARTNER_EIN', metadata, 'partnerEin');
-    this.extractTextMetadata(dataItems, 'E_NAME', metadata, 'partnerName');
-    this.extractTextMetadata(dataItems, 'F_ADDR', metadata, null);
+    this.extractTextMetadata(dataItems, 'E_TIN', metadata, 'partnerEin');
+    this.extractTextMetadata(dataItems, 'F_NAME_ADDR', metadata, 'partnerName');
 
     // Extract remaining metadata text fields into the fields array
     const metadataRegions = K1_POSITION_REGIONS.filter(
