@@ -3,7 +3,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +17,7 @@ import { openOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfLogoComponent, IonIcon, RouterModule],
+  imports: [GfLogoComponent, IonIcon, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-footer',
   styleUrls: ['./footer.component.scss'],
@@ -34,13 +33,13 @@ export class GfFooterComponent implements OnChanges {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkAboutChangelog =
-    publicRoutes.about.subRoutes.changelog.routerLink;
+    publicRoutes.about.subRoutes?.changelog.routerLink;
   public routerLinkAboutLicense =
-    publicRoutes.about.subRoutes.license.routerLink;
+    publicRoutes.about.subRoutes?.license.routerLink;
   public routerLinkAboutPrivacyPolicy =
-    publicRoutes.about.subRoutes.privacyPolicy.routerLink;
+    publicRoutes.about.subRoutes?.privacyPolicy.routerLink;
   public routerLinkAboutTermsOfService =
-    publicRoutes.about.subRoutes.termsOfService.routerLink;
+    publicRoutes.about.subRoutes?.termsOfService.routerLink;
   public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFaq = publicRoutes.faq.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;

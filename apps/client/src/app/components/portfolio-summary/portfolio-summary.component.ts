@@ -84,10 +84,13 @@ export class GfPortfolioSummaryComponent implements OnChanges {
         this.precision = 0;
       }
 
-      if (this.user.dateOfFirstActivity) {
-        this.timeInMarket = formatDistanceToNow(this.user.dateOfFirstActivity, {
-          locale: getDateFnsLocale(this.language)
-        });
+      if (this.summary.dateOfFirstActivity) {
+        this.timeInMarket = formatDistanceToNow(
+          this.summary.dateOfFirstActivity,
+          {
+            locale: getDateFnsLocale(this.language)
+          }
+        );
       } else {
         this.timeInMarket = '-';
       }

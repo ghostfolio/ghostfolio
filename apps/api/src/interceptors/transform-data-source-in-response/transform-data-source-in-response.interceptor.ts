@@ -1,4 +1,4 @@
-import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
+import { redactPaths } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { encodeDataSource } from '@ghostfolio/common/helper';
 
@@ -58,13 +58,21 @@ export class TransformDataSourceInResponseInterceptor<
             }
           }
 
-          data = redactAttributes({
+          data = redactPaths({
+            valueMap,
             object: data,
-            options: [
-              {
-                valueMap,
-                attribute: 'dataSource'
-              }
+            paths: [
+              'activities[*].dataSource',
+              'activities[*].SymbolProfile.dataSource',
+              'benchmarks[*].dataSource',
+              'errors[*].dataSource',
+              'fearAndGreedIndex.CRYPTOCURRENCIES.dataSource',
+              'fearAndGreedIndex.STOCKS.dataSource',
+              'holdings[*].assetProfile.dataSource',
+              'holdings[*].dataSource',
+              'items[*].dataSource',
+              'SymbolProfile.dataSource',
+              'watchlist[*].dataSource'
             ]
           });
         }

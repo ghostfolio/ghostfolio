@@ -18,7 +18,7 @@ import {
 
 import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import * as Alphavantage from 'alphavantage';
+import Alphavantage from 'alphavantage';
 import { format, isAfter, isBefore, parse } from 'date-fns';
 
 import { AlphaVantageHistoricalResponse } from './interfaces/interfaces';

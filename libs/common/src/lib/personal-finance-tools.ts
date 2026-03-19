@@ -34,6 +34,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    founded: 2018,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'altruist',
+    name: 'Altruist',
+    origin: 'United States',
+    slogan: 'The wealth platform built for independent advisors'
+  },
+  {
     founded: 2023,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -106,6 +115,26 @@ export const personalFinanceTools: Product[] = [
     origin: 'France',
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors'
+  },
+  {
+    founded: 2024,
+    hasSelfHostingAbility: false,
+    key: 'bluebudget',
+    languages: ['Deutsch', 'English', 'Français', 'Italiano'],
+    name: 'BlueBudget',
+    origin: 'Switzerland',
+    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung'
+  },
+  {
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'boldin',
+    name: 'Boldin',
+    note: 'Originally named as NewRetirement',
+    origin: 'United States',
+    pricingPerYear: '$144',
+    slogan: 'Take control with retirement planning tools that begin with you'
   },
   {
     key: 'budgetpulse',
@@ -642,6 +671,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Dein smarter Finance Assistant'
   },
   {
+    founded: 2007,
+    key: 'moneyspire',
+    name: 'Moneyspire',
+    note: 'License is a perpetual license',
+    origin: 'United States',
+    pricingPerYear: '$59.99',
+    slogan: 'Have total control of your financial life'
+  },
+  {
     key: 'moneywiz',
     name: 'MoneyWiz',
     origin: 'United States',
@@ -715,6 +753,13 @@ export const personalFinanceTools: Product[] = [
     name: 'Peek',
     origin: 'Singapore',
     slogan: 'Feel in control of your money without spreadsheets or shame'
+  },
+  {
+    key: 'pennies',
+    name: 'Pennies',
+    origin: 'United States',
+    pricingPerYear: '$39.99',
+    slogan: 'Your money. Made simple.'
   },
   {
     founded: 2022,
@@ -815,6 +860,16 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$108',
     slogan: 'Build Financial Plans You Love.'
+  },
+  {
+    founded: 2022,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'prostocktracker',
+    name: 'Pro Stock Tracker',
+    origin: 'United Kingdom',
+    pricingPerYear: '$60',
+    slogan: 'The stock portfolio tracker built for long-term investors'
   },
   {
     founded: 2015,
@@ -988,6 +1043,16 @@ export const personalFinanceTools: Product[] = [
     origin: 'Germany',
     regions: ['Austria', 'Germany', 'Switzerland'],
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    founded: 2025,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'turbobulls',
+    name: 'Turbobulls',
+    origin: 'Romania',
+    pricingPerYear: '€39.99',
+    slogan: 'Your complete financial dashboard. Actually private.'
   },
   {
     hasFreePlan: true,

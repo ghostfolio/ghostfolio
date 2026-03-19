@@ -30,6 +30,7 @@ export class ConfigurationService {
       API_KEY_FINANCIAL_MODELING_PREP: str({ default: '' }),
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
+      BULL_BOARD_IS_READ_ONLY: bool({ default: true }),
       CACHE_QUOTES_TTL: num({ default: ms('1 minute') }),
       CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
@@ -43,6 +44,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_AUTH_GOOGLE: bool({ default: false }),
       ENABLE_FEATURE_AUTH_OIDC: bool({ default: false }),
       ENABLE_FEATURE_AUTH_TOKEN: bool({ default: true }),
+      ENABLE_FEATURE_BULL_BOARD: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: bool({ default: true }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
@@ -102,7 +104,6 @@ export class ConfigurationService {
       ROOT_URL: url({
         default: environment.rootUrl
       }),
-      STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),

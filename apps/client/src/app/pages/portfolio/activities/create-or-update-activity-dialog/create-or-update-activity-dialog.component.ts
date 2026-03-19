@@ -10,6 +10,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -48,7 +49,6 @@ import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
-import { DataService } from '../../../../services/data.service';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
 
@@ -96,7 +96,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
-  public platforms: { id: string; name: string }[];
   public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
@@ -127,11 +126,10 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
     this.dateAdapter.setLocale(this.locale);
 
-    const { currencies, platforms } = this.dataService.fetchInfo();
+    const { currencies } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
-    this.platforms = platforms;
 
     this.dataService
       .fetchPortfolioHoldings()
@@ -190,8 +188,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
         !this.data.activity?.accountId &&
         this.mode === 'create'
           ? this.data.accounts[0].id
-          : this.data.activity?.accountId,
-        Validators.required
+          : this.data.activity?.accountId
       ],
       assetClass: [this.data.activity?.SymbolProfile?.assetClass],
       assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
@@ -367,11 +364,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
           (this.activityForm.get('dataSource').value === 'MANUAL' &&
             type === 'BUY')
         ) {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId').value;
@@ -399,11 +391,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
           this.activityForm.get('updateAccountBalance').disable();
           this.activityForm.get('updateAccountBalance').setValue(false);
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId').value;
@@ -449,8 +436,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
             this.activityForm.get('updateAccountBalance').setValue(false);
           }
         } else {
-          this.activityForm.get('accountId').setValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
           this.activityForm
             .get('dataSource')
             .setValidators(Validators.required);
@@ -516,11 +501,12 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
       comment: this.activityForm.get('comment').value || null,
       currency: this.activityForm.get('currency').value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
+      dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
+        this.activityForm.get('type').value
+      )
+        ? 'MANUAL'
+        : this.activityForm.get('dataSource').value,
       date: this.activityForm.get('date').value,
-      dataSource:
-        this.activityForm.get('type').value === 'VALUABLE'
-          ? 'MANUAL'
-          : this.activityForm.get('dataSource').value,
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:

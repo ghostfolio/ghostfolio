@@ -1,6 +1,5 @@
 import {
   getTooltipOptions,
-  getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin,
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
@@ -15,11 +14,13 @@ import {
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
+import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  type ElementRef,
   Input,
   OnChanges,
   OnDestroy,
@@ -34,12 +35,15 @@ import {
   LineController,
   LineElement,
   PointElement,
+  type ScriptableLineSegmentContext,
   TimeScale,
   Tooltip,
-  TooltipPosition
+  type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import annotationPlugin from 'chartjs-plugin-annotation';
+import annotationPlugin, {
+  type AnnotationOptions
+} from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -62,7 +66,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() locale = getLocale();
   @Input() savingsRate = 0;
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart<'bar' | 'line'>;
   private investments: InvestmentItem[];
@@ -81,8 +85,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
-      getTooltipPositionerMapTop(this.chart, position);
+    registerChartConfiguration();
   }
 
   public ngOnChanges() {
@@ -121,12 +124,12 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           }),
           label: this.benchmarkDataLabel,
           segment: {
-            borderColor: (context: unknown) =>
+            borderColor: (context) =>
               this.isInFuture(
                 context,
                 `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.67)`
               ),
-            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
+            borderDash: (context) => this.isInFuture(context, [2, 2])
           },
           stepped: true
         },
@@ -143,12 +146,12 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           label: $localize`Total Amount`,
           pointRadius: 0,
           segment: {
-            borderColor: (context: unknown) =>
+            borderColor: (context) =>
               this.isInFuture(
                 context,
                 `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
               ),
-            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
+            borderDash: (context) => this.isInFuture(context, [2, 2])
           }
         }
       ]
@@ -157,17 +160,14 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = chartData;
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
+          this.getTooltipPluginConfiguration();
 
-        if (
-          this.savingsRate &&
-          // @ts-ignore
-          this.chart.options.plugins.annotation.annotations.savingsRate
-        ) {
-          // @ts-ignore
-          this.chart.options.plugins.annotation.annotations.savingsRate.value =
-            this.savingsRate;
+        const annotations = this.chart.options.plugins.annotation
+          .annotations as Record<string, AnnotationOptions<'line'>>;
+        if (this.savingsRate && annotations.savingsRate) {
+          annotations.savingsRate.value = this.savingsRate;
         }
 
         this.chart.update();
@@ -201,7 +201,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                           color: 'white',
                           content: $localize`Savings Rate`,
                           display: true,
-                          font: { size: '10px', weight: 'normal' },
+                          font: { size: 10, weight: 'normal' },
                           padding: {
                             x: 4,
                             y: 2
@@ -229,7 +229,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            } as unknown,
+            },
             responsive: true,
             scales: {
               x: {
@@ -286,7 +286,9 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration(): Partial<
+    TooltipOptions<'bar' | 'line'>
+  > {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
@@ -296,13 +298,13 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
         unit: this.isInPercent ? '%' : undefined
       }),
       mode: 'index',
-      position: 'top' as unknown,
+      position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'
     };
   }
 
-  private isInFuture<T>(aContext: any, aValue: T) {
+  private isInFuture<T>(aContext: ScriptableLineSegmentContext, aValue: T) {
     return isAfter(new Date(aContext?.p1?.parsed?.x), new Date())
       ? aValue
       : undefined;

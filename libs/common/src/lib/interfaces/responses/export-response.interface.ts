@@ -27,7 +27,12 @@ export interface ExportResponse {
   > & { dataSource: DataSource; date: string; symbol: string })[];
   assetProfiles: (Omit<
     SymbolProfile,
-    'createdAt' | 'id' | 'updatedAt' | 'userId'
+    | 'createdAt'
+    | 'id'
+    | 'scraperConfiguration'
+    | 'symbolMapping'
+    | 'updatedAt'
+    | 'userId'
   > & {
     marketData: MarketData[];
   })[];

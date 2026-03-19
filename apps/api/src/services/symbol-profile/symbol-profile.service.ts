@@ -77,7 +77,7 @@ export class SymbolProfileService {
       .findMany({
         include: {
           _count: {
-            select: { activities: true }
+            select: { activities: true, watchedBy: true }
           },
           activities: {
             orderBy: {
@@ -109,7 +109,7 @@ export class SymbolProfileService {
       .findMany({
         include: {
           _count: {
-            select: { activities: true }
+            select: { activities: true, watchedBy: true }
           },
           SymbolProfileOverrides: true
         },
@@ -184,7 +184,7 @@ export class SymbolProfileService {
 
   private enhanceSymbolProfiles(
     symbolProfiles: (SymbolProfile & {
-      _count: { activities: number };
+      _count: { activities: number; watchedBy?: number };
       activities?: {
         date: Date;
       }[];
@@ -206,10 +206,12 @@ export class SymbolProfileService {
         sectors: this.getSectors(
           symbolProfile?.sectors as unknown as Prisma.JsonArray
         ),
-        symbolMapping: this.getSymbolMapping(symbolProfile)
+        symbolMapping: this.getSymbolMapping(symbolProfile),
+        watchedByCount: 0
       };
 
       item.activitiesCount = symbolProfile._count.activities;
+      item.watchedByCount = symbolProfile._count.watchedBy ?? 0;
       delete item._count;
 
       item.dateOfFirstActivity = symbolProfile.activities?.[0]?.date;

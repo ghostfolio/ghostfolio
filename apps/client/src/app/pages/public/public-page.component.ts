@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -11,6 +10,7 @@ import { Market } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
@@ -19,8 +19,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableDataSource } from '@angular/material/table';
@@ -29,8 +31,8 @@ import { AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -83,12 +85,12 @@ export class GfPublicPageComponent implements OnInit {
   public UNKNOWN_KEY = UNKNOWN_KEY;
 
   private accessId: string;
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private router: Router
   ) {
@@ -110,7 +112,7 @@ export class GfPublicPageComponent implements OnInit {
     this.dataService
       .fetchPublicPortfolio(this.accessId)
       .pipe(
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         catchError((error) => {
           if (error.status === StatusCodes.NOT_FOUND) {
             console.error(error);
@@ -245,10 +247,5 @@ export class GfPublicPageComponent implements OnInit {
           : position.valueInPercentage
       };
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

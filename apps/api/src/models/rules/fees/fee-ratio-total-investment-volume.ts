@@ -3,35 +3,36 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
-export class FeeRatioInitialInvestment extends Rule<Settings> {
+export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
   private fees: number;
-  private totalInvestment: number;
+  private totalInvestmentVolumeInBaseCurrency: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     languageCode: string,
-    totalInvestment: number,
+    totalInvestmentVolumeInBaseCurrency: number,
     fees: number
   ) {
     super(exchangeRateDataService, {
       languageCode,
-      key: FeeRatioInitialInvestment.name
+      key: FeeRatioTotalInvestmentVolume.name
     });
 
     this.fees = fees;
-    this.totalInvestment = totalInvestment;
+    this.totalInvestmentVolumeInBaseCurrency =
+      totalInvestmentVolumeInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
-    const feeRatio = this.totalInvestment
-      ? this.fees / this.totalInvestment
+    const feeRatio = this.totalInvestmentVolumeInBaseCurrency
+      ? this.fees / this.totalInvestmentVolumeInBaseCurrency
       : 0;
 
     if (feeRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.feeRatioInitialInvestment.false',
+          id: 'rule.feeRatioTotalInvestmentVolume.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
             feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
@@ -44,7 +45,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.feeRatioInitialInvestment.true',
+        id: 'rule.feeRatioTotalInvestmentVolume.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
           feeRatio: (feeRatio * 100).toPrecision(3),
@@ -76,7 +77,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
   public getName() {
     return this.i18nService.getTranslation({
-      id: 'rule.feeRatioInitialInvestment',
+      id: 'rule.feeRatioTotalInvestmentVolume',
       languageCode: this.getLanguageCode()
     });
   }

@@ -20,24 +20,29 @@ export const routes: Routes = [
         title: internalRoutes.adminControl.title
       },
       {
-        path: internalRoutes.adminControl.subRoutes.jobs.path,
+        path: internalRoutes.adminControl.subRoutes?.jobs.path,
         component: GfAdminJobsComponent,
-        title: internalRoutes.adminControl.subRoutes.jobs.title
+        title: internalRoutes.adminControl.subRoutes?.jobs.title
       },
       {
-        path: internalRoutes.adminControl.subRoutes.marketData.path,
+        path: internalRoutes.adminControl.subRoutes?.marketData.path,
         component: GfAdminMarketDataComponent,
-        title: internalRoutes.adminControl.subRoutes.marketData.title
+        title: internalRoutes.adminControl.subRoutes?.marketData.title
       },
       {
-        path: internalRoutes.adminControl.subRoutes.settings.path,
+        path: internalRoutes.adminControl.subRoutes?.settings.path,
         component: GfAdminSettingsComponent,
-        title: internalRoutes.adminControl.subRoutes.settings.title
+        title: internalRoutes.adminControl.subRoutes?.settings.title
       },
       {
-        path: internalRoutes.adminControl.subRoutes.users.path,
+        path: internalRoutes.adminControl.subRoutes?.users.path,
         component: GfAdminUsersComponent,
-        title: internalRoutes.adminControl.subRoutes.users.title
+        title: internalRoutes.adminControl.subRoutes?.users.title
+      },
+      {
+        path: `${internalRoutes.adminControl.subRoutes?.users.path}/:userId`,
+        component: GfAdminUsersComponent,
+        title: internalRoutes.adminControl.subRoutes?.users.title
       }
     ],
     component: AdminPageComponent,

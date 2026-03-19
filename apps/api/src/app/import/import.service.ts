@@ -1,9 +1,10 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -25,13 +26,13 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
-  AccountWithPlatform,
+  AccountWithValue,
   OrderWithAccount,
   UserWithSettings
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
+import { DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
@@ -43,11 +44,12 @@ import { ImportDataDto } from './import-data.dto';
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
-    private readonly configurationService: ConfigurationService,
+    private readonly activitiesService: ActivitiesService,
+    private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
-    private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
     private readonly portfolioService: PortfolioService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -57,8 +59,12 @@ export class ImportService {
   public async getDividends({
     dataSource,
     symbol,
+    userCurrency,
     userId
-  }: AssetProfileIdentifier & { userId: string }): Promise<Activity[]> {
+  }: AssetProfileIdentifier & {
+    userCurrency: string;
+    userId: string;
+  }): Promise<Activity[]> {
     try {
       const holding = await this.portfolioService.getHolding({
         dataSource,
@@ -71,36 +77,45 @@ export class ImportService {
         return [];
       }
 
-      const { activities, firstBuyDate, historicalData } = holding;
+      const filters = this.apiService.buildFiltersFromQueryParams({
+        filterByDataSource: dataSource,
+        filterBySymbol: symbol
+      });
 
-      const [[assetProfile], dividends] = await Promise.all([
-        this.symbolProfileService.getSymbolProfiles([
-          {
+      const { dateOfFirstActivity, historicalData } = holding;
+
+      const [{ accounts }, { activities }, [assetProfile], dividends] =
+        await Promise.all([
+          this.portfolioService.getAccountsWithAggregations({
+            filters,
+            userId,
+            withExcludedAccounts: true
+          }),
+          this.activitiesService.getActivities({
+            filters,
+            userCurrency,
+            userId,
+            startDate: parseDate(dateOfFirstActivity)
+          }),
+          this.symbolProfileService.getSymbolProfiles([
+            {
+              dataSource,
+              symbol
+            }
+          ]),
+          await this.dataProviderService.getDividends({
             dataSource,
-            symbol
-          }
-        ]),
-        await this.dataProviderService.getDividends({
-          dataSource,
-          symbol,
-          from: parseDate(firstBuyDate),
-          granularity: 'day',
-          to: new Date()
-        })
-      ]);
-
-      const accounts = activities
-        .filter(({ account }) => {
-          return !!account;
-        })
-        .map(({ account }) => {
-          return account;
-        });
+            symbol,
+            from: parseDate(dateOfFirstActivity),
+            granularity: 'day',
+            to: new Date()
+          })
+        ]);
 
       const account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
       return await Promise.all(
-        Object.entries(dividends).map(async ([dateString, { marketPrice }]) => {
+        Object.entries(dividends).map(([dateString, { marketPrice }]) => {
           const quantity =
             historicalData.find((historicalDataItem) => {
               return historicalDataItem.date === dateString;
@@ -378,7 +393,7 @@ export class ImportService {
       }
     }
 
-    const assetProfiles = await this.validateActivities({
+    const assetProfiles = await this.dataProviderService.validateActivities({
       activitiesDto,
       assetProfilesWithMarketDataDto,
       maxActivitiesToImport,
@@ -533,7 +548,7 @@ export class ImportService {
           continue;
         }
 
-        order = await this.orderService.createOrder({
+        order = await this.activitiesService.createActivity({
           comment,
           currency,
           date,
@@ -575,10 +590,18 @@ export class ImportService {
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
+      const valueInBaseCurrency = this.exchangeRateDataService.toCurrencyAtDate(
+        value,
+        currency ?? assetProfile.currency,
+        userCurrency,
+        date
+      );
+
       activities.push({
         ...order,
         error,
         value,
+        valueInBaseCurrency: await valueInBaseCurrency,
         // @ts-ignore
         SymbolProfile: assetProfile
       });
@@ -622,7 +645,7 @@ export class ImportService {
     userId: string;
   }): Promise<Partial<Activity>[]> {
     const { activities: existingActivities } =
-      await this.orderService.getOrders({
+      await this.activitiesService.getActivities({
         userCurrency,
         userId,
         includeDrafts: true,
@@ -695,141 +718,13 @@ export class ImportService {
     );
   }
 
-  private isUniqueAccount(accounts: AccountWithPlatform[]) {
+  private isUniqueAccount(accounts: AccountWithValue[]) {
     const uniqueAccountIds = new Set<string>();
 
-    for (const account of accounts) {
-      uniqueAccountIds.add(account.id);
+    for (const { id } of accounts) {
+      uniqueAccountIds.add(id);
     }
 
     return uniqueAccountIds.size === 1;
-  }
-
-  private async validateActivities({
-    activitiesDto,
-    assetProfilesWithMarketDataDto,
-    maxActivitiesToImport,
-    user
-  }: {
-    activitiesDto: Partial<CreateOrderDto>[];
-    assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
-    maxActivitiesToImport: number;
-    user: UserWithSettings;
-  }) {
-    if (activitiesDto?.length > maxActivitiesToImport) {
-      throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
-    }
-
-    const assetProfiles: {
-      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
-    } = {};
-    const dataSources = await this.dataProviderService.getDataSources();
-
-    for (const [
-      index,
-      { currency, dataSource, symbol, type }
-    ] of activitiesDto.entries()) {
-      if (!dataSources.includes(dataSource)) {
-        throw new Error(
-          `activities.${index}.dataSource ("${dataSource}") is not valid`
-        );
-      }
-
-      if (
-        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        user.subscription.type === 'Basic'
-      ) {
-        const dataProvider = this.dataProviderService.getDataProvider(
-          DataSource[dataSource]
-        );
-
-        if (dataProvider.getDataProviderInfo().isPremium) {
-          throw new Error(
-            `activities.${index}.dataSource ("${dataSource}") is not valid`
-          );
-        }
-      }
-
-      if (!assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          // Skip asset profile validation for FEE, INTEREST, and LIABILITY
-          // as these activity types don't require asset profiles
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) => {
-              return (
-                profile.dataSource === dataSource && profile.symbol === symbol
-              );
-            }
-          );
-
-          assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] = {
-            currency,
-            dataSource,
-            symbol,
-            name: assetProfileInImport?.name
-          };
-
-          continue;
-        }
-
-        let assetProfile: Partial<SymbolProfile> = { currency };
-
-        try {
-          assetProfile = (
-            await this.dataProviderService.getAssetProfiles([
-              { dataSource, symbol }
-            ])
-          )?.[symbol];
-        } catch {}
-
-        if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) => {
-              return (
-                profile.dataSource === dataSource && profile.symbol === symbol
-              );
-            }
-          );
-
-          if (assetProfileInImport) {
-            // Merge all fields of custom asset profiles into the validation object
-            Object.assign(assetProfile, {
-              assetClass: assetProfileInImport.assetClass,
-              assetSubClass: assetProfileInImport.assetSubClass,
-              comment: assetProfileInImport.comment,
-              countries: assetProfileInImport.countries,
-              currency: assetProfileInImport.currency,
-              cusip: assetProfileInImport.cusip,
-              dataSource: assetProfileInImport.dataSource,
-              figi: assetProfileInImport.figi,
-              figiComposite: assetProfileInImport.figiComposite,
-              figiShareClass: assetProfileInImport.figiShareClass,
-              holdings: assetProfileInImport.holdings,
-              isActive: assetProfileInImport.isActive,
-              isin: assetProfileInImport.isin,
-              name: assetProfileInImport.name,
-              scraperConfiguration: assetProfileInImport.scraperConfiguration,
-              sectors: assetProfileInImport.sectors,
-              symbol: assetProfileInImport.symbol,
-              symbolMapping: assetProfileInImport.symbolMapping,
-              url: assetProfileInImport.url
-            });
-          }
-        }
-
-        if (!['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          if (!assetProfile?.name) {
-            throw new Error(
-              `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
-            );
-          }
-        }
-
-        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
-          assetProfile;
-      }
-    }
-
-    return assetProfiles;
   }
 }

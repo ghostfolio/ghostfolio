@@ -1,8 +1,11 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   DeleteOwnUserDto,
   UpdateOwnAccessTokenDto,
@@ -28,7 +31,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -43,6 +47,7 @@ import { UserService } from './user.service';
 export class UserController {
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly impersonationService: ImpersonationService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -107,13 +112,19 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getUser(
-    @Headers('accept-language') acceptLanguage: string
+    @Headers('accept-language') acceptLanguage: string,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
   ): Promise<User> {
-    return this.userService.getUser(
-      this.request.user,
-      acceptLanguage?.split(',')?.[0]
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(impersonationId);
+
+    return this.userService.getUser({
+      impersonationUserId,
+      locale: acceptLanguage?.split(',')?.[0],
+      user: this.request.user
+    });
   }
 
   @Post()

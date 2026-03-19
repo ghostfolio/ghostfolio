@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -11,7 +10,9 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -128,8 +129,13 @@ export class GfActivitiesPageComponent implements OnInit {
   }
 
   public fetchActivities() {
+    const dateRange = this.user?.settings?.dateRange;
+
+    const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
+
     this.dataService
       .fetchActivities({
+        range,
         filters: this.userService.getFilters(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
@@ -346,6 +352,19 @@ export class GfActivitiesPageComponent implements OnInit {
       });
   }
 
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private isCalendarYear(dateRange: DateRange) {
+    if (!dateRange) {
+      return false;
+    }
+
+    return /^\d{4}$/.test(dateRange);
+  }
+
   private openCreateActivityDialog(aActivity?: Activity) {
     this.userService
       .get()
@@ -379,7 +398,7 @@ export class GfActivitiesPageComponent implements OnInit {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((transaction: CreateOrderDto | null) => {
             if (transaction) {
-              this.dataService.postOrder(transaction).subscribe({
+              this.dataService.postActivity(transaction).subscribe({
                 next: () => {
                   this.userService
                     .get(true)
@@ -401,9 +420,9 @@ export class GfActivitiesPageComponent implements OnInit {
 
     this.hasPermissionToCreateActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.createOrder);
+      hasPermission(this.user.permissions, permissions.createActivity);
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteOrder);
+      hasPermission(this.user.permissions, permissions.deleteActivity);
   }
 }

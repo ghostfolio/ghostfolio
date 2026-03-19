@@ -28,7 +28,8 @@
           matInput
           name="marketPrice"
           type="number"
-          [(ngModel)]="data.marketPrice"
+          [ngModel]="marketPrice()"
+          (ngModelChange)="marketPrice.set($event)"
         />
         <span class="ml-2" matTextSuffix>{{ data.currency }}</span>
       </mat-form-field>

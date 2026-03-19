@@ -3,28 +3,24 @@
     <div class="d-flex">
       <div class="date mr-1 text-nowrap">{{ itemByMonth.key }}</div>
       <div class="align-items-center d-flex flex-grow-1 px-1">
-        @for (dayItem of days; track dayItem; let i = $index) {
+        @for (day of days; track day) {
           <div
             class="day"
             [ngClass]="{
               'cursor-pointer valid': isDateOfInterest(
-                `${itemByMonth.key}-${i + 1 < 10 ? `0${i + 1}` : i + 1}`
+                `${itemByMonth.key}-${formatDay(day)}`
               ),
               available:
-                marketDataByMonth[itemByMonth.key][
-                  i + 1 < 10 ? `0${i + 1}` : i + 1
-                ]?.marketPrice,
-              today: isToday(
-                `${itemByMonth.key}-${i + 1 < 10 ? `0${i + 1}` : i + 1}`
-              )
+                marketDataByMonth[itemByMonth.key][formatDay(day)]?.marketPrice,
+              today: isToday(`${itemByMonth.key}-${formatDay(day)}`)
             }"
             [title]="
-              (`${itemByMonth.key}-${i + 1 < 10 ? `0${i + 1}` : i + 1}`
-                | date: defaultDateFormat) ?? ''
+              (`${itemByMonth.key}-${formatDay(day)}`
+                | date: defaultDateFormat()) ?? ''
             "
             (click)="
               onOpenMarketDataDetail({
-                day: i + 1 < 10 ? `0${i + 1}` : i + 1,
+                day: formatDay(day),
                 yearMonth: itemByMonth.key
               })
             "
@@ -61,10 +57,10 @@
         mat-flat-button
         type="button"
         [disabled]="
-          !historicalDataForm.controls['historicalData']?.controls['csvString']
+          !historicalDataForm.controls.historicalData.controls.csvString
             .touched ||
-          historicalDataForm.controls['historicalData']?.controls['csvString']
-            ?.value === ''
+          historicalDataForm.controls.historicalData.controls.csvString
+            .value === ''
         "
         (click)="onImportHistoricalData()"
       >

@@ -1,6 +1,5 @@
 import { GfAccountDetailDialogComponent } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -12,8 +11,15 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -21,8 +27,8 @@ import { Account as AccountModel } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY, Subject, Subscription } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
 import { CreateOrUpdateAccountDialogParams } from './create-or-update-account-dialog/interfaces/interfaces';
@@ -36,8 +42,9 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
 })
-export class GfAccountsPageComponent implements OnDestroy, OnInit {
+export class GfAccountsPageComponent implements OnInit {
   public accounts: AccountModel[];
+  public activitiesCount = 0;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateAccount: boolean;
@@ -45,14 +52,12 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
   public routeQueryParams: Subscription;
   public totalBalanceInBaseCurrency = 0;
   public totalValueInBaseCurrency = 0;
-  public transactionCount = 0;
   public user: User;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
@@ -62,7 +67,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {
           this.openAccountDetailDialog(params['accountId']);
@@ -94,13 +99,13 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -124,18 +129,18 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
   public fetchAccounts() {
     this.dataService
       .fetchAccounts()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         ({
           accounts,
+          activitiesCount,
           totalBalanceInBaseCurrency,
-          totalValueInBaseCurrency,
-          transactionCount
+          totalValueInBaseCurrency
         }) => {
           this.accounts = accounts;
+          this.activitiesCount = activitiesCount;
           this.totalBalanceInBaseCurrency = totalBalanceInBaseCurrency;
           this.totalValueInBaseCurrency = totalValueInBaseCurrency;
-          this.transactionCount = transactionCount;
 
           if (this.accounts?.length <= 0) {
             this.router.navigate([], { queryParams: { createDialog: true } });
@@ -151,11 +156,11 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .deleteAccount(aId)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
 
         this.fetchAccounts();
@@ -204,18 +209,18 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((account: UpdateAccountDto | null) => {
         if (account) {
           this.reset();
 
           this.dataService
             .putAccount(account)
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
               this.userService
                 .get(true)
-                .pipe(takeUntil(this.unsubscribeSubject))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
 
               this.fetchAccounts();
@@ -226,11 +231,6 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
         this.router.navigate(['.'], { relativeTo: this.route });
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private openAccountDetailDialog(aAccountId: string) {
@@ -245,7 +245,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
         hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
-          hasPermission(this.user?.permissions, permissions.createOrder) &&
+          hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView
       },
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
@@ -254,7 +254,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.fetchAccounts();
 
@@ -284,18 +284,18 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((account: CreateAccountDto | null) => {
         if (account) {
           this.reset();
 
           this.dataService
             .postAccount(account)
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
               this.userService
                 .get(true)
-                .pipe(takeUntil(this.unsubscribeSubject))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe();
 
               this.fetchAccounts();
@@ -321,7 +321,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data: any) => {
         if (data) {
           this.reset();
@@ -343,7 +343,7 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
                 return EMPTY;
               }),
-              takeUntil(this.unsubscribeSubject)
+              takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
               this.fetchAccounts();
@@ -358,8 +358,8 @@ export class GfAccountsPageComponent implements OnDestroy, OnInit {
 
   private reset() {
     this.accounts = undefined;
+    this.activitiesCount = 0;
     this.totalBalanceInBaseCurrency = 0;
     this.totalValueInBaseCurrency = 0;
-    this.transactionCount = 0;
   }
 }

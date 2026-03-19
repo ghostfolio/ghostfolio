@@ -21,24 +21,24 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
+import { isNumber } from 'lodash';
 
-import { environment } from '../../environments/environment';
 import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  public constructor(
-    private dataService: DataService,
-    private http: HttpClient
-  ) {}
+  private readonly dataService = inject(DataService);
+  private readonly environment = inject(GF_ENVIRONMENT);
+  private readonly http = inject(HttpClient);
 
   public addAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.post<void>(
@@ -124,7 +124,7 @@ export class AdminService {
     });
 
     return this.http.get<DataProviderGhostfolioStatusResponse>(
-      `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+      `${this.environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
       { headers }
     );
   }
@@ -132,7 +132,7 @@ export class AdminService {
   public fetchJobs({ status }: { status?: JobStatus[] }) {
     let params = new HttpParams();
 
-    if (status?.length > 0) {
+    if (status && status.length > 0) {
       params = params.append('status', status.join(','));
     }
 
@@ -158,8 +158,13 @@ export class AdminService {
   }) {
     let params = new HttpParams();
 
-    params = params.append('skip', skip);
-    params = params.append('take', take);
+    if (isNumber(skip)) {
+      params = params.append('skip', skip);
+    }
+
+    if (isNumber(take)) {
+      params = params.append('take', take);
+    }
 
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
@@ -276,7 +281,7 @@ export class AdminService {
     scraperConfiguration,
     symbol
   }: AssetProfileIdentifier & UpdateAssetProfileDto['scraperConfiguration']) {
-    return this.http.post<any>(
+    return this.http.post<{ price: number }>(
       `/api/v1/admin/market-data/${dataSource}/${symbol}/test`,
       {
         scraperConfiguration
