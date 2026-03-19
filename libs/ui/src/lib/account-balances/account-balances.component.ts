@@ -10,12 +10,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  inject,
+  input,
+  viewChild
 } from '@angular/core';
 import {
   FormGroup,
@@ -39,8 +39,7 @@ import {
   ellipsisHorizontal,
   trashOutline
 } from 'ionicons/icons';
-import { get } from 'lodash';
-import { Subject } from 'rxjs';
+import { get, isNil } from 'lodash';
 
 import { GfValueComponent } from '../value';
 
@@ -63,50 +62,44 @@ import { GfValueComponent } from '../value';
   styleUrls: ['./account-balances.component.scss'],
   templateUrl: './account-balances.component.html'
 })
-export class GfAccountBalancesComponent
-  implements OnChanges, OnDestroy, OnInit
-{
-  @Input() accountBalances: AccountBalancesResponse['balances'];
-  @Input() accountCurrency: string;
-  @Input() accountId: string;
-  @Input() locale = getLocale();
-  @Input() showActions = true;
-
+export class GfAccountBalancesComponent implements OnChanges, OnInit {
   @Output() accountBalanceCreated = new EventEmitter<CreateAccountBalanceDto>();
   @Output() accountBalanceDeleted = new EventEmitter<string>();
 
-  @ViewChild(MatSort) sort: MatSort;
+  public readonly accountBalances =
+    input.required<AccountBalancesResponse['balances']>();
+  public readonly accountCurrency = input.required<string>();
+  public readonly accountId = input.required<string>();
+  public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
+  public readonly locale = input(getLocale());
+  public readonly showActions = input(true);
+  public readonly sort = viewChild(MatSort);
 
   public accountBalanceForm = new FormGroup({
-    balance: new FormControl(0, Validators.required),
-    date: new FormControl(new Date(), Validators.required)
+    balance: new FormControl(0, (control) => Validators.required(control)),
+    date: new FormControl(new Date(), (control) => Validators.required(control))
   });
 
   public dataSource = new MatTableDataSource<
     AccountBalancesResponse['balances'][0]
   >();
 
-  public displayedColumns: string[] = ['date', 'value', 'actions'];
-  public Validators = Validators;
+  private dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
+  private notificationService = inject(NotificationService);
 
-  private unsubscribeSubject = new Subject<void>();
-
-  public constructor(
-    private dateAdapter: DateAdapter<any>,
-    private notificationService: NotificationService
-  ) {
+  public constructor() {
     addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
   }
 
   public ngOnInit() {
-    this.dateAdapter.setLocale(this.locale);
+    this.dateAdapter.setLocale(this.locale());
   }
 
   public ngOnChanges() {
-    if (this.accountBalances) {
-      this.dataSource = new MatTableDataSource(this.accountBalances);
+    if (this.accountBalances()) {
+      this.dataSource = new MatTableDataSource(this.accountBalances());
 
-      this.dataSource.sort = this.sort;
+      this.dataSource.sort = this.sort();
       this.dataSource.sortingDataAccessor = get;
     }
   }
@@ -122,10 +115,16 @@ export class GfAccountBalancesComponent
   }
 
   public async onSubmitAccountBalance() {
+    const { balance, date } = this.accountBalanceForm.value;
+
+    if (isNil(balance) || !date) {
+      return;
+    }
+
     const accountBalance: CreateAccountBalanceDto = {
-      accountId: this.accountId,
-      balance: this.accountBalanceForm.get('balance').value,
-      date: format(this.accountBalanceForm.get('date').value, DATE_FORMAT)
+      balance,
+      accountId: this.accountId(),
+      date: format(date, DATE_FORMAT)
     };
 
     try {
@@ -140,10 +139,5 @@ export class GfAccountBalancesComponent
     }
 
     this.accountBalanceCreated.emit(accountBalance);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

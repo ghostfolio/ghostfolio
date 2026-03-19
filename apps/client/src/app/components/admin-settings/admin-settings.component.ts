@@ -1,8 +1,6 @@
 import { GfAdminPlatformComponent } from '@ghostfolio/client/components/admin-platform/admin-platform.component';
 import { GfAdminTagComponent } from '@ghostfolio/client/components/admin-tag/admin-tag.component';
 import { GfDataProviderStatusComponent } from '@ghostfolio/client/components/data-provider-status/data-provider-status.component';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
@@ -16,6 +14,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -23,20 +22,24 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit
+  DestroyRef,
+  OnInit,
+  ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
+import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
+import { catchError, filter, of } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +56,7 @@ import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
     MatCardModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
     RouterModule
@@ -61,7 +65,9 @@ import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./admin-settings.component.scss'],
   templateUrl: './admin-settings.component.html'
 })
-export class GfAdminSettingsComponent implements OnDestroy, OnInit {
+export class GfAdminSettingsComponent implements OnInit {
+  @ViewChild(MatSort) sort: MatSort;
+
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
   public displayedColumns = [
@@ -75,14 +81,13 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
   public pricingUrl: string;
-
-  private unsubscribeSubject = new Subject<void>();
-  private user: User;
+  public user: User;
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private notificationService: NotificationService,
     private userService: UserService
   ) {
@@ -91,7 +96,7 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -148,11 +153,6 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private initialize() {
     this.isLoading = true;
 
@@ -160,13 +160,15 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
 
     this.adminService
       .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ dataProviders, settings }) => {
         const filteredProviders = dataProviders.filter(({ dataSource }) => {
           return dataSource !== 'MANUAL';
         });
 
         this.dataSource = new MatTableDataSource(filteredProviders);
+        this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = get;
 
         const ghostfolioApiKey = settings[
           PROPERTY_API_KEY_GHOSTFOLIO
@@ -186,7 +188,7 @@ export class GfAdminSettingsComponent implements OnDestroy, OnInit {
               filter((status) => {
                 return status !== null;
               }),
-              takeUntil(this.unsubscribeSubject)
+              takeUntilDestroyed(this.destroyRef)
             )
             .subscribe((status) => {
               this.ghostfolioApiStatus = status;

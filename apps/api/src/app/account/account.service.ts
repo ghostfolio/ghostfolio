@@ -150,15 +150,15 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      let transactionCount = 0;
+      let activitiesCount = 0;
 
       for (const { isDraft } of account.activities) {
         if (!isDraft) {
-          transactionCount += 1;
+          activitiesCount += 1;
         }
       }
 
-      const result = { ...account, transactionCount };
+      const result = { ...account, activitiesCount };
 
       delete result.activities;
 

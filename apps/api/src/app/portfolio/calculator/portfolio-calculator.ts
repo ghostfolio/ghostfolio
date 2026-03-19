@@ -39,6 +39,7 @@ import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
+import { AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
@@ -52,6 +53,7 @@ import {
   isBefore,
   isWithinInterval,
   min,
+  startOfDay,
   startOfYear,
   subDays
 } from 'date-fns';
@@ -119,6 +121,7 @@ export abstract class PortfolioCalculator {
         ({
           date,
           feeInAssetProfileCurrency,
+          feeInBaseCurrency,
           quantity,
           SymbolProfile,
           tags = [],
@@ -141,6 +144,7 @@ export abstract class PortfolioCalculator {
             type,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
+            feeInBaseCurrency: new Big(feeInBaseCurrency),
             quantity: new Big(quantity),
             unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
@@ -154,13 +158,13 @@ export abstract class PortfolioCalculator {
     this.redisCacheService = redisCacheService;
     this.userId = userId;
 
-    const { endDate, startDate } = getIntervalFromDateRange(
-      'max',
-      subDays(dateOfFirstActivity, 1)
-    );
+    const { endDate, startDate } = getIntervalFromDateRange({
+      dateRange: 'max',
+      startDate: subDays(dateOfFirstActivity, 1)
+    });
 
-    this.endDate = endDate;
-    this.startDate = startDate;
+    this.endDate = endOfDay(endDate);
+    this.startDate = startOfDay(startDate);
 
     this.computeTransactionPoints();
 
@@ -203,13 +207,19 @@ export abstract class PortfolioCalculator {
     let totalInterestWithCurrencyEffect = new Big(0);
     let totalLiabilitiesWithCurrencyEffect = new Big(0);
 
-    for (const { currency, dataSource, symbol } of transactionPoints[
-      firstIndex - 1
-    ].items) {
-      dataGatheringItems.push({
-        dataSource,
-        symbol
-      });
+    for (const {
+      assetSubClass,
+      currency,
+      dataSource,
+      symbol
+    } of transactionPoints[firstIndex - 1].items) {
+      // Gather data for all assets except CASH
+      if (assetSubClass !== 'CASH') {
+        dataGatheringItems.push({
+          dataSource,
+          symbol
+        });
+      }
 
       currencies[symbol] = currency;
     }
@@ -227,7 +237,7 @@ export abstract class PortfolioCalculator {
     const exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: Array.from(new Set(Object.values(currencies))),
-        endDate: endOfDay(this.endDate),
+        endDate: this.endDate,
         startDate: this.startDate,
         targetCurrency: this.currency
       });
@@ -329,12 +339,6 @@ export abstract class PortfolioCalculator {
     } = {};
 
     for (const item of lastTransactionPoint.items) {
-      const feeInBaseCurrency = item.fee.mul(
-        exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
-          lastTransactionPoint.date
-        ] ?? 1
-      );
-
       const marketPriceInBaseCurrency = (
         marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
       ).mul(
@@ -383,29 +387,36 @@ export abstract class PortfolioCalculator {
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
 
-      valuesBySymbol[item.symbol] = {
-        currentValues,
-        currentValuesWithCurrencyEffect,
-        investmentValuesAccumulated,
-        investmentValuesAccumulatedWithCurrencyEffect,
-        investmentValuesWithCurrencyEffect,
-        netPerformanceValues,
-        netPerformanceValuesWithCurrencyEffect,
-        timeWeightedInvestmentValues,
-        timeWeightedInvestmentValuesWithCurrencyEffect
-      };
+      const includeInTotalAssetValue =
+        item.assetSubClass !== AssetSubClass.CASH;
+
+      if (includeInTotalAssetValue) {
+        valuesBySymbol[item.symbol] = {
+          currentValues,
+          currentValuesWithCurrencyEffect,
+          investmentValuesAccumulated,
+          investmentValuesAccumulatedWithCurrencyEffect,
+          investmentValuesWithCurrencyEffect,
+          netPerformanceValues,
+          netPerformanceValuesWithCurrencyEffect,
+          timeWeightedInvestmentValues,
+          timeWeightedInvestmentValuesWithCurrencyEffect
+        };
+      }
 
       positions.push({
-        feeInBaseCurrency,
+        includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
-        dividend: totalDividend,
-        dividendInBaseCurrency: totalDividendInBaseCurrency,
+        activitiesCount: item.activitiesCount,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
+        dateOfFirstActivity: item.dateOfFirstActivity,
+        dividend: totalDividend,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
         fee: item.fee,
-        firstBuyDate: item.firstBuyDate,
+        feeInBaseCurrency: item.feeInBaseCurrency,
         grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
           ? (grossPerformancePercentage ?? null)
@@ -420,9 +431,8 @@ export abstract class PortfolioCalculator {
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
         marketPrice:
-          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? null,
-        marketPriceInBaseCurrency:
-          marketPriceInBaseCurrency?.toNumber() ?? null,
+          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? 1,
+        marketPriceInBaseCurrency: marketPriceInBaseCurrency?.toNumber() ?? 1,
         netPerformance: !hasErrors ? (netPerformance ?? null) : null,
         netPerformancePercentage: !hasErrors
           ? (netPerformancePercentage ?? null)
@@ -436,7 +446,6 @@ export abstract class PortfolioCalculator {
         quantity: item.quantity,
         symbol: item.symbol,
         tags: item.tags,
-        transactionCount: item.transactionCount,
         valueInBaseCurrency: new Big(marketPriceInBaseCurrency).mul(
           item.quantity
         )
@@ -876,7 +885,7 @@ export abstract class PortfolioCalculator {
     // Make sure some key dates are present
     for (const dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
       const { endDate: dateRangeEnd, startDate: dateRangeStart } =
-        getIntervalFromDateRange(dateRange);
+        getIntervalFromDateRange({ dateRange });
 
       if (
         !isBefore(dateRangeStart, startDate) &&
@@ -925,6 +934,7 @@ export abstract class PortfolioCalculator {
     for (const {
       date,
       fee,
+      feeInBaseCurrency,
       quantity,
       SymbolProfile,
       tags,
@@ -933,6 +943,7 @@ export abstract class PortfolioCalculator {
     } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
 
+      const assetSubClass = SymbolProfile.assetSubClass;
       const currency = SymbolProfile.currency;
       const dataSource = SymbolProfile.dataSource;
       const factor = getFactor(type);
@@ -977,37 +988,42 @@ export abstract class PortfolioCalculator {
         }
 
         currentTransactionPointItem = {
+          assetSubClass,
           currency,
           dataSource,
           investment,
           skipErrors,
           symbol,
+          activitiesCount: oldAccumulatedSymbol.activitiesCount + 1,
           averagePrice: newQuantity.eq(0)
             ? new Big(0)
             : investment.div(newQuantity).abs(),
+          dateOfFirstActivity: oldAccumulatedSymbol.dateOfFirstActivity,
           dividend: new Big(0),
           fee: oldAccumulatedSymbol.fee.plus(fee),
-          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
+          feeInBaseCurrency:
+            oldAccumulatedSymbol.feeInBaseCurrency.plus(feeInBaseCurrency),
           includeInHoldings: oldAccumulatedSymbol.includeInHoldings,
           quantity: newQuantity,
-          tags: oldAccumulatedSymbol.tags.concat(tags),
-          transactionCount: oldAccumulatedSymbol.transactionCount + 1
+          tags: oldAccumulatedSymbol.tags.concat(tags)
         };
       } else {
         currentTransactionPointItem = {
+          assetSubClass,
           currency,
           dataSource,
           fee,
+          feeInBaseCurrency,
           skipErrors,
           symbol,
           tags,
+          activitiesCount: 1,
           averagePrice: unitPrice,
+          dateOfFirstActivity: date,
           dividend: new Big(0),
-          firstBuyDate: date,
           includeInHoldings: INVESTMENT_ACTIVITY_TYPES.includes(type),
           investment: unitPrice.mul(quantity).mul(factor),
-          quantity: quantity.mul(factor),
-          transactionCount: 1
+          quantity: quantity.mul(factor)
         };
       }
 

@@ -1,7 +1,10 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
@@ -16,6 +19,7 @@ import {
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
+  Activity,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -40,10 +44,12 @@ import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
-export class OrderService {
+export class ActivitiesService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly dataProviderService: DataProviderService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
@@ -56,7 +62,7 @@ export class OrderService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    const orders = await this.prismaService.order.findMany({
+    const activities = await this.prismaService.order.findMany({
       where: {
         userId,
         SymbolProfile: {
@@ -67,7 +73,7 @@ export class OrderService {
     });
 
     await Promise.all(
-      orders.map(({ id }) =>
+      activities.map(({ id }) =>
         this.prismaService.order.update({
           data: {
             tags: {
@@ -90,7 +96,7 @@ export class OrderService {
     );
   }
 
-  public async createOrder(
+  public async createActivity(
     data: Prisma.OrderCreateInput & {
       accountId?: string;
       assetClass?: AssetClass;
@@ -195,7 +201,7 @@ export class OrderService {
       ? false
       : isAfter(data.date as Date, endOfToday());
 
-    const order = await this.prismaService.order.create({
+    const activity = await this.prismaService.order.create({
       data: {
         ...orderData,
         account,
@@ -229,56 +235,56 @@ export class OrderService {
     this.eventEmitter.emit(
       AssetProfileChangedEvent.getName(),
       new AssetProfileChangedEvent({
-        currency: order.SymbolProfile.currency,
-        dataSource: order.SymbolProfile.dataSource,
-        symbol: order.SymbolProfile.symbol
+        currency: activity.SymbolProfile.currency,
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
       })
     );
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: order.userId
+        userId: activity.userId
       })
     );
 
-    return order;
+    return activity;
   }
 
-  public async deleteOrder(
+  public async deleteActivity(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
-    const order = await this.prismaService.order.delete({
+    const activity = await this.prismaService.order.delete({
       where
     });
 
     const [symbolProfile] =
       await this.symbolProfileService.getSymbolProfilesByIds([
-        order.symbolProfileId
+        activity.symbolProfileId
       ]);
 
     if (symbolProfile.activitiesCount === 0) {
-      await this.symbolProfileService.deleteById(order.symbolProfileId);
+      await this.symbolProfileService.deleteById(activity.symbolProfileId);
     }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: order.userId
+        userId: activity.userId
       })
     );
 
-    return order;
+    return activity;
   }
 
-  public async deleteOrders({
+  public async deleteActivities({
     filters,
     userId
   }: {
     filters?: Filter[];
     userId: string;
   }): Promise<number> {
-    const { activities } = await this.getOrders({
+    const { activities } = await this.getActivities({
       filters,
       userId,
       includeDrafts: true,
@@ -317,7 +323,135 @@ export class OrderService {
     return count;
   }
 
-  public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
+  /**
+   * Generates synthetic activities for cash holdings based on account balance history.
+   * Treat currencies as assets with a fixed unit price of 1.0 (in their own currency) to allow
+   * performance tracking based on exchange rate fluctuations.
+   *
+   * @param cashDetails - The cash balance details.
+   * @param filters - Optional filters to apply.
+   * @param userCurrency - The base currency of the user.
+   * @param userId - The ID of the user.
+   * @returns A response containing the list of synthetic cash activities.
+   */
+  public async getCashActivities({
+    cashDetails,
+    filters = [],
+    userCurrency,
+    userId
+  }: {
+    cashDetails: CashDetails;
+    filters?: Filter[];
+    userCurrency: string;
+    userId: string;
+  }): Promise<ActivitiesResponse> {
+    const filtersByAssetClass = filters.filter(({ type }) => {
+      return type === 'ASSET_CLASS';
+    });
+
+    if (
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.find(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      })
+    ) {
+      // If asset class filters are present and none of them is liquidity, return an empty response
+      return {
+        activities: [],
+        count: 0
+      };
+    }
+
+    const activities: Activity[] = [];
+
+    for (const account of cashDetails.accounts) {
+      const { balances } = await this.accountBalanceService.getAccountBalances({
+        userCurrency,
+        userId,
+        filters: [{ id: account.id, type: 'ACCOUNT' }]
+      });
+
+      let currentBalance = 0;
+      let currentBalanceInBaseCurrency = 0;
+
+      for (const balanceItem of balances) {
+        const syntheticActivityTemplate: Activity = {
+          userId,
+          accountId: account.id,
+          accountUserId: account.userId,
+          comment: account.name,
+          createdAt: new Date(balanceItem.date),
+          currency: account.currency,
+          date: new Date(balanceItem.date),
+          fee: 0,
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          id: balanceItem.id,
+          isDraft: false,
+          quantity: 1,
+          SymbolProfile: {
+            activitiesCount: 0,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countries: [],
+            createdAt: new Date(balanceItem.date),
+            currency: account.currency,
+            dataSource:
+              this.dataProviderService.getDataSourceForExchangeRates(),
+            holdings: [],
+            id: account.currency,
+            isActive: true,
+            name: account.currency,
+            sectors: [],
+            symbol: account.currency,
+            updatedAt: new Date(balanceItem.date)
+          },
+          symbolProfileId: account.currency,
+          type: ActivityType.BUY,
+          unitPrice: 1,
+          unitPriceInAssetProfileCurrency: 1,
+          updatedAt: new Date(balanceItem.date),
+          valueInBaseCurrency: 0,
+          value: 0
+        };
+
+        if (currentBalance < balanceItem.value) {
+          // BUY
+          activities.push({
+            ...syntheticActivityTemplate,
+            quantity: balanceItem.value - currentBalance,
+            type: ActivityType.BUY,
+            value: balanceItem.value - currentBalance,
+            valueInBaseCurrency:
+              balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
+          });
+        } else if (currentBalance > balanceItem.value) {
+          // SELL
+          activities.push({
+            ...syntheticActivityTemplate,
+            quantity: currentBalance - balanceItem.value,
+            type: ActivityType.SELL,
+            value: currentBalance - balanceItem.value,
+            valueInBaseCurrency:
+              currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
+          });
+        }
+
+        currentBalance = balanceItem.value;
+        currentBalanceInBaseCurrency = balanceItem.valueInBaseCurrency;
+      }
+    }
+
+    return {
+      activities,
+      count: activities.length
+    };
+  }
+
+  public async getLatestActivity({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     return this.prismaService.order.findFirst({
       orderBy: {
         date: 'desc'
@@ -328,7 +462,7 @@ export class OrderService {
     });
   }
 
-  public async getOrders({
+  public async getActivities({
     endDate,
     filters,
     includeDrafts = false,
@@ -610,22 +744,52 @@ export class OrderService {
     return { activities, count };
   }
 
+  /**
+   * Retrieves all activities required for the portfolio calculator, including both standard asset activities
+   * and optional synthetic activities representing cash activities.
+   */
   @LogPerformance
-  public async getOrdersForPortfolioCalculator({
+  public async getActivitiesForPortfolioCalculator({
     filters,
     userCurrency,
-    userId
+    userId,
+    withCash = false
   }: {
+    /** Optional filters to apply to the activities. */
     filters?: Filter[];
+    /** The base currency of the user. */
     userCurrency: string;
+    /** The ID of the user. */
     userId: string;
+    /** Whether to include cash activities in the result. */
+    withCash?: boolean;
   }) {
-    return this.getOrders({
+    const activities = await this.getActivities({
       filters,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
     });
+
+    if (withCash) {
+      const cashDetails = await this.accountService.getCashDetails({
+        filters,
+        userId,
+        currency: userCurrency
+      });
+
+      const cashActivities = await this.getCashActivities({
+        cashDetails,
+        filters,
+        userCurrency,
+        userId
+      });
+
+      activities.activities.push(...cashActivities.activities);
+      activities.count += cashActivities.count;
+    }
+
+    return activities;
   }
 
   public async getStatisticsByCurrency(
@@ -656,7 +820,7 @@ export class OrderService {
     });
   }
 
-  public async updateOrder({
+  public async updateActivity({
     data,
     where
   }: {
@@ -721,7 +885,7 @@ export class OrderService {
       data: { tags: { set: [] } }
     });
 
-    const order = await this.prismaService.order.update({
+    const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
@@ -735,11 +899,11 @@ export class OrderService {
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: order.userId
+        userId: activity.userId
       })
     );
 
-    return order;
+    return activity;
   }
 
   private async orders(params: {

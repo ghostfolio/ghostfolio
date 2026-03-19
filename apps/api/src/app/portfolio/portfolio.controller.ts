@@ -1,4 +1,4 @@
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -63,10 +63,10 @@ import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 @Controller('portfolio')
 export class PortfolioController {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly impersonationService: ImpersonationService,
-    private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -187,7 +187,6 @@ export class PortfolioController {
 
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
-        'committedFunds',
         'currentNetWorth',
         'currentValueInBaseCurrency',
         'dividendInBaseCurrency',
@@ -195,15 +194,18 @@ export class PortfolioController {
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
+        'fireWealth',
         'grossPerformance',
         'grossPerformanceWithCurrencyEffect',
         'interestInBaseCurrency',
         'items',
         'liabilities',
+        'liabilitiesInBaseCurrency',
         'netPerformance',
         'netPerformanceWithCurrencyEffect',
         'totalBuy',
         'totalInvestment',
+        'totalInvestmentValueWithCurrencyEffect',
         'totalSell',
         'totalValueInBaseCurrency'
       ]);
@@ -318,9 +320,9 @@ export class PortfolioController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
-    const { activities } = await this.orderService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       endDate,
       filters,
       startDate,
@@ -329,7 +331,7 @@ export class PortfolioController {
       types: ['DIVIDEND']
     });
 
-    let dividends = await this.portfolioService.getDividends({
+    let dividends = this.portfolioService.getDividends({
       activities,
       groupBy
     });
@@ -637,7 +639,7 @@ export class PortfolioController {
     return report;
   }
 
-  @HasPermission(permissions.updateOrder)
+  @HasPermission(permissions.updateActivity)
   @Put('holding/:dataSource/:symbol/tags')
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)

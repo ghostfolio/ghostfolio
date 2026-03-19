@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "bundler",
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
     "typeRoots": ["../../node_modules/@types"],

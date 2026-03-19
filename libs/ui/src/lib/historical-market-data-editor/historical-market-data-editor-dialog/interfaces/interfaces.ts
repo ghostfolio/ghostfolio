@@ -6,7 +6,7 @@ export interface HistoricalMarketDataEditorDialogParams {
   currency: string;
   dataSource: DataSource;
   dateString: string;
-  marketPrice: number;
+  marketPrice?: number;
   symbol: string;
   user: User;
 }

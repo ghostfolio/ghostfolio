@@ -75,12 +75,16 @@ export class TagService {
       }
     });
 
-    return tags.map(({ _count, id, name, userId }) => ({
-      id,
-      name,
-      userId,
-      isUsed: _count.activities > 0
-    }));
+    return tags
+      .map(({ _count, id, name, userId }) => ({
+        id,
+        name,
+        userId,
+        isUsed: _count.activities > 0
+      }))
+      .sort((a, b) => {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      });
   }
 
   public async getTagsWithActivityCount() {

@@ -1,6 +1,6 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -16,12 +16,11 @@ export class GfConfirmationDialogComponent {
   public confirmLabel: string;
   public confirmType: ConfirmationDialogType;
   public discardLabel: string;
-  public message: string;
+  public message?: string;
   public title: string;
 
-  public constructor(
-    public dialogRef: MatDialogRef<GfConfirmationDialogComponent>
-  ) {}
+  protected readonly dialogRef =
+    inject<MatDialogRef<GfConfirmationDialogComponent>>(MatDialogRef);
 
   @HostListener('window:keyup', ['$event'])
   public keyEvent(event: KeyboardEvent) {
@@ -30,11 +29,17 @@ export class GfConfirmationDialogComponent {
     }
   }
 
-  public initialize(aParams: ConfirmDialogParams) {
-    this.confirmLabel = aParams.confirmLabel;
-    this.confirmType = aParams.confirmType;
-    this.discardLabel = aParams.discardLabel;
-    this.message = aParams.message;
-    this.title = aParams.title;
+  public initialize({
+    confirmLabel,
+    confirmType,
+    discardLabel,
+    message,
+    title
+  }: ConfirmDialogParams) {
+    this.confirmLabel = confirmLabel;
+    this.confirmType = confirmType;
+    this.discardLabel = discardLabel;
+    this.message = message;
+    this.title = title;
   }
 }

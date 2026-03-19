@@ -26,6 +26,8 @@ import {
 import { isNumber } from 'lodash';
 import ms from 'ms';
 
+import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interface';
+
 @Injectable()
 export class ExchangeRateDataService {
   private currencies: string[] = [];
@@ -59,7 +61,7 @@ export class ExchangeRateDataService {
     endDate?: Date;
     startDate: Date;
     targetCurrency: string;
-  }) {
+  }): Promise<ExchangeRatesByCurrency> {
     if (!startDate) {
       return {};
     }

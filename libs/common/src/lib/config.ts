@@ -51,6 +51,14 @@ export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.REAL_ESTATE, []]
 ]);
 
+export const BULL_BOARD_COOKIE_NAME = 'bull_board_token';
+
+/**
+ * WARNING: This route is mirrored in `apps/client/proxy.conf.json`.
+ * If you update this value, you must also update the proxy configuration.
+ */
+export const BULL_BOARD_ROUTE = '/admin/queues';
+
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
 
@@ -77,6 +85,63 @@ export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
+
+export const DEFAULT_REDACTED_PATHS = [
+  'accounts[*].balance',
+  'accounts[*].balanceInBaseCurrency',
+  'accounts[*].comment',
+  'accounts[*].dividendInBaseCurrency',
+  'accounts[*].interestInBaseCurrency',
+  'accounts[*].value',
+  'accounts[*].valueInBaseCurrency',
+  'activities[*].account.balance',
+  'activities[*].account.comment',
+  'activities[*].comment',
+  'activities[*].fee',
+  'activities[*].feeInAssetProfileCurrency',
+  'activities[*].feeInBaseCurrency',
+  'activities[*].quantity',
+  'activities[*].SymbolProfile.symbolMapping',
+  'activities[*].SymbolProfile.watchedByCount',
+  'activities[*].value',
+  'activities[*].valueInBaseCurrency',
+  'balance',
+  'balanceInBaseCurrency',
+  'balances[*].account.balance',
+  'balances[*].account.comment',
+  'balances[*].value',
+  'balances[*].valueInBaseCurrency',
+  'comment',
+  'dividendInBaseCurrency',
+  'feeInBaseCurrency',
+  'grossPerformance',
+  'grossPerformanceWithCurrencyEffect',
+  'historicalData[*].quantity',
+  'holdings[*].dividend',
+  'holdings[*].grossPerformance',
+  'holdings[*].grossPerformanceWithCurrencyEffect',
+  'holdings[*].holdings[*].valueInBaseCurrency',
+  'holdings[*].investment',
+  'holdings[*].netPerformance',
+  'holdings[*].netPerformanceWithCurrencyEffect',
+  'holdings[*].quantity',
+  'holdings[*].valueInBaseCurrency',
+  'interestInBaseCurrency',
+  'investmentInBaseCurrencyWithCurrencyEffect',
+  'netPerformance',
+  'netPerformanceWithCurrencyEffect',
+  'platforms[*].balance',
+  'platforms[*].valueInBaseCurrency',
+  'quantity',
+  'SymbolProfile.symbolMapping',
+  'SymbolProfile.watchedByCount',
+  'totalBalanceInBaseCurrency',
+  'totalDividendInBaseCurrency',
+  'totalInterestInBaseCurrency',
+  'totalValueInBaseCurrency',
+  'value',
+  'valueInBaseCurrency'
+];
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -147,6 +212,7 @@ export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';
 export const PROPERTY_COUNTRIES_OF_SUBSCRIBERS = 'COUNTRIES_OF_SUBSCRIBERS';
 export const PROPERTY_COUPONS = 'COUPONS';
 export const PROPERTY_CURRENCIES = 'CURRENCIES';
+export const PROPERTY_CUSTOM_CRYPTOCURRENCIES = 'CUSTOM_CRYPTOCURRENCIES';
 export const PROPERTY_DATA_SOURCE_MAPPING = 'DATA_SOURCE_MAPPING';
 export const PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS =
   'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS';
@@ -193,6 +259,7 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'es',
   'fr',
   'it',
+  'ko',
   'nl',
   'pl',
   'pt',

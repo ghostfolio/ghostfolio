@@ -1,5 +1,4 @@
 import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -12,17 +11,17 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -35,7 +34,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-market.scss'],
   templateUrl: './home-market.html'
 })
-export class GfHomeMarketComponent implements OnDestroy, OnInit {
+export class GfHomeMarketComponent implements OnInit {
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;
@@ -47,11 +46,10 @@ export class GfHomeMarketComponent implements OnDestroy, OnInit {
   public readonly numberOfDays = 365;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
@@ -59,7 +57,7 @@ export class GfHomeMarketComponent implements OnDestroy, OnInit {
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -82,7 +80,7 @@ export class GfHomeMarketComponent implements OnDestroy, OnInit {
           includeHistoricalData: this.numberOfDays,
           symbol: ghostfolioFearAndGreedIndexSymbol
         })
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ historicalData, marketPrice }) => {
           this.fearAndGreedIndex = marketPrice;
           this.historicalDataItems = [
@@ -99,16 +97,11 @@ export class GfHomeMarketComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchBenchmarks()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ benchmarks }) => {
         this.benchmarks = benchmarks;
 
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

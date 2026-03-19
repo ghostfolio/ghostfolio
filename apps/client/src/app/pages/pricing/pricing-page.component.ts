@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -6,6 +5,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -27,9 +27,8 @@ import {
   informationCircleOutline
 } from 'ionicons/icons';
 import { StringValue } from 'ms';
-import { StripeService } from 'ngx-stripe';
-import { Subject } from 'rxjs';
-import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -83,6 +82,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     'frankly',
     'Interactive Brokers',
     'Mintos',
+    'Monefit SmartSaver',
     'Swissquote',
     'VIAC',
     'Zak'
@@ -98,7 +98,6 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private notificationService: NotificationService,
-    private stripeService: StripeService,
     private userService: UserService
   ) {
     addIcons({
@@ -155,23 +154,17 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
         priceId: this.priceId
       })
       .pipe(
-        switchMap(({ sessionId }) => {
-          return this.stripeService.redirectToCheckout({ sessionId });
-        }),
-        catchError((error) => {
+        catchError((error: Error) => {
           this.notificationService.alert({
             title: error.message
           });
 
-          throw error;
-        })
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
       )
-      .subscribe((result) => {
-        if (result.error) {
-          this.notificationService.alert({
-            title: result.error.message
-          });
-        }
+      .subscribe(({ sessionUrl }) => {
+        window.location.href = sessionUrl;
       });
   }
 

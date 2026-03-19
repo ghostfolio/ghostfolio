@@ -1,5 +1,5 @@
 import { AccountModule } from '@ghostfolio/api/app/account/account.module';
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
@@ -14,9 +14,9 @@ import { ExportService } from './export.service';
   controllers: [ExportController],
   imports: [
     AccountModule,
+    ActivitiesModule,
     ApiModule,
     MarketDataModule,
-    OrderModule,
     TagModule,
     TransformDataSourceInRequestModule
   ],

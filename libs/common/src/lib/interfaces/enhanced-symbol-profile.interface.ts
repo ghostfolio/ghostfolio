@@ -33,4 +33,5 @@ export interface EnhancedSymbolProfile {
   updatedAt: Date;
   url?: string;
   userId?: string;
+  watchedByCount?: number;
 }

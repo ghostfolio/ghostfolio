@@ -38,7 +38,7 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.createOrder)
+  @HasPermission(permissions.createActivity)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
@@ -103,6 +103,7 @@ export class ImportController {
     const activities = await this.importService.getDividends({
       dataSource,
       symbol,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
       userId: this.request.user.id
     });
 

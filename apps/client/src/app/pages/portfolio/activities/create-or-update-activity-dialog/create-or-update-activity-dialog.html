@@ -84,12 +84,8 @@
       >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
-          @if (
-            !activityForm.get('accountId').hasValidator(Validators.required) ||
-            (!activityForm.get('accountId').value && mode === 'update')
-          ) {
-            <mat-option [value]="null" />
-          }
+          <mat-option [value]="null" />
+
           @for (account of data.accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">

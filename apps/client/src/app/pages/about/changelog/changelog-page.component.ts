@@ -1,7 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
 
 @Component({
   imports: [MarkdownModule, NgxSkeletonLoaderModule],
@@ -9,17 +8,10 @@ import { Subject } from 'rxjs';
   styleUrls: ['./changelog-page.scss'],
   templateUrl: './changelog-page.html'
 })
-export class GfChangelogPageComponent implements OnDestroy {
+export class GfChangelogPageComponent {
   public isLoading = true;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public onLoad() {
     this.isLoading = false;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

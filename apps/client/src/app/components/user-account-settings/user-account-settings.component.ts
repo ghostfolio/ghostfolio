@@ -1,17 +1,17 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   KEY_STAY_SIGNED_IN,
   KEY_TOKEN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,
@@ -88,6 +88,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
     'es',
     'fr',
     'it',
+    'ko',
     'nl',
     'pl',
     'pt',
@@ -106,7 +107,6 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
     private notificationService: NotificationService,
     private settingsStorageService: SettingsStorageService,
     private snackBar: MatSnackBar,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
@@ -169,9 +169,9 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
 
             if (aKey === 'language') {
               if (aValue) {
-                window.location.href = `../${aValue}/account`;
+                window.location.href = `../${aValue}/${internalRoutes.account.path}`;
               } else {
-                window.location.href = `../`;
+                window.location.href = '../';
               }
             }
           });
@@ -196,8 +196,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
             takeUntil(this.unsubscribeSubject)
           )
           .subscribe(() => {
-            this.tokenStorageService.signOut();
-            this.userService.remove();
+            this.userService.signOut();
 
             document.location.href = `/${document.documentElement.lang}`;
           });

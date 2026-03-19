@@ -65,7 +65,11 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.committedFunds"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.totalInvestmentValueWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -180,18 +184,21 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToUpdateUserSettings &&
+          !user?.settings?.isRestrictedView &&
           user?.subscription?.type !== 'Basic'
       }"
       (click)="
         hasPermissionToUpdateUserSettings &&
+          !user?.settings?.isRestrictedView &&
           user?.subscription?.type !== 'Basic' &&
           onEditEmergencyFund()
       "
     >
       @if (
         hasPermissionToUpdateUserSettings &&
-        user?.subscription?.type !== 'Basic' &&
-        !isLoading
+        !isLoading &&
+        !user?.settings?.isRestrictedView &&
+        user?.subscription?.type !== 'Basic'
       ) {
         <ion-icon
           class="mr-1 text-muted"
@@ -327,8 +334,8 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>
-      Annualized Performance
+    <div class="flex-grow-1 ml-3 text-truncate">
+      <ng-container i18n>Annualized Performance</ng-container>
     </div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value

@@ -1,5 +1,5 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
@@ -23,9 +23,9 @@ import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue
 export class PortfolioSnapshotProcessor {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
+    private readonly activitiesService: ActivitiesService,
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly configurationService: ConfigurationService,
-    private readonly orderService: OrderService,
     private readonly redisCacheService: RedisCacheService
   ) {}
 
@@ -47,10 +47,11 @@ export class PortfolioSnapshotProcessor {
       );
 
       const { activities } =
-        await this.orderService.getOrdersForPortfolioCalculator({
+        await this.activitiesService.getActivitiesForPortfolioCalculator({
           filters: job.data.filters,
           userCurrency: job.data.userCurrency,
-          userId: job.data.userId
+          userId: job.data.userId,
+          withCash: true
         });
 
       const accountBalanceItems =

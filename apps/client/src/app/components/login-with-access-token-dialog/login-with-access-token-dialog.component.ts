@@ -4,7 +4,6 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,7 +27,6 @@ import { LoginWithAccessTokenDialogParams } from './interfaces/interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfDialogHeaderComponent,
     IonIcon,
     MatButtonModule,

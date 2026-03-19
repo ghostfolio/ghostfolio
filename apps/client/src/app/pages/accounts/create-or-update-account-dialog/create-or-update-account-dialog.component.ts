@@ -1,16 +1,11 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule, NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnDestroy
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -30,7 +25,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Platform } from '@prisma/client';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
@@ -55,13 +50,11 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-account-dialog.scss'],
   templateUrl: 'create-or-update-account-dialog.html'
 })
-export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
+export class GfCreateOrUpdateAccountDialogComponent {
   public accountForm: FormGroup;
   public currencies: string[] = [];
   public filteredPlatforms: Observable<Platform[]>;
-  public platforms: Platform[];
-
-  private unsubscribeSubject = new Subject<void>();
+  public platforms: Platform[] = [];
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
@@ -71,10 +64,8 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
   ) {}
 
   public ngOnInit() {
-    const { currencies, platforms } = this.dataService.fetchInfo();
-
+    const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
-    this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
@@ -83,23 +74,33 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
       currency: [this.data.account.currency, Validators.required],
       isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
-      platformId: [
-        this.platforms.find(({ id }) => {
-          return id === this.data.account.platformId;
-        }),
-        this.autocompleteObjectValidator()
-      ]
+      platformId: [null, this.autocompleteObjectValidator()]
     });
 
-    this.filteredPlatforms = this.accountForm
-      .get('platformId')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => {
-          const name = typeof value === 'string' ? value : value?.name;
-          return name ? this.filter(name as string) : this.platforms.slice();
-        })
+    this.dataService.fetchPlatforms().subscribe(({ platforms }) => {
+      this.platforms = platforms;
+
+      const selectedPlatform = this.platforms.find(({ id }) => {
+        return id === this.data.account.platformId;
+      });
+
+      this.accountForm.patchValue(
+        {
+          platformId: selectedPlatform
+        },
+        { emitEvent: false }
       );
+
+      this.filteredPlatforms = this.accountForm
+        .get('platformId')
+        .valueChanges.pipe(
+          startWith(''),
+          map((value) => {
+            const name = typeof value === 'string' ? value : value?.name;
+            return name ? this.filter(name as string) : this.platforms.slice();
+          })
+        );
+    });
   }
 
   public autoCompleteCheck() {
@@ -160,11 +161,6 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private autocompleteObjectValidator(): ValidatorFn {

@@ -34,7 +34,6 @@ import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
-import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
@@ -68,6 +67,7 @@ import type { LookupResponse } from './responses/lookup-response.interface';
 import type { MarketDataDetailsResponse } from './responses/market-data-details-response.interface';
 import type { MarketDataOfMarketsResponse } from './responses/market-data-of-markets-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PlatformsResponse } from './responses/platforms-response.interface';
 import type { PortfolioDividendsResponse } from './responses/portfolio-dividends-response.interface';
 import type { PortfolioHoldingResponse } from './responses/portfolio-holding-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
@@ -158,6 +158,7 @@ export {
   MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
+  PlatformsResponse,
   PortfolioChart,
   PortfolioDetails,
   PortfolioDividendsResponse,
@@ -170,7 +171,6 @@ export {
   PortfolioReportResponse,
   PortfolioReportRule,
   PortfolioSummary,
-  Position,
   Product,
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,

@@ -20,6 +20,8 @@
     "strictTemplates": false
   },
   "compilerOptions": {
+    "lib": ["dom", "es2022"],
+    "module": "preserve",
     "target": "es2020"
   }
 }

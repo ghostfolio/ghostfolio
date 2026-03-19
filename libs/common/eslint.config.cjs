@@ -18,7 +18,9 @@ module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx'],
     // Override or add rules here
-    rules: {}
+    rules: {
+      '@typescript-eslint/prefer-nullish-coalescing': 'error'
+    }
   },
   {
     files: ['**/*.js', '**/*.jsx'],
