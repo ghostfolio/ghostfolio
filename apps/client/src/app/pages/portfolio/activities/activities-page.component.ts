@@ -357,11 +357,6 @@ export class GfActivitiesPageComponent implements OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private isCalendarYear(dateRange: DateRange) {
     if (!dateRange) {
       return false;
