@@ -344,7 +344,7 @@ export class GfActivitiesPageComponent implements OnInit {
       .subscribe((activity: UpdateOrderDto) => {
         if (activity) {
           this.dataService
-            .putOrder(activity)
+            .putActivity(activity)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
               next: () => {
