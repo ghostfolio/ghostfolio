@@ -12,6 +12,7 @@
       "name": "Debug Jest",
       "program": "${workspaceFolder}/node_modules/@nrwl/cli/bin/nx",
       "request": "launch",
+      "runtimeExecutable": "/Users/ddgs/.nvm/versions/node/v22.18.0/bin/node",
       "type": "node"
     },
     {
@@ -24,6 +25,7 @@
       "program": "${workspaceFolder}/apps/api/src/main.ts",
       "request": "launch",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "runtimeExecutable": "/Users/ddgs/.nvm/versions/node/v22.18.0/bin/node",
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"

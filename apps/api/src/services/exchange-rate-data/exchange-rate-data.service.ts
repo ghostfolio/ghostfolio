@@ -294,6 +294,8 @@ export class ExchangeRateDataService {
         date: aDate
       });
 
+      console.log('===> hay marketData ?? ', marketData?.marketPrice);
+
       if (marketData?.marketPrice) {
         factor = marketData?.marketPrice;
       } else {
@@ -313,6 +315,10 @@ export class ExchangeRateDataService {
                 symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
               })
             )?.marketPrice;
+            console.log(
+              '===> marketPriceBaseCurrencyFromCurrency',
+              marketPriceBaseCurrencyFromCurrency
+            );
           }
         } catch {}
 
@@ -327,6 +333,10 @@ export class ExchangeRateDataService {
                 symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
               })
             )?.marketPrice;
+            console.log(
+              '===> marketPriceBaseCurrencyToCurrency',
+              marketPriceBaseCurrencyToCurrency
+            );
           }
         } catch {}
 

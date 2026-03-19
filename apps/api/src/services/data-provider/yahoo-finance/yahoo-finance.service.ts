@@ -80,19 +80,24 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     try {
-      const historicalResult = this.convertToDividendResult(
-        await this.yahooFinance.chart(
-          this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-            symbol
-          ),
-          {
-            events: 'dividends',
-            interval: granularity === 'month' ? '1mo' : '1d',
-            period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
-          }
-        )
+      const chartResponse = await this.yahooFinance.chart(
+        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          symbol
+        ),
+        {
+          events: 'dividends',
+          interval: granularity === 'month' ? '1mo' : '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(to, DATE_FORMAT)
+        }
       );
+
+      Logger.debug(
+        `Fetched dividends for ${symbol} from ${format(from, DATE_FORMAT)} to ${format(to, DATE_FORMAT)}: ${chartResponse.events?.dividends?.length ?? 0} entries`,
+        'YahooFinanceService'
+      );
+
+      const historicalResult = this.convertToDividendResult(chartResponse);
       const response: {
         [date: string]: DataProviderHistoricalResponse;
       } = {};
@@ -129,18 +134,23 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     try {
-      const historicalResult = this.convertToHistoricalResult(
-        await this.yahooFinance.chart(
-          this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-            symbol
-          ),
-          {
-            interval: '1d',
-            period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
-          }
-        )
+      const chartResponse = await this.yahooFinance.chart(
+        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          symbol
+        ),
+        {
+          interval: '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(to, DATE_FORMAT)
+        }
       );
+
+      Logger.debug(
+        `Fetched historical market data for ${symbol} from ${format(from, DATE_FORMAT)} to ${format(to, DATE_FORMAT)}: ${chartResponse.quotes?.length ?? 0} quotes`,
+        'YahooFinanceService'
+      );
+
+      const historicalResult = this.convertToHistoricalResult(chartResponse);
 
       const response: {
         [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
@@ -197,6 +207,11 @@ export class YahooFinanceService implements DataProviderInterface {
 
       try {
         quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
+
+        Logger.debug(
+          `Fetched quotes for ${yahooFinanceSymbols.length} symbol(s) [${yahooFinanceSymbols.join(', ')}]: ${quotes.length} results`,
+          'YahooFinanceService'
+        );
       } catch (error) {
         Logger.error(error, 'YahooFinanceService');
 
@@ -206,6 +221,11 @@ export class YahooFinanceService implements DataProviderInterface {
         );
 
         quotes = await this.getQuotesWithQuoteSummary(yahooFinanceSymbols);
+
+        Logger.debug(
+          `Fetched quotes via quoteSummary fallback for ${yahooFinanceSymbols.length} symbol(s) [${yahooFinanceSymbols.join(', ')}]: ${quotes.length} results`,
+          'YahooFinanceService'
+        );
       }
 
       for (const quote of quotes) {
@@ -254,6 +274,11 @@ export class YahooFinanceService implements DataProviderInterface {
 
       const searchResult = await this.yahooFinance.search(query);
 
+      Logger.debug(
+        `Fetched search results for query "${query}": ${searchResult.quotes?.length ?? 0} quotes`,
+        'YahooFinanceService'
+      );
+
       const quotes = searchResult.quotes
         .filter(
           (quote): quote is Exclude<typeof quote, SearchQuoteNonYahoo> => {
@@ -295,6 +320,11 @@ export class YahooFinanceService implements DataProviderInterface {
           }).map(({ symbol }) => {
             return symbol;
           })
+        );
+
+        Logger.debug(
+          `Fetched market data for search results of query "${query}": ${marketData.length} quotes`,
+          'YahooFinanceService'
         );
       } catch (error) {
         if (error?.result?.length > 0) {
@@ -360,6 +390,16 @@ export class YahooFinanceService implements DataProviderInterface {
     });
 
     const settledResults = await Promise.allSettled(quoteSummaryPromises);
+
+    const fulfilled = settledResults.filter(
+      (result) => result.status === 'fulfilled'
+    ).length;
+    const rejected = settledResults.length - fulfilled;
+
+    Logger.debug(
+      `Fetched quoteSummary for ${aYahooFinanceSymbols.length} symbol(s) [${aYahooFinanceSymbols.join(', ')}]: ${fulfilled} fulfilled, ${rejected} rejected`,
+      'YahooFinanceService'
+    );
 
     return settledResults
       .filter(

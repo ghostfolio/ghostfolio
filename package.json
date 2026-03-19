@@ -39,7 +39,7 @@
     "prisma": "prisma",
     "replace-placeholders-in-build": "node ./replace.build.mjs",
     "start": "node dist/apps/api/main",
-    "start:client": "nx run client:copy-assets && nx run client:serve --configuration=development-en --hmr -o",
+    "start:client": "nx run client:copy-assets && nx run client:serve --configuration=development-es --hmr -o",
     "start:production": "npm run database:migrate && npm run database:seed && node main",
     "start:server": "nx run api:copy-assets && nx run api:serve --watch",
     "start:storybook": "nx run ui:storybook",
