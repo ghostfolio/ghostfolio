@@ -141,18 +141,18 @@ export class GfAppComponent implements OnInit {
         if (
           (this.currentRoute === internalRoutes.home.path &&
             this.currentSubRoute ===
-              internalRoutes.home.subRoutes.holdings.path) ||
+              internalRoutes.home.subRoutes?.holdings.path) ||
           (this.currentRoute === internalRoutes.portfolio.path &&
             !this.currentSubRoute) ||
           (this.currentRoute === internalRoutes.portfolio.path &&
             this.currentSubRoute ===
-              internalRoutes.portfolio.subRoutes.activities.path) ||
+              internalRoutes.portfolio.subRoutes?.activities.path) ||
           (this.currentRoute === internalRoutes.portfolio.path &&
             this.currentSubRoute ===
-              internalRoutes.portfolio.subRoutes.allocations.path) ||
+              internalRoutes.portfolio.subRoutes?.allocations.path) ||
           (this.currentRoute === internalRoutes.zen.path &&
             this.currentSubRoute ===
-              internalRoutes.home.subRoutes.holdings.path)
+              internalRoutes.home.subRoutes?.holdings.path)
         ) {
           this.hasPermissionToChangeFilters = true;
         } else {
