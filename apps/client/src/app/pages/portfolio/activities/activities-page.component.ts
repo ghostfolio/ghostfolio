@@ -13,7 +13,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -26,8 +26,8 @@ import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { CreateOrUpdateActivityDialogParams } from './create-or-update-activity-dialog/interfaces/interfaces';
@@ -47,7 +47,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
 })
-export class GfActivitiesPageComponent implements OnDestroy, OnInit {
+export class GfActivitiesPageComponent implements OnInit {
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -61,8 +61,6 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public totalItems: number;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -72,16 +70,17 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private destroyRef: DestroyRef
   ) {
     this.routeQueryParams = route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['createDialog']) {
           if (params['activityId']) {
             this.dataService
               .fetchActivity(params['activityId'])
-              .pipe(takeUntil(this.unsubscribeSubject))
+              .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe((activity) => {
                 this.openCreateActivityDialog(activity);
               });
@@ -92,7 +91,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
           if (params['activityId']) {
             this.dataService
               .fetchActivity(params['activityId'])
-              .pipe(takeUntil(this.unsubscribeSubject))
+              .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe((activity) => {
                 this.openUpdateActivityDialog(activity);
               });
@@ -110,13 +109,13 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.updateUser(state.user);
@@ -137,7 +136,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
         sortDirection: this.sortDirection,
         take: this.pageSize
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ activities, count }) => {
         this.dataSource = new MatTableDataSource(activities);
         this.totalItems = count;
@@ -178,11 +177,11 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       .deleteActivities({
         filters: this.userService.getFilters()
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
 
         this.fetchActivities();
@@ -192,11 +191,11 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public onDeleteActivity(aId: string) {
     this.dataService
       .deleteActivity(aId)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
 
         this.fetchActivities();
@@ -212,7 +211,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchExport(fetchExportParams)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         for (const activity of data.activities) {
           delete activity.id;
@@ -232,7 +231,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public onExportDrafts(activityIds?: string[]) {
     this.dataService
       .fetchExport({ activityIds })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         downloadAsFile({
           content: this.icsService.transformActivitiesToIcsContent(
@@ -262,11 +261,11 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
 
         this.fetchActivities();
@@ -289,11 +288,11 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
 
         this.fetchActivities();
@@ -330,12 +329,12 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((activity: UpdateOrderDto) => {
         if (activity) {
           this.dataService
             .putOrder(activity)
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
               next: () => {
                 this.fetchActivities();
@@ -347,15 +346,10 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private openCreateActivityDialog(aActivity?: Activity) {
     this.userService
       .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         this.updateUser(user);
 
@@ -382,14 +376,14 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
         dialogRef
           .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((transaction: CreateOrderDto | null) => {
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({
                 next: () => {
                   this.userService
                     .get(true)
-                    .pipe(takeUntil(this.unsubscribeSubject))
+                    .pipe(takeUntilDestroyed(this.destroyRef))
                     .subscribe();
 
                   this.fetchActivities();
