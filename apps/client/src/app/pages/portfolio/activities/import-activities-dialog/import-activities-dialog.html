@@ -156,7 +156,7 @@
             </button>
           </div>
         } @else {
-          <div class="pt-3">
+          <div class="notices pt-3">
             <mat-accordion displayMode="flat">
               @for (message of errorMessages; track message; let i = $index) {
                 <mat-expansion-panel [disabled]="!details[i]">
