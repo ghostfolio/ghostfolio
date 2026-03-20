@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Polish (`pl`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
 
 ## 2.250.0 - 2026-03-17
 
