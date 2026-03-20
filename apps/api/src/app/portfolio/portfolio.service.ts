@@ -1903,6 +1903,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      dividendYieldTrailingTwelveMonths,
       totalInvestment,
       totalInvestmentWithCurrencyEffect
     } = await portfolioCalculator.getSnapshot();
@@ -2005,6 +2006,7 @@ export class PortfolioService {
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
       dateOfFirstActivity,
+      dividendYieldTrailingTwelveMonths,
       excludedAccountsAndActivities,
       netPerformance,
       netPerformancePercentage,

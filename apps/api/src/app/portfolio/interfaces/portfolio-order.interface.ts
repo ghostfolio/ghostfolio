@@ -1,6 +1,9 @@
 import { Activity } from '@ghostfolio/common/interfaces';
 
-export interface PortfolioOrder extends Pick<Activity, 'tags' | 'type'> {
+export interface PortfolioOrder extends Pick<
+  Activity,
+  'currency' | 'tags' | 'type'
+> {
   date: string;
   fee: Big;
   feeInBaseCurrency: Big;

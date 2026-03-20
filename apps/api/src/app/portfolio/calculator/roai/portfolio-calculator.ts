@@ -34,6 +34,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
+    let totalDividendsTrailingTwelveMonthsInBaseCurrency = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
     const totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
@@ -46,6 +47,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         return includeInTotalAssetValue;
       }
     )) {
+      if (currentPosition.investmentWithCurrencyEffect) {
+        totalDividendsTrailingTwelveMonthsInBaseCurrency =
+          totalDividendsTrailingTwelveMonthsInBaseCurrency.plus(
+            new Big(currentPosition.dividendYieldTrailingTwelveMonths ?? 0).mul(
+              currentPosition.investmentWithCurrencyEffect
+            )
+          );
+      }
+
       if (currentPosition.feeInBaseCurrency) {
         totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
           currentPosition.feeInBaseCurrency
@@ -105,8 +115,17 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
     }
 
+    // Calculate dividend yield for the entire portfolio based on trailing twelve months
+    const dividendYieldTrailingTwelveMonths =
+      totalInvestmentWithCurrencyEffect.gt(0)
+        ? totalDividendsTrailingTwelveMonthsInBaseCurrency
+            .div(totalInvestmentWithCurrencyEffect)
+            .toNumber()
+        : 0;
+
     return {
       currentValueInBaseCurrency,
+      dividendYieldTrailingTwelveMonths,
       hasErrors,
       positions,
       totalFeesWithCurrencyEffect,
@@ -303,6 +322,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     // Add a synthetic order at the start and the end date
     orders.push({
+      currency: undefined,
       date: startDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
@@ -318,6 +338,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     });
 
     orders.push({
+      currency: undefined,
       date: endDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
@@ -359,6 +380,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
       } else {
         orders.push({
+          currency: undefined,
           date: dateString,
           fee: new Big(0),
           feeInBaseCurrency: new Big(0),

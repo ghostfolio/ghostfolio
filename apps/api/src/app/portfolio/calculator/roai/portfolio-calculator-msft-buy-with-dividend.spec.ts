@@ -79,7 +79,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with MSFT buy', async () => {
+    it('with MSFT buy', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
@@ -175,6 +175,156 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
           totalInvestment: 298.58,
+          totalInvestmentValueWithCurrencyEffect: 298.58
+        })
+      );
+    });
+
+    it('with MSFT buy and four quarterly dividends to calculate annualized dividend yield', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-09-16'),
+          feeInAssetProfileCurrency: 19,
+          feeInBaseCurrency: 19,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 298.58
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2022-08-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.62
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2022-11-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.68
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2023-02-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.68
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2023-05-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.68
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      expect(portfolioSnapshot).toMatchObject({
+        errors: [],
+        hasErrors: false,
+        positions: [
+          {
+            activitiesCount: 5,
+            averagePrice: new Big('298.58'),
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            dateOfFirstActivity: '2021-09-16',
+            dividend: new Big('2.66'),
+            dividendInBaseCurrency: new Big('2.66'),
+            fee: new Big('19'),
+            quantity: new Big('1'),
+            symbol: 'MSFT',
+            tags: []
+          }
+        ],
+        totalFeesWithCurrencyEffect: new Big('19'),
+        totalInterestWithCurrencyEffect: new Big('0'),
+        totalInvestment: new Big('298.58'),
+        totalInvestmentWithCurrencyEffect: new Big('298.58'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0')
+      });
+
+      // Verify position-level dividend yield
+      const position = portfolioSnapshot.positions[0];
+      expect(position).toHaveProperty('dividendYieldTrailingTwelveMonths');
+      expect(position.dividendYieldTrailingTwelveMonths).toBeGreaterThan(0);
+
+      const expectedPositionYield = new Big(position.dividendInBaseCurrency)
+        .div(position.investmentWithCurrencyEffect)
+        .toNumber();
+      expect(position.dividendYieldTrailingTwelveMonths).toBeCloseTo(
+        expectedPositionYield,
+        10
+      );
+      expect(expectedPositionYield).toBeCloseTo(0.00891, 3); // ~0.89% yield on cost
+
+      // Verify portfolio-level dividend yield
+      expect(portfolioSnapshot).toHaveProperty(
+        'dividendYieldTrailingTwelveMonths'
+      );
+      expect(portfolioSnapshot.dividendYieldTrailingTwelveMonths).toBeCloseTo(
+        expectedPositionYield,
+        10
+      );
+
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
+        expect.objectContaining({
           totalInvestmentValueWithCurrencyEffect: 298.58
         })
       );

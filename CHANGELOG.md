@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the dividend yield (trailing twelve months) to the portfolio summary (experimental)
+
 ### Changed
 
 - Improved the language localization for Polish (`pl`)
