@@ -676,7 +676,9 @@ model CellMapping {
   boxNumber     String
   label         String
   description   String?
+  cellType      String       @default("number")
   isCustom      Boolean      @default(false)
+  isIgnored     Boolean      @default(false)
   sortOrder     Int
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

@@ -472,7 +472,7 @@ export class PdfParseExtractor implements K1Extractor {
     if (!item) return;
 
     const numericValue =
-      region.valueType === 'checkbox'
+      region.valueType === 'checkbox' || region.valueType === 'text'
         ? null
         : this.parseNumericValue(item.text);
     const { confidence, confidenceLevel } = this.computeConfidence(
@@ -531,6 +531,21 @@ export class PdfParseExtractor implements K1Extractor {
         for (const item of taxYearItems) {
           item.matched = true;
         }
+        // Also emit as a field so it appears in cell mapping
+        fields.push({
+          boxNumber: 'TAX_YEAR',
+          label: 'Tax Year',
+          customLabel: null,
+          rawValue: String(year),
+          numericValue: null,
+          confidence: 1.0,
+          confidenceLevel: 'HIGH',
+          isUserEdited: false,
+          isReviewed: false,
+          subtype: null,
+          fieldCategory: 'METADATA',
+          isCheckbox: false
+        });
       }
     } else if (taxYearItems.length === 1) {
       const text = taxYearItems[0].text;
@@ -538,6 +553,20 @@ export class PdfParseExtractor implements K1Extractor {
       if (text.length === 4 && year >= 1900 && year <= 2100) {
         metadata.taxYear = year;
         taxYearItems[0].matched = true;
+        fields.push({
+          boxNumber: 'TAX_YEAR',
+          label: 'Tax Year',
+          customLabel: null,
+          rawValue: String(year),
+          numericValue: null,
+          confidence: 1.0,
+          confidenceLevel: 'HIGH',
+          isUserEdited: false,
+          isReviewed: false,
+          subtype: null,
+          fieldCategory: 'METADATA',
+          isCheckbox: false
+        });
       }
     }
 
@@ -688,6 +717,9 @@ export class PdfParseExtractor implements K1Extractor {
 
     const assignments = this.assignItemsToRegions(dataItems, checkboxRegions);
 
+    // Track which checkbox regions were matched (checked)
+    const checkedRegionIds = new Set<string>();
+
     for (const [region, item] of assignments) {
       const isChecked =
         item.text.toUpperCase() === 'X' ||
@@ -695,6 +727,8 @@ export class PdfParseExtractor implements K1Extractor {
         item.text.toUpperCase() === '✗';
 
       if (!isChecked) continue;
+
+      checkedRegionIds.add(region.fieldId);
 
       const { confidence, confidenceLevel } = this.computeConfidence(
         item.x,
@@ -706,7 +740,7 @@ export class PdfParseExtractor implements K1Extractor {
         boxNumber: region.boxNumber,
         label: region.label,
         customLabel: null,
-        rawValue: 'X',
+        rawValue: 'true',
         numericValue: null,
         confidence,
         confidenceLevel,
@@ -725,6 +759,26 @@ export class PdfParseExtractor implements K1Extractor {
       } else if (region.fieldId === 'AMENDED_K1') {
         metadata.isAmended = true;
       }
+    }
+
+    // Emit false for all unchecked checkbox regions
+    for (const region of checkboxRegions) {
+      if (checkedRegionIds.has(region.fieldId)) continue;
+
+      fields.push({
+        boxNumber: region.boxNumber,
+        label: region.label,
+        customLabel: null,
+        rawValue: 'false',
+        numericValue: null,
+        confidence: 1.0,
+        confidenceLevel: 'HIGH',
+        isUserEdited: false,
+        isReviewed: false,
+        subtype: null,
+        fieldCategory: 'CHECKBOX',
+        isCheckbox: true
+      });
     }
   }
 

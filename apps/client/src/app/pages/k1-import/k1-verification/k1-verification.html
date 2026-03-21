@@ -68,9 +68,27 @@
                 <th mat-header-cell *matHeaderCellDef>Parsed</th>
                 <td mat-cell *matCellDef="let field">
                   @if (field.numericValue !== null && field.numericValue !== undefined) {
-                    {{ field.numericValue | number:'1.2-2' }}
+                    {{ field.numericValue | number:'1.2-6' }}
+                  } @else if (field.rawValue) {
+                    {{ field.rawValue }}
                   } @else {
                     <span class="text-muted">—</span>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Cell Type Column -->
+              <ng-container matColumnDef="cellType">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let field">
+                  @if (field.isEditing) {
+                    <mat-select class="type-select" [(ngModel)]="field.editCellType">
+                      @for (opt of cellTypeOptions; track opt.value) {
+                        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                      }
+                    </mat-select>
+                  } @else {
+                    <span class="type-badge type-{{ field.cellType }}">{{ field.cellType }}</span>
                   }
                 </td>
               </ng-container>
@@ -152,7 +170,7 @@
                       <span class="ms-2">{{ item.rawValue }}</span>
                       @if (item.numericValue !== null) {
                         <small class="text-muted ms-1">
-                          ({{ item.numericValue | number:'1.2-2' }})
+                          ({{ item.numericValue | number:'1.2-6' }})
                         </small>
                       }
                       <small class="text-muted d-block">Page {{ item.pageNumber }}</small>
@@ -207,7 +225,7 @@
                     </small>
                   </div>
                   <div class="aggregation-value">
-                    <strong>{{ agg.computedValue | number:'1.2-2' }}</strong>
+                    <strong>{{ agg.computedValue | number:'1.2-6' }}</strong>
                   </div>
                 </div>
               }

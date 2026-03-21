@@ -37,6 +37,8 @@ interface EditableField extends K1ExtractedField {
   isEditing: boolean;
   editValue: string;
   editLabel: string;
+  cellType: string;
+  editCellType: string;
 }
 
 interface EditableUnmappedItem extends K1UnmappedItem {
@@ -75,12 +77,20 @@ export class K1VerificationComponent implements OnInit {
   public taxYear: number;
   public unmappedItems: EditableUnmappedItem[] = [];
 
+  public cellTypeOptions = [
+    { value: 'number', label: 'Number ($)' },
+    { value: 'string', label: 'String' },
+    { value: 'percentage', label: 'Percentage (%)' },
+    { value: 'boolean', label: 'Boolean' }
+  ];
+
   // Column definitions for the fields table
   public displayedColumns = [
     'boxNumber',
     'label',
     'rawValue',
     'numericValue',
+    'cellType',
     'confidence',
     'reviewed',
     'actions'
@@ -132,6 +142,7 @@ export class K1VerificationComponent implements OnInit {
     field.isEditing = true;
     field.editValue = field.rawValue;
     field.editLabel = field.customLabel || field.label;
+    field.editCellType = field.cellType;
     this.changeDetectorRef.markForCheck();
   }
 
@@ -142,17 +153,27 @@ export class K1VerificationComponent implements OnInit {
     field.rawValue = field.editValue;
     field.customLabel =
       field.editLabel !== field.label ? field.editLabel : null;
+    field.cellType = field.editCellType;
     field.isUserEdited = true;
     field.isReviewed = true;
     field.isEditing = false;
 
-    // Try to parse numeric value
-    const cleaned = field.editValue
-      .replace(/[$,]/g, '')
-      .replace(/\(([^)]+)\)/, '-$1')
-      .trim();
-    const parsed = parseFloat(cleaned);
-    field.numericValue = isNaN(parsed) ? null : parsed;
+    // Parse value based on cell type
+    if (field.cellType === 'boolean') {
+      const lower = field.editValue.toLowerCase().trim();
+      field.numericValue = null;
+      field.rawValue = (lower === 'true' || lower === 'yes' || lower === '1' || lower === 'x') ? 'true' : 'false';
+    } else if (field.cellType === 'string') {
+      field.numericValue = null;
+    } else {
+      // number or percentage
+      const cleaned = field.editValue
+        .replace(/[$,%]/g, '')
+        .replace(/\(([^)]+)\)/, '-$1')
+        .trim();
+      const parsed = parseFloat(cleaned);
+      field.numericValue = isNaN(parsed) ? null : parsed;
+    }
 
     this.recalculateAggregations();
     this.checkConfirmability();
@@ -219,6 +240,7 @@ export class K1VerificationComponent implements OnInit {
         customLabel: f.customLabel,
         rawValue: f.rawValue,
         numericValue: f.numericValue,
+        cellType: f.cellType,
         confidence: f.confidence,
         confidenceLevel: f.confidenceLevel,
         isUserEdited: f.isUserEdited,
@@ -300,7 +322,9 @@ export class K1VerificationComponent implements OnInit {
                 ...f,
                 isEditing: false,
                 editValue: f.rawValue,
-                editLabel: f.customLabel || f.label
+                editLabel: f.customLabel || f.label,
+                cellType: (f as any).cellType || 'number',
+                editCellType: (f as any).cellType || 'number'
               })
             );
 

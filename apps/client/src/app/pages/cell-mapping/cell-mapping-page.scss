@@ -3,7 +3,7 @@
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 1.5rem;
 }
@@ -56,16 +56,115 @@ h2 {
 .mappings-table {
   width: 100%;
   margin-bottom: 1rem;
+
+  // Let browser auto-size columns based on content
+  th.mat-mdc-header-cell,
+  td.mat-mdc-cell {
+    padding: 8px 12px;
+    vertical-align: middle;
+  }
+
+  .mat-column-boxNumber {
+    white-space: nowrap;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8125rem;
+    color: rgba(0, 0, 0, 0.72);
+    width: 1%; // shrink-to-fit trick for auto layout
+  }
+
+  .mat-column-label {
+    white-space: nowrap;
+  }
+
+  .mat-column-description {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.8125rem;
+    // Allow wrapping for long descriptions
+    word-break: break-word;
+  }
+
+  .mat-column-cellType {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  .mat-column-isCustom {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .mat-column-isIgnored {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .mat-column-actions {
+    width: 1%;
+    white-space: nowrap;
+  }
 }
 
-.inline-edit {
+// Lightweight inline cell inputs (no mat-form-field wrapper)
+.cell-input {
   width: 100%;
-  max-width: 200px;
+  min-width: 160px;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.24);
+  border-radius: 4px;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.15s ease;
+
+  &:focus {
+    border-color: var(--primary-color, #1976d2);
+    box-shadow: 0 0 0 1px var(--primary-color, #1976d2);
+  }
 }
 
 .custom-badge {
   color: #f9a825;
   font-size: 20px;
+}
+
+// Type badge styling
+.type-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.type-number {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.type-string {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.type-percentage {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.type-boolean {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+// Inline type selector (no mat-form-field wrapper)
+.type-select {
+  min-width: 110px;
 }
 
 .add-row {

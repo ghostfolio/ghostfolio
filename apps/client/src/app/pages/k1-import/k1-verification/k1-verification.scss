@@ -2,16 +2,60 @@
   display: block;
 }
 
+// Column width hints – give Label the most room, keep Box and actions compact
+.mat-column-boxNumber {
+  width: 60px;
+  white-space: nowrap;
+}
+
+.mat-column-label {
+  min-width: 200px;
+  width: 28%;
+}
+
+.mat-column-rawValue {
+  min-width: 140px;
+  width: 18%;
+}
+
+.mat-column-numericValue {
+  white-space: nowrap;
+}
+
+.mat-column-cellType {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.mat-column-confidence {
+  width: 90px;
+  white-space: nowrap;
+}
+
+.mat-column-reviewed {
+  width: 60px;
+}
+
+.mat-column-actions {
+  width: 80px;
+  white-space: nowrap;
+}
+
 .fields-section {
   .table-responsive {
     overflow-x: auto;
   }
 
   .compact-field {
-    width: 160px;
+    width: 100%;
+    min-width: 120px;
 
     .mat-mdc-form-field-infix {
       padding: 4px 0;
+    }
+
+    input.mat-mdc-input-element {
+      font-size: 0.8125rem;
     }
   }
 
@@ -75,7 +119,11 @@
   }
 
   .compact-field {
-    width: 140px;
+    width: 160px;
+
+    input.mat-mdc-input-element {
+      font-size: 0.8125rem;
+    }
   }
 }
 
@@ -113,4 +161,39 @@
 
 .actions {
   padding-bottom: 2rem;
+}
+
+// Type badge styling
+.type-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.type-number {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.type-string {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.type-percentage {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.type-boolean {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.type-select {
+  min-width: 110px;
 }

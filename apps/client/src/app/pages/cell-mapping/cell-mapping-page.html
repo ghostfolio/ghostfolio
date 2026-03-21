@@ -37,9 +37,7 @@
           <th mat-header-cell *matHeaderCellDef>Label</th>
           <td mat-cell *matCellDef="let row">
             @if (row.isEditing) {
-              <mat-form-field appearance="outline" class="inline-edit">
-                <input matInput [(ngModel)]="row.editLabel" />
-              </mat-form-field>
+              <input class="cell-input" [(ngModel)]="row.editLabel" />
             } @else {
               {{ row.label }}
             }
@@ -51,9 +49,7 @@
           <th mat-header-cell *matHeaderCellDef>Description</th>
           <td mat-cell *matCellDef="let row">
             @if (row.isEditing) {
-              <mat-form-field appearance="outline" class="inline-edit">
-                <input matInput [(ngModel)]="row.editDescription" />
-              </mat-form-field>
+              <input class="cell-input" [(ngModel)]="row.editDescription" />
             } @else {
               {{ row.description }}
             }
@@ -67,6 +63,34 @@
             @if (row.isCustom) {
               <mat-icon class="custom-badge" matTooltip="Partnership-specific override">star</mat-icon>
             }
+          </td>
+        </ng-container>
+
+        <!-- Cell Type -->
+        <ng-container matColumnDef="cellType">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let row">
+            @if (row.isEditing) {
+              <mat-select class="type-select" [(ngModel)]="row.editCellType">
+                @for (opt of cellTypeOptions; track opt.value) {
+                  <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                }
+              </mat-select>
+            } @else {
+              <span class="type-badge type-{{ row.cellType }}">{{ row.cellType }}</span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Is Ignored -->
+        <ng-container matColumnDef="isIgnored">
+          <th mat-header-cell *matHeaderCellDef>Ignored</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+              [checked]="row.isIgnored"
+              (change)="toggleIgnored(row)"
+              matTooltip="Ignored fields are excluded from scan results">
+            </mat-checkbox>
           </td>
         </ng-container>
 
@@ -107,6 +131,14 @@
         <mat-form-field appearance="outline">
           <mat-label>Label</mat-label>
           <input matInput [(ngModel)]="newLabel" placeholder="e.g. Other deductions" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="newCellType">
+            @for (opt of cellTypeOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+            }
+          </mat-select>
         </mat-form-field>
         <button mat-stroked-button (click)="addCustomCell()" [disabled]="!newBoxNumber || !newLabel">
           <mat-icon>add</mat-icon> Add Custom Cell

@@ -24,10 +24,13 @@ interface EditableMapping {
   boxNumber: string;
   label: string;
   description: string;
+  cellType: string;
   isCustom: boolean;
+  isIgnored: boolean;
   isEditing: boolean;
   editLabel: string;
   editDescription: string;
+  editCellType: string;
 }
 
 interface EditableRule {
@@ -69,13 +72,21 @@ export class CellMappingPageComponent implements OnInit {
 
   // New custom cell form
   public newBoxNumber = '';
+  public newCellType = 'number';
   public newLabel = '';
 
   // New rule form
   public newRuleName = '';
   public newRuleSourceCells = '';
 
-  public displayedColumns = ['boxNumber', 'label', 'description', 'isCustom', 'actions'];
+  public cellTypeOptions = [
+    { value: 'number', label: 'Number ($)' },
+    { value: 'string', label: 'String' },
+    { value: 'percentage', label: 'Percentage (%)' },
+    { value: 'boolean', label: 'Boolean' }
+  ];
+
+  public displayedColumns = ['boxNumber', 'label', 'description', 'cellType', 'isCustom', 'isIgnored', 'actions'];
 
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -101,12 +112,14 @@ export class CellMappingPageComponent implements OnInit {
     mapping.isEditing = true;
     mapping.editLabel = mapping.label;
     mapping.editDescription = mapping.description;
+    mapping.editCellType = mapping.cellType;
     this.changeDetectorRef.markForCheck();
   }
 
   public saveEditMapping(mapping: EditableMapping): void {
     mapping.label = mapping.editLabel;
     mapping.description = mapping.editDescription;
+    mapping.cellType = mapping.editCellType;
     mapping.isEditing = false;
     this.changeDetectorRef.markForCheck();
   }
@@ -114,6 +127,30 @@ export class CellMappingPageComponent implements OnInit {
   public cancelEditMapping(mapping: EditableMapping): void {
     mapping.isEditing = false;
     this.changeDetectorRef.markForCheck();
+  }
+
+  public toggleIgnored(mapping: EditableMapping): void {
+    if (!this.selectedPartnershipId) {
+      return;
+    }
+
+    this.k1ImportDataService
+      .toggleFieldIgnored({
+        partnershipId: this.selectedPartnershipId,
+        boxNumber: mapping.boxNumber
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result: any) => {
+          mapping.isIgnored = result.isIgnored;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: (err) => {
+          this.error =
+            err?.error?.message || 'Failed to toggle ignored state.';
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   public addCustomCell(): void {
@@ -125,14 +162,18 @@ export class CellMappingPageComponent implements OnInit {
       boxNumber: this.newBoxNumber,
       label: this.newLabel,
       description: '',
+      cellType: this.newCellType,
       isCustom: true,
+      isIgnored: false,
       isEditing: false,
       editLabel: '',
-      editDescription: ''
+      editDescription: '',
+      editCellType: this.newCellType
     });
 
     this.newBoxNumber = '';
     this.newLabel = '';
+    this.newCellType = 'number';
     this.changeDetectorRef.markForCheck();
   }
 
@@ -158,6 +199,7 @@ export class CellMappingPageComponent implements OnInit {
           boxNumber: m.boxNumber,
           label: m.label,
           description: m.description,
+          cellType: m.cellType,
           isCustom: m.isCustom
         }))
       })
@@ -286,10 +328,13 @@ export class CellMappingPageComponent implements OnInit {
             boxNumber: m.boxNumber,
             label: m.label,
             description: m.description || '',
+            cellType: m.cellType || 'number',
             isCustom: m.isCustom,
+            isIgnored: m.isIgnored ?? false,
             isEditing: false,
             editLabel: '',
-            editDescription: ''
+            editDescription: '',
+            editCellType: m.cellType || 'number'
           }));
           this.changeDetectorRef.markForCheck();
         },

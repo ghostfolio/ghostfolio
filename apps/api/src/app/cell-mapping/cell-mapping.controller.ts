@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Put,
   Query,
   UseGuards
@@ -48,6 +49,7 @@ export class CellMappingController {
         boxNumber: string;
         label: string;
         description?: string;
+        cellType?: string;
         isCustom: boolean;
       }>;
     }
@@ -69,6 +71,22 @@ export class CellMappingController {
     @Query('partnershipId') partnershipId: string
   ) {
     return this.cellMappingService.resetMappings(partnershipId);
+  }
+
+  /**
+   * PATCH /api/v1/cell-mapping/toggle-ignored
+   * Toggle the isIgnored flag for a specific cell mapping.
+   */
+  @HasPermission(permissions.updateKDocument)
+  @Patch('toggle-ignored')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async toggleIgnored(
+    @Body() data: { partnershipId: string; boxNumber: string }
+  ) {
+    return this.cellMappingService.toggleIgnored(
+      data.partnershipId,
+      data.boxNumber
+    );
   }
 
   /**

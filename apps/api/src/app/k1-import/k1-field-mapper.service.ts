@@ -39,11 +39,20 @@ export class K1FieldMapperService {
       const mapping = mappingMap.get(field.boxNumber);
 
       if (mapping) {
+        // Skip ignored fields — they are filtered out of extraction results
+        if (mapping.isIgnored) {
+          this.logger.debug(
+            `Skipping ignored field: box ${field.boxNumber}`
+          );
+          continue;
+        }
+
         mappedFields.push({
           ...field,
           label: mapping.label,
-          customLabel: mapping.isCustom ? mapping.label : field.customLabel
-        });
+          customLabel: mapping.isCustom ? mapping.label : field.customLabel,
+          cellType: mapping.cellType
+        } as any);
       } else {
         // Field has a box number but no corresponding cell mapping
         this.logger.debug(
@@ -103,6 +112,11 @@ export class K1FieldMapperService {
     const missingFields: K1ExtractedField[] = [];
 
     for (const mapping of mappings) {
+      // Skip ignored mappings — don't generate empty placeholder rows
+      if (mapping.isIgnored) {
+        continue;
+      }
+
       if (!existingBoxes.has(mapping.boxNumber)) {
         missingFields.push({
           boxNumber: mapping.boxNumber,
@@ -113,8 +127,9 @@ export class K1FieldMapperService {
           confidence: 1.0, // Empty fields have full confidence
           confidenceLevel: 'HIGH',
           isUserEdited: false,
-          isReviewed: true // No review needed for empty fields
-        });
+          isReviewed: true, // No review needed for empty fields
+          cellType: mapping.cellType
+        } as any);
       }
     }
 

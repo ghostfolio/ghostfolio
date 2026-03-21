@@ -192,14 +192,16 @@ function assignItemsToRegions(items, regions) {
 // 1. Checkboxes (closest-center assignment)
 const checkboxRegions = K1_POSITION_REGIONS.filter(r => r.valueType === 'checkbox');
 const cbAssignments = assignItemsToRegions(dataItems, checkboxRegions);
+const checkedRegionIds = new Set();
 for (const [region, item] of cbAssignments) {
   const isChecked = ['X', '✓', '✗'].includes(item.text.toUpperCase());
   if (!isChecked) continue;
+  checkedRegionIds.add(region.fieldId);
   fields.push({
     fieldId: region.fieldId,
     boxNumber: region.boxNumber,
     label: region.label,
-    rawValue: 'X',
+    rawValue: 'true',
     numericValue: null,
     fieldCategory: 'CHECKBOX',
     isCheckbox: true,
@@ -208,6 +210,20 @@ for (const [region, item] of cbAssignments) {
   item.matched = true;
   if (region.fieldId === 'FINAL_K1') metadata.isFinal = true;
   if (region.fieldId === 'AMENDED_K1') metadata.isAmended = true;
+}
+// Emit false for unchecked checkbox regions
+for (const region of checkboxRegions) {
+  if (checkedRegionIds.has(region.fieldId)) continue;
+  fields.push({
+    fieldId: region.fieldId,
+    boxNumber: region.boxNumber,
+    label: region.label,
+    rawValue: 'false',
+    numericValue: null,
+    fieldCategory: 'CHECKBOX',
+    isCheckbox: true,
+    subtype: null
+  });
 }
 
 // 2. Part III — subtype regions first, then simple

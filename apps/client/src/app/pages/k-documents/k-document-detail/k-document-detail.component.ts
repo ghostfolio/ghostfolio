@@ -37,10 +37,25 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class KDocumentDetailComponent implements OnInit {
   public aggregations: K1AggregationResult[] = [];
   public boxColumns = ['boxNumber', 'value'];
-  public boxData: Array<{ boxNumber: string; value: number | null }> = [];
+  public boxData: Array<{ boxNumber: string; value: number | string | null }> = [];
   public error: string | null = null;
   public kDocument: any = null;
   public kDocumentId: string;
+
+  /** Box numbers that represent percentage values (Section J) */
+  private static readonly PERCENTAGE_BOXES = new Set([
+    'J_PROFIT_BEGIN', 'J_PROFIT_END',
+    'J_LOSS_BEGIN', 'J_LOSS_END',
+    'J_CAPITAL_BEGIN', 'J_CAPITAL_END'
+  ]);
+
+  public isPercentage(boxNumber: string): boolean {
+    return KDocumentDetailComponent.PERCENTAGE_BOXES.has(boxNumber);
+  }
+
+  public isNumeric(value: any): boolean {
+    return typeof value === 'number';
+  }
 
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -77,7 +92,7 @@ export class KDocumentDetailComponent implements OnInit {
             this.boxData = Object.entries(data)
               .map(([boxNumber, value]) => ({
                 boxNumber,
-                value: typeof value === 'number' ? value : null
+                value: value ?? null
               }))
               .sort((a, b) => this.compareBoxNumbers(a.boxNumber, b.boxNumber));
           }

@@ -129,7 +129,7 @@ export class KDocumentsPageComponent implements OnInit {
 
   public onFormSubmit(event: {
     filingStatus: string;
-    data: Record<string, number>;
+    data: Record<string, number | string | null>;
   }): void {
     if (this.editingDoc) {
       this.familyOfficeDataService

@@ -50,7 +50,7 @@ export class K1AggregationService {
         name: rule.name,
         operation: rule.operation,
         sourceCells,
-        computedValue: Math.round(computedValue * 100) / 100,
+        computedValue,
         breakdown
       };
     });

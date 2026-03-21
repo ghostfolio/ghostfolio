@@ -631,13 +631,14 @@ export class K1ImportService {
     }
 
     // Build KDocument data from verified fields
-    const kDocumentData: Record<string, number | null> = {};
+    const kDocumentData: Record<string, number | string | null> = {};
     for (const field of verifiedData.fields) {
       // For subtype fields (e.g., box 11 "ZZ*", box 20 "A"), create unique key
       const key = field.subtype
         ? `${field.boxNumber}-${field.subtype}`
         : field.boxNumber;
-      kDocumentData[key] = field.numericValue ?? null;
+      // Persist numericValue for numeric fields, rawValue for text/checkbox/string fields
+      kDocumentData[key] = field.numericValue ?? field.rawValue ?? null;
     }
 
     // FR-012: Create or update KDocument

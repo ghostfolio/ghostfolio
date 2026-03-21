@@ -52,14 +52,14 @@
             </mat-card-header>
             <mat-card-content>
               <div class="aggregation-value">
-                {{ agg.value | currency:'USD':'symbol':'1.2-2' }}
+                {{ agg.value | currency:'USD':'symbol':'1.2-6' }}
               </div>
               @if (agg.breakdown && agg.breakdown.length > 0) {
                 <div class="breakdown">
                   @for (item of agg.breakdown; track item.boxNumber) {
                     <div class="breakdown-row">
                       <span class="box-label">Box {{ item.boxNumber }}:</span>
-                      <span class="box-value">{{ item.value | currency:'USD':'symbol':'1.2-2' }}</span>
+                      <span class="box-value">{{ item.value | currency:'USD':'symbol':'1.2-6' }}</span>
                     </div>
                   }
                 </div>
@@ -82,10 +82,14 @@
         <ng-container matColumnDef="value">
           <th mat-header-cell *matHeaderCellDef>Value</th>
           <td mat-cell *matCellDef="let row">
-            @if (row.value !== null) {
-              {{ row.value | currency:'USD':'symbol':'1.2-2' }}
-            } @else {
+            @if (row.value === null || row.value === '') {
               <span class="text-muted">—</span>
+            } @else if (isPercentage(row.boxNumber)) {
+              {{ row.value | number:'1.2-6' }}%
+            } @else if (isNumeric(row.value)) {
+              {{ row.value | currency:'USD':'symbol':'1.2-6' }}
+            } @else {
+              {{ row.value }}
             }
           </td>
         </ng-container>

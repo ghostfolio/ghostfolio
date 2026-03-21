@@ -57,6 +57,20 @@ export interface K1PositionRegion {
 // ============================================================================
 const HEADER_REGIONS: K1PositionRegion[] = [
   {
+    fieldId: 'K1_DOCUMENT_ID',
+    boxNumber: 'K1_DOCUMENT_ID',
+    label: 'K-1 Document ID',
+    fieldCategory: 'METADATA',
+    valueType: 'text',
+    xMin: 500,
+    xMax: 580,
+    yMin: 750,
+    yMax: 770,
+    hasSubtype: false,
+    subtypeXMin: null,
+    subtypeXMax: null
+  },
+  {
     fieldId: 'TAX_YEAR',
     boxNumber: 'TAX_YEAR',
     label: 'Tax Year',
@@ -1143,15 +1157,57 @@ const PART_III_RIGHT_REGIONS: K1PositionRegion[] = [
     subtypeXMax: 510
   },
   {
-    fieldId: 'BOX_20',
-    boxNumber: '20',
-    label: 'Other information',
+    fieldId: 'BOX_20A',
+    boxNumber: '20A',
+    label: 'Other information — Code A',
+    fieldCategory: 'PART_III',
+    valueType: 'numeric',
+    xMin: 510,
+    xMax: 600,
+    yMin: 356,
+    yMax: 396,
+    hasSubtype: true,
+    subtypeXMin: 445,
+    subtypeXMax: 510
+  },
+  {
+    fieldId: 'BOX_20B',
+    boxNumber: '20B',
+    label: 'Other information — Code B',
+    fieldCategory: 'PART_III',
+    valueType: 'numeric',
+    xMin: 510,
+    xMax: 600,
+    yMin: 332,
+    yMax: 356,
+    hasSubtype: true,
+    subtypeXMin: 445,
+    subtypeXMax: 510
+  },
+  {
+    fieldId: 'BOX_20V',
+    boxNumber: '20V',
+    label: 'Other information — Code V',
+    fieldCategory: 'PART_III',
+    valueType: 'numeric',
+    xMin: 510,
+    xMax: 600,
+    yMin: 308,
+    yMax: 332,
+    hasSubtype: true,
+    subtypeXMin: 445,
+    subtypeXMax: 510
+  },
+  {
+    fieldId: 'BOX_20_WILDCARD',
+    boxNumber: '20_WILDCARD',
+    label: 'Other information — Other codes',
     fieldCategory: 'PART_III',
     valueType: 'numeric',
     xMin: 510,
     xMax: 600,
     yMin: 284,
-    yMax: 396,
+    yMax: 308,
     hasSubtype: true,
     subtypeXMin: 445,
     subtypeXMax: 510

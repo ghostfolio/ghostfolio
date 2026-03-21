@@ -124,6 +124,7 @@ export class K1ImportDataService {
       boxNumber: string;
       label: string;
       description?: string;
+      cellType?: string;
       isCustom: boolean;
     }>;
   }): Observable<any[]> {
@@ -140,6 +141,17 @@ export class K1ImportDataService {
     return this.http.delete<void>('/api/v1/cell-mapping/reset', {
       params: httpParams
     });
+  }
+
+  /**
+   * Toggle the isIgnored flag for a cell mapping.
+   * PATCH /api/v1/cell-mapping/toggle-ignored
+   */
+  public toggleFieldIgnored(data: {
+    partnershipId: string;
+    boxNumber: string;
+  }): Observable<any> {
+    return this.http.patch('/api/v1/cell-mapping/toggle-ignored', data);
   }
 
   // ── Aggregation Rule Endpoints ───────────────────────────────────
