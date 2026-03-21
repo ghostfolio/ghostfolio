@@ -10,6 +10,7 @@
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
+        [hasPermissionToFilterByType]="hasPermissionToFilterByType"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
@@ -32,6 +33,7 @@
         (importDividends)="onImportDividends()"
         (pageChanged)="onChangePage($event)"
         (sortChanged)="onSortChanged($event)"
+        (typesFilterChanged)="onTypesFilterChanged($event)"
       />
     </div>
   </div>
