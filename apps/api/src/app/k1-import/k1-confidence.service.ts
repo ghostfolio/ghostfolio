@@ -105,7 +105,7 @@ export class K1ConfidenceService {
   public applyAutoReview(fields: K1ExtractedField[]): K1ExtractedField[] {
     return fields.map((field) => ({
       ...field,
-      isReviewed: field.confidenceLevel === 'HIGH'
+      isReviewed: field.isReviewed || field.confidenceLevel === 'HIGH'
     }));
   }
 }
