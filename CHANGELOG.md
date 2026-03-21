@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Hardened the endpoint `DELETE /api/v1/auth-device/:id` by improving the user validation
 - Improved the language localization for Polish (`pl`)
 
 ## 2.250.0 - 2026-03-17
