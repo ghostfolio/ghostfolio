@@ -170,7 +170,7 @@
     "@schematics/angular": "21.1.1",
     "@storybook/addon-docs": "10.1.10",
     "@storybook/angular": "10.1.10",
-    "@trivago/prettier-plugin-sort-imports": "5.2.2",
+    "@trivago/prettier-plugin-sort-imports": "6.0.2",
     "@types/big.js": "6.2.2",
     "@types/cookie-parser": "1.4.10",
     "@types/fast-redact": "3.0.4",
