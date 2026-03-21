@@ -162,7 +162,9 @@ export class GfTreemapChartComponent
   private initialize() {
     this.isLoading = true;
 
-    const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange({
+      dateRange: this.dateRange
+    });
 
     const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
       ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {

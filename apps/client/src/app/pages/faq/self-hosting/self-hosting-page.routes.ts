@@ -10,6 +10,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfSelfHostingPageComponent,
     path: '',
-    title: `${publicRoutes.faq.subRoutes.selfHosting.title} - ${publicRoutes.faq.title}`
+    title: `${publicRoutes.faq.subRoutes?.selfHosting.title} - ${publicRoutes.faq.title}`
   }
 ];

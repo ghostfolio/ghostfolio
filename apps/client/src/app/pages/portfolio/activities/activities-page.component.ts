@@ -10,6 +10,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -129,8 +130,13 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public fetchActivities() {
+    const dateRange = this.user?.settings?.dateRange;
+
+    const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
+
     this.dataService
       .fetchActivities({
+        range,
         filters: this.userService.getFilters(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
@@ -350,6 +356,14 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private isCalendarYear(dateRange: DateRange) {
+    if (!dateRange) {
+      return false;
+    }
+
+    return /^\d{4}$/.test(dateRange);
   }
 
   private openCreateActivityDialog(aActivity?: Activity) {
