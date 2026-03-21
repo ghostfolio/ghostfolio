@@ -7,18 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the quantity column to the holdings table of the portfolio holdings page
+- Added copy-to-clipboard functionality to value component
+
+### Changed
+
+- Improved the language localization for Polish (`pl`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
+
+## 2.250.0 - 2026-03-17
+
+### Added
+
+- Added support for specific calendar year date ranges (`2025`, `2024`, `2023`, etc.) on the portfolio activities page
+
 ### Changed
 
 - Consolidated the sign-out logic within the user service to unify cookie, state and token clearance
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@ionic/angular` from version `8.7.3` to `8.8.1`
+- Upgraded `replace-in-file` from version `8.3.0` to `8.4.0`
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
-- Added copy-to-clipboard functionality to value component
 - Pinned the _Node.js_ version in the _Build code_ _GitHub Action_ to ensure environment consistency for tests
 
 ### Fixed
 
 - Fixed an issue with the detection of the thousand separator for the `de-CH` locale
+- Fixed an issue in the _Storybook_ stories of the symbol autocomplete component caused by a circular dependency
 
 ## 2.249.0 - 2026-03-10
 
@@ -676,7 +693,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the server startup message to properly display IPv6 addresses
-- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
+- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
 - Fixed an issue where importing custom asset profiles failed due to validation errors
 
 ## 2.207.0 - 2025-10-08
@@ -1290,7 +1307,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the selector handling of the scraper configuration for more use cases
 - Extended the _AI_ service by an access to _OpenRouter_ (experimental)
-- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
+- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
 - Renamed `Account` to `account` in the `AccountBalance` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)

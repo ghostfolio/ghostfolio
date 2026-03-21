@@ -80,15 +80,6 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
     return precision !== undefined && precision >= 0;
   }
 
-  private initializeVariables() {
-    this.absoluteValue = 0;
-    this.formattedValue = '';
-    this.isNumber = false;
-    this.isString = false;
-    this.locale = this.locale || getLocale();
-    this.useAbsoluteValue = false;
-  }
-
   public ngAfterViewInit() {
     const el = this.labelContent.nativeElement;
     this.hasLabel = el.textContent.trim().length > 0 || el.children.length > 0;
@@ -173,19 +164,22 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   }
 
   public onCopyValueToClipboard() {
-    if (this.value || this.value === 0) {
-      this.clipboard.copy(this.formattedValue);
-      this.snackBar.open(
-        '✅ ' + $localize`Value has been copied to the clipboard`,
-        undefined,
-        {
-          duration: ms('3 seconds')
-        }
-      );
-    } else {
-      this.snackBar.open($localize`Value is empty`, undefined, {
+    this.clipboard.copy(this.formattedValue);
+    this.snackBar.open(
+      '✅ ' + $localize`Value has been copied to the clipboard`,
+      undefined,
+      {
         duration: ms('3 seconds')
-      });
-    }
+      }
+    );
+  }
+
+  private initializeVariables() {
+    this.absoluteValue = 0;
+    this.formattedValue = '';
+    this.isNumber = false;
+    this.isString = false;
+    this.locale = this.locale || getLocale();
+    this.useAbsoluteValue = false;
   }
 }
