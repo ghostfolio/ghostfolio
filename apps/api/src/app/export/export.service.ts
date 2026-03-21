@@ -10,7 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
-import { Platform, Prisma } from '@prisma/client';
+import { Platform, Prisma, Type as ActivityType } from '@prisma/client';
 import { groupBy, uniqBy } from 'lodash';
 
 @Injectable()
@@ -25,11 +25,13 @@ export class ExportService {
   public async export({
     activityIds,
     filters,
+    types,
     userId,
     userSettings
   }: {
     activityIds?: string[];
     filters?: Filter[];
+    types?: ActivityType[];
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
@@ -40,6 +42,7 @@ export class ExportService {
 
     let { activities } = await this.activitiesService.getActivities({
       filters,
+      types,
       userId,
       includeDrafts: true,
       sortColumn: 'date',
