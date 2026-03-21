@@ -49,11 +49,13 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   templateUrl: './activities-page.html'
 })
 export class GfActivitiesPageComponent implements OnDestroy, OnInit {
+  public activityTypeFilter: string[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
   public hasPermissionToDeleteActivity: boolean;
+  public hasPermissionToFilterByType = true;
   public pageIndex = 0;
   public pageSize = DEFAULT_PAGE_SIZE;
   public routeQueryParams: Subscription;
@@ -141,7 +143,10 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,
-        take: this.pageSize
+        take: this.pageSize,
+        types: this.activityTypeFilter.length
+          ? this.activityTypeFilter
+          : undefined
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities, count }) => {
@@ -213,7 +218,12 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
     let fetchExportParams: any = { activityIds };
 
     if (!activityIds) {
-      fetchExportParams = { filters: this.userService.getFilters() };
+      fetchExportParams = {
+        filters: this.userService.getFilters(),
+        types: this.activityTypeFilter.length
+          ? this.activityTypeFilter
+          : undefined
+      };
     }
 
     this.dataService
@@ -304,6 +314,12 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
         this.fetchActivities();
       });
+  }
+
+  public onTypesFilterChanged(types: string[]) {
+    this.activityTypeFilter = types;
+    this.pageIndex = 0;
+    this.fetchActivities();
   }
 
   public onSortChanged({ active, direction }: Sort) {

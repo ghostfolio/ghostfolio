@@ -29,14 +29,17 @@ import {
   inject,
   input
 } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   MatPaginator,
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import {
   MatSort,
   MatSortModule,
@@ -46,6 +49,7 @@ import {
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
+import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { addIcons } from 'ionicons';
 import {
@@ -82,11 +86,14 @@ import { GfValueComponent } from '../value/value.component';
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
+    MatFormFieldModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatSelectModule,
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
+    ReactiveFormsModule,
     NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -103,6 +110,7 @@ export class GfActivitiesTableComponent
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
+  @Input() hasPermissionToFilterByType = false;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() pageIndex: number;
@@ -125,14 +133,24 @@ export class GfActivitiesTableComponent
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
+  @Output() typesFilterChanged = new EventEmitter<string[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  public readonly activityTypes: Record<ActivityType, string> = {
+    [ActivityType.BUY]: $localize`Buy`,
+    [ActivityType.DIVIDEND]: $localize`Dividend`,
+    [ActivityType.FEE]: $localize`Fee`,
+    [ActivityType.INTEREST]: $localize`Interest`,
+    [ActivityType.LIABILITY]: $localize`Liability`,
+    [ActivityType.SELL]: $localize`Sell`
+  };
   public hasDrafts = false;
   public hasErrors = false;
   public isUUID = isUUID;
   public selectedRows = new SelectionModel<Activity>(true, []);
+  public typesFilter = new FormControl<string[]>([]);
 
   public readonly dataSource = input.required<
     MatTableDataSource<Activity> | undefined
@@ -214,6 +232,12 @@ export class GfActivitiesTableComponent
           this.selectedActivities.emit(selectedRows.source.selected);
         });
     }
+
+    this.typesFilter.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((types) => {
+        this.typesFilterChanged.emit(types ?? []);
+      });
   }
 
   public ngAfterViewInit() {

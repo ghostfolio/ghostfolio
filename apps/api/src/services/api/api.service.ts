@@ -1,3 +1,4 @@
+import { splitStringToArray } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
@@ -23,14 +24,14 @@ export class ApiService {
     filterBySymbol?: string;
     filterByTags?: string;
   }): Filter[] {
-    const accountIds = filterByAccounts?.split(',') ?? [];
-    const assetClasses = filterByAssetClasses?.split(',') ?? [];
-    const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
+    const accountIds = splitStringToArray(filterByAccounts);
+    const assetClasses = splitStringToArray(filterByAssetClasses);
+    const assetSubClasses = splitStringToArray(filterByAssetSubClasses);
     const dataSource = filterByDataSource;
     const holdingType = filterByHoldingType;
     const searchQuery = filterBySearchQuery?.toLowerCase();
     const symbol = filterBySymbol;
-    const tagIds = filterByTags?.split(',') ?? [];
+    const tagIds = splitStringToArray(filterByTags);
 
     const filters = [
       ...accountIds.map((accountId) => {

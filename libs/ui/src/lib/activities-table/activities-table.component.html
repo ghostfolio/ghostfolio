@@ -1,3 +1,21 @@
+@if (hasPermissionToFilterByType) {
+  <div class="d-none d-lg-flex">
+    <mat-form-field appearance="outline" class="without-hint">
+      <mat-label i18n>Type</mat-label>
+      <mat-select multiple [formControl]="typesFilter">
+        @for (
+          activityType of activityTypes | keyvalue;
+          track activityType.key
+        ) {
+          <mat-option [value]="activityType.key">
+            {{ activityType.value }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+}
+
 @if (hasPermissionToCreateActivity) {
   <div class="d-flex justify-content-end">
     <button
