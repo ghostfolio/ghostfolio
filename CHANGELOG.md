@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the quantity column to the holdings table of the portfolio holdings page
+- Added copy-to-clipboard functionality to value component
 
 ### Changed
 
@@ -692,7 +693,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the server startup message to properly display IPv6 addresses
-- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
+- Enabled IPv6 connectivity for _Redis_ in the job queue module by setting the address family
 - Fixed an issue where importing custom asset profiles failed due to validation errors
 
 ## 2.207.0 - 2025-10-08
@@ -1306,7 +1307,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the selector handling of the scraper configuration for more use cases
 - Extended the _AI_ service by an access to _OpenRouter_ (experimental)
-- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
+- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
 - Renamed `Account` to `account` in the `AccountBalance` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
