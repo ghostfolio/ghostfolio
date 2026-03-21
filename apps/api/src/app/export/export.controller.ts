@@ -2,6 +2,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { splitStringToArray } from '@ghostfolio/common/helper';
 import { ExportResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -15,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { Type as ActivityType } from '@prisma/client';
 
 import { ExportService } from './export.service';
 
@@ -36,7 +38,8 @@ export class ExportController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('types') filterByTypes?: string
   ): Promise<ExportResponse> {
     const activityIds = filterByActivityIds?.split(',') ?? [];
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -46,10 +49,14 @@ export class ExportController {
       filterBySymbol,
       filterByTags
     });
+    const types = filterByTypes
+      ? (splitStringToArray(filterByTypes) as ActivityType[])
+      : undefined;
 
     return this.exportService.export({
       activityIds,
       filters,
+      types,
       userId: this.request.user.id,
       userSettings: this.request.user.settings.settings
     });
