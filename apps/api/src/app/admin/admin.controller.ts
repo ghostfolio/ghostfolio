@@ -338,14 +338,14 @@ export class AdminController {
   }
 
   @Delete('family-office-data')
-  @HasPermission(permissions.accessAdminControl)
+  @HasPermission(permissions.readFamilyOfficeDashboard)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async clearFamilyOfficeData() {
     return this.devSeedService.clearDatabase();
   }
 
   @Post('family-office-data/seed')
-  @HasPermission(permissions.accessAdminControl)
+  @HasPermission(permissions.readFamilyOfficeDashboard)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async seedFamilyOfficeData() {
     return this.devSeedService.populateDummyData({
