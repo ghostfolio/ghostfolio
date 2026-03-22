@@ -13,129 +13,29 @@
     </div>
     <span class="gf-spacer"></span>
     <ul class="align-items-center d-flex list-inline m-0 px-2">
+      <!-- Dashboard -->
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block"
           i18n
           mat-flat-button
+          routerLink="/family-office"
           [ngClass]="{
-            'font-weight-bold':
-              currentRoute === internalRoutes.home.path ||
-              currentRoute === internalRoutes.zen.path,
-            'text-decoration-underline':
-              currentRoute === internalRoutes.home.path ||
-              currentRoute === internalRoutes.zen.path
+            'font-weight-bold': currentRoute === 'family-office',
+            'text-decoration-underline': currentRoute === 'family-office'
           }"
-          [routerLink]="['/']"
-          >Overview</a
+          >Dashboard</a
         >
       </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
-            'text-decoration-underline':
-              currentRoute === internalRoutes.portfolio.path
-          }"
-          [routerLink]="routerLinkPortfolio"
-          >Portfolio</a
-        >
+      <!-- Partnerships Group -->
+      <li class="list-inline-item d-none d-sm-block">
+        <gf-nav-menu-group
+          label="Partnerships"
+          [isActive]="isActiveInGroup(partnershipsRoutes)"
+          [menuItems]="partnershipsMenuItems"
+        />
       </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === internalRoutes.accounts.path,
-            'text-decoration-underline':
-              currentRoute === internalRoutes.accounts.path
-          }"
-          [routerLink]="routerLinkAccounts"
-          >Accounts</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          routerLink="/entities"
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'entities',
-            'text-decoration-underline': currentRoute === 'entities'
-          }"
-          >Entities</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          routerLink="/partnerships"
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'partnerships',
-            'text-decoration-underline': currentRoute === 'partnerships'
-          }"
-          >Partnerships</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          routerLink="/distributions"
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'distributions',
-            'text-decoration-underline': currentRoute === 'distributions'
-          }"
-          >Distributions</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          routerLink="/k-documents"
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'k-documents',
-            'text-decoration-underline': currentRoute === 'k-documents'
-          }"
-          >K-1 Documents</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          routerLink="/k1-import"
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'k1-import',
-            'text-decoration-underline': currentRoute === 'k1-import'
-          }"
-          >K-1 Import</a
-        >
-      </li>
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          routerLink="/cell-mapping"
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'cell-mapping',
-            'text-decoration-underline': currentRoute === 'cell-mapping'
-          }"
-          >Cell Mapping</a
-        >
-      </li>
+      <!-- Portfolio Views -->
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block"
@@ -149,71 +49,71 @@
           >Portfolio Views</a
         >
       </li>
+      <!-- K-1 Center Group -->
+      <li class="list-inline-item d-none d-sm-block">
+        <gf-nav-menu-group
+          label="K-1 Center"
+          [isActive]="isActiveInGroup(k1CenterRoutes)"
+          [menuItems]="k1CenterMenuItems"
+        />
+      </li>
+      <!-- Analysis -->
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.portfolio.path
+          }"
+          [routerLink]="routerLinkPortfolio"
+          >Analysis</a
+        >
+      </li>
+      <!-- Admin Group -->
       @if (hasPermissionToAccessAdminControl) {
-        <li class="list-inline-item">
-          <a
-            class="d-none d-sm-block"
-            i18n
+        <li class="list-inline-item d-none d-sm-block">
+          <button
             mat-flat-button
+            [matMenuTriggerFor]="adminNavMenu"
             [ngClass]="{
-              'font-weight-bold':
-                currentRoute === internalRoutes.adminControl.path,
-              'text-decoration-underline':
-                currentRoute === internalRoutes.adminControl.path
+              'font-weight-bold': isActiveInGroup(adminGroupRoutes),
+              'text-decoration-underline': isActiveInGroup(adminGroupRoutes)
             }"
-            [routerLink]="routerLinkAdminControl"
-            >Admin Control</a
           >
+            Admin
+          </button>
+          <mat-menu #adminNavMenu="matMenu" xPosition="after">
+            <a i18n mat-menu-item [routerLink]="routerLinkAdminControl"
+              >Admin Control</a
+            >
+            <a i18n mat-menu-item [routerLink]="routerLinkAccounts"
+              >Accounts</a
+            >
+            <a i18n mat-menu-item [routerLink]="routerLinkResources"
+              >Resources</a
+            >
+            @if (
+              hasPermissionForSubscription &&
+              user?.subscription?.type === 'Basic'
+            ) {
+              <a mat-menu-item [routerLink]="routerLinkPricing">
+                <span class="align-items-center d-flex">
+                  <span i18n>Pricing</span>
+                </span>
+              </a>
+            }
+            <hr class="m-0" />
+            @for (item of legacyMenuItems; track item.routerLink) {
+              <a mat-menu-item [routerLink]="item.routerLink">{{
+                item.label
+              }}</a>
+            }
+          </mat-menu>
         </li>
       }
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === routeResources,
-            'text-decoration-underline': currentRoute === routeResources
-          }"
-          [routerLink]="routerLinkResources"
-          >Resources</a
-        >
-      </li>
-      @if (
-        hasPermissionForSubscription && user?.subscription?.type === 'Basic'
-      ) {
-        <li class="list-inline-item">
-          <a
-            class="d-none d-sm-block"
-            mat-flat-button
-            [ngClass]="{
-              'font-weight-bold': currentRoute === routePricing,
-              'text-decoration-underline': currentRoute === routePricing
-            }"
-            [routerLink]="routerLinkPricing"
-          >
-            <span class="align-items-center d-flex">
-              <span i18n>Pricing</span>
-              @if (currentRoute !== routePricing && hasPromotion) {
-                <span class="badge badge-warning ml-1">%</span>
-              }
-            </span>
-          </a>
-        </li>
-      }
-      <li class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === routeAbout,
-            'text-decoration-underline': currentRoute === routeAbout
-          }"
-          [routerLink]="routerLinkAbout"
-          >About</a
-        >
-      </li>
       @if (hasPermissionToAccessAssistant) {
         <li class="list-inline-item">
           <button
@@ -326,38 +226,20 @@
             }
             <hr class="m-0" />
           }
+          <!-- Dashboard -->
           <a
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{
-              'font-weight-bold':
-                currentRoute === internalRoutes.home.path ||
-                currentRoute === internalRoutes.zen.path
-            }"
-            [routerLink]="['/']"
-            >Overview</a
+            routerLink="/family-office"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'family-office' }"
+            >Dashboard</a
           >
-          <a
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
-            }"
-            [routerLink]="routerLinkPortfolio"
-            >Portfolio</a
-          >
-          <a
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === internalRoutes.accounts.path
-            }"
-            [routerLink]="routerLinkAccounts"
-            >Accounts</a
-          >
+          <hr class="d-flex d-sm-none m-0" />
+          <!-- Partnerships -->
+          <div class="d-flex d-sm-none px-4 py-1">
+            <small class="text-muted" i18n>Partnerships</small>
+          </div>
           <a
             class="d-flex d-sm-none"
             i18n
@@ -386,10 +268,25 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            routerLink="/k-documents"
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'k-documents' }"
-            >K-1 Documents</a
+            routerLink="/accounts"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
+            >Accounts</a
           >
+          <hr class="d-flex d-sm-none m-0" />
+          <!-- Portfolio Views -->
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/portfolio-views"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'portfolio-views' }"
+            >Portfolio Views</a
+          >
+          <hr class="d-flex d-sm-none m-0" />
+          <!-- K-1 Center -->
+          <div class="d-flex d-sm-none px-4 py-1">
+            <small class="text-muted" i18n>K-1 Center</small>
+          </div>
           <a
             class="d-flex d-sm-none"
             i18n
@@ -402,18 +299,32 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            routerLink="/cell-mapping"
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'cell-mapping' }"
-            >Cell Mapping</a
+            routerLink="/k-documents"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'k-documents' }"
+            >K-1 Documents</a
           >
           <a
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            routerLink="/portfolio-views"
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'portfolio-views' }"
-            >Portfolio Views</a
+            routerLink="/cell-mapping"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'cell-mapping' }"
+            >Cell Mapping</a
           >
+          <hr class="d-flex d-sm-none m-0" />
+          <!-- Analysis -->
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
+            }"
+            [routerLink]="routerLinkPortfolio"
+            >Analysis</a
+          >
+          <hr class="d-flex d-sm-none m-0" />
+          <!-- Account Settings -->
           <a
             i18n
             mat-menu-item
@@ -423,7 +334,12 @@
             [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
+          <!-- Admin -->
           @if (hasPermissionToAccessAdminControl) {
+            <hr class="d-flex d-sm-none m-0" />
+            <div class="d-flex d-sm-none px-4 py-1">
+              <small class="text-muted" i18n>Admin</small>
+            </div>
             <a
               class="d-flex d-sm-none"
               i18n
@@ -435,43 +351,58 @@
               [routerLink]="routerLinkAdminControl"
               >Admin Control</a
             >
-          }
-          <hr class="m-0" />
-          <a
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === routeResources
-            }"
-            [routerLink]="routerLinkResources"
-            >Resources</a
-          >
-          @if (
-            hasPermissionForSubscription && user?.subscription?.type === 'Basic'
-          ) {
             <a
               class="d-flex d-sm-none"
+              i18n
               mat-menu-item
-              [ngClass]="{ 'font-weight-bold': currentRoute === routePricing }"
-              [routerLink]="routerLinkPricing"
+              [ngClass]="{
+                'font-weight-bold':
+                  currentRoute === internalRoutes.accounts.path
+              }"
+              [routerLink]="routerLinkAccounts"
+              >Accounts</a
             >
-              <span class="align-items-center d-flex">
-                <span i18n>Pricing</span>
-                @if (currentRoute !== routePricing && hasPromotion) {
-                  <span class="badge badge-warning ml-1">%</span>
-                }
-              </span>
-            </a>
+            <a
+              class="d-flex d-sm-none"
+              i18n
+              mat-menu-item
+              [ngClass]="{
+                'font-weight-bold': currentRoute === routeResources
+              }"
+              [routerLink]="routerLinkResources"
+              >Resources</a
+            >
+            @if (
+              hasPermissionForSubscription &&
+              user?.subscription?.type === 'Basic'
+            ) {
+              <a
+                class="d-flex d-sm-none"
+                mat-menu-item
+                [ngClass]="{
+                  'font-weight-bold': currentRoute === routePricing
+                }"
+                [routerLink]="routerLinkPricing"
+              >
+                <span class="align-items-center d-flex">
+                  <span i18n>Pricing</span>
+                </span>
+              </a>
+            }
+            <hr class="d-flex d-sm-none m-0" />
+            <!-- Legacy -->
+            <div class="d-flex d-sm-none px-4 py-1">
+              <small class="text-muted" i18n>Legacy</small>
+            </div>
+            @for (item of legacyMenuItems; track item.routerLink) {
+              <a
+                class="d-flex d-sm-none"
+                mat-menu-item
+                [routerLink]="item.routerLink"
+                >{{ item.label }}</a
+              >
+            }
           }
-          <a
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === routeAbout }"
-            [routerLink]="routerLinkAbout"
-            >About Ghostfolio</a
-          >
           <hr class="d-flex d-sm-none m-0" />
           <button i18n mat-menu-item (click)="onSignOut()">Log out</button>
         </mat-menu>

@@ -1,5 +1,12 @@
 import { FamilyOfficeDataService } from '@ghostfolio/client/services/family-office-data.service';
-import type { IFamilyOfficeDashboard } from '@ghostfolio/common/interfaces';
+import type {
+  IActivityDetail,
+  IFamilyOfficeDashboard,
+  IPortfolioSummary
+} from '@ghostfolio/common/interfaces';
+import { GfK1IncomeSummaryComponent } from '@ghostfolio/ui/k1-income-summary';
+import { GfPerformanceMetricsComponent } from '@ghostfolio/ui/performance-metrics';
+import { AdminService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -10,11 +17,13 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 
@@ -22,11 +31,15 @@ import { RouterModule } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    GfK1IncomeSummaryComponent,
+    GfPerformanceMetricsComponent,
+    MatButtonModule,
     MatCardModule,
     MatChipsModule,
     MatIconModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     MatTableModule,
     RouterModule
   ],
@@ -166,6 +179,24 @@ import { RouterModule } from '@angular/router';
         justify-content: center;
         padding: 3rem;
       }
+
+      .mgmt-section {
+        margin-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+        padding-top: 1.5rem;
+      }
+
+      .mgmt-section h2 {
+        margin-bottom: 0.75rem;
+        font-size: 1.1rem;
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      .mgmt-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
     `
   ],
   template: `
@@ -200,6 +231,89 @@ import { RouterModule } from '@angular/router';
           </div>
         </div>
       </mat-card>
+
+      <!-- Onboarding Guide (T020) -->
+      @if (
+        dashboard.entitiesCount === 0 && dashboard.partnershipsCount === 0
+      ) {
+        <mat-card style="margin-bottom: 1.5rem; padding: 1.5rem">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon style="vertical-align: middle; margin-right: 0.5rem"
+                >rocket_launch</mat-icon
+              >
+              Get Started
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content style="padding-top: 1rem">
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+              "
+            >
+              <div style="display: flex; align-items: center; gap: 1rem">
+                <span
+                  style="
+                    background: #1976d2;
+                    color: white;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                  "
+                  >1</span
+                >
+                <a routerLink="/entities" style="font-size: 1rem"
+                  >Create an Entity</a
+                >
+              </div>
+              <div style="display: flex; align-items: center; gap: 1rem">
+                <span
+                  style="
+                    background: #1976d2;
+                    color: white;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                  "
+                  >2</span
+                >
+                <a routerLink="/partnerships" style="font-size: 1rem"
+                  >Add a Partnership</a
+                >
+              </div>
+              <div style="display: flex; align-items: center; gap: 1rem">
+                <span
+                  style="
+                    background: #1976d2;
+                    color: white;
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                  "
+                  >3</span
+                >
+                <a routerLink="/k1-import" style="font-size: 1rem"
+                  >Import a K-1</a
+                >
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
 
       <!-- Allocation Charts -->
       <div class="charts-grid">
@@ -294,6 +408,27 @@ import { RouterModule } from '@angular/router';
         </mat-card>
       </div>
 
+      <!-- Performance Metrics (T018) -->
+      @if (portfolioSummary?.totals) {
+        <section style="margin-bottom: 1.5rem">
+          <h2 style="margin-bottom: 0.75rem">Performance Metrics</h2>
+          <gf-performance-metrics
+            [dpi]="portfolioSummary.totals.dpi"
+            [irr]="portfolioSummary.totals.irr"
+            [rvpi]="portfolioSummary.totals.rvpi"
+            [tvpi]="portfolioSummary.totals.tvpi"
+          />
+        </section>
+      }
+
+      <!-- K-1 Income Summary (T019) -->
+      @if (activityDetail?.rows?.length) {
+        <section style="margin-bottom: 1.5rem">
+          <h2 style="margin-bottom: 0.75rem">K-1 Income Summary</h2>
+          <gf-k1-income-summary [rows]="activityDetail.rows" />
+        </section>
+      }
+
       <!-- Bottom row: Recent Distributions + K-1 Status -->
       <div class="bottom-grid">
         <!-- Recent Distributions -->
@@ -385,19 +520,54 @@ import { RouterModule } from '@angular/router';
           </mat-card-content>
         </mat-card>
       </div>
+
+      <!-- Data Management -->
+      <section class="mgmt-section">
+        <h2>
+          <mat-icon style="vertical-align: middle; margin-right: 0.25rem; font-size: 1.2rem; height: 1.2rem; width: 1.2rem"
+            >settings</mat-icon
+          >
+          Data Management
+        </h2>
+        <div class="mgmt-buttons">
+          <button
+            mat-stroked-button
+            color="primary"
+            [disabled]="isSeedingOrClearing"
+            (click)="onPopulateDummyData()"
+          >
+            <mat-icon>auto_awesome</mat-icon>
+            Populate Demo Data
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
+            [disabled]="isSeedingOrClearing"
+            (click)="onClearDatabase()"
+          >
+            <mat-icon>delete_sweep</mat-icon>
+            Clear All Data
+          </button>
+        </div>
+      </section>
     }
   `
 })
 export class DashboardPageComponent implements OnInit {
+  public activityDetail: IActivityDetail | null = null;
   public dashboard: IFamilyOfficeDashboard | null = null;
   public distributionColumns = ['partnership', 'amount', 'date', 'type'];
   public isLoading = true;
+  public isSeedingOrClearing = false;
   public k1ProgressPercent = 0;
+  public portfolioSummary: IPortfolioSummary | null = null;
 
   public constructor(
+    private readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly destroyRef: DestroyRef,
-    private readonly familyOfficeDataService: FamilyOfficeDataService
+    private readonly familyOfficeDataService: FamilyOfficeDataService,
+    private readonly snackBar: MatSnackBar
   ) {}
 
   public ngOnInit() {
@@ -423,5 +593,116 @@ export class DashboardPageComponent implements OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.familyOfficeDataService
+      .fetchPortfolioSummary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (summary) => {
+          this.portfolioSummary = summary;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+
+    this.familyOfficeDataService
+      .fetchActivity()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (activity) => {
+          this.activityDetail = activity;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+
+  public onPopulateDummyData() {
+    if (
+      !confirm(
+        'This will populate the database with demo family office data (entities, partnerships, distributions, K-1 documents, and brokerage accounts with activities). Continue?'
+      )
+    ) {
+      return;
+    }
+
+    this.isSeedingOrClearing = true;
+    this.changeDetectorRef.markForCheck();
+
+    this.adminService
+      .seedFamilyOfficeData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: (error) => {
+          this.isSeedingOrClearing = false;
+          this.snackBar.open(
+            `Failed to populate data: ${error?.error?.message ?? 'Unknown error'}`,
+            'Dismiss',
+            { duration: 5000 }
+          );
+          this.changeDetectorRef.markForCheck();
+        },
+        next: (result) => {
+          this.isSeedingOrClearing = false;
+          const total = Object.values(result.created).reduce(
+            (sum, n) => sum + n,
+            0
+          );
+          this.snackBar.open(
+            `Demo data populated (${total} records created)`,
+            'OK',
+            { duration: 5000 }
+          );
+          this.refreshDashboard();
+        }
+      });
+  }
+
+  public onClearDatabase() {
+    if (
+      !confirm(
+        'This will permanently delete ALL family office data and portfolio data (entities, partnerships, accounts, activities, etc.). This cannot be undone. Continue?'
+      )
+    ) {
+      return;
+    }
+
+    this.isSeedingOrClearing = true;
+    this.changeDetectorRef.markForCheck();
+
+    this.adminService
+      .clearFamilyOfficeData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: (error) => {
+          this.isSeedingOrClearing = false;
+          this.snackBar.open(
+            `Failed to clear data: ${error?.error?.message ?? 'Unknown error'}`,
+            'Dismiss',
+            { duration: 5000 }
+          );
+          this.changeDetectorRef.markForCheck();
+        },
+        next: (result) => {
+          this.isSeedingOrClearing = false;
+          const total = Object.values(result.deleted).reduce(
+            (sum, n) => sum + n,
+            0
+          );
+          this.snackBar.open(
+            `All data cleared (${total} records removed)`,
+            'OK',
+            { duration: 5000 }
+          );
+          this.refreshDashboard();
+        }
+      });
+  }
+
+  private refreshDashboard() {
+    this.isLoading = true;
+    this.dashboard = null;
+    this.portfolioSummary = null;
+    this.activityDetail = null;
+    this.changeDetectorRef.markForCheck();
+    this.ngOnInit();
   }
 }

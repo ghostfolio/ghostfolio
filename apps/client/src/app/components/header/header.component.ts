@@ -16,6 +16,10 @@ import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import {
+  GfNavMenuGroupComponent,
+  NavMenuItem
+} from '@ghostfolio/ui/nav-menu-group';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -59,6 +63,7 @@ import { catchError } from 'rxjs/operators';
     CommonModule,
     GfAssistantComponent,
     GfLogoComponent,
+    GfNavMenuGroupComponent,
     GfPremiumIndicatorComponent,
     IonIcon,
     MatBadgeModule,
@@ -133,6 +138,41 @@ export class GfHeaderComponent implements OnChanges {
   public routerLinkRegister = publicRoutes.register.routerLink;
   public routerLinkResources = publicRoutes.resources.routerLink;
 
+  // Navigation group items per contracts/navigation.md
+  public partnershipsMenuItems: NavMenuItem[] = [
+    { label: 'Entities', routerLink: '/entities' },
+    { label: 'Partnerships', routerLink: '/partnerships' },
+    { label: 'Distributions', routerLink: '/distributions' },
+    { label: 'Accounts', routerLink: '/accounts' }
+  ];
+
+  public k1CenterMenuItems: NavMenuItem[] = [
+    { label: 'K-1 Import', routerLink: '/k1-import' },
+    { label: 'K-1 Documents', routerLink: '/k-documents' },
+    { label: 'Cell Mapping', routerLink: '/cell-mapping' }
+  ];
+
+  public legacyMenuItems: NavMenuItem[] = [
+    { label: 'Overview', routerLink: '/home' },
+    { label: 'Holdings', routerLink: '/home/holdings' },
+    { label: 'Summary', routerLink: '/home/summary' },
+    { label: 'Markets', routerLink: '/home/markets' },
+    { label: 'Watchlist', routerLink: '/home/watchlist' },
+    { label: 'FIRE Calculator', routerLink: '/portfolio/fire' },
+    { label: 'X-Ray', routerLink: '/portfolio/x-ray' }
+  ];
+
+  public partnershipsRoutes = [
+    'entities',
+    'partnerships',
+    'distributions',
+    'accounts'
+  ];
+
+  public k1CenterRoutes = ['k1-import', 'k-documents', 'cell-mapping'];
+
+  public adminGroupRoutes: string[] = [];
+
   public constructor(
     private dataService: DataService,
     private destroyRef: DestroyRef,
@@ -206,6 +246,14 @@ export class GfHeaderComponent implements OnChanges {
       this.info?.globalPermissions,
       permissions.createUserAccount
     );
+
+    this.adminGroupRoutes = [
+      internalRoutes.adminControl.path,
+      internalRoutes.accounts.path,
+      this.routeResources,
+      this.routePricing,
+      internalRoutes.home.path
+    ];
   }
 
   public closeAssistant() {
@@ -260,6 +308,10 @@ export class GfHeaderComponent implements OnChanges {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
       });
+  }
+
+  public isActiveInGroup(routes: string[]): boolean {
+    return routes.includes(this.currentRoute);
   }
 
   public onLogoClick() {

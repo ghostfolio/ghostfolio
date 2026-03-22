@@ -15,74 +15,6 @@
       </div>
 
       <mat-tab-group>
-        <!-- Ownerships Tab -->
-        <mat-tab>
-          <ng-template mat-tab-label>
-            <span i18n>Ownerships</span>
-            <span class="badge bg-secondary ms-2">{{
-              entity?.ownerships?.length ?? 0
-            }}</span>
-          </ng-template>
-
-          <div class="py-3">
-            <table
-              class="gf-table w-100"
-              mat-table
-              [dataSource]="entity?.ownerships ?? []"
-            >
-              <ng-container matColumnDef="accountName">
-                <th *matHeaderCellDef mat-header-cell>Account</th>
-                <td *matCellDef="let row" mat-cell>{{ row.accountName }}</td>
-              </ng-container>
-              <ng-container matColumnDef="ownershipPercent">
-                <th *matHeaderCellDef class="text-right" mat-header-cell>
-                  Ownership %
-                </th>
-                <td *matCellDef="let row" class="text-right" mat-cell>
-                  {{ row.ownershipPercent }}%
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="effectiveDate">
-                <th
-                  *matHeaderCellDef
-                  class="d-none d-lg-table-cell"
-                  mat-header-cell
-                >
-                  Effective Date
-                </th>
-                <td
-                  *matCellDef="let row"
-                  class="d-none d-lg-table-cell"
-                  mat-cell
-                >
-                  {{ row.effectiveDate | date }}
-                </td>
-              </ng-container>
-              <tr *matHeaderRowDef="ownershipColumns" mat-header-row></tr>
-              <tr *matRowDef="let row; columns: ownershipColumns" mat-row></tr>
-            </table>
-
-            @if (entity?.ownerships?.length === 0) {
-              <p class="p-3 text-center text-muted" i18n>
-                No account ownerships yet.
-              </p>
-            }
-
-            @if (hasPermissionToCreate) {
-              <div class="mt-3">
-                <button
-                  color="primary"
-                  mat-stroked-button
-                  (click)="onAddOwnership()"
-                >
-                  <ion-icon class="me-1" name="add-outline" />
-                  Add Ownership
-                </button>
-              </div>
-            }
-          </div>
-        </mat-tab>
-
         <!-- Partnership Memberships Tab -->
         <mat-tab>
           <ng-template mat-tab-label>
@@ -247,6 +179,75 @@
               <p class="p-3 text-center text-muted" i18n>
                 No K-1 documents yet.
               </p>
+            }
+          </div>
+        </mat-tab>
+
+        <!-- Account Ownerships Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span i18n>Accounts</span>
+            <span class="badge bg-secondary ms-2">{{
+              entity?.ownerships?.length ?? 0
+            }}</span>
+          </ng-template>
+
+          <div class="py-3">
+            <table
+              class="gf-table w-100"
+              mat-table
+              [dataSource]="entity?.ownerships ?? []"
+            >
+              <ng-container matColumnDef="accountName">
+                <th *matHeaderCellDef mat-header-cell>Account</th>
+                <td *matCellDef="let row" mat-cell>{{ row.accountName }}</td>
+              </ng-container>
+              <ng-container matColumnDef="ownershipPercent">
+                <th *matHeaderCellDef class="text-right" mat-header-cell>
+                  Ownership %
+                </th>
+                <td *matCellDef="let row" class="text-right" mat-cell>
+                  {{ row.ownershipPercent }}%
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="effectiveDate">
+                <th
+                  *matHeaderCellDef
+                  class="d-none d-lg-table-cell"
+                  mat-header-cell
+                >
+                  Effective Date
+                </th>
+                <td
+                  *matCellDef="let row"
+                  class="d-none d-lg-table-cell"
+                  mat-cell
+                >
+                  {{ row.effectiveDate | date }}
+                </td>
+              </ng-container>
+              <tr *matHeaderRowDef="ownershipColumns" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: ownershipColumns" mat-row></tr>
+            </table>
+
+            @if (entity?.ownerships?.length === 0) {
+              <p class="p-3 text-center text-muted" i18n>
+                No brokerage account links yet. Manage accounts from the
+                Partnerships menu.
+              </p>
+            }
+
+            @if (hasPermissionToCreate) {
+              <div class="mt-3">
+                <button
+                  color="primary"
+                  mat-stroked-button
+                  (click)="onAddOwnership()"
+                >
+                  <ion-icon class="me-1" name="add-outline" />
+                  Link Account
+                </button>
+              </div>
             }
           </div>
         </mat-tab>

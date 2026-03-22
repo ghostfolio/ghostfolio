@@ -916,6 +916,68 @@ export class DevSeedService {
       counts.kDocuments++;
     }
 
+    // ── B9. Ownerships (Entity → Account links) ─────────────────────
+    // Realistic mapping: Trust owns the IRA & 401(k), LLC owns
+    // the brokerage & margin accounts, Individual owns Coinbase.
+    const [trustEntity, llcEntity, jamesEntity] = foEntities;
+    const ownershipDefs = [
+      {
+        accountId: accountRecords[1].id, // Schwab Traditional IRA
+        accountUserId: userId,
+        costBasis: 150000,
+        effectiveDate: new Date('2020-01-15'),
+        entityId: trustEntity.id,
+        ownershipPercent: 100
+      },
+      {
+        accountId: accountRecords[3].id, // Fidelity 401(k)
+        accountUserId: userId,
+        costBasis: 250000,
+        effectiveDate: new Date('2019-06-01'),
+        entityId: trustEntity.id,
+        ownershipPercent: 100
+      },
+      {
+        accountId: accountRecords[0].id, // Schwab Individual Brokerage
+        accountUserId: userId,
+        costBasis: 35000,
+        effectiveDate: new Date('2021-03-10'),
+        entityId: llcEntity.id,
+        ownershipPercent: 100
+      },
+      {
+        accountId: accountRecords[5].id, // Interactive Brokers Margin
+        accountUserId: userId,
+        costBasis: 50000,
+        effectiveDate: new Date('2022-01-15'),
+        entityId: llcEntity.id,
+        ownershipPercent: 100
+      },
+      {
+        accountId: accountRecords[2].id, // Vanguard Roth IRA
+        accountUserId: userId,
+        costBasis: 20000,
+        effectiveDate: new Date('2020-09-01'),
+        entityId: jamesEntity.id,
+        ownershipPercent: 100
+      },
+      {
+        accountId: accountRecords[4].id, // Coinbase
+        accountUserId: userId,
+        costBasis: 5000,
+        effectiveDate: new Date('2023-02-14'),
+        entityId: jamesEntity.id,
+        ownershipPercent: 100
+      }
+    ];
+
+    counts.ownerships = 0;
+
+    for (const def of ownershipDefs) {
+      await this.prismaService.ownership.create({ data: def });
+      counts.ownerships++;
+    }
+
     this.logger.log(`Dummy data populated: ${JSON.stringify(counts)}`);
 
     return { created: counts };

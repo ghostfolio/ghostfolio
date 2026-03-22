@@ -157,6 +157,132 @@
     </div>
   </div>
 
+  <!-- Family Office Performance Metrics (NEW) -->
+  @if (hasFamilyOfficeData && portfolioSummary?.totals) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <gf-performance-metrics
+          [dpi]="portfolioSummary.totals.dpi"
+          [irr]="portfolioSummary.totals.irr"
+          [rvpi]="portfolioSummary.totals.rvpi"
+          [tvpi]="portfolioSummary.totals.tvpi"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- Entity Breakdown Table (NEW) -->
+  @if (portfolioSummary?.entities?.length > 0) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title i18n>Entity Performance</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="table-responsive">
+              <table
+                class="w-100"
+                mat-table
+                [dataSource]="portfolioSummary.entities"
+              >
+                <ng-container matColumnDef="entityName">
+                  <th *matHeaderCellDef mat-header-cell i18n>Entity</th>
+                  <td *matCellDef="let row" mat-cell>{{ row.entityName }}</td>
+                </ng-container>
+                <ng-container matColumnDef="originalCommitment">
+                  <th *matHeaderCellDef mat-header-cell i18n>Commitment</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.originalCommitment | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="percentCalled">
+                  <th *matHeaderCellDef mat-header-cell i18n>% Called</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{
+                      row.percentCalled !== null
+                        ? (row.percentCalled | number: '1.1-1') + '%'
+                        : 'N/A'
+                    }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="unfundedCommitment">
+                  <th *matHeaderCellDef mat-header-cell i18n>Unfunded</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.unfundedCommitment | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="paidIn">
+                  <th *matHeaderCellDef mat-header-cell i18n>Paid-In</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.paidIn | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="distributions">
+                  <th *matHeaderCellDef mat-header-cell i18n>Distributions</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.distributions | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="irr">
+                  <th *matHeaderCellDef mat-header-cell i18n>IRR</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{
+                      row.irr !== null
+                        ? (row.irr | percent: '1.2-2')
+                        : 'N/A'
+                    }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tvpi">
+                  <th *matHeaderCellDef mat-header-cell i18n>TVPI</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.tvpi | number: '1.2-2' }}x
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="dpi">
+                  <th *matHeaderCellDef mat-header-cell i18n>DPI</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.dpi | number: '1.2-2' }}x
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="entityColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: entityColumns" mat-row></tr>
+              </table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+
+  <!-- K1 Income Summary (NEW) -->
+  @if (hasFamilyOfficeData && activityDetail?.rows) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <gf-k1-income-summary [rows]="activityDetail.rows" />
+      </div>
+    </div>
+  }
+
+  <!-- Empty State: No FO data (NEW) -->
+  @if (!hasFamilyOfficeData && !isLoadingFamilyOffice) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <mat-card appearance="outlined">
+          <mat-card-content class="text-center py-4">
+            <p i18n>
+              No K-1 data available. Import a K-1 to get started.
+            </p>
+            <a mat-flat-button color="primary" routerLink="/k1-import" i18n
+              >Import K-1</a
+            >
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+
   <div class="mb-5 row">
     <div class="col">
       <mat-card appearance="outlined">
@@ -296,6 +422,83 @@
       </mat-card>
     </div>
   </div>
+
+  <!-- Asset Class Breakdown (NEW) -->
+  @if (assetClassSummary?.assetClasses?.length > 0) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title i18n>Asset Class Breakdown</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="table-responsive">
+              <table
+                class="w-100"
+                mat-table
+                [dataSource]="assetClassSummary.assetClasses"
+              >
+                <ng-container matColumnDef="assetClassLabel">
+                  <th *matHeaderCellDef mat-header-cell i18n>Asset Class</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.assetClassLabel }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="originalCommitment">
+                  <th *matHeaderCellDef mat-header-cell i18n>Commitment</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.originalCommitment | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="paidIn">
+                  <th *matHeaderCellDef mat-header-cell i18n>Paid-In</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.paidIn | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="distributions">
+                  <th *matHeaderCellDef mat-header-cell i18n>Distributions</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.distributions | number: '1.0-0' }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="irr">
+                  <th *matHeaderCellDef mat-header-cell i18n>IRR</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{
+                      row.irr !== null
+                        ? (row.irr | percent: '1.2-2')
+                        : 'N/A'
+                    }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tvpi">
+                  <th *matHeaderCellDef mat-header-cell i18n>TVPI</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.tvpi | number: '1.2-2' }}x
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="dpi">
+                  <th *matHeaderCellDef mat-header-cell i18n>DPI</th>
+                  <td *matCellDef="let row" mat-cell>
+                    {{ row.dpi | number: '1.2-2' }}x
+                  </td>
+                </ng-container>
+                <tr
+                  *matHeaderRowDef="assetClassColumns"
+                  mat-header-row
+                ></tr>
+                <tr
+                  *matRowDef="let row; columns: assetClassColumns"
+                  mat-row
+                ></tr>
+              </table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
 
   <div class="mb-5 row">
     <div class="col-md-6 mb-3">

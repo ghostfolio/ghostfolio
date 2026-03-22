@@ -1,10 +1,14 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
+import { FamilyOfficeDataService } from '@ghostfolio/client/services/family-office-data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   HistoricalDataItem,
+  IActivityDetail,
+  IAssetClassSummary,
+  IPortfolioSummary,
   InvestmentItem,
   PortfolioInvestmentsResponse,
   PortfolioPerformance,
@@ -15,12 +19,15 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfK1IncomeSummaryComponent } from '@ghostfolio/ui/k1-income-summary';
+import { GfPerformanceMetricsComponent } from '@ghostfolio/ui/performance-metrics';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { Clipboard } from '@angular/cdk/clipboard';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -33,6 +40,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -46,8 +54,11 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   imports: [
+    CommonModule,
     GfBenchmarkComparatorComponent,
     GfInvestmentChartComponent,
+    GfK1IncomeSummaryComponent,
+    GfPerformanceMetricsComponent,
     GfPremiumIndicatorComponent,
     GfToggleComponent,
     GfValueComponent,
@@ -56,6 +67,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     MatCardModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatTableModule,
     NgxSkeletonLoaderModule,
     RouterModule
   ],
@@ -66,16 +78,40 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAnalysisPageComponent implements OnInit {
   @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
 
+  public activityDetail: IActivityDetail | null = null;
+  public assetClassSummary: IAssetClassSummary | null = null;
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
+  public entityColumns = [
+    'entityName',
+    'originalCommitment',
+    'percentCalled',
+    'unfundedCommitment',
+    'paidIn',
+    'distributions',
+    'irr',
+    'tvpi',
+    'dpi'
+  ];
+  public assetClassColumns = [
+    'assetClassLabel',
+    'originalCommitment',
+    'paidIn',
+    'distributions',
+    'irr',
+    'tvpi',
+    'dpi'
+  ];
   public bottom3: PortfolioPosition[];
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
   public firstOrderDate: Date;
+  public hasFamilyOfficeData: boolean = false;
   public hasImpersonationId: boolean;
   public hasPermissionToReadAiPrompt: boolean;
+  public isLoadingFamilyOffice: boolean = false;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
@@ -95,6 +131,7 @@ export class GfAnalysisPageComponent implements OnInit {
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public portfolioEvolutionDataLabel = $localize`Investment`;
   public precision = 2;
+  public portfolioSummary: IPortfolioSummary | null = null;
   public streaks: PortfolioInvestmentsResponse['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
@@ -107,6 +144,7 @@ export class GfAnalysisPageComponent implements OnInit {
     private dataService: DataService,
     private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
+    private familyOfficeDataService: FamilyOfficeDataService,
     private impersonationStorageService: ImpersonationStorageService,
     private snackBar: MatSnackBar,
     private userService: UserService
@@ -367,7 +405,59 @@ export class GfAnalysisPageComponent implements OnInit {
       });
 
     this.fetchDividendsAndInvestments();
+    this.fetchFamilyOfficeData();
     this.changeDetectorRef.markForCheck();
+  }
+
+  private fetchFamilyOfficeData() {
+    this.isLoadingFamilyOffice = true;
+
+    this.familyOfficeDataService
+      .fetchPortfolioSummary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.isLoadingFamilyOffice = false;
+          this.changeDetectorRef.markForCheck();
+        },
+        next: (portfolioSummary) => {
+          this.portfolioSummary = portfolioSummary;
+          this.hasFamilyOfficeData =
+            this.hasFamilyOfficeData ||
+            (portfolioSummary?.entities?.length ?? 0) > 0;
+          this.isLoadingFamilyOffice = false;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+
+    this.familyOfficeDataService
+      .fetchAssetClassSummary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.changeDetectorRef.markForCheck();
+        },
+        next: (assetClassSummary) => {
+          this.assetClassSummary = assetClassSummary;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+
+    this.familyOfficeDataService
+      .fetchActivity()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.changeDetectorRef.markForCheck();
+        },
+        next: (activityDetail) => {
+          this.activityDetail = activityDetail;
+          this.hasFamilyOfficeData =
+            this.hasFamilyOfficeData ||
+            (activityDetail?.rows?.length ?? 0) > 0;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   private updateBenchmarkDataItems() {
