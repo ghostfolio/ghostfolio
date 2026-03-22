@@ -105,10 +105,9 @@ export class CellMappingPageComponent implements OnInit {
       SECTION_J: 'Section J',
       SECTION_K: 'Section K',
       SECTION_L: 'Section L',
-      SECTION_M_N: 'Sections M & N',
-      PART_III_A: 'Part III (Income)',
-      PART_III_B: 'Part III (Deductions)',
-      PART_III_C: 'Part III (Other)'
+      SECTION_M: 'Section M',
+      SECTION_N: 'Section N',
+      PART_III: 'Part III'
     };
     return map[section] ?? section;
   }
