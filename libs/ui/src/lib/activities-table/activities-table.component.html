@@ -1,95 +1,101 @@
-@if (hasPermissionToFilterByType) {
+<div class="d-flex justify-content-between">
   <div class="d-none d-lg-flex">
-    <mat-form-field appearance="outline" class="without-hint">
-      <mat-label i18n>Type</mat-label>
-      <mat-select multiple [formControl]="typesFilter">
-        @for (
-          activityType of activityTypes | keyvalue;
-          track activityType.key
-        ) {
-          <mat-option [value]="activityType.key">
-            {{ activityType.value }}
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </div>
-}
-
-@if (hasPermissionToCreateActivity) {
-  <div class="d-flex justify-content-end">
-    <button
-      class="align-items-center d-flex"
-      mat-stroked-button
-      (click)="onImport()"
-    >
-      <ion-icon class="mr-2" name="cloud-upload-outline" />
-      <span><ng-container i18n>Import Activities</ng-container>...</span>
-    </button>
-    @if (hasPermissionToExportActivities) {
-      <button
-        class="mx-1 no-min-width px-2"
-        mat-stroked-button
-        [matMenuTriggerFor]="activitiesMenu"
-        (click)="$event.stopPropagation()"
-      >
-        <ion-icon name="ellipsis-vertical" />
-      </button>
+    @if (hasPermissionToFilterByType) {
+      <mat-form-field appearance="outline" class="without-hint">
+        <mat-label i18n>Type</mat-label>
+        <mat-select multiple [formControl]="typesFilter">
+          @for (
+            activityType of activityTypes | keyvalue;
+            track activityType.key
+          ) {
+            <mat-option [value]="activityType.key">
+              {{ activityType.value }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     }
-    <mat-menu #activitiesMenu="matMenu" class="no-max-width" xPosition="before">
-      <button
-        mat-menu-item
-        [disabled]="dataSource()?.data.length === 0"
-        (click)="onImportDividends()"
-      >
-        <span class="align-items-center d-flex">
-          <ion-icon class="mr-2" name="color-wand-outline" />
-          <span><ng-container i18n>Import Dividends</ng-container>...</span>
-        </span>
-      </button>
-      @if (hasPermissionToExportActivities) {
-        <button
-          class="align-items-center d-flex"
-          mat-menu-item
-          [disabled]="dataSource()?.data.length === 0"
-          (click)="onExport()"
-        >
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="cloud-download-outline" />
-            <span i18n>Export Activities</span>
-          </span>
-        </button>
-      }
-      @if (hasPermissionToExportActivities) {
-        <button
-          class="align-items-center d-flex"
-          mat-menu-item
-          [disabled]="!hasDrafts"
-          (click)="onExportDrafts()"
-        >
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="calendar-clear-outline" />
-            <span i18n>Export Drafts as ICS</span>
-          </span>
-        </button>
-      }
-      <hr class="m-0" />
+  </div>
+
+  @if (hasPermissionToCreateActivity) {
+    <div class="d-flex justify-content-end">
       <button
         class="align-items-center d-flex"
-        mat-menu-item
-        [disabled]="
-          dataSource()?.data.length === 0 || !hasPermissionToDeleteActivity
-        "
-        (click)="onDeleteActivities()"
+        mat-stroked-button
+        (click)="onImport()"
       >
-        <span class="align-items-center d-flex">
-          <ion-icon class="mr-2" name="trash-outline" />
-          <span i18n>Delete Activities</span>
-        </span>
+        <ion-icon class="mr-2" name="cloud-upload-outline" />
+        <span><ng-container i18n>Import Activities</ng-container>...</span>
       </button>
-    </mat-menu>
-  </div>
-}
+      @if (hasPermissionToExportActivities) {
+        <button
+          class="mx-1 no-min-width px-2"
+          mat-stroked-button
+          [matMenuTriggerFor]="activitiesMenu"
+          (click)="$event.stopPropagation()"
+        >
+          <ion-icon name="ellipsis-vertical" />
+        </button>
+      }
+      <mat-menu
+        #activitiesMenu="matMenu"
+        class="no-max-width"
+        xPosition="before"
+      >
+        <button
+          mat-menu-item
+          [disabled]="dataSource()?.data.length === 0"
+          (click)="onImportDividends()"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="color-wand-outline" />
+            <span><ng-container i18n>Import Dividends</ng-container>...</span>
+          </span>
+        </button>
+        @if (hasPermissionToExportActivities) {
+          <button
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="dataSource()?.data.length === 0"
+            (click)="onExport()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="cloud-download-outline" />
+              <span i18n>Export Activities</span>
+            </span>
+          </button>
+        }
+        @if (hasPermissionToExportActivities) {
+          <button
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="!hasDrafts"
+            (click)="onExportDrafts()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="calendar-clear-outline" />
+              <span i18n>Export Drafts as ICS</span>
+            </span>
+          </button>
+        }
+        <hr class="m-0" />
+        <button
+          class="align-items-center d-flex"
+          mat-menu-item
+          [disabled]="
+            dataSource()?.data.length === 0 || !hasPermissionToDeleteActivity
+          "
+          (click)="onDeleteActivities()"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="trash-outline" />
+            <span i18n>Delete Activities</span>
+          </span>
+        </button>
+      </mat-menu>
+    </div>
+  }
+</div>
 
 <div class="overflow-x-auto">
   <table
