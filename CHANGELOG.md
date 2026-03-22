@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
 
+### Fixed
+
+- Fixed an issue by adding a missing guard in the public access for portfolio sharing
+
 ## 2.250.0 - 2026-03-17
 
 ### Added
@@ -35,10 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue with the detection of the thousand separator for the `de-CH` locale
 - Fixed an issue in the _Storybook_ stories of the symbol autocomplete component caused by a circular dependency
-
-### Fixed
-
-- Fixed an issue by adding a missing guard in the public access for portfolio sharing
 
 ## 2.249.0 - 2026-03-10
 
