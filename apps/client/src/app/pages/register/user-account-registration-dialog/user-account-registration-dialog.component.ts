@@ -8,10 +8,11 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   Inject,
-  OnDestroy,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -27,8 +28,6 @@ import {
   checkmarkOutline,
   copyOutline
 } from 'ionicons/icons';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
 
@@ -53,7 +52,7 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
   styleUrls: ['./user-account-registration-dialog.scss'],
   templateUrl: 'user-account-registration-dialog.html'
 })
-export class GfUserAccountRegistrationDialogComponent implements OnDestroy {
+export class GfUserAccountRegistrationDialogComponent {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
   public accessToken: string;
@@ -64,12 +63,11 @@ export class GfUserAccountRegistrationDialogComponent implements OnDestroy {
   public routerLinkAboutTermsOfService =
     publicRoutes.about.subRoutes.termsOfService.routerLink;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: UserAccountRegistrationDialogParams,
-    private dataService: DataService
+    private dataService: DataService,
+    private destroyRef: DestroyRef
   ) {
     addIcons({ arrowForwardOutline, checkmarkOutline, copyOutline });
   }
@@ -77,7 +75,7 @@ export class GfUserAccountRegistrationDialogComponent implements OnDestroy {
   public createAccount() {
     this.dataService
       .postUser()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ accessToken, authToken, role }) => {
         this.accessToken = accessToken;
         this.authToken = authToken;
@@ -95,10 +93,5 @@ export class GfUserAccountRegistrationDialogComponent implements OnDestroy {
 
   public onChangeDislaimerChecked() {
     this.isDisclaimerChecked = !this.isDisclaimerChecked;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
