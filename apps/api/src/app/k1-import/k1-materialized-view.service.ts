@@ -22,9 +22,7 @@ export class K1MaterializedViewService {
 
   async refreshAll() {
     try {
-      await this.prismaService.$executeRawUnsafe(
-        `REFRESH MATERIALIZED VIEW CONCURRENTLY mv_k1_partnership_year_summary`
-      );
+      await this.prismaService.$executeRaw`REFRESH MATERIALIZED VIEW CONCURRENTLY mv_k1_partnership_year_summary`;
       this.logger.log('Materialized view mv_k1_partnership_year_summary refreshed.');
     } catch (error) {
       this.logger.error(
@@ -45,7 +43,7 @@ export class K1MaterializedViewService {
       box_key: string;
       label: string;
       section: string | null;
-      total_amount: number | null;
+      total_amount: string | null;
       line_count: bigint;
     }>
   > {

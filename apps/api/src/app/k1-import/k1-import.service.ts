@@ -712,9 +712,9 @@ export class K1ImportService {
       '1': 'ordinaryIncome',
       '2': 'netRentalIncome',
       '3': 'otherRentalIncome',
-      '4a': 'guaranteedPayments',    // 4a guaranteed payments (services)
-      '4b': 'guaranteedPayments',    // 4b guaranteed payments (capital) — merged
-      '4c': 'guaranteedPayments',    // 4c total guaranteed payments
+      '4': 'guaranteedPayments',     // 4 guaranteed payments (services)
+      '4a': 'guaranteedPayments',    // 4a guaranteed payments (capital) — merged
+      '4b': 'guaranteedPayments',    // 4b total guaranteed payments — merged
       '5': 'interestIncome',
       '6a': 'dividends',
       '6b': 'qualifiedDividends',
@@ -734,7 +734,7 @@ export class K1ImportService {
       '21': 'foreignTaxesPaid',
       // Section L: Tax basis / capital account fields
       'L_BEG_CAPITAL': 'beginningTaxBasis',
-      'L_CAPITAL_CONTRIBUTED': 'k1CapitalAccount',
+      'L_CONTRIBUTED': 'k1CapitalAccount',
       'L_END_CAPITAL': 'endingTaxBasis',
     };
 
@@ -753,69 +753,74 @@ export class K1ImportService {
     // Merge named fields into the document data (named fields take precedence for views)
     const finalDocumentData = { ...kDocumentData, ...k1DataSnapshot };
 
-    // FR-012: Create or update KDocument
+    // FR-012: Create or update KDocument with K1LineItems in a single transaction
+    // to ensure consistent state (no superseded-but-unreplaced line items).
     let kDocument;
-    if (existingKDocument && data.existingKDocumentAction === 'UPDATE') {
-      kDocument = await this.prismaService.kDocument.update({
-        where: { id: existingKDocument.id },
-        data: {
-          filingStatus: data.filingStatus,
-          data: finalDocumentData as any,
-          documentFileId: session.documentId
-        }
-      });
+    await this.prismaService.$transaction(async (tx) => {
+      if (existingKDocument && data.existingKDocumentAction === 'UPDATE') {
+        kDocument = await tx.kDocument.update({
+          where: { id: existingKDocument.id },
+          data: {
+            filingStatus: data.filingStatus,
+            data: finalDocumentData as any,
+            documentFileId: session.documentId
+          }
+        });
 
-      // FR-016: Mark existing active K1LineItems as superseded (ESTIMATED→FINAL)
-      await this.prismaService.k1LineItem.updateMany({
-        where: {
-          kDocumentId: existingKDocument.id,
-          isSuperseded: false
-        },
-        data: { isSuperseded: true }
-      });
-    } else {
-      // CREATE_NEW or no existing document
-      if (existingKDocument && data.existingKDocumentAction === 'CREATE_NEW') {
-        // Delete existing unique constraint holder to create new
-        await this.prismaService.kDocument.delete({
-          where: { id: existingKDocument.id }
+        // FR-016: Mark existing active K1LineItems as superseded (ESTIMATED→FINAL)
+        await tx.k1LineItem.updateMany({
+          where: {
+            kDocumentId: existingKDocument.id,
+            isSuperseded: false
+          },
+          data: { isSuperseded: true }
+        });
+      } else {
+        // CREATE_NEW or no existing document
+        if (existingKDocument && data.existingKDocumentAction === 'CREATE_NEW') {
+          // Delete existing unique constraint holder to create new
+          await tx.kDocument.delete({
+            where: { id: existingKDocument.id }
+          });
+        }
+
+        kDocument = await tx.kDocument.create({
+          data: {
+            partnershipId: session.partnershipId,
+            type: 'K1',
+            taxYear: session.taxYear,
+            filingStatus: data.filingStatus,
+            data: finalDocumentData as any,
+            documentFileId: session.documentId
+          }
         });
       }
 
-      kDocument = await this.prismaService.kDocument.create({
-        data: {
-          partnershipId: session.partnershipId,
-          type: 'K1',
-          taxYear: session.taxYear,
-          filingStatus: data.filingStatus,
-          data: finalDocumentData as any,
-          documentFileId: session.documentId
-        }
-      });
-    }
+      // Create K1LineItem rows (the authoritative normalized data)
+      if (lineItemsToCreate.length > 0) {
+        await tx.k1LineItem.createMany({
+          data: lineItemsToCreate.map((item) => ({
+            kDocumentId: kDocument.id,
+            boxKey: item.boxKey,
+            amount: item.amount,
+            textValue: item.textValue,
+            rawText: item.rawText,
+            confidence: item.confidence,
+            sourcePage: item.sourcePage,
+            sourceCoords: item.sourceCoords,
+            isUserEdited: item.isUserEdited,
+            isSuperseded: false
+          }))
+        });
 
-    // Create K1LineItem rows (the authoritative normalized data)
-    if (lineItemsToCreate.length > 0) {
-      await this.prismaService.k1LineItem.createMany({
-        data: lineItemsToCreate.map((item) => ({
-          kDocumentId: kDocument.id,
-          boxKey: item.boxKey,
-          amount: item.amount,
-          textValue: item.textValue,
-          rawText: item.rawText,
-          confidence: item.confidence,
-          sourcePage: item.sourcePage,
-          sourceCoords: item.sourceCoords,
-          isUserEdited: item.isUserEdited,
-          isSuperseded: false
-        }))
-      });
+        this.logger.log(
+          `Session ${sessionId}: Created ${lineItemsToCreate.length} K1LineItem rows for KDocument ${kDocument.id}`
+        );
+      }
+    });
 
-      this.logger.log(
-        `Session ${sessionId}: Created ${lineItemsToCreate.length} K1LineItem rows for KDocument ${kDocument.id}`
-      );
-
-      // Emit event to refresh materialized views (US5)
+    // Emit event after the transaction commits to refresh materialized views (US5)
+    if (kDocument && lineItemsToCreate.length > 0) {
       this.eventEmitter.emit('k-document.changed', {
         kDocumentId: kDocument.id,
         partnershipId: kDocument.partnershipId
@@ -886,7 +891,7 @@ export class K1ImportService {
     // This drives Portfolio Summary (DPI/RVPI/TVPI) computations
     const sectionLData = {
       beginningCapital: boxValues['L_BEG_CAPITAL'] ?? null,
-      capitalContributed: boxValues['L_CAPITAL_CONTRIBUTED'] ?? null,
+      capitalContributed: boxValues['L_CONTRIBUTED'] ?? null,
       endingCapital: boxValues['L_END_CAPITAL'] ?? null,
       withdrawals: boxValues['L_WITHDRAWALS'] ?? null
     };

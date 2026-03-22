@@ -54,16 +54,6 @@
               <div class="aggregation-value">
                 {{ agg.value | currency:'USD':'symbol':'1.2-6' }}
               </div>
-              @if (agg.breakdown && agg.breakdown.length > 0) {
-                <div class="breakdown">
-                  @for (item of agg.breakdown; track item.boxNumber) {
-                    <div class="breakdown-row">
-                      <span class="box-label">Box {{ item.boxNumber }}:</span>
-                      <span class="box-value">{{ item.value | currency:'USD':'symbol':'1.2-6' }}</span>
-                    </div>
-                  }
-                </div>
-              }
             </mat-card-content>
           </mat-card>
         }

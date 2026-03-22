@@ -42,7 +42,7 @@ export class K1FieldMapperService {
         mappedFields.push({
           ...field,
           label: def.label,
-          customLabel: def.customLabel ? def.label : field.customLabel,
+          customLabel: def.customLabel ?? field.customLabel,
           cellType: def.dataType
         } as any);
       } else {
