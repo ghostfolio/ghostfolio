@@ -1,5 +1,4 @@
 import { K1ImportDataService } from '@ghostfolio/client/services/k1-import-data.service';
-import { FamilyOfficeDataService } from '@ghostfolio/client/services/family-office-data.service';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -12,34 +11,27 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-interface EditableMapping {
-  boxNumber: string;
+interface BoxDefinition {
+  boxKey: string;
   label: string;
-  description: string;
-  cellType: string;
-  isCustom: boolean;
-  isIgnored: boolean;
-  isEditing: boolean;
-  editLabel: string;
-  editDescription: string;
-  editCellType: string;
+  section?: string;
+  dataType?: string;
+  sortOrder?: number;
 }
 
-interface EditableRule {
+interface AggregationRule {
+  ruleId: string;
   name: string;
   operation: string;
-  sourceCells: string[];
-  isEditing: boolean;
-  editName: string;
-  editSourceCells: string;
+  sourceBoxKeys: string[];
+  sortOrder: number;
 }
 
 @Component({
@@ -49,322 +41,113 @@ interface EditableRule {
     CommonModule,
     FormsModule,
     MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
+    MatCardModule,
+    MatChipsModule,
     MatIconModule,
-    MatInputModule,
     MatSelectModule,
     MatTableModule,
     MatTooltipModule
   ],
   selector: 'gf-cell-mapping-page',
+  standalone: true,
   styleUrls: ['./cell-mapping-page.scss'],
   templateUrl: './cell-mapping-page.html'
 })
 export class CellMappingPageComponent implements OnInit {
-  public aggregationRules: EditableRule[] = [];
+  public boxDefinitions: BoxDefinition[] = [];
+  public aggregationRules: AggregationRule[] = [];
+  public isLoading = true;
   public error: string | null = null;
-  public isSaving = false;
-  public mappings: EditableMapping[] = [];
-  public partnerships: Array<{ id: string; name: string }> = [];
-  public selectedPartnershipId = '';
-  public successMessage: string | null = null;
 
-  // New custom cell form
-  public newBoxNumber = '';
-  public newCellType = 'number';
-  public newLabel = '';
+  // Filters
+  public filterSection: string | null = null;
+  public sections: string[] = [];
 
-  // New rule form
-  public newRuleName = '';
-  public newRuleSourceCells = '';
-
-  public cellTypeOptions = [
-    { value: 'number', label: 'Number ($)' },
-    { value: 'string', label: 'String' },
-    { value: 'percentage', label: 'Percentage (%)' },
-    { value: 'boolean', label: 'Boolean' }
-  ];
-
-  public displayedColumns = ['boxNumber', 'label', 'description', 'cellType', 'isCustom', 'isIgnored', 'actions'];
+  // Table columns
+  public boxColumns = ['boxKey', 'label', 'section', 'dataType'];
+  public ruleColumns = ['name', 'operation', 'sourceBoxKeys', 'sortOrder'];
 
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly destroyRef: DestroyRef,
-    private readonly familyOfficeDataService: FamilyOfficeDataService,
     private readonly k1ImportDataService: K1ImportDataService
   ) {}
 
   public ngOnInit(): void {
-    this.fetchPartnerships();
+    this.loadData();
   }
 
-  public onPartnershipChange(): void {
-    if (this.selectedPartnershipId) {
-      this.loadMappings();
-      this.loadAggregationRules();
+  public get filteredDefinitions(): BoxDefinition[] {
+    if (!this.filterSection) {
+      return this.boxDefinitions;
     }
+    return this.boxDefinitions.filter(
+      (d) => d.section === this.filterSection
+    );
   }
 
-  // ── Cell Mapping Methods ─────────────────────────────────────────
-
-  public startEditMapping(mapping: EditableMapping): void {
-    mapping.isEditing = true;
-    mapping.editLabel = mapping.label;
-    mapping.editDescription = mapping.description;
-    mapping.editCellType = mapping.cellType;
-    this.changeDetectorRef.markForCheck();
+  /**
+   * Get the label for a box key, used in the aggregation rules table.
+   */
+  public getBoxLabel(boxKey: string): string {
+    const def = this.boxDefinitions.find((d) => d.boxKey === boxKey);
+    return def ? `${boxKey} — ${def.label}` : boxKey;
   }
 
-  public saveEditMapping(mapping: EditableMapping): void {
-    mapping.label = mapping.editLabel;
-    mapping.description = mapping.editDescription;
-    mapping.cellType = mapping.editCellType;
-    mapping.isEditing = false;
-    this.changeDetectorRef.markForCheck();
+  /**
+   * Get a human-friendly section name.
+   */
+  public getSectionLabel(section: string): string {
+    const map: Record<string, string> = {
+      HEADER: 'Header',
+      PART_I: 'Part I',
+      PART_II: 'Part II',
+      SECTION_J: 'Section J',
+      SECTION_K: 'Section K',
+      SECTION_L: 'Section L',
+      SECTION_M_N: 'Sections M & N',
+      PART_III_A: 'Part III (Income)',
+      PART_III_B: 'Part III (Deductions)',
+      PART_III_C: 'Part III (Other)'
+    };
+    return map[section] ?? section;
   }
 
-  public cancelEditMapping(mapping: EditableMapping): void {
-    mapping.isEditing = false;
-    this.changeDetectorRef.markForCheck();
-  }
+  private loadData(): void {
+    this.isLoading = true;
 
-  public toggleIgnored(mapping: EditableMapping): void {
-    if (!this.selectedPartnershipId) {
-      return;
-    }
-
+    // Load box definitions
     this.k1ImportDataService
-      .toggleFieldIgnored({
-        partnershipId: this.selectedPartnershipId,
-        boxNumber: mapping.boxNumber
-      })
+      .fetchBoxDefinitions()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (result: any) => {
-          mapping.isIgnored = result.isIgnored;
+        next: (defs) => {
+          this.boxDefinitions = defs;
+          this.sections = [
+            ...new Set(defs.map((d: any) => d.section).filter(Boolean))
+          ];
           this.changeDetectorRef.markForCheck();
         },
-        error: (err) => {
-          this.error =
-            err?.error?.message || 'Failed to toggle ignored state.';
+        error: () => {
+          this.error = 'Failed to load box definitions.';
+          this.isLoading = false;
           this.changeDetectorRef.markForCheck();
         }
       });
-  }
 
-  public addCustomCell(): void {
-    if (!this.newBoxNumber || !this.newLabel) {
-      return;
-    }
-
-    this.mappings.push({
-      boxNumber: this.newBoxNumber,
-      label: this.newLabel,
-      description: '',
-      cellType: this.newCellType,
-      isCustom: true,
-      isIgnored: false,
-      isEditing: false,
-      editLabel: '',
-      editDescription: '',
-      editCellType: this.newCellType
-    });
-
-    this.newBoxNumber = '';
-    this.newLabel = '';
-    this.newCellType = 'number';
-    this.changeDetectorRef.markForCheck();
-  }
-
-  public removeMapping(index: number): void {
-    this.mappings.splice(index, 1);
-    this.changeDetectorRef.markForCheck();
-  }
-
-  public saveMappings(): void {
-    if (!this.selectedPartnershipId) {
-      return;
-    }
-
-    this.isSaving = true;
-    this.error = null;
-    this.successMessage = null;
-    this.changeDetectorRef.markForCheck();
-
+    // Load aggregation rules
     this.k1ImportDataService
-      .updateCellMappings({
-        partnershipId: this.selectedPartnershipId,
-        mappings: this.mappings.map((m) => ({
-          boxNumber: m.boxNumber,
-          label: m.label,
-          description: m.description,
-          cellType: m.cellType,
-          isCustom: m.isCustom
-        }))
-      })
+      .fetchAggregationRules()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
-          this.isSaving = false;
-          this.successMessage = 'Cell mappings saved successfully.';
+        next: (rules) => {
+          this.aggregationRules = rules;
+          this.isLoading = false;
           this.changeDetectorRef.markForCheck();
         },
-        error: (err) => {
-          this.isSaving = false;
-          this.error =
-            err?.error?.message || err?.message || 'Failed to save mappings.';
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  public resetToDefaults(): void {
-    if (!this.selectedPartnershipId) {
-      return;
-    }
-
-    this.k1ImportDataService
-      .resetCellMappings(this.selectedPartnershipId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.successMessage = 'Cell mappings reset to IRS defaults.';
-          this.loadMappings();
-        },
-        error: (err) => {
-          this.error =
-            err?.error?.message || err?.message || 'Failed to reset mappings.';
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  // ── Aggregation Rule Methods ─────────────────────────────────────
-
-  public addAggregationRule(): void {
-    if (!this.newRuleName || !this.newRuleSourceCells) {
-      return;
-    }
-
-    this.aggregationRules.push({
-      name: this.newRuleName,
-      operation: 'SUM',
-      sourceCells: this.newRuleSourceCells.split(',').map((s) => s.trim()),
-      isEditing: false,
-      editName: '',
-      editSourceCells: ''
-    });
-
-    this.newRuleName = '';
-    this.newRuleSourceCells = '';
-    this.changeDetectorRef.markForCheck();
-  }
-
-  public removeAggregationRule(index: number): void {
-    this.aggregationRules.splice(index, 1);
-    this.changeDetectorRef.markForCheck();
-  }
-
-  public saveAggregationRules(): void {
-    if (!this.selectedPartnershipId) {
-      return;
-    }
-
-    this.isSaving = true;
-    this.error = null;
-    this.successMessage = null;
-    this.changeDetectorRef.markForCheck();
-
-    this.k1ImportDataService
-      .updateAggregationRules({
-        partnershipId: this.selectedPartnershipId,
-        rules: this.aggregationRules.map((r) => ({
-          name: r.name,
-          operation: r.operation,
-          sourceCells: r.sourceCells
-        }))
-      })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.isSaving = false;
-          this.successMessage = 'Aggregation rules saved successfully.';
-          this.changeDetectorRef.markForCheck();
-        },
-        error: (err) => {
-          this.isSaving = false;
-          this.error =
-            err?.error?.message || err?.message || 'Failed to save rules.';
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  // ── Data Loading ─────────────────────────────────────────────────
-
-  private fetchPartnerships(): void {
-    this.familyOfficeDataService
-      .fetchPartnerships()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (partnerships) => {
-          this.partnerships = partnerships.map((p) => ({
-            id: p.id,
-            name: p.name
-          }));
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  private loadMappings(): void {
-    this.k1ImportDataService
-      .fetchCellMappings(this.selectedPartnershipId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (mappings: any[]) => {
-          this.mappings = mappings.map((m) => ({
-            boxNumber: m.boxNumber,
-            label: m.label,
-            description: m.description || '',
-            cellType: m.cellType || 'number',
-            isCustom: m.isCustom,
-            isIgnored: m.isIgnored ?? false,
-            isEditing: false,
-            editLabel: '',
-            editDescription: '',
-            editCellType: m.cellType || 'number'
-          }));
-          this.changeDetectorRef.markForCheck();
-        },
-        error: (err) => {
-          this.error =
-            err?.error?.message || 'Failed to load cell mappings.';
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  private loadAggregationRules(): void {
-    this.k1ImportDataService
-      .fetchAggregationRules(this.selectedPartnershipId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (rules: any[]) => {
-          this.aggregationRules = rules.map((r) => ({
-            name: r.name,
-            operation: r.operation,
-            sourceCells: (r.sourceCells as string[]) || [],
-            isEditing: false,
-            editName: '',
-            editSourceCells: ''
-          }));
-          this.changeDetectorRef.markForCheck();
-        },
-        error: (err) => {
-          this.error =
-            err?.error?.message || 'Failed to load aggregation rules.';
+        error: () => {
+          this.error = 'Failed to load aggregation rules.';
+          this.isLoading = false;
           this.changeDetectorRef.markForCheck();
         }
       });

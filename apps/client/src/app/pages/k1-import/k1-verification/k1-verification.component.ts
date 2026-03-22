@@ -96,8 +96,11 @@ export class K1VerificationComponent implements OnInit {
     'actions'
   ];
 
-  // Available box numbers for assigning unmapped items
-  public availableBoxNumbers: string[] = [];
+  // All box definitions from the API (for assigning unmapped items)
+  public allBoxDefinitions: Array<{ boxKey: string; label: string; section?: string }> = [];
+
+  // Available box definitions for the dropdown (excludes already-mapped boxes)
+  public availableBoxDefinitions: Array<{ boxKey: string; label: string; section?: string }> = [];
 
   public constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -315,7 +318,7 @@ export class K1VerificationComponent implements OnInit {
 
           this.taxYear = session.taxYear;
 
-          const extraction = session.rawExtraction || session.verifiedData;
+          const extraction = session.rawExtraction;
           if (extraction) {
             this.fields = (extraction.fields || []).map(
               (f: K1ExtractedField) => ({
@@ -336,8 +339,8 @@ export class K1VerificationComponent implements OnInit {
               })
             );
 
-            // Build available box numbers from fields
-            this.availableBoxNumbers = this.fields.map((f) => f.boxNumber);
+            // Load all box definitions from API for the unmapped dropdown
+            this.loadBoxDefinitions();
           }
 
           this.recalculateAggregations();
@@ -357,11 +360,9 @@ export class K1VerificationComponent implements OnInit {
   /**
    * Recalculate aggregation summaries from current field values.
    * FR-034: Auto-recalculate when cell values change.
+   * Uses all 15 default aggregation rules to match backend behavior.
    */
   private recalculateAggregations(): void {
-    // Use the data service to compute aggregations from current fields
-    // For now, compute client-side from the predefined rules
-    // The full server-side computation will be used when a KDocument exists
     const fieldMap: Record<string, number> = {};
     for (const f of this.fields) {
       if (f.numericValue !== null && f.numericValue !== undefined) {
@@ -369,44 +370,42 @@ export class K1VerificationComponent implements OnInit {
       }
     }
 
-    // Client-side aggregation matching the default rules
-    this.aggregations = [
-      {
-        ruleId: 'client-1',
-        name: 'Total Ordinary Income',
-        operation: 'SUM',
-        sourceCells: ['1'],
-        computedValue: fieldMap['1'] ?? 0,
-        breakdown: { '1': fieldMap['1'] ?? 0 }
-      },
-      {
-        ruleId: 'client-2',
-        name: 'Total Capital Gains',
-        operation: 'SUM',
-        sourceCells: ['8', '9a', '9b', '9c', '10'],
-        computedValue: ['8', '9a', '9b', '9c', '10'].reduce(
-          (sum, box) => sum + (fieldMap[box] ?? 0),
-          0
-        ),
-        breakdown: Object.fromEntries(
-          ['8', '9a', '9b', '9c', '10'].map((box) => [
-            box,
-            fieldMap[box] ?? 0
-          ])
-        )
-      },
-      {
-        ruleId: 'client-3',
-        name: 'Total Deductions',
-        operation: 'SUM',
-        sourceCells: ['12', '13'],
-        computedValue: (fieldMap['12'] ?? 0) + (fieldMap['13'] ?? 0),
-        breakdown: {
-          '12': fieldMap['12'] ?? 0,
-          '13': fieldMap['13'] ?? 0
-        }
-      }
+    // All IRS default aggregation rules — mirrors DEFAULT_AGGREGATION_RULES on the backend
+    const rules: Array<{ name: string; sourceCells: string[] }> = [
+      { name: 'Total Ordinary Income', sourceCells: ['1'] },
+      { name: 'Net Rental Income', sourceCells: ['2', '3'] },
+      { name: 'Guaranteed Payments', sourceCells: ['4a', '4b'] },
+      { name: 'Interest Income', sourceCells: ['5'] },
+      { name: 'Total Dividends', sourceCells: ['6a'] },
+      { name: 'Qualified Dividends', sourceCells: ['6b'] },
+      { name: 'Royalties', sourceCells: ['7'] },
+      { name: 'Total Capital Gains', sourceCells: ['8', '9a', '9b', '9c', '10'] },
+      { name: 'Other Income', sourceCells: ['11'] },
+      { name: 'Total Deductions', sourceCells: ['12', '13'] },
+      { name: 'Self-Employment Earnings', sourceCells: ['14'] },
+      { name: 'Alternative Minimum Tax Items', sourceCells: ['17'] },
+      { name: 'Total Distributions', sourceCells: ['19a', '19b', '19'] },
+      { name: 'Foreign Taxes Paid', sourceCells: ['21'] },
+      { name: 'Total K-1 Income (Net)', sourceCells: ['1', '2', '3', '4b', '5', '6a', '7', '8', '9a', '9b', '9c', '10', '11', '14'] }
     ];
+
+    this.aggregations = rules.map((rule, index) => {
+      const breakdown: Record<string, number> = {};
+      let computedValue = 0;
+      for (const box of rule.sourceCells) {
+        const val = fieldMap[box] ?? 0;
+        breakdown[box] = val;
+        computedValue += val;
+      }
+      return {
+        ruleId: `client-${index + 1}`,
+        name: rule.name,
+        operation: 'SUM' as const,
+        sourceCells: rule.sourceCells,
+        computedValue,
+        breakdown
+      };
+    });
   }
 
   /**
@@ -430,5 +429,53 @@ export class K1VerificationComponent implements OnInit {
       );
 
     this.canConfirm = allFieldsReviewed && allUnmappedResolved;
+  }
+
+  /**
+   * Load all IRS box definitions from the API for the unmapped items dropdown.
+   * Filters out boxes that are already mapped to existing fields.
+   */
+  private loadBoxDefinitions(): void {
+    this.k1ImportDataService
+      .fetchBoxDefinitions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (definitions: any[]) => {
+          this.allBoxDefinitions = definitions.map((d) => ({
+            boxKey: d.boxKey,
+            label: d.label,
+            section: d.section
+          }));
+
+          this.updateAvailableBoxDefinitions();
+          this.changeDetectorRef.markForCheck();
+        },
+        error: (err) => {
+          this.logger('Failed to load box definitions:', err);
+          // Fallback: use currently mapped field box numbers
+          this.allBoxDefinitions = this.fields.map((f) => ({
+            boxKey: f.boxNumber,
+            label: f.label,
+            section: undefined
+          }));
+          this.updateAvailableBoxDefinitions();
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+
+  /**
+   * Update the available box definitions for the dropdown.
+   * Excludes boxes that already have mapped fields.
+   */
+  private updateAvailableBoxDefinitions(): void {
+    const mappedBoxes = new Set(this.fields.map((f) => f.boxNumber));
+    this.availableBoxDefinitions = this.allBoxDefinitions.filter(
+      (d) => !mappedBoxes.has(d.boxKey)
+    );
+  }
+
+  private logger(message: string, ...args: any[]): void {
+    console.warn(`[K1Verification] ${message}`, ...args);
   }
 }

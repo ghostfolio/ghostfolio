@@ -2,12 +2,14 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import type { K1ExtractionResult } from '@ghostfolio/common/interfaces';
 
 import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { K1ImportStatus, KDocumentStatus } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import { UploadService } from '../upload/upload.service';
+import { K1BoxDefinitionService } from '../k1-box-definition/k1-box-definition.service';
 import { AzureExtractor } from './extractors/azure-extractor';
 import { PdfParseExtractor } from './extractors/pdf-parse-extractor';
 import { TesseractExtractor } from './extractors/tesseract-extractor';
@@ -25,6 +27,8 @@ export class K1ImportService {
     private readonly uploadService: UploadService,
     private readonly fieldMapperService: K1FieldMapperService,
     private readonly allocationService: K1AllocationService,
+    private readonly k1BoxDefinitionService: K1BoxDefinitionService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly pdfParseExtractor: PdfParseExtractor,
     private readonly azureExtractor: AzureExtractor,
     private readonly tesseractExtractor: TesseractExtractor
@@ -352,15 +356,19 @@ export class K1ImportService {
       }
     }
 
-    // Transition to VERIFIED and store verified data
+    // Transition to VERIFIED and store verified data in rawExtraction
+    const currentRaw = (session.rawExtraction as any) || {};
     const updated = await this.prismaService.k1ImportSession.update({
       where: { id: sessionId },
       data: {
         status: K1ImportStatus.VERIFIED,
         taxYear: data.taxYear,
-        verifiedData: {
-          fields: data.fields,
-          unmappedItems: data.unmappedItems || []
+        rawExtraction: {
+          ...currentRaw,
+          verified: {
+            fields: data.fields,
+            unmappedItems: data.unmappedItems || []
+          }
         } as any
       }
     });
@@ -545,7 +553,8 @@ export class K1ImportService {
       );
     }
 
-    const verifiedData = session.verifiedData as any;
+    const rawExtraction = session.rawExtraction as any;
+    const verifiedData = rawExtraction?.verified;
     if (!verifiedData?.fields || verifiedData.fields.length === 0) {
       throw new HttpException(
         'No verified data available',
@@ -571,7 +580,8 @@ export class K1ImportService {
 
     if (memberships.length === 0) {
       throw new HttpException(
-        'Partnership has no active members',
+        `Partnership has no active members for tax year ${session.taxYear}. ` +
+        `Check that membership effectiveDate is on or before ${session.taxYear}-12-31.`,
         StatusCodes.BAD_REQUEST
       );
     }
@@ -630,33 +640,138 @@ export class K1ImportService {
       );
     }
 
-    // Build KDocument data from verified fields
+    // Build convenience JSON snapshot and K1LineItem data from verified fields
+    // The snapshot uses K1Data named fields (see k-document.interface.ts)
+    // so that portfolio views can read it directly without box-key translation.
+    const boxValues: Record<string, number> = {};
     const kDocumentData: Record<string, number | string | null> = {};
+    const lineItemMap = new Map<
+      string,
+      {
+        boxKey: string;
+        amount: number | null;
+        textValue: string | null;
+        rawText: string | null;
+        confidence: number | null;
+        sourcePage: number | null;
+        sourceCoords: any;
+        isUserEdited: boolean;
+      }
+    >();
+
     for (const field of verifiedData.fields) {
       // For subtype fields (e.g., box 11 "ZZ*", box 20 "A"), create unique key
-      const key = field.subtype
+      const boxKey = field.subtype
         ? `${field.boxNumber}-${field.subtype}`
         : field.boxNumber;
-      // Persist numericValue for numeric fields, rawValue for text/checkbox/string fields
-      kDocumentData[key] = field.numericValue ?? field.rawValue ?? null;
+
+      // FR-017: Auto-create box definition if missing
+      await this.k1BoxDefinitionService.autoCreateIfMissing(boxKey, field.label);
+
+      // Collect numeric values by box key for K1Data mapping
+      if (field.numericValue !== undefined && field.numericValue !== null) {
+        boxValues[boxKey] = field.numericValue;
+      }
+
+      // Also keep raw box-key snapshot for debugging
+      kDocumentData[boxKey] = field.numericValue ?? field.rawValue ?? null;
+
+      // Build K1LineItem row data — deduplicate by boxKey (take most meaningful value)
+      const isNumeric =
+        field.numericValue !== undefined && field.numericValue !== null;
+      const existing = lineItemMap.get(boxKey);
+      const newItem = {
+        boxKey,
+        amount: isNumeric ? field.numericValue : null,
+        textValue: !isNumeric ? String(field.rawValue ?? '') : null,
+        rawText: field.rawValue != null ? String(field.rawValue) : null,
+        confidence: field.confidence ?? null,
+        sourcePage: field.page ?? null,
+        sourceCoords: field.boundingBox ?? null,
+        isUserEdited: field.isReviewed === true || field.isEdited === true
+      };
+
+      if (existing) {
+        // Merge: prefer the entry with actual numeric data over empty
+        const existingHasValue = existing.amount !== null || (existing.textValue && existing.textValue !== '' && existing.textValue !== '.');
+        const newHasValue = newItem.amount !== null || (newItem.textValue && newItem.textValue !== '' && newItem.textValue !== '.');
+
+        if (newHasValue && !existingHasValue) {
+          lineItemMap.set(boxKey, newItem);
+        }
+        // Otherwise keep existing (first-wins for equal)
+      } else {
+        lineItemMap.set(boxKey, newItem);
+      }
     }
+
+    const lineItemsToCreate = Array.from(lineItemMap.values());
+
+    // Map box keys → K1Data named fields so portfolio views can read directly
+    const BOX_KEY_TO_K1DATA_FIELD: Record<string, string> = {
+      '1': 'ordinaryIncome',
+      '2': 'netRentalIncome',
+      '3': 'otherRentalIncome',
+      '4a': 'guaranteedPayments',    // 4a guaranteed payments (services)
+      '4b': 'guaranteedPayments',    // 4b guaranteed payments (capital) — merged
+      '4c': 'guaranteedPayments',    // 4c total guaranteed payments
+      '5': 'interestIncome',
+      '6a': 'dividends',
+      '6b': 'qualifiedDividends',
+      '7': 'royalties',
+      '8': 'capitalGainLossShortTerm',
+      '9a': 'capitalGainLossLongTerm',
+      '9b': 'collectiblesGain',
+      '9c': 'unrecaptured1250Gain',
+      '10': 'section1231GainLoss',
+      '11': 'otherIncome',
+      '12': 'section179Deduction',
+      '13': 'otherDeductions',
+      '14': 'selfEmploymentEarnings',
+      '17': 'alternativeMinimumTaxItems',
+      '19a': 'distributionsCash',
+      '19b': 'distributionsProperty',
+      '21': 'foreignTaxesPaid',
+      // Section L: Tax basis / capital account fields
+      'L_BEG_CAPITAL': 'beginningTaxBasis',
+      'L_CAPITAL_CONTRIBUTED': 'k1CapitalAccount',
+      'L_END_CAPITAL': 'endingTaxBasis',
+    };
+
+    const k1DataSnapshot: Record<string, number | string | null> = {};
+    for (const [boxKey, value] of Object.entries(boxValues)) {
+      const namedField = BOX_KEY_TO_K1DATA_FIELD[boxKey];
+      if (namedField) {
+        // If multiple box keys map to same field (e.g., 4a/4b/4c), sum them
+        if (k1DataSnapshot[namedField] !== undefined && k1DataSnapshot[namedField] !== null) {
+          k1DataSnapshot[namedField] = (k1DataSnapshot[namedField] as number) + value;
+        } else {
+          k1DataSnapshot[namedField] = value;
+        }
+      }
+    }
+    // Merge named fields into the document data (named fields take precedence for views)
+    const finalDocumentData = { ...kDocumentData, ...k1DataSnapshot };
 
     // FR-012: Create or update KDocument
     let kDocument;
     if (existingKDocument && data.existingKDocumentAction === 'UPDATE') {
-      // FR-025: Preserve previous values for audit trail
-      const previousData = existingKDocument.data;
-      const previousFilingStatus = existingKDocument.filingStatus;
-
       kDocument = await this.prismaService.kDocument.update({
         where: { id: existingKDocument.id },
         data: {
           filingStatus: data.filingStatus,
-          data: kDocumentData as any,
-          previousData: previousData as any,
-          previousFilingStatus,
+          data: finalDocumentData as any,
           documentFileId: session.documentId
         }
+      });
+
+      // FR-016: Mark existing active K1LineItems as superseded (ESTIMATED→FINAL)
+      await this.prismaService.k1LineItem.updateMany({
+        where: {
+          kDocumentId: existingKDocument.id,
+          isSuperseded: false
+        },
+        data: { isSuperseded: true }
       });
     } else {
       // CREATE_NEW or no existing document
@@ -673,9 +788,37 @@ export class K1ImportService {
           type: 'K1',
           taxYear: session.taxYear,
           filingStatus: data.filingStatus,
-          data: kDocumentData as any,
+          data: finalDocumentData as any,
           documentFileId: session.documentId
         }
+      });
+    }
+
+    // Create K1LineItem rows (the authoritative normalized data)
+    if (lineItemsToCreate.length > 0) {
+      await this.prismaService.k1LineItem.createMany({
+        data: lineItemsToCreate.map((item) => ({
+          kDocumentId: kDocument.id,
+          boxKey: item.boxKey,
+          amount: item.amount,
+          textValue: item.textValue,
+          rawText: item.rawText,
+          confidence: item.confidence,
+          sourcePage: item.sourcePage,
+          sourceCoords: item.sourceCoords,
+          isUserEdited: item.isUserEdited,
+          isSuperseded: false
+        }))
+      });
+
+      this.logger.log(
+        `Session ${sessionId}: Created ${lineItemsToCreate.length} K1LineItem rows for KDocument ${kDocument.id}`
+      );
+
+      // Emit event to refresh materialized views (US5)
+      this.eventEmitter.emit('k-document.changed', {
+        kDocumentId: kDocument.id,
+        partnershipId: kDocument.partnershipId
       });
     }
 
@@ -687,12 +830,26 @@ export class K1ImportService {
     );
 
     // FR-014: Create Distribution records for Box 19a and Box 19b
+    // Fallback: if 19a/19b are empty, use box 19 total or L_WITHDRAWALS
     const distributions: any[] = [];
     const distributionDate = new Date(session.taxYear, 11, 31); // Dec 31
 
     for (const allocation of allocations) {
       // Box 19a: Cash and marketable securities
-      const box19a = allocation.allocatedValues['19a'];
+      let box19a = allocation.allocatedValues['19a'];
+      const box19b = allocation.allocatedValues['19b'];
+
+      // Fallback: if 19a and 19b are both empty, use box 19 total or L_WITHDRAWALS as cash distribution
+      if ((!box19a || box19a === 0) && (!box19b || box19b === 0)) {
+        const box19Total = allocation.allocatedValues['19'];
+        const lWithdrawals = allocation.allocatedValues['L_WITHDRAWALS'];
+        if (box19Total && box19Total !== 0) {
+          box19a = box19Total;
+        } else if (lWithdrawals && lWithdrawals !== 0) {
+          box19a = lWithdrawals;
+        }
+      }
+
       if (box19a && box19a !== 0) {
         const dist = await this.prismaService.distribution.create({
           data: {
@@ -709,7 +866,6 @@ export class K1ImportService {
       }
 
       // Box 19b: Other property distributions
-      const box19b = allocation.allocatedValues['19b'];
       if (box19b && box19b !== 0) {
         const dist = await this.prismaService.distribution.create({
           data: {
@@ -723,6 +879,88 @@ export class K1ImportService {
           }
         });
         distributions.push(dist);
+      }
+    }
+
+    // AUTO-POPULATE: Update PartnershipMembership capital fields from K-1 Section L
+    // This drives Portfolio Summary (DPI/RVPI/TVPI) computations
+    const sectionLData = {
+      beginningCapital: boxValues['L_BEG_CAPITAL'] ?? null,
+      capitalContributed: boxValues['L_CAPITAL_CONTRIBUTED'] ?? null,
+      endingCapital: boxValues['L_END_CAPITAL'] ?? null,
+      withdrawals: boxValues['L_WITHDRAWALS'] ?? null
+    };
+
+    if (sectionLData.beginningCapital !== null || sectionLData.capitalContributed !== null) {
+      for (const allocation of allocations) {
+        const pct = allocation.ownershipPercent / 100;
+
+        // Compute capitalContributed: beginning + any current year contributions
+        const contributed = sectionLData.beginningCapital !== null
+          ? Math.round((sectionLData.beginningCapital + (sectionLData.capitalContributed ?? 0)) * pct * 100) / 100
+          : null;
+
+        // Compute capitalCommitment: use ending capital as a conservative estimate if not set
+        const commitment = sectionLData.endingCapital !== null
+          ? Math.round(sectionLData.endingCapital * pct * 100) / 100
+          : null;
+
+        try {
+          await this.prismaService.partnershipMembership.updateMany({
+            where: {
+              partnershipId: session.partnershipId,
+              entityId: allocation.entityId,
+              endDate: null
+            },
+            data: {
+              ...(contributed !== null ? { capitalContributed: contributed } : {}),
+              ...(commitment !== null ? { capitalCommitment: commitment } : {})
+            }
+          });
+          this.logger.log(
+            `Auto-populated capital for entity ${allocation.entityName}: contributed=${contributed}, commitment=${commitment}`
+          );
+        } catch (error) {
+          this.logger.warn(
+            `Failed to update membership capital for ${allocation.entityName}: ${error.message}`
+          );
+        }
+      }
+    }
+
+    // AUTO-POPULATE: Create/update PartnershipValuation from K-1 Section L ending capital
+    // This drives Dashboard AUM and RVPI calculations
+    if (sectionLData.endingCapital !== null) {
+      const valuationDate = new Date(session.taxYear, 11, 31); // Dec 31
+
+      try {
+        await this.prismaService.partnershipValuation.upsert({
+          where: {
+            partnershipId_date: {
+              partnershipId: session.partnershipId,
+              date: valuationDate
+            }
+          },
+          create: {
+            partnershipId: session.partnershipId,
+            date: valuationDate,
+            nav: sectionLData.endingCapital,
+            source: 'NAV_STATEMENT',
+            notes: `Auto-created from K-1 Section L ending capital account — Tax Year ${session.taxYear}`
+          },
+          update: {
+            nav: sectionLData.endingCapital,
+            source: 'NAV_STATEMENT',
+            notes: `Auto-updated from K-1 Section L ending capital account — Tax Year ${session.taxYear}`
+          }
+        });
+        this.logger.log(
+          `Auto-created PartnershipValuation: partnership=${session.partnershipId}, date=${valuationDate.toISOString()}, nav=${sectionLData.endingCapital}`
+        );
+      } catch (error) {
+        this.logger.warn(
+          `Failed to create partnership valuation: ${error.message}`
+        );
       }
     }
 

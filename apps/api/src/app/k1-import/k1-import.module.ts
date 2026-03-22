@@ -8,7 +8,7 @@ import { existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CellMappingModule } from '../cell-mapping/cell-mapping.module';
+import { K1BoxDefinitionModule } from '../k1-box-definition/k1-box-definition.module';
 import { UploadModule } from '../upload/upload.module';
 import { K1ImportController } from './k1-import.controller';
 import { K1ImportService } from './k1-import.service';
@@ -16,6 +16,7 @@ import { K1AggregationService } from './k1-aggregation.service';
 import { K1AllocationService } from './k1-allocation.service';
 import { K1ConfidenceService } from './k1-confidence.service';
 import { K1FieldMapperService } from './k1-field-mapper.service';
+import { K1MaterializedViewService } from './k1-materialized-view.service';
 import { AzureExtractor } from './extractors/azure-extractor';
 import { PdfParseExtractor } from './extractors/pdf-parse-extractor';
 import { TesseractExtractor } from './extractors/tesseract-extractor';
@@ -26,8 +27,8 @@ const uploadDir = process.env.UPLOAD_DIR || join(process.cwd(), 'uploads');
   controllers: [K1ImportController],
   exports: [K1ImportService],
   imports: [
-    CellMappingModule,
     ConfigurationModule,
+    K1BoxDefinitionModule,
     MulterModule.register({
       limits: {
         fileSize: 25 * 1024 * 1024 // 25 MB
@@ -61,6 +62,7 @@ const uploadDir = process.env.UPLOAD_DIR || join(process.cwd(), 'uploads');
     K1ConfidenceService,
     K1FieldMapperService,
     K1ImportService,
+    K1MaterializedViewService,
     PdfParseExtractor,
     TesseractExtractor
   ]

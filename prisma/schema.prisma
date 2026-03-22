@@ -472,8 +472,7 @@ model Partnership {
   kDocuments       KDocument[]
   documents        Document[]
   importSessions   K1ImportSession[]
-  cellMappings     CellMapping[]
-  aggregationRules CellAggregationRule[]
+  boxOverrides     K1BoxOverride[]
 
   @@index([name])
   @@index([type])
@@ -547,15 +546,14 @@ model KDocument {
   type                  KDocumentType
   taxYear               Int
   filingStatus          KDocumentStatus @default(DRAFT)
-  data                  Json
-  previousData          Json?
-  previousFilingStatus  KDocumentStatus?
+  data                  Json?
   documentFileId        String?
   documentFile          Document?       @relation(fields: [documentFileId], references: [id])
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt
 
   importSession K1ImportSession?
+  lineItems     K1LineItem[]
 
   @@unique([partnershipId, type, taxYear])
   @@index([partnershipId])
@@ -656,7 +654,6 @@ model K1ImportSession {
   fileSize         Int
   extractionMethod String
   rawExtraction    Json?
-  verifiedData     Json?
   documentId       String?
   document         Document?      @relation(fields: [documentId], references: [id])
   kDocumentId      String?        @unique
@@ -669,35 +666,72 @@ model K1ImportSession {
   @@index([userId])
 }
 
-model CellMapping {
-  id            String       @id @default(uuid())
-  partnershipId String?
-  partnership   Partnership? @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
-  boxNumber     String
-  label         String
-  description   String?
-  cellType      String       @default("number")
-  isCustom      Boolean      @default(false)
-  isIgnored     Boolean      @default(false)
-  sortOrder     Int
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+/// Global IRS K-1 box reference. One row per unique box identifier.
+/// Replaces the global (partnershipId = null) CellMapping rows.
+/// NOTE: COMMENT ON annotations added in migration SQL for LLM discoverability.
+model K1BoxDefinition {
+  boxKey      String   @id @map("box_key")
+  label       String
+  section     String?
+  dataType    String   @default("number") @map("data_type")
+  sortOrder   Int      @map("sort_order")
+  irsFormLine String?  @map("irs_form_line")
+  description String?
+  isCustom    Boolean  @default(false) @map("is_custom")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  @@unique([partnershipId, boxNumber])
+  lineItems   K1LineItem[]
+  overrides   K1BoxOverride[]
+
+  @@map("k1_box_definition")
+  @@index([section])
+  @@index([sortOrder])
+}
+
+/// Per-partnership display overrides for a K1BoxDefinition.
+/// Controls custom labels, ignored status, etc. Does NOT affect data integrity.
+/// Replaces the per-partnership (partnershipId != null) CellMapping rows.
+model K1BoxOverride {
+  id            String          @id @default(uuid())
+  boxKey        String          @map("box_key")
+  boxDefinition K1BoxDefinition @relation(fields: [boxKey], references: [boxKey], onDelete: Cascade)
+  partnershipId String          @map("partnership_id")
+  partnership   Partnership     @relation(fields: [partnershipId], references: [id], onDelete: Cascade)
+  customLabel   String?         @map("custom_label")
+  isIgnored     Boolean         @default(false) @map("is_ignored")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  @@unique([boxKey, partnershipId])
+  @@map("k1_box_override")
   @@index([partnershipId])
 }
 
-model CellAggregationRule {
-  id            String       @id @default(uuid())
-  partnershipId String?
-  partnership   Partnership? @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
-  name          String
-  operation     String       @default("SUM")
-  sourceCells   Json
-  sortOrder     Int
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+/// Individual financial line item from an IRS Schedule K-1.
+/// Fact table: one row per box per K-1 document.
+/// NOTE: Partial unique index "k1_line_item_active_unique" on (k_document_id, box_key)
+/// WHERE is_superseded = false — managed in migration SQL, not expressible in Prisma.
+model K1LineItem {
+  id            String          @id @default(uuid())
+  kDocumentId   String          @map("k_document_id")
+  kDocument     KDocument       @relation(fields: [kDocumentId], references: [id], onDelete: Cascade)
+  boxKey        String          @map("box_key")
+  boxDefinition K1BoxDefinition @relation(fields: [boxKey], references: [boxKey])
+  amount        Decimal?        @db.Decimal(15, 6)
+  textValue     String?         @map("text_value")
+  rawText       String?         @map("raw_text")
+  confidence    Decimal?        @db.Decimal(3, 2)
+  sourcePage    Int?            @map("source_page")
+  sourceCoords  Json?           @map("source_coords")
+  isUserEdited  Boolean         @default(false) @map("is_user_edited")
+  isSuperseded  Boolean         @default(false) @map("is_superseded")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
 
-  @@unique([partnershipId, name])
-  @@index([partnershipId])
+  @@map("k1_line_item")
+  @@index([kDocumentId, boxKey])
+  @@index([kDocumentId])
+  @@index([boxKey])
+  @@index([isSuperseded])
 }

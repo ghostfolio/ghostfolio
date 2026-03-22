@@ -66,6 +66,10 @@ export class K1ExtractedFieldDto {
   @IsOptional()
   @IsBoolean()
   isCheckbox?: boolean;
+
+  @IsOptional()
+  @IsString()
+  cellType?: string;
 }
 
 export class K1UnmappedItemDto {

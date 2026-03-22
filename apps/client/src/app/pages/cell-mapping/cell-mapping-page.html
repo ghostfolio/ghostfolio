@@ -1,207 +1,111 @@
 <div class="container">
-  <h1>Cell Mapping Configuration</h1>
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center">
+        Cell Mapping — K-1 Box Definitions
+      </h1>
 
-  @if (error) {
-    <div class="alert alert-error">{{ error }}</div>
-  }
-  @if (successMessage) {
-    <div class="alert alert-success">{{ successMessage }}</div>
-  }
+      @if (error) {
+        <div class="alert alert-danger mb-3">{{ error }}</div>
+      }
 
-  <!-- Partnership Selector -->
-  <section class="partnership-selector">
-    <mat-form-field appearance="outline">
-      <mat-label>Partnership</mat-label>
-      <mat-select [(ngModel)]="selectedPartnershipId" (selectionChange)="onPartnershipChange()">
-        @for (p of partnerships; track p.id) {
-          <mat-option [value]="p.id">{{ p.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </section>
+      <!-- Aggregation Rules Section -->
+      <section class="mb-5">
+        <h2 class="h5 mb-3">Aggregation Rules</h2>
+        <p class="text-muted mb-3">
+          These rules define how individual K-1 box values are combined into summary totals
+          shown on the verification and K-Document detail pages.
+        </p>
 
-  @if (selectedPartnershipId) {
-    <!-- Cell Mappings -->
-    <section class="cell-mappings">
-      <h2>Cell Mappings</h2>
+        <table mat-table [dataSource]="aggregationRules" class="w-100 rules-table">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Rule Name</th>
+            <td mat-cell *matCellDef="let rule">
+              <strong>{{ rule.name }}</strong>
+            </td>
+          </ng-container>
 
-      <table mat-table [dataSource]="mappings" class="mappings-table">
-        <!-- Box Number -->
-        <ng-container matColumnDef="boxNumber">
-          <th mat-header-cell *matHeaderCellDef>Box #</th>
-          <td mat-cell *matCellDef="let row">{{ row.boxNumber }}</td>
-        </ng-container>
+          <ng-container matColumnDef="operation">
+            <th mat-header-cell *matHeaderCellDef>Operation</th>
+            <td mat-cell *matCellDef="let rule">
+              <span class="op-badge">{{ rule.operation }}</span>
+            </td>
+          </ng-container>
 
-        <!-- Label -->
-        <ng-container matColumnDef="label">
-          <th mat-header-cell *matHeaderCellDef>Label</th>
-          <td mat-cell *matCellDef="let row">
-            @if (row.isEditing) {
-              <input class="cell-input" [(ngModel)]="row.editLabel" />
-            } @else {
-              {{ row.label }}
-            }
-          </td>
-        </ng-container>
-
-        <!-- Description -->
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef>Description</th>
-          <td mat-cell *matCellDef="let row">
-            @if (row.isEditing) {
-              <input class="cell-input" [(ngModel)]="row.editDescription" />
-            } @else {
-              {{ row.description }}
-            }
-          </td>
-        </ng-container>
-
-        <!-- Is Custom -->
-        <ng-container matColumnDef="isCustom">
-          <th mat-header-cell *matHeaderCellDef>Custom</th>
-          <td mat-cell *matCellDef="let row">
-            @if (row.isCustom) {
-              <mat-icon class="custom-badge" matTooltip="Partnership-specific override">star</mat-icon>
-            }
-          </td>
-        </ng-container>
-
-        <!-- Cell Type -->
-        <ng-container matColumnDef="cellType">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
-          <td mat-cell *matCellDef="let row">
-            @if (row.isEditing) {
-              <mat-select class="type-select" [(ngModel)]="row.editCellType">
-                @for (opt of cellTypeOptions; track opt.value) {
-                  <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+          <ng-container matColumnDef="sourceBoxKeys">
+            <th mat-header-cell *matHeaderCellDef>Source Boxes</th>
+            <td mat-cell *matCellDef="let rule">
+              <div class="box-chips">
+                @for (key of rule.sourceBoxKeys; track key) {
+                  <span class="box-chip"
+                        [matTooltip]="getBoxLabel(key)">
+                    {{ key }}
+                  </span>
                 }
-              </mat-select>
-            } @else {
-              <span class="type-badge type-{{ row.cellType }}">{{ row.cellType }}</span>
-            }
-          </td>
-        </ng-container>
+              </div>
+            </td>
+          </ng-container>
 
-        <!-- Is Ignored -->
-        <ng-container matColumnDef="isIgnored">
-          <th mat-header-cell *matHeaderCellDef>Ignored</th>
-          <td mat-cell *matCellDef="let row">
-            <mat-checkbox
-              [checked]="row.isIgnored"
-              (change)="toggleIgnored(row)"
-              matTooltip="Ignored fields are excluded from scan results">
-            </mat-checkbox>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="sortOrder">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let rule">{{ rule.sortOrder }}</td>
+          </ng-container>
 
-        <!-- Actions -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let row; let i = index">
-            @if (row.isEditing) {
-              <button mat-icon-button (click)="saveEditMapping(row)" matTooltip="Save">
-                <mat-icon>check</mat-icon>
-              </button>
-              <button mat-icon-button (click)="cancelEditMapping(row)" matTooltip="Cancel">
-                <mat-icon>close</mat-icon>
-              </button>
-            } @else {
-              <button mat-icon-button (click)="startEditMapping(row)" matTooltip="Edit">
-                <mat-icon>edit</mat-icon>
-              </button>
-              @if (row.isCustom) {
-                <button mat-icon-button (click)="removeMapping(i)" matTooltip="Remove">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              }
-            }
-          </td>
-        </ng-container>
+          <tr mat-header-row *matHeaderRowDef="ruleColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: ruleColumns;"></tr>
+        </table>
+      </section>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-
-      <!-- Add Custom Cell -->
-      <div class="add-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Box #</mat-label>
-          <input matInput [(ngModel)]="newBoxNumber" placeholder="e.g. 20c" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Label</mat-label>
-          <input matInput [(ngModel)]="newLabel" placeholder="e.g. Other deductions" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Type</mat-label>
-          <mat-select [(ngModel)]="newCellType">
-            @for (opt of cellTypeOptions; track opt.value) {
-              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      <!-- Box Definitions Section -->
+      <section class="mb-5">
+        <div class="d-flex align-items-center flex-wrap gap-3 mb-3">
+          <h2 class="h5 mb-0">IRS K-1 Box Definitions</h2>
+          <mat-select
+            [(value)]="filterSection"
+            placeholder="All Sections"
+            class="section-filter"
+          >
+            <mat-option [value]="null">All Sections</mat-option>
+            @for (section of sections; track section) {
+              <mat-option [value]="section">{{ getSectionLabel(section) }}</mat-option>
             }
           </mat-select>
-        </mat-form-field>
-        <button mat-stroked-button (click)="addCustomCell()" [disabled]="!newBoxNumber || !newLabel">
-          <mat-icon>add</mat-icon> Add Custom Cell
-        </button>
-      </div>
-
-      <!-- Mapping Actions -->
-      <div class="mapping-actions">
-        <button mat-flat-button color="primary" (click)="saveMappings()" [disabled]="isSaving">
-          Save Mappings
-        </button>
-        <button mat-stroked-button color="warn" (click)="resetToDefaults()">
-          Reset to IRS Defaults
-        </button>
-      </div>
-    </section>
-
-    <!-- Aggregation Rules -->
-    <section class="aggregation-rules">
-      <h2>Aggregation Rules</h2>
-
-      @if (aggregationRules.length === 0) {
-        <p class="empty-state">No aggregation rules configured.</p>
-      }
-
-      @for (rule of aggregationRules; track rule.name; let i = $index) {
-        <div class="rule-card">
-          <div class="rule-header">
-            <strong>{{ rule.name }}</strong>
-            <span class="rule-operation">{{ rule.operation }}</span>
-            <button mat-icon-button (click)="removeAggregationRule(i)" matTooltip="Remove rule">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-          <div class="rule-source-cells">
-            Source cells:
-            @for (cell of rule.sourceCells; track cell) {
-              <span class="cell-chip">{{ cell }}</span>
-            }
-          </div>
         </div>
-      }
 
-      <!-- Add Aggregation Rule -->
-      <div class="add-rule-row">
-        <mat-form-field appearance="outline">
-          <mat-label>Rule Name</mat-label>
-          <input matInput [(ngModel)]="newRuleName" placeholder="e.g. Total Income" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Source Cells (comma-separated)</mat-label>
-          <input matInput [(ngModel)]="newRuleSourceCells" placeholder="e.g. 1, 2, 3, 4a" />
-        </mat-form-field>
-        <button mat-stroked-button (click)="addAggregationRule()" [disabled]="!newRuleName || !newRuleSourceCells">
-          <mat-icon>add</mat-icon> Add Rule
-        </button>
-      </div>
+        <p class="text-muted mb-3">
+          These are the {{ filteredDefinitions.length }} IRS-standard box definitions
+          used to parse and label K-1 form data.
+        </p>
 
-      <div class="rule-actions">
-        <button mat-flat-button color="primary" (click)="saveAggregationRules()" [disabled]="isSaving">
-          Save Rules
-        </button>
-      </div>
-    </section>
-  }
+        <table mat-table [dataSource]="filteredDefinitions" class="w-100 defs-table">
+          <ng-container matColumnDef="boxKey">
+            <th mat-header-cell *matHeaderCellDef>Box Key</th>
+            <td mat-cell *matCellDef="let def">
+              <code class="box-key">{{ def.boxKey }}</code>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="label">
+            <th mat-header-cell *matHeaderCellDef>Label</th>
+            <td mat-cell *matCellDef="let def">{{ def.label }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="section">
+            <th mat-header-cell *matHeaderCellDef>Section</th>
+            <td mat-cell *matCellDef="let def">
+              <span class="section-badge">{{ getSectionLabel(def.section) }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dataType">
+            <th mat-header-cell *matHeaderCellDef>Data Type</th>
+            <td mat-cell *matCellDef="let def">{{ def.dataType }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="boxColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: boxColumns;"></tr>
+        </table>
+      </section>
+    </div>
+  </div>
 </div>

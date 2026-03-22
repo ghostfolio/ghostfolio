@@ -55,6 +55,14 @@ import type {
   K1Data
 } from './k-document.interface';
 import type {
+  K1BoxDataType,
+  K1BoxDefinition,
+  K1BoxDefinitionResolved,
+  K1BoxOverride,
+  K1BoxSection,
+  CreateK1BoxOverrideDto
+} from './k1-box-definition.interface';
+import type {
   K1AggregationResult,
   K1ConfirmationRequest,
   K1ExtractionResult,
@@ -62,6 +70,15 @@ import type {
   K1ImportSessionSummary,
   K1UnmappedItem
 } from './k1-import.interface';
+import type {
+  CreateK1LineItemDto,
+  K1LineItem,
+  K1LineItemAggregationResult,
+  K1LineItemWithDefinition,
+  K1PartnershipYearSummary,
+  K1SourceCoordinates,
+  K1SupersedeResult
+} from './k1-line-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
@@ -201,11 +218,24 @@ export {
   IKDocumentAllocation,
   IOwnership,
   K1AggregationResult,
+  K1BoxDataType,
+  K1BoxDefinition,
+  K1BoxDefinitionResolved,
+  K1BoxOverride,
+  K1BoxSection,
   K1ConfirmationRequest,
   K1ExtractionResult,
   K1ExtractedField,
   K1ImportSessionSummary,
+  K1LineItem,
+  K1LineItemAggregationResult,
+  K1LineItemWithDefinition,
+  K1PartnershipYearSummary,
+  K1SourceCoordinates,
+  K1SupersedeResult,
   K1UnmappedItem,
+  CreateK1BoxOverrideDto,
+  CreateK1LineItemDto,
   IPartnership,
   IPartnershipAsset,
   IPartnershipDetail,

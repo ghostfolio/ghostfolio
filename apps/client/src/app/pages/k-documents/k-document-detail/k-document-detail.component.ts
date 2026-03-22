@@ -1,6 +1,4 @@
 import { FamilyOfficeDataService } from '@ghostfolio/client/services/family-office-data.service';
-import { K1ImportDataService } from '@ghostfolio/client/services/k1-import-data.service';
-import { K1AggregationResult } from '@ghostfolio/common/interfaces/k1-import.interface';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -35,7 +33,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   templateUrl: './k-document-detail.html'
 })
 export class KDocumentDetailComponent implements OnInit {
-  public aggregations: K1AggregationResult[] = [];
+  public aggregations: Array<{ name: string; value: number }> = [];
   public boxColumns = ['boxNumber', 'value'];
   public boxData: Array<{ boxNumber: string; value: number | string | null }> = [];
   public error: string | null = null;
@@ -62,7 +60,6 @@ export class KDocumentDetailComponent implements OnInit {
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly destroyRef: DestroyRef,
     private readonly familyOfficeDataService: FamilyOfficeDataService,
-    private readonly k1ImportDataService: K1ImportDataService,
     private readonly router: Router
   ) {}
 
@@ -71,7 +68,6 @@ export class KDocumentDetailComponent implements OnInit {
 
     if (this.kDocumentId) {
       this.loadKDocument();
-      this.loadAggregations();
     }
   }
 
@@ -101,23 +97,6 @@ export class KDocumentDetailComponent implements OnInit {
         },
         error: () => {
           this.error = 'Failed to load K-Document.';
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  private loadAggregations(): void {
-    this.k1ImportDataService
-      .computeAggregations({ kDocumentId: this.kDocumentId })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (aggregations) => {
-          this.aggregations = aggregations;
-          this.changeDetectorRef.markForCheck();
-        },
-        error: () => {
-          // Aggregations may not be configured yet
-          this.aggregations = [];
           this.changeDetectorRef.markForCheck();
         }
       });

@@ -195,54 +195,71 @@ const K1_SECTIONS: K1Section[] = [
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
 
       /* Collapsible sections */
       .k1-section {
-        margin-bottom: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        border-radius: 8px;
-        overflow: hidden;
+        margin-bottom: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        background: #fff;
+        transition: box-shadow 0.2s;
+      }
+
+      .k1-section:hover {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
       }
 
       .section-header {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 16px;
-        background: rgba(0, 0, 0, 0.03);
+        gap: 12px;
+        padding: 14px 20px;
+        background: transparent;
         cursor: pointer;
         user-select: none;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 15px;
+        letter-spacing: -0.01em;
+        color: rgba(0, 0, 0, 0.82);
         transition: background 0.15s;
       }
 
       .section-header:hover {
-        background: rgba(0, 0, 0, 0.06);
+        background: rgba(0, 0, 0, 0.025);
       }
 
       .section-header mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        transition: transform 0.2s;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        flex-shrink: 0;
+        color: rgba(0, 0, 0, 0.45);
+        transition: transform 0.2s ease;
       }
 
       .section-header mat-icon.expanded {
         transform: rotate(90deg);
       }
 
+      .section-header .section-title {
+        flex: 1;
+        min-width: 0;
+      }
+
       .section-header .section-desc {
         font-weight: 400;
         font-size: 12px;
-        color: rgba(0, 0, 0, 0.5);
+        color: rgba(0, 0, 0, 0.45);
         margin-left: auto;
+        flex-shrink: 0;
       }
 
       .section-body {
-        padding: 12px 16px 4px;
+        padding: 4px 20px 16px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
       }
 
       /* Two-column grid */
@@ -263,15 +280,15 @@ const K1_SECTIONS: K1Section[] = [
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 4px 0;
-        min-height: 34px;
+        padding: 5px 0;
+        min-height: 36px;
       }
 
       .field-label {
         flex: 1 1 auto;
         font-size: 13px;
-        color: rgba(0, 0, 0, 0.72);
-        line-height: 1.3;
+        color: rgba(0, 0, 0, 0.7);
+        line-height: 1.35;
         min-width: 0;
       }
 
@@ -284,20 +301,21 @@ const K1_SECTIONS: K1Section[] = [
       .field-input input {
         width: 100%;
         box-sizing: border-box;
-        padding: 5px 8px;
+        padding: 6px 10px;
         font-size: 13px;
         font-family: 'Roboto Mono', monospace;
-        border: 1px solid rgba(0, 0, 0, 0.18);
-        border-radius: 4px;
-        background: transparent;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.015);
         outline: none;
         text-align: right;
-        transition: border-color 0.15s;
+        transition: border-color 0.15s, box-shadow 0.15s;
       }
 
       .field-input input:focus {
         border-color: #1976d2;
-        box-shadow: 0 0 0 1px #1976d2;
+        box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.12);
+        background: #fff;
       }
 
       .field-input input.text-input {
@@ -307,30 +325,31 @@ const K1_SECTIONS: K1Section[] = [
 
       .field-input .unit-suffix {
         font-size: 12px;
-        color: rgba(0, 0, 0, 0.45);
-        margin-left: 3px;
+        color: rgba(0, 0, 0, 0.4);
+        margin-left: 4px;
         flex-shrink: 0;
       }
 
       .field-input .unit-prefix {
         font-size: 12px;
-        color: rgba(0, 0, 0, 0.45);
-        margin-right: 3px;
+        color: rgba(0, 0, 0, 0.4);
+        margin-right: 4px;
         flex-shrink: 0;
       }
 
       .field-input input.is-zero {
-        color: rgba(0, 0, 0, 0.3);
+        color: rgba(0, 0, 0, 0.28);
       }
 
       /* Checkbox row */
       .field-row-checkbox {
         cursor: pointer;
+        padding: 4px 0;
       }
 
       .field-row-checkbox .cb-label {
         font-size: 13px;
-        color: rgba(0, 0, 0, 0.72);
+        color: rgba(0, 0, 0, 0.7);
       }
 
       /* Footer */
@@ -338,8 +357,8 @@ const K1_SECTIONS: K1Section[] = [
         display: flex;
         justify-content: flex-end;
         gap: 8px;
-        margin-top: 20px;
-        padding-top: 12px;
+        margin-top: 24px;
+        padding-top: 16px;
         border-top: 1px solid rgba(0, 0, 0, 0.08);
       }
     `
@@ -360,7 +379,7 @@ const K1_SECTIONS: K1Section[] = [
       <div class="k1-section">
         <div class="section-header" (click)="section.collapsed = !section.collapsed">
           <mat-icon [class.expanded]="!section.collapsed">chevron_right</mat-icon>
-          <span>{{ section.title }}</span>
+          <span class="section-title">{{ section.title }}</span>
           @if (section.description) {
             <span class="section-desc">{{ section.description }}</span>
           }
