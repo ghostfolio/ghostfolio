@@ -25,11 +25,13 @@ import { StatusCodes } from 'http-status-codes';
 import { ConfirmK1Dto } from './dto/confirm-k1.dto';
 import { VerifyK1Dto } from './dto/verify-k1.dto';
 import { K1ImportService } from './k1-import.service';
+import { K1MaterializedViewService } from './k1-materialized-view.service';
 
 @Controller('k1-import')
 export class K1ImportController {
   public constructor(
     private readonly k1ImportService: K1ImportService,
+    private readonly k1MaterializedViewService: K1MaterializedViewService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -134,5 +136,22 @@ export class K1ImportController {
     @Body() data: ConfirmK1Dto
   ) {
     return this.k1ImportService.confirm(id, this.request.user.id, data);
+  }
+
+  /**
+   * GET /api/v1/k1-import/summary/:partnershipId/:taxYear
+   * Get partnership-year K-1 summary from materialized view.
+   */
+  @HasPermission(permissions.readKDocument)
+  @Get('summary/:partnershipId/:taxYear')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getPartnershipYearSummary(
+    @Param('partnershipId') partnershipId: string,
+    @Param('taxYear') taxYear: string
+  ) {
+    return this.k1MaterializedViewService.getPartnershipYearSummary(
+      partnershipId,
+      parseInt(taxYear, 10)
+    );
   }
 }

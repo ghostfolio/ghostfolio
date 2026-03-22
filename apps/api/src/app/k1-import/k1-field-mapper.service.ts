@@ -2,33 +2,33 @@ import type { K1ExtractedField, K1ExtractionResult, K1UnmappedItem } from '@ghos
 
 import { Injectable, Logger } from '@nestjs/common';
 
-import { CellMappingService } from '../cell-mapping/cell-mapping.service';
+import { K1BoxDefinitionService } from '../k1-box-definition/k1-box-definition.service';
 import { K1ConfidenceService } from './k1-confidence.service';
 
 /**
- * Maps raw extraction results to K-1 box fields using cell mapping configuration.
- * Applies labels from cell mappings, scoring, and auto-review logic.
+ * Maps raw extraction results to K-1 box fields using K1BoxDefinition reference data.
+ * Applies labels from box definitions, scoring, and auto-review logic.
  */
 @Injectable()
 export class K1FieldMapperService {
   private readonly logger = new Logger(K1FieldMapperService.name);
 
   public constructor(
-    private readonly cellMappingService: CellMappingService,
+    private readonly k1BoxDefinitionService: K1BoxDefinitionService,
     private readonly confidenceService: K1ConfidenceService
   ) {}
 
   /**
-   * Map raw extraction results to fully labeled K1ExtractedFields using cell mappings.
-   * Also identifies unmapped items (extracted values that don't match any cell mapping).
+   * Map raw extraction results to fully labeled K1ExtractedFields using box definitions.
+   * Also identifies unmapped items (extracted values that don't match any box definition).
    */
   public async mapFields(
     extractionResult: K1ExtractionResult,
     partnershipId: string
   ): Promise<K1ExtractionResult> {
-    // Load cell mappings for this partnership (with global fallback)
-    const mappings = await this.cellMappingService.getMappings(partnershipId);
-    const mappingMap = new Map(mappings.map((m) => [m.boxNumber, m]));
+    // Load resolved box definitions for this partnership (with overrides applied)
+    const definitions = await this.k1BoxDefinitionService.resolve(partnershipId);
+    const defMap = new Map(definitions.map((d) => [d.boxKey, d]));
 
     const mappedFields: K1ExtractedField[] = [];
     const unmappedItems: K1UnmappedItem[] = [
@@ -36,26 +36,19 @@ export class K1FieldMapperService {
     ];
 
     for (const field of extractionResult.fields) {
-      const mapping = mappingMap.get(field.boxNumber);
+      const def = defMap.get(field.boxNumber);
 
-      if (mapping) {
-        // Skip ignored fields — they are filtered out of extraction results
-        if (mapping.isIgnored) {
-          this.logger.debug(
-            `Skipping ignored field: box ${field.boxNumber}`
-          );
-          continue;
-        }
-
+      if (def) {
         mappedFields.push({
           ...field,
-          label: mapping.label,
-          cellType: mapping.cellType
+          label: def.label,
+          customLabel: def.customLabel ?? field.customLabel,
+          cellType: def.dataType
         } as any);
       } else {
-        // Field has a box number but no corresponding cell mapping
+        // Field has a box number but no corresponding box definition
         this.logger.debug(
-          `No cell mapping for box ${field.boxNumber}, adding to unmapped items`
+          `No box definition for box ${field.boxNumber}, adding to unmapped items`
         );
         unmappedItems.push({
           rawLabel: field.label || `Box ${field.boxNumber}`,
@@ -69,10 +62,10 @@ export class K1FieldMapperService {
       }
     }
 
-    // Sort mapped fields by the cell mapping sort order
+    // Sort mapped fields by the box definition sort order
     const sortedFields = mappedFields.sort((a, b) => {
-      const sortA = mappingMap.get(a.boxNumber)?.sortOrder ?? 999;
-      const sortB = mappingMap.get(b.boxNumber)?.sortOrder ?? 999;
+      const sortA = defMap.get(a.boxNumber)?.sortOrder ?? 999;
+      const sortB = defMap.get(b.boxNumber)?.sortOrder ?? 999;
       return sortA - sortB;
     });
 
@@ -98,36 +91,31 @@ export class K1FieldMapperService {
   }
 
   /**
-   * Add any mapped cell mapping boxes that were NOT extracted as zero-value fields.
+   * Add any box definitions that were NOT extracted as zero-value fields.
    * This ensures the verification screen shows all expected K-1 boxes.
    */
   public async fillMissingBoxes(
     result: K1ExtractionResult,
     partnershipId: string
   ): Promise<K1ExtractionResult> {
-    const mappings = await this.cellMappingService.getMappings(partnershipId);
+    const definitions = await this.k1BoxDefinitionService.resolve(partnershipId);
     const existingBoxes = new Set(result.fields.map((f) => f.boxNumber));
 
     const missingFields: K1ExtractedField[] = [];
 
-    for (const mapping of mappings) {
-      // Skip ignored mappings — don't generate empty placeholder rows
-      if (mapping.isIgnored) {
-        continue;
-      }
-
-      if (!existingBoxes.has(mapping.boxNumber)) {
+    for (const def of definitions) {
+      if (!existingBoxes.has(def.boxKey)) {
         missingFields.push({
-          boxNumber: mapping.boxNumber,
-          label: mapping.label,
-          customLabel: null,
+          boxNumber: def.boxKey,
+          label: def.label,
+          customLabel: def.customLabel ?? null,
           rawValue: '',
           numericValue: null,
           confidence: 1.0, // Empty fields have full confidence
           confidenceLevel: 'HIGH',
           isUserEdited: false,
           isReviewed: true, // No review needed for empty fields
-          cellType: mapping.cellType
+          cellType: def.dataType
         } as any);
       }
     }

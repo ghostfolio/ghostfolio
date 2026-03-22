@@ -1,6 +1,5 @@
 import type {
-  K1ImportSessionSummary,
-  K1AggregationResult
+  K1ImportSessionSummary
 } from '@ghostfolio/common/interfaces';
 import type {
   ConfirmK1ImportDto,
@@ -96,117 +95,29 @@ export class K1ImportDataService {
     return this.http.post(`/api/v1/k1-import/${sessionId}/reprocess`, {});
   }
 
-  // ── Cell Mapping Endpoints ───────────────────────────────────────
+  // ── K1 Box Definition Endpoints ─────────────────────────────────
 
   /**
-   * Get cell mappings for a partnership (with global defaults).
-   * GET /api/v1/cell-mapping
+   * Fetch all K1 box definitions (IRS reference data).
+   * GET /api/v1/k1/box-definitions
    */
-  public fetchCellMappings(partnershipId?: string): Observable<any[]> {
+  public fetchBoxDefinitions(section?: string): Observable<any[]> {
     let httpParams = new HttpParams();
 
-    if (partnershipId) {
-      httpParams = httpParams.set('partnershipId', partnershipId);
+    if (section) {
+      httpParams = httpParams.set('section', section);
     }
 
-    return this.http.get<any[]>('/api/v1/cell-mapping', {
+    return this.http.get<any[]>('/api/v1/k1/box-definitions', {
       params: httpParams
     });
   }
 
   /**
-   * Update or create cell mappings for a partnership.
-   * PUT /api/v1/cell-mapping
+   * Fetch all default aggregation rules.
+   * GET /api/v1/k1/box-definitions/aggregation-rules
    */
-  public updateCellMappings(data: {
-    partnershipId: string;
-    mappings: Array<{
-      boxNumber: string;
-      label: string;
-      description?: string;
-      cellType?: string;
-      isCustom: boolean;
-    }>;
-  }): Observable<any[]> {
-    return this.http.put<any[]>('/api/v1/cell-mapping', data);
-  }
-
-  /**
-   * Reset a partnership's cell mappings to IRS defaults.
-   * DELETE /api/v1/cell-mapping/reset
-   */
-  public resetCellMappings(partnershipId: string): Observable<void> {
-    const httpParams = new HttpParams().set('partnershipId', partnershipId);
-
-    return this.http.delete<void>('/api/v1/cell-mapping/reset', {
-      params: httpParams
-    });
-  }
-
-  /**
-   * Toggle the isIgnored flag for a cell mapping.
-   * PATCH /api/v1/cell-mapping/toggle-ignored
-   */
-  public toggleFieldIgnored(data: {
-    partnershipId: string;
-    boxNumber: string;
-  }): Observable<any> {
-    return this.http.patch('/api/v1/cell-mapping/toggle-ignored', data);
-  }
-
-  // ── Aggregation Rule Endpoints ───────────────────────────────────
-
-  /**
-   * Get aggregation rules for a partnership.
-   * GET /api/v1/cell-mapping/aggregation-rules
-   */
-  public fetchAggregationRules(partnershipId?: string): Observable<any[]> {
-    let httpParams = new HttpParams();
-
-    if (partnershipId) {
-      httpParams = httpParams.set('partnershipId', partnershipId);
-    }
-
-    return this.http.get<any[]>('/api/v1/cell-mapping/aggregation-rules', {
-      params: httpParams
-    });
-  }
-
-  /**
-   * Create or update aggregation rules for a partnership.
-   * PUT /api/v1/cell-mapping/aggregation-rules
-   */
-  public updateAggregationRules(data: {
-    partnershipId: string;
-    rules: Array<{
-      name: string;
-      operation: string;
-      sourceCells: string[];
-    }>;
-  }): Observable<any[]> {
-    return this.http.put<any[]>(
-      '/api/v1/cell-mapping/aggregation-rules',
-      data
-    );
-  }
-
-  /**
-   * Compute aggregation values for a specific KDocument.
-   * GET /api/v1/cell-mapping/aggregation-rules/compute
-   */
-  public computeAggregations(params: {
-    kDocumentId: string;
-    partnershipId?: string;
-  }): Observable<K1AggregationResult[]> {
-    let httpParams = new HttpParams().set('kDocumentId', params.kDocumentId);
-
-    if (params.partnershipId) {
-      httpParams = httpParams.set('partnershipId', params.partnershipId);
-    }
-
-    return this.http.get<K1AggregationResult[]>(
-      '/api/v1/cell-mapping/aggregation-rules/compute',
-      { params: httpParams }
-    );
+  public fetchAggregationRules(): Observable<any[]> {
+    return this.http.get<any[]>('/api/v1/k1/box-definitions/aggregation-rules');
   }
 }

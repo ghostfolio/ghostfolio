@@ -180,8 +180,10 @@
                         <mat-form-field class="compact-field">
                           <mat-label>Assign to box</mat-label>
                           <mat-select (selectionChange)="assignUnmappedItem(item, $event.value)">
-                            @for (box of availableBoxNumbers; track box) {
-                              <mat-option [value]="box">Box {{ box }}</mat-option>
+                            @for (def of availableBoxDefinitions; track def.boxKey) {
+                              <mat-option [value]="def.boxKey">
+                                Box {{ def.boxKey }} — {{ def.label }}
+                              </mat-option>
                             }
                           </mat-select>
                         </mat-form-field>

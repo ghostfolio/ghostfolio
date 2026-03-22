@@ -177,13 +177,6 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'cell-mapping',
-    loadChildren: () =>
-      import('./pages/cell-mapping/cell-mapping-page.routes').then(
-        (m) => m.routes
-      )
-  },
-  {
     path: 'k-documents',
     loadChildren: () =>
       import('./pages/k-documents/k-documents-page.routes').then(
@@ -194,6 +187,13 @@ export const routes: Routes = [
     path: 'k1-import',
     loadChildren: () =>
       import('./pages/k1-import/k1-import-page.routes').then(
+        (m) => m.routes
+      )
+  },
+  {
+    path: 'cell-mapping',
+    loadChildren: () =>
+      import('./pages/cell-mapping/cell-mapping-page.routes').then(
         (m) => m.routes
       )
   },
