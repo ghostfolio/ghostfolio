@@ -50,7 +50,6 @@ export class K1FieldMapperService {
         mappedFields.push({
           ...field,
           label: mapping.label,
-          customLabel: mapping.isCustom ? mapping.label : field.customLabel,
           cellType: mapping.cellType
         } as any);
       } else {
@@ -121,7 +120,7 @@ export class K1FieldMapperService {
         missingFields.push({
           boxNumber: mapping.boxNumber,
           label: mapping.label,
-          customLabel: mapping.isCustom ? mapping.label : null,
+          customLabel: null,
           rawValue: '',
           numericValue: null,
           confidence: 1.0, // Empty fields have full confidence

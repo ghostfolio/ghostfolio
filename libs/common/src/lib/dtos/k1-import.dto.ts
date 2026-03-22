@@ -53,6 +53,10 @@ export class K1ExtractedFieldDto {
 
   @IsOptional()
   @IsString()
+  cellType?: string;
+
+  @IsOptional()
+  @IsString()
   subtype?: string | null;
 
   @IsOptional()

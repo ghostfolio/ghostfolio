@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -44,7 +45,7 @@ import {
   styleUrls: ['./k1-import-page.scss'],
   templateUrl: './k1-import-page.html'
 })
-export class K1ImportPageComponent implements OnInit {
+export class K1ImportPageComponent implements OnDestroy, OnInit {
   public error: string | null = null;
   public extractionStatus: string | null = null;
   public historyColumns = ['createdAt', 'fileName', 'taxYear', 'status', 'kDocument', 'actions'];
@@ -73,6 +74,10 @@ export class K1ImportPageComponent implements OnInit {
     for (let y = currentYear; y >= currentYear - 10; y--) {
       this.taxYearOptions.push(y);
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.stopPolling();
   }
 
   public ngOnInit(): void {
@@ -125,29 +130,39 @@ export class K1ImportPageComponent implements OnInit {
   }
 
   public onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
+    let file: File | null = null;
 
-      // Client-side validation
-      if (file.type !== 'application/pdf') {
-        this.error = 'Please select a valid PDF file.';
-        this.selectedFile = null;
-        this.changeDetectorRef.markForCheck();
-        return;
+    if (event instanceof DragEvent && event.dataTransfer?.files?.length) {
+      file = event.dataTransfer.files[0];
+    } else {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+        file = input.files[0];
       }
-
-      if (file.size > 25 * 1024 * 1024) {
-        this.error = 'File exceeds 25 MB size limit.';
-        this.selectedFile = null;
-        this.changeDetectorRef.markForCheck();
-        return;
-      }
-
-      this.error = null;
-      this.selectedFile = file;
-      this.changeDetectorRef.markForCheck();
     }
+
+    if (!file) {
+      return;
+    }
+
+    // Client-side validation
+    if (file.type !== 'application/pdf') {
+      this.error = 'Please select a valid PDF file.';
+      this.selectedFile = null;
+      this.changeDetectorRef.markForCheck();
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      this.error = 'File exceeds 25 MB size limit.';
+      this.selectedFile = null;
+      this.changeDetectorRef.markForCheck();
+      return;
+    }
+
+    this.error = null;
+    this.selectedFile = file;
+    this.changeDetectorRef.markForCheck();
   }
 
   public uploadK1(): void {
