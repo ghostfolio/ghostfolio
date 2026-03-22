@@ -306,7 +306,7 @@ export class FamilyOfficeDataService {
     type: string;
     taxYear: number;
     filingStatus?: string;
-    data: Record<string, number>;
+    data: Record<string, number | string | null>;
   }): Observable<IKDocument> {
     return this.http.post<IKDocument>('/api/v1/k-document', data);
   }
@@ -332,7 +332,7 @@ export class FamilyOfficeDataService {
 
   public updateKDocument(
     kDocumentId: string,
-    data: { filingStatus?: string; data?: Record<string, number> }
+    data: { filingStatus?: string; data?: Record<string, number | string | null> }
   ): Observable<IKDocument> {
     return this.http.put<IKDocument>(`/api/v1/k-document/${kDocumentId}`, data);
   }

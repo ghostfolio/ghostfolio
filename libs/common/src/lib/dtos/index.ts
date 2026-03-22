@@ -15,6 +15,13 @@ import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { CreateKDocumentDto, UpdateKDocumentDto } from './k-document.dto';
 import {
+  ConfirmK1ImportDto,
+  CreateK1ImportDto,
+  K1ExtractedFieldDto,
+  K1UnmappedItemDto,
+  VerifyK1ImportDto
+} from './k1-import.dto';
+import {
   CreatePartnershipAssetDto,
   CreatePartnershipDto,
   CreatePartnershipMembershipDto,
@@ -37,6 +44,7 @@ import { UpdateUserSettingDto } from './update-user-setting.dto';
 
 export {
   AuthDeviceDto,
+  ConfirmK1ImportDto,
   CreateAccessDto,
   CreateAccountBalanceDto,
   CreateAccountDto,
@@ -45,6 +53,7 @@ export {
   CreateAssetProfileWithMarketDataDto,
   CreateDistributionDto,
   CreateEntityDto,
+  CreateK1ImportDto,
   CreateKDocumentDto,
   CreateOrderDto,
   CreateOwnershipDto,
@@ -56,6 +65,8 @@ export {
   CreateTagDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
+  K1ExtractedFieldDto,
+  K1UnmappedItemDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
@@ -70,5 +81,6 @@ export {
   UpdatePlatformDto,
   UpdatePropertyDto,
   UpdateTagDto,
-  UpdateUserSettingDto
+  UpdateUserSettingDto,
+  VerifyK1ImportDto
 };

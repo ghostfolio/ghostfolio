@@ -54,6 +54,14 @@ import type {
   IKDocumentAllocation,
   K1Data
 } from './k-document.interface';
+import type {
+  K1AggregationResult,
+  K1ConfirmationRequest,
+  K1ExtractionResult,
+  K1ExtractedField,
+  K1ImportSessionSummary,
+  K1UnmappedItem
+} from './k1-import.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
@@ -192,6 +200,12 @@ export {
   IKDocument,
   IKDocumentAllocation,
   IOwnership,
+  K1AggregationResult,
+  K1ConfirmationRequest,
+  K1ExtractionResult,
+  K1ExtractedField,
+  K1ImportSessionSummary,
+  K1UnmappedItem,
   IPartnership,
   IPartnershipAsset,
   IPartnershipDetail,

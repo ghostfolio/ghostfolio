@@ -55,6 +55,8 @@ import { FamilyOfficeModule } from './family-office/family-office.module';
 import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
+import { CellMappingModule } from './cell-mapping/cell-mapping.module';
+import { K1ImportModule } from './k1-import/k1-import.module';
 import { KDocumentModule } from './k-document/k-document.module';
 import { LogoModule } from './logo/logo.module';
 import { PartnershipModule } from './partnership/partnership.module';
@@ -129,6 +131,8 @@ import { UserModule } from './user/user.module';
     HealthModule,
     ImportModule,
     InfoModule,
+    CellMappingModule,
+    K1ImportModule,
     KDocumentModule,
     LogoModule,
     MarketDataModule,

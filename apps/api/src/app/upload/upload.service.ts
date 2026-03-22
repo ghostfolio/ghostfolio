@@ -4,8 +4,9 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { DocumentType } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { createReadStream, existsSync } from 'node:fs';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UploadService {
@@ -51,7 +52,19 @@ export class UploadService {
       await mkdir(subDir, { recursive: true });
     }
 
-    const relativePath = `${yearDir}/${monthDir}/${file.filename}`;
+    // Support both disk storage (file.filename set by multer) and memory storage (file.buffer)
+    let filename = file.filename;
+
+    if (!filename) {
+      const ext = (file.originalname || 'file').split('.').pop();
+      filename = `${uuidv4()}.${ext}`;
+
+      if (file.buffer) {
+        await writeFile(join(subDir, filename), file.buffer);
+      }
+    }
+
+    const relativePath = `/${yearDir}/${monthDir}/${filename}`;
 
     return this.prismaService.document.create({
       data: {

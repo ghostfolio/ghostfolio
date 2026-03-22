@@ -1,0 +1,199 @@
+:host {
+  display: block;
+}
+
+// Column width hints – give Label the most room, keep Box and actions compact
+.mat-column-boxNumber {
+  width: 60px;
+  white-space: nowrap;
+}
+
+.mat-column-label {
+  min-width: 200px;
+  width: 28%;
+}
+
+.mat-column-rawValue {
+  min-width: 140px;
+  width: 18%;
+}
+
+.mat-column-numericValue {
+  white-space: nowrap;
+}
+
+.mat-column-cellType {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.mat-column-confidence {
+  width: 90px;
+  white-space: nowrap;
+}
+
+.mat-column-reviewed {
+  width: 60px;
+}
+
+.mat-column-actions {
+  width: 80px;
+  white-space: nowrap;
+}
+
+.fields-section {
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .compact-field {
+    width: 100%;
+    min-width: 120px;
+
+    .mat-mdc-form-field-infix {
+      padding: 4px 0;
+    }
+
+    input.mat-mdc-input-element {
+      font-size: 0.8125rem;
+    }
+  }
+
+  .user-edited {
+    font-style: italic;
+    color: var(--primary-color, #1976d2);
+  }
+}
+
+// Confidence badge styles
+.confidence-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.confidence-high {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+}
+
+.confidence-medium {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: #f57f17;
+}
+
+.confidence-low {
+  background-color: rgba(244, 67, 54, 0.15);
+  color: #c62828;
+}
+
+// Row highlighting for unreviewed medium/low
+.row-low {
+  background-color: rgba(244, 67, 54, 0.05) !important;
+}
+
+.row-medium {
+  background-color: rgba(255, 193, 7, 0.05) !important;
+}
+
+// Unmapped items
+.unmapped-section {
+  .unmapped-item {
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+
+    &.resolved {
+      opacity: 0.7;
+      background-color: rgba(76, 175, 80, 0.05);
+    }
+  }
+
+  .resolution-badge {
+    font-size: 0.85rem;
+    color: var(--text-muted, #666);
+    font-style: italic;
+  }
+
+  .compact-field {
+    width: 160px;
+
+    input.mat-mdc-input-element {
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+// Aggregation summary
+.aggregation-section {
+  .aggregation-row {
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .aggregation-value {
+    font-size: 1.1rem;
+  }
+}
+
+// Alerts
+.alert-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #f44336;
+  padding: 12px 16px;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 4px;
+  color: #e65100;
+  padding: 12px 16px;
+}
+
+.actions {
+  padding-bottom: 2rem;
+}
+
+// Type badge styling
+.type-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.type-number {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.type-string {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.type-percentage {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.type-boolean {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.type-select {
+  min-width: 110px;
+}

@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+.upload-form {
+  max-width: 480px;
+}
+
+.upload-dropzone {
+  border: 2px dashed var(--border-color, #ccc);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--primary-color, #1976d2);
+  }
+
+  ion-icon {
+    font-size: 48px;
+    color: var(--text-muted, #999);
+  }
+}
+
+.processing-status {
+  max-width: 480px;
+
+  mat-progress-bar {
+    margin-top: 1rem;
+  }
+}
+
+.text-success {
+  color: #4caf50;
+}
+
+.text-danger {
+  color: #f44336;
+}
+
+.alert-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #f44336;
+  padding: 12px 16px;
+}

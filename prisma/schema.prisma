@@ -282,6 +282,7 @@ model User {
   updatedAt     DateTime        @updatedAt
   watchlist     SymbolProfile[] @relation("UserWatchlist")
   SymbolProfile SymbolProfile[]
+  k1ImportSessions K1ImportSession[]
 
   @@index([accessToken])
   @@index([createdAt])
@@ -468,8 +469,11 @@ model Partnership {
   assets        PartnershipAsset[]
   valuations    PartnershipValuation[]
   distributions Distribution[]
-  kDocuments    KDocument[]
-  documents     Document[]
+  kDocuments       KDocument[]
+  documents        Document[]
+  importSessions   K1ImportSession[]
+  cellMappings     CellMapping[]
+  aggregationRules CellAggregationRule[]
 
   @@index([name])
   @@index([type])
@@ -537,17 +541,21 @@ model Distribution {
 }
 
 model KDocument {
-  id             String          @id @default(uuid())
-  partnershipId  String
-  partnership    Partnership     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
-  type           KDocumentType
-  taxYear        Int
-  filingStatus   KDocumentStatus @default(DRAFT)
-  data           Json
-  documentFileId String?
-  documentFile   Document?       @relation(fields: [documentFileId], references: [id])
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id                    String          @id @default(uuid())
+  partnershipId         String
+  partnership           Partnership     @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  type                  KDocumentType
+  taxYear               Int
+  filingStatus          KDocumentStatus @default(DRAFT)
+  data                  Json
+  previousData          Json?
+  previousFilingStatus  KDocumentStatus?
+  documentFileId        String?
+  documentFile          Document?       @relation(fields: [documentFileId], references: [id])
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  importSession K1ImportSession?
 
   @@unique([partnershipId, type, taxYear])
   @@index([partnershipId])
@@ -620,8 +628,76 @@ model Document {
   taxYear       Int?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  kDocuments    KDocument[]
+  kDocuments        KDocument[]
+  k1ImportSessions  K1ImportSession[]
 
   @@index([entityId])
+  @@index([partnershipId])
+}
+
+enum K1ImportStatus {
+  PROCESSING
+  EXTRACTED
+  VERIFIED
+  CONFIRMED
+  CANCELLED
+  FAILED
+}
+
+model K1ImportSession {
+  id               String         @id @default(uuid())
+  partnershipId    String
+  partnership      Partnership    @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  userId           String
+  user             User           @relation(fields: [userId], onDelete: Cascade, references: [id])
+  status           K1ImportStatus @default(PROCESSING)
+  taxYear          Int
+  fileName         String
+  fileSize         Int
+  extractionMethod String
+  rawExtraction    Json?
+  verifiedData     Json?
+  documentId       String?
+  document         Document?      @relation(fields: [documentId], references: [id])
+  kDocumentId      String?        @unique
+  kDocument        KDocument?     @relation(fields: [kDocumentId], references: [id])
+  errorMessage     String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([partnershipId, taxYear])
+  @@index([userId])
+}
+
+model CellMapping {
+  id            String       @id @default(uuid())
+  partnershipId String?
+  partnership   Partnership? @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  boxNumber     String
+  label         String
+  description   String?
+  cellType      String       @default("number")
+  isCustom      Boolean      @default(false)
+  isIgnored     Boolean      @default(false)
+  sortOrder     Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@unique([partnershipId, boxNumber])
+  @@index([partnershipId])
+}
+
+model CellAggregationRule {
+  id            String       @id @default(uuid())
+  partnershipId String?
+  partnership   Partnership? @relation(fields: [partnershipId], onDelete: Cascade, references: [id])
+  name          String
+  operation     String       @default("SUM")
+  sourceCells   Json
+  sortOrder     Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@unique([partnershipId, name])
   @@index([partnershipId])
 }

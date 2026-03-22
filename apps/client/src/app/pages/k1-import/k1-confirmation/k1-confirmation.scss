@@ -1,0 +1,37 @@
+:host {
+  display: block;
+}
+
+.confirmation-form {
+  max-width: 480px;
+}
+
+.summary-card {
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+
+  > div {
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border-color, #f0f0f0);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.text-success {
+  color: #4caf50;
+}
+
+.alert-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 4px;
+  color: #f44336;
+  padding: 12px 16px;
+}
+
+.actions {
+  padding-bottom: 2rem;
+}

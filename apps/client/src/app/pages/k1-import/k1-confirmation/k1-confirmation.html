@@ -1,0 +1,167 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      @if (error) {
+        <div class="alert alert-danger mb-3">
+          {{ error }}
+        </div>
+      }
+
+      @if (isLoading) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      } @else if (result) {
+        <!-- Confirmation Result -->
+        <h1 class="h3 mb-4 text-center text-success">K-1 Import Confirmed</h1>
+
+        <!-- KDocument Summary -->
+        <section class="mb-4">
+          <h2 class="h5 mb-3">KDocument Created</h2>
+          <div class="summary-card p-3">
+            <div class="d-flex justify-content-between">
+              <span>ID</span>
+              <strong>{{ result.kDocument.id }}</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Type</span>
+              <strong>{{ result.kDocument.type }}</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Tax Year</span>
+              <strong>{{ result.kDocument.taxYear }}</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Filing Status</span>
+              <strong>{{ result.kDocument.filingStatus }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- Member Allocations -->
+        @if (result.allocations.length > 0) {
+          <section class="mb-4">
+            <h2 class="h5 mb-3">Member Allocations</h2>
+            <table mat-table [dataSource]="result.allocations" class="w-100">
+              <ng-container matColumnDef="entityName">
+                <th mat-header-cell *matHeaderCellDef>Member</th>
+                <td mat-cell *matCellDef="let a">{{ a.entityName }}</td>
+              </ng-container>
+              <ng-container matColumnDef="ownershipPercent">
+                <th mat-header-cell *matHeaderCellDef>Ownership %</th>
+                <td mat-cell *matCellDef="let a">{{ a.ownershipPercent }}%</td>
+              </ng-container>
+              <ng-container matColumnDef="allocatedValues">
+                <th mat-header-cell *matHeaderCellDef>Key Values</th>
+                <td mat-cell *matCellDef="let a">
+                  @if (a.allocatedValues['1'] !== undefined) {
+                    Box 1: {{ a.allocatedValues['1'] | number:'1.2-2' }}
+                  }
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="allocationColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: allocationColumns"></tr>
+            </table>
+          </section>
+        }
+
+        <!-- Distributions -->
+        @if (result.distributions.length > 0) {
+          <section class="mb-4">
+            <h2 class="h5 mb-3">Distribution Records</h2>
+            <table mat-table [dataSource]="result.distributions" class="w-100">
+              <ng-container matColumnDef="entityId">
+                <th mat-header-cell *matHeaderCellDef>Member</th>
+                <td mat-cell *matCellDef="let d">{{ d.entityId }}</td>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let d">{{ d.type }}</td>
+              </ng-container>
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef>Amount</th>
+                <td mat-cell *matCellDef="let d">{{ d.amount | number:'1.2-2' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let d">{{ d.date | date:'mediumDate' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="distributionColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: distributionColumns"></tr>
+            </table>
+          </section>
+        }
+
+        <!-- Linked Document -->
+        @if (result.document) {
+          <section class="mb-4">
+            <h2 class="h5 mb-3">Linked Document</h2>
+            <div class="summary-card p-3">
+              <div class="d-flex justify-content-between">
+                <span>File</span>
+                <strong>{{ result.document.name }}</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Type</span>
+                <strong>{{ result.document.type }}</strong>
+              </div>
+            </div>
+          </section>
+        }
+
+        <!-- Actions -->
+        <div class="actions d-flex justify-content-between mt-4">
+          <button mat-stroked-button (click)="goToImportList()">
+            Back to Import List
+          </button>
+          <button mat-flat-button color="primary" (click)="viewKDocument()">
+            View KDocument
+          </button>
+        </div>
+      } @else {
+        <!-- Confirmation Form -->
+        <h1 class="h3 mb-4 text-center">Confirm K-1 Import</h1>
+
+        <div class="confirmation-form mx-auto">
+          <div class="mb-3">
+            <mat-form-field class="w-100">
+              <mat-label>Filing Status</mat-label>
+              <mat-select [(ngModel)]="filingStatus">
+                @for (status of filingStatusOptions; track status) {
+                  <mat-option [value]="status">{{ status }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          @if (hasConflict) {
+            <div class="mb-3">
+              <mat-form-field class="w-100">
+                <mat-label>Existing KDocument Action</mat-label>
+                <mat-select [(ngModel)]="existingKDocumentAction">
+                  <mat-option value="UPDATE">Update existing</mat-option>
+                  <mat-option value="CREATE_NEW">Create new version</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          }
+
+          <div class="d-flex justify-content-between">
+            <button mat-stroked-button (click)="goBackToVerify()">
+              Back to Verify
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="isConfirming || (hasConflict && !existingKDocumentAction)"
+              (click)="confirmImport()">
+              @if (isConfirming) {
+                Confirming...
+              } @else {
+                Confirm & Create KDocument
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
