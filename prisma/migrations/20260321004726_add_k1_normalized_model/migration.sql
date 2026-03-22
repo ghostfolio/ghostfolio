@@ -1,10 +1,10 @@
 -- AlterTable
 ALTER TABLE "K1ImportSession" DROP COLUMN "verifiedData";
 
--- AlterTable
-ALTER TABLE "KDocument" DROP COLUMN "previousData",
-DROP COLUMN "previousFilingStatus",
-ALTER COLUMN "data" DROP NOT NULL;
+-- AlterTable (use IF EXISTS for columns that may have been added via db push)
+ALTER TABLE "KDocument" DROP COLUMN IF EXISTS "previousData";
+ALTER TABLE "KDocument" DROP COLUMN IF EXISTS "previousFilingStatus";
+ALTER TABLE "KDocument" ALTER COLUMN "data" DROP NOT NULL;
 
 -- CreateTable
 CREATE TABLE "k1_box_definition" (
