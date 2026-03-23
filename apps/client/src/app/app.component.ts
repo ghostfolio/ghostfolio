@@ -13,7 +13,7 @@ import {
   DestroyRef,
   DOCUMENT,
   HostBinding,
-  Inject,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,7 +36,7 @@ import { filter } from 'rxjs/operators';
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
-import { HoldingDetailDialogParams } from './components/holding-detail-dialog/interfaces/interfaces';
+import { GfAppQueryParams } from './interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { UserService } from './services/user/user.service';
 
@@ -48,10 +48,6 @@ import { UserService } from './services/user/user.service';
   templateUrl: './app.component.html'
 })
 export class GfAppComponent implements OnInit {
-  @HostBinding('class.has-info-message') get getHasMessage() {
-    return this.hasInfoMessage;
-  }
-
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentSubRoute: string;
@@ -66,41 +62,45 @@ export class GfAppComponent implements OnInit {
   public pageTitle: string;
   public routerLinkRegister = publicRoutes.register.routerLink;
   public showFooter = false;
-  public user: User;
+  public user: User | undefined;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private dialog: MatDialog,
-    @Inject(DOCUMENT) private document: Document,
-    private impersonationStorageService: ImpersonationStorageService,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private title: Title,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly document = inject(DOCUMENT);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly title = inject(Title);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.initializeTheme();
     this.user = undefined;
 
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        if (
-          params['dataSource'] &&
-          params['holdingDetailDialog'] &&
-          params['symbol']
-        ) {
-          this.openHoldingDetailDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
+      .subscribe(
+        ({ dataSource, holdingDetailDialog, symbol }: GfAppQueryParams) => {
+          if (dataSource && holdingDetailDialog && symbol) {
+            this.openHoldingDetailDialog({
+              dataSource,
+              symbol
+            });
+          }
         }
-      });
+      );
 
     addIcons({ openOutline });
+  }
+
+  @HostBinding('class.has-info-message') get getHasMessage() {
+    return this.hasInfoMessage;
   }
 
   public ngOnInit() {
@@ -128,7 +128,7 @@ export class GfAppComponent implements OnInit {
             !this.currentSubRoute) ||
             (this.currentRoute === internalRoutes.home.path &&
               this.currentSubRoute ===
-                internalRoutes.home.subRoutes.holdings.path) ||
+                internalRoutes.home.subRoutes?.holdings.path) ||
             (this.currentRoute === internalRoutes.portfolio.path &&
               !this.currentSubRoute)) &&
           this.user?.settings?.viewMode !== 'ZEN'
@@ -223,11 +223,17 @@ export class GfAppComponent implements OnInit {
   }
 
   public onClickSystemMessage() {
-    if (this.user.systemMessage.routerLink) {
-      this.router.navigate(this.user.systemMessage.routerLink);
+    const systemMessage = this.user?.systemMessage;
+
+    if (!systemMessage) {
+      return;
+    }
+
+    if (systemMessage.routerLink) {
+      void this.router.navigate(systemMessage.routerLink);
     } else {
       this.notificationService.alert({
-        title: this.user.systemMessage.message
+        title: systemMessage.message
       });
     }
   }
@@ -269,10 +275,7 @@ export class GfAppComponent implements OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open<
-          GfHoldingDetailDialogComponent,
-          HoldingDetailDialogParams
-        >(GfHoldingDetailDialogComponent, {
+        const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
           autoFocus: false,
           data: {
             dataSource,
@@ -313,7 +316,7 @@ export class GfAppComponent implements OnInit {
           .afterClosed()
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
-            this.router.navigate([], {
+            void this.router.navigate([], {
               queryParams: {
                 dataSource: null,
                 holdingDetailDialog: null,
@@ -339,6 +342,6 @@ export class GfAppComponent implements OnInit {
 
     this.document
       .querySelector('meta[name="theme-color"]')
-      .setAttribute('content', themeColor);
+      ?.setAttribute('content', themeColor);
   }
 }
