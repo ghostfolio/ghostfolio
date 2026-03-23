@@ -76,8 +76,8 @@ export class GfActivitiesPageComponent implements OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
