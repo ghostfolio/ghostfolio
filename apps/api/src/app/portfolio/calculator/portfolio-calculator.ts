@@ -431,8 +431,13 @@ export abstract class PortfolioCalculator {
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
         marketPrice:
-          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? 1,
-        marketPriceInBaseCurrency: marketPriceInBaseCurrency?.toNumber() ?? 1,
+          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ??
+          item.averagePrice?.toNumber() ??
+          0,
+        marketPriceInBaseCurrency:
+          marketPriceInBaseCurrency?.toNumber() ??
+          item.averagePrice?.toNumber() ??
+          0,
         netPerformance: !hasErrors ? (netPerformance ?? null) : null,
         netPerformancePercentage: !hasErrors
           ? (netPerformancePercentage ?? null)

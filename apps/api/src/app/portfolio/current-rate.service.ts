@@ -2,7 +2,6 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { resetHours } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   DataProviderInfo,
@@ -10,9 +9,9 @@ import {
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { isBefore, isToday } from 'date-fns';
+import { isBefore, isToday, startOfDay } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -44,7 +43,7 @@ export class CurrentRateService {
       (!dateQuery.in || this.containsToday(dateQuery.in));
 
     const quoteErrors: ResponseError['errors'] = [];
-    const today = resetHours(new Date());
+    const today = startOfDay(new Date());
     const values: GetValueObject[] = [];
 
     if (includesToday) {
@@ -147,7 +146,11 @@ export class CurrentRateService {
 
           const [latestValue] = response.values
             .filter((currentValue) => {
-              return currentValue.symbol === symbol && currentValue.marketPrice;
+              return (
+                currentValue.symbol === symbol &&
+                currentValue.marketPrice != null &&
+                currentValue.marketPrice > 0
+              );
             })
             .sort((a, b) => {
               if (a.date < b.date) {
@@ -161,8 +164,15 @@ export class CurrentRateService {
               return 0;
             });
 
-          value.marketPrice = latestValue.marketPrice;
-        } catch {}
+          if (latestValue?.marketPrice) {
+            value.marketPrice = latestValue.marketPrice;
+          }
+        } catch (error) {
+          Logger.warn(
+            `Failed to recover quote for ${symbol}: ${error?.message}`,
+            'CurrentRateService'
+          );
+        }
       }
     }
 

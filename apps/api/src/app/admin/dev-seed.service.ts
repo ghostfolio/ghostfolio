@@ -1,13 +1,17 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { DataSource, Prisma } from '@prisma/client';
 
 @Injectable()
 export class DevSeedService {
   private readonly logger = new Logger(DevSeedService.name);
 
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly dataGatheringService: DataGatheringService,
+    private readonly prismaService: PrismaService
+  ) {}
 
   /**
    * Wipe ALL seeded data: accounts, activities, symbol profiles, market data,
@@ -247,11 +251,15 @@ export class DevSeedService {
     const acctCoinbase = accountRecords[4];
     const acctIBKR = accountRecords[5];
 
-    // ── A4. Symbol Profiles (MANUAL data source) ────────────────────
+    // ── A4. Symbol Profiles (live data sources) ─────────────────────
+    // All symbols use YAHOO (full historical data, including crypto via BTCUSD/ETHUSD).
+    // The optional `key` field is an alias used in buildActivities().
     const symbolDefs: {
       assetClass: string;
       assetSubClass: string;
       currency: string;
+      dataSource: DataSource;
+      key?: string;
       name: string;
       symbol: string;
     }[] = [
@@ -260,6 +268,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Apple Inc.',
         symbol: 'AAPL'
       },
@@ -267,6 +276,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Microsoft Corporation',
         symbol: 'MSFT'
       },
@@ -274,6 +284,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Amazon.com Inc.',
         symbol: 'AMZN'
       },
@@ -281,6 +292,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'NVIDIA Corporation',
         symbol: 'NVDA'
       },
@@ -288,6 +300,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Alphabet Inc.',
         symbol: 'GOOGL'
       },
@@ -295,6 +308,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Tesla Inc.',
         symbol: 'TSLA'
       },
@@ -302,6 +316,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'JPMorgan Chase & Co.',
         symbol: 'JPM'
       },
@@ -309,6 +324,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'STOCK',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Johnson & Johnson',
         symbol: 'JNJ'
       },
@@ -317,6 +333,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'ETF',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Vanguard S&P 500 ETF',
         symbol: 'VOO'
       },
@@ -324,6 +341,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'ETF',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Vanguard Total Stock Market ETF',
         symbol: 'VTI'
       },
@@ -331,6 +349,7 @@ export class DevSeedService {
         assetClass: 'EQUITY',
         assetSubClass: 'ETF',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Vanguard Total International ETF',
         symbol: 'VXUS'
       },
@@ -338,6 +357,7 @@ export class DevSeedService {
         assetClass: 'FIXED_INCOME',
         assetSubClass: 'BOND',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'iShares Core US Aggregate Bond ETF',
         symbol: 'AGG'
       },
@@ -345,29 +365,36 @@ export class DevSeedService {
         assetClass: 'REAL_ESTATE',
         assetSubClass: 'ETF',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'Vanguard Real Estate ETF',
         symbol: 'VNQ'
       },
-      // Crypto
+      // Crypto — internal symbol is BTCUSD/ETHUSD; the Yahoo Finance data
+      // enhancer automatically converts to BTC-USD/ETH-USD for API calls.
       {
         assetClass: 'ALTERNATIVE_INVESTMENT',
         assetSubClass: 'CRYPTOCURRENCY',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
+        key: 'BTC',
         name: 'Bitcoin',
-        symbol: 'BTC'
+        symbol: 'BTCUSD'
       },
       {
         assetClass: 'ALTERNATIVE_INVESTMENT',
         assetSubClass: 'CRYPTOCURRENCY',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
+        key: 'ETH',
         name: 'Ethereum',
-        symbol: 'ETH'
+        symbol: 'ETHUSD'
       },
       // Commodities
       {
         assetClass: 'COMMODITY',
         assetSubClass: 'ETF',
         currency: 'USD',
+        dataSource: DataSource.YAHOO,
         name: 'SPDR Gold Shares',
         symbol: 'GLD'
       }
@@ -381,7 +408,7 @@ export class DevSeedService {
           assetClass: def.assetClass as any,
           assetSubClass: def.assetSubClass as any,
           currency: def.currency,
-          dataSource: 'MANUAL',
+          dataSource: def.dataSource,
           name: def.name,
           symbol: def.symbol
         },
@@ -391,132 +418,24 @@ export class DevSeedService {
           name: def.name
         },
         where: {
-          dataSource_symbol: { dataSource: 'MANUAL', symbol: def.symbol }
+          dataSource_symbol: {
+            dataSource: def.dataSource,
+            symbol: def.symbol
+          }
         }
       });
 
-      symbolProfileMap[def.symbol] = sp.id;
+      // Use `key` alias (e.g. 'BTC') when present so buildActivities()
+      // can still reference symbols by their common ticker.
+      symbolProfileMap[def.key ?? def.symbol] = sp.id;
       counts.symbolProfiles++;
     }
 
-    // ── A5. Market Data — 3+ years of monthly prices ────────────────
-    // Realistic price trajectories (monthly, Jan 2023 → Dec 2025)
-    const priceHistories: Record<string, number[]> = {
-      AAPL: [
-        130, 135, 140, 148, 156, 168, 172, 178, 185, 175, 182, 190, 192, 195,
-        198, 205, 210, 215, 220, 225, 218, 222, 228, 235, 232, 238, 245, 250,
-        248, 255, 260, 258, 262, 270, 275, 280
-      ],
-      MSFT: [
-        240, 248, 255, 262, 275, 290, 305, 318, 325, 330, 340, 360, 365, 370,
-        378, 392, 400, 410, 420, 430, 425, 435, 445, 455, 450, 458, 465, 475,
-        480, 488, 495, 500, 505, 512, 520, 530
-      ],
-      AMZN: [
-        85, 90, 95, 102, 110, 118, 125, 130, 128, 135, 140, 148, 152, 155,
-        160, 168, 175, 180, 186, 188, 182, 190, 195, 200, 198, 205, 210, 215,
-        218, 225, 230, 228, 235, 240, 245, 250
-      ],
-      NVDA: [
-        142, 155, 175, 210, 250, 295, 350, 410, 445, 460, 470, 495, 510, 540,
-        580, 650, 720, 800, 850, 900, 880, 920, 950, 980, 960, 990, 1020,
-        1050, 1080, 1120, 1100, 1150, 1180, 1200, 1230, 1250
-      ],
-      GOOGL: [
-        88, 92, 96, 102, 110, 118, 120, 125, 130, 128, 132, 138, 142, 145,
-        150, 155, 160, 165, 170, 175, 172, 178, 182, 188, 185, 190, 195, 200,
-        205, 210, 215, 212, 218, 222, 228, 235
-      ],
-      TSLA: [
-        120, 135, 162, 180, 195, 205, 225, 245, 255, 240, 215, 250, 248, 260,
-        275, 290, 280, 265, 250, 240, 255, 270, 285, 300, 310, 320, 305, 295,
-        310, 325, 340, 350, 345, 360, 375, 390
-      ],
-      JPM: [
-        135, 138, 128, 132, 136, 142, 148, 152, 155, 150, 148, 158, 162, 168,
-        175, 180, 185, 190, 195, 200, 198, 205, 210, 218, 215, 220, 225, 230,
-        228, 235, 240, 245, 242, 248, 255, 260
-      ],
-      JNJ: [
-        172, 168, 162, 158, 155, 160, 162, 165, 158, 155, 152, 158, 160, 162,
-        165, 168, 170, 172, 168, 165, 162, 165, 168, 170, 168, 170, 172, 175,
-        178, 180, 182, 180, 178, 182, 185, 188
-      ],
-      VOO: [
-        365, 370, 378, 390, 398, 408, 420, 430, 435, 425, 430, 445, 450, 458,
-        465, 475, 480, 490, 498, 505, 495, 502, 510, 520, 515, 522, 530, 538,
-        542, 550, 555, 560, 558, 565, 572, 580
-      ],
-      VTI: [
-        195, 198, 202, 208, 215, 222, 228, 234, 238, 230, 235, 242, 245, 250,
-        255, 260, 265, 270, 275, 280, 275, 278, 282, 290, 288, 292, 298, 302,
-        305, 310, 315, 318, 315, 320, 325, 330
-      ],
-      VXUS: [
-        52, 53, 54, 55, 56, 55, 54, 53, 52, 51, 52, 53, 54, 55, 56, 57, 58,
-        57, 56, 55, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 63, 62, 63,
-        64, 65
-      ],
-      AGG: [
-        98, 97, 96, 97, 96, 95, 94, 93, 92, 91, 92, 93, 94, 94, 95, 95, 96,
-        96, 97, 97, 98, 98, 99, 99, 100, 100, 101, 101, 102, 102, 103, 103,
-        104, 104, 105, 105
-      ],
-      VNQ: [
-        82, 80, 78, 77, 75, 78, 80, 82, 80, 78, 76, 80, 82, 84, 86, 88, 90,
-        92, 90, 88, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 105, 103,
-        105, 107, 110
-      ],
-      BTC: [
-        16500, 19500, 23000, 28000, 27500, 30000, 31000, 29500, 26000, 27500,
-        34000, 42000, 44000, 48000, 52000, 57000, 63000, 68000, 65000, 62000,
-        58000, 60000, 72000, 85000, 82000, 88000, 92000, 95000, 98000, 102000,
-        105000, 100000, 97000, 103000, 108000, 112000
-      ],
-      ETH: [
-        1200, 1400, 1600, 1850, 1800, 1900, 1950, 1850, 1650, 1700, 2000,
-        2300, 2400, 2600, 2800, 3100, 3400, 3600, 3500, 3300, 3100, 3200,
-        3500, 3800, 3700, 3900, 4100, 4300, 4500, 4700, 4600, 4400, 4200,
-        4500, 4800, 5000
-      ],
-      GLD: [
-        170, 172, 178, 182, 185, 182, 180, 178, 175, 180, 185, 190, 192, 195,
-        198, 200, 205, 210, 215, 218, 220, 225, 230, 235, 238, 242, 248, 252,
-        258, 262, 265, 268, 272, 278, 282, 288
-      ]
-    };
-
-    for (const [symbol, prices] of Object.entries(priceHistories)) {
-      const dataPoints: {
-        dataSource: 'MANUAL';
-        date: Date;
-        marketPrice: number;
-        symbol: string;
-      }[] = [];
-
-      for (let i = 0; i < prices.length; i++) {
-        const year = 2023 + Math.floor(i / 12);
-        const month = (i % 12) + 1;
-        // Use last business day of the month
-        const date = new Date(
-          `${year}-${String(month).padStart(2, '0')}-${month === 2 ? '28' : '30'}T00:00:00.000Z`
-        );
-
-        dataPoints.push({
-          dataSource: 'MANUAL',
-          date,
-          marketPrice: prices[i],
-          symbol
-        });
-      }
-
-      await this.prismaService.marketData.createMany({
-        data: dataPoints as any,
-        skipDuplicates: true
-      });
-
-      counts.marketData += dataPoints.length;
-    }
+    // ── A5. Market Data — fetched from live providers ────────────────
+    // Historical prices will be gathered asynchronously by the data
+    // gathering queue after seed completes (see gatherMax() at the end).
+    // No hardcoded prices needed — Yahoo Finance (stocks/ETFs) and
+    // Yahoo Finance provides real historical data for all symbols.
 
     // ── A6. Activities / Orders — 3 years of realistic trading ──────
     const activities = this.buildActivities({
@@ -979,6 +898,15 @@ export class DevSeedService {
     }
 
     this.logger.log(`Dummy data populated: ${JSON.stringify(counts)}`);
+
+    // ── Gather real historical market data from live providers ───────
+    // This enqueues background jobs for Yahoo Finance (stocks/ETFs) and
+    // (BTCUSD, ETHUSD, stocks, ETFs). Prices arrive asynchronously — the UI will
+    // populate within ~30–60 seconds as the queue drains.
+    this.logger.log(
+      'Enqueuing market-data gathering jobs (Yahoo Finance)…'
+    );
+    await this.dataGatheringService.gatherMax();
 
     return { created: counts };
   }
