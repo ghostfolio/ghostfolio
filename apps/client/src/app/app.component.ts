@@ -13,7 +13,7 @@ import {
   DestroyRef,
   DOCUMENT,
   HostBinding,
-  Inject,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -70,20 +70,22 @@ export class GfAppComponent implements OnInit {
   public showFooter = false;
   public user: User | undefined;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private dialog: MatDialog,
-    @Inject(DOCUMENT) private document: Document,
-    private impersonationStorageService: ImpersonationStorageService,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private title: Title,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly document = inject(DOCUMENT);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly title = inject(Title);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.initializeTheme();
     this.user = undefined;
 
