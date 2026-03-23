@@ -11,14 +11,14 @@
   </ng-template>
   <ng-template #copyIcon>
     @if (enableCopyToClipboardButton) {
-      <a
-        class="bg-transparent no-min-width"
-        mat-icon-button
+      <button
+        class="bg-transparent no-min-width mdc-button"
+        mat-button
         type="button"
         (click)="onCopyValueToClipboard()"
       >
-        <ion-icon class="ml-1 icon-small" name="copy-outline" />
-      </a>
+        <ion-icon class="icon-small" name="copy-outline" />
+      </button>
     }
   </ng-template>
 
