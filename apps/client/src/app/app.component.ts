@@ -22,7 +22,6 @@ import { Title } from '@angular/platform-browser';
 import {
   ActivatedRoute,
   NavigationEnd,
-  Params,
   PRIMARY_OUTLET,
   Router,
   RouterLink,
@@ -37,14 +36,9 @@ import { filter } from 'rxjs/operators';
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { GfAppQueryParams } from './interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { UserService } from './services/user/user.service';
-
-export interface GfAppQueryParams extends Params {
-  dataSource?: DataSource;
-  holdingDetailDialog?: string;
-  symbol?: string;
-}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,15 +85,16 @@ export class GfAppComponent implements OnInit {
 
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params: GfAppQueryParams) => {
-        const { dataSource, holdingDetailDialog, symbol } = params;
-        if (dataSource && holdingDetailDialog && symbol) {
-          this.openHoldingDetailDialog({
-            dataSource,
-            symbol
-          });
+      .subscribe(
+        ({ dataSource, holdingDetailDialog, symbol }: GfAppQueryParams) => {
+          if (dataSource && holdingDetailDialog && symbol) {
+            this.openHoldingDetailDialog({
+              dataSource,
+              symbol
+            });
+          }
         }
-      });
+      );
 
     addIcons({ openOutline });
   }
@@ -229,6 +224,7 @@ export class GfAppComponent implements OnInit {
 
   public onClickSystemMessage() {
     const systemMessage = this.user?.systemMessage;
+
     if (!systemMessage) {
       return;
     }
