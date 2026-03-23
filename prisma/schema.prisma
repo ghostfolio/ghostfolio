@@ -27,27 +27,32 @@ model Access {
 }
 
 model Account {
-  activities Order[]
-  balance    Float            @default(0)
-  balances   AccountBalance[]
-  comment    String?
-  createdAt  DateTime         @default(now())
-  currency   String?
-  id         String           @default(uuid())
-  isExcluded Boolean          @default(false)
-  name       String?
-  ownerships Ownership[]
-  platform   Platform?        @relation(fields: [platformId], references: [id])
-  platformId String?
-  updatedAt  DateTime         @updatedAt
-  user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
-  userId     String
+  accountType String?
+  activities  Order[]
+  balance     Float            @default(0)
+  balances    AccountBalance[]
+  comment     String?
+  createdAt   DateTime         @default(now())
+  currency    String?
+  id          String           @default(uuid())
+  isExcluded  Boolean          @default(false)
+  name        String?
+  ownerships  Ownership[]
+  plaidAccountId String?
+  plaidItem   PlaidItem?       @relation(fields: [plaidItemId], references: [id])
+  plaidItemId String?
+  platform    Platform?        @relation(fields: [platformId], references: [id])
+  platformId  String?
+  updatedAt   DateTime         @updatedAt
+  user        User             @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId      String
 
   @@id([id, userId])
   @@index([currency])
   @@index([id])
   @@index([isExcluded])
   @@index([name])
+  @@index([plaidItemId])
   @@index([userId])
 }
 
@@ -259,6 +264,25 @@ model Tag {
   @@index([name])
 }
 
+model PlaidItem {
+  accounts        Account[]
+  accessToken     String
+  consentExpiresAt DateTime?
+  createdAt       DateTime  @default(now())
+  cursor          String?
+  error           String?
+  id              String    @id @default(uuid())
+  institutionId   String?
+  institutionName String?
+  itemId          String    @unique
+  lastSyncedAt    DateTime?
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId          String
+
+  @@index([userId])
+}
+
 model User {
   accessesGet   Access[]        @relation("accessGet")
   accessesGive  Access[]        @relation("accessGive")
@@ -273,6 +297,7 @@ model User {
   entities      Entity[]
   id            String          @id @default(uuid())
   partnerships  Partnership[]
+  plaidItems    PlaidItem[]
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
   settings      Settings?

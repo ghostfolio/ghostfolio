@@ -28,6 +28,7 @@ export interface Environment extends CleanedEnvAccessors {
   ENABLE_FEATURE_READ_ONLY_MODE: boolean;
   ENABLE_FEATURE_STATISTICS: boolean;
   ENABLE_FEATURE_SUBSCRIPTION: boolean;
+  ENABLE_FEATURE_PLAID: boolean;
   ENABLE_FEATURE_SYSTEM_MESSAGE: boolean;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_SECRET: string;
@@ -37,6 +38,10 @@ export interface Environment extends CleanedEnvAccessors {
   JWT_SECRET_KEY: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_CHART_ITEMS: number;
+  PLAID_CLIENT_ID: string;
+  PLAID_ENCRYPTION_KEY: string;
+  PLAID_ENV: string;
+  PLAID_SECRET: string;
   OIDC_AUTHORIZATION_URL: string;
   OIDC_CALLBACK_URL: string;
   OIDC_CLIENT_ID: string;

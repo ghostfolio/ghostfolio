@@ -52,6 +52,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
+      ENABLE_FEATURE_PLAID: bool({ default: false }),
       ENABLE_FEATURE_SYSTEM_MESSAGE: bool({ default: false }),
       GOOGLE_CLIENT_ID: str({ default: 'dummyClientId' }),
       GOOGLE_SECRET: str({ default: 'dummySecret' }),
@@ -62,6 +63,10 @@ export class ConfigurationService {
       JWT_SECRET_KEY: str(),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
+      PLAID_CLIENT_ID: str({ default: '' }),
+      PLAID_ENCRYPTION_KEY: str({ default: '' }),
+      PLAID_ENV: str({ default: 'sandbox' }),
+      PLAID_SECRET: str({ default: '' }),
       OIDC_AUTHORIZATION_URL: str({ default: '' }),
       OIDC_CALLBACK_URL: str({ default: '' }),
       OIDC_CLIENT_ID: str({

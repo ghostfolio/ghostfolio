@@ -60,6 +60,8 @@ import { K1ImportModule } from './k1-import/k1-import.module';
 import { KDocumentModule } from './k-document/k-document.module';
 import { LogoModule } from './logo/logo.module';
 import { PartnershipModule } from './partnership/partnership.module';
+import { PlaidModule } from './plaid/plaid.module';
+import { PlaidSyncModule } from './plaid-sync/plaid-sync.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
@@ -137,6 +139,8 @@ import { UserModule } from './user/user.module';
     LogoModule,
     MarketDataModule,
     PartnershipModule,
+    PlaidModule,
+    PlaidSyncModule,
     PlatformModule,
     PlatformsModule,
     PortfolioModule,

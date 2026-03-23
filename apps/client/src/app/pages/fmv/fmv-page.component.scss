@@ -1,0 +1,78 @@
+:host {
+  display: block;
+}
+
+.hero-card {
+  .fmv-label {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .account-count {
+    font-size: 0.875rem;
+  }
+}
+
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0.75rem;
+
+  .connection-card {
+    .error-icon {
+      font-size: 0.875rem;
+      width: 0.875rem;
+      height: 0.875rem;
+      vertical-align: text-bottom;
+    }
+  }
+}
+
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.account-card {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow:
+      0 4px 8px rgba(0, 0, 0, 0.12),
+      0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .account-name {
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 70%;
+  }
+
+  .platform-badge {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.75rem;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .allocation {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .currency-badge {
+    font-size: 0.75rem;
+  }
+
+  .plaid-indicator {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}

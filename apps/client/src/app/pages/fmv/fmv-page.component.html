@@ -1,0 +1,167 @@
+<div class="container p-4">
+  @if (isLoading) {
+    <div class="d-flex justify-content-center py-5">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else {
+    <!-- Hero: Total FMV -->
+    <mat-card class="hero-card mb-4">
+      <mat-card-content class="text-center py-4">
+        <div class="fmv-label text-muted mb-1" i18n>
+          Total Fair Market Value
+        </div>
+        <div class="fmv-value">
+          <gf-value
+            size="large"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="baseCurrency"
+            [value]="totalValueInBaseCurrency"
+          />
+        </div>
+        <div class="account-count text-muted mt-2">
+          {{ accounts.length }}
+          <ng-container i18n>
+            {accounts.length, plural, =1 {Account} other {Accounts}}
+          </ng-container>
+        </div>
+        @if (isPlaidEnabled) {
+          <div class="mt-3">
+            <button
+              class="mx-1"
+              mat-stroked-button
+              [disabled]="isLinkingPlaid"
+              (click)="onLinkPlaid()"
+            >
+              <mat-icon>link</mat-icon>
+              <span i18n>Link Account via Plaid</span>
+            </button>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Plaid Connections -->
+    @if (plaidItems.length > 0) {
+      <div class="plaid-connections mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <h3 class="m-0" i18n>Plaid Connections</h3>
+        </div>
+        <div class="connections-grid">
+          @for (item of plaidItems; track item.id) {
+            <mat-card class="connection-card p-2">
+              <mat-card-content
+                class="d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <div class="font-weight-bold">
+                    {{ item.institutionName ?? 'Unknown Institution' }}
+                  </div>
+                  <div class="text-muted small">
+                    {{ item.accountCount }}
+                    <ng-container i18n>
+                      {item.accountCount, plural, =1 {account} other {accounts}}
+                    </ng-container>
+                    @if (item.lastSyncedAt) {
+                      <span>
+                        &middot;
+                        <span i18n>Last synced</span>:
+                        {{ item.lastSyncedAt | date : 'short' }}
+                      </span>
+                    }
+                  </div>
+                  @if (item.error) {
+                    <div class="text-danger small">
+                      <mat-icon class="error-icon">warning</mat-icon>
+                      {{ item.error }}
+                    </div>
+                  }
+                </div>
+                <button
+                  mat-icon-button
+                  matTooltip="Refresh"
+                  i18n-matTooltip
+                  (click)="onRefreshPlaidItem(item.id)"
+                >
+                  <mat-icon>refresh</mat-icon>
+                </button>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Account Cards Grid -->
+    @if (accounts.length === 0) {
+      <mat-card class="text-center py-5">
+        <mat-card-content>
+          <p class="text-muted" i18n>
+            No accounts found. Create accounts to see your fair market value
+            overview.
+          </p>
+          <a mat-flat-button color="primary" routerLink="/accounts" i18n
+            >Go to Accounts</a
+          >
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <div class="accounts-grid">
+        @for (account of accounts; track account.id) {
+          <mat-card
+            class="account-card"
+            [class.clickable]="true"
+            (click)="onAccountClick(account)"
+          >
+            <mat-card-content class="p-3">
+              <div
+                class="d-flex justify-content-between align-items-start mb-2"
+              >
+                <div class="account-name font-weight-bold">
+                  {{ account.name }}
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                  @if ($any(account).plaidItemId) {
+                    <mat-icon
+                      class="plaid-indicator text-success"
+                      matTooltip="Linked via Plaid"
+                      i18n-matTooltip
+                      >link</mat-icon
+                    >
+                  }
+                  @if (account.platform?.name) {
+                    <div class="platform-badge text-muted small">
+                      {{ account.platform.name }}
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="account-value mb-2">
+                <gf-value
+                  size="medium"
+                  [isCurrency]="true"
+                  [locale]="user?.settings?.locale"
+                  [unit]="baseCurrency"
+                  [value]="account.valueInBaseCurrency"
+                />
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="allocation text-muted small">
+                  <gf-value
+                    [isPercent]="true"
+                    [locale]="user?.settings?.locale"
+                    [value]="account.allocationInPercentage"
+                  />
+                  <span i18n>allocation</span>
+                </div>
+                <div class="currency-badge text-muted small">
+                  {{ account.currency }}
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

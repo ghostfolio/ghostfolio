@@ -134,6 +134,7 @@
     "passport-jwt": "4.0.1",
     "passport-openidconnect": "0.1.2",
     "pdf-parse": "^2.4.5",
+    "plaid": "^41.4.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
     "stripe": "20.3.0",

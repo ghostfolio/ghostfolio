@@ -85,6 +85,7 @@ export class ExportService {
       })
       .map(
         ({
+          accountType,
           balance,
           balances,
           comment,
@@ -92,6 +93,8 @@ export class ExportService {
           id,
           isExcluded,
           name,
+          plaidAccountId,
+          plaidItemId,
           platform,
           platformId
         }) => {
@@ -100,6 +103,7 @@ export class ExportService {
           }
 
           return {
+            accountType,
             balance,
             balances: balances.map(({ date, value }) => {
               return { date: date.toISOString(), value };
@@ -109,6 +113,8 @@ export class ExportService {
             id,
             isExcluded,
             name,
+            plaidAccountId,
+            plaidItemId,
             platformId
           };
         }

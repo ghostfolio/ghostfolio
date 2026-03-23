@@ -210,6 +210,11 @@ export const routes: Routes = [
       )
   },
   {
+    path: 'fmv',
+    loadChildren: () =>
+      import('./pages/fmv/fmv-page.routes').then((m) => m.routes)
+  },
+  {
     path: 'portfolio-views',
     loadChildren: () =>
       import('./pages/portfolio-views/portfolio-views-page.routes').then(

@@ -139,6 +139,11 @@ export class GfHeaderComponent implements OnChanges {
   public routerLinkResources = publicRoutes.resources.routerLink;
 
   // Navigation group items per contracts/navigation.md
+  public fmvMenuItems: NavMenuItem[] = [
+    { label: 'Dashboard', routerLink: '/fmv' },
+    { label: 'Accounts', routerLink: '/accounts' }
+  ];
+
   public partnershipsMenuItems: NavMenuItem[] = [
     { label: 'Entities', routerLink: '/entities' },
     { label: 'Partnerships', routerLink: '/partnerships' },
@@ -170,6 +175,10 @@ export class GfHeaderComponent implements OnChanges {
   ];
 
   public k1CenterRoutes = ['k1-import', 'k-documents', 'cell-mapping'];
+
+  public fmvRoutes = ['fmv', 'accounts'];
+
+  public analysisRoutes = ['home', 'portfolio'];
 
   public adminGroupRoutes: string[] = [];
 
@@ -251,8 +260,7 @@ export class GfHeaderComponent implements OnChanges {
       internalRoutes.adminControl.path,
       internalRoutes.accounts.path,
       this.routeResources,
-      this.routePricing,
-      internalRoutes.home.path
+      this.routePricing
     ];
   }
 

@@ -180,12 +180,15 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   public openUpdateAccountDialog({
+    accountType,
     balance,
     comment,
     currency,
     id,
     isExcluded,
     name,
+    plaidAccountId,
+    plaidItemId,
     platformId
   }: AccountModel) {
     const dialogRef = this.dialog.open<
@@ -194,12 +197,15 @@ export class GfAccountsPageComponent implements OnInit {
     >(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
+          accountType,
           balance,
           comment,
           currency,
           id,
           isExcluded,
           name,
+          plaidAccountId,
+          plaidItemId,
           platformId
         }
       },
@@ -269,12 +275,15 @@ export class GfAccountsPageComponent implements OnInit {
     >(GfCreateOrUpdateAccountDialogComponent, {
       data: {
         account: {
+          accountType: null,
           balance: 0,
           comment: null,
           currency: this.user?.settings?.baseCurrency,
           id: null,
           isExcluded: false,
           name: null,
+          plaidAccountId: null,
+          plaidItemId: null,
           platformId: null
         }
       },

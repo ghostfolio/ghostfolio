@@ -27,6 +27,15 @@
           >Dashboard</a
         >
       </li>
+      <!-- FMV Group -->
+      <li class="list-inline-item d-none d-sm-block">
+        <gf-nav-menu-group
+          label="FMV"
+          i18n-label
+          [isActive]="isActiveInGroup(fmvRoutes)"
+          [menuItems]="fmvMenuItems"
+        />
+      </li>
       <!-- Partnerships Group -->
       <li class="list-inline-item d-none d-sm-block">
         <gf-nav-menu-group
@@ -59,18 +68,13 @@
       </li>
       <!-- Analysis -->
       <li class="list-inline-item">
-        <a
+        <gf-nav-menu-group
           class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
-            'text-decoration-underline':
-              currentRoute === internalRoutes.portfolio.path
-          }"
-          [routerLink]="routerLinkPortfolio"
-          >Analysis</a
-        >
+          label="Analysis"
+          i18n-label
+          [isActive]="isActiveInGroup(analysisRoutes)"
+          [menuItems]="legacyMenuItems"
+        />
       </li>
       <!-- Admin Group -->
       @if (hasPermissionToAccessAdminControl) {
@@ -104,12 +108,6 @@
                   <span i18n>Pricing</span>
                 </span>
               </a>
-            }
-            <hr class="m-0" />
-            @for (item of legacyMenuItems; track item.routerLink) {
-              <a mat-menu-item [routerLink]="item.routerLink">{{
-                item.label
-              }}</a>
             }
           </mat-menu>
         </li>
@@ -236,6 +234,27 @@
             >Dashboard</a
           >
           <hr class="d-flex d-sm-none m-0" />
+          <!-- FMV -->
+          <div class="d-flex d-sm-none px-4 py-1">
+            <small class="text-muted" i18n>FMV</small>
+          </div>
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/fmv"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'fmv' }"
+            >Dashboard</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            routerLink="/accounts"
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
+            >Accounts</a
+          >
+          <hr class="d-flex d-sm-none m-0" />
           <!-- Partnerships -->
           <div class="d-flex d-sm-none px-4 py-1">
             <small class="text-muted" i18n>Partnerships</small>
@@ -313,16 +332,17 @@
           >
           <hr class="d-flex d-sm-none m-0" />
           <!-- Analysis -->
-          <a
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
-            }"
-            [routerLink]="routerLinkPortfolio"
-            >Analysis</a
-          >
+          <div class="d-flex d-sm-none px-4 py-1">
+            <small class="text-muted" i18n>Analysis</small>
+          </div>
+          @for (item of legacyMenuItems; track item.routerLink) {
+            <a
+              class="d-flex d-sm-none"
+              mat-menu-item
+              [routerLink]="item.routerLink"
+              >{{ item.label }}</a
+            >
+          }
           <hr class="d-flex d-sm-none m-0" />
           <!-- Account Settings -->
           <a
@@ -388,19 +408,6 @@
                   <span i18n>Pricing</span>
                 </span>
               </a>
-            }
-            <hr class="d-flex d-sm-none m-0" />
-            <!-- Legacy -->
-            <div class="d-flex d-sm-none px-4 py-1">
-              <small class="text-muted" i18n>Legacy</small>
-            </div>
-            @for (item of legacyMenuItems; track item.routerLink) {
-              <a
-                class="d-flex d-sm-none"
-                mat-menu-item
-                [routerLink]="item.routerLink"
-                >{{ item.label }}</a
-              >
             }
           }
           <hr class="d-flex d-sm-none m-0" />
