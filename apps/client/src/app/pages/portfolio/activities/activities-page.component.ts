@@ -70,13 +70,13 @@ export class GfActivitiesPageComponent implements OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private destroyRef: DestroyRef,
     private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
