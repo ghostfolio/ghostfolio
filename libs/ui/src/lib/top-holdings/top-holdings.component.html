@@ -16,7 +16,7 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2" mat-cell>
-        <div class="text-truncate">{{ element?.name | titlecase }}</div>
+        <div class="text-truncate">{{ prettifyAssetName(element?.name) }}</div>
       </td>
     </ng-container>
 
