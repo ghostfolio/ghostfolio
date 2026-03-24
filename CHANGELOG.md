@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the quantity column to the holdings table of the portfolio holdings page
+
 ### Changed
 
 - Hardened the endpoint `DELETE /api/v1/auth-device/:id` by improving the user validation
+- Improved the allocations by ETF holding on the allocations page by refining the grouping of the same assets with diverging names (experimental)
 - Improved the language localization for Polish (`pl`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
+
+### Fixed
+
+- Fixed an issue by adding a missing guard in the public access for portfolio sharing
 
 ## 2.250.0 - 2026-03-17
 
