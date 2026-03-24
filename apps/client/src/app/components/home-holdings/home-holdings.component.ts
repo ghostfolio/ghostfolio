@@ -19,9 +19,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -30,8 +31,6 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -51,7 +50,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-holdings.scss'],
   templateUrl: './home-holdings.html'
 })
-export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
+export class GfHomeHoldingsComponent implements OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
   public deviceType: string;
@@ -71,11 +70,10 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
     GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
   );
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
@@ -89,13 +87,13 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -107,7 +105,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
 
           this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
-            permissions.createOrder
+            permissions.createActivity
           );
 
           this.initialize();
@@ -117,15 +115,15 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
       });
 
     this.viewModeFormControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((holdingsViewMode) => {
         this.dataService
           .putUserSetting({ holdingsViewMode })
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
             this.userService
               .get(true)
-              .pipe(takeUntil(this.unsubscribeSubject))
+              .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe((user) => {
                 this.user = user;
 
@@ -147,11 +145,6 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private fetchHoldings() {
@@ -193,7 +186,7 @@ export class GfHomeHoldingsComponent implements OnDestroy, OnInit {
     this.holdings = undefined;
 
     this.fetchHoldings()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = holdings;
 

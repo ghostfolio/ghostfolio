@@ -5,12 +5,7 @@ import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule, NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnDestroy
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -30,7 +25,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Platform } from '@prisma/client';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
@@ -55,13 +50,11 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-account-dialog.scss'],
   templateUrl: 'create-or-update-account-dialog.html'
 })
-export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
+export class GfCreateOrUpdateAccountDialogComponent {
   public accountForm: FormGroup;
   public currencies: string[] = [];
   public filteredPlatforms: Observable<Platform[]>;
   public platforms: Platform[] = [];
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
@@ -168,11 +161,6 @@ export class GfCreateOrUpdateAccountDialogComponent implements OnDestroy {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private autocompleteObjectValidator(): ValidatorFn {

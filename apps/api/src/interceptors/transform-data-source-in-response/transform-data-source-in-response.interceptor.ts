@@ -68,6 +68,7 @@ export class TransformDataSourceInResponseInterceptor<
               'errors[*].dataSource',
               'fearAndGreedIndex.CRYPTOCURRENCIES.dataSource',
               'fearAndGreedIndex.STOCKS.dataSource',
+              'holdings[*].assetProfile.dataSource',
               'holdings[*].dataSource',
               'items[*].dataSource',
               'SymbolProfile.dataSource',

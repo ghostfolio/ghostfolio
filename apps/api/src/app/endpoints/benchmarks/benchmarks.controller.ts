@@ -126,10 +126,10 @@ export class BenchmarksController {
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
   ): Promise<BenchmarkMarketDataDetailsResponse> {
-    const { endDate, startDate } = getIntervalFromDateRange(
+    const { endDate, startDate } = getIntervalFromDateRange({
       dateRange,
-      new Date(startDateString)
-    );
+      startDate: new Date(startDateString)
+    });
 
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,

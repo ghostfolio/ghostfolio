@@ -8,6 +8,6 @@ export const routes: Routes = [
   {
     component: ResourcesGlossaryPageComponent,
     path: '',
-    title: publicRoutes.resources.subRoutes.glossary.title
+    title: publicRoutes.resources.subRoutes?.glossary.title
   }
 ];

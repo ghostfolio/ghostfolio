@@ -10,6 +10,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -129,8 +130,13 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public fetchActivities() {
+    const dateRange = this.user?.settings?.dateRange;
+
+    const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
+
     this.dataService
       .fetchActivities({
+        range,
         filters: this.userService.getFilters(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
@@ -334,7 +340,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((activity: UpdateOrderDto) => {
         if (activity) {
           this.dataService
-            .putOrder(activity)
+            .putActivity(activity)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
@@ -350,6 +356,14 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private isCalendarYear(dateRange: DateRange) {
+    if (!dateRange) {
+      return false;
+    }
+
+    return /^\d{4}$/.test(dateRange);
   }
 
   private openCreateActivityDialog(aActivity?: Activity) {
@@ -385,7 +399,7 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((transaction: CreateOrderDto | null) => {
             if (transaction) {
-              this.dataService.postOrder(transaction).subscribe({
+              this.dataService.postActivity(transaction).subscribe({
                 next: () => {
                   this.userService
                     .get(true)
@@ -407,9 +421,9 @@ export class GfActivitiesPageComponent implements OnDestroy, OnInit {
 
     this.hasPermissionToCreateActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.createOrder);
+      hasPermission(this.user.permissions, permissions.createActivity);
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteOrder);
+      hasPermission(this.user.permissions, permissions.deleteActivity);
   }
 }
