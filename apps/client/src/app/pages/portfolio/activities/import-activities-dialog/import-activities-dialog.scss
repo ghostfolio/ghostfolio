@@ -2,7 +2,8 @@
   display: block;
 
   .mat-mdc-dialog-content {
-    max-height: unset;
+    max-height: calc(100vh - 10rem);
+    overflow: auto;
 
     a {
       color: rgba(var(--palette-primary-500), 1);
@@ -40,6 +41,12 @@
     .mat-mdc-progress-spinner {
       right: 1.5rem;
       top: calc(50% - 10px);
+    }
+
+    .notices {
+      max-height: min(24rem, 50vh);
+      overflow-y: auto;
+      padding-right: 0.25rem;
     }
 
     .mat-expansion-panel {
