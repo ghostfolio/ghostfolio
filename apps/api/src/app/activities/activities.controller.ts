@@ -13,6 +13,7 @@ import {
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
+import { splitStringToArray } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   ActivityResponse
@@ -37,7 +38,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order, Prisma } from '@prisma/client';
+import { Order, Prisma, Type as ActivityType } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -120,8 +121,13 @@ export class ActivitiesController {
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
-    @Query('take') take?: number
+    @Query('take') take?: number,
+    @Query('activityTypes') filterByTypes?: string
   ): Promise<ActivitiesResponse> {
+    const types = filterByTypes
+      ? (splitStringToArray(filterByTypes) as ActivityType[])
+      : undefined;
+
     let endDate: Date;
     let startDate: Date;
 
@@ -147,6 +153,7 @@ export class ActivitiesController {
       sortColumn,
       sortDirection,
       startDate,
+      types,
       userCurrency,
       includeDrafts: true,
       skip: isNaN(skip) ? undefined : skip,

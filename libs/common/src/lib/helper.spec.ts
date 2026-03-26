@@ -1,6 +1,7 @@
 import {
   extractNumberFromString,
-  getNumberFormatGroup
+  getNumberFormatGroup,
+  splitStringToArray
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -114,6 +115,24 @@ describe('Helper', () => {
     it('Get zh-CN number format group when it is default', () => {
       languageGetter.mockReturnValue('zh-CN');
       expect(getNumberFormatGroup()).toEqual(',');
+    });
+  });
+
+  describe('splitStringToArray', () => {
+    it('should split a comma-separated string', () => {
+      expect(splitStringToArray('a,b,c')).toEqual(['a', 'b', 'c']);
+    });
+
+    it('should return a single-element array for a string without commas', () => {
+      expect(splitStringToArray('a')).toEqual(['a']);
+    });
+
+    it('should return an empty array for undefined', () => {
+      expect(splitStringToArray(undefined)).toEqual([]);
+    });
+
+    it('should return an empty array for no argument', () => {
+      expect(splitStringToArray()).toEqual([]);
     });
   });
 });
