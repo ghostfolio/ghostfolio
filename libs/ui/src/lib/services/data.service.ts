@@ -215,15 +215,15 @@ export class DataService {
     sortColumn,
     sortDirection,
     take,
-    types
+    activityTypes
   }: {
+    activityTypes?: string[];
     filters?: Filter[];
     range?: DateRange;
     skip?: number;
     sortColumn?: string;
     sortDirection?: SortDirection;
     take?: number;
-    types?: string[];
   }): Observable<ActivitiesResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
 
@@ -247,8 +247,8 @@ export class DataService {
       params = params.append('take', take);
     }
 
-    if (types?.length) {
-      params = params.append('types', types.join(','));
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
     }
 
     return this.http.get<any>('/api/v1/activities', { params }).pipe(
@@ -417,12 +417,12 @@ export class DataService {
 
   public fetchExport({
     activityIds,
-    filters,
-    types
+    activityTypes,
+    filters
   }: {
     activityIds?: string[];
+    activityTypes?: string[];
     filters?: Filter[];
-    types?: string[];
   } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
@@ -430,8 +430,8 @@ export class DataService {
       params = params.append('activityIds', activityIds.join(','));
     }
 
-    if (types?.length) {
-      params = params.append('types', types.join(','));
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
     }
 
     return this.http.get<ExportResponse>('/api/v1/export', {

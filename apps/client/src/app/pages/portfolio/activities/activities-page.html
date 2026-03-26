@@ -10,7 +10,7 @@
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
-        [hasPermissionToFilterByType]="hasPermissionToFilterByType"
+        [hasPermissionToFilterByType]="user?.settings?.isExperimentalFeatures"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"

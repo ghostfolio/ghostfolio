@@ -122,7 +122,7 @@ export class ActivitiesController {
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number,
-    @Query('types') filterByTypes?: string
+    @Query('activityTypes') filterByTypes?: string
   ): Promise<ActivitiesResponse> {
     const types = filterByTypes
       ? (splitStringToArray(filterByTypes) as ActivityType[])
