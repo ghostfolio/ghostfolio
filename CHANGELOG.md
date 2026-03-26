@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the quantity column to the holdings table of the portfolio holdings page
 
+### Added
+
+- Added the dividend yield (trailing twelve months) to the portfolio summary (experimental)
+
 ### Changed
 
 - Hardened the endpoint `DELETE /api/v1/auth-device/:id` by improving the user validation
