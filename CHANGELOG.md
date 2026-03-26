@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Spanish (`es`)
+- Upgraded `stripe` from version `20.3.0` to `20.4.1`
 
 ## 2.251.0 - 2026-03-24
 
