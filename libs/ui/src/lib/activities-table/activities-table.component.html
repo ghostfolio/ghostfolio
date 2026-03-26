@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-end justify-content-lg-between">
   <div class="d-none d-lg-flex">
     @if (hasPermissionToFilterByType) {
       <mat-form-field appearance="outline" class="without-hint">
@@ -18,7 +18,7 @@
   </div>
 
   @if (hasPermissionToCreateActivity) {
-    <div class="d-flex justify-content-end">
+    <div class="d-flex">
       <button
         class="align-items-center d-flex"
         mat-stroked-button

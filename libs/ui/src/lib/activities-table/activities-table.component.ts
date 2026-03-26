@@ -10,6 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -93,8 +94,8 @@ import { GfValueComponent } from '../value/value.component';
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
-    ReactiveFormsModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
@@ -110,7 +111,7 @@ export class GfActivitiesTableComponent
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
-  @Input() hasPermissionToFilterByType = false;
+  @Input() hasPermissionToFilterByType: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() pageIndex: number;
@@ -138,14 +139,7 @@ export class GfActivitiesTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public readonly activityTypes: Record<ActivityType, string> = {
-    [ActivityType.BUY]: $localize`Buy`,
-    [ActivityType.DIVIDEND]: $localize`Dividend`,
-    [ActivityType.FEE]: $localize`Fee`,
-    [ActivityType.INTEREST]: $localize`Interest`,
-    [ActivityType.LIABILITY]: $localize`Liability`,
-    [ActivityType.SELL]: $localize`Sell`
-  };
+  public readonly activityTypes = new Map<ActivityType, string>();
   public hasDrafts = false;
   public hasErrors = false;
   public isUUID = isUUID;
@@ -207,6 +201,10 @@ export class GfActivitiesTableComponent
   private readonly unsubscribeSubject = new Subject<void>();
 
   public constructor() {
+    for (const type of Object.keys(ActivityType) as ActivityType[]) {
+      this.activityTypes.set(ActivityType[type], translate(ActivityType[type]));
+    }
+
     addIcons({
       alertCircleOutline,
       calendarClearOutline,

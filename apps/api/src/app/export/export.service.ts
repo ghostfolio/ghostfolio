@@ -24,14 +24,14 @@ export class ExportService {
 
   public async export({
     activityIds,
+    activityTypes,
     filters,
-    types,
     userId,
     userSettings
   }: {
     activityIds?: string[];
     filters?: Filter[];
-    types?: ActivityType[];
+    activityTypes?: ActivityType[];
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
@@ -42,7 +42,7 @@ export class ExportService {
 
     let { activities } = await this.activitiesService.getActivities({
       filters,
-      types,
+      types: activityTypes,
       userId,
       includeDrafts: true,
       sortColumn: 'date',

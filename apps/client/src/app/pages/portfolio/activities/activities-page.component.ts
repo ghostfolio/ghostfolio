@@ -54,13 +54,12 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   templateUrl: './activities-page.html'
 })
 export class GfActivitiesPageComponent implements OnInit {
-  public activityTypeFilter: string[] = [];
+  public activityTypesFilter: string[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
   public hasPermissionToDeleteActivity: boolean;
-  public hasPermissionToFilterByType = true;
   public pageIndex = 0;
   public pageSize = DEFAULT_PAGE_SIZE;
   public routeQueryParams: Subscription;
@@ -148,8 +147,8 @@ export class GfActivitiesPageComponent implements OnInit {
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,
         take: this.pageSize,
-        types: this.activityTypeFilter.length
-          ? this.activityTypeFilter
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
           : undefined
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -224,8 +223,8 @@ export class GfActivitiesPageComponent implements OnInit {
     if (!activityIds) {
       fetchExportParams = {
         filters: this.userService.getFilters(),
-        types: this.activityTypeFilter.length
-          ? this.activityTypeFilter
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
           : undefined
       };
     }
@@ -320,16 +319,17 @@ export class GfActivitiesPageComponent implements OnInit {
       });
   }
 
-  public onTypesFilterChanged(types: string[]) {
-    this.activityTypeFilter = types;
-    this.pageIndex = 0;
-    this.fetchActivities();
-  }
-
   public onSortChanged({ active, direction }: Sort) {
     this.pageIndex = 0;
     this.sortColumn = active;
     this.sortDirection = direction;
+
+    this.fetchActivities();
+  }
+
+  public onTypesFilterChanged(types: string[]) {
+    this.activityTypesFilter = types;
+    this.pageIndex = 0;
 
     this.fetchActivities();
   }

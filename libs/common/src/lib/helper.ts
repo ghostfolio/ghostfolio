@@ -463,10 +463,6 @@ export function resolveFearAndGreedIndex(aValue: number) {
   }
 }
 
-export function splitStringToArray(aString?: string): string[] {
-  return aString?.split(',') ?? [];
-}
-
 export function resolveMarketCondition(
   aMarketCondition: Benchmark['marketCondition']
 ) {
@@ -477,4 +473,8 @@ export function resolveMarketCondition(
   } else {
     return { emoji: undefined };
   }
+}
+
+export function splitStringToArray(aString?: string): string[] {
+  return aString?.split(',') ?? [];
 }

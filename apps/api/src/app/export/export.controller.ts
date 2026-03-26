@@ -39,9 +39,12 @@ export class ExportController {
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
-    @Query('types') filterByTypes?: string
+    @Query('activityTypes') filterByTypes?: string
   ): Promise<ExportResponse> {
     const activityIds = filterByActivityIds?.split(',') ?? [];
+    const activityTypes = filterByTypes
+      ? (splitStringToArray(filterByTypes) as ActivityType[])
+      : undefined;
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -49,14 +52,11 @@ export class ExportController {
       filterBySymbol,
       filterByTags
     });
-    const types = filterByTypes
-      ? (splitStringToArray(filterByTypes) as ActivityType[])
-      : undefined;
 
     return this.exportService.export({
       activityIds,
       filters,
-      types,
+      activityTypes: activityTypes,
       userId: this.request.user.id,
       userSettings: this.request.user.settings.settings
     });
