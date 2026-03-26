@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the language localization for Spanish (`es`)
+
 ## 2.251.0 - 2026-03-24
 
 ### Added
@@ -17,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the allocations by ETF holding on the allocations page by refining the grouping of the same assets with diverging names (experimental)
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
-- Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
