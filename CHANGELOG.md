@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Spanish (`es`)
+- Upgraded `countup.js` from version `2.9.0` to `2.10.0`
 
 ## 2.251.0 - 2026-03-24
 
