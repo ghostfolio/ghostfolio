@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the terms of service for the _Ghostfolio_ SaaS (cloud) to include _Paid Plans_ and _Refund Policy_
+- Upgraded `countup.js` from version `2.9.0` to `2.10.0`
 - Upgraded `prisma` from version `6.19.0` to `6.19.3`
 
 ### Fixed
