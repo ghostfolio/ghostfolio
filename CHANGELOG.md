@@ -100,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the _Save_ button state in the rule settings dialog on the _X-ray_ page
 - Fixed an issue where the apply and reset filter buttons remained disabled in the assistant
 
 ## 2.245.0 - 2026-03-01
