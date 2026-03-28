@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Spanish (`es`)
 - Upgraded `countries-list` from version `3.2.2` to `3.3.0`
 
+### Fixed
+
+- Fixed the _Save_ button state in the rule settings dialog of the _X-ray_ section
+
 ## 2.251.0 - 2026-03-24
 
 ### Added
