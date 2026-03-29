@@ -92,6 +92,7 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
 
   public onUpdate() {
     const marketPrice = this.marketPrice();
+
     if (isNil(marketPrice)) {
       return;
     }
