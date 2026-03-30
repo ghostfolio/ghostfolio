@@ -14,6 +14,7 @@ import {
   OnChanges,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -24,7 +25,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonIcon, NgxSkeletonLoaderModule],
+  imports: [CommonModule, IonIcon, MatButtonModule, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
   styleUrls: ['./value.component.scss'],
@@ -164,9 +165,10 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   }
 
   public onCopyValueToClipboard() {
-    this.clipboard.copy(this.formattedValue);
+    this.clipboard.copy(String(this.value));
+
     this.snackBar.open(
-      '✅ ' + $localize`Value has been copied to the clipboard`,
+      '✅ ' + $localize`${this.value} has been copied to the clipboard`,
       undefined,
       {
         duration: ms('3 seconds')
