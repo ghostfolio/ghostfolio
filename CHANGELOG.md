@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for a copy-to-clipboard functionality in the value component
+
 ### Changed
 
 - Improved the language localization for Spanish (`es`)
