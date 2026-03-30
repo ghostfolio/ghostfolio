@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   computed,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -47,7 +48,8 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   @Input() unit = '';
   @Input() value: number | string = '';
 
-  @ViewChild('labelContent', { static: false }) labelContent!: ElementRef;
+  @ViewChild('labelContent', { static: false })
+  labelContent!: ElementRef<HTMLSpanElement>;
 
   public absoluteValue = 0;
   public formattedValue = '';
@@ -57,6 +59,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   public useAbsoluteValue = false;
 
   public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar
   ) {
@@ -82,8 +85,14 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   }
 
   public ngAfterViewInit() {
-    const el = this.labelContent.nativeElement;
-    this.hasLabel = el.textContent.trim().length > 0 || el.children.length > 0;
+    if (this.labelContent) {
+      const element = this.labelContent.nativeElement;
+
+      this.hasLabel =
+        element.children.length > 0 || element.textContent.trim().length > 0;
+
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   public ngOnChanges() {

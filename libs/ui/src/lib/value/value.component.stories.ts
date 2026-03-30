@@ -14,12 +14,12 @@ export default {
     })
   ],
   argTypes: {
-    enableCopyToClipboardButton: {
-      control: 'boolean'
-    },
     deviceType: {
       control: 'select',
       options: ['desktop', 'mobile']
+    },
+    enableCopyToClipboardButton: {
+      control: 'boolean'
     },
     size: {
       control: 'select',
