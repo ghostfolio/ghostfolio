@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for a copy-to-clipboard functionality in the value component
+- Extended the user detail dialog of the admin control panel’s users section by adding a copy-to-clipboard button for the user id
 
 ### Changed
 
