@@ -56,7 +56,7 @@ export class GfAccessTableComponent implements OnChanges {
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
-  public displayedColumns = [];
+  public displayedColumns: string[] = [];
 
   public constructor(
     private clipboard: Clipboard,
