@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `countries-list` from version `3.2.2` to `3.3.0`
 - Upgraded `ng-extract-i18n-merge` from `3.2.1` to `3.3.0`
