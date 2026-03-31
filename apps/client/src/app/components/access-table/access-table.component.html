@@ -86,7 +86,8 @@
             </button>
           }
           @if (
-            user()?.settings?.isExperimentalFeatures || element.type === 'PUBLIC'
+            user()?.settings?.isExperimentalFeatures ||
+            element.type === 'PUBLIC'
           ) {
             <hr class="my-0" />
           }
