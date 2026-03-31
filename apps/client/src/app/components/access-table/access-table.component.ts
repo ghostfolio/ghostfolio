@@ -9,6 +9,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   Output
@@ -58,11 +59,11 @@ export class GfAccessTableComponent implements OnChanges {
   public dataSource: MatTableDataSource<Access>;
   public displayedColumns: string[] = [];
 
-  public constructor(
-    private clipboard: Clipboard,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar
-  ) {
+  private readonly clipboard = inject(Clipboard);
+  private readonly notificationService = inject(NotificationService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  public constructor() {
     addIcons({
       copyOutline,
       createOutline,
