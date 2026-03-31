@@ -6958,7 +6958,7 @@
       </trans-unit>
       <trans-unit id="8466521722895614996" datatype="html">
         <source><x id="PH" equiv-text="this.value"/> has been copied to the clipboard</source>
-        <target state="new"><x id="PH" equiv-text="this.value"/> has been copied to the clipboard</target>
+        <target state="translated"><x id="PH" equiv-text="this.value"/> wurde in die Zwischenablage kopiert</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/value/value.component.ts</context>
           <context context-type="linenumber">180</context>
