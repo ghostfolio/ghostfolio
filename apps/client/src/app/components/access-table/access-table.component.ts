@@ -88,13 +88,13 @@ export class GfAccessTableComponent {
     });
   }
 
-  protected getPublicUrl(aId: string): string {
+  protected getPublicUrl(aId: string) {
     const languageCode = this.user().settings.language;
 
     return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
   }
 
-  protected onCopyUrlToClipboard(aId: string): void {
+  protected onCopyUrlToClipboard(aId: string) {
     this.clipboard.copy(this.getPublicUrl(aId));
 
     this.snackBar.open(
