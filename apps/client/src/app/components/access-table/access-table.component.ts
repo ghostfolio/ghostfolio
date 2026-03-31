@@ -8,11 +8,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  EventEmitter,
   inject,
   Input,
   OnChanges,
-  Output
+  output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -52,10 +51,10 @@ export class GfAccessTableComponent implements OnChanges {
   @Input() showActions: boolean;
   @Input() user: User;
 
-  @Output() accessDeleted = new EventEmitter<string>();
-  @Output() accessToUpdate = new EventEmitter<string>();
+  public readonly accessDeleted = output<string>();
+  public readonly accessToUpdate = output<string>();
 
-  public baseUrl = window.location.origin;
+  public readonly baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
   public displayedColumns: string[] = [];
 
