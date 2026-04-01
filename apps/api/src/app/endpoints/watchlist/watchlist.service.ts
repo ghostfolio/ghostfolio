@@ -1,9 +1,11 @@
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { MarketSentimentService } from '@ghostfolio/api/services/market-sentiment/market-sentiment.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -15,6 +17,7 @@ export class WatchlistService {
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly marketSentimentService: MarketSentimentService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
@@ -110,6 +113,22 @@ export class WatchlistService {
       })
     ]);
 
+    const watchlistMarketSentiment =
+      await this.marketSentimentService.getWatchlistMarketSentiment(
+        assetProfiles
+      );
+    const watchlistMarketSentimentBySymbol = new Map(
+      watchlistMarketSentiment.map((item) => {
+        return [
+          getAssetProfileIdentifier({
+            dataSource: item.dataSource,
+            symbol: item.symbol
+          }),
+          item.marketSentiment
+        ] as const;
+      })
+    );
+
     const watchlist = await Promise.all(
       user.watchlist.map(async ({ dataSource, symbol }) => {
         const assetProfile = assetProfiles.find((profile) => {
@@ -135,6 +154,9 @@ export class WatchlistService {
           symbol,
           marketCondition:
             this.benchmarkService.getMarketCondition(performancePercent),
+          marketSentiment: watchlistMarketSentimentBySymbol.get(
+            getAssetProfileIdentifier({ dataSource, symbol })
+          ),
           name: assetProfile?.name,
           performances: {
             allTimeHigh: {

@@ -1,0 +1,65 @@
+@if (marketSentiment) {
+  <div class="summary-grid">
+    <div class="summary-stat">
+      <small class="text-muted">Buzz</small>
+      <strong>{{ marketSentiment.averageBuzzScore | number: '1.1-1' }}</strong>
+    </div>
+    <div class="summary-stat">
+      <small class="text-muted">Bullish</small>
+      <strong>
+        @if (marketSentiment.averageBullishPct !== undefined) {
+          {{ marketSentiment.averageBullishPct | number: '1.0-0' }}%
+        } @else {
+          <span class="text-muted">N/A</span>
+        }
+      </strong>
+    </div>
+    <div class="summary-stat">
+      <small class="text-muted">Coverage</small>
+      <strong>{{ marketSentiment.coverage }}</strong>
+    </div>
+    <div class="summary-stat">
+      <small class="text-muted">Alignment</small>
+      <strong class="summary-badge">{{ alignmentLabel }}</strong>
+    </div>
+  </div>
+
+  <div class="trend-row mt-3">
+    <small class="mr-2 text-muted">Trend</small>
+    <span class="summary-badge" [ngClass]="getTrendClass()">{{
+      trendLabel
+    }}</span>
+  </div>
+
+  @if (showSources && sortedSourceMetrics.length > 0) {
+    <div class="source-list mt-3">
+      @for (sourceMetric of sortedSourceMetrics; track sourceMetric.source) {
+        <div class="source-row">
+          <div class="source-label">{{ getSourceLabel(sourceMetric) }}</div>
+          <div class="source-values text-muted">
+            <span>{{ sourceMetric.buzzScore | number: '1.1-1' }}</span>
+            <span>
+              @if (sourceMetric.bullishPct !== undefined) {
+                {{ sourceMetric.bullishPct | number: '1.0-0' }}%
+              } @else {
+                <ng-container>N/A</ng-container>
+              }
+            </span>
+            <span>
+              {{ getActivityLabel(sourceMetric) }}:
+              {{ sourceMetric.activityCount | number: '1.0-0' }}
+            </span>
+            @if (sourceMetric.trend) {
+              <span
+                class="summary-badge"
+                [ngClass]="getTrendClass(sourceMetric)"
+              >
+                {{ sourceMetric.trend.toLowerCase() }}
+              </span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+}

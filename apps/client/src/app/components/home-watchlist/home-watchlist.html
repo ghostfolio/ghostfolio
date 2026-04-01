@@ -9,6 +9,38 @@
   </h1>
   <div class="row">
     <div class="col-xs-12 col-md-10 offset-md-1">
+      @if (watchlistWithMarketSentiment.length > 0) {
+        <section class="market-sentiment-section mb-4">
+          <div class="align-items-center d-flex justify-content-between mb-3">
+            <h2 class="h5 mb-0">Market Sentiment</h2>
+            <small class="text-muted">Most discussed watchlist assets</small>
+          </div>
+          <div class="row">
+            @for (
+              watchlistItem of watchlistWithMarketSentiment;
+              track watchlistItem.dataSource + ':' + watchlistItem.symbol
+            ) {
+              <div class="col-12 col-xl-4 mb-3">
+                <div class="card h-100 market-sentiment-card">
+                  <div class="card-body">
+                    <div class="d-flex flex-column mb-3">
+                      <strong class="line-height-1">
+                        {{ watchlistItem.name || watchlistItem.symbol }}
+                      </strong>
+                      <small class="text-muted">{{
+                        watchlistItem.symbol
+                      }}</small>
+                    </div>
+                    <gf-market-sentiment-summary
+                      [marketSentiment]="watchlistItem.marketSentiment"
+                    />
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
       <gf-benchmark
         [benchmarks]="watchlist"
         [deviceType]="deviceType"

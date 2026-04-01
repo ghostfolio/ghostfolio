@@ -12,5 +12,11 @@
     .button-container {
       gap: 0.5rem;
     }
+
+    .market-sentiment-card {
+      background-color: var(--oc-gray-0);
+      border: 1px solid var(--oc-gray-2);
+      border-radius: 0.75rem;
+    }
   }
 }

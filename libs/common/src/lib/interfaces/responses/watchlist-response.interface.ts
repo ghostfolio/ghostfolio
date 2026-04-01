@@ -6,6 +6,7 @@ import {
 export interface WatchlistResponse {
   watchlist: (AssetProfileIdentifier & {
     marketCondition: Benchmark['marketCondition'];
+    marketSentiment?: Benchmark['marketSentiment'];
     name: string;
     performances: Benchmark['performances'];
     trend50d: Benchmark['trend50d'];

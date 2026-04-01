@@ -16,6 +16,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
+import { MarketSentimentModule } from '@ghostfolio/api/services/market-sentiment/market-sentiment.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
@@ -44,6 +45,7 @@ import { RulesService } from './rules.service';
     I18nModule,
     ImpersonationModule,
     MarketDataModule,
+    MarketSentimentModule,
     PerformanceLoggingModule,
     PortfolioSnapshotQueueModule,
     PrismaModule,
