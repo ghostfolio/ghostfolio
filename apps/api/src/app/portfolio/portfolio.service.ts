@@ -1006,7 +1006,7 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
     const [accountBalanceItems, { activities }] = await Promise.all([
       this.accountBalanceService.getAccountBalanceItems({
