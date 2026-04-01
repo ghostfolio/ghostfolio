@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refreshed the cryptocurrencies list
 - Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `countries-list` from version `3.2.2` to `3.3.0`
