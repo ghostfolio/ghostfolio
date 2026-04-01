@@ -320,7 +320,7 @@ export class PortfolioController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
     const { activities } = await this.activitiesService.getActivities({
       endDate,

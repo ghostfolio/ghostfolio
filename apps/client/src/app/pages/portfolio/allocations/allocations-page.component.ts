@@ -405,17 +405,22 @@ export class GfAllocationsPageComponent implements OnInit {
         }
 
         if (position.holdings.length > 0) {
-          for (const holding of position.holdings) {
-            const { allocationInPercentage, name, valueInBaseCurrency } =
-              holding;
+          for (const {
+            allocationInPercentage,
+            name,
+            valueInBaseCurrency
+          } of position.holdings) {
+            const normalizedAssetName = this.normalizeAssetName(name);
 
-            if (this.topHoldingsMap[name]?.value) {
-              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+            if (this.topHoldingsMap[normalizedAssetName]?.value) {
+              this.topHoldingsMap[normalizedAssetName].value += isNumber(
+                valueInBaseCurrency
+              )
                 ? valueInBaseCurrency
                 : allocationInPercentage *
                   this.portfolioDetails.holdings[symbol].valueInPercentage;
             } else {
-              this.topHoldingsMap[name] = {
+              this.topHoldingsMap[normalizedAssetName] = {
                 name,
                 value: isNumber(valueInBaseCurrency)
                   ? valueInBaseCurrency
@@ -518,7 +523,10 @@ export class GfAllocationsPageComponent implements OnInit {
               if (holding.holdings.length > 0) {
                 const currentParentHolding = holding.holdings.find(
                   (parentHolding) => {
-                    return parentHolding.name === name;
+                    return (
+                      this.normalizeAssetName(parentHolding.name) ===
+                      this.normalizeAssetName(name)
+                    );
                   }
                 );
 
@@ -553,6 +561,14 @@ export class GfAllocationsPageComponent implements OnInit {
     if (this.topHoldings.length > MAX_TOP_HOLDINGS) {
       this.topHoldings = this.topHoldings.slice(0, MAX_TOP_HOLDINGS);
     }
+  }
+
+  private normalizeAssetName(name: string) {
+    if (!name) {
+      return '';
+    }
+
+    return name.trim().toLowerCase();
   }
 
   private openAccountDetailDialog(aAccountId: string) {

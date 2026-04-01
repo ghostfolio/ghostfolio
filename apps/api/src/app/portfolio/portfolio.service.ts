@@ -403,7 +403,7 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
     const { activities } =
       await this.activitiesService.getActivitiesForPortfolioCalculator({

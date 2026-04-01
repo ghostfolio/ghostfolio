@@ -126,7 +126,7 @@ export class ActivitiesController {
     let startDate: Date;
 
     if (dateRange) {
-      ({ endDate, startDate } = getIntervalFromDateRange(dateRange));
+      ({ endDate, startDate } = getIntervalFromDateRange({ dateRange }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({

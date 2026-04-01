@@ -7,17 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for a copy-to-clipboard functionality in the value component
+- Extended the holding detail dialog by adding a copy-to-clipboard button for the ISIN number (experimental)
+- Extended the holding detail dialog by adding a copy-to-clipboard button for the symbol (experimental)
+- Extended the user detail dialog of the admin control panel’s users section by adding a copy-to-clipboard button for the user id
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `countries-list` from version `3.2.2` to `3.3.0`
+- Upgraded `ng-extract-i18n-merge` from `3.2.1` to `3.3.0`
+- Upgraded `stripe` from version `20.3.0` to `20.4.1`
+
+## 2.251.0 - 2026-03-24
+
+### Added
+
+- Added the quantity column to the holdings table of the portfolio holdings page
+
+### Changed
+
+- Hardened the endpoint `DELETE /api/v1/auth-device/:id` by improving the user validation
+- Improved the allocations by ETF holding on the allocations page by refining the grouping of the same assets with diverging names (experimental)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
+
+### Fixed
+
+- Fixed an issue by adding a missing guard in the public access for portfolio sharing
+
+## 2.250.0 - 2026-03-17
+
+### Added
+
+- Added support for specific calendar year date ranges (`2025`, `2024`, `2023`, etc.) on the portfolio activities page
+
 ### Changed
 
 - Consolidated the sign-out logic within the user service to unify cookie, state and token clearance
 - Improved the language localization for Polish (`pl`)
 - Upgraded `@ionic/angular` from version `8.7.3` to `8.8.1`
+- Upgraded `replace-in-file` from version `8.3.0` to `8.4.0`
 - Upgraded `svgmap` from version `2.14.0` to `2.19.2`
 - Pinned the _Node.js_ version in the _Build code_ _GitHub Action_ to ensure environment consistency for tests
 
 ### Fixed
 
 - Fixed an issue with the detection of the thousand separator for the `de-CH` locale
+- Fixed an issue in the _Storybook_ stories of the symbol autocomplete component caused by a circular dependency
 
 ## 2.249.0 - 2026-03-10
 

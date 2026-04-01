@@ -546,6 +546,10 @@ ngx-skeleton-loader {
   padding: 9px 24px !important;
 }
 
+.no-height {
+  height: unset !important;
+}
+
 .no-min-width {
   min-width: unset !important;
 }
