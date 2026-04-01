@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the holding detail dialog by adding a copy-to-clipboard button for the ISIN number (experimental)
 - Extended the holding detail dialog by adding a copy-to-clipboard button for the symbol (experimental)
 - Extended the user detail dialog of the admin control panel’s users section by adding a copy-to-clipboard button for the user id
+- Added a filter by activity type to the activities page (experimental)
 
 ### Changed
 

@@ -209,13 +209,13 @@ export class DataService {
   }
 
   public fetchActivities({
+    activityTypes,
     filters,
     range,
     skip,
     sortColumn,
     sortDirection,
-    take,
-    activityTypes
+    take
   }: {
     activityTypes?: string[];
     filters?: Filter[];
@@ -226,6 +226,10 @@ export class DataService {
     take?: number;
   }): Observable<ActivitiesResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
+    }
 
     if (range) {
       params = params.append('range', range);
@@ -245,10 +249,6 @@ export class DataService {
 
     if (take) {
       params = params.append('take', take);
-    }
-
-    if (activityTypes?.length) {
-      params = params.append('activityTypes', activityTypes.join(','));
     }
 
     return this.http.get<any>('/api/v1/activities', { params }).pipe(

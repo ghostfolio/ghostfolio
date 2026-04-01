@@ -35,13 +35,13 @@ export class ExportController {
   public async export(
     @Query('accounts') filterByAccounts?: string,
     @Query('activityIds') filterByActivityIds?: string,
+    @Query('activityTypes') filterByTypes?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string,
-    @Query('activityTypes') filterByTypes?: string
+    @Query('tags') filterByTags?: string
   ): Promise<ExportResponse> {
-    const activityIds = filterByActivityIds?.split(',') ?? [];
+    const activityIds = splitStringToArray(filterByActivityIds);
     const activityTypes = filterByTypes
       ? (splitStringToArray(filterByTypes) as ActivityType[])
       : undefined;
@@ -55,8 +55,8 @@ export class ExportController {
 
     return this.exportService.export({
       activityIds,
+      activityTypes,
       filters,
-      activityTypes: activityTypes,
       userId: this.request.user.id,
       userSettings: this.request.user.settings.settings
     });

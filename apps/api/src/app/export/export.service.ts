@@ -30,8 +30,8 @@ export class ExportService {
     userSettings
   }: {
     activityIds?: string[];
-    filters?: Filter[];
     activityTypes?: ActivityType[];
+    filters?: Filter[];
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
@@ -42,8 +42,8 @@ export class ExportService {
 
     let { activities } = await this.activitiesService.getActivities({
       filters,
-      types: activityTypes,
       userId,
+      types: activityTypes,
       includeDrafts: true,
       sortColumn: 'date',
       sortDirection: 'asc',

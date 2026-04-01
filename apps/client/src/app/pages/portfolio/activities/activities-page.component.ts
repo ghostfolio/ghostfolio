@@ -141,15 +141,15 @@ export class GfActivitiesPageComponent implements OnInit {
 
     this.dataService
       .fetchActivities({
-        range,
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
+          : undefined,
         filters: this.userService.getFilters(),
+        range,
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,
-        take: this.pageSize,
-        activityTypes: this.activityTypesFilter.length
-          ? this.activityTypesFilter
-          : undefined
+        take: this.pageSize
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ activities, count }) => {
@@ -222,10 +222,10 @@ export class GfActivitiesPageComponent implements OnInit {
 
     if (!activityIds) {
       fetchExportParams = {
-        filters: this.userService.getFilters(),
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
-          : undefined
+          : undefined,
+        filters: this.userService.getFilters()
       };
     }
 

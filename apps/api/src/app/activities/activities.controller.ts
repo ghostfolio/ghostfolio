@@ -113,6 +113,7 @@ export class ActivitiesController {
   public async getAllActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
+    @Query('activityTypes') filterByTypes?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('range') dateRange?: DateRange,
@@ -121,8 +122,7 @@ export class ActivitiesController {
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
-    @Query('take') take?: number,
-    @Query('activityTypes') filterByTypes?: string
+    @Query('take') take?: number
   ): Promise<ActivitiesResponse> {
     const types = filterByTypes
       ? (splitStringToArray(filterByTypes) as ActivityType[])
