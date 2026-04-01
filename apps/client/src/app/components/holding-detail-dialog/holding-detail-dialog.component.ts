@@ -12,6 +12,7 @@ import {
   EnhancedSymbolProfile,
   Filter,
   LineChartItem,
+  MarketSentiment,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -24,6 +25,7 @@ import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfMarketSentimentSummaryComponent } from '@ghostfolio/ui/market-sentiment-summary';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
@@ -84,6 +86,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfDialogHeaderComponent,
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
+    GfMarketSentimentSummaryComponent,
     GfPortfolioProportionChartComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
@@ -135,6 +138,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public marketPriceMin: number;
   public marketPriceMinPrecision = 2;
   public marketPricePrecision = 2;
+  public marketSentiment: MarketSentiment;
   public netPerformance: number;
   public netPerformancePrecision = 2;
   public netPerformancePercent: number;
@@ -275,6 +279,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           marketPrice,
           marketPriceMax,
           marketPriceMin,
+          marketSentiment,
           netPerformance,
           netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
@@ -357,6 +362,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           }
 
           this.marketPriceMin = marketPriceMin;
+          this.marketSentiment = marketSentiment;
 
           if (
             this.data.deviceType === 'mobile' &&

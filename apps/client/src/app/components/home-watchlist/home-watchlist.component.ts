@@ -7,6 +7,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
+import { GfMarketSentimentSummaryComponent } from '@ghostfolio/ui/market-sentiment-summary';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -35,6 +36,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComponent,
+    GfMarketSentimentSummaryComponent,
     GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,
@@ -52,6 +54,20 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
   public hasPermissionToDeleteWatchlistItem: boolean;
   public user: User;
   public watchlist: Benchmark[];
+
+  public get watchlistWithMarketSentiment() {
+    return (this.watchlist ?? [])
+      .filter(({ marketSentiment }) => {
+        return !!marketSentiment;
+      })
+      .sort((a, b) => {
+        return (
+          (b.marketSentiment?.averageBuzzScore ?? 0) -
+          (a.marketSentiment?.averageBuzzScore ?? 0)
+        );
+      })
+      .slice(0, 3);
+  }
 
   private unsubscribeSubject = new Subject<void>();
 

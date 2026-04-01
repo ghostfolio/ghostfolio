@@ -2,6 +2,7 @@ import { CleanedEnvAccessors } from 'envalid';
 
 export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;
+  API_KEY_ADANOS: string;
   API_KEY_ALPHA_VANTAGE: string;
   API_KEY_BETTER_UPTIME: string;
   API_KEY_COINGECKO_DEMO: string;
@@ -11,6 +12,7 @@ export interface Environment extends CleanedEnvAccessors {
   API_KEY_OPEN_FIGI: string;
   API_KEY_RAPID_API: string;
   BULL_BOARD_IS_READ_ONLY: boolean;
+  CACHE_MARKET_SENTIMENT_TTL: number;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
   DATA_SOURCE_EXCHANGE_RATES: string;

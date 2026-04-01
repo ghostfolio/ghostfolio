@@ -25,6 +25,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { MarketSentimentService } from '@ghostfolio/api/services/market-sentiment/market-sentiment.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   getAnnualizedPerformancePercent,
@@ -112,6 +113,7 @@ export class PortfolioService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly i18nService: I18nService,
     private readonly impersonationService: ImpersonationService,
+    private readonly marketSentimentService: MarketSentimentService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -792,6 +794,10 @@ export class PortfolioService {
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       { dataSource, symbol }
     ]);
+    const marketSentiment =
+      await this.marketSentimentService.getHoldingMarketSentiment(
+        SymbolProfile
+      );
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
@@ -949,6 +955,7 @@ export class PortfolioService {
       marketPrice,
       marketPriceMax,
       marketPriceMin,
+      marketSentiment,
       SymbolProfile,
       tags,
       averagePrice: averagePrice.toNumber(),

@@ -4,6 +4,7 @@ import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.mo
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
+import { MarketSentimentModule } from '@ghostfolio/api/services/market-sentiment/market-sentiment.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
@@ -20,6 +21,7 @@ import { WatchlistService } from './watchlist.service';
     DataGatheringModule,
     DataProviderModule,
     ImpersonationModule,
+    MarketSentimentModule,
     MarketDataModule,
     PrismaModule,
     SymbolProfileModule,

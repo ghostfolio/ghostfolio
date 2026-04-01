@@ -219,6 +219,23 @@
                 >First Activity</gf-value
               >
             </div>
+            @if (marketSentiment) {
+              <div class="col-12 mb-3">
+                <div class="market-sentiment-card p-3">
+                  <div class="d-flex flex-column mb-3">
+                    <strong>Market Sentiment</strong>
+                    <small class="text-muted">
+                      Retail discussion and market attention across supported
+                      sources
+                    </small>
+                  </div>
+                  <gf-market-sentiment-summary
+                    [marketSentiment]="marketSentiment"
+                    [showSources]="true"
+                  />
+                </div>
+              </div>
+            }
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"

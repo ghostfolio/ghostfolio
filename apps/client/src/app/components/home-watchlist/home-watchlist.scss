@@ -1,3 +1,13 @@
 :host {
   display: block;
+
+  .market-sentiment-card {
+    border-color: var(--oc-gray-2);
+  }
+
+  .market-sentiment-section {
+    .card-body {
+      padding: 1rem;
+    }
+  }
 }

@@ -28,6 +28,13 @@ import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
+import type {
+  MarketSentiment,
+  MarketSentimentAlignment,
+  MarketSentimentSource,
+  MarketSentimentSourceName,
+  MarketSentimentTrend
+} from './market-sentiment.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
@@ -153,6 +160,11 @@ export {
   InvestmentItem,
   LineChartItem,
   LookupItem,
+  MarketSentiment,
+  MarketSentimentAlignment,
+  MarketSentimentSource,
+  MarketSentimentSourceName,
+  MarketSentimentTrend,
   LookupResponse,
   MarketData,
   MarketDataDetailsResponse,

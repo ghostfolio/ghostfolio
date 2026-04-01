@@ -22,6 +22,7 @@ export class ConfigurationService {
   public constructor() {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
+      API_KEY_ADANOS: str({ default: '' }),
       API_KEY_ALPHA_VANTAGE: str({ default: '' }),
       API_KEY_BETTER_UPTIME: str({ default: '' }),
       API_KEY_COINGECKO_DEMO: str({ default: '' }),
@@ -31,6 +32,7 @@ export class ConfigurationService {
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
       BULL_BOARD_IS_READ_ONLY: bool({ default: true }),
+      CACHE_MARKET_SENTIMENT_TTL: num({ default: ms('6 hours') }),
       CACHE_QUOTES_TTL: num({ default: ms('1 minute') }),
       CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),

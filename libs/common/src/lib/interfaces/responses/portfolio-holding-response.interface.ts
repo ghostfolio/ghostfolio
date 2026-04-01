@@ -2,7 +2,8 @@ import {
   Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
-  HistoricalDataItem
+  HistoricalDataItem,
+  MarketSentiment
 } from '@ghostfolio/common/interfaces';
 
 import { Tag } from '@prisma/client';
@@ -25,6 +26,7 @@ export interface PortfolioHoldingResponse {
   marketPrice: number;
   marketPriceMax: number;
   marketPriceMin: number;
+  marketSentiment?: MarketSentiment;
   netPerformance: number;
   netPerformancePercent: number;
   netPerformancePercentWithCurrencyEffect: number;
