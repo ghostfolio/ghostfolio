@@ -8,9 +8,11 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   Inject,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -26,8 +28,6 @@ import {
   checkmarkOutline,
   copyOutline
 } from 'ionicons/icons';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
 
@@ -63,12 +63,11 @@ export class GfUserAccountRegistrationDialogComponent {
   public routerLinkAboutTermsOfService =
     publicRoutes.about.subRoutes.termsOfService.routerLink;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: UserAccountRegistrationDialogParams,
-    private dataService: DataService
+    private dataService: DataService,
+    private destroyRef: DestroyRef
   ) {
     addIcons({ arrowForwardOutline, checkmarkOutline, copyOutline });
   }
@@ -76,7 +75,7 @@ export class GfUserAccountRegistrationDialogComponent {
   public createAccount() {
     this.dataService
       .postUser()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ accessToken, authToken, role }) => {
         this.accessToken = accessToken;
         this.authToken = authToken;

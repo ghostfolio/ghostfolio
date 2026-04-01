@@ -4,13 +4,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   DoCheck,
   ElementRef,
-  Input,
-  OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  inject,
+  input,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroupDirective,
@@ -21,15 +24,14 @@ import {
 import {
   MatAutocomplete,
   MatAutocompleteModule,
-  MatAutocompleteSelectedEvent
+  MatOption
 } from '@angular/material/autocomplete';
 import {
   MatFormFieldControl,
   MatFormFieldModule
 } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
-import { Subject } from 'rxjs';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 
@@ -58,21 +60,19 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   templateUrl: 'currency-selector.component.html'
 })
 export class GfCurrencySelectorComponent
-  extends AbstractMatFormField<string>
-  implements DoCheck, OnDestroy, OnInit
+  extends AbstractMatFormField<string | null>
+  implements DoCheck, OnInit
 {
-  @Input() private currencies: string[] = [];
-  @Input() private formControlName: string;
-
-  @ViewChild(MatInput) private input: MatInput;
-
   @ViewChild('currencyAutocomplete')
   public currencyAutocomplete: MatAutocomplete;
 
-  public control = new FormControl();
+  public readonly control = new FormControl<string | null>(null);
+  public readonly currencies = input.required<string[]>();
   public filteredCurrencies: string[] = [];
+  public readonly formControlName = input.required<string>();
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly input = viewChild.required(MatInput);
 
   public constructor(
     public readonly _elementRef: ElementRef,
@@ -86,6 +86,19 @@ export class GfCurrencySelectorComponent
     this.controlType = 'currency-selector';
   }
 
+  public get empty() {
+    return this.input().empty;
+  }
+
+  public set value(value: string | null) {
+    this.control.setValue(value);
+    super.value = value;
+  }
+
+  public focus() {
+    this.input().focus();
+  }
+
   public ngOnInit() {
     if (this.disabled) {
       this.control.disable();
@@ -94,17 +107,18 @@ export class GfCurrencySelectorComponent
     const formGroup = this.formGroupDirective.form;
 
     if (formGroup) {
-      const control = formGroup.get(this.formControlName);
+      const control = formGroup.get(this.formControlName());
 
       if (control) {
-        this.value = this.currencies.find((value) => {
-          return value === control.value;
-        });
+        this.value =
+          this.currencies().find((value) => {
+            return value === control.value;
+          }) ?? null;
       }
     }
 
     this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         if (super.value) {
           super.value = null;
@@ -113,10 +127,10 @@ export class GfCurrencySelectorComponent
 
     this.control.valueChanges
       .pipe(
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         startWith(''),
         map((value) => {
-          return value ? this.filter(value) : this.currencies.slice();
+          return value ? this.filter(value) : this.currencies().slice();
         })
       )
       .subscribe((values) => {
@@ -124,42 +138,22 @@ export class GfCurrencySelectorComponent
       });
   }
 
-  public get empty() {
-    return this.input?.empty;
-  }
-
-  public focus() {
-    this.input.focus();
-  }
-
   public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
-      this.errorState = this.ngControl.invalid && this.ngControl.touched;
+      this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);
       this.stateChanges.next();
     }
   }
 
-  public onUpdateCurrency(event: MatAutocompleteSelectedEvent) {
-    super.value = event.option.value;
-  }
-
-  public set value(value: string) {
-    this.control.setValue(value);
-    super.value = value;
-  }
-
-  public ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+  public onUpdateCurrency({ option }: { option: MatOption<string> }) {
+    super.value = option.value;
   }
 
   private filter(value: string) {
-    const filterValue = value?.toLowerCase();
+    const filterValue = value.toLowerCase();
 
-    return this.currencies.filter((currency) => {
+    return this.currencies().filter((currency) => {
       return currency.toLowerCase().startsWith(filterValue);
     });
   }
@@ -168,7 +162,7 @@ export class GfCurrencySelectorComponent
     const requiredCheck = super.required ? !super.value : false;
 
     if (requiredCheck) {
-      this.ngControl.control.setErrors({ invalidData: true });
+      this.ngControl.control?.setErrors({ invalidData: true });
     }
   }
 }

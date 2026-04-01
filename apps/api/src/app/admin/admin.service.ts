@@ -1,4 +1,4 @@
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -55,12 +55,12 @@ import { groupBy } from 'lodash';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
-    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
@@ -225,6 +225,10 @@ export class AdminService {
       presetId === 'ETF_WITHOUT_SECTORS'
     ) {
       filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
+    } else if (presetId === 'NO_ACTIVITIES') {
+      where.activities = {
+        none: {}
+      };
     }
 
     const searchQuery = filters.find(({ type }) => {
@@ -466,10 +470,12 @@ export class AdminService {
     let currency: EnhancedSymbolProfile['currency'] = '-';
     let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
 
-    if (isCurrency(getCurrencyFromSymbol(symbol))) {
+    const isCurrencyAssetProfile = isCurrency(getCurrencyFromSymbol(symbol));
+
+    if (isCurrencyAssetProfile) {
       currency = getCurrencyFromSymbol(symbol);
       ({ activitiesCount, dateOfFirstActivity } =
-        await this.orderService.getStatisticsByCurrency(currency));
+        await this.activitiesService.getStatisticsByCurrency(currency));
     }
 
     const [[assetProfile], marketData] = await Promise.all([
@@ -504,6 +510,8 @@ export class AdminService {
         dataSource,
         dateOfFirstActivity,
         symbol,
+        assetClass: isCurrencyAssetProfile ? AssetClass.LIQUIDITY : undefined,
+        assetSubClass: isCurrencyAssetProfile ? AssetSubClass.CASH : undefined,
         isActive: true
       }
     };
@@ -790,7 +798,7 @@ export class AdminService {
         if (isCurrency(getCurrencyFromSymbol(symbol))) {
           currency = getCurrencyFromSymbol(symbol);
           ({ activitiesCount, dateOfFirstActivity } =
-            await this.orderService.getStatisticsByCurrency(currency));
+            await this.activitiesService.getStatisticsByCurrency(currency));
         }
 
         const lastMarketPrice = lastMarketPriceMap.get(

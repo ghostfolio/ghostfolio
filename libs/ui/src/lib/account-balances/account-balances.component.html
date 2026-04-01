@@ -12,7 +12,7 @@
         <ng-container i18n>Date</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2" mat-cell>
-        <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
+        <gf-value [isDate]="true" [locale]="locale()" [value]="element?.date" />
       </td>
       <td *matFooterCellDef class="px-2" mat-footer-cell>
         <mat-form-field appearance="outline" class="py-1 without-hint">
@@ -37,7 +37,7 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
-            [locale]="locale"
+            [locale]="locale()"
             [unit]="element?.account?.currency"
             [value]="element?.value"
           />
@@ -48,7 +48,7 @@
           <mat-form-field appearance="outline" class="without-hint">
             <input formControlName="balance" matInput type="number" />
             <div class="ml-2" matTextSuffix>
-              {{ accountCurrency }}
+              {{ accountCurrency() }}
             </div>
           </mat-form-field>
         </div>
@@ -58,7 +58,7 @@
     <ng-container matColumnDef="actions" stickyEnd>
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        @if (showActions) {
+        @if (showActions()) {
           <button
             class="mx-1 no-min-width px-2"
             mat-button
@@ -100,7 +100,7 @@
     <tr
       *matFooterRowDef="displayedColumns"
       mat-footer-row
-      [hidden]="!showActions"
+      [hidden]="!showActions()"
     ></tr>
   </table>
 </form>

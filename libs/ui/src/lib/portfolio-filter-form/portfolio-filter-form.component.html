@@ -4,14 +4,14 @@
       <mat-label i18n>Account</mat-label>
       <mat-select formControlName="account">
         <mat-option [value]="null" />
-        @for (account of accounts; track account.id) {
+        @for (account of accounts(); track account.id) {
           <mat-option [value]="account.id">
             <div class="d-flex">
               @if (account.platform?.url) {
                 <gf-entity-logo
                   class="mr-1"
-                  [tooltip]="account.platform?.name"
-                  [url]="account.platform?.url"
+                  [tooltip]="account.platform?.name ?? ''"
+                  [url]="account.platform?.url ?? ''"
                 />
               }
               <span>{{ account.name }}</span>
@@ -32,7 +32,7 @@
           filterForm.get('holding')?.value?.name
         }}</mat-select-trigger>
         <mat-option [value]="null" />
-        @for (holding of holdings; track holding.name) {
+        @for (holding of holdings(); track holding.name) {
           <mat-option [value]="holding">
             <div class="line-height-1 text-truncate">
               <span
@@ -53,7 +53,7 @@
       <mat-label i18n>Tag</mat-label>
       <mat-select formControlName="tag">
         <mat-option [value]="null" />
-        @for (tag of tags; track tag.id) {
+        @for (tag of tags(); track tag.id) {
           <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
         }
       </mat-select>
@@ -64,7 +64,7 @@
       <mat-label i18n>Asset Class</mat-label>
       <mat-select formControlName="assetClass">
         <mat-option [value]="null" />
-        @for (assetClass of assetClasses; track assetClass.id) {
+        @for (assetClass of assetClasses(); track assetClass.id) {
           <mat-option [value]="assetClass.id">{{
             assetClass.label
           }}</mat-option>

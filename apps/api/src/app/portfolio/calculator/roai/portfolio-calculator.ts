@@ -860,7 +860,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           return format(date, 'yyyy');
         })
     ] as DateRange[]) {
-      const dateInterval = getIntervalFromDateRange(dateRange);
+      const dateInterval = getIntervalFromDateRange({ dateRange });
       const endDate = dateInterval.endDate;
       let startDate = dateInterval.startDate;
 

@@ -19,14 +19,13 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -41,7 +40,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-overview.scss'],
   templateUrl: './home-overview.html'
 })
-export class GfHomeOverviewComponent implements OnDestroy, OnInit {
+export class GfHomeOverviewComponent implements OnInit {
   public deviceType: string;
   public errors: AssetProfileIdentifier[];
   public hasError: boolean;
@@ -57,32 +56,31 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   public routerLinkPortfolioActivities =
-    internalRoutes.portfolio.subRoutes.activities.routerLink;
+    internalRoutes.portfolio.subRoutes?.activities.routerLink;
   public showDetails = false;
   public unit: string;
   public user: User;
   private graph_type: string;
   public graph_unit: string;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
     private userService: UserService
   ) {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
 
           this.hasPermissionToCreateActivity = hasPermission(
             this.user.permissions,
-            permissions.createOrder
+            permissions.createActivity
           );
 
           this.update();
@@ -106,7 +104,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
 
@@ -114,15 +112,10 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.layoutService.shouldReloadContent$
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.update();
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private update() {
@@ -133,7 +126,7 @@ export class GfHomeOverviewComponent implements OnDestroy, OnInit {
       .fetchPortfolioPerformance({
         range: this.user?.settings?.dateRange
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
         this.errors = errors;
         this.performance = performance;

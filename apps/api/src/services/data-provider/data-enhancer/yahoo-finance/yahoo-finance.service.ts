@@ -207,14 +207,16 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
       if (['ETF', 'MUTUALFUND'].includes(assetSubClass)) {
         response.holdings =
-          assetProfile.topHoldings?.holdings?.map(
-            ({ holdingName, holdingPercent }) => {
+          assetProfile.topHoldings?.holdings
+            ?.filter(({ holdingName }) => {
+              return !holdingName?.includes('ETF');
+            })
+            ?.map(({ holdingName, holdingPercent }) => {
               return {
                 name: this.formatName({ longName: holdingName }),
                 weight: holdingPercent
               };
-            }
-          ) ?? [];
+            }) ?? [];
 
         response.sectors = (
           assetProfile.topHoldings?.sectorWeightings ?? []

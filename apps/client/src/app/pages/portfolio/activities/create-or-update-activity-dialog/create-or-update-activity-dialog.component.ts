@@ -20,9 +20,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
-  OnDestroy
+  DestroyRef,
+  Inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -46,8 +47,8 @@ import { AssetClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, delay, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError, delay } from 'rxjs/operators';
 
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 import { ActivityType } from './types/activity-type.type';
@@ -75,7 +76,7 @@ import { ActivityType } from './types/activity-type.type';
   styleUrls: ['./create-or-update-activity-dialog.scss'],
   templateUrl: 'create-or-update-activity-dialog.html'
 })
-export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
+export class GfCreateOrUpdateActivityDialogComponent {
   public activityForm: FormGroup;
 
   public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
@@ -101,13 +102,12 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
   public typesTranslationMap = new Map<Type, string>();
   public Validators = Validators;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
+    private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string,
@@ -133,7 +133,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
     this.dataService
       .fetchPortfolioHoldings()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.defaultLookupItems = holdings
           .filter(({ assetSubClass }) => {
@@ -188,8 +188,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
         !this.data.activity?.accountId &&
         this.mode === 'create'
           ? this.data.accounts[0].id
-          : this.data.activity?.accountId,
-        Validators.required
+          : this.data.activity?.accountId
       ],
       assetClass: [this.data.activity?.SymbolProfile?.assetClass],
       assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
@@ -238,7 +237,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
         // Slightly delay until the more specific form control value changes have
         // completed
         delay(300),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(async () => {
         if (
@@ -285,7 +284,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
     this.activityForm
       .get('assetClass')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((assetClass) => {
         const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
 
@@ -336,7 +335,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
       if (newTag && this.hasPermissionToCreateOwnTag) {
         this.dataService
           .postTag({ ...newTag, userId: this.data.user.id })
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((tag) => {
             this.activityForm.get('tags').setValue(
               tags.map((currentTag) => {
@@ -350,7 +349,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
             this.userService
               .get(true)
-              .pipe(takeUntil(this.unsubscribeSubject))
+              .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe();
           });
       }
@@ -358,18 +357,13 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
     this.activityForm
       .get('type')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((type: ActivityType) => {
         if (
           type === 'VALUABLE' ||
           (this.activityForm.get('dataSource').value === 'MANUAL' &&
             type === 'BUY')
         ) {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId').value;
@@ -397,11 +391,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
           this.activityForm.get('updateAccountBalance').disable();
           this.activityForm.get('updateAccountBalance').setValue(false);
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
-          this.activityForm
-            .get('accountId')
-            .removeValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
-
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId').value;
@@ -447,8 +436,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
             this.activityForm.get('updateAccountBalance').setValue(false);
           }
         } else {
-          this.activityForm.get('accountId').setValidators(Validators.required);
-          this.activityForm.get('accountId').updateValueAndValidity();
           this.activityForm
             .get('dataSource')
             .setValidators(Validators.required);
@@ -478,7 +465,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
           dataSource: this.data.activity?.SymbolProfile?.dataSource,
           symbol: this.data.activity?.SymbolProfile?.symbol
         })
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ marketPrice }) => {
           this.currentMarketPrice = marketPrice;
 
@@ -514,11 +501,12 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
       comment: this.activityForm.get('comment').value || null,
       currency: this.activityForm.get('currency').value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
+      dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
+        this.activityForm.get('type').value
+      )
+        ? 'MANUAL'
+        : this.activityForm.get('dataSource').value,
       date: this.activityForm.get('date').value,
-      dataSource:
-        this.activityForm.get('type').value === 'VALUABLE'
-          ? 'MANUAL'
-          : this.activityForm.get('dataSource').value,
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
@@ -569,11 +557,6 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
     }
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private updateAssetProfile() {
     this.isLoading = true;
     this.changeDetectorRef.markForCheck();
@@ -593,7 +576,7 @@ export class GfCreateOrUpdateActivityDialogComponent implements OnDestroy {
 
           return EMPTY;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
         if (this.mode === 'create') {

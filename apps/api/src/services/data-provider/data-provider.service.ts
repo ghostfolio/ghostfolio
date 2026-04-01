@@ -1,3 +1,4 @@
+import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
@@ -10,8 +11,10 @@ import {
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
+  getAssetProfileIdentifier,
   getCurrencyFromSymbol,
   getStartOfUtcDate,
   isCurrency,
@@ -27,7 +30,7 @@ import {
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
+import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
@@ -185,6 +188,125 @@ export class DataProviderService implements OnModuleInit {
     return dataSources.sort();
   }
 
+  public async validateActivities({
+    activitiesDto,
+    assetProfilesWithMarketDataDto,
+    maxActivitiesToImport,
+    user
+  }: {
+    activitiesDto: Pick<
+      Partial<CreateOrderDto>,
+      'currency' | 'dataSource' | 'symbol' | 'type'
+    >[];
+    assetProfilesWithMarketDataDto?: ImportDataDto['assetProfiles'];
+    maxActivitiesToImport: number;
+    user: UserWithSettings;
+  }) {
+    if (activitiesDto?.length > maxActivitiesToImport) {
+      throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
+    }
+
+    const assetProfiles: {
+      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
+    } = {};
+
+    const dataSources = await this.getDataSources();
+
+    for (const [
+      index,
+      { currency, dataSource, symbol, type }
+    ] of activitiesDto.entries()) {
+      const activityPath =
+        maxActivitiesToImport === 1 ? 'activity' : `activities.${index}`;
+
+      if (!dataSources.includes(dataSource)) {
+        throw new Error(
+          `${activityPath}.dataSource ("${dataSource}") is not valid`
+        );
+      }
+
+      if (
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user.subscription.type === 'Basic'
+      ) {
+        const dataProvider = this.getDataProvider(DataSource[dataSource]);
+
+        if (dataProvider.getDataProviderInfo().isPremium) {
+          throw new Error(
+            `${activityPath}.dataSource ("${dataSource}") is not valid`
+          );
+        }
+      }
+
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource,
+        symbol
+      });
+
+      if (!assetProfiles[assetProfileIdentifier]) {
+        if (
+          (dataSource === DataSource.MANUAL && type === 'BUY') ||
+          ['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+        ) {
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (assetProfile) => {
+              return (
+                assetProfile.dataSource === dataSource &&
+                assetProfile.symbol === symbol
+              );
+            }
+          );
+
+          assetProfiles[assetProfileIdentifier] = {
+            currency,
+            dataSource,
+            symbol,
+            name: assetProfileInImport?.name ?? symbol
+          };
+
+          continue;
+        }
+
+        let assetProfile: Partial<SymbolProfile> = { currency };
+
+        try {
+          assetProfile = (
+            await this.getAssetProfiles([
+              {
+                dataSource,
+                symbol
+              }
+            ])
+          )?.[symbol];
+        } catch {}
+
+        if (!assetProfile?.name) {
+          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+            (profile) => {
+              return (
+                profile.dataSource === dataSource && profile.symbol === symbol
+              );
+            }
+          );
+
+          if (assetProfileInImport) {
+            Object.assign(assetProfile, assetProfileInImport);
+          }
+        }
+
+        if (!assetProfile?.name) {
+          throw new Error(
+            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+          );
+        }
+
+        assetProfiles[assetProfileIdentifier] = assetProfile;
+      }
+    }
+
+    return assetProfiles;
+  }
+
   public async getDividends({
     dataSource,
     from,
@@ -225,36 +347,35 @@ export class DataProviderService implements OnModuleInit {
 
     const granularityQuery =
       aGranularity === 'month'
-        ? `AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
-        : '';
+        ? Prisma.sql`AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
+        : Prisma.empty;
 
     const rangeQuery =
       from && to
-        ? `AND date >= '${format(from, DATE_FORMAT)}' AND date <= '${format(
+        ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT)}::timestamp AND date <= ${format(
             to,
             DATE_FORMAT
-          )}'`
-        : '';
+          )}::timestamp`
+        : Prisma.empty;
 
     const dataSources = aItems.map(({ dataSource }) => {
       return dataSource;
     });
+
     const symbols = aItems.map(({ symbol }) => {
       return symbol;
     });
 
     try {
-      const queryRaw = `
-        SELECT *
-        FROM "MarketData"
-        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
-          AND "symbol" IN ('${symbols.join(
-            `','`
-          )}') ${granularityQuery} ${rangeQuery}
-        ORDER BY date;`;
-
-      const marketDataByGranularity: MarketData[] =
-        await this.prismaService.$queryRawUnsafe(queryRaw);
+      const marketDataByGranularity: MarketData[] = await this.prismaService
+        .$queryRaw`
+          SELECT *
+          FROM "MarketData"
+          WHERE "dataSource"::text IN (${Prisma.join(dataSources)})
+            AND "symbol" IN (${Prisma.join(symbols)})
+            ${granularityQuery}
+            ${rangeQuery}
+          ORDER BY date;`;
 
       response = marketDataByGranularity.reduce((r, marketData) => {
         const { date, marketPrice, symbol } = marketData;

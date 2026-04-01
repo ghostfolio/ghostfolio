@@ -7,11 +7,12 @@ import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output
+  effect,
+  inject,
+  input,
+  output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -46,23 +47,32 @@ import ms from 'ms';
   templateUrl: './access-table.component.html',
   styleUrls: ['./access-table.component.scss']
 })
-export class GfAccessTableComponent implements OnChanges {
-  @Input() accesses: Access[];
-  @Input() showActions: boolean;
-  @Input() user: User;
+export class GfAccessTableComponent {
+  public readonly accesses = input.required<Access[]>();
+  public readonly showActions = input<boolean>(false);
+  public readonly user = input.required<User>();
 
-  @Output() accessDeleted = new EventEmitter<string>();
-  @Output() accessToUpdate = new EventEmitter<string>();
+  public readonly accessDeleted = output<string>();
+  public readonly accessToUpdate = output<string>();
 
-  public baseUrl = window.location.origin;
-  public dataSource: MatTableDataSource<Access>;
-  public displayedColumns = [];
+  protected readonly baseUrl = window.location.origin;
+  protected readonly dataSource = new MatTableDataSource<Access>();
 
-  public constructor(
-    private clipboard: Clipboard,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar
-  ) {
+  protected readonly displayedColumns = computed(() => {
+    const columns = ['alias', 'grantee', 'type', 'details'];
+
+    if (this.showActions()) {
+      columns.push('actions');
+    }
+
+    return columns;
+  });
+
+  private readonly clipboard = inject(Clipboard);
+  private readonly notificationService = inject(NotificationService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  public constructor() {
     addIcons({
       copyOutline,
       createOutline,
@@ -72,27 +82,19 @@ export class GfAccessTableComponent implements OnChanges {
       lockOpenOutline,
       removeCircleOutline
     });
+
+    effect(() => {
+      this.dataSource.data = this.accesses() ?? [];
+    });
   }
 
-  public ngOnChanges() {
-    this.displayedColumns = ['alias', 'grantee', 'type', 'details'];
-
-    if (this.showActions) {
-      this.displayedColumns.push('actions');
-    }
-
-    if (this.accesses) {
-      this.dataSource = new MatTableDataSource(this.accesses);
-    }
-  }
-
-  public getPublicUrl(aId: string): string {
-    const languageCode = this.user.settings.language;
+  protected getPublicUrl(aId: string) {
+    const languageCode = this.user().settings.language;
 
     return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
   }
 
-  public onCopyUrlToClipboard(aId: string): void {
+  protected onCopyUrlToClipboard(aId: string) {
     this.clipboard.copy(this.getPublicUrl(aId));
 
     this.snackBar.open(
@@ -104,7 +106,7 @@ export class GfAccessTableComponent implements OnChanges {
     );
   }
 
-  public onDeleteAccess(aId: string) {
+  protected onDeleteAccess(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.accessDeleted.emit(aId);
@@ -114,7 +116,7 @@ export class GfAccessTableComponent implements OnChanges {
     });
   }
 
-  public onUpdateAccess(aId: string) {
+  protected onUpdateAccess(aId: string) {
     this.accessToUpdate.emit(aId);
   }
 }

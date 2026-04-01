@@ -1540,7 +1540,6 @@ describe('redactAttributes', () => {
             netPerformanceWithCurrencyEffect: null,
             totalBuy: null,
             totalSell: null,
-            committedFunds: null,
             currentValueInBaseCurrency: null,
             dividendInBaseCurrency: null,
             emergencyFund: null,
@@ -1554,6 +1553,7 @@ describe('redactAttributes', () => {
             items: null,
             liabilities: null,
             totalInvestment: null,
+            totalInvestmentValueWithCurrencyEffect: null,
             totalValueInBaseCurrency: null,
             currentNetWorth: null
           }
@@ -3016,7 +3016,6 @@ describe('redactAttributes', () => {
         netPerformanceWithCurrencyEffect: null,
         totalBuy: null,
         totalSell: null,
-        committedFunds: null,
         currentValueInBaseCurrency: null,
         dividendInBaseCurrency: null,
         emergencyFund: null,
@@ -3030,6 +3029,7 @@ describe('redactAttributes', () => {
         items: null,
         liabilities: null,
         totalInvestment: null,
+        totalInvestmentValueWithCurrencyEffect: null,
         totalValueInBaseCurrency: null,
         currentNetWorth: null
       }
