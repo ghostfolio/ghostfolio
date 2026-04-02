@@ -15,9 +15,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -25,8 +26,6 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { GfCreateWatchlistItemDialogComponent } from './create-watchlist-item-dialog/create-watchlist-item-dialog.component';
 import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/interfaces/interfaces';
@@ -45,7 +44,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   styleUrls: ['./home-watchlist.scss'],
   templateUrl: './home-watchlist.html'
 })
-export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
+export class GfHomeWatchlistComponent implements OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateWatchlistItem: boolean;
@@ -53,11 +52,10 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
   public user: User;
   public watchlist: Benchmark[];
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
@@ -69,13 +67,13 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['createWatchlistItemDialog']) {
           this.openCreateWatchlistItemDialog();
@@ -83,7 +81,7 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -114,12 +112,11 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
 
   public onWatchlistItemDeleted({
     dataSource,
-
     symbol
   }: AssetProfileIdentifier) {
     this.dataService
       .deleteWatchlistItem({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           return this.loadWatchlistData();
@@ -127,15 +124,10 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private loadWatchlistData() {
     this.dataService
       .fetchWatchlist()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ watchlist }) => {
         this.watchlist = watchlist;
 
@@ -146,7 +138,7 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
   private openCreateWatchlistItemDialog() {
     this.userService
       .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         this.user = user;
 
@@ -164,12 +156,12 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
 
         dialogRef
           .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(({ dataSource, symbol } = {}) => {
             if (dataSource && symbol) {
               this.dataService
                 .postWatchlistItem({ dataSource, symbol })
-                .pipe(takeUntil(this.unsubscribeSubject))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
                   next: () => this.loadWatchlistData()
                 });
