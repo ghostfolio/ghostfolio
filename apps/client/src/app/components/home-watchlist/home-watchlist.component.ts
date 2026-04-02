@@ -114,6 +114,7 @@ export class GfHomeWatchlistComponent implements OnDestroy, OnInit {
 
   public onWatchlistItemDeleted({
     dataSource,
+
     symbol
   }: AssetProfileIdentifier) {
     this.dataService
