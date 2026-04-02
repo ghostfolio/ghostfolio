@@ -7,9 +7,11 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   Inject,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -21,8 +23,8 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import ms from 'ms';
-import { interval, Subject } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
+import { interval } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 
 import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
 
@@ -51,11 +53,10 @@ export class GfSubscriptionInterstitialDialogComponent implements OnInit {
   public routerLinkPricing = publicRoutes.pricing.routerLink;
   public variantIndex: number;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: SubscriptionInterstitialDialogParams,
+    private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfSubscriptionInterstitialDialogComponent>
   ) {
     this.variantIndex = Math.floor(
@@ -76,17 +77,12 @@ export class GfSubscriptionInterstitialDialogComponent implements OnInit {
 
           this.changeDetectorRef.markForCheck();
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
   }
 
   public closeDialog() {
     this.dialogRef.close({});
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
