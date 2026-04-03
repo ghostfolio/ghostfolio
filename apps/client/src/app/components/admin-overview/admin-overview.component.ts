@@ -22,7 +22,13 @@ import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -50,8 +56,6 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import ms, { StringValue } from 'ms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -72,7 +76,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./admin-overview.scss'],
   templateUrl: './admin-overview.html'
 })
-export class GfAdminOverviewComponent implements OnDestroy, OnInit {
+export class GfAdminOverviewComponent implements OnInit {
   public activitiesCount: number;
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
@@ -88,13 +92,12 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
   public user: User;
   public version: string;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private adminService: AdminService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private userService: UserService
@@ -102,7 +105,7 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -219,7 +222,7 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
       confirmFn: () => {
         this.cacheService
           .flush()
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
             setTimeout(() => {
               window.location.reload();
@@ -268,7 +271,7 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
   public onSyncDemoUserAccount() {
     this.adminService
       .syncDemoUserAccount()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.snackBar.open(
           '✅ ' + $localize`Demo user account has been synced.`,
@@ -280,15 +283,10 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private fetchAdminData() {
     this.adminService
       .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ activitiesCount, settings, userCount, version }) => {
         this.activitiesCount = activitiesCount;
         this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
@@ -320,7 +318,7 @@ export class GfAdminOverviewComponent implements OnDestroy, OnInit {
       .putAdminSetting(key, {
         value: value || value === false ? JSON.stringify(value) : undefined
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         setTimeout(() => {
           window.location.reload();

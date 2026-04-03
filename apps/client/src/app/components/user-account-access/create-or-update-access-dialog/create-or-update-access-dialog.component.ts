@@ -7,10 +7,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   Inject,
-  OnDestroy,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -28,7 +29,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { StatusCodes } from 'http-status-codes';
-import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
@@ -48,19 +49,16 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
 })
-export class GfCreateOrUpdateAccessDialogComponent
-  implements OnDestroy, OnInit
-{
+export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService
   ) {
@@ -113,11 +111,6 @@ export class GfCreateOrUpdateAccessDialogComponent
     }
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private async createAccess() {
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias').value,
@@ -144,7 +137,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
             return EMPTY;
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
           this.dialogRef.close(access);
@@ -181,7 +174,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
             return EMPTY;
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
           this.dialogRef.close(access);

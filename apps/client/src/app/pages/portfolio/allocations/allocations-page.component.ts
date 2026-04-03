@@ -22,7 +22,13 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -36,8 +42,6 @@ import {
 } from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -54,7 +58,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'
 })
-export class GfAllocationsPageComponent implements OnDestroy, OnInit {
+export class GfAllocationsPageComponent implements OnInit {
   public accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
@@ -119,11 +123,10 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
   public user: User;
   public worldMapChartFormat: string;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
@@ -132,7 +135,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {
           this.openAccountDetailDialog(params['accountId']);
@@ -145,13 +148,13 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -166,7 +169,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
           this.initialize();
 
           this.fetchPortfolioDetails()
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((portfolioDetails) => {
               this.initialize();
 
@@ -200,11 +203,6 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private extractEtfProvider({
@@ -407,17 +405,22 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
         }
 
         if (position.holdings.length > 0) {
-          for (const holding of position.holdings) {
-            const { allocationInPercentage, name, valueInBaseCurrency } =
-              holding;
+          for (const {
+            allocationInPercentage,
+            name,
+            valueInBaseCurrency
+          } of position.holdings) {
+            const normalizedAssetName = this.normalizeAssetName(name);
 
-            if (this.topHoldingsMap[name]?.value) {
-              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+            if (this.topHoldingsMap[normalizedAssetName]?.value) {
+              this.topHoldingsMap[normalizedAssetName].value += isNumber(
+                valueInBaseCurrency
+              )
                 ? valueInBaseCurrency
                 : allocationInPercentage *
                   this.portfolioDetails.holdings[symbol].valueInPercentage;
             } else {
-              this.topHoldingsMap[name] = {
+              this.topHoldingsMap[normalizedAssetName] = {
                 name,
                 value: isNumber(valueInBaseCurrency)
                   ? valueInBaseCurrency
@@ -520,7 +523,10 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
               if (holding.holdings.length > 0) {
                 const currentParentHolding = holding.holdings.find(
                   (parentHolding) => {
-                    return parentHolding.name === name;
+                    return (
+                      this.normalizeAssetName(parentHolding.name) ===
+                      this.normalizeAssetName(name)
+                    );
                   }
                 );
 
@@ -557,6 +563,14 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
     }
   }
 
+  private normalizeAssetName(name: string) {
+    if (!name) {
+      return '';
+    }
+
+    return name.trim().toLowerCase();
+  }
+
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open<
       GfAccountDetailDialogComponent,
@@ -569,7 +583,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
         hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
-          hasPermission(this.user?.permissions, permissions.createOrder) &&
+          hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView
       },
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
@@ -578,7 +592,7 @@ export class GfAllocationsPageComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });

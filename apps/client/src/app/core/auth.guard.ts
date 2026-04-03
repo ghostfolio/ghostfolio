@@ -68,7 +68,7 @@ export class AuthGuard {
             this.dataService
               .putUserSetting({ language: document.documentElement.lang })
               .subscribe(() => {
-                this.userService.remove();
+                this.userService.reset();
 
                 setTimeout(() => {
                   window.location.reload();

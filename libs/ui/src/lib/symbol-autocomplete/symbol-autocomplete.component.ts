@@ -8,15 +8,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   DoCheck,
   ElementRef,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewChild
+  inject,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormsModule,
@@ -35,13 +37,12 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isString } from 'lodash';
-import { Subject, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
-  switchMap,
-  takeUntil
+  switchMap
 } from 'rxjs/operators';
 
 import { translate } from '../i18n';
@@ -77,21 +78,21 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements DoCheck, OnChanges, OnDestroy, OnInit
+  implements DoCheck, OnChanges, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
 
-  @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
-
   @Input() private includeIndices = false;
 
-  @ViewChild(MatInput) private input: MatInput;
-
-  public control = new FormControl();
+  public readonly control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
-  private unsubscribeSubject = new Subject<void>();
+  protected readonly symbolAutocomplete =
+    viewChild.required<MatAutocomplete>('symbolAutocomplete');
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly input = viewChild.required(MatInput);
 
   public constructor(
     public readonly _elementRef: ElementRef,
@@ -105,13 +106,22 @@ export class GfSymbolAutocompleteComponent
     this.controlType = 'symbol-autocomplete';
   }
 
+  public get empty() {
+    return this.input().empty;
+  }
+
+  public set value(value: LookupItem) {
+    this.control.setValue(value);
+    super.value = value;
+  }
+
   public ngOnInit() {
     if (this.disabled) {
       this.control.disable();
     }
 
     this.control.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         if (super.value) {
           super.value.dataSource = null;
@@ -136,7 +146,7 @@ export class GfSymbolAutocompleteComponent
         }),
         debounceTime(400),
         distinctUntilChanged(),
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
             query,
@@ -168,12 +178,8 @@ export class GfSymbolAutocompleteComponent
     return aLookupItem?.symbol ?? '';
   }
 
-  public get empty() {
-    return this.input?.empty;
-  }
-
   public focus() {
-    this.input.focus();
+    this.input().focus();
   }
 
   public isValueInOptions(value: string) {
@@ -185,7 +191,7 @@ export class GfSymbolAutocompleteComponent
   public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
-      this.errorState = this.ngControl.invalid && this.ngControl.touched;
+      this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);
       this.stateChanges.next();
     }
   }
@@ -195,18 +201,6 @@ export class GfSymbolAutocompleteComponent
       dataSource: event.option.value.dataSource,
       symbol: event.option.value.symbol
     } as LookupItem;
-  }
-
-  public set value(value: LookupItem) {
-    this.control.setValue(value);
-    super.value = value;
-  }
-
-  public ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private showDefaultOptions() {
@@ -224,8 +218,9 @@ export class GfSymbolAutocompleteComponent
     const requiredCheck = super.required
       ? !super.value?.dataSource || !super.value?.symbol
       : false;
+
     if (requiredCheck) {
-      this.ngControl.control.setErrors({ invalidData: true });
+      this.ngControl.control?.setErrors({ invalidData: true });
     }
   }
 }

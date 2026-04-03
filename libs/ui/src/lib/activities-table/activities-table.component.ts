@@ -10,6 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -19,9 +20,9 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -29,14 +30,18 @@ import {
   inject,
   input
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   MatPaginator,
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import {
   MatSort,
   MatSortModule,
@@ -46,6 +51,7 @@ import {
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
+import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { addIcons } from 'ionicons';
 import {
@@ -63,7 +69,6 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, takeUntil } from 'rxjs';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -82,27 +87,29 @@ import { GfValueComponent } from '../value/value.component';
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
+    MatFormFieldModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatSelectModule,
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class GfActivitiesTableComponent
-  implements AfterViewInit, OnDestroy, OnInit
-{
+export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasActivities: boolean;
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
+  @Input() hasPermissionToFilterByType: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() pageIndex: number;
@@ -125,14 +132,17 @@ export class GfActivitiesTableComponent
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
+  @Output() typesFilterChanged = new EventEmitter<string[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  public activityTypesTranslationMap = new Map<ActivityType, string>();
   public hasDrafts = false;
   public hasErrors = false;
   public isUUID = isUUID;
   public selectedRows = new SelectionModel<Activity>(true, []);
+  public typesFilter = new FormControl<string[]>([]);
 
   public readonly dataSource = input.required<
     MatTableDataSource<Activity> | undefined
@@ -186,9 +196,15 @@ export class GfActivitiesTableComponent
   });
 
   private readonly notificationService = inject(NotificationService);
-  private readonly unsubscribeSubject = new Subject<void>();
 
-  public constructor() {
+  public constructor(private destroyRef: DestroyRef) {
+    for (const type of Object.keys(ActivityType) as ActivityType[]) {
+      this.activityTypesTranslationMap.set(
+        ActivityType[type],
+        translate(ActivityType[type])
+      );
+    }
+
     addIcons({
       alertCircleOutline,
       calendarClearOutline,
@@ -209,11 +225,17 @@ export class GfActivitiesTableComponent
     if (this.showCheckbox()) {
       this.toggleAllRows();
       this.selectedRows.changed
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((selectedRows) => {
           this.selectedActivities.emit(selectedRows.source.selected);
         });
     }
+
+    this.typesFilter.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((types) => {
+        this.typesFilterChanged.emit(types ?? []);
+      });
   }
 
   public ngAfterViewInit() {
@@ -341,10 +363,5 @@ export class GfActivitiesTableComponent
     }
 
     this.selectedActivities.emit(this.selectedRows.selected);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

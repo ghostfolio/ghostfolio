@@ -157,6 +157,7 @@ model Order {
   @@index([accountId])
   @@index([date])
   @@index([isDraft])
+  @@index([type])
   @@index([userId])
 }
 

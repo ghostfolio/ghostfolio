@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Input,
-  OnDestroy,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { DataSource } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { catchError, map, type Observable, of, Subject, takeUntil } from 'rxjs';
+import { catchError, map, type Observable, of } from 'rxjs';
 
 import { DataProviderStatus } from './interfaces/interfaces';
 
@@ -20,14 +21,15 @@ import { DataProviderStatus } from './interfaces/interfaces';
   selector: 'gf-data-provider-status',
   templateUrl: './data-provider-status.component.html'
 })
-export class GfDataProviderStatusComponent implements OnDestroy, OnInit {
+export class GfDataProviderStatusComponent implements OnInit {
   @Input() dataSource: DataSource;
 
   public status$: Observable<DataProviderStatus>;
 
-  private unsubscribeSubject = new Subject<void>();
-
-  public constructor(private dataService: DataService) {}
+  public constructor(
+    private dataService: DataService,
+    private destroyRef: DestroyRef
+  ) {}
 
   public ngOnInit() {
     this.status$ = this.dataService
@@ -39,12 +41,7 @@ export class GfDataProviderStatusComponent implements OnDestroy, OnInit {
         catchError(() => {
           return of({ isHealthy: false });
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

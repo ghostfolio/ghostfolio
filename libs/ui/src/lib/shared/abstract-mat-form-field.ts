@@ -37,7 +37,7 @@ export abstract class AbstractMatFormField<T>
   private static nextId = 0;
 
   protected constructor(
-    protected _elementRef: ElementRef,
+    protected _elementRef: ElementRef<HTMLElement>,
     protected _focusMonitor: FocusMonitor,
     public readonly ngControl: NgControl
   ) {
@@ -137,7 +137,7 @@ export abstract class AbstractMatFormField<T>
 
   public ngDoCheck() {
     if (this.ngControl) {
-      this.errorState = this.ngControl.invalid && this.ngControl.touched;
+      this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);
       this.stateChanges.next();
     }
   }

@@ -5,11 +5,11 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -23,7 +23,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./features-page.scss'],
   templateUrl: './features-page.html'
 })
-export class GfFeaturesPageComponent implements OnDestroy {
+export class GfFeaturesPageComponent {
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
   public info: InfoItem;
@@ -31,11 +31,10 @@ export class GfFeaturesPageComponent implements OnDestroy {
   public routerLinkResources = publicRoutes.resources.routerLink;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
@@ -43,7 +42,7 @@ export class GfFeaturesPageComponent implements OnDestroy {
 
   public ngOnInit() {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -61,10 +60,5 @@ export class GfFeaturesPageComponent implements OnDestroy {
       this.info?.globalPermissions,
       permissions.createUserAccount
     );
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
