@@ -13,7 +13,6 @@ import {
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
-import { splitStringToArray } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   ActivityResponse
@@ -124,10 +123,6 @@ export class ActivitiesController {
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
   ): Promise<ActivitiesResponse> {
-    const types = filterByTypes
-      ? (splitStringToArray(filterByTypes) as ActivityType[])
-      : undefined;
-
     let endDate: Date;
     let startDate: Date;
 
@@ -145,6 +140,9 @@ export class ActivitiesController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
+
+    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { activities, count } = await this.activitiesService.getActivities({

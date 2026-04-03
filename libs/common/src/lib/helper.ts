@@ -474,7 +474,3 @@ export function resolveMarketCondition(
     return { emoji: undefined };
   }
 }
-
-export function splitStringToArray(aString?: string): string[] {
-  return aString?.split(',') ?? [];
-}

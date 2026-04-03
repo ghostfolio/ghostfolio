@@ -2,7 +2,6 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { splitStringToArray } from '@ghostfolio/common/helper';
 import { ExportResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -41,10 +40,9 @@ export class ExportController {
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<ExportResponse> {
-    const activityIds = splitStringToArray(filterByActivityIds);
-    const activityTypes = filterByTypes
-      ? (splitStringToArray(filterByTypes) as ActivityType[])
-      : undefined;
+    const activityIds = filterByActivityIds?.split(',') ?? [];
+    const activityTypes = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
