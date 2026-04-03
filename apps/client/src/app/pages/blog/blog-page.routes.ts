@@ -218,5 +218,14 @@ export const routes: Routes = [
         (c) => c.BlackWeeks2025PageComponent
       ),
     title: 'Black Weeks 2025'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2026/04/ghostfolio-3',
+    loadComponent: () =>
+      import('./2026/04/ghostfolio-3/ghostfolio-3-page.component').then(
+        (c) => c.Ghostfolio3PageComponent
+      ),
+    title: 'Ghostfolio 3.0'
   }
 ];
