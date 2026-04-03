@@ -1,11 +1,6 @@
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -19,7 +14,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,10 +30,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./create-watchlist-item-dialog.component.scss'],
   templateUrl: 'create-watchlist-item-dialog.html'
 })
-export class GfCreateWatchlistItemDialogComponent implements OnDestroy, OnInit {
+export class GfCreateWatchlistItemDialogComponent implements OnInit {
   public createWatchlistItemForm: FormGroup;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     public readonly dialogRef: MatDialogRef<GfCreateWatchlistItemDialogComponent>,
@@ -67,11 +59,6 @@ export class GfCreateWatchlistItemDialogComponent implements OnDestroy, OnInit {
         this.createWatchlistItemForm.get('searchSymbol').value.dataSource,
       symbol: this.createWatchlistItemForm.get('searchSymbol').value.symbol
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private validator(control: AbstractControl): ValidationErrors {
