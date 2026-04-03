@@ -18,9 +18,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormsModule,
@@ -43,8 +44,8 @@ import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import ms from 'ms';
-import { EMPTY, Subject, throwError } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +66,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   styleUrls: ['./user-account-settings.scss'],
   templateUrl: './user-account-settings.html'
 })
-export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
+export class GfUserAccountSettingsComponent implements OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public currencies: string[] = [];
@@ -98,11 +99,10 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   ];
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private settingsStorageService: SettingsStorageService,
@@ -116,7 +116,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
     this.currencies = currencies;
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -157,11 +157,11 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public onChangeUserSetting(aKey: string, aValue: string) {
     this.dataService
       .putUserSetting({ [aKey]: aValue })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
             this.user = user;
 
@@ -193,7 +193,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
 
               return EMPTY;
             }),
-            takeUntil(this.unsubscribeSubject)
+            takeUntilDestroyed(this.destroyRef)
           )
           .subscribe(() => {
             this.userService.signOut();
@@ -209,11 +209,11 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
             this.user = user;
 
@@ -225,7 +225,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public onExport() {
     this.dataService
       .fetchExport()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         for (const activity of data.activities) {
           delete activity.id;
@@ -245,11 +245,11 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isRestrictedView: aEvent.checked })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
             this.user = user;
 
@@ -284,22 +284,17 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
   public onViewModeChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
             this.user = user;
 
             this.changeDetectorRef.markForCheck();
           });
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private deregisterDevice() {
@@ -311,7 +306,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
 
           return EMPTY;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.update();
@@ -341,7 +336,7 @@ export class GfUserAccountSettingsComponent implements OnDestroy, OnInit {
               return error;
             });
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe({
           next: () => {
