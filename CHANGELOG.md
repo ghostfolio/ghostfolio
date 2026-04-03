@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Next
 
+### Added
+
+- Added a blog post: _Announcing Ghostfolio 3.0_
+
 ### Changed
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
