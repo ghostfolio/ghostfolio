@@ -19,9 +19,9 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -29,6 +29,7 @@ import {
   inject,
   input
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
@@ -63,7 +64,6 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, takeUntil } from 'rxjs';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -94,9 +94,7 @@ import { GfValueComponent } from '../value/value.component';
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class GfActivitiesTableComponent
-  implements AfterViewInit, OnDestroy, OnInit
-{
+export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasActivities: boolean;
@@ -186,9 +184,8 @@ export class GfActivitiesTableComponent
   });
 
   private readonly notificationService = inject(NotificationService);
-  private readonly unsubscribeSubject = new Subject<void>();
 
-  public constructor() {
+  public constructor(private destroyRef: DestroyRef) {
     addIcons({
       alertCircleOutline,
       calendarClearOutline,
@@ -209,7 +206,7 @@ export class GfActivitiesTableComponent
     if (this.showCheckbox()) {
       this.toggleAllRows();
       this.selectedRows.changed
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((selectedRows) => {
           this.selectedActivities.emit(selectedRows.source.selected);
         });
@@ -341,10 +338,5 @@ export class GfActivitiesTableComponent
     }
 
     this.selectedActivities.emit(this.selectedRows.selected);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
