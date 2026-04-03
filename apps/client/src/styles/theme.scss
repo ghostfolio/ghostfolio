@@ -313,7 +313,10 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.button-overrides(
     (
-      filled-container-color: var(--gf-theme-primary-500)
+      filled-container-color: var(--gf-theme-primary-500),
+      filled-horizontal-padding: 1rem,
+      outlined-horizontal-padding: 1rem,
+      text-horizontal-padding: 1rem
     )
   );
 
