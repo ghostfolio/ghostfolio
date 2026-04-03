@@ -194,7 +194,8 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.dialog-overrides(
     (
-      container-color: var(--light-background)
+      container-color: var(--light-background),
+      container-shape: 0.5rem
     )
   );
 
