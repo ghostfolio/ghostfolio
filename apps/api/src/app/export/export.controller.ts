@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { Type as ActivityType } from '@prisma/client';
 
 import { ExportService } from './export.service';
 
@@ -33,12 +34,15 @@ export class ExportController {
   public async export(
     @Query('accounts') filterByAccounts?: string,
     @Query('activityIds') filterByActivityIds?: string,
+    @Query('activityTypes') filterByTypes?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<ExportResponse> {
     const activityIds = filterByActivityIds?.split(',') ?? [];
+    const activityTypes = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -49,6 +53,7 @@ export class ExportController {
 
     return this.exportService.export({
       activityIds,
+      activityTypes,
       filters,
       userId: this.request.user.id,
       userSettings: this.request.user.settings.settings

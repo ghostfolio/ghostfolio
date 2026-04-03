@@ -54,6 +54,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   templateUrl: './activities-page.html'
 })
 export class GfActivitiesPageComponent implements OnInit {
+  public activityTypesFilter: string[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -141,6 +142,9 @@ export class GfActivitiesPageComponent implements OnInit {
     this.dataService
       .fetchActivities({
         range,
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
+          : undefined,
         filters: this.userService.getFilters(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
@@ -217,7 +221,12 @@ export class GfActivitiesPageComponent implements OnInit {
     let fetchExportParams: any = { activityIds };
 
     if (!activityIds) {
-      fetchExportParams = { filters: this.userService.getFilters() };
+      fetchExportParams = {
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
+          : undefined,
+        filters: this.userService.getFilters()
+      };
     }
 
     this.dataService
@@ -314,6 +323,13 @@ export class GfActivitiesPageComponent implements OnInit {
     this.pageIndex = 0;
     this.sortColumn = active;
     this.sortDirection = direction;
+
+    this.fetchActivities();
+  }
+
+  public onTypesFilterChanged(aTypes: string[]) {
+    this.activityTypesFilter = aTypes;
+    this.pageIndex = 0;
 
     this.fetchActivities();
   }

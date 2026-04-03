@@ -37,7 +37,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order, Prisma } from '@prisma/client';
+import { Order, Prisma, Type as ActivityType } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -112,6 +112,7 @@ export class ActivitiesController {
   public async getAllActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
+    @Query('activityTypes') filterByTypes?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('range') dateRange?: DateRange,
@@ -139,6 +140,9 @@ export class ActivitiesController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
+
+    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { activities, count } = await this.activitiesService.getActivities({
@@ -147,6 +151,7 @@ export class ActivitiesController {
       sortColumn,
       sortDirection,
       startDate,
+      types,
       userCurrency,
       includeDrafts: true,
       skip: isNaN(skip) ? undefined : skip,
