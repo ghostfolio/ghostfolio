@@ -65,7 +65,7 @@ export class GfActivitiesPageComponent implements OnInit {
   public routeQueryParams: Subscription;
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
-  public totalItems: number;
+  public totalItems: number | undefined;
   public user: User;
 
   public constructor(
@@ -135,6 +135,11 @@ export class GfActivitiesPageComponent implements OnInit {
   }
 
   public fetchActivities() {
+    this.dataSource = undefined;
+    this.totalItems = undefined;
+
+    this.changeDetectorRef.markForCheck();
+
     const dateRange = this.user?.settings?.dateRange;
 
     const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
