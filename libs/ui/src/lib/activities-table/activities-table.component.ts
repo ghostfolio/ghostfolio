@@ -139,7 +139,7 @@ export class GfActivitiesTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public readonly activityTypes = new Map<ActivityType, string>();
+  public activityTypesTranslationMap = new Map<ActivityType, string>();
   public hasDrafts = false;
   public hasErrors = false;
   public isUUID = isUUID;
@@ -202,7 +202,10 @@ export class GfActivitiesTableComponent
 
   public constructor() {
     for (const type of Object.keys(ActivityType) as ActivityType[]) {
-      this.activityTypes.set(ActivityType[type], translate(ActivityType[type]));
+      this.activityTypesTranslationMap.set(
+        ActivityType[type],
+        translate(ActivityType[type])
+      );
     }
 
     addIcons({

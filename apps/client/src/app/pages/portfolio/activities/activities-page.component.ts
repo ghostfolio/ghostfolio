@@ -327,8 +327,8 @@ export class GfActivitiesPageComponent implements OnInit {
     this.fetchActivities();
   }
 
-  public onTypesFilterChanged(types: string[]) {
-    this.activityTypesFilter = types;
+  public onTypesFilterChanged(aTypes: string[]) {
+    this.activityTypesFilter = aTypes;
     this.pageIndex = 0;
 
     this.fetchActivities();

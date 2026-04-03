@@ -43,10 +43,10 @@ export class ExportService {
     let { activities } = await this.activitiesService.getActivities({
       filters,
       userId,
-      types: activityTypes,
       includeDrafts: true,
       sortColumn: 'date',
       sortDirection: 'asc',
+      types: activityTypes,
       userCurrency: userSettings?.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
