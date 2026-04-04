@@ -10,6 +10,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfAnalysisPageComponent,
     path: '',
-    title: internalRoutes.portfolio.subRoutes?.analysis.title
+    title: internalRoutes.portfolio.subRoutes.analysis.title
   }
 ];

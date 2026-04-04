@@ -16,22 +16,22 @@ export const routes: Routes = [
           import('./overview/resources-overview.routes').then((m) => m.routes)
       },
       {
-        path: publicRoutes.resources.subRoutes?.glossary.path,
+        path: publicRoutes.resources.subRoutes.glossary.path,
         loadChildren: () =>
           import('./glossary/resources-glossary.routes').then((m) => m.routes)
       },
       {
-        path: publicRoutes.resources.subRoutes?.guides.path,
+        path: publicRoutes.resources.subRoutes.guides.path,
         loadChildren: () =>
           import('./guides/resources-guides.routes').then((m) => m.routes)
       },
       {
-        path: publicRoutes.resources.subRoutes?.markets.path,
+        path: publicRoutes.resources.subRoutes.markets.path,
         loadChildren: () =>
           import('./markets/resources-markets.routes').then((m) => m.routes)
       },
       {
-        path: publicRoutes.resources.subRoutes?.personalFinanceTools.path,
+        path: publicRoutes.resources.subRoutes.personalFinanceTools.path,
         loadChildren: () =>
           import('./personal-finance-tools/personal-finance-tools-page.routes').then(
             (m) => m.routes

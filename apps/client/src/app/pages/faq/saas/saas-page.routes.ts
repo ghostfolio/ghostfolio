@@ -10,6 +10,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfSaasPageComponent,
     path: '',
-    title: `${publicRoutes.faq.subRoutes?.saas.title} - ${publicRoutes.faq.title}`
+    title: `${publicRoutes.faq.subRoutes.saas.title} - ${publicRoutes.faq.title}`
   }
 ];

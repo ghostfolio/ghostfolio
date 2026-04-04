@@ -89,7 +89,7 @@ export class GfAdminUsersComponent implements OnInit {
   public isLoading = false;
   public pageSize = DEFAULT_PAGE_SIZE;
   public routerLinkAdminControlUsers =
-    internalRoutes.adminControl.subRoutes?.users.routerLink;
+    internalRoutes.adminControl.subRoutes.users.routerLink;
   public totalItems = 0;
   public user: User;
 

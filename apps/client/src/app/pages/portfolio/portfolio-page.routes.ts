@@ -15,22 +15,22 @@ export const routes: Routes = [
           import('./analysis/analysis-page.routes').then((m) => m.routes)
       },
       {
-        path: internalRoutes.portfolio.subRoutes?.activities.path,
+        path: internalRoutes.portfolio.subRoutes.activities.path,
         loadChildren: () =>
           import('./activities/activities-page.routes').then((m) => m.routes)
       },
       {
-        path: internalRoutes.portfolio.subRoutes?.allocations.path,
+        path: internalRoutes.portfolio.subRoutes.allocations.path,
         loadChildren: () =>
           import('./allocations/allocations-page.routes').then((m) => m.routes)
       },
       {
-        path: internalRoutes.portfolio.subRoutes?.fire.path,
+        path: internalRoutes.portfolio.subRoutes.fire.path,
         loadChildren: () =>
           import('./fire/fire-page.routes').then((m) => m.routes)
       },
       {
-        path: internalRoutes.portfolio.subRoutes?.xRay.path,
+        path: internalRoutes.portfolio.subRoutes.xRay.path,
         loadChildren: () =>
           import('./x-ray/x-ray-page.routes').then((m) => m.routes)
       }
