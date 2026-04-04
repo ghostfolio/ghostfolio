@@ -16,7 +16,7 @@ export class ResourcesGlossaryPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public routerLinkResourcesPersonalFinanceTools =
-    publicRoutes.resources.subRoutes?.personalFinanceTools.routerLink;
+    publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
 
   public constructor(private dataService: DataService) {
     this.info = this.dataService.fetchInfo();

@@ -11,7 +11,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: PersonalFinanceToolsPageComponent,
     path: '',
-    title: publicRoutes.resources.subRoutes?.personalFinanceTools.title
+    title: publicRoutes.resources.subRoutes.personalFinanceTools.title
   },
   ...personalFinanceTools.map(({ alias, key, name }) => {
     return {
@@ -23,8 +23,8 @@ export const routes: Routes = [
             return GfProductPageComponent;
           }
         ),
-      path: `${publicRoutes.resources.subRoutes?.personalFinanceTools.subRoutes?.product.path}-${alias ?? key}`,
-      title: `${publicRoutes.resources.subRoutes?.personalFinanceTools.subRoutes?.product.title} ${name}`
+      path: `${publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.path}-${alias ?? key}`,
+      title: `${publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.title} ${name}`
     };
   })
 ];

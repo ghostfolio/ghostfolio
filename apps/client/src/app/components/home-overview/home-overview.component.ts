@@ -56,7 +56,7 @@ export class GfHomeOverviewComponent implements OnInit {
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   public routerLinkPortfolioActivities =
-    internalRoutes.portfolio.subRoutes?.activities.routerLink;
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
   public showDetails = false;
   public unit: string;
   public user: User;

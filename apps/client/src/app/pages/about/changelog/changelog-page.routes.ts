@@ -10,6 +10,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfChangelogPageComponent,
     path: '',
-    title: publicRoutes.about.subRoutes?.changelog.title
+    title: publicRoutes.about.subRoutes.changelog.title
   }
 ];

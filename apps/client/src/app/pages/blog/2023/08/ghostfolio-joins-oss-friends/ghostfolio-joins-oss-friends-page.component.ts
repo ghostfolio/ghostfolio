@@ -12,6 +12,6 @@ import { RouterModule } from '@angular/router';
 })
 export class GhostfolioJoinsOssFriendsPageComponent {
   public routerLinkAboutOssFriends =
-    publicRoutes.about.subRoutes?.ossFriends.routerLink;
+    publicRoutes.about.subRoutes.ossFriends.routerLink;
   public routerLinkBlog = publicRoutes.blog.routerLink;
 }

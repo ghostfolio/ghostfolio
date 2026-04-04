@@ -10,6 +10,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     component: GfOpenSourceSoftwareFriendsPageComponent,
     path: '',
-    title: publicRoutes.about.subRoutes?.ossFriends.title
+    title: publicRoutes.about.subRoutes.ossFriends.title
   }
 ];
