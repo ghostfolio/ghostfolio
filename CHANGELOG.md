@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for filtering by activity type on the activities page (experimental)
+- Extended the admin control panel by adding a copy-to-clipboard button for the application version
 
 ## 2.252.0 - 2026-03-02
 
