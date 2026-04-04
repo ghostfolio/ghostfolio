@@ -53,7 +53,7 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 export class GfCreateOrUpdateAccountDialogComponent {
   public accountForm: FormGroup;
   public currencies: string[] = [];
-  public filteredPlatforms: Observable<Platform[]>;
+  public filteredPlatforms: Observable<Platform[]> | undefined;
   public platforms: Platform[] = [];
 
   public constructor(
@@ -93,18 +93,18 @@ export class GfCreateOrUpdateAccountDialogComponent {
 
       this.filteredPlatforms = this.accountForm
         .get('platformId')
-        .valueChanges.pipe(
+        ?.valueChanges.pipe(
           startWith(''),
-          map((value) => {
+          map((value: Platform | string) => {
             const name = typeof value === 'string' ? value : value?.name;
-            return name ? this.filter(name as string) : this.platforms.slice();
+            return name ? this.filter(name) : this.platforms.slice();
           })
         );
     });
   }
 
   public autoCompleteCheck() {
-    const inputValue = this.accountForm.get('platformId').value;
+    const inputValue = this.accountForm.get('platformId')?.value;
 
     if (typeof inputValue === 'string') {
       const matchingEntry = this.platforms.find(({ name }) => {
@@ -112,7 +112,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
       });
 
       if (matchingEntry) {
-        this.accountForm.get('platformId').setValue(matchingEntry);
+        this.accountForm.get('platformId')?.setValue(matchingEntry);
       }
     }
   }
@@ -127,13 +127,13 @@ export class GfCreateOrUpdateAccountDialogComponent {
 
   public async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
-      balance: this.accountForm.get('balance').value,
-      comment: this.accountForm.get('comment').value || null,
-      currency: this.accountForm.get('currency').value,
-      id: this.accountForm.get('accountId').value,
-      isExcluded: this.accountForm.get('isExcluded').value,
-      name: this.accountForm.get('name').value,
-      platformId: this.accountForm.get('platformId').value?.id || null
+      balance: this.accountForm.get('balance')?.value,
+      comment: this.accountForm.get('comment')?.value || null,
+      currency: this.accountForm.get('currency')?.value,
+      id: this.accountForm.get('accountId')?.value,
+      isExcluded: this.accountForm.get('isExcluded')?.value,
+      name: this.accountForm.get('name')?.value,
+      platformId: this.accountForm.get('platformId')?.value?.id || null
     };
 
     try {
@@ -177,7 +177,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
     const filterValue = value.toLowerCase();
 
     return this.platforms.filter(({ name }) => {
-      return name.toLowerCase().startsWith(filterValue);
+      return name?.toLowerCase().startsWith(filterValue);
     });
   }
 }
