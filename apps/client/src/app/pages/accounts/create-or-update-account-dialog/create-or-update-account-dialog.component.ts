@@ -51,10 +51,10 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-account-dialog.html'
 })
 export class GfCreateOrUpdateAccountDialogComponent {
-  public accountForm: FormGroup;
-  public currencies: string[] = [];
-  public filteredPlatforms: Observable<Platform[]> | undefined;
-  public platforms: Platform[] = [];
+  protected accountForm: FormGroup;
+  protected currencies: string[] = [];
+  protected filteredPlatforms: Observable<Platform[]> | undefined;
+  protected platforms: Platform[] = [];
 
   protected readonly data =
     inject<CreateOrUpdateAccountDialogParams>(MAT_DIALOG_DATA);
@@ -103,7 +103,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
     });
   }
 
-  public autoCompleteCheck() {
+  protected autoCompleteCheck() {
     const inputValue = this.accountForm.get('platformId')?.value;
 
     if (typeof inputValue === 'string') {
@@ -117,15 +117,15 @@ export class GfCreateOrUpdateAccountDialogComponent {
     }
   }
 
-  public displayFn(platform: Platform) {
+  protected displayFn(platform: Platform) {
     return platform?.name ?? '';
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance')?.value,
       comment: this.accountForm.get('comment')?.value || null,
