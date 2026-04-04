@@ -71,7 +71,10 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
   }
 
   public getCategoryName() {
-    return 'Regional Market Cluster Risk'; // TODO: Replace hardcoded text with i18n translation
+    return this.i18nService.getTranslation({
+      id: 'rule.regionalMarketClusterRisk.category',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getConfiguration() {
