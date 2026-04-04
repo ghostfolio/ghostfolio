@@ -135,13 +135,11 @@ export class GfActivitiesPageComponent implements OnInit {
   }
 
   public fetchActivities() {
+    // Reset dataSource and totalItems to show loading state
     this.dataSource = undefined;
     this.totalItems = undefined;
 
-    this.changeDetectorRef.markForCheck();
-
     const dateRange = this.user?.settings?.dateRange;
-
     const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
 
     this.dataService
@@ -205,6 +203,8 @@ export class GfActivitiesPageComponent implements OnInit {
           .subscribe();
 
         this.fetchActivities();
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -219,6 +219,8 @@ export class GfActivitiesPageComponent implements OnInit {
           .subscribe();
 
         this.fetchActivities();
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -294,6 +296,8 @@ export class GfActivitiesPageComponent implements OnInit {
           .subscribe();
 
         this.fetchActivities();
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -321,6 +325,8 @@ export class GfActivitiesPageComponent implements OnInit {
           .subscribe();
 
         this.fetchActivities();
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -370,6 +376,8 @@ export class GfActivitiesPageComponent implements OnInit {
             .subscribe({
               next: () => {
                 this.fetchActivities();
+
+                this.changeDetectorRef.markForCheck();
               }
             });
         }
@@ -427,6 +435,8 @@ export class GfActivitiesPageComponent implements OnInit {
                     .subscribe();
 
                   this.fetchActivities();
+
+                  this.changeDetectorRef.markForCheck();
                 }
               });
             }
