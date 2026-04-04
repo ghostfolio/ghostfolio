@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for filtering by activity type on the activities page (experimental)
 
+### Changed
+
+- Upgraded `countup.js` from version `2.9.0` to `2.10.0`
+
 ## 2.252.0 - 2026-03-02
 
 ### Added
