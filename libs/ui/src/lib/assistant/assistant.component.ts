@@ -717,7 +717,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private searchQuickLinks(aSearchTerm: string): SearchResultItem[] {
     const searchTerm = aSearchTerm.toLowerCase();
 
-    const allRoutes = Object.values(internalRoutes)
+    const allRoutes = Object.values<InternalRoute>(internalRoutes)
       .filter(({ excludeFromAssistant }) => {
         if (isFunction(excludeFromAssistant)) {
           return excludeFromAssistant(this.user);
@@ -725,13 +725,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
         return !excludeFromAssistant;
       })
-      .reduce((acc, route) => {
+      .reduce<InternalRoute[]>((acc, route) => {
         acc.push(route);
         if (route.subRoutes) {
           acc.push(...Object.values(route.subRoutes));
         }
         return acc;
-      }, [] as InternalRoute[]);
+      }, []);
 
     const fuse = new Fuse(allRoutes, {
       keys: ['title'],

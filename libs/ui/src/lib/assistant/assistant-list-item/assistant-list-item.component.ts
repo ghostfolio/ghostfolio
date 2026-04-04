@@ -67,7 +67,7 @@ export class GfAssistantListItemComponent
       };
 
       this.routerLink =
-        internalRoutes.adminControl.subRoutes?.marketData.routerLink ?? [];
+        internalRoutes.adminControl.subRoutes.marketData.routerLink ?? [];
     } else if (this.item?.mode === SearchMode.HOLDING) {
       this.queryParams = {
         dataSource: this.item.dataSource,

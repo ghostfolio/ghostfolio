@@ -15,12 +15,12 @@ export const routes: Routes = [
           import('./overview/faq-overview-page.routes').then((m) => m.routes)
       },
       {
-        path: publicRoutes.faq.subRoutes?.saas.path,
+        path: publicRoutes.faq.subRoutes.saas.path,
         loadChildren: () =>
           import('./saas/saas-page.routes').then((m) => m.routes)
       },
       {
-        path: publicRoutes.faq.subRoutes?.selfHosting.path,
+        path: publicRoutes.faq.subRoutes.selfHosting.path,
         loadChildren: () =>
           import('./self-hosting/self-hosting-page.routes').then(
             (m) => m.routes

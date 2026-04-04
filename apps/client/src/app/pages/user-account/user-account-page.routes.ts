@@ -18,14 +18,14 @@ export const routes: Routes = [
         title: internalRoutes.account.title
       },
       {
-        path: internalRoutes.account.subRoutes?.membership.path,
+        path: internalRoutes.account.subRoutes.membership.path,
         component: GfUserAccountMembershipComponent,
-        title: internalRoutes.account.subRoutes?.membership.title
+        title: internalRoutes.account.subRoutes.membership.title
       },
       {
-        path: internalRoutes.account.subRoutes?.access.path,
+        path: internalRoutes.account.subRoutes.access.path,
         component: GfUserAccountAccessComponent,
-        title: internalRoutes.account.subRoutes?.access.title
+        title: internalRoutes.account.subRoutes.access.title
       }
     ],
     component: GfUserAccountPageComponent,

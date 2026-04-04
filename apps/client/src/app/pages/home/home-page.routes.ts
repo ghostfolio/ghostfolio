@@ -20,29 +20,29 @@ export const routes: Routes = [
         component: GfHomeOverviewComponent
       },
       {
-        path: internalRoutes.home.subRoutes?.holdings.path,
+        path: internalRoutes.home.subRoutes.holdings.path,
         component: GfHomeHoldingsComponent,
-        title: internalRoutes.home.subRoutes?.holdings.title
+        title: internalRoutes.home.subRoutes.holdings.title
       },
       {
-        path: internalRoutes.home.subRoutes?.summary.path,
+        path: internalRoutes.home.subRoutes.summary.path,
         component: GfHomeSummaryComponent,
-        title: internalRoutes.home.subRoutes?.summary.title
+        title: internalRoutes.home.subRoutes.summary.title
       },
       {
-        path: internalRoutes.home.subRoutes?.markets.path,
+        path: internalRoutes.home.subRoutes.markets.path,
         component: GfHomeMarketComponent,
-        title: internalRoutes.home.subRoutes?.markets.title
+        title: internalRoutes.home.subRoutes.markets.title
       },
       {
-        path: internalRoutes.home.subRoutes?.marketsPremium.path,
+        path: internalRoutes.home.subRoutes.marketsPremium.path,
         component: GfMarketsComponent,
-        title: internalRoutes.home.subRoutes?.marketsPremium.title
+        title: internalRoutes.home.subRoutes.marketsPremium.title
       },
       {
-        path: internalRoutes.home.subRoutes?.watchlist.path,
+        path: internalRoutes.home.subRoutes.watchlist.path,
         component: GfHomeWatchlistComponent,
-        title: internalRoutes.home.subRoutes?.watchlist.title
+        title: internalRoutes.home.subRoutes.watchlist.title
       }
     ],
     component: GfHomePageComponent,

@@ -20,20 +20,20 @@ export class ResourcesOverviewComponent {
     {
       description:
         'Explore our guides to help you get started with investing and managing your finances.',
-      routerLink: publicRoutes.resources.subRoutes?.guides.routerLink,
-      title: publicRoutes.resources.subRoutes?.guides.title
+      routerLink: publicRoutes.resources.subRoutes.guides.routerLink,
+      title: publicRoutes.resources.subRoutes.guides.title
     },
     {
       description:
         'Access various market resources and tools to stay informed about financial markets.',
-      routerLink: publicRoutes.resources.subRoutes?.markets.routerLink,
-      title: publicRoutes.resources.subRoutes?.markets.title
+      routerLink: publicRoutes.resources.subRoutes.markets.routerLink,
+      title: publicRoutes.resources.subRoutes.markets.title
     },
     {
       description:
         'Learn key financial terms and concepts in our comprehensive glossary.',
-      routerLink: publicRoutes.resources.subRoutes?.glossary.routerLink,
-      title: publicRoutes.resources.subRoutes?.glossary.title
+      routerLink: publicRoutes.resources.subRoutes.glossary.routerLink,
+      title: publicRoutes.resources.subRoutes.glossary.title
     }
   ];
 }
