@@ -147,12 +147,12 @@ export class GfCreateOrUpdateActivityDialogComponent {
               assetClass: assetProfile.assetClass,
               assetSubClass: assetProfile.assetSubClass,
               currency: assetProfile.currency ?? '',
-              dataSource: assetProfile.dataSource,
-              name: assetProfile.name ?? '',
-              symbol: assetProfile.symbol,
               dataProviderInfo: {
                 isPremium: false
-              }
+              },
+              dataSource: assetProfile.dataSource,
+              name: assetProfile.name ?? '',
+              symbol: assetProfile.symbol
             };
           });
 
