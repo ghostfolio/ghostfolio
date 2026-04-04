@@ -89,11 +89,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   public assetSubClassOptions: AssetClassSelectorOption[] = [];
   public currencies: string[] = [];
-  public currencyOfAssetProfile: string;
-  public currentMarketPrice = null;
+  public currencyOfAssetProfile: string | undefined;
+  public currentMarketPrice: number | null = null;
   public defaultDateFormat: string;
   public defaultLookupItems: LookupItem[] = [];
-  public hasPermissionToCreateOwnTag: boolean;
+  public hasPermissionToCreateOwnTag: boolean | undefined;
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
@@ -106,7 +106,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
-    private dateAdapter: DateAdapter<any>,
+    private dateAdapter: DateAdapter<Date, string>,
     private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
     private formBuilder: FormBuilder,
@@ -121,7 +121,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.hasPermissionToCreateOwnTag =
       this.data.user?.settings?.isExperimentalFeatures &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
-    this.locale = this.data.user?.settings?.locale;
+    this.locale = this.data.user?.settings?.locale ?? this.locale;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
     this.dateAdapter.setLocale(this.locale);
@@ -136,34 +136,25 @@ export class GfCreateOrUpdateActivityDialogComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.defaultLookupItems = holdings
-          .filter(({ assetSubClass }) => {
-            return !['CASH'].includes(assetSubClass);
+          .filter(({ assetProfile }) => {
+            return !['CASH'].includes(assetProfile.assetSubClass);
           })
           .sort((a, b) => {
             return a.name?.localeCompare(b.name);
           })
-          .map(
-            ({
-              assetClass,
-              assetSubClass,
-              currency,
-              dataSource,
-              name,
-              symbol
-            }) => {
-              return {
-                assetClass,
-                assetSubClass,
-                currency,
-                dataSource,
-                name,
-                symbol,
-                dataProviderInfo: {
-                  isPremium: false
-                }
-              };
-            }
-          );
+          .map(({ assetProfile }) => {
+            return {
+              assetClass: assetProfile.assetClass,
+              assetSubClass: assetProfile.assetSubClass,
+              currency: assetProfile.currency ?? '',
+              dataSource: assetProfile.dataSource,
+              name: assetProfile.name ?? '',
+              symbol: assetProfile.symbol,
+              dataProviderInfo: {
+                isPremium: false
+              }
+            };
+          });
 
         this.changeDetectorRef.markForCheck();
       });
@@ -242,25 +233,25 @@ export class GfCreateOrUpdateActivityDialogComponent {
       .subscribe(async () => {
         if (
           ['BUY', 'FEE', 'VALUABLE'].includes(
-            this.activityForm.get('type').value
+            this.activityForm.get('type')?.value
           )
         ) {
           this.total =
-            this.activityForm.get('quantity').value *
-              this.activityForm.get('unitPrice').value +
-            (this.activityForm.get('fee').value ?? 0);
+            this.activityForm.get('quantity')?.value *
+              this.activityForm.get('unitPrice')?.value +
+            (this.activityForm.get('fee')?.value ?? 0);
         } else {
           this.total =
-            this.activityForm.get('quantity').value *
-              this.activityForm.get('unitPrice').value -
-            (this.activityForm.get('fee').value ?? 0);
+            this.activityForm.get('quantity')?.value *
+              this.activityForm.get('unitPrice')?.value -
+            (this.activityForm.get('fee')?.value ?? 0);
         }
 
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.get('accountId').valueChanges.subscribe((accountId) => {
-      const type = this.activityForm.get('type').value;
+    this.activityForm.get('accountId')?.valueChanges.subscribe((accountId) => {
+      const type = this.activityForm.get('type')?.value;
 
       if (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(type)) {
         const currency =
@@ -268,15 +259,15 @@ export class GfCreateOrUpdateActivityDialogComponent {
             return id === accountId;
           })?.currency ?? this.data.user.settings.baseCurrency;
 
-        this.activityForm.get('currency').setValue(currency);
-        this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+        this.activityForm.get('currency')?.setValue(currency);
+        this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
 
         if (['FEE', 'INTEREST'].includes(type)) {
-          if (this.activityForm.get('accountId').value) {
-            this.activityForm.get('updateAccountBalance').enable();
+          if (this.activityForm.get('accountId')?.value) {
+            this.activityForm.get('updateAccountBalance')?.enable();
           } else {
-            this.activityForm.get('updateAccountBalance').disable();
-            this.activityForm.get('updateAccountBalance').setValue(false);
+            this.activityForm.get('updateAccountBalance')?.disable();
+            this.activityForm.get('updateAccountBalance')?.setValue(false);
           }
         }
       }
@@ -284,7 +275,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
     this.activityForm
       .get('assetClass')
-      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((assetClass) => {
         const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
 
@@ -297,28 +288,28 @@ export class GfCreateOrUpdateActivityDialogComponent {
           })
           .sort((a, b) => a.label.localeCompare(b.label));
 
-        this.activityForm.get('assetSubClass').setValue(null);
+        this.activityForm.get('assetSubClass')?.setValue(null);
 
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.get('date').valueChanges.subscribe(() => {
-      if (isToday(this.activityForm.get('date').value)) {
-        this.activityForm.get('updateAccountBalance').enable();
+    this.activityForm.get('date')?.valueChanges.subscribe(() => {
+      if (isToday(this.activityForm.get('date')?.value)) {
+        this.activityForm.get('updateAccountBalance')?.enable();
       } else {
-        this.activityForm.get('updateAccountBalance').disable();
-        this.activityForm.get('updateAccountBalance').setValue(false);
+        this.activityForm.get('updateAccountBalance')?.disable();
+        this.activityForm.get('updateAccountBalance')?.setValue(false);
       }
 
       this.changeDetectorRef.markForCheck();
     });
 
-    this.activityForm.get('searchSymbol').valueChanges.subscribe(() => {
-      if (this.activityForm.get('searchSymbol').invalid) {
+    this.activityForm.get('searchSymbol')?.valueChanges.subscribe(() => {
+      if (this.activityForm.get('searchSymbol')?.invalid) {
         this.data.activity.SymbolProfile = null;
       } else if (
         ['BUY', 'DIVIDEND', 'SELL'].includes(
-          this.activityForm.get('type').value
+          this.activityForm.get('type')?.value
         )
       ) {
         this.updateAssetProfile();
@@ -327,7 +318,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       this.changeDetectorRef.markForCheck();
     });
 
-    this.activityForm.get('tags').valueChanges.subscribe((tags: Tag[]) => {
+    this.activityForm.get('tags')?.valueChanges.subscribe((tags: Tag[]) => {
       const newTag = tags.find(({ id }) => {
         return id === undefined;
       });
@@ -337,7 +328,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
           .postTag({ ...newTag, userId: this.data.user.id })
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((tag) => {
-            this.activityForm.get('tags').setValue(
+            this.activityForm.get('tags')?.setValue(
               tags.map((currentTag) => {
                 if (currentTag.id === undefined) {
                   return tag;
@@ -357,106 +348,106 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
     this.activityForm
       .get('type')
-      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((type: ActivityType) => {
         if (
           type === 'VALUABLE' ||
-          (this.activityForm.get('dataSource').value === 'MANUAL' &&
+          (this.activityForm.get('dataSource')?.value === 'MANUAL' &&
             type === 'BUY')
         ) {
           const currency =
             this.data.accounts.find(({ id }) => {
-              return id === this.activityForm.get('accountId').value;
+              return id === this.activityForm.get('accountId')?.value;
             })?.currency ?? this.data.user.settings.baseCurrency;
 
-          this.activityForm.get('currency').setValue(currency);
-          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+          this.activityForm.get('currency')?.setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
 
           this.activityForm
             .get('dataSource')
-            .removeValidators(Validators.required);
-          this.activityForm.get('dataSource').updateValueAndValidity();
-          this.activityForm.get('fee').setValue(0);
-          this.activityForm.get('name').setValidators(Validators.required);
-          this.activityForm.get('name').updateValueAndValidity();
+            ?.removeValidators(Validators.required);
+          this.activityForm.get('dataSource')?.updateValueAndValidity();
+          this.activityForm.get('fee')?.setValue(0);
+          this.activityForm.get('name')?.setValidators(Validators.required);
+          this.activityForm.get('name')?.updateValueAndValidity();
 
           if (type === 'VALUABLE') {
-            this.activityForm.get('quantity').setValue(1);
+            this.activityForm.get('quantity')?.setValue(1);
           }
 
           this.activityForm
             .get('searchSymbol')
-            .removeValidators(Validators.required);
-          this.activityForm.get('searchSymbol').updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance').disable();
-          this.activityForm.get('updateAccountBalance').setValue(false);
+            ?.removeValidators(Validators.required);
+          this.activityForm.get('searchSymbol')?.updateValueAndValidity();
+          this.activityForm.get('updateAccountBalance')?.disable();
+          this.activityForm.get('updateAccountBalance')?.setValue(false);
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           const currency =
             this.data.accounts.find(({ id }) => {
-              return id === this.activityForm.get('accountId').value;
+              return id === this.activityForm.get('accountId')?.value;
             })?.currency ?? this.data.user.settings.baseCurrency;
 
-          this.activityForm.get('currency').setValue(currency);
-          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+          this.activityForm.get('currency')?.setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
 
           this.activityForm
             .get('dataSource')
-            .removeValidators(Validators.required);
-          this.activityForm.get('dataSource').updateValueAndValidity();
+            ?.removeValidators(Validators.required);
+          this.activityForm.get('dataSource')?.updateValueAndValidity();
 
           if (['INTEREST', 'LIABILITY'].includes(type)) {
-            this.activityForm.get('fee').setValue(0);
+            this.activityForm.get('fee')?.setValue(0);
           }
 
-          this.activityForm.get('name').setValidators(Validators.required);
-          this.activityForm.get('name').updateValueAndValidity();
+          this.activityForm.get('name')?.setValidators(Validators.required);
+          this.activityForm.get('name')?.updateValueAndValidity();
 
           if (type === 'FEE') {
-            this.activityForm.get('quantity').setValue(0);
+            this.activityForm.get('quantity')?.setValue(0);
           } else if (['INTEREST', 'LIABILITY'].includes(type)) {
-            this.activityForm.get('quantity').setValue(1);
+            this.activityForm.get('quantity')?.setValue(1);
           }
 
           this.activityForm
             .get('searchSymbol')
-            .removeValidators(Validators.required);
-          this.activityForm.get('searchSymbol').updateValueAndValidity();
+            ?.removeValidators(Validators.required);
+          this.activityForm.get('searchSymbol')?.updateValueAndValidity();
 
           if (type === 'FEE') {
-            this.activityForm.get('unitPrice').setValue(0);
+            this.activityForm.get('unitPrice')?.setValue(0);
           }
 
           if (
             ['FEE', 'INTEREST'].includes(type) &&
-            this.activityForm.get('accountId').value
+            this.activityForm.get('accountId')?.value
           ) {
-            this.activityForm.get('updateAccountBalance').enable();
+            this.activityForm.get('updateAccountBalance')?.enable();
           } else {
-            this.activityForm.get('updateAccountBalance').disable();
-            this.activityForm.get('updateAccountBalance').setValue(false);
+            this.activityForm.get('updateAccountBalance')?.disable();
+            this.activityForm.get('updateAccountBalance')?.setValue(false);
           }
         } else {
           this.activityForm
             .get('dataSource')
-            .setValidators(Validators.required);
-          this.activityForm.get('dataSource').updateValueAndValidity();
-          this.activityForm.get('name').removeValidators(Validators.required);
-          this.activityForm.get('name').updateValueAndValidity();
+            ?.setValidators(Validators.required);
+          this.activityForm.get('dataSource')?.updateValueAndValidity();
+          this.activityForm.get('name')?.removeValidators(Validators.required);
+          this.activityForm.get('name')?.updateValueAndValidity();
           this.activityForm
             .get('searchSymbol')
-            .setValidators(Validators.required);
-          this.activityForm.get('searchSymbol').updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance').enable();
+            ?.setValidators(Validators.required);
+          this.activityForm.get('searchSymbol')?.updateValueAndValidity();
+          this.activityForm.get('updateAccountBalance')?.enable();
         }
 
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.get('type').setValue(this.data.activity?.type);
+    this.activityForm.get('type')?.setValue(this.data.activity?.type);
 
     if (this.data.activity?.id) {
-      this.activityForm.get('searchSymbol').disable();
-      this.activityForm.get('type').disable();
+      this.activityForm.get('searchSymbol')?.disable();
+      this.activityForm.get('type')?.disable();
     }
 
     if (this.data.activity?.SymbolProfile?.symbol) {
@@ -476,7 +467,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   public applyCurrentMarketPrice() {
     this.activityForm.patchValue({
-      currencyOfUnitPrice: this.activityForm.get('currency').value,
+      currencyOfUnitPrice: this.activityForm.get('currency')?.value,
       unitPrice: this.currentMarketPrice
     });
   }
@@ -495,42 +486,42 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   public async onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
-      accountId: this.activityForm.get('accountId').value,
-      assetClass: this.activityForm.get('assetClass').value,
-      assetSubClass: this.activityForm.get('assetSubClass').value,
-      comment: this.activityForm.get('comment').value || null,
-      currency: this.activityForm.get('currency').value,
-      customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
+      accountId: this.activityForm.get('accountId')?.value,
+      assetClass: this.activityForm.get('assetClass')?.value,
+      assetSubClass: this.activityForm.get('assetSubClass')?.value,
+      comment: this.activityForm.get('comment')?.value || null,
+      currency: this.activityForm.get('currency')?.value,
+      customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,
       dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
-        this.activityForm.get('type').value
+        this.activityForm.get('type')?.value
       )
         ? 'MANUAL'
-        : this.activityForm.get('dataSource').value,
-      date: this.activityForm.get('date').value,
-      fee: this.activityForm.get('fee').value,
-      quantity: this.activityForm.get('quantity').value,
+        : this.activityForm.get('dataSource')?.value,
+      date: this.activityForm.get('date')?.value,
+      fee: this.activityForm.get('fee')?.value,
+      quantity: this.activityForm.get('quantity')?.value,
       symbol:
         (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
-          this.activityForm.get('type').value
+          this.activityForm.get('type')?.value
         )
           ? undefined
           : this.activityForm.get('searchSymbol')?.value?.symbol) ??
         this.activityForm.get('name')?.value,
-      tags: this.activityForm.get('tags').value?.map(({ id }) => {
+      tags: this.activityForm.get('tags')?.value?.map(({ id }) => {
         return id;
       }),
       type:
-        this.activityForm.get('type').value === 'VALUABLE'
+        this.activityForm.get('type')?.value === 'VALUABLE'
           ? 'BUY'
-          : this.activityForm.get('type').value,
-      unitPrice: this.activityForm.get('unitPrice').value
+          : this.activityForm.get('type')?.value,
+      unitPrice: this.activityForm.get('unitPrice')?.value
     };
 
     try {
       if (this.mode === 'create') {
         activity.updateAccountBalance = this.activityForm.get(
           'updateAccountBalance'
-        ).value;
+        )?.value;
 
         await validateObjectForForm({
           classDto: CreateOrderDto,
@@ -563,8 +554,8 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
     this.dataService
       .fetchSymbolItem({
-        dataSource: this.activityForm.get('searchSymbol').value.dataSource,
-        symbol: this.activityForm.get('searchSymbol').value.symbol
+        dataSource: this.activityForm.get('searchSymbol')?.value.dataSource,
+        symbol: this.activityForm.get('searchSymbol')?.value.symbol
       })
       .pipe(
         catchError(() => {
@@ -580,9 +571,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
         if (this.mode === 'create') {
-          this.activityForm.get('currency').setValue(currency);
-          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
-          this.activityForm.get('dataSource').setValue(dataSource);
+          this.activityForm.get('currency')?.setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
+          this.activityForm.get('dataSource')?.setValue(dataSource);
         }
 
         this.currencyOfAssetProfile = currency;
