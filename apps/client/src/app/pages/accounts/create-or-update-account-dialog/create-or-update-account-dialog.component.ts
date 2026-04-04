@@ -5,7 +5,7 @@ import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -56,12 +56,12 @@ export class GfCreateOrUpdateAccountDialogComponent {
   public filteredPlatforms: Observable<Platform[]> | undefined;
   public platforms: Platform[] = [];
 
-  public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
-    private dataService: DataService,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccountDialogComponent>,
-    private formBuilder: FormBuilder
-  ) {}
+  protected readonly data =
+    inject<CreateOrUpdateAccountDialogParams>(MAT_DIALOG_DATA);
+  private readonly dataService = inject(DataService);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateAccountDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
 
   public ngOnInit() {
     const { currencies } = this.dataService.fetchInfo();
