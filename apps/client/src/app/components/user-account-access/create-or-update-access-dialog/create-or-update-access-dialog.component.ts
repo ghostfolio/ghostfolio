@@ -81,19 +81,19 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    this.accessForm.get('type').valueChanges.subscribe((accessType) => {
+    this.accessForm.get('type')?.valueChanges.subscribe((accessType) => {
       const granteeUserIdControl = this.accessForm.get('granteeUserId');
       const permissionsControl = this.accessForm.get('permissions');
 
       if (accessType === 'PRIVATE') {
-        granteeUserIdControl.setValidators(Validators.required);
+        granteeUserIdControl?.setValidators(Validators.required);
       } else {
-        granteeUserIdControl.clearValidators();
-        granteeUserIdControl.setValue(null);
-        permissionsControl.setValue(this.data.access.permissions[0]);
+        granteeUserIdControl?.clearValidators();
+        granteeUserIdControl?.setValue(null);
+        permissionsControl?.setValue(this.data.access.permissions[0]);
       }
 
-      granteeUserIdControl.updateValueAndValidity();
+      granteeUserIdControl?.updateValueAndValidity();
 
       this.changeDetectorRef.markForCheck();
     });
@@ -113,9 +113,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private async createAccess() {
     const access: CreateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
-      permissions: [this.accessForm.get('permissions').value]
+      alias: this.accessForm.get('alias')?.value,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value,
+      permissions: [this.accessForm.get('permissions')?.value]
     };
 
     try {
@@ -149,10 +149,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private async updateAccess() {
     const access: UpdateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
+      alias: this.accessForm.get('alias')?.value,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: this.data.access.id,
-      permissions: [this.accessForm.get('permissions').value]
+      permissions: [this.accessForm.get('permissions')?.value]
     };
 
     try {
