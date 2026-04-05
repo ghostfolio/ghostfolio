@@ -83,22 +83,25 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    this.accessForm.get('type')?.valueChanges.subscribe((accessType) => {
-      const granteeUserIdControl = this.accessForm.get('granteeUserId');
-      const permissionsControl = this.accessForm.get('permissions');
+    this.accessForm
+      .get('type')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((accessType) => {
+        const granteeUserIdControl = this.accessForm.get('granteeUserId');
+        const permissionsControl = this.accessForm.get('permissions');
 
-      if (accessType === 'PRIVATE') {
-        granteeUserIdControl?.setValidators(Validators.required);
-      } else {
-        granteeUserIdControl?.clearValidators();
-        granteeUserIdControl?.setValue(null);
-        permissionsControl?.setValue(this.data.access.permissions[0]);
-      }
+        if (accessType === 'PRIVATE') {
+          granteeUserIdControl?.setValidators(Validators.required);
+        } else {
+          granteeUserIdControl?.clearValidators();
+          granteeUserIdControl?.setValue(null);
+          permissionsControl?.setValue(this.data.access.permissions[0]);
+        }
 
-      granteeUserIdControl?.updateValueAndValidity();
+        granteeUserIdControl?.updateValueAndValidity();
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onCancel() {
