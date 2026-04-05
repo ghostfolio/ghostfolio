@@ -3,6 +3,7 @@ import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -133,7 +134,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       this.dataService
         .postAccess(access)
         .pipe(
-          catchError((error) => {
+          catchError((error: HttpErrorResponse) => {
             if (error.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not grant access.`
@@ -170,8 +171,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       this.dataService
         .putAccess(access)
         .pipe(
-          catchError(({ status }) => {
-            if (status.status === StatusCodes.BAD_REQUEST) {
+          catchError(({ status }: HttpErrorResponse) => {
+            if (status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });
