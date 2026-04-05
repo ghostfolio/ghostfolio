@@ -9,8 +9,8 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  OnInit,
-  inject
+  inject,
+  OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -55,12 +55,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   protected mode: 'create' | 'update';
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   private readonly data =
     inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
-  private readonly dialogRef =
-    inject<MatDialogRef<GfCreateOrUpdateAccessDialogComponent>>(MatDialogRef);
+
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateAccessDialogComponent>>(MatDialogRef);
+
   private readonly formBuilder = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
 
