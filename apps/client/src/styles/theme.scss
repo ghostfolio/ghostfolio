@@ -194,8 +194,7 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 
   @include mat.dialog-overrides(
     (
-      container-color: var(--light-background),
-      container-shape: 0.5rem
+      container-color: var(--light-background)
     )
   );
 
@@ -339,6 +338,7 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   @include mat.dialog-overrides(
     (
       container-max-width: 80vw,
+      container-shape: 8px,
       container-small-max-width: 96vw
     )
   );
