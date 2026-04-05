@@ -8,8 +8,8 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -50,18 +50,20 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
-  public accessForm: FormGroup;
-  public mode: 'create' | 'update';
+  protected accessForm: FormGroup;
+  protected mode: 'create' | 'update';
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly data =
+    inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateAccessDialogComponent>>(MatDialogRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly notificationService = inject(NotificationService);
+
+  public constructor() {
     this.mode = this.data.access?.id ? 'update' : 'create';
   }
 
