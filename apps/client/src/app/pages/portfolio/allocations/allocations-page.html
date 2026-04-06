@@ -25,11 +25,9 @@
         <mat-card-content>
           <mat-progress-bar
             mode="determinate"
-            [title]="
-              `${(
-                portfolioDetails?.summary?.filteredValueInPercentage * 100
-              ).toFixed(2)}%`
-            "
+            [title]="`${(
+              portfolioDetails?.summary?.filteredValueInPercentage * 100
+            ).toFixed(2)}%`"
             [value]="portfolioDetails?.summary?.filteredValueInPercentage * 100"
           />
         </mat-card-content>
@@ -49,7 +47,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="platforms"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
           />
@@ -71,7 +69,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="holdings"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['currency']"
             [locale]="user?.settings?.locale"
           />
@@ -93,7 +91,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="holdings"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['assetClassLabel', 'assetSubClassLabel']"
             [locale]="user?.settings?.locale"
           />
@@ -114,7 +112,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="symbols"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['symbol']"
             [locale]="user?.settings?.locale"
             [showLabels]="deviceType !== 'mobile'"
@@ -138,7 +136,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="sectors"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [maxItems]="10"
@@ -161,7 +159,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="continents"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
           />
@@ -183,7 +181,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="marketsAdvanced"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [locale]="user?.settings?.locale"
           />
         </mat-card-content>
@@ -206,9 +204,7 @@
             <gf-world-map-chart
               [countries]="countries"
               [format]="worldMapChartFormat"
-              [isInPercent]="
-                hasImpersonationId || user.settings.isRestrictedView
-              "
+              [isInPercent]="showValuesInPercentage()"
               [locale]="user?.settings?.locale"
             />
           </div>
@@ -272,7 +268,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="countries"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [maxItems]="10"
@@ -291,7 +287,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="accounts"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
             (proportionChartClicked)="onAccountChartClicked($event)"
@@ -314,7 +310,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="holdings"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [isInPercent]="showValuesInPercentage()"
             [keys]="['etfProvider']"
             [locale]="user?.settings?.locale"
           />

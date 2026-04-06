@@ -159,10 +159,9 @@ export class GfAllocationsPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.worldMapChartFormat =
-            this.hasImpersonationId || this.user.settings.isRestrictedView
-              ? `{0}%`
-              : `{0} ${this.user?.settings?.baseCurrency}`;
+          this.worldMapChartFormat = this.showValuesInPercentage()
+            ? `{0}%`
+            : `{0} ${this.user?.settings?.baseCurrency}`;
 
           this.isLoading = true;
 
@@ -310,7 +309,7 @@ export class GfAllocationsPageComponent implements OnInit {
     ] of Object.entries(this.portfolioDetails.accounts)) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.showValuesInPercentage()) {
         value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
@@ -328,7 +327,7 @@ export class GfAllocationsPageComponent implements OnInit {
     )) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.showValuesInPercentage()) {
         value = position.allocationInPercentage;
       } else {
         value = position.valueInBaseCurrency;
@@ -491,7 +490,7 @@ export class GfAllocationsPageComponent implements OnInit {
     ] of Object.entries(this.portfolioDetails.platforms)) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.showValuesInPercentage()) {
         value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
@@ -506,7 +505,7 @@ export class GfAllocationsPageComponent implements OnInit {
 
     this.topHoldings = Object.values(this.topHoldingsMap)
       .map(({ name, value }) => {
-        if (this.hasImpersonationId || this.user.settings.isRestrictedView) {
+        if (this.showValuesInPercentage()) {
           return {
             name,
             allocationInPercentage: value,
@@ -596,5 +595,9 @@ export class GfAllocationsPageComponent implements OnInit {
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });
+  }
+
+  public showValuesInPercentage() {
+    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
   }
 }
