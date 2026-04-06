@@ -74,7 +74,7 @@ export class GfPortfolioProportionChartComponent
       value: number;
     };
   } = {};
-  @Input() isInPercent = false;
+  @Input() isInPercentage = false;
   @Input() keys: string[] = [];
   @Input() locale = getLocale();
   @Input() maxItems?: number;
@@ -198,7 +198,7 @@ export class GfPortfolioProportionChartComponent
       });
     }
 
-    if (this.isInPercent) {
+    if (this.isInPercentage) {
       const totalValueInPercentage = getSum(
         Object.values(chartData).map(({ value }) => {
           return value;
@@ -465,7 +465,7 @@ export class GfPortfolioProportionChartComponent
 
           if ((context.raw as number) === Number.MAX_SAFE_INTEGER) {
             return $localize`No data available`;
-          } else if (this.isInPercent) {
+          } else if (this.isInPercentage) {
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
             const value = context.raw as number;
