@@ -73,7 +73,7 @@
           <gf-portfolio-proportion-chart
             class="mx-auto"
             [data]="symbols"
-            [isInPercent]="true"
+            [isInPercentage]="true"
             [keys]="['symbol']"
             [showLabels]="deviceType !== 'mobile'"
           />
@@ -98,7 +98,7 @@
           <mat-card-content>
             <gf-portfolio-proportion-chart
               [data]="positions"
-              [isInPercent]="true"
+              [isInPercentage]="true"
               [keys]="['currency']"
               [maxItems]="10"
             />
@@ -115,7 +115,7 @@
           <mat-card-content>
             <gf-portfolio-proportion-chart
               [data]="sectors"
-              [isInPercent]="true"
+              [isInPercentage]="true"
               [keys]="['name']"
               [maxItems]="10"
             />
@@ -134,7 +134,7 @@
           <mat-card-content>
             <gf-portfolio-proportion-chart
               [data]="continents"
-              [isInPercent]="true"
+              [isInPercentage]="true"
               [keys]="['name']"
             />
           </mat-card-content>
