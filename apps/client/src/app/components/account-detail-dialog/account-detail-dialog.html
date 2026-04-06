@@ -24,9 +24,7 @@
         class="h-100"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
-        [isInPercentage]="
-          data.hasImpersonationId || user.settings.isRestrictedView
-        "
+        [isInPercentage]="showValuesInPercentage()"
         [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
       />
