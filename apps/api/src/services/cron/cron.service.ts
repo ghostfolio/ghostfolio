@@ -3,6 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { StatisticsGatheringService } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.service';
 import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
@@ -12,7 +13,7 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
@@ -25,9 +26,16 @@ export class CronService {
     private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly propertyService: PropertyService,
+    @Optional()
+    private readonly statisticsGatheringService: StatisticsGatheringService,
     private readonly twitterBotService: TwitterBotService,
     private readonly userService: UserService
   ) {}
+
+  @Cron(CronExpression.EVERY_HOUR)
+  public async runEveryHour() {
+    await this.statisticsGatheringService?.addJobToQueue();
+  }
 
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
   public async runEveryHourAtRandomMinute() {
