@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the terms of service for the _Ghostfolio_ SaaS (cloud) to include _Paid Plans_ and _Refund Policy_
 - Upgraded `prisma` from version `6.19.0` to `6.19.3`
 
 ## 2.252.0 - 2026-03-02
