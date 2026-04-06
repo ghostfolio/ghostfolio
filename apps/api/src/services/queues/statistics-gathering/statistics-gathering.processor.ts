@@ -141,12 +141,6 @@ export class StatisticsGatheringProcessor {
 
       const $ = cheerio.load(body);
 
-      console.log(
-        $(
-          'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
-        ).text()
-      );
-
       const value = $(
         'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
       ).text();
