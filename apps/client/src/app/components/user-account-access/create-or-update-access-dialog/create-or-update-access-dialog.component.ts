@@ -3,12 +3,13 @@ import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -50,18 +51,24 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
-  public accessForm: FormGroup;
-  public mode: 'create' | 'update';
+  protected accessForm: FormGroup;
+  protected mode: 'create' | 'update';
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+  private readonly data =
+    inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
+
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateAccessDialogComponent>>(MatDialogRef);
+
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly notificationService = inject(NotificationService);
+
+  public constructor() {
     this.mode = this.data.access?.id ? 'update' : 'create';
   }
 
@@ -81,22 +88,25 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    this.accessForm.get('type').valueChanges.subscribe((accessType) => {
-      const granteeUserIdControl = this.accessForm.get('granteeUserId');
-      const permissionsControl = this.accessForm.get('permissions');
+    this.accessForm
+      .get('type')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((accessType) => {
+        const granteeUserIdControl = this.accessForm.get('granteeUserId');
+        const permissionsControl = this.accessForm.get('permissions');
 
-      if (accessType === 'PRIVATE') {
-        granteeUserIdControl.setValidators(Validators.required);
-      } else {
-        granteeUserIdControl.clearValidators();
-        granteeUserIdControl.setValue(null);
-        permissionsControl.setValue(this.data.access.permissions[0]);
-      }
+        if (accessType === 'PRIVATE') {
+          granteeUserIdControl?.setValidators(Validators.required);
+        } else {
+          granteeUserIdControl?.clearValidators();
+          granteeUserIdControl?.setValue(null);
+          permissionsControl?.setValue(this.data.access.permissions[0]);
+        }
 
-      granteeUserIdControl.updateValueAndValidity();
+        granteeUserIdControl?.updateValueAndValidity();
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onCancel() {
@@ -113,9 +123,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private async createAccess() {
     const access: CreateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
-      permissions: [this.accessForm.get('permissions').value]
+      alias: this.accessForm.get('alias')?.value,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value,
+      permissions: [this.accessForm.get('permissions')?.value]
     };
 
     try {
@@ -128,7 +138,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       this.dataService
         .postAccess(access)
         .pipe(
-          catchError((error) => {
+          catchError((error: HttpErrorResponse) => {
             if (error.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not grant access.`
@@ -149,10 +159,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private async updateAccess() {
     const access: UpdateAccessDto = {
-      alias: this.accessForm.get('alias').value,
-      granteeUserId: this.accessForm.get('granteeUserId').value,
+      alias: this.accessForm.get('alias')?.value,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: this.data.access.id,
-      permissions: [this.accessForm.get('permissions').value]
+      permissions: [this.accessForm.get('permissions')?.value]
     };
 
     try {
@@ -165,8 +175,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       this.dataService
         .putAccess(access)
         .pipe(
-          catchError(({ status }) => {
-            if (status.status === StatusCodes.BAD_REQUEST) {
+          catchError(({ status }: HttpErrorResponse) => {
+            if (status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });
