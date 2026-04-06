@@ -310,7 +310,7 @@ export class GfAllocationsPageComponent implements OnInit {
     ] of Object.entries(this.portfolioDetails.accounts)) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.hasImpersonationId || this.user?.settings?.isRestrictedView) {
         value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
@@ -328,7 +328,7 @@ export class GfAllocationsPageComponent implements OnInit {
     )) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.hasImpersonationId || this.user?.settings?.isRestrictedView) {
         value = position.allocationInPercentage;
       } else {
         value = position.valueInBaseCurrency;
@@ -491,7 +491,7 @@ export class GfAllocationsPageComponent implements OnInit {
     ] of Object.entries(this.portfolioDetails.platforms)) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.hasImpersonationId || this.user?.settings?.isRestrictedView) {
         value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
