@@ -120,6 +120,10 @@ export class SitemapService {
       {
         languageCode: 'en',
         routerLink: ['2025', '11', 'black-weeks-2025']
+      },
+      {
+        languageCode: 'en',
+        routerLink: ['2026', '04', 'ghostfolio-3']
       }
     ]
       .map(({ languageCode, routerLink }) => {
