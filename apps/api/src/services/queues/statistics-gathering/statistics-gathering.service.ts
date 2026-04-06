@@ -19,39 +19,22 @@ export class StatisticsGatheringService {
   ) {}
 
   public async addJobsToQueue() {
-    return Promise.all([
-      this.statisticsGatheringQueue.add(
+    return Promise.all(
+      [
         GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME,
-        {},
-        {
-          ...GATHER_STATISTICS_PROCESS_JOB_OPTIONS,
-          jobId: GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME
-        }
-      ),
-      this.statisticsGatheringQueue.add(
         GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME,
-        {},
-        {
-          ...GATHER_STATISTICS_PROCESS_JOB_OPTIONS,
-          jobId: GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME
-        }
-      ),
-      this.statisticsGatheringQueue.add(
         GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME,
-        {},
-        {
-          ...GATHER_STATISTICS_PROCESS_JOB_OPTIONS,
-          jobId: GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME
-        }
-      ),
-      this.statisticsGatheringQueue.add(
-        GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME,
-        {},
-        {
-          ...GATHER_STATISTICS_PROCESS_JOB_OPTIONS,
-          jobId: GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME
-        }
-      )
-    ]);
+        GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME
+      ].map((jobName) => {
+        return this.statisticsGatheringQueue.add(
+          jobName,
+          {},
+          {
+            ...GATHER_STATISTICS_PROCESS_JOB_OPTIONS,
+            jobId: jobName
+          }
+        );
+      })
+    );
   }
 }
