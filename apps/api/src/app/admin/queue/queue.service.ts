@@ -1,7 +1,8 @@
 import {
   DATA_GATHERING_QUEUE,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
-  QUEUE_JOB_STATUS_LIST
+  QUEUE_JOB_STATUS_LIST,
+  STATISTICS_GATHERING_QUEUE
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
 
@@ -15,7 +16,9 @@ export class QueueService {
     @InjectQueue(DATA_GATHERING_QUEUE)
     private readonly dataGatheringQueue: Queue,
     @InjectQueue(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
-    private readonly portfolioSnapshotQueue: Queue
+    private readonly portfolioSnapshotQueue: Queue,
+    @InjectQueue(STATISTICS_GATHERING_QUEUE)
+    private readonly statisticsGatheringQueue: Queue
   ) {}
 
   public async deleteJob(aId: string) {
@@ -38,6 +41,7 @@ export class QueueService {
 
       await this.dataGatheringQueue.clean(300, queueStatus);
       await this.portfolioSnapshotQueue.clean(300, queueStatus);
+      await this.statisticsGatheringQueue.clean(300, queueStatus);
     }
   }
 
@@ -58,13 +62,19 @@ export class QueueService {
     limit?: number;
     status?: JobStatus[];
   }): Promise<AdminJobs> {
-    const [dataGatheringJobs, portfolioSnapshotJobs] = await Promise.all([
-      this.dataGatheringQueue.getJobs(status),
-      this.portfolioSnapshotQueue.getJobs(status)
-    ]);
+    const [dataGatheringJobs, portfolioSnapshotJobs, statisticsGatheringJobs] =
+      await Promise.all([
+        this.dataGatheringQueue.getJobs(status),
+        this.portfolioSnapshotQueue.getJobs(status),
+        this.statisticsGatheringQueue.getJobs(status)
+      ]);
 
     const jobsWithState = await Promise.all(
-      [...dataGatheringJobs, ...portfolioSnapshotJobs]
+      [
+        ...dataGatheringJobs,
+        ...portfolioSnapshotJobs,
+        ...statisticsGatheringJobs
+      ]
         .filter((job) => {
           return job;
         })

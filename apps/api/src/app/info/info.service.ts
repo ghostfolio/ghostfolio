@@ -24,6 +24,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { subDays } from 'date-fns';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class InfoService {
@@ -235,10 +236,16 @@ export class InfoService {
       uptime: uptime ? Number.parseFloat(uptime) : undefined
     };
 
-    await this.redisCacheService.set(
-      InfoService.CACHE_KEY_STATISTICS,
-      JSON.stringify(statistics)
-    );
+    if (
+      Object.values(statistics).every((value) => {
+        return !isNil(value);
+      })
+    ) {
+      await this.redisCacheService.set(
+        InfoService.CACHE_KEY_STATISTICS,
+        JSON.stringify(statistics)
+      );
+    }
 
     return statistics;
   }

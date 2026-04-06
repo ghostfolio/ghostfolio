@@ -34,7 +34,7 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_HOUR)
   public async runEveryHour() {
-    await this.statisticsGatheringService?.addJobToQueue();
+    await this.statisticsGatheringService?.addJobsToQueue();
   }
 
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)

@@ -1,7 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
-  GATHER_STATISTICS_PROCESS_JOB_NAME,
+  GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME,
+  GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME,
+  GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME,
+  GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME,
   HEADER_KEY_TOKEN,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_DOCKER_HUB_PULLS,
@@ -28,46 +31,82 @@ export class StatisticsGatheringProcessor {
     private readonly propertyService: PropertyService
   ) {}
 
-  @Process(GATHER_STATISTICS_PROCESS_JOB_NAME)
-  public async gatherStatistics() {
+  @Process(GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME)
+  public async gatherDockerHubPullsStatistics() {
     Logger.log(
-      'Statistics gathering has been started',
+      'Docker Hub pulls statistics gathering has been started',
       'StatisticsGatheringProcessor'
     );
 
-    const [dockerHubPulls, gitHubContributors, gitHubStargazers, uptime] =
-      await Promise.all([
-        this.countDockerHubPulls(),
-        this.countGitHubContributors(),
-        this.countGitHubStargazers(),
-        this.getUptime()
-      ]);
+    const dockerHubPulls = await this.countDockerHubPulls();
 
-    await Promise.all([
-      dockerHubPulls !== undefined &&
-        this.propertyService.put({
-          key: PROPERTY_DOCKER_HUB_PULLS,
-          value: String(dockerHubPulls)
-        }),
-      gitHubContributors !== undefined &&
-        this.propertyService.put({
-          key: PROPERTY_GITHUB_CONTRIBUTORS,
-          value: String(gitHubContributors)
-        }),
-      gitHubStargazers !== undefined &&
-        this.propertyService.put({
-          key: PROPERTY_GITHUB_STARGAZERS,
-          value: String(gitHubStargazers)
-        }),
-      uptime !== undefined &&
-        this.propertyService.put({
-          key: PROPERTY_UPTIME,
-          value: String(uptime)
-        })
-    ]);
+    await this.propertyService.put({
+      key: PROPERTY_DOCKER_HUB_PULLS,
+      value: String(dockerHubPulls)
+    });
 
     Logger.log(
-      'Statistics gathering has been completed',
+      'Docker Hub pulls statistics gathering has been completed',
+      'StatisticsGatheringProcessor'
+    );
+  }
+
+  @Process(GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME)
+  public async gatherGitHubContributorsStatistics() {
+    Logger.log(
+      'GitHub contributors statistics gathering has been started',
+      'StatisticsGatheringProcessor'
+    );
+
+    const gitHubContributors = await this.countGitHubContributors();
+
+    await this.propertyService.put({
+      key: PROPERTY_GITHUB_CONTRIBUTORS,
+      value: String(gitHubContributors)
+    });
+
+    Logger.log(
+      'GitHub contributors statistics gathering has been completed',
+      'StatisticsGatheringProcessor'
+    );
+  }
+
+  @Process(GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME)
+  public async gatherGitHubStargazersStatistics() {
+    Logger.log(
+      'GitHub stargazers statistics gathering has been started',
+      'StatisticsGatheringProcessor'
+    );
+
+    const gitHubStargazers = await this.countGitHubStargazers();
+
+    await this.propertyService.put({
+      key: PROPERTY_GITHUB_STARGAZERS,
+      value: String(gitHubStargazers)
+    });
+
+    Logger.log(
+      'GitHub stargazers statistics gathering has been completed',
+      'StatisticsGatheringProcessor'
+    );
+  }
+
+  @Process(GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME)
+  public async gatherUptimeStatistics() {
+    Logger.log(
+      'Uptime statistics gathering has been started',
+      'StatisticsGatheringProcessor'
+    );
+
+    const uptime = await this.getUptime();
+
+    await this.propertyService.put({
+      key: PROPERTY_UPTIME,
+      value: String(uptime)
+    });
+
+    Logger.log(
+      'Uptime statistics gathering has been completed',
       'StatisticsGatheringProcessor'
     );
   }
@@ -88,7 +127,7 @@ export class StatisticsGatheringProcessor {
     } catch (error) {
       Logger.error(error, 'StatisticsGatheringProcessor - DockerHub');
 
-      return undefined;
+      throw error;
     }
   }
 
@@ -102,15 +141,29 @@ export class StatisticsGatheringProcessor {
 
       const $ = cheerio.load(body);
 
-      return extractNumberFromString({
-        value: $(
+      console.log(
+        $(
           'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
         ).text()
+      );
+
+      const value = $(
+        'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
+      ).text();
+
+      if (!value) {
+        throw new Error(
+          'Could not find the number of contributors in the page'
+        );
+      }
+
+      return extractNumberFromString({
+        value
       });
     } catch (error) {
       Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
 
-      return undefined;
+      throw error;
     }
   }
 
@@ -130,7 +183,7 @@ export class StatisticsGatheringProcessor {
     } catch (error) {
       Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
 
-      return undefined;
+      throw error;
     }
   }
 
@@ -161,7 +214,7 @@ export class StatisticsGatheringProcessor {
     } catch (error) {
       Logger.error(error, 'StatisticsGatheringProcessor - Better Stack');
 
-      return undefined;
+      throw error;
     }
   }
 }
