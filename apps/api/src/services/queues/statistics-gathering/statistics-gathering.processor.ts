@@ -146,9 +146,7 @@ export class StatisticsGatheringProcessor {
       ).text();
 
       if (!value) {
-        throw new Error(
-          'Could not find the number of contributors in the page'
-        );
+        throw new Error('Could not find the contributors count in the page');
       }
 
       return extractNumberFromString({
