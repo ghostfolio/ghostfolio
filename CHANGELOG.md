@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for filtering by activity type on the activities page (experimental)
 
+### Changed
+
+- Upgraded `prisma` from version `6.19.0` to `6.19.3`
+
 ## 2.252.0 - 2026-03-02
 
 ### Added
