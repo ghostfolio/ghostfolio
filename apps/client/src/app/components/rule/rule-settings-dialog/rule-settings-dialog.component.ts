@@ -28,8 +28,8 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
   templateUrl: './rule-settings-dialog.html'
 })
 export class GfRuleSettingsDialogComponent {
-  public settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
   public form: FormGroup;
+  public settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: RuleSettingsDialogParams,
