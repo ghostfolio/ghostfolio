@@ -154,6 +154,11 @@ export class GfAssistantComponent implements OnChanges, OnInit {
     private destroyRef: DestroyRef
   ) {
     addIcons({ closeCircleOutline, closeOutline, searchOutline });
+    this.destroyRef.onDestroy(() => {
+      if (this.preselectionTimeout) {
+        clearTimeout(this.preselectionTimeout);
+      }
+    });
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -260,30 +265,30 @@ export class GfAssistantComponent implements OnChanges, OnInit {
           const assetProfiles$: Observable<Partial<SearchResults>> = this
             .hasPermissionToAccessAdminControl
             ? this.searchAssetProfiles(searchTerm).pipe(
-                map((assetProfiles) => ({
-                  assetProfiles: assetProfiles.slice(
-                    0,
-                    GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
-                  )
-                })),
-                catchError((error) => {
-                  console.error(
-                    'Error fetching asset profiles for assistant:',
-                    error
-                  );
-                  return of({ assetProfiles: [] as SearchResultItem[] });
-                }),
-                tap(() => {
-                  this.isLoading.assetProfiles = false;
-                  this.changeDetectorRef.markForCheck();
-                })
-              )
+              map((assetProfiles) => ({
+                assetProfiles: assetProfiles.slice(
+                  0,
+                  GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+                )
+              })),
+              catchError((error) => {
+                console.error(
+                  'Error fetching asset profiles for assistant:',
+                  error
+                );
+                return of({ assetProfiles: [] as SearchResultItem[] });
+              }),
+              tap(() => {
+                this.isLoading.assetProfiles = false;
+                this.changeDetectorRef.markForCheck();
+              })
+            )
             : of({ assetProfiles: [] as SearchResultItem[] }).pipe(
-                tap(() => {
-                  this.isLoading.assetProfiles = false;
-                  this.changeDetectorRef.markForCheck();
-                })
-              );
+              tap(() => {
+                this.isLoading.assetProfiles = false;
+                this.changeDetectorRef.markForCheck();
+              })
+            );
 
           const holdings$: Observable<Partial<SearchResults>> =
             this.searchHoldings(searchTerm).pipe(
@@ -550,12 +555,6 @@ export class GfAssistantComponent implements OnChanges, OnInit {
 
   public setIsOpen(aIsOpen: boolean) {
     this.isOpen = aIsOpen;
-  }
-
-  public ngOnDestroy() {
-    if (this.preselectionTimeout) {
-      clearTimeout(this.preselectionTimeout);
-    }
   }
 
   private getCurrentAssistantListItem() {
