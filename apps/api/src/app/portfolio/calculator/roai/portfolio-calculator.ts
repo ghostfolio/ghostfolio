@@ -626,6 +626,13 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             totalQuantityFromBuyTransactions
           );
 
+      if (totalUnits.eq(0)) {
+        // Reset tracking variables when position is fully closed
+        totalInvestmentFromBuyTransactions = new Big(0);
+        totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
+        totalQuantityFromBuyTransactions = new Big(0);
+      }
+
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log(
           'grossPerformanceFromSells',
@@ -853,7 +860,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           return format(date, 'yyyy');
         })
     ] as DateRange[]) {
-      const dateInterval = getIntervalFromDateRange(dateRange);
+      const dateInterval = getIntervalFromDateRange({ dateRange });
       const endDate = dateInterval.endDate;
       let startDate = dateInterval.startDate;
 

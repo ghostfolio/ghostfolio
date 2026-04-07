@@ -61,7 +61,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() currency: string;
   @Input() groupBy: GroupBy;
   @Input() historicalDataItems: LineChartItem[] = [];
-  @Input() isInPercent = false;
+  @Input() isInPercentage = false;
   @Input() isLoading = false;
   @Input() locale = getLocale();
   @Input() savingsRate = 0;
@@ -119,7 +119,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           data: this.investments.map(({ date, investment }) => {
             return {
               x: parseDate(date).getTime(),
-              y: this.isInPercent ? investment * 100 : investment
+              y: this.isInPercentage ? investment * 100 : investment
             };
           }),
           label: this.benchmarkDataLabel,
@@ -139,7 +139,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           data: this.values.map(({ date, value }) => {
             return {
               x: parseDate(date).getTime(),
-              y: this.isInPercent ? value * 100 : value
+              y: this.isInPercentage ? value * 100 : value
             };
           }),
           fill: false,
@@ -251,7 +251,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 border: {
                   display: false
                 },
-                display: !this.isInPercent,
+                display: !this.isInPercentage,
                 grid: {
                   color: ({ scale, tick }) => {
                     if (
@@ -292,10 +292,10 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
-        currency: this.isInPercent ? undefined : this.currency,
+        currency: this.isInPercentage ? undefined : this.currency,
         groupBy: this.groupBy,
-        locale: this.isInPercent ? undefined : this.locale,
-        unit: this.isInPercent ? '%' : undefined
+        locale: this.isInPercentage ? undefined : this.locale,
+        unit: this.isInPercentage ? '%' : undefined
       }),
       mode: 'index',
       position: 'top',

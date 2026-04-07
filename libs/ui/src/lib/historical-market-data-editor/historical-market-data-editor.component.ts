@@ -8,16 +8,21 @@ import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  DestroyRef,
   EventEmitter,
+  inject,
+  input,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -40,7 +45,7 @@ import { first, last } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { parse as csvToJson } from 'papaparse';
-import { EMPTY, Subject, takeUntil } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { GfHistoricalMarketDataEditorDialogComponent } from './historical-market-data-editor-dialog/historical-market-data-editor-dialog.component';
@@ -54,74 +59,80 @@ import { HistoricalMarketDataEditorDialogParams } from './historical-market-data
   templateUrl: './historical-market-data-editor.component.html'
 })
 export class GfHistoricalMarketDataEditorComponent
-  implements OnChanges, OnDestroy, OnInit
+  implements OnChanges, OnInit
 {
-  @Input() currency: string;
-  @Input() dataSource: DataSource;
-  @Input() dateOfFirstActivity: string;
-  @Input() locale = getLocale();
-  @Input() marketData: MarketData[];
-  @Input() symbol: string;
-  @Input() user: User;
-
-  @Output() marketDataChanged = new EventEmitter<boolean>();
-
-  public days = Array(31);
-  public defaultDateFormat: string;
-  public deviceType: string;
-  public historicalDataForm = this.formBuilder.group({
-    historicalData: this.formBuilder.group({
-      csvString: ''
-    })
-  });
-  public historicalDataItems: LineChartItem[];
-  public marketDataByMonth: {
-    [yearMonth: string]: {
-      [day: string]: Pick<MarketData, 'date' | 'marketPrice'> & { day: number };
-    };
-  } = {};
-
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
     DATE_FORMAT
   )};123.45`;
 
-  private unsubscribeSubject = new Subject<void>();
+  @Input() currency: string;
+  @Input() dataSource: DataSource;
+  @Input() dateOfFirstActivity: string;
+  @Input() symbol: string;
+  @Input() user: User;
+
+  @Output() marketDataChanged = new EventEmitter<boolean>();
+
+  public historicalDataForm = this.formBuilder.group({
+    historicalData: this.formBuilder.group({
+      csvString: ''
+    })
+  });
+  public marketDataByMonth: {
+    [yearMonth: string]: {
+      [day: string]: {
+        date: Date;
+        day: number;
+        marketPrice?: number;
+      };
+    };
+  } = {};
+
+  public readonly locale = input(getLocale());
+  public readonly marketData = input.required<MarketData[]>();
+
+  protected readonly days = Array.from({ length: 31 }, (_, i) => i + 1);
+  protected readonly defaultDateFormat = computed(() =>
+    getDateFormatString(this.locale())
+  );
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  private readonly historicalDataItems = computed<LineChartItem[]>(() =>
+    this.marketData().map(({ date, marketPrice }) => {
+      return {
+        date: format(date, DATE_FORMAT),
+        value: marketPrice
+      };
+    })
+  );
 
   public constructor(
     private dataService: DataService,
-    private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar
-  ) {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-  }
+  ) {}
 
   public ngOnInit() {
     this.initializeHistoricalDataForm();
   }
 
   public ngOnChanges() {
-    this.defaultDateFormat = getDateFormatString(this.locale);
-
-    this.historicalDataItems = this.marketData.map(({ date, marketPrice }) => {
-      return {
-        date: format(date, DATE_FORMAT),
-        value: marketPrice
-      };
-    });
-
     if (this.dateOfFirstActivity) {
       let date = parseISO(this.dateOfFirstActivity);
 
-      const missingMarketData: Partial<MarketData>[] = [];
+      const missingMarketData: { date: Date; marketPrice?: number }[] = [];
 
-      if (this.historicalDataItems?.[0]?.date) {
+      if (this.historicalDataItems()?.[0]?.date) {
         while (
           isBefore(
             date,
-            parse(this.historicalDataItems[0].date, DATE_FORMAT, new Date())
+            parse(this.historicalDataItems()[0].date, DATE_FORMAT, new Date())
           )
         ) {
           missingMarketData.push({
@@ -133,9 +144,10 @@ export class GfHistoricalMarketDataEditorComponent
         }
       }
 
-      const marketDataItems = [...missingMarketData, ...this.marketData];
+      const marketDataItems = [...missingMarketData, ...this.marketData()];
 
-      if (!isToday(last(marketDataItems)?.date)) {
+      const lastDate = last(marketDataItems)?.date;
+      if (!lastDate || !isToday(lastDate)) {
         marketDataItems.push({ date: new Date() });
       }
 
@@ -160,23 +172,32 @@ export class GfHistoricalMarketDataEditorComponent
 
       // Fill up missing months
       const dates = Object.keys(this.marketDataByMonth).sort();
+      const startDateString = first(dates);
       const startDate = min([
         parseISO(this.dateOfFirstActivity),
-        parseISO(first(dates))
+        ...(startDateString ? [parseISO(startDateString)] : [])
       ]);
-      const endDate = parseISO(last(dates));
+      const endDateString = last(dates);
 
-      let currentDate = startDate;
+      if (endDateString) {
+        const endDate = parseISO(endDateString);
 
-      while (isBefore(currentDate, endDate)) {
-        const key = format(currentDate, 'yyyy-MM');
-        if (!this.marketDataByMonth[key]) {
-          this.marketDataByMonth[key] = {};
+        let currentDate = startDate;
+
+        while (isBefore(currentDate, endDate)) {
+          const key = format(currentDate, 'yyyy-MM');
+          if (!this.marketDataByMonth[key]) {
+            this.marketDataByMonth[key] = {};
+          }
+
+          currentDate = addMonths(currentDate, 1);
         }
-
-        currentDate = addMonths(currentDate, 1);
       }
     }
+  }
+
+  public formatDay(day: number): string {
+    return day < 10 ? `0${day}` : `${day}`;
   }
 
   public isDateOfInterest(aDateString: string) {
@@ -201,7 +222,8 @@ export class GfHistoricalMarketDataEditorComponent
 
     const dialogRef = this.dialog.open<
       GfHistoricalMarketDataEditorDialogComponent,
-      HistoricalMarketDataEditorDialogParams
+      HistoricalMarketDataEditorDialogParams,
+      { withRefresh: boolean }
     >(GfHistoricalMarketDataEditorDialogComponent, {
       data: {
         marketPrice,
@@ -211,13 +233,13 @@ export class GfHistoricalMarketDataEditorComponent
         symbol: this.symbol,
         user: this.user
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ withRefresh } = { withRefresh: false }) => {
         this.marketDataChanged.emit(withRefresh);
       });
@@ -225,15 +247,15 @@ export class GfHistoricalMarketDataEditorComponent
 
   public onImportHistoricalData() {
     try {
-      const marketData = csvToJson(
-        this.historicalDataForm.controls['historicalData'].controls['csvString']
-          .value,
+      const marketData = csvToJson<UpdateMarketDataDto>(
+        this.historicalDataForm.controls.historicalData.controls.csvString
+          .value ?? '',
         {
           dynamicTyping: true,
           header: true,
           skipEmptyLines: true
         }
-      ).data as UpdateMarketDataDto[];
+      ).data;
 
       this.dataService
         .postMarketData({
@@ -244,13 +266,13 @@ export class GfHistoricalMarketDataEditorComponent
           symbol: this.symbol
         })
         .pipe(
-          catchError(({ error, message }) => {
+          catchError(({ error, message }: HttpErrorResponse) => {
             this.snackBar.open(`${error}: ${message[0]}`, undefined, {
               duration: ms('3 seconds')
             });
             return EMPTY;
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
           this.initializeHistoricalDataForm();
@@ -266,11 +288,6 @@ export class GfHistoricalMarketDataEditorComponent
         }
       );
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private initializeHistoricalDataForm() {

@@ -1,7 +1,7 @@
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -14,7 +14,6 @@ import {
   settingsOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page has-tabs' },
@@ -23,11 +22,9 @@ import { Subject } from 'rxjs';
   styleUrls: ['./admin-page.scss'],
   templateUrl: './admin-page.html'
 })
-export class AdminPageComponent implements OnDestroy, OnInit {
+export class AdminPageComponent implements OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(private deviceService: DeviceDetectorService) {
     addIcons({
@@ -50,11 +47,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       },
       {
         iconName: 'settings-outline',
-        label:
-          internalRoutes.adminControl.subRoutes.settings.title +
-          '<span class="badge badge-pill badge-secondary ml-2 text-uppercase">' +
-          $localize`new` +
-          '</span>',
+        label: internalRoutes.adminControl.subRoutes.settings.title,
         routerLink: internalRoutes.adminControl.subRoutes.settings.routerLink
       },
       {
@@ -73,10 +66,5 @@ export class AdminPageComponent implements OnDestroy, OnInit {
         routerLink: internalRoutes.adminControl.subRoutes.users.routerLink
       }
     ];
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

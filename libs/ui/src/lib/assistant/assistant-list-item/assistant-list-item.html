@@ -8,7 +8,7 @@
   @if (item && isAsset(item)) {
     <br />
     <small class="text-muted"
-      >{{ item?.symbol | gfSymbol }} · {{ item?.currency }}
+      >{{ item?.symbol ?? '' | gfSymbol }} · {{ item?.currency }}
       @if (item?.assetSubClassString) {
         · {{ item.assetSubClassString }}
       }

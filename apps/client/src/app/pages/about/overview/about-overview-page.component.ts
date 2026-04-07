@@ -9,9 +9,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -23,8 +24,6 @@ import {
   logoX,
   mail
 } from 'ionicons/icons';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [CommonModule, IonIcon, MatButtonModule, RouterModule],
@@ -33,7 +32,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./about-overview-page.scss'],
   templateUrl: './about-overview-page.html'
 })
-export class GfAboutOverviewPageComponent implements OnDestroy, OnInit {
+export class GfAboutOverviewPageComponent implements OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
@@ -43,11 +42,10 @@ export class GfAboutOverviewPageComponent implements OnDestroy, OnInit {
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private userService: UserService
   ) {
     const { globalPermissions } = this.dataService.fetchInfo();
@@ -67,7 +65,7 @@ export class GfAboutOverviewPageComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -75,10 +73,5 @@ export class GfAboutOverviewPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

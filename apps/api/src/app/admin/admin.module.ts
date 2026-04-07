@@ -1,4 +1,4 @@
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
@@ -20,6 +20,7 @@ import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
+    ActivitiesModule,
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
@@ -28,7 +29,6 @@ import { QueueModule } from './queue/queue.module';
     DemoModule,
     ExchangeRateDataModule,
     MarketDataModule,
-    OrderModule,
     PrismaModule,
     PropertyModule,
     QueueModule,

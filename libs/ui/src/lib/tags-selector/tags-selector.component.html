@@ -2,7 +2,7 @@
   <div class="col">
     @if (readonly) {
       <div class="h5" i18n>Tags</div>
-      @if (tags?.length > 0) {
+      @if (tags && tags.length > 0) {
         <mat-chip-listbox>
           @for (tag of tags; track tag) {
             <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>

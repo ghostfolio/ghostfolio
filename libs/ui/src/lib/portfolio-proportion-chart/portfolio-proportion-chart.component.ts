@@ -13,12 +13,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
-  ViewChild
+  output,
+  viewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
@@ -75,20 +74,21 @@ export class GfPortfolioProportionChartComponent
       value: number;
     };
   } = {};
-  @Input() isInPercent = false;
+  @Input() isInPercentage = false;
   @Input() keys: string[] = [];
   @Input() locale = getLocale();
   @Input() maxItems?: number;
   @Input() showLabels = false;
 
-  @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
-
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
-
   public chart: Chart<'doughnut'>;
   public isLoading = true;
 
+  protected readonly proportionChartClicked = output<AssetProfileIdentifier>();
+
   private readonly OTHER_KEY = 'OTHER';
+
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   private colorMap: {
     [symbol: string]: string;
@@ -130,45 +130,45 @@ export class GfPortfolioProportionChartComponent
     };
 
     if (this.keys.length > 0) {
-      Object.keys(this.data).forEach((symbol) => {
-        if (this.data[symbol][this.keys[0]]?.toUpperCase()) {
-          if (chartData[this.data[symbol][this.keys[0]].toUpperCase()]) {
-            chartData[this.data[symbol][this.keys[0]].toUpperCase()].value =
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].value.plus(this.data[symbol].value || 0);
+      const primaryKey = this.keys[0];
+      const secondaryKey = this.keys[1];
 
-            if (
-              chartData[this.data[symbol][this.keys[0]].toUpperCase()]
-                .subCategory[this.data[symbol][this.keys[1]]]
-            ) {
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]]].value = chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]]].value.plus(
-                this.data[symbol].value || 0
-              );
+      Object.keys(this.data).forEach((symbol) => {
+        const asset = this.data[symbol];
+        const assetValue = asset.value || 0;
+        const primaryKeyValue = (asset[primaryKey] as string)?.toUpperCase();
+        const secondaryKeyValue = asset[secondaryKey] as string;
+
+        if (primaryKeyValue) {
+          if (chartData[primaryKeyValue]) {
+            chartData[primaryKeyValue].value =
+              chartData[primaryKeyValue].value.plus(assetValue);
+
+            const targetSubCategory =
+              chartData[primaryKeyValue].subCategory?.[secondaryKeyValue];
+            if (targetSubCategory) {
+              targetSubCategory.value =
+                targetSubCategory.value.plus(assetValue);
             } else {
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.data[symbol][this.keys[1]] ?? UNKNOWN_KEY] = {
-                value: new Big(this.data[symbol].value || 0)
-              };
+              if (chartData[primaryKeyValue].subCategory) {
+                chartData[primaryKeyValue].subCategory[
+                  secondaryKeyValue ?? UNKNOWN_KEY
+                ] = {
+                  value: new Big(assetValue)
+                };
+              }
             }
           } else {
-            chartData[this.data[symbol][this.keys[0]].toUpperCase()] = {
-              name: this.data[symbol][this.keys[0]],
+            chartData[primaryKeyValue] = {
+              name: asset[primaryKey] as string,
               subCategory: {},
-              value: new Big(this.data[symbol].value || 0)
+              value: new Big(assetValue)
             };
 
-            if (this.data[symbol][this.keys[1]]) {
-              chartData[
-                this.data[symbol][this.keys[0]].toUpperCase()
-              ].subCategory = {
-                [this.data[symbol][this.keys[1]]]: {
-                  value: new Big(this.data[symbol].value || 0)
+            if (secondaryKeyValue) {
+              chartData[primaryKeyValue].subCategory = {
+                [secondaryKeyValue]: {
+                  value: new Big(assetValue)
                 }
               };
             }
@@ -181,10 +181,10 @@ export class GfPortfolioProportionChartComponent
           } else {
             chartData[UNKNOWN_KEY] = {
               name: this.data[symbol].name,
-              subCategory: this.keys[1]
-                ? { [this.keys[1]]: { value: new Big(0) } }
+              subCategory: secondaryKey
+                ? { [secondaryKey]: { value: new Big(0) } }
                 : undefined,
-              value: new Big(this.data[symbol].value || 0)
+              value: new Big(assetValue)
             };
           }
         }
@@ -198,7 +198,7 @@ export class GfPortfolioProportionChartComponent
       });
     }
 
-    if (this.isInPercent) {
+    if (this.isInPercentage) {
       const totalValueInPercentage = getSum(
         Object.values(chartData).map(({ value }) => {
           return value;
@@ -278,13 +278,15 @@ export class GfPortfolioProportionChartComponent
 
       Object.keys(item.subCategory ?? {}).forEach((subCategory) => {
         if (item.name === UNKNOWN_KEY) {
-          backgroundColorSubCategory.push(item.color);
+          backgroundColorSubCategory.push(item.color ?? '');
         } else {
           backgroundColorSubCategory.push(
             Color(item.color).lighten(lightnessRatio).hex()
           );
         }
-        dataSubCategory.push(item.subCategory[subCategory].value.toNumber());
+        dataSubCategory.push(
+          item.subCategory?.[subCategory].value.toNumber() ?? 0
+        );
         labelSubCategory.push(subCategory);
 
         lightnessRatio += 0.1;
@@ -334,7 +336,7 @@ export class GfPortfolioProportionChartComponent
       labels
     };
 
-    if (this.chartCanvas) {
+    if (this.chartCanvas()) {
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins ??= {};
@@ -343,7 +345,7 @@ export class GfPortfolioProportionChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart<'doughnut'>(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'doughnut'>(this.chartCanvas().nativeElement, {
           data,
           options: {
             animation: false,
@@ -463,7 +465,7 @@ export class GfPortfolioProportionChartComponent
 
           if ((context.raw as number) === Number.MAX_SAFE_INTEGER) {
             return $localize`No data available`;
-          } else if (this.isInPercent) {
+          } else if (this.isInPercentage) {
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
             const value = context.raw as number;

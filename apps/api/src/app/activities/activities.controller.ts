@@ -4,6 +4,7 @@ import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
@@ -36,27 +37,32 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order as OrderModel, Prisma } from '@prisma/client';
+import { Order, Prisma, Type as ActivityType } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { OrderService } from './order.service';
+import { ActivitiesService } from './activities.service';
 
-@Controller('order')
-export class OrderController {
+@Controller([
+  'activities',
+  /** @deprecated */
+  'order'
+])
+export class ActivitiesController {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
+    private readonly dataProviderService: DataProviderService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly impersonationService: ImpersonationService,
-    private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Delete()
-  @HasPermission(permissions.deleteOrder)
+  @HasPermission(permissions.deleteActivity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async deleteOrders(
+  public async deleteActivities(
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
@@ -71,29 +77,29 @@ export class OrderController {
       filterByTags
     });
 
-    return this.orderService.deleteOrders({
+    return this.activitiesService.deleteActivities({
       filters,
       userId: this.request.user.id
     });
   }
 
   @Delete(':id')
-  @HasPermission(permissions.deleteOrder)
+  @HasPermission(permissions.deleteActivity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
-    const order = await this.orderService.order({
+  public async deleteActivity(@Param('id') id: string): Promise<Order> {
+    const activity = await this.activitiesService.order({
       id,
       userId: this.request.user.id
     });
 
-    if (!order) {
+    if (!activity) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
       );
     }
 
-    return this.orderService.deleteOrder({
+    return this.activitiesService.deleteActivity({
       id
     });
   }
@@ -103,9 +109,10 @@ export class OrderController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getAllOrders(
+  public async getAllActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
+    @Query('activityTypes') filterByTypes?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('range') dateRange?: DateRange,
@@ -120,7 +127,7 @@ export class OrderController {
     let startDate: Date;
 
     if (dateRange) {
-      ({ endDate, startDate } = getIntervalFromDateRange(dateRange));
+      ({ endDate, startDate } = getIntervalFromDateRange({ dateRange }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -133,14 +140,18 @@ export class OrderController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
+
+    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { activities, count } = await this.orderService.getOrders({
+    const { activities, count } = await this.activitiesService.getActivities({
       endDate,
       filters,
       sortColumn,
       sortDirection,
       startDate,
+      types,
       userCurrency,
       includeDrafts: true,
       skip: isNaN(skip) ? undefined : skip,
@@ -156,7 +167,7 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getOrderById(
+  public async getActivityById(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
   ): Promise<ActivityResponse> {
@@ -164,7 +175,7 @@ export class OrderController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
-    const { activities } = await this.orderService.getOrders({
+    const { activities } = await this.activitiesService.getActivities({
       userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
@@ -185,11 +196,34 @@ export class OrderController {
     return activity;
   }
 
-  @HasPermission(permissions.createOrder)
+  @HasPermission(permissions.createActivity)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
+  public async createActivity(@Body() data: CreateOrderDto): Promise<Order> {
+    try {
+      await this.dataProviderService.validateActivities({
+        activitiesDto: [
+          {
+            currency: data.currency,
+            dataSource: data.dataSource,
+            symbol: data.symbol,
+            type: data.type
+          }
+        ],
+        maxActivitiesToImport: 1,
+        user: this.request.user
+      });
+    } catch (error) {
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [error.message]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
     const currency = data.currency;
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
@@ -202,7 +236,7 @@ export class OrderController {
 
     delete data.dataSource;
 
-    const order = await this.orderService.createOrder({
+    const activity = await this.activitiesService.createActivity({
       ...data,
       date: parseISO(data.date),
       SymbolProfile: {
@@ -227,14 +261,14 @@ export class OrderController {
       userId: this.request.user.id
     });
 
-    if (dataSource && !order.isDraft) {
+    if (dataSource && !activity.isDraft) {
       // Gather symbol data in the background, if data source is set
       // (not MANUAL) and not draft
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
             dataSource,
-            date: order.date,
+            date: activity.date,
             symbol: data.symbol
           }
         ],
@@ -242,19 +276,22 @@ export class OrderController {
       });
     }
 
-    return order;
+    return activity;
   }
 
-  @HasPermission(permissions.updateOrder)
+  @HasPermission(permissions.updateActivity)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
-    const originalOrder = await this.orderService.order({
+  public async updateActivity(
+    @Param('id') id: string,
+    @Body() data: UpdateOrderDto
+  ) {
+    const originalActivity = await this.activitiesService.order({
       id
     });
 
-    if (!originalOrder || originalOrder.userId !== this.request.user.id) {
+    if (!originalActivity || originalActivity.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -277,7 +314,7 @@ export class OrderController {
 
     delete data.dataSource;
 
-    return this.orderService.updateOrder({
+    return this.activitiesService.updateActivity({
       data: {
         ...data,
         date,

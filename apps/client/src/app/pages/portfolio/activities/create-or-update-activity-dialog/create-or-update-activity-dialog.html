@@ -15,7 +15,7 @@
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
           <mat-select-trigger>{{
-            typesTranslationMap[activityForm.get('type').value]
+            typesTranslationMap[activityForm.get('type')?.value]
           }}</mat-select-trigger>
           <mat-option value="BUY">
             <span
@@ -84,12 +84,8 @@
       >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
-          @if (
-            !activityForm.get('accountId').hasValidator(Validators.required) ||
-            (!activityForm.get('accountId').value && mode === 'update')
-          ) {
-            <mat-option [value]="null" />
-          }
+          <mat-option [value]="null" />
+
           @for (account of data.accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">
@@ -117,7 +113,7 @@
       [ngClass]="{
         'd-none': !activityForm
           .get('searchSymbol')
-          .hasValidator(Validators.required)
+          ?.hasValidator(Validators.required)
       }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -132,7 +128,7 @@
     <div
       class="mb-3"
       [ngClass]="{
-        'd-none': !activityForm.get('name').hasValidator(Validators.required)
+        'd-none': !activityForm.get('name')?.hasValidator(Validators.required)
       }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -232,7 +228,7 @@
         </mat-form-field>
         @if (
           currencyOfAssetProfile ===
-            activityForm.get('currencyOfUnitPrice').value &&
+            activityForm.get('currencyOfUnitPrice')?.value &&
           currentMarketPrice &&
           ['BUY', 'SELL'].includes(data.activity.type) &&
           isToday(activityForm.get('date')?.value)
@@ -266,7 +262,7 @@
           matTextSuffix
           [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
         >
-          {{ activityForm.get('currencyOfUnitPrice').value }}
+          {{ activityForm.get('currencyOfUnitPrice')?.value }}
         </div>
       </mat-form-field>
     </div>

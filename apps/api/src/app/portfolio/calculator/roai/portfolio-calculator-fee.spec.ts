@@ -128,6 +128,7 @@ describe('PortfolioCalculator', () => {
           netPerformanceInPercentage: 0,
           netPerformanceInPercentageWithCurrencyEffect: 0,
           netPerformanceWithCurrencyEffect: 0,
+          totalInvestment: 0,
           totalInvestmentValueWithCurrencyEffect: 0
         })
       );

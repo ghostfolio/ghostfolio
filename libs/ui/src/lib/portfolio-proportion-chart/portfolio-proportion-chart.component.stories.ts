@@ -77,7 +77,7 @@ export const InPercentage: Story = {
       JP: { name: 'Japan', value: 0 },
       BE: { name: 'Belgium', value: 0 }
     },
-    isInPercent: true,
+    isInPercentage: true,
     keys: ['name']
   }
 };

@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import type { TooltipOptions, ChartData } from 'chart.js';
+import type { ChartData, TooltipOptions } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
@@ -162,7 +162,9 @@ export class GfTreemapChartComponent
   private initialize() {
     this.isLoading = true;
 
-    const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange({
+      dateRange: this.dateRange
+    });
 
     const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
       ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {

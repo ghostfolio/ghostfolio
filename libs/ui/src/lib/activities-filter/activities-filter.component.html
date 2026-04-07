@@ -10,7 +10,7 @@
         [removable]="true"
         (removed)="onRemoveFilter(filter)"
       >
-        {{ filter.label | gfSymbol }}
+        {{ filter.label ?? '' | gfSymbol }}
         <button matChipRemove>
           <ion-icon name="close-outline" />
         </button>
@@ -23,7 +23,7 @@
       [matAutocomplete]="autocomplete"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [placeholder]="placeholder"
+      [placeholder]="placeholder()"
       (matChipInputTokenEnd)="onAddFilter($event)"
     />
   </mat-chip-grid>
@@ -35,7 +35,7 @@
       <mat-optgroup [label]="filterGroup.name">
         @for (filter of filterGroup.filters; track filter) {
           <mat-option [value]="filter.id">
-            {{ filter.label | gfSymbol }}
+            {{ filter.label ?? '' | gfSymbol }}
           </mat-option>
         }
       </mat-optgroup>
@@ -46,7 +46,7 @@
     disabled
     mat-icon-button
     matSuffix
-    [ngClass]="{ 'd-none': !isLoading }"
+    [ngClass]="{ 'd-none': !isLoading() }"
   >
     <mat-spinner matSuffix [diameter]="20" />
   </button>

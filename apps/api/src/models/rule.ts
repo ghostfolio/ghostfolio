@@ -57,7 +57,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
             previousValue +
             this.exchangeRateDataService.toCurrency(
               new Big(currentValue.quantity)
-                .mul(currentValue.marketPrice)
+                .mul(currentValue.marketPrice ?? 0)
                 .toNumber(),
               currentValue.currency,
               baseCurrency
@@ -69,8 +69,6 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   }
 
   public abstract evaluate(aRuleSettings: T): EvaluationResult;
-
-  public abstract getCategoryName(): string;
 
   public abstract getConfiguration(): Partial<
     PortfolioReportRule['configuration']

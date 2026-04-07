@@ -2,7 +2,7 @@
 @import './styles/table';
 @import './styles/variables';
 
-@import 'svgmap/dist/svgMap';
+@import 'svgmap/style.min';
 
 :root {
   --dark-background: rgb(25, 25, 25);
@@ -544,6 +544,10 @@ ngx-skeleton-loader {
 
 .mdc-dialog__title {
   padding: 9px 24px !important;
+}
+
+.no-height {
+  height: unset !important;
 }
 
 .no-min-width {

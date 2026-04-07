@@ -5,7 +5,11 @@ import {
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getCurrencyFromSymbol,
+  isCurrency
+} from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   AssetClassSelectorOption,
@@ -33,12 +37,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   Inject,
-  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -83,8 +88,8 @@ import {
   serverOutline
 } from 'ionicons/icons';
 import ms from 'ms';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
 
@@ -117,7 +122,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   styleUrls: ['./asset-profile-dialog.component.scss'],
   templateUrl: 'asset-profile-dialog.html'
 })
-export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
+export class GfAssetProfileDialogComponent implements OnInit {
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
     DATE_FORMAT
@@ -138,7 +143,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
     });
 
   public assetSubClassOptions: AssetClassSelectorOption[] = [];
-
   public assetProfile: AdminMarketDataDetails['assetProfile'];
 
   public assetProfileForm = this.formBuilder.group({
@@ -180,12 +184,14 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   );
 
   public benchmarks: Partial<SymbolProfile>[];
+  public canEditAssetProfile = true;
 
   public countries: {
     [code: string]: { name: string; value: number };
   };
 
   public currencies: string[] = [];
+
   public dateRangeOptions = [
     {
       label: $localize`Current week` + ' (' + $localize`WTD` + ')',
@@ -236,14 +242,13 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
 
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfAssetProfileDialogComponent>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
@@ -260,7 +265,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   }
 
   public get canSaveAssetProfileIdentifier() {
-    return !this.assetProfileForm.dirty;
+    return !this.assetProfileForm.dirty && this.canEditAssetProfile;
   }
 
   public ngOnInit() {
@@ -277,7 +282,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
 
     this.adminService
       .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ settings }) => {
         this.isDataGatheringEnabled =
           settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
@@ -286,7 +291,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -295,7 +300,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
 
     this.assetProfileForm
       .get('assetClass')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((assetClass) => {
         const assetSubClasses = ASSET_CLASS_MAPPING.get(assetClass) ?? [];
 
@@ -318,12 +323,17 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
         this.assetClassLabel = translate(this.assetProfile?.assetClass);
         this.assetSubClassLabel = translate(this.assetProfile?.assetSubClass);
+
+        this.canEditAssetProfile = !isCurrency(
+          getCurrencyFromSymbol(this.data.symbol)
+        );
+
         this.countries = {};
 
         this.isBenchmark = this.benchmarks.some(({ id }) => {
@@ -390,6 +400,10 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
           url: this.assetProfile?.url ?? ''
         });
 
+        if (!this.canEditAssetProfile) {
+          this.assetProfileForm.disable();
+        }
+
         this.assetProfileForm.markAsPristine();
 
         this.changeDetectorRef.markForCheck();
@@ -399,7 +413,9 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onCancelEditAssetProfileIdentifierMode() {
     this.isEditAssetProfileIdentifierMode = false;
 
-    this.assetProfileForm.enable();
+    if (this.canEditAssetProfile) {
+      this.assetProfileForm.enable();
+    }
 
     this.assetProfileIdentifierForm.reset();
   }
@@ -420,7 +436,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
@@ -433,7 +449,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   } & AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, range, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
@@ -446,7 +462,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .postBenchmark({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.dataService.updateInfo();
 
@@ -648,7 +664,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
 
           return EMPTY;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         const newAssetProfileIdentifier = {
@@ -698,7 +714,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
           });
           return EMPTY;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(({ price }) => {
         this.notificationService.alert({
@@ -729,7 +745,7 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.dataService.updateInfo();
 
@@ -737,11 +753,6 @@ export class GfAssetProfileDialogComponent implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   public onTriggerSubmitAssetProfileForm() {

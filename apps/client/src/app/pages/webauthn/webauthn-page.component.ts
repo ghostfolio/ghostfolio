@@ -2,12 +2,16 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -16,13 +20,12 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
 })
-export class GfWebauthnPageComponent implements OnDestroy, OnInit {
+export class GfWebauthnPageComponent implements OnInit {
   public hasError = false;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private destroyRef: DestroyRef,
     private router: Router,
     private tokenStorageService: TokenStorageService,
     private webAuthnService: WebAuthnService
@@ -35,7 +38,7 @@ export class GfWebauthnPageComponent implements OnDestroy, OnInit {
   public deregisterDevice() {
     this.webAuthnService
       .deregister()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.router.navigate(['/']);
       });
@@ -46,7 +49,7 @@ export class GfWebauthnPageComponent implements OnDestroy, OnInit {
 
     this.webAuthnService
       .login()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         ({ authToken }) => {
           this.tokenStorageService.saveToken(authToken, false);
@@ -58,10 +61,5 @@ export class GfWebauthnPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

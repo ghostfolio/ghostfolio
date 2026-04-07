@@ -51,6 +51,14 @@ export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.REAL_ESTATE, []]
 ]);
 
+export const BULL_BOARD_COOKIE_NAME = 'bull_board_token';
+
+/**
+ * WARNING: This route is mirrored in `apps/client/proxy.conf.json`.
+ * If you update this value, you must also update the proxy configuration.
+ */
+export const BULL_BOARD_ROUTE = '/admin/queues';
+
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
 
@@ -80,6 +88,11 @@ export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
 
 export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].balance',
+  'accounts[*].balanceInBaseCurrency',
+  'accounts[*].comment',
+  'accounts[*].dividendInBaseCurrency',
+  'accounts[*].interestInBaseCurrency',
+  'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
   'activities[*].account.balance',
   'activities[*].account.comment',
@@ -199,6 +212,7 @@ export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';
 export const PROPERTY_COUNTRIES_OF_SUBSCRIBERS = 'COUNTRIES_OF_SUBSCRIBERS';
 export const PROPERTY_COUPONS = 'COUPONS';
 export const PROPERTY_CURRENCIES = 'CURRENCIES';
+export const PROPERTY_CUSTOM_CRYPTOCURRENCIES = 'CUSTOM_CRYPTOCURRENCIES';
 export const PROPERTY_DATA_SOURCE_MAPPING = 'DATA_SOURCE_MAPPING';
 export const PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS =
   'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS';

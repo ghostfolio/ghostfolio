@@ -1,4 +1,4 @@
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -12,11 +12,11 @@ import { PortfolioChangedListener } from './portfolio-changed.listener';
 
 @Module({
   imports: [
+    ActivitiesModule,
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
     ExchangeRateDataModule,
-    OrderModule,
     RedisCacheModule
   ],
   providers: [AssetProfileChangedListener, PortfolioChangedListener]

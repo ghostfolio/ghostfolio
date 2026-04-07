@@ -1,5 +1,4 @@
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
@@ -14,9 +13,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -27,8 +27,8 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccessDialogComponent } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
 import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dialog/interfaces/interfaces';
@@ -52,7 +52,7 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
   styleUrls: ['./user-account-access.scss'],
   templateUrl: './user-account-access.html'
 })
-export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
+export class GfUserAccountAccessComponent implements OnInit {
   public accessesGet: Access[];
   public accessesGive: Access[];
   public deviceType: string;
@@ -65,18 +65,16 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   });
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     const { globalPermissions } = this.dataService.fetchInfo();
@@ -87,7 +85,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     );
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -112,7 +110,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
       });
 
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
@@ -133,7 +131,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
   public onDeleteAccess(aId: string) {
     this.dataService
       .deleteAccess(aId)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.update();
@@ -156,13 +154,12 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
 
               return EMPTY;
             }),
-            takeUntil(this.unsubscribeSubject)
+            takeUntilDestroyed(this.destroyRef)
           )
           .subscribe(({ accessToken }) => {
             this.notificationService.alert({
               discardFn: () => {
-                this.tokenStorageService.signOut();
-                this.userService.remove();
+                this.userService.signOut();
 
                 document.location.href = `/${document.documentElement.lang}`;
               },
@@ -180,11 +177,6 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     this.router.navigate([], {
       queryParams: { accessId: aId, editDialog: true }
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private openCreateAccessDialog() {
@@ -220,8 +212,6 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
     });
 
     if (!access) {
-      console.log('Could not find access.');
-
       return;
     }
 
@@ -264,7 +254,7 @@ export class GfUserAccountAccessComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchAccesses()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((accesses) => {
         this.accessesGive = accesses;
 

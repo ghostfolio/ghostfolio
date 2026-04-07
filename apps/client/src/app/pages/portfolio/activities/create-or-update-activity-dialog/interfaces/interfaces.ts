@@ -4,6 +4,8 @@ import { Account } from '@prisma/client';
 
 export interface CreateOrUpdateActivityDialogParams {
   accounts: Account[];
-  activity: Activity;
+  activity: Omit<Activity, 'SymbolProfile'> & {
+    SymbolProfile: Activity['SymbolProfile'] | null;
+  };
   user: User;
 }
