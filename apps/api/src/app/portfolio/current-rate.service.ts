@@ -1,6 +1,7 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
@@ -26,6 +27,7 @@ export class CurrentRateService {
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -128,18 +130,40 @@ export class CurrentRateService {
           });
 
           if (!value) {
-            // Fallback to unit price of latest activity
             const latestActivity =
               await this.activitiesService.getLatestActivity({
                 dataSource,
                 symbol
               });
 
+            let marketPrice = latestActivity?.unitPrice ?? 0;
+
+            if (latestActivity?.unitPrice && latestActivity.SymbolProfile) {
+              const fromCurrency =
+                latestActivity.currency ??
+                latestActivity.SymbolProfile.currency;
+              const toCurrency = latestActivity.SymbolProfile.currency;
+
+              if (fromCurrency !== toCurrency) {
+                const convertedPrice =
+                  await this.exchangeRateDataService.toCurrencyAtDate(
+                    latestActivity.unitPrice,
+                    fromCurrency,
+                    toCurrency,
+                    latestActivity.date
+                  );
+
+                if (convertedPrice !== undefined) {
+                  marketPrice = convertedPrice;
+                }
+              }
+            }
+
             value = {
               dataSource,
               symbol,
               date: today,
-              marketPrice: latestActivity?.unitPrice ?? 0
+              marketPrice
             };
 
             response.values.push(value);
