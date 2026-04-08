@@ -1,0 +1,119 @@
+:host {
+  display: block;
+}
+
+.allocation-donut-cards {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.donut-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  flex-shrink: 0;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.donut-total {
+  font-size: 1.15rem;
+  font-weight: 600;
+  display: block;
+  line-height: 1.2;
+}
+
+.donut-label {
+  font-size: 0.7rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-card {
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  background: var(--surface-color, rgba(128, 128, 128, 0.06));
+  border: 1px solid var(--border-color, rgba(128, 128, 128, 0.12));
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+  min-width: 100px;
+  flex: 0 1 auto;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
+}
+
+.color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.card-pct {
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.card-name {
+  font-size: 0.75rem;
+  opacity: 0.65;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.card-value {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-top: 0.1rem;
+}
+
+// Responsive: stack vertically on small screens
+@media (max-width: 480px) {
+  .allocation-donut-cards {
+    flex-direction: column;
+  }
+
+  .donut-wrapper {
+    width: 150px;
+    height: 150px;
+  }
+
+  .detail-cards {
+    justify-content: center;
+  }
+}

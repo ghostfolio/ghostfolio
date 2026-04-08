@@ -1,0 +1,113 @@
+:host {
+  display: block;
+}
+
+.allocation-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+// Proportional stacked bar
+.proportion-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 2px;
+}
+
+.bar-segment {
+  min-width: 4px;
+  transition: opacity 0.2s;
+  cursor: default;
+  border-radius: 2px;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+// Cards grid
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.5rem;
+}
+
+.allocation-card {
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface-color, rgba(128, 128, 128, 0.04));
+  border: 1px solid var(--border-color, rgba(128, 128, 128, 0.1));
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+}
+
+.card-accent {
+  width: 4px;
+  flex-shrink: 0;
+}
+
+.card-body {
+  padding: 0.6rem 0.7rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.card-percentage {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.card-name {
+  font-size: 0.75rem;
+  opacity: 0.55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.1rem;
+  line-height: 1.3;
+}
+
+.card-value {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+// Total
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color, rgba(128, 128, 128, 0.12));
+}
+
+.total-label {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.total-value {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

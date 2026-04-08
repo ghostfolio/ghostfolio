@@ -137,6 +137,11 @@ export const internalRoutes: Record<string, InternalRoute> = {
         routerLink: ['/portfolio', 'allocations'],
         title: $localize`Allocations`
       },
+      allocationsV2: {
+        path: 'allocations-v2',
+        routerLink: ['/portfolio', 'allocations-v2'],
+        title: $localize`Allocations V2`
+      },
       analysis: {
         path: undefined, // Default sub route
         routerLink: ['/portfolio'],

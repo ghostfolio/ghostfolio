@@ -41,6 +41,7 @@ export class DevSeedService {
       await this.prismaService.accountBalance.deleteMany({});
     const orders = await this.prismaService.order.deleteMany({});
     const accounts = await this.prismaService.account.deleteMany({});
+    const plaidItems = await this.prismaService.plaidItem.deleteMany({});
     const marketData = await this.prismaService.marketData.deleteMany({});
     const symbolProfiles =
       await this.prismaService.symbolProfile.deleteMany({});
@@ -50,6 +51,7 @@ export class DevSeedService {
     const result = {
       accountBalances: accountBalances.count,
       accounts: accounts.count,
+      plaidItems: plaidItems.count,
       assetValuations: assetValuations.count,
       distributions: distributions.count,
       documents: documents.count,

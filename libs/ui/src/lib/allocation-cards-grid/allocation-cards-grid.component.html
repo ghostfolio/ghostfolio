@@ -1,0 +1,49 @@
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    [theme]="{ height: '200px', width: '100%', borderRadius: '12px' }"
+  />
+} @else {
+  <div class="allocation-cards-grid">
+    <!-- Stacked bar at top showing proportional segments -->
+    <div class="proportion-bar">
+      @for (card of cards; track card.key) {
+        <div
+          class="bar-segment"
+          [style.width.%]="card.percentage * 100"
+          [style.background]="card.color"
+          [matTooltip]="card.name + ': ' + (card.percentage | percent : '1.1-1')"
+        ></div>
+      }
+    </div>
+
+    <!-- Cards -->
+    <div class="cards-container">
+      @for (card of cards; track card.key) {
+        <div
+          class="allocation-card"
+          (click)="onCardClick(card)"
+        >
+          <div class="card-accent" [style.background]="card.color"></div>
+          <div class="card-body">
+            <div class="card-percentage">
+              {{ card.percentage | percent : '1.1-1' }}
+            </div>
+            <div class="card-name">{{ card.name }}</div>
+            @if (!isInPercent) {
+              <div class="card-value">
+                {{ card.value | currency : baseCurrency : 'symbol' : '1.0-0' }}
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Total -->
+    <div class="total-row">
+      <span class="total-label" i18n>Total</span>
+      <span class="total-value">{{ totalFormatted }}</span>
+    </div>
+  </div>
+}

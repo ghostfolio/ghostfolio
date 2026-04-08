@@ -77,14 +77,25 @@
                     </div>
                   }
                 </div>
-                <button
-                  mat-icon-button
-                  matTooltip="Refresh"
-                  i18n-matTooltip
-                  (click)="onRefreshPlaidItem(item.id)"
-                >
-                  <mat-icon>refresh</mat-icon>
-                </button>
+                <div class="d-flex align-items-center">
+                  <button
+                    mat-icon-button
+                    matTooltip="Refresh"
+                    i18n-matTooltip
+                    (click)="onRefreshPlaidItem(item.id)"
+                  >
+                    <mat-icon>refresh</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    matTooltip="Remove connection"
+                    i18n-matTooltip
+                    color="warn"
+                    (click)="onDeletePlaidItem(item.id)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
               </mat-card-content>
             </mat-card>
           }

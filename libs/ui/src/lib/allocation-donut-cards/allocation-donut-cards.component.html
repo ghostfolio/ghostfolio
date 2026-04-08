@@ -1,0 +1,49 @@
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    [theme]="{ height: '200px', width: '100%', borderRadius: '12px' }"
+  />
+} @else {
+  <div class="allocation-donut-cards">
+    <!-- Donut -->
+    <div class="donut-wrapper">
+      <canvas #donutCanvas></canvas>
+      <div class="donut-center">
+        <span class="donut-total">{{ totalFormatted }}</span>
+        <span class="donut-label" i18n>Total</span>
+      </div>
+    </div>
+
+    <!-- Detail cards -->
+    <div class="detail-cards">
+      @for (slice of slices; track slice.key) {
+        <div
+          class="detail-card"
+          [matTooltip]="
+            slice.name +
+            ': ' +
+            (isInPercent
+              ? (slice.percentage | percent : '1.1-1')
+              : (slice.value | currency : baseCurrency : 'symbol' : '1.0-0'))
+          "
+          (click)="onSliceClick(slice)"
+        >
+          <div class="card-top">
+            <span class="color-dot" [style.background]="slice.color"></span>
+            <span class="card-pct">{{
+              slice.percentage | percent : '1.1-1'
+            }}</span>
+          </div>
+          <div class="card-name">{{ slice.name }}</div>
+          @if (!isInPercent) {
+            <div class="card-value">
+              {{
+                slice.value | currency : baseCurrency : 'symbol' : '1.0-0'
+              }}
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

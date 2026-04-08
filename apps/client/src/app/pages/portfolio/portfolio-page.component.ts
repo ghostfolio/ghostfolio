@@ -15,6 +15,7 @@ import { addIcons } from 'ionicons';
 import {
   analyticsOutline,
   calculatorOutline,
+  gridOutline,
   pieChartOutline,
   scanOutline,
   swapVerticalOutline
@@ -62,6 +63,12 @@ export class PortfolioPageComponent implements OnInit {
                 internalRoutes.portfolio.subRoutes.allocations.routerLink
             },
             {
+              iconName: 'grid-outline',
+              label: internalRoutes.portfolio.subRoutes.allocationsV2.title,
+              routerLink:
+                internalRoutes.portfolio.subRoutes.allocationsV2.routerLink
+            },
+            {
               iconName: 'calculator-outline',
               label: internalRoutes.portfolio.subRoutes.fire.title,
               routerLink: internalRoutes.portfolio.subRoutes.fire.routerLink
@@ -81,6 +88,7 @@ export class PortfolioPageComponent implements OnInit {
     addIcons({
       analyticsOutline,
       calculatorOutline,
+      gridOutline,
       pieChartOutline,
       scanOutline,
       swapVerticalOutline

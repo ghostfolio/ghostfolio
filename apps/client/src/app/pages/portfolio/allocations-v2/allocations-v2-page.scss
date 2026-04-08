@@ -1,0 +1,41 @@
+:host {
+  display: block;
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 0;
+    padding-top: 1rem;
+  }
+
+  .chart-full-width {
+    grid-column: 1 / -1;
+  }
+
+  .mat-mdc-card {
+    .mat-mdc-card-header {
+      ::ng-deep {
+        .mat-mdc-card-header-text {
+          flex: 1 1 auto;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  .mat-mdc-tab-group {
+    ::ng-deep {
+      .mat-mdc-tab-body-wrapper {
+        flex: 1;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

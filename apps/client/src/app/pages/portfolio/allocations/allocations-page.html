@@ -45,7 +45,7 @@
           >
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="platforms"
@@ -67,7 +67,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="holdings"
@@ -89,7 +89,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="holdings"
@@ -108,17 +108,16 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             class="mx-auto"
-            cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="symbols"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['symbol']"
             [locale]="user?.settings?.locale"
-            [showLabels]="deviceType !== 'mobile'"
-            (proportionChartClicked)="onSymbolChartClicked($event)"
+            [maxItems]="15"
+            (sliceClicked)="onSymbolChartClicked($event)"
           />
         </mat-card-content>
       </mat-card>
@@ -134,7 +133,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="sectors"
@@ -157,7 +156,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="continents"
@@ -179,7 +178,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="marketsAdvanced"
@@ -268,7 +267,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="countries"
@@ -286,15 +285,14 @@
           <mat-card-title class="text-truncate" i18n>By Account</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
-            cursor="pointer"
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="accounts"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
-            (proportionChartClicked)="onAccountChartClicked($event)"
+            (sliceClicked)="onAccountChartClicked($event)"
           />
         </mat-card-content>
       </mat-card>
@@ -310,7 +308,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-allocation-donut-cards
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [data]="holdings"

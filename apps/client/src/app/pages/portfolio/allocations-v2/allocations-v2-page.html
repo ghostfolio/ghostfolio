@@ -1,0 +1,452 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>
+        Allocations — Comparison View
+      </h1>
+    </div>
+  </div>
+
+  <!-- Tab toggle between the two new visualization styles -->
+  <mat-tab-group
+    [(selectedIndex)]="selectedTabIndex"
+    animationDuration="200ms"
+    class="mb-4"
+  >
+    <!-- TAB 1: Donut + Cards (recommended hybrid) -->
+    <mat-tab label="Donut + Cards">
+      <div class="charts-grid">
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >By Platform</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="platforms"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['id']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Currency</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="holdings"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['currency']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Asset Class</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="holdings"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['assetClassLabel', 'assetSubClassLabel']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="chart-full-width mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >By Holding</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="symbols"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['symbol']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="15"
+              (sliceClicked)="onSymbolClicked($event)"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Sector</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="sectors"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Continent</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="continents"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Market</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="marketsAdvanced"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >By Account</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="accounts"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['id']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Country</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-donut-cards
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="countries"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+            />
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- TAB 2: Cards Grid only (Option 3) -->
+    <mat-tab label="Cards Grid">
+      <div class="charts-grid">
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >By Platform</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="platforms"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['id']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Currency</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="holdings"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['currency']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Asset Class</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="holdings"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['assetClassLabel', 'assetSubClassLabel']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="chart-full-width mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >By Holding</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="symbols"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['symbol']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="15"
+              (cardClicked)="onSymbolClicked($event)"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Sector</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="sectors"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Continent</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="continents"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Market</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="marketsAdvanced"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >By Account</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="accounts"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['id']"
+              [locale]="user?.settings?.locale"
+            />
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title
+              class="align-items-center d-flex text-truncate"
+            >
+              <span i18n>By Country</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-allocation-cards-grid
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="user?.settings?.colorScheme"
+              [data]="countries"
+              [isInPercent]="
+                hasImpersonationId || user?.settings?.isRestrictedView
+              "
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+            />
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

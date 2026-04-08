@@ -104,6 +104,26 @@ export class FmvPageComponent implements OnInit {
     this.openAccountDetailDialog(account.id);
   }
 
+  public onDeletePlaidItem(plaidItemId: string) {
+    this.plaidLinkService
+      .deleteItem(plaidItemId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Connection removed', undefined, {
+            duration: 2000
+          });
+          this.fetchAccounts();
+          this.fetchPlaidItems();
+        },
+        error: () => {
+          this.snackBar.open('Failed to remove connection', undefined, {
+            duration: 3000
+          });
+        }
+      });
+  }
+
   public onRefreshPlaidItem(plaidItemId: string) {
     this.plaidLinkService
       .triggerSync(plaidItemId)

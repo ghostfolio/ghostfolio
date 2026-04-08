@@ -153,16 +153,47 @@ export class PlaidService {
       });
     }
 
-    // Create PlaidItem
-    const plaidItem = await this.prismaService.plaidItem.create({
-      data: {
-        accessToken: encryptedToken,
-        institutionId,
-        institutionName,
-        itemId,
-        userId
-      }
+    // Check for existing PlaidItem for the same institution + user
+    const existingPlaidItem = await this.prismaService.plaidItem.findFirst({
+      include: { accounts: true },
+      where: { institutionId, userId }
     });
+
+    let plaidItem;
+
+    if (existingPlaidItem) {
+      // Update existing PlaidItem with new access token and item ID
+      plaidItem = await this.prismaService.plaidItem.update({
+        data: {
+          accessToken: encryptedToken,
+          error: null,
+          itemId,
+          lastSyncedAt: null
+        },
+        where: { id: existingPlaidItem.id }
+      });
+
+      this.logger.log(
+        `Reusing existing PlaidItem ${existingPlaidItem.id} for institution ${institutionId}`
+      );
+
+      // Unlink orphaned accounts from the old connection
+      await this.prismaService.account.updateMany({
+        data: { plaidAccountId: null, plaidItemId: null },
+        where: { plaidItemId: existingPlaidItem.id }
+      });
+    } else {
+      // Create new PlaidItem
+      plaidItem = await this.prismaService.plaidItem.create({
+        data: {
+          accessToken: encryptedToken,
+          institutionId,
+          institutionName,
+          itemId,
+          userId
+        }
+      });
+    }
 
     // Create accounts for each Plaid account
     const createdAccounts = [];
