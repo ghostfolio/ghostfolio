@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed Redis and Valkey connectivity when `REDIS_HOST` points to a Unix socket
 - Improved the style of the activity type component
 
 ## 2.253.0 - 2026-03-06
