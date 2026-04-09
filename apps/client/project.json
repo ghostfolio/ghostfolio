@@ -218,7 +218,9 @@
         "proxyConfig": "apps/client/proxy.conf.json",
         "ssl": true,
         "sslCert": "apps/client/localhost.cert",
-        "sslKey": "apps/client/localhost.pem"
+        "sslKey": "apps/client/localhost.pem",
+        "hmr": true,
+        "open": true
       },
       "configurations": {
         "development-ca": {
@@ -264,6 +266,7 @@
           "buildTarget": "client:build:production"
         }
       },
+      "defaultConfiguration": "development-en",
       "continuous": true
     },
     "extract-i18n": {
