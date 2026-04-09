@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
 - Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
+- Upgraded `nx` from version `22.5.3` to `22.6.4`
+- Upgraded the Angular toolchain from version `21.1.x` to `21.2.x`
+- Updated the API production environment version resolution to use `process.env.npm_package_version` in order to satisfy _Nx_ module boundary rules
 
 ## 2.253.0 - 2026-03-06
 
