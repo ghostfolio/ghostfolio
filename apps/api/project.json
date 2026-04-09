@@ -57,7 +57,8 @@
     "serve": {
       "executor": "@nx/js:node",
       "options": {
-        "buildTarget": "api:build"
+        "buildTarget": "api:build",
+        "watch": true
       },
       "dependsOn": ["copy-assets"]
     },
