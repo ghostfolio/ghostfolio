@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
 - Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
 
+### Fixed
+
+- Improved the style of the activity type component
+
 ## 2.253.0 - 2026-03-06
 
 ### Added
