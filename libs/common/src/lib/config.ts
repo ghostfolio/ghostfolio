@@ -46,7 +46,7 @@ export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
       AssetSubClass.STOCK
     ]
   ],
-  [AssetClass.FIXED_INCOME, [AssetSubClass.BOND]],
+  [AssetClass.FIXED_INCOME, [AssetSubClass.BOND, AssetSubClass.LOAN]],
   [AssetClass.LIQUIDITY, [AssetSubClass.CRYPTOCURRENCY]],
   [AssetClass.REAL_ESTATE, []]
 ]);
