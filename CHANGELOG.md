@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the benchmark toggle in the asset profile details dialog to participate in the regular save flow
 - Improved the style of the activity type component
 
 ## 2.253.0 - 2026-03-06
