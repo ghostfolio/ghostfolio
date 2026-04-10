@@ -3759,7 +3759,7 @@
       </trans-unit>
       <trans-unit id="5515771028435710194" datatype="html">
         <source>Loan</source>
-        <target state="new">Loan</target>
+        <target state="translated">Darlehen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">59</context>
