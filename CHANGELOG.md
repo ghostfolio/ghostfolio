@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
 - Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
+- Upgraded `lodash` from version `4.17.23` to `4.18.1`
 
 ### Fixed
 
