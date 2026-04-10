@@ -16,6 +16,7 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   QueryList,
   ViewChild,
@@ -84,7 +85,7 @@ import {
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
-export class GfAssistantComponent implements OnChanges, OnInit {
+export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
   @Input() deviceType: string;
@@ -154,11 +155,6 @@ export class GfAssistantComponent implements OnChanges, OnInit {
     private destroyRef: DestroyRef
   ) {
     addIcons({ closeCircleOutline, closeOutline, searchOutline });
-    this.destroyRef.onDestroy(() => {
-      if (this.preselectionTimeout) {
-        clearTimeout(this.preselectionTimeout);
-      }
-    });
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -555,6 +551,12 @@ export class GfAssistantComponent implements OnChanges, OnInit {
 
   public setIsOpen(aIsOpen: boolean) {
     this.isOpen = aIsOpen;
+  }
+
+  public ngOnDestroy() {
+    if (this.preselectionTimeout) {
+      clearTimeout(this.preselectionTimeout);
+    }
   }
 
   private getCurrentAssistantListItem() {
