@@ -13,7 +13,7 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 
-import { Injectable, Optional } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
@@ -26,7 +26,6 @@ export class CronService {
     private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly propertyService: PropertyService,
-    @Optional()
     private readonly statisticsGatheringService: StatisticsGatheringService,
     private readonly twitterBotService: TwitterBotService,
     private readonly userService: UserService
@@ -34,7 +33,9 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_HOUR)
   public async runEveryHour() {
-    await this.statisticsGatheringService?.addJobsToQueue();
+    if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
+      await this.statisticsGatheringService.addJobsToQueue();
+    }
   }
 
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)

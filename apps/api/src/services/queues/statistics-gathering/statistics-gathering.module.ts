@@ -33,4 +33,4 @@ import { StatisticsGatheringService } from './statistics-gathering.service';
   ],
   providers: [StatisticsGatheringProcessor, StatisticsGatheringService]
 })
-export class StatisticsGatheringModule {}
+export class StatisticsGatheringQueueModule {}
