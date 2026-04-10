@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added loan as an asset sub class
+
 ### Changed
 
 - Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
