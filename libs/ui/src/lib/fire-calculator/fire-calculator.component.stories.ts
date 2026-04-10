@@ -8,7 +8,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -32,10 +32,13 @@ export default {
         MatFormFieldModule,
         MatInputModule,
         NgxSkeletonLoaderModule,
-        NoopAnimationsModule,
         ReactiveFormsModule
       ],
-      providers: [FireCalculatorService, provideNativeDateAdapter()]
+      providers: [
+        FireCalculatorService,
+        provideAnimationsAsync('noop'),
+        provideNativeDateAdapter()
+      ]
     })
   ]
 } as Meta<GfFireCalculatorComponent>;
