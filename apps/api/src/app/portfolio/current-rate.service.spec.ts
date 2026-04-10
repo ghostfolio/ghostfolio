@@ -1,4 +1,6 @@
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
@@ -8,6 +10,16 @@ import { DataSource, MarketData } from '@prisma/client';
 import { CurrentRateService } from './current-rate.service';
 import { DateQuery } from './interfaces/date-query.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
+
+jest.mock('@ghostfolio/api/app/activities/activities.service', () => {
+  return {
+    ActivitiesService: jest.fn().mockImplementation(() => {
+      return {
+        getLatestActivity: jest.fn().mockResolvedValue(null)
+      };
+    })
+  };
+});
 
 jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
   return {
@@ -76,6 +88,9 @@ jest.mock(
           toCurrency: (value: number) => {
             return 1 * value;
           },
+          toCurrencyAtDate: jest
+            .fn()
+            .mockImplementation((value: number) => Promise.resolve(value)),
           getExchangeRates: () => Promise.resolve()
         };
       })
@@ -94,12 +109,25 @@ jest.mock('@ghostfolio/api/services/property/property.service', () => {
 });
 
 describe('CurrentRateService', () => {
+  let activitiesService: ActivitiesService;
   let currentRateService: CurrentRateService;
   let dataProviderService: DataProviderService;
+  let exchangeRateDataService: ExchangeRateDataService;
   let marketDataService: MarketDataService;
   let propertyService: PropertyService;
 
   beforeAll(async () => {
+    activitiesService = new ActivitiesService(
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    );
+
     propertyService = new PropertyService(null);
 
     dataProviderService = new DataProviderService(
@@ -111,11 +139,19 @@ describe('CurrentRateService', () => {
       null
     );
 
+    exchangeRateDataService = new ExchangeRateDataService(
+      null,
+      null,
+      null,
+      null
+    );
+
     marketDataService = new MarketDataService(null);
 
     currentRateService = new CurrentRateService(
-      null,
+      activitiesService,
       dataProviderService,
+      exchangeRateDataService,
       marketDataService,
       null
     );

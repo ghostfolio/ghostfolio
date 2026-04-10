@@ -53,7 +53,7 @@ describe('PortfolioCalculator', () => {
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null, null, null);
     exchangeRateDataService = new ExchangeRateDataService(
       null,
       null,

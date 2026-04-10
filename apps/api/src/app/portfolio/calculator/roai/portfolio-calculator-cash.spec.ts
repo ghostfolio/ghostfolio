@@ -109,6 +109,7 @@ describe('PortfolioCalculator', () => {
       null,
       dataProviderService,
       null,
+      null,
       null
     );
 

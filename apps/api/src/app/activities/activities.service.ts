@@ -453,6 +453,7 @@ export class ActivitiesService {
     symbol
   }: AssetProfileIdentifier) {
     return this.prismaService.order.findFirst({
+      include: { SymbolProfile: true },
       orderBy: {
         date: 'desc'
       },
