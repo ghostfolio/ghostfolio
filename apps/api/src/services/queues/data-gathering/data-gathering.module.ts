@@ -50,4 +50,4 @@ import { DataGatheringProcessor } from './data-gathering.processor';
   providers: [DataGatheringProcessor, DataGatheringService],
   exports: [BullModule, DataEnhancerModule, DataGatheringService]
 })
-export class DataGatheringModule {}
+export class DataGatheringQueueModule {}
