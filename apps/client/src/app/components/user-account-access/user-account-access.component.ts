@@ -212,8 +212,6 @@ export class GfUserAccountAccessComponent implements OnInit {
     });
 
     if (!access) {
-      console.log('Could not find access.');
-
       return;
     }
 

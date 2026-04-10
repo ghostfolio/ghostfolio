@@ -56,6 +56,7 @@ const locales = {
   COLLECTIBLE: $localize`Collectible`,
   CRYPTOCURRENCY: $localize`Cryptocurrency`,
   ETF: $localize`ETF`,
+  LOAN: $localize`Loan`,
   MUTUALFUND: $localize`Mutual Fund`,
   PRECIOUS_METAL: $localize`Precious Metal`,
   PRIVATE_EQUITY: $localize`Private Equity`,

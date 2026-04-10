@@ -1,3 +1,3 @@
-import { validateObjectForForm } from './form.util';
+import { jsonValidator, validateObjectForForm } from './form.util';
 
-export { validateObjectForForm };
+export { jsonValidator, validateObjectForForm };
