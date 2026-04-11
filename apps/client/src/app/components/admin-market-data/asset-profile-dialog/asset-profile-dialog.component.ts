@@ -502,18 +502,18 @@ export class GfAssetProfileDialogComponent implements OnInit {
   }
 
   protected async onSubmitAssetProfileForm() {
-    let countries = [];
+    let countries: Prisma.InputJsonArray = [];
     let scraperConfiguration: Prisma.InputJsonObject | undefined = {
       selector: '',
       url: ''
     };
-    let sectors = [];
-    let symbolMapping = {};
+    let sectors: Prisma.InputJsonArray = [];
+    let symbolMapping: Record<string, string> = {};
 
     try {
       countries = JSON.parse(
         this.assetProfileForm.get('countries')?.value ?? '[]'
-      );
+      ) as Prisma.InputJsonArray;
     } catch {}
 
     try {
@@ -526,7 +526,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
           this.assetProfileForm.controls['scraperConfiguration'].controls[
             'headers'
           ].value ?? '{}'
-        ),
+        ) as Record<string, string>,
         locale:
           this.assetProfileForm.controls['scraperConfiguration'].controls[
             'locale'
@@ -562,13 +562,15 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
 
     try {
-      sectors = JSON.parse(this.assetProfileForm.get('sectors')?.value ?? '[]');
+      sectors = JSON.parse(
+        this.assetProfileForm.get('sectors')?.value ?? '[]'
+      ) as Prisma.InputJsonArray;
     } catch {}
 
     try {
       symbolMapping = JSON.parse(
         this.assetProfileForm.get('symbolMapping')?.value ?? '{}'
-      );
+      ) as Record<string, string>;
     } catch {}
 
     const isActive = this.assetProfileForm.get('isActive')?.value;
@@ -716,7 +718,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
             this.assetProfileForm.controls['scraperConfiguration'].controls[
               'headers'
             ]?.value ?? '{}'
-          ),
+          ) as Record<string, string>,
           locale:
             this.assetProfileForm.controls['scraperConfiguration'].controls[
               'locale'
