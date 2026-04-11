@@ -48,27 +48,29 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   templateUrl: './home-watchlist.html'
 })
 export class GfHomeWatchlistComponent implements OnInit {
-  public hasImpersonationId: boolean;
-  public hasPermissionToCreateWatchlistItem: boolean;
-  public hasPermissionToDeleteWatchlistItem: boolean;
-  public user: User;
-  public watchlist: Benchmark[];
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToCreateWatchlistItem: boolean;
+  protected hasPermissionToDeleteWatchlistItem: boolean;
+  protected user: User;
+  protected watchlist: Benchmark[];
 
-  private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly deviceType = computed(
+  protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private dialog: MatDialog,
-    private impersonationStorageService: ImpersonationStorageService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -114,7 +116,7 @@ export class GfHomeWatchlistComponent implements OnInit {
     this.loadWatchlistData();
   }
 
-  public onWatchlistItemDeleted({
+  protected onWatchlistItemDeleted({
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
