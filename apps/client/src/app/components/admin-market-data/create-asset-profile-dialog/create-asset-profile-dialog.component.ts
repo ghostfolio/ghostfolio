@@ -57,23 +57,23 @@ import type {
   templateUrl: 'create-asset-profile-dialog.html'
 })
 export class GfCreateAssetProfileDialogComponent implements OnInit {
-  public createAssetProfileForm: CreateAssetProfileForm;
-  public ghostfolioPrefix = `${ghostfolioPrefix}_`;
-  public mode: CreateAssetProfileDialogMode;
+  protected createAssetProfileForm: CreateAssetProfileForm;
+  protected readonly ghostfolioPrefix = `${ghostfolioPrefix}_`;
+  protected mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
   private dataSourceForExchangeRates: DataSource;
 
   public constructor(
-    public readonly adminService: AdminService,
+    private readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
     private readonly destroyRef: DestroyRef,
-    public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
-    public readonly formBuilder: FormBuilder
+    private readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
+    private readonly formBuilder: FormBuilder
   ) {}
 
-  public get showCurrencyErrorMessage() {
+  protected get showCurrencyErrorMessage() {
     const addCurrencyFormControl =
       this.createAssetProfileForm.controls.addCurrency;
 
