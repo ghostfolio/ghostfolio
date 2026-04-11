@@ -1,5 +1,6 @@
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+
 import type { FormControl, FormGroup } from '@angular/forms';
-import type { SymbolProfile } from '@prisma/client';
 
 export interface CreateWatchlistItemDialogParams {
   deviceType: string;
@@ -7,5 +8,5 @@ export interface CreateWatchlistItemDialogParams {
 }
 
 export type CreateWatchlistItemForm = FormGroup<{
-  searchSymbol: FormControl<SymbolProfile | null>;
+  searchSymbol: FormControl<AssetProfileIdentifier | null>;
 }>;

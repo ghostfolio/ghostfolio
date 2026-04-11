@@ -1,3 +1,4 @@
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
@@ -12,7 +13,6 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { SymbolProfile } from '@prisma/client';
 
 import { CreateWatchlistItemForm } from './interfaces/interfaces';
 
@@ -35,7 +35,7 @@ export class GfCreateWatchlistItemDialogComponent {
   protected readonly createWatchlistItemForm: CreateWatchlistItemForm =
     new FormGroup(
       {
-        searchSymbol: new FormControl<SymbolProfile | null>(null, [
+        searchSymbol: new FormControl<AssetProfileIdentifier | null>(null, [
           Validators.required
         ])
       },
