@@ -627,7 +627,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
           this.initialize();
         },
-        error: (error) => {
+        error: (error: HttpErrorResponse) => {
           console.error($localize`Could not save asset profile`, error);
 
           this.snackBar.open(
@@ -735,7 +735,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         symbol: this.data.symbol
       })
       .pipe(
-        catchError(({ error }) => {
+        catchError(({ error }: HttpErrorResponse) => {
           this.notificationService.alert({
             message: error?.message,
             title: $localize`Error`
