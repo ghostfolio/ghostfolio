@@ -73,6 +73,17 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
     public readonly formBuilder: FormBuilder
   ) {}
 
+  public get showCurrencyErrorMessage() {
+    const addCurrencyFormControl =
+      this.createAssetProfileForm.controls.addCurrency;
+
+    if (addCurrencyFormControl.hasError('invalidCurrency')) {
+      return true;
+    }
+
+    return false;
+  }
+
   public ngOnInit() {
     this.initialize();
 
@@ -146,17 +157,6 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
         symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.controls.addSymbol.value}`
       });
     }
-  }
-
-  public get showCurrencyErrorMessage() {
-    const addCurrencyFormControl =
-      this.createAssetProfileForm.controls.addCurrency;
-
-    if (addCurrencyFormControl.hasError('invalidCurrency')) {
-      return true;
-    }
-
-    return false;
   }
 
   private atLeastOneValid(control: CreateAssetProfileForm): ValidationErrors {
