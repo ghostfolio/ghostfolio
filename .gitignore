@@ -25,6 +25,8 @@ npm-debug.log
 
 # misc
 /.angular/cache
+.claude/settings.local.json
+.claude/worktrees
 .cursor/rules/nx-rules.mdc
 .env
 .env.prod
