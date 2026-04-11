@@ -208,6 +208,12 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  public showValuesInPercentage() {
+    return (
+      this.data.hasImpersonationId || this.user?.settings?.isRestrictedView
+    );
+  }
+
   private fetchAccount() {
     this.dataService
       .fetchAccount(this.data.accountId)
