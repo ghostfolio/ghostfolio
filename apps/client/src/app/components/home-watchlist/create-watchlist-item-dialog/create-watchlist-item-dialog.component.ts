@@ -1,14 +1,9 @@
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit
-} from '@angular/core';
-import {
-  FormBuilder,
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   ValidationErrors,
@@ -36,15 +31,9 @@ import { CreateWatchlistItemForm } from './interfaces/interfaces';
   styleUrls: ['./create-watchlist-item-dialog.component.scss'],
   templateUrl: 'create-watchlist-item-dialog.html'
 })
-export class GfCreateWatchlistItemDialogComponent implements OnInit {
-  protected createWatchlistItemForm: CreateWatchlistItemForm;
-
-  private readonly dialogRef =
-    inject<MatDialogRef<GfCreateWatchlistItemDialogComponent>>(MatDialogRef);
-  private readonly formBuilder = inject(FormBuilder);
-
-  public ngOnInit() {
-    this.createWatchlistItemForm = this.formBuilder.group(
+export class GfCreateWatchlistItemDialogComponent {
+  protected readonly createWatchlistItemForm: CreateWatchlistItemForm =
+    new FormGroup(
       {
         searchSymbol: new FormControl<SymbolProfile | null>(null, [
           Validators.required
@@ -54,7 +43,9 @@ export class GfCreateWatchlistItemDialogComponent implements OnInit {
         validators: this.validator
       }
     );
-  }
+
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateWatchlistItemDialogComponent>>(MatDialogRef);
 
   protected onCancel() {
     this.dialogRef.close();
