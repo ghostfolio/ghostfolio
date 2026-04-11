@@ -12,6 +12,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -64,14 +65,13 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
   private customCurrencies: string[];
   private dataSourceForExchangeRates: DataSource;
 
-  public constructor(
-    private readonly adminService: AdminService,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
-    private readonly formBuilder: FormBuilder
-  ) {}
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateAssetProfileDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
 
   protected get showCurrencyErrorMessage() {
     const addCurrencyFormControl =
