@@ -304,9 +304,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
         }
       });
 
-    this.assetProfileForm
-      .get('assetClass')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+    this.assetProfileForm.controls.assetClass.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((assetClass) => {
         if (!assetClass) {
           return;
@@ -323,7 +322,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
           })
           .sort((a, b) => a.label.localeCompare(b.label));
 
-        this.assetProfileForm.get('assetSubClass')?.setValue(null);
+        this.assetProfileForm.controls.assetSubClass.setValue(null);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -512,35 +511,30 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
     try {
       countries = JSON.parse(
-        this.assetProfileForm.get('countries')?.value ?? '[]'
+        this.assetProfileForm.controls.countries.value ?? '[]'
       ) as Prisma.InputJsonArray;
     } catch {}
 
     try {
       scraperConfiguration = {
         defaultMarketPrice:
-          this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'defaultMarketPrice'
-          ]?.value ?? undefined,
+          this.assetProfileForm.controls.scraperConfiguration.controls
+            .defaultMarketPrice?.value ?? undefined,
         headers: JSON.parse(
-          this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'headers'
-          ].value ?? '{}'
+          this.assetProfileForm.controls.scraperConfiguration.controls.headers
+            .value ?? '{}'
         ) as Record<string, string>,
         locale:
-          this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'locale'
-          ]?.value ?? undefined,
+          this.assetProfileForm.controls.scraperConfiguration.controls.locale
+            ?.value ?? undefined,
         mode:
-          this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'mode'
-          ]?.value ?? undefined,
+          this.assetProfileForm.controls.scraperConfiguration.controls.mode
+            ?.value ?? undefined,
         selector:
-          this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'selector'
-          ].value ?? '',
+          this.assetProfileForm.controls.scraperConfiguration.controls.selector
+            .value ?? '',
         url:
-          this.assetProfileForm.controls['scraperConfiguration'].controls['url']
+          this.assetProfileForm.controls.scraperConfiguration.controls.url
             .value ?? ''
       };
 
@@ -563,30 +557,31 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
     try {
       sectors = JSON.parse(
-        this.assetProfileForm.get('sectors')?.value ?? '[]'
+        this.assetProfileForm.controls.sectors.value ?? '[]'
       ) as Prisma.InputJsonArray;
     } catch {}
 
     try {
       symbolMapping = JSON.parse(
-        this.assetProfileForm.get('symbolMapping')?.value ?? '{}'
+        this.assetProfileForm.controls.symbolMapping.value ?? '{}'
       ) as Record<string, string>;
     } catch {}
 
-    const isActive = this.assetProfileForm.get('isActive')?.value;
     const assetProfile: UpdateAssetProfileDto = {
       countries,
       scraperConfiguration,
       sectors,
       symbolMapping,
-      assetClass: this.assetProfileForm.get('assetClass')?.value ?? undefined,
+      assetClass: this.assetProfileForm.controls.assetClass.value ?? undefined,
       assetSubClass:
-        this.assetProfileForm.get('assetSubClass')?.value ?? undefined,
-      comment: this.assetProfileForm.get('comment')?.value ?? undefined,
-      currency: this.assetProfileForm.get('currency')?.value ?? undefined,
-      isActive: isBoolean(isActive) ? isActive : undefined,
-      name: this.assetProfileForm.get('name')?.value ?? undefined,
-      url: this.assetProfileForm.get('url')?.value ?? undefined
+        this.assetProfileForm.controls.assetSubClass.value ?? undefined,
+      comment: this.assetProfileForm.controls.comment.value ?? undefined,
+      currency: this.assetProfileForm.controls.currency.value ?? undefined,
+      isActive: isBoolean(this.assetProfileForm.controls.isActive.value)
+        ? this.assetProfileForm.controls.isActive.value
+        : undefined,
+      name: this.assetProfileForm.controls.name.value ?? undefined,
+      url: this.assetProfileForm.controls.url.value ?? undefined
     };
 
     try {
@@ -645,10 +640,12 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
   protected async onSubmitAssetProfileIdentifierForm() {
     const assetProfileIdentifier: UpdateAssetProfileDto = {
-      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
-        ?.value.dataSource,
-      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
-        ?.value.symbol
+      dataSource:
+        this.assetProfileIdentifierForm.controls.assetProfileIdentifier.value
+          ?.dataSource ?? undefined,
+      symbol:
+        this.assetProfileIdentifierForm.controls.assetProfileIdentifier.value
+          ?.symbol ?? undefined
     };
 
     try {
@@ -711,28 +708,22 @@ export class GfAssetProfileDialogComponent implements OnInit {
         dataSource: this.data.dataSource,
         scraperConfiguration: {
           defaultMarketPrice:
-            this.assetProfileForm.controls['scraperConfiguration'].controls[
-              'defaultMarketPrice'
-            ]?.value,
+            this.assetProfileForm.controls.scraperConfiguration.controls
+              .defaultMarketPrice?.value,
           headers: JSON.parse(
-            this.assetProfileForm.controls['scraperConfiguration'].controls[
-              'headers'
-            ]?.value ?? '{}'
+            this.assetProfileForm.controls.scraperConfiguration.controls.headers
+              .value ?? '{}'
           ) as Record<string, string>,
           locale:
-            this.assetProfileForm.controls['scraperConfiguration'].controls[
-              'locale'
-            ]?.value || undefined,
-          mode: this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'mode'
-          ]?.value,
+            this.assetProfileForm.controls.scraperConfiguration.controls.locale
+              ?.value || undefined,
+          mode: this.assetProfileForm.controls.scraperConfiguration.controls
+            .mode?.value,
           selector:
-            this.assetProfileForm.controls['scraperConfiguration'].controls[
-              'selector'
-            ].value,
-          url: this.assetProfileForm.controls['scraperConfiguration'].controls[
-            'url'
-          ].value
+            this.assetProfileForm.controls.scraperConfiguration.controls
+              .selector.value,
+          url: this.assetProfileForm.controls.scraperConfiguration.controls.url
+            .value
         },
         symbol: this.data.symbol
       })
@@ -753,22 +744,22 @@ export class GfAssetProfileDialogComponent implements OnInit {
             ' ' +
             price +
             ' ' +
-            this.assetProfileForm.get('currency')?.value
+            this.assetProfileForm.controls.currency.value
         });
       });
   }
 
   protected onToggleIsActive({ checked }: MatCheckboxChange) {
     if (checked) {
-      this.assetProfileForm.get('isActive')?.setValue(true);
+      this.assetProfileForm.controls.isActive.setValue(true);
     } else {
-      this.assetProfileForm.get('isActive')?.setValue(false);
+      this.assetProfileForm.controls.isActive.setValue(false);
     }
 
     if (checked === this.assetProfile.isActive) {
-      this.assetProfileForm.get('isActive')?.markAsPristine();
+      this.assetProfileForm.controls.isActive.markAsPristine();
     } else {
-      this.assetProfileForm.get('isActive')?.markAsDirty();
+      this.assetProfileForm.controls.isActive.markAsDirty();
     }
   }
 
@@ -791,9 +782,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   }
 
-  private isNewSymbolValid(
-    control: AbstractControl
-  ): ValidationErrors | undefined {
+  private isNewSymbolValid(control: AbstractControl): ValidationErrors | null {
     const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
       control.get('assetProfileIdentifier')?.value;
 
@@ -805,5 +794,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         equalsPreviousProfileIdentifier: true
       };
     }
+
+    return null;
   }
 }
