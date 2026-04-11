@@ -3,6 +3,7 @@ import {
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
@@ -18,7 +19,6 @@ import {
   AbstractControl,
   FormBuilder,
   FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   ValidationErrors,
@@ -34,7 +34,10 @@ import { DataSource } from '@prisma/client';
 import { isISO4217CurrencyCode } from 'class-validator';
 import { switchMap } from 'rxjs';
 
-import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
+import type {
+  CreateAssetProfileDialogMode,
+  CreateAssetProfileForm
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +57,7 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   templateUrl: 'create-asset-profile-dialog.html'
 })
 export class GfCreateAssetProfileDialogComponent implements OnInit {
-  public createAssetProfileForm: FormGroup;
+  public createAssetProfileForm: CreateAssetProfileForm;
   public ghostfolioPrefix = `${ghostfolioPrefix}_`;
   public mode: CreateAssetProfileDialogMode;
 
@@ -75,11 +78,13 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
 
     this.createAssetProfileForm = this.formBuilder.group(
       {
-        addCurrency: new FormControl(null, [
+        addCurrency: new FormControl<string | null>(null, [
           this.iso4217CurrencyCodeValidator()
         ]),
-        addSymbol: new FormControl(null, [Validators.required]),
-        searchSymbol: new FormControl(null, [Validators.required])
+        addSymbol: new FormControl<string | null>(null, [Validators.required]),
+        searchSymbol: new FormControl<AssetProfileIdentifier | null>(null, [
+          Validators.required
+        ])
       },
       {
         validators: this.atLeastOneValid
@@ -104,12 +109,11 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
       this.dialogRef.close({
         addAssetProfile: true,
         dataSource:
-          this.createAssetProfileForm.get('searchSymbol').value.dataSource,
-        symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
+          this.createAssetProfileForm.controls.searchSymbol.value?.dataSource,
+        symbol: this.createAssetProfileForm.controls.searchSymbol.value?.symbol
       });
     } else if (this.mode === 'currency') {
-      const currency = this.createAssetProfileForm.get('addCurrency')
-        .value as string;
+      const currency = this.createAssetProfileForm.controls.addCurrency.value;
 
       const currencies = Array.from(
         new Set([...this.customCurrencies, currency])
@@ -139,14 +143,14 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
       this.dialogRef.close({
         addAssetProfile: true,
         dataSource: 'MANUAL',
-        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`
+        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.controls.addSymbol.value}`
       });
     }
   }
 
   public get showCurrencyErrorMessage() {
     const addCurrencyFormControl =
-      this.createAssetProfileForm.get('addCurrency');
+      this.createAssetProfileForm.controls.addCurrency;
 
     if (addCurrencyFormControl.hasError('invalidCurrency')) {
       return true;
@@ -155,10 +159,10 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
     return false;
   }
 
-  private atLeastOneValid(control: AbstractControl): ValidationErrors {
-    const addCurrencyControl = control.get('addCurrency');
-    const addSymbolControl = control.get('addSymbol');
-    const searchSymbolControl = control.get('searchSymbol');
+  private atLeastOneValid(control: CreateAssetProfileForm): ValidationErrors {
+    const addCurrencyControl = control.controls.addCurrency;
+    const addSymbolControl = control.controls.addSymbol;
+    const searchSymbolControl = control.controls.searchSymbol;
 
     if (
       addCurrencyControl.valid &&
@@ -170,11 +174,8 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
 
     if (
       addCurrencyControl.valid ||
-      !addCurrencyControl ||
       addSymbolControl.valid ||
-      !addSymbolControl ||
-      searchSymbolControl.valid ||
-      !searchSymbolControl
+      searchSymbolControl.valid
     ) {
       return { atLeastOneValid: false };
     }
@@ -189,11 +190,14 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
       .subscribe(({ dataProviders, settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
 
-        const { dataSource } = dataProviders.find(({ useForExchangeRates }) => {
-          return useForExchangeRates;
-        });
+        const { dataSource } =
+          dataProviders.find(({ useForExchangeRates }) => {
+            return useForExchangeRates;
+          }) ?? {};
 
-        this.dataSourceForExchangeRates = dataSource;
+        if (dataSource) {
+          this.dataSourceForExchangeRates = dataSource;
+        }
 
         this.changeDetectorRef.markForCheck();
       });
