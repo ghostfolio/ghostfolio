@@ -25,6 +25,8 @@ npm-debug.log
 
 # misc
 /.angular/cache
+.claude/worktrees
+.claude/settings.local.json
 .cursor/rules/nx-rules.mdc
 .env
 .env.prod
@@ -42,6 +44,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-.claude/worktrees
-.claude/settings.local.json
