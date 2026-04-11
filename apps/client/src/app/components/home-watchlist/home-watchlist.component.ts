@@ -15,8 +15,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -46,26 +48,27 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   templateUrl: './home-watchlist.html'
 })
 export class GfHomeWatchlistComponent implements OnInit {
-  public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateWatchlistItem: boolean;
   public hasPermissionToDeleteWatchlistItem: boolean;
   public user: User;
   public watchlist: Benchmark[];
 
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService
   ) {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -149,10 +152,10 @@ export class GfHomeWatchlistComponent implements OnInit {
         >(GfCreateWatchlistItemDialogComponent, {
           autoFocus: false,
           data: {
-            deviceType: this.deviceType,
+            deviceType: this.deviceType(),
             locale: this.user?.settings?.locale ?? defaultLocale
           },
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });
 
         dialogRef
