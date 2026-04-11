@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `angular` from version `21.1.1` to `21.2.7`
 - Upgraded `countup.js` from version `2.9.0` to `2.10.0`
+- Upgraded `Nx` from version `22.5.3` to `22.6.4`
 
 ## 2.254.0 - 2026-03-10
 
