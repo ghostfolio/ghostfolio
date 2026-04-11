@@ -1,6 +1,11 @@
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -32,12 +37,11 @@ import { CreateWatchlistItemForm } from './interfaces/interfaces';
   templateUrl: 'create-watchlist-item-dialog.html'
 })
 export class GfCreateWatchlistItemDialogComponent implements OnInit {
-  public createWatchlistItemForm: CreateWatchlistItemForm;
+  protected createWatchlistItemForm: CreateWatchlistItemForm;
 
-  public constructor(
-    public readonly dialogRef: MatDialogRef<GfCreateWatchlistItemDialogComponent>,
-    public readonly formBuilder: FormBuilder
-  ) {}
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateWatchlistItemDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
 
   public ngOnInit() {
     this.createWatchlistItemForm = this.formBuilder.group(
@@ -52,11 +56,11 @@ export class GfCreateWatchlistItemDialogComponent implements OnInit {
     );
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  protected onSubmit() {
     this.dialogRef.close({
       dataSource:
         this.createWatchlistItemForm.controls.searchSymbol.value?.dataSource,
