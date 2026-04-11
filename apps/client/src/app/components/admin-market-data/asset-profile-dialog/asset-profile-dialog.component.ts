@@ -130,23 +130,24 @@ export class GfAssetProfileDialogComponent implements OnInit {
   )};123.45`;
 
   @ViewChild('assetProfileFormElement')
-  assetProfileFormElement: ElementRef<HTMLFormElement>;
+  public readonly assetProfileFormElement: ElementRef<HTMLFormElement>;
 
-  public assetClassLabel: string;
-  public assetSubClassLabel: string;
+  protected assetClassLabel: string;
+  protected assetSubClassLabel: string;
 
-  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
-    .map((id) => {
-      return { id, label: translate(id) } as AssetClassSelectorOption;
-    })
-    .sort((a, b) => {
-      return a.label.localeCompare(b.label);
-    });
+  protected readonly assetClassOptions: AssetClassSelectorOption[] =
+    Object.keys(AssetClass)
+      .map((id) => {
+        return { id, label: translate(id) } as AssetClassSelectorOption;
+      })
+      .sort((a, b) => {
+        return a.label.localeCompare(b.label);
+      });
 
-  public assetSubClassOptions: AssetClassSelectorOption[] = [];
-  public assetProfile: AdminMarketDataDetails['assetProfile'];
+  protected assetSubClassOptions: AssetClassSelectorOption[] = [];
+  protected assetProfile: AdminMarketDataDetails['assetProfile'];
 
-  public assetProfileForm = this.formBuilder.group({
+  protected readonly assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass | null>(null),
     assetSubClass: new FormControl<AssetSubClass | null>(null),
     comment: '',
@@ -174,7 +175,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     url: ''
   });
 
-  public assetProfileIdentifierForm = this.formBuilder.group(
+  protected readonly assetProfileIdentifierForm = this.formBuilder.group(
     {
       assetProfileIdentifier: new FormControl<
         AssetProfileIdentifier | { symbol: null; dataSource: null }
@@ -187,16 +188,15 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   );
 
-  public benchmarks: Partial<SymbolProfile>[];
-  public canEditAssetProfile = true;
+  protected canEditAssetProfile = true;
 
-  public countries: {
+  protected countries: {
     [code: string]: { name: string; value: number };
   };
 
-  public currencies: string[] = [];
+  protected currencies: string[] = [];
 
-  public readonly dateRangeOptions = [
+  protected readonly dateRangeOptions = [
     {
       label: $localize`Current week` + ' (' + $localize`WTD` + ')',
       value: 'wtd'
@@ -222,14 +222,14 @@ export class GfAssetProfileDialogComponent implements OnInit {
       value: 'max'
     }
   ];
-  public historicalDataItems: LineChartItem[];
-  public isBenchmark = false;
-  public isDataGatheringEnabled: boolean;
-  public isEditAssetProfileIdentifierMode = false;
-  public readonly isUUID = isUUID;
-  public marketDataItems: MarketData[] = [];
+  protected historicalDataItems: LineChartItem[];
+  protected isBenchmark = false;
+  protected isDataGatheringEnabled: boolean;
+  protected isEditAssetProfileIdentifierMode = false;
+  protected readonly isUUID = isUUID;
+  protected marketDataItems: MarketData[] = [];
 
-  public modeValues = [
+  protected readonly modeValues = [
     {
       value: 'lazy',
       viewValue: $localize`Lazy` + ' (' + $localize`end of day` + ')'
@@ -240,20 +240,22 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   ];
 
-  public sectors: {
+  protected sectors: {
     [name: string]: { name: string; value: number };
   };
 
-  public user: User;
+  protected user: User;
+
+  private benchmarks: Partial<SymbolProfile>[];
 
   public constructor(
-    public adminMarketDataService: AdminMarketDataService,
+    protected adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
+    @Inject(MAT_DIALOG_DATA) protected data: AssetProfileDialogParams,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<GfAssetProfileDialogComponent>,
+    private dialogRef: MatDialogRef<GfAssetProfileDialogComponent>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
@@ -268,7 +270,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     });
   }
 
-  public get canSaveAssetProfileIdentifier() {
+  protected get canSaveAssetProfileIdentifier() {
     return !this.assetProfileForm.dirty && this.canEditAssetProfile;
   }
 
@@ -281,7 +283,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     this.initialize();
   }
 
-  public initialize() {
+  protected initialize() {
     this.historicalDataItems = [];
 
     this.adminService
@@ -428,7 +430,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       });
   }
 
-  public onCancelEditAssetProfileIdentifierMode() {
+  protected onCancelEditAssetProfileIdentifierMode() {
     this.isEditAssetProfileIdentifierMode = false;
 
     if (this.canEditAssetProfile) {
@@ -438,17 +440,20 @@ export class GfAssetProfileDialogComponent implements OnInit {
     this.assetProfileIdentifierForm.reset();
   }
 
-  public onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  public onDeleteProfileData({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onDeleteProfileData({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
 
     this.dialogRef.close();
   }
 
-  public onGatherProfileDataBySymbol({
+  protected onGatherProfileDataBySymbol({
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
@@ -458,7 +463,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       .subscribe();
   }
 
-  public onGatherSymbol({
+  protected onGatherSymbol({
     dataSource,
     range,
     symbol
@@ -471,13 +476,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
       .subscribe();
   }
 
-  public onMarketDataChanged(withRefresh: boolean = false) {
+  protected onMarketDataChanged(withRefresh: boolean = false) {
     if (withRefresh) {
       this.initialize();
     }
   }
 
-  public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .postBenchmark({ dataSource, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -490,13 +495,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
       });
   }
 
-  public onSetEditAssetProfileIdentifierMode() {
+  protected onSetEditAssetProfileIdentifierMode() {
     this.isEditAssetProfileIdentifierMode = true;
 
     this.assetProfileForm.disable();
   }
 
-  public async onSubmitAssetProfileForm() {
+  protected async onSubmitAssetProfileForm() {
     let countries = [];
     let scraperConfiguration: Prisma.InputJsonObject | undefined = {
       selector: '',
@@ -636,7 +641,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       });
   }
 
-  public async onSubmitAssetProfileIdentifierForm() {
+  protected async onSubmitAssetProfileIdentifierForm() {
     const assetProfileIdentifier: UpdateAssetProfileDto = {
       dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
         ?.value.dataSource,
@@ -698,7 +703,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       });
   }
 
-  public onTestMarketData() {
+  protected onTestMarketData() {
     this.adminService
       .testMarketData({
         dataSource: this.data.dataSource,
@@ -751,7 +756,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       });
   }
 
-  public onToggleIsActive({ checked }: MatCheckboxChange) {
+  protected onToggleIsActive({ checked }: MatCheckboxChange) {
     if (checked) {
       this.assetProfileForm.get('isActive')?.setValue(true);
     } else {
@@ -765,7 +770,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   }
 
-  public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -778,7 +783,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       });
   }
 
-  public onTriggerSubmitAssetProfileForm() {
+  protected onTriggerSubmitAssetProfileForm() {
     if (this.assetProfileForm.valid) {
       this.onSubmitAssetProfileForm();
     }
