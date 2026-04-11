@@ -17,7 +17,7 @@ import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
@@ -38,7 +38,7 @@ import { RulesService } from './rules.service';
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     ExchangeRateDataModule,
     I18nModule,

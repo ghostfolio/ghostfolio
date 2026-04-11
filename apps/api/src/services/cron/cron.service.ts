@@ -3,6 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { StatisticsGatheringService } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.service';
 import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
@@ -25,9 +26,17 @@ export class CronService {
     private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly propertyService: PropertyService,
+    private readonly statisticsGatheringService: StatisticsGatheringService,
     private readonly twitterBotService: TwitterBotService,
     private readonly userService: UserService
   ) {}
+
+  @Cron(CronExpression.EVERY_HOUR)
+  public async runEveryHour() {
+    if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
+      await this.statisticsGatheringService.addJobsToQueue();
+    }
+  }
 
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
   public async runEveryHourAtRandomMinute() {

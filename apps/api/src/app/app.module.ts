@@ -8,7 +8,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import {
   BULL_BOARD_ROUTE,
@@ -109,7 +109,7 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot(),
     ConfigurationModule,
     CronModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     EventEmitterModule.forRoot(),
     EventsModule,

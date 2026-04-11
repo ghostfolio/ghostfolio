@@ -3,7 +3,7 @@ import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.mo
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 
 import { Module } from '@nestjs/common';
 
@@ -14,7 +14,7 @@ import { PortfolioChangedListener } from './portfolio-changed.listener';
   imports: [
     ActivitiesModule,
     ConfigurationModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     ExchangeRateDataModule,
     RedisCacheModule

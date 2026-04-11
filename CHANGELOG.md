@@ -9,10 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
-- Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
 - Upgraded `angular` from version `21.1.1` to `21.2.7`
 - Upgraded `Nx` from version `22.5.3` to `22.6.4`
+
+## 2.254.0 - 2026-03-10
+
+### Added
+
+- Added loan as an asset sub class
+
+### Changed
+
+- Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
+- Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
+- Migrated the data collection for the _Open Startup_ (`/open`) page to the queue design pattern
+- Improved the language localization for German (`de`)
+- Upgraded `lodash` from version `4.17.23` to `4.18.1`
+
+### Fixed
+
+- Improved the style of the activity type component
 
 ## 2.253.0 - 2026-03-06
 

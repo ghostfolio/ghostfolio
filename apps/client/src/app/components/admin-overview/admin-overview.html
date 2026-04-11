@@ -107,7 +107,13 @@
                 <table>
                   @for (coupon of coupons; track coupon) {
                     <tr>
-                      <td class="text-monospace">{{ coupon.code }}</td>
+                      <td>
+                        <gf-value
+                          class="text-monospace"
+                          [enableCopyToClipboardButton]="true"
+                          [value]="coupon.code"
+                        />
+                      </td>
                       <td class="pl-2 text-right">
                         {{ formatStringValue(coupon.duration) }}
                       </td>
