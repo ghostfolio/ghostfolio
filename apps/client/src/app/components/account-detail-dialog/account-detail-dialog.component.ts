@@ -78,31 +78,31 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'account-detail-dialog.html'
 })
 export class GfAccountDetailDialogComponent implements OnInit {
-  public accountBalances: AccountBalancesResponse['balances'];
-  public activities: OrderWithAccount[];
-  public activitiesCount: number;
-  public balance: number;
-  public balancePrecision = 2;
-  public currency: string | null;
-  public dataSource: MatTableDataSource<Activity>;
-  public dividendInBaseCurrency: number;
-  public dividendInBaseCurrencyPrecision = 2;
-  public equity: number | null;
-  public equityPrecision = 2;
-  public hasPermissionToDeleteAccountBalance: boolean;
-  public historicalDataItems: HistoricalDataItem[];
-  public holdings: PortfolioPosition[];
-  public interestInBaseCurrency: number;
-  public interestInBaseCurrencyPrecision = 2;
-  public isLoadingActivities: boolean;
-  public isLoadingChart: boolean;
-  public name: string | null;
-  public platformName: string;
-  public sortColumn = 'date';
-  public sortDirection: SortDirection = 'desc';
-  public totalItems: number;
-  public user: User;
-  public valueInBaseCurrency: number;
+  protected accountBalances: AccountBalancesResponse['balances'];
+  protected activities: OrderWithAccount[];
+  protected activitiesCount: number;
+  protected balance: number;
+  protected balancePrecision = 2;
+  protected currency: string | null;
+  protected dataSource: MatTableDataSource<Activity>;
+  protected dividendInBaseCurrency: number;
+  protected dividendInBaseCurrencyPrecision = 2;
+  protected equity: number | null;
+  protected equityPrecision = 2;
+  protected hasPermissionToDeleteAccountBalance: boolean;
+  protected historicalDataItems: HistoricalDataItem[];
+  protected holdings: PortfolioPosition[];
+  protected interestInBaseCurrency: number;
+  protected interestInBaseCurrencyPrecision = 2;
+  protected isLoadingActivities: boolean;
+  protected isLoadingChart: boolean;
+  protected name: string | null;
+  protected platformName: string;
+  protected sortColumn = 'date';
+  protected sortDirection: SortDirection = 'desc';
+  protected totalItems: number;
+  protected user: User;
+  protected valueInBaseCurrency: number;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly data = inject<AccountDetailDialogParams>(MAT_DIALOG_DATA);
@@ -136,7 +136,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.initialize();
   }
 
-  public onCloneActivity(aActivity: Activity) {
+  protected onCloneActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
@@ -147,11 +147,11 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  public onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
+  protected onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
     this.dataService
       .postAccountBalance(accountBalance)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -160,7 +160,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
       });
   }
 
-  public onDeleteAccountBalance(aId: string) {
+  protected onDeleteAccountBalance(aId: string) {
     this.dataService
       .deleteAccountBalance(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -169,7 +169,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
       });
   }
 
-  public onExport() {
+  protected onExport() {
     const activityIds = this.dataSource.data.map(({ id }) => {
       return id;
     });
@@ -191,14 +191,14 @@ export class GfAccountDetailDialogComponent implements OnInit {
       });
   }
 
-  public onSortChanged({ active, direction }: Sort) {
+  protected onSortChanged({ active, direction }: Sort) {
     this.sortColumn = active;
     this.sortDirection = direction;
 
     this.fetchActivities();
   }
 
-  public onUpdateActivity(aActivity: Activity) {
+  protected onUpdateActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
@@ -209,7 +209,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public showValuesInPercentage() {
+  protected showValuesInPercentage() {
     return (
       this.data.hasImpersonationId || this.user?.settings?.isRestrictedView
     );
