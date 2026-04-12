@@ -83,11 +83,11 @@ export class GfAccountDetailDialogComponent implements OnInit {
   public activitiesCount: number;
   public balance: number;
   public balancePrecision = 2;
-  public currency: string;
+  public currency: string | null;
   public dataSource: MatTableDataSource<Activity>;
   public dividendInBaseCurrency: number;
   public dividendInBaseCurrencyPrecision = 2;
-  public equity: number;
+  public equity: number | null;
   public equityPrecision = 2;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
@@ -96,7 +96,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
   public interestInBaseCurrencyPrecision = 2;
   public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
-  public name: string;
+  public name: string | null;
   public platformName: string;
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
@@ -180,7 +180,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
         downloadAsFile({
           content: data,
           fileName: `ghostfolio-export-${this.name
-            .replace(/\s+/g, '-')
+            ?.replace(/\s+/g, '-')
             .toLowerCase()}-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
@@ -330,7 +330,10 @@ export class GfAccountDetailDialogComponent implements OnInit {
       next: ({ accountBalances, portfolioPerformance }) => {
         this.accountBalances = accountBalances.balances;
 
-        if (portfolioPerformance.chart.length > 0) {
+        if (
+          portfolioPerformance.chart &&
+          portfolioPerformance.chart.length > 0
+        ) {
           this.historicalDataItems = portfolioPerformance.chart.map(
             ({ date, netWorth, netWorthInPercentage }) => ({
               date,
