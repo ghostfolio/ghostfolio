@@ -27,7 +27,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject,
+  inject,
   OnInit
 } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -104,15 +104,16 @@ export class GfAccountDetailDialogComponent implements OnInit {
   public user: User;
   public valueInBaseCurrency: number;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<GfAccountDetailDialogComponent>,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly data = inject<AccountDetailDialogParams>(MAT_DIALOG_DATA);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfAccountDetailDialogComponent>>(MatDialogRef);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
