@@ -12,7 +12,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { OrderWithAccount } from '@ghostfolio/common/types';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -79,7 +78,6 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
 })
 export class GfAccountDetailDialogComponent implements OnInit {
   protected accountBalances: AccountBalancesResponse['balances'];
-  protected activities: OrderWithAccount[];
   protected activitiesCount: number;
   protected balance: number;
   protected balancePrecision = 2;
@@ -104,8 +102,9 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected user: User;
   protected valueInBaseCurrency: number;
 
+  protected readonly data = inject<AccountDetailDialogParams>(MAT_DIALOG_DATA);
+
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
-  private readonly data = inject<AccountDetailDialogParams>(MAT_DIALOG_DATA);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
