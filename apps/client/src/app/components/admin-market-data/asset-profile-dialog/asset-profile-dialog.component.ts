@@ -88,8 +88,8 @@ import {
   serverOutline
 } from 'ionicons/icons';
 import ms from 'ms';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
 
@@ -155,6 +155,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       csvString: ''
     }),
     isActive: [true],
+    isBenchmark: [false],
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
       defaultMarketPrice: null,
@@ -382,6 +383,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
             csvString: GfAssetProfileDialogComponent.HISTORICAL_DATA_TEMPLATE
           },
           isActive: this.assetProfile?.isActive,
+          isBenchmark: this.isBenchmark,
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: {
             defaultMarketPrice:
@@ -457,19 +459,6 @@ export class GfAssetProfileDialogComponent implements OnInit {
     if (withRefresh) {
       this.initialize();
     }
-  }
-
-  public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.dataService
-      .postBenchmark({ dataSource, symbol })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.dataService.updateInfo();
-
-        this.isBenchmark = true;
-
-        this.changeDetectorRef.markForCheck();
-      });
   }
 
   public onSetEditAssetProfileIdentifierMode() {
@@ -559,6 +548,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         scraperConfiguration as unknown as Prisma.InputJsonObject,
       url: this.assetProfileForm.get('url').value || null
     };
+    const isBenchmark = !!this.assetProfileForm.get('isBenchmark').value;
 
     try {
       await validateObjectForForm({
@@ -587,6 +577,15 @@ export class GfAssetProfileDialogComponent implements OnInit {
           symbol: this.data.symbol
         },
         assetProfile
+      )
+      .pipe(
+        switchMap(() => {
+          if (isBenchmark === this.isBenchmark) {
+            return of(undefined);
+          }
+
+          return this.updateBenchmark(isBenchmark);
+        })
       )
       .subscribe({
         next: () => {
@@ -742,19 +741,6 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   }
 
-  public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.dataService
-      .deleteBenchmark({ dataSource, symbol })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.dataService.updateInfo();
-
-        this.isBenchmark = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
   public onTriggerSubmitAssetProfileForm() {
     if (this.assetProfileForm.valid) {
       this.onSubmitAssetProfileForm();
@@ -773,5 +759,38 @@ export class GfAssetProfileDialogComponent implements OnInit {
         equalsPreviousProfileIdentifier: true
       };
     }
+  }
+
+  private updateBenchmark(isBenchmark: boolean) {
+    const benchmark$ = isBenchmark
+      ? this.dataService.postBenchmark({
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        })
+      : this.dataService.deleteBenchmark({
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        });
+
+    return benchmark$.pipe(
+      tap(() => {
+        this.dataService.updateInfo();
+
+        this.isBenchmark = isBenchmark;
+
+        if (this.assetProfile?.id) {
+          this.benchmarks = isBenchmark
+            ? [
+                ...this.benchmarks.filter(({ id }) => {
+                  return id !== this.assetProfile.id;
+                }),
+                { id: this.assetProfile.id }
+              ]
+            : this.benchmarks.filter(({ id }) => {
+                return id !== this.assetProfile.id;
+              });
+        }
+      })
+    );
   }
 }
