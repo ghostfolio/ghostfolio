@@ -6044,10 +6044,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the alias from the user interface as a preparation to remove it from the `User` database schema
 - Removed the activities import limit for users with a subscription
 
-### Todo
-
-- Rename the environment variable from `MAX_ORDERS_TO_IMPORT` to `MAX_ACTIVITIES_TO_IMPORT`
-
 ## 1.169.0 - 14.07.2022
 
 ### Added
