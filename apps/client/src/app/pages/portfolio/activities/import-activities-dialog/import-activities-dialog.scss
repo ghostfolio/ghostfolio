@@ -2,7 +2,9 @@
   display: block;
 
   .mat-mdc-dialog-content {
-    max-height: unset;
+    max-height: calc(100vh - 10rem);
+    min-height: 0;
+    overflow-y: auto;
 
     a {
       color: rgba(var(--palette-primary-500), 1);
