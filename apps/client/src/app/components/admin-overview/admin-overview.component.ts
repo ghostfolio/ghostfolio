@@ -8,7 +8,10 @@ import {
   PROPERTY_SYSTEM_MESSAGE,
   ghostfolioPrefix
 } from '@ghostfolio/common/config';
-import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import {
+  ConfirmationDialogType,
+  SubscriptionType
+} from '@ghostfolio/common/enums';
 import { getDateFnsLocale } from '@ghostfolio/common/helper';
 import {
   Coupon,
@@ -255,7 +258,7 @@ export class GfAdminOverviewComponent implements OnInit {
         this.systemMessage ??
           ({
             message: '⚒️ Scheduled maintenance in progress...',
-            targetGroups: ['Basic', 'Premium']
+            targetGroups: [SubscriptionType.Basic, SubscriptionType.Premium]
           } as SystemMessage)
       )
     );
