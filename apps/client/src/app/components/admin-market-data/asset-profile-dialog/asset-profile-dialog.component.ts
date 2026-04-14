@@ -178,8 +178,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected readonly assetProfileIdentifierForm = this.formBuilder.group(
     {
       assetProfileIdentifier: new FormControl<
-        AssetProfileIdentifier | { symbol: null; dataSource: null }
-      >({ symbol: null, dataSource: null }, [Validators.required])
+        AssetProfileIdentifier | { dataSource: null; symbol: null }
+      >({ dataSource: null, symbol: null }, [Validators.required])
     },
     {
       validators: (control) => {
