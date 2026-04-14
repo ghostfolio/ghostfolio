@@ -102,6 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a crash on the _Overview_, _Portfolio_ and _Holdings_ pages when exchange rate data is missing (e.g. before the data gathering job completes)
 - Fixed an issue with the detection of the thousand separator for the `de-CH` locale
 - Fixed an issue in the _Storybook_ stories of the symbol autocomplete component caused by a circular dependency
 
