@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -62,7 +63,7 @@ export class ImportController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Premium'
+      this.request.user.subscription.type === SubscriptionType.Premium
     ) {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
