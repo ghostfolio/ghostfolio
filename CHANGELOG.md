@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `21.1.1` to `21.2.7`
 - Upgraded `Nx` from version `22.5.3` to `22.6.4`
 
+### Fixed
+
+- Fixed the missing value column of the accounts table component on mobile
+
 ## 2.254.0 - 2026-03-10
 
 ### Added
