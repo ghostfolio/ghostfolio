@@ -21,7 +21,7 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -75,7 +75,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './admin-jobs.html'
 })
 export class GfAdminJobsComponent implements OnInit {
-  @ViewChild(MatSort) sort: MatSort;
+  protected readonly sort = viewChild.required(MatSort);
 
   protected readonly DATA_GATHERING_QUEUE_PRIORITY_LOW =
     DATA_GATHERING_QUEUE_PRIORITY_LOW;
@@ -227,7 +227,7 @@ export class GfAdminJobsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort();
         this.dataSource.sortingDataAccessor = get;
 
         this.isLoading = false;
