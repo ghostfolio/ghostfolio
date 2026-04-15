@@ -26,7 +26,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -87,9 +86,9 @@ export class GfAdminJobsComponent implements OnInit {
 
   protected dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
   protected defaultDateTimeFormat: string;
-  protected filterForm: FormGroup<{
-    status: FormControl<JobStatus | null>;
-  }>;
+  protected readonly filterForm = new FormGroup({
+    status: new FormControl<JobStatus | null>(null)
+  });
 
   protected readonly displayedColumns = [
     'index',
@@ -113,7 +112,6 @@ export class GfAdminJobsComponent implements OnInit {
   private readonly adminService = inject(AdminService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
   private readonly tokenStorageService = inject(TokenStorageService);
   private readonly userService = inject(UserService);
@@ -153,10 +151,6 @@ export class GfAdminJobsComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.filterForm = this.formBuilder.group({
-      status: new FormControl<JobStatus | null>(null)
-    });
-
     this.filterForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
