@@ -20,6 +20,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit,
   viewChild
 } from '@angular/core';
@@ -109,15 +110,15 @@ export class GfAdminJobsComponent implements OnInit {
 
   private user: User;
 
-  public constructor(
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private destroyRef: DestroyRef,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService,
-    private tokenStorageService: TokenStorageService,
-    private userService: UserService
-  ) {
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly notificationService = inject(NotificationService);
+  private readonly tokenStorageService = inject(TokenStorageService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
