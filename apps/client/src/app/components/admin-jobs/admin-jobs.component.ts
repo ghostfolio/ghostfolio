@@ -26,6 +26,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule
@@ -84,7 +85,9 @@ export class GfAdminJobsComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
   public defaultDateTimeFormat: string;
-  public filterForm: FormGroup;
+  public filterForm: FormGroup<{
+    status: FormControl<JobStatus | null>;
+  }>;
 
   public displayedColumns = [
     'index',
@@ -149,13 +152,13 @@ export class GfAdminJobsComponent implements OnInit {
 
   public ngOnInit() {
     this.filterForm = this.formBuilder.group({
-      status: []
+      status: new FormControl<JobStatus | null>(null)
     });
 
     this.filterForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        const currentFilter = this.filterForm.get('status').value;
+        const currentFilter = this.filterForm.controls.status.value;
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
       });
 
@@ -172,10 +175,10 @@ export class GfAdminJobsComponent implements OnInit {
   }
 
   public onDeleteJobs() {
-    const currentFilter = this.filterForm.get('status').value;
+    const currentFilter = this.filterForm.controls.status.value;
 
     this.adminService
-      .deleteJobs({ status: currentFilter ? [currentFilter] : undefined })
+      .deleteJobs({ status: currentFilter ? [currentFilter] : [] })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
