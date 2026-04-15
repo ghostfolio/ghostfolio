@@ -77,19 +77,20 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAdminJobsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
-  public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
-  public DATA_GATHERING_QUEUE_PRIORITY_HIGH =
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_LOW =
+    DATA_GATHERING_QUEUE_PRIORITY_LOW;
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_HIGH =
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;
-  public DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
     DATA_GATHERING_QUEUE_PRIORITY_MEDIUM;
 
-  public dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
-  public defaultDateTimeFormat: string;
-  public filterForm: FormGroup<{
+  protected dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
+  protected defaultDateTimeFormat: string;
+  protected filterForm: FormGroup<{
     status: FormControl<JobStatus | null>;
   }>;
 
-  public displayedColumns = [
+  protected readonly displayedColumns = [
     'index',
     'type',
     'symbol',
@@ -102,9 +103,9 @@ export class GfAdminJobsComponent implements OnInit {
     'actions'
   ];
 
-  public hasPermissionToAccessBullBoard = false;
-  public isLoading = false;
-  public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
+  protected hasPermissionToAccessBullBoard = false;
+  protected isLoading = false;
+  protected readonly statusFilterOptions = QUEUE_JOB_STATUS_LIST;
 
   private user: User;
 
@@ -165,7 +166,7 @@ export class GfAdminJobsComponent implements OnInit {
     this.fetchJobs();
   }
 
-  public onDeleteJob(aId: string) {
+  protected onDeleteJob(aId: string) {
     this.adminService
       .deleteJob(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -174,7 +175,7 @@ export class GfAdminJobsComponent implements OnInit {
       });
   }
 
-  public onDeleteJobs() {
+  protected onDeleteJobs() {
     const currentFilter = this.filterForm.controls.status.value;
 
     this.adminService
@@ -185,7 +186,7 @@ export class GfAdminJobsComponent implements OnInit {
       });
   }
 
-  public onExecuteJob(aId: string) {
+  protected onExecuteJob(aId: string) {
     this.adminService
       .executeJob(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -194,7 +195,7 @@ export class GfAdminJobsComponent implements OnInit {
       });
   }
 
-  public onOpenBullBoard() {
+  protected onOpenBullBoard() {
     const token = this.tokenStorageService.getToken();
 
     document.cookie = [
@@ -206,13 +207,13 @@ export class GfAdminJobsComponent implements OnInit {
     window.open(BULL_BOARD_ROUTE, '_blank');
   }
 
-  public onViewData(aData: AdminJobs['jobs'][0]['data']) {
+  protected onViewData(aData: AdminJobs['jobs'][0]['data']) {
     this.notificationService.alert({
       title: JSON.stringify(aData, null, '  ')
     });
   }
 
-  public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
+  protected onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
     this.notificationService.alert({
       title: JSON.stringify(aStacktrace, null, '  ')
     });
