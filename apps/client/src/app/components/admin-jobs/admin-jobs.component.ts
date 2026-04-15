@@ -77,15 +77,18 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAdminJobsComponent implements OnInit {
   protected readonly sort = viewChild.required(MatSort);
 
-  protected readonly DATA_GATHERING_QUEUE_PRIORITY_LOW =
-    DATA_GATHERING_QUEUE_PRIORITY_LOW;
   protected readonly DATA_GATHERING_QUEUE_PRIORITY_HIGH =
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;
+
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_LOW =
+    DATA_GATHERING_QUEUE_PRIORITY_LOW;
+
   protected readonly DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
     DATA_GATHERING_QUEUE_PRIORITY_MEDIUM;
 
   protected dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
   protected defaultDateTimeFormat: string;
+
   protected readonly filterForm = new FormGroup({
     status: new FormControl<JobStatus | null>(null)
   });
