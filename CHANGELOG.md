@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `21.1.1` to `21.2.7`
 - Upgraded `Nx` from version `22.5.3` to `22.6.4`
 - Upgraded `prettier` from version `3.8.1` to `3.8.2`
+- Upgraded `yahoo-finance2` from version `3.13.2` to `3.14.0`
+
+### Fixed
+
+- Fixed the missing value column of the accounts table component on mobile
 
 ## 2.254.0 - 2026-03-10
 
@@ -6044,10 +6049,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the alias from the user interface as a preparation to remove it from the `User` database schema
 - Removed the activities import limit for users with a subscription
-
-### Todo
-
-- Rename the environment variable from `MAX_ORDERS_TO_IMPORT` to `MAX_ACTIVITIES_TO_IMPORT`
 
 ## 1.169.0 - 14.07.2022
 

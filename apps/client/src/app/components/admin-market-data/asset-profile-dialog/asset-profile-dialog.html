@@ -419,11 +419,11 @@
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-label i18n>Url</mat-label>
                 <input formControlName="url" matInput type="text" />
-                @if (assetProfileForm.get('url').value) {
+                @if (assetProfileForm.controls.url.value) {
                   <gf-entity-logo
                     class="mr-3"
                     matSuffix
-                    [url]="assetProfileForm.get('url').value"
+                    [url]="assetProfileForm.controls.url.value"
                   />
                 }
               </mat-form-field>

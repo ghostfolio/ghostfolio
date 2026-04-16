@@ -20,12 +20,13 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule
@@ -74,19 +75,25 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './admin-jobs.html'
 })
 export class GfAdminJobsComponent implements OnInit {
-  @ViewChild(MatSort) sort: MatSort;
+  protected readonly sort = viewChild.required(MatSort);
 
-  public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
-  public DATA_GATHERING_QUEUE_PRIORITY_HIGH =
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_HIGH =
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;
-  public DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
+
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_LOW =
+    DATA_GATHERING_QUEUE_PRIORITY_LOW;
+
+  protected readonly DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
     DATA_GATHERING_QUEUE_PRIORITY_MEDIUM;
 
-  public dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
-  public defaultDateTimeFormat: string;
-  public filterForm: FormGroup;
+  protected dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
+  protected defaultDateTimeFormat: string;
 
-  public displayedColumns = [
+  protected readonly filterForm = new FormGroup({
+    status: new FormControl<JobStatus | null>(null)
+  });
+
+  protected readonly displayedColumns = [
     'index',
     'type',
     'symbol',
@@ -99,21 +106,20 @@ export class GfAdminJobsComponent implements OnInit {
     'actions'
   ];
 
-  public hasPermissionToAccessBullBoard = false;
-  public isLoading = false;
-  public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
+  protected hasPermissionToAccessBullBoard = false;
+  protected isLoading = false;
+  protected readonly statusFilterOptions = QUEUE_JOB_STATUS_LIST;
 
   private user: User;
 
-  public constructor(
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private destroyRef: DestroyRef,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService,
-    private tokenStorageService: TokenStorageService,
-    private userService: UserService
-  ) {
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationService = inject(NotificationService);
+  private readonly tokenStorageService = inject(TokenStorageService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
@@ -148,21 +154,17 @@ export class GfAdminJobsComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.filterForm = this.formBuilder.group({
-      status: []
-    });
-
     this.filterForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        const currentFilter = this.filterForm.get('status').value;
+        const currentFilter = this.filterForm.controls.status.value;
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
       });
 
     this.fetchJobs();
   }
 
-  public onDeleteJob(aId: string) {
+  protected onDeleteJob(aId: string) {
     this.adminService
       .deleteJob(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -171,18 +173,18 @@ export class GfAdminJobsComponent implements OnInit {
       });
   }
 
-  public onDeleteJobs() {
-    const currentFilter = this.filterForm.get('status').value;
+  protected onDeleteJobs() {
+    const currentFilter = this.filterForm.controls.status.value;
 
     this.adminService
-      .deleteJobs({ status: currentFilter ? [currentFilter] : undefined })
+      .deleteJobs({ status: currentFilter ? [currentFilter] : [] })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
       });
   }
 
-  public onExecuteJob(aId: string) {
+  protected onExecuteJob(aId: string) {
     this.adminService
       .executeJob(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -191,7 +193,7 @@ export class GfAdminJobsComponent implements OnInit {
       });
   }
 
-  public onOpenBullBoard() {
+  protected onOpenBullBoard() {
     const token = this.tokenStorageService.getToken();
 
     document.cookie = [
@@ -203,13 +205,13 @@ export class GfAdminJobsComponent implements OnInit {
     window.open(BULL_BOARD_ROUTE, '_blank');
   }
 
-  public onViewData(aData: AdminJobs['jobs'][0]['data']) {
+  protected onViewData(aData: AdminJobs['jobs'][0]['data']) {
     this.notificationService.alert({
       title: JSON.stringify(aData, null, '  ')
     });
   }
 
-  public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
+  protected onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
     this.notificationService.alert({
       title: JSON.stringify(aStacktrace, null, '  ')
     });
@@ -223,7 +225,7 @@ export class GfAdminJobsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort();
         this.dataSource.sortingDataAccessor = get;
 
         this.isLoading = false;
