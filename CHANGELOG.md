@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `angular` from version `21.1.1` to `21.2.7`
 - Upgraded `Nx` from version `22.5.3` to `22.6.4`
+- Upgraded `svgmap` from version `2.19.2` to `2.19.3`
 
 ### Fixed
 
