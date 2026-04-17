@@ -353,6 +353,13 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.activityToUpdate.emit(aActivity);
   }
 
+  public sortByValue(
+    a: { key: ActivityType; value: string },
+    b: { key: ActivityType; value: string }
+  ) {
+    return a.value.localeCompare(b.value);
+  }
+
   public toggleAllRows() {
     if (this.areAllRowsSelected()) {
       this.selectedRows.clear();
