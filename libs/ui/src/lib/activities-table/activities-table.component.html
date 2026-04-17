@@ -5,7 +5,7 @@
         <mat-label i18n>Type</mat-label>
         <mat-select multiple [formControl]="typesFilter">
           @for (
-            activityType of activityTypesTranslationMap | keyvalue;
+            activityType of activityTypesTranslationMap | keyvalue: sortByValue;
             track activityType.key
           ) {
             <mat-option [value]="activityType.key">
