@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sorted the activity types alphabetically on the activities page (experimental)
 - Upgraded `angular` from version `21.1.1` to `21.2.7`
 - Upgraded `Nx` from version `22.5.3` to `22.6.4`
+- Upgraded `prettier` from version `3.8.1` to `3.8.2`
 - Upgraded `yahoo-finance2` from version `3.13.2` to `3.14.0`
 
 ### Fixed
