@@ -61,7 +61,7 @@ export class GfPublicPageComponent implements OnInit {
   protected countries: {
     [code: string]: { name: string; value: number };
   };
-  protected defaultAlias = $localize`someone`;
+  protected readonly defaultAlias = $localize`someone`;
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
@@ -74,7 +74,7 @@ export class GfPublicPageComponent implements OnInit {
   protected markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
-  protected pageSize = Number.MAX_SAFE_INTEGER;
+  protected readonly pageSize = Number.MAX_SAFE_INTEGER;
   protected positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
@@ -87,7 +87,7 @@ export class GfPublicPageComponent implements OnInit {
   protected symbols: {
     [name: string]: { name: string; symbol: string; value: number };
   };
-  protected UNKNOWN_KEY = UNKNOWN_KEY;
+  protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
 
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
