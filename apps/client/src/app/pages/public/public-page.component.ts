@@ -15,6 +15,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
@@ -113,7 +114,7 @@ export class GfPublicPageComponent implements OnInit {
       .fetchPublicPortfolio(this.accessId)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           if (error.status === StatusCodes.NOT_FOUND) {
             console.error(error);
             this.router.navigate(['/']);
@@ -185,36 +186,38 @@ export class GfPublicPageComponent implements OnInit {
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
-                weight * position.valueInBaseCurrency;
+                weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.continents[continent] = {
                 name: continent,
                 value:
                   weight *
-                  this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency
+                  (this.publicPortfolioDetails.holdings[symbol]
+                    .valueInBaseCurrency ?? 0)
               };
             }
 
             if (this.countries[code]?.value) {
               this.countries[code].value +=
-                weight * position.valueInBaseCurrency;
+                weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.countries[code] = {
                 name,
                 value:
                   weight *
-                  this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency
+                  (this.publicPortfolioDetails.holdings[symbol]
+                    .valueInBaseCurrency ?? 0)
               };
             }
           }
         } else {
           this.continents[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
+            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
+            0;
 
           this.countries[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
+            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
+            0;
         }
 
         if (position.sectors.length > 0) {
@@ -222,20 +225,22 @@ export class GfPublicPageComponent implements OnInit {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
-              this.sectors[name].value += weight * position.valueInBaseCurrency;
+              this.sectors[name].value +=
+                weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.sectors[name] = {
                 name,
                 value:
                   weight *
-                  this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency
+                  (this.publicPortfolioDetails.holdings[symbol]
+                    .valueInBaseCurrency ?? 0)
               };
             }
           }
         } else {
           this.sectors[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
+            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
+            0;
         }
       }
 
@@ -244,7 +249,7 @@ export class GfPublicPageComponent implements OnInit {
         symbol: prettifySymbol(symbol),
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
-          : position.valueInPercentage
+          : (position.valueInPercentage ?? 0)
       };
     }
   }
