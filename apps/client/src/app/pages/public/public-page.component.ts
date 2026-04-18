@@ -21,6 +21,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -85,16 +86,16 @@ export class GfPublicPageComponent implements OnInit {
   };
   public UNKNOWN_KEY = UNKNOWN_KEY;
 
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly router = inject(Router);
+
   private accessId: string;
 
-  public constructor(
-    private activatedRoute: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private router: Router
-  ) {
+  public constructor() {
     this.activatedRoute.params.subscribe((params) => {
       this.accessId = params['id'];
     });
