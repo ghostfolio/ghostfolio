@@ -55,40 +55,39 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './public-page.html'
 })
 export class GfPublicPageComponent implements OnInit {
-  public continents: {
+  protected continents: {
     [code: string]: { name: string; value: number };
   };
-  public countries: {
+  protected countries: {
     [code: string]: { name: string; value: number };
   };
-  public defaultAlias = $localize`someone`;
-  public hasPermissionForSubscription: boolean;
-  public holdings: PublicPortfolioResponse['holdings'][string][];
-  public info: InfoItem;
-  public latestActivitiesDataSource: MatTableDataSource<
+  protected defaultAlias = $localize`someone`;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  protected hasPermissionForSubscription: boolean;
+  protected holdings: PublicPortfolioResponse['holdings'][string][];
+  protected info: InfoItem;
+  protected latestActivitiesDataSource: MatTableDataSource<
     PublicPortfolioResponse['latestActivities'][0]
   >;
-  public markets: {
+  protected markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
-  public pageSize = Number.MAX_SAFE_INTEGER;
-  public positions: {
+  protected pageSize = Number.MAX_SAFE_INTEGER;
+  protected positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
     };
   };
-  public publicPortfolioDetails: PublicPortfolioResponse;
-  public sectors: {
+  protected publicPortfolioDetails: PublicPortfolioResponse;
+  protected sectors: {
     [name: string]: { name: string; value: number };
   };
-  public symbols: {
+  protected symbols: {
     [name: string]: { name: string; symbol: string; value: number };
   };
-  public UNKNOWN_KEY = UNKNOWN_KEY;
-
-  protected readonly deviceType = computed(
-    () => this.deviceDetectorService.deviceInfo().deviceType
-  );
+  protected UNKNOWN_KEY = UNKNOWN_KEY;
 
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -139,7 +138,7 @@ export class GfPublicPageComponent implements OnInit {
       });
   }
 
-  public initializeAnalysisData() {
+  private initializeAnalysisData() {
     this.continents = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
