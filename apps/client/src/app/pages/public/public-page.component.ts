@@ -15,11 +15,14 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -52,48 +55,50 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './public-page.html'
 })
 export class GfPublicPageComponent implements OnInit {
-  public continents: {
+  protected continents: {
     [code: string]: { name: string; value: number };
   };
-  public countries: {
+  protected countries: {
     [code: string]: { name: string; value: number };
   };
-  public defaultAlias = $localize`someone`;
-  public deviceType: string;
-  public hasPermissionForSubscription: boolean;
-  public holdings: PublicPortfolioResponse['holdings'][string][];
-  public info: InfoItem;
-  public latestActivitiesDataSource: MatTableDataSource<
+  protected readonly defaultAlias = $localize`someone`;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  protected hasPermissionForSubscription: boolean;
+  protected holdings: PublicPortfolioResponse['holdings'][string][];
+  protected info: InfoItem;
+  protected latestActivitiesDataSource: MatTableDataSource<
     PublicPortfolioResponse['latestActivities'][0]
   >;
-  public markets: {
+  protected markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
-  public pageSize = Number.MAX_SAFE_INTEGER;
-  public positions: {
+  protected readonly pageSize = Number.MAX_SAFE_INTEGER;
+  protected positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
     };
   };
-  public publicPortfolioDetails: PublicPortfolioResponse;
-  public sectors: {
+  protected publicPortfolioDetails: PublicPortfolioResponse;
+  protected sectors: {
     [name: string]: { name: string; value: number };
   };
-  public symbols: {
+  protected symbols: {
     [name: string]: { name: string; symbol: string; value: number };
   };
-  public UNKNOWN_KEY = UNKNOWN_KEY;
+  protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
+
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly router = inject(Router);
 
   private accessId: string;
 
-  public constructor(
-    private activatedRoute: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private router: Router
-  ) {
+  public constructor() {
     this.activatedRoute.params.subscribe((params) => {
       this.accessId = params['id'];
     });
@@ -107,13 +112,11 @@ export class GfPublicPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.dataService
       .fetchPublicPortfolio(this.accessId)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        catchError((error) => {
+        catchError((error: HttpErrorResponse) => {
           if (error.status === StatusCodes.NOT_FOUND) {
             console.error(error);
             this.router.navigate(['/']);
@@ -135,7 +138,7 @@ export class GfPublicPageComponent implements OnInit {
       });
   }
 
-  public initializeAnalysisData() {
+  private initializeAnalysisData() {
     this.continents = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -185,36 +188,38 @@ export class GfPublicPageComponent implements OnInit {
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
-                weight * position.valueInBaseCurrency;
+                weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.continents[continent] = {
                 name: continent,
                 value:
                   weight *
-                  this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency
+                  (this.publicPortfolioDetails.holdings[symbol]
+                    .valueInBaseCurrency ?? 0)
               };
             }
 
             if (this.countries[code]?.value) {
               this.countries[code].value +=
-                weight * position.valueInBaseCurrency;
+                weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.countries[code] = {
                 name,
                 value:
                   weight *
-                  this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency
+                  (this.publicPortfolioDetails.holdings[symbol]
+                    .valueInBaseCurrency ?? 0)
               };
             }
           }
         } else {
           this.continents[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
+            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
+            0;
 
           this.countries[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
+            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
+            0;
         }
 
         if (position.sectors.length > 0) {
@@ -222,20 +227,22 @@ export class GfPublicPageComponent implements OnInit {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
-              this.sectors[name].value += weight * position.valueInBaseCurrency;
+              this.sectors[name].value +=
+                weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.sectors[name] = {
                 name,
                 value:
                   weight *
-                  this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency
+                  (this.publicPortfolioDetails.holdings[symbol]
+                    .valueInBaseCurrency ?? 0)
               };
             }
           }
         } else {
           this.sectors[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency;
+            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
+            0;
         }
       }
 
@@ -244,7 +251,7 @@ export class GfPublicPageComponent implements OnInit {
         symbol: prettifySymbol(symbol),
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
-          : position.valueInPercentage
+          : (position.valueInPercentage ?? 0)
       };
     }
   }

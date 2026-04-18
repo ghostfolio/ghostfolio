@@ -75,7 +75,7 @@
             [data]="symbols"
             [isInPercentage]="true"
             [keys]="['symbol']"
-            [showLabels]="deviceType !== 'mobile'"
+            [showLabels]="deviceType() !== 'mobile'"
           />
           <gf-holdings-table
             [hasPermissionToOpenDetails]="false"
@@ -213,7 +213,7 @@
         <mat-card-content>
           <gf-activities-table
             [dataSource]="latestActivitiesDataSource"
-            [deviceType]="deviceType"
+            [deviceType]="deviceType()"
             [hasPermissionToCreateActivity]="false"
             [hasPermissionToDeleteActivity]="false"
             [hasPermissionToExportActivities]="false"
