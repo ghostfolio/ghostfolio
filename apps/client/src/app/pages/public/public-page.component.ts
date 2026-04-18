@@ -19,6 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
@@ -61,7 +62,6 @@ export class GfPublicPageComponent implements OnInit {
     [code: string]: { name: string; value: number };
   };
   public defaultAlias = $localize`someone`;
-  public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public holdings: PublicPortfolioResponse['holdings'][string][];
   public info: InfoItem;
@@ -86,11 +86,15 @@ export class GfPublicPageComponent implements OnInit {
   };
   public UNKNOWN_KEY = UNKNOWN_KEY;
 
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly router = inject(Router);
 
   private accessId: string;
@@ -109,8 +113,6 @@ export class GfPublicPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.dataService
       .fetchPublicPortfolio(this.accessId)
       .pipe(
