@@ -189,13 +189,17 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
-      return {
-        id: assetClass,
-        label: translate(assetClass),
-        type: 'ASSET_CLASS'
-      };
-    });
+    this.assetClasses = Object.keys(AssetClass)
+      .map((assetClass) => {
+        return {
+          id: assetClass,
+          label: translate(assetClass),
+          type: 'ASSET_CLASS'
+        } satisfies Filter;
+      })
+      .sort((a, b) => {
+        return a.label.localeCompare(b.label);
+      });
 
     this.searchFormControl.valueChanges
       .pipe(
@@ -435,12 +439,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         ?.filter(({ isUsed }) => {
           return isUsed;
         })
-        .map(({ id, name }) => {
+        ?.map(({ id, name }) => {
           return {
             id,
             label: translate(name),
             type: 'TAG'
-          };
+          } satisfies Filter;
+        })
+        ?.sort((a, b) => {
+          return a.label.localeCompare(b.label);
         }) ?? [];
   }
 

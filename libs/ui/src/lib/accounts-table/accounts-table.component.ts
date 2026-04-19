@@ -64,7 +64,7 @@ export class GfAccountsTableComponent {
   public readonly showBalance = input(true);
   public readonly showFooter = input(true);
   public readonly showValue = input(true);
-  public readonly showValueInBaseCurrency = input(false);
+  public readonly showValueInBaseCurrency = input(true);
   public readonly totalBalanceInBaseCurrency = input<number>();
   public readonly totalValueInBaseCurrency = input<number>();
 
