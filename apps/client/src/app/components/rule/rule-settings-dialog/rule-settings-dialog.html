@@ -1,6 +1,6 @@
-<div mat-dialog-title>{{ data.categoryName }} › {{ data.rule.name }}</div>
+<div mat-dialog-title>{{ data.categoryName }} âº {{ data.rule.name }}</div>
 
-<div class="py-3" mat-dialog-content>
+<div class="py-3" mat-dialog-content [formGroup]="settingsForm">
   @if (
     data.rule.configuration.thresholdMin && data.rule.configuration.thresholdMax
   ) {
@@ -35,8 +35,8 @@
           [min]="data.rule.configuration.threshold.min"
           [step]="data.rule.configuration.threshold.step"
         >
-          <input matSliderStartThumb [(ngModel)]="data.settings.thresholdMin" />
-          <input matSliderEndThumb [(ngModel)]="data.settings.thresholdMax" />
+          <input matSliderStartThumb formControlName="thresholdMin" />
+          <input matSliderEndThumb formControlName="thresholdMax" />
         </mat-slider>
         <gf-value
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
@@ -75,7 +75,7 @@
           [min]="data.rule.configuration.threshold.min"
           [step]="data.rule.configuration.threshold.step"
         >
-          <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" />
+          <input matSliderThumb formControlName="thresholdMin" />
         </mat-slider>
         <gf-value
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
@@ -113,7 +113,7 @@
           [min]="data.rule.configuration.threshold.min"
           [step]="data.rule.configuration.threshold.step"
         >
-          <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" />
+          <input matSliderThumb formControlName="thresholdMax" />
         </mat-slider>
         <gf-value
           [isPercent]="data.rule.configuration.threshold.unit === '%'"
@@ -131,7 +131,7 @@
   <button
     color="primary"
     mat-flat-button
-    (click)="dialogRef.close(data.settings)"
+    [disabled]="!settingsForm.dirty" (click)="dialogRef.close(updatedSettings)"
   >
     <ng-container i18n>Save</ng-container>
   </button>
