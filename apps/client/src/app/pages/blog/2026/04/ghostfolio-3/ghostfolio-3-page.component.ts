@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ghostfolio-3-page.html'
 })
 export class Ghostfolio3PageComponent {
+  public pricingUrl = `https://ghostfol.io/${document.documentElement.lang}/${publicRoutes.pricing.path}`;
   public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkAboutChangelog =
     publicRoutes.about.subRoutes.changelog.routerLink;
