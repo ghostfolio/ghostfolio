@@ -3,21 +3,15 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef
-} from '@angular/material/dialog';
-import { MatSliderModule } from '@angular/material/slider';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { RuleSettingsDialogParams } from './interfaces/interfaces';
+import { RuleSettingsDialogInput } from './interfaces';
 
 @Component({
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     GfValueComponent,
     MatButtonModule,
     MatDialogModule,
@@ -28,10 +22,22 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
   templateUrl: './rule-settings-dialog.html'
 })
 export class GfRuleSettingsDialogComponent {
-  public settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
+  public settingsForm: FormGroup;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: RuleSettingsDialogParams,
+    @Inject(MAT_DIALOG_DATA) public data: RuleSettingsDialogInput,
     public dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>
-  ) {}
+  ) {
+    this.settingsForm = new FormGroup({
+      thresholdMin: new FormControl(data.settings?.thresholdMin ?? null),
+      thresholdMax: new FormControl(data.settings?.thresholdMax ?? null)
+    });
+  }
+
+  public get updatedSettings(): XRayRulesSettings {
+    return {
+      ...this.data.settings,
+      ...(this.settingsForm.value as Partial<XRayRulesSettings>)
+    };
+  }
 }
