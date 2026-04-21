@@ -1,0 +1,30 @@
+{
+  "name": "Ghostfolio (Ona demo)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "forwardPorts": [3333, 4200, 5432, 6379],
+  "portsAttributes": {
+    "3333": { "label": "Ghostfolio API" },
+    "4200": { "label": "Ghostfolio Client" },
+    "5432": { "label": "PostgreSQL" },
+    "6379": { "label": "Redis" }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "Prisma.prisma",
+        "nrwl.angular-console"
+      ]
+    }
+  }
+}
