@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `countup.js` from version `2.9.0` to `2.10.0`
+- Upgraded `Nx` from version `22.6.4` to `22.6.5`
 
 ## 2.255.0 - 2026-03-20
 
