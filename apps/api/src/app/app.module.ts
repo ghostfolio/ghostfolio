@@ -1,4 +1,5 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { getBullRedisOptions } from '@ghostfolio/api/helper/redis-options.helper';
 import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -98,12 +99,12 @@ import { UserModule } from './user/user.module';
         ]
       : []),
     BullModule.forRoot({
-      redis: {
+      redis: getBullRedisOptions({
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
-        host: process.env.REDIS_HOST,
+        host: process.env.REDIS_HOST ?? 'localhost',
         password: process.env.REDIS_PASSWORD,
         port: parseInt(process.env.REDIS_PORT ?? '6379', 10)
-      }
+      })
     }),
     CacheModule,
     ConfigModule.forRoot(),
