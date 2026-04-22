@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
+- Moved the total amount, change and performance with currency effects on the analysis page from experimental to general availability
 - Upgraded `prisma` from version `6.19.0` to `7.7.0`
 
 ### Todo
