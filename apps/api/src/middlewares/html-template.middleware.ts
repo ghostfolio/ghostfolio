@@ -83,6 +83,10 @@ const locales = {
   '/en/blog/2025/11/black-weeks-2025': {
     featureGraphicPath: 'assets/images/blog/black-weeks-2025.jpg',
     title: `Black Weeks 2025 - ${title}`
+  },
+  '/en/blog/2026/04/ghostfolio-3': {
+    featureGraphicPath: 'assets/images/blog/ghostfolio-3.jpg',
+    title: `Announcing Ghostfolio 3.0 - ${title}`
   }
 };
 
