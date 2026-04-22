@@ -32,6 +32,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   locale as defaultLocale
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   User as IUser,
   SystemMessage,
@@ -156,7 +157,7 @@ export class UserService {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      subscription.type === 'Basic'
+      subscription.type === SubscriptionType.Basic
     ) {
       tags = [];
     }
@@ -443,7 +444,7 @@ export class UserService {
         createdAt: user.createdAt
       });
 
-      if (user.subscription?.type === 'Basic') {
+      if (user.subscription?.type === SubscriptionType.Basic) {
         const daysSinceRegistration = differenceInDays(
           new Date(),
           user.createdAt
@@ -485,7 +486,7 @@ export class UserService {
 
         // Reset holdings view mode
         user.settings.settings.holdingsViewMode = undefined;
-      } else if (user.subscription?.type === 'Premium') {
+      } else if (user.subscription?.type === SubscriptionType.Premium) {
         if (!hasRole(user, Role.DEMO)) {
           currentPermissions.push(permissions.createApiKey);
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
