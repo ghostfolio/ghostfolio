@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `countup.js` from version `2.9.0` to `2.10.0`
 - Upgraded `jsonpath` from version `1.2.1` to `1.3.0`
 - Upgraded `nestjs` from version `11.1.14` to `11.1.19`
+- Upgraded `ngx-markdown` from version `21.1.0` to `21.2.0`
 - Upgraded `Nx` from version `22.6.4` to `22.6.5`
 
 ## 2.255.0 - 2026-04-20
