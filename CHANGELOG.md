@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `countup.js` from version `2.9.0` to `2.10.0`
+- Upgraded `jsonpath` from version `1.2.1` to `1.3.0`
 - Upgraded `Nx` from version `22.6.4` to `22.6.5`
 
-## 2.255.0 - 2026-03-20
+## 2.255.0 - 2026-04-20
 
 ### Changed
 
@@ -29,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the missing value column of the accounts table component on mobile
 
-## 2.254.0 - 2026-03-10
+## 2.254.0 - 2026-04-10
 
 ### Added
 
@@ -47,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the activity type component
 
-## 2.253.0 - 2026-03-06
+## 2.253.0 - 2026-04-06
 
 ### Added
 
@@ -67,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the allocations by ETF provider chart on the allocations page in the _Presenter View_
 - Fixed the allocations by platform chart on the allocations page in the _Presenter View_
 
-## 2.252.0 - 2026-03-02
+## 2.252.0 - 2026-04-02
 
 ### Added
 
