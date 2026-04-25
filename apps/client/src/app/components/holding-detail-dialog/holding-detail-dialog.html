@@ -310,9 +310,7 @@
               <gf-value
                 i18n
                 size="medium"
-                [enableCopyToClipboardButton]="
-                  user?.settings?.isExperimentalFeatures
-                "
+                [enableCopyToClipboardButton]="true"
                 [hidden]="!SymbolProfile?.symbol"
                 [value]="SymbolProfile?.symbol"
                 >Symbol</gf-value
@@ -321,9 +319,7 @@
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"
-                [enableCopyToClipboardButton]="
-                  user?.settings?.isExperimentalFeatures
-                "
+                [enableCopyToClipboardButton]="true"
                 [hidden]="!SymbolProfile?.isin"
                 [value]="SymbolProfile?.isin"
                 >ISIN</gf-value
