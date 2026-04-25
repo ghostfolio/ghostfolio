@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the copy-to-clipboard button for the ISIN number in the holding detail dialog from experimental to general availability
+- Moved the copy-to-clipboard button for the symbol in the holding detail dialog from experimental to general availability
 - Upgraded `prettier` from version `3.8.2` to `3.8.3`
 
 ## 3.0.0 - 2026-04-23
