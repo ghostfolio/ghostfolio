@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the styling of buttons and input fields across various components
 - Upgraded `prettier` from version `3.8.2` to `3.8.3`
 
 ## 3.0.0 - 2026-04-23
