@@ -13,12 +13,14 @@
             (keydown.enter)="onLoginWithAccessToken(); $event.preventDefault()"
           />
           <button
-            mat-button
+            class="mx-2"
+            mat-icon-button
             matSuffix
             type="button"
             (click)="isAccessTokenHidden = !isAccessTokenHidden"
           >
             <ion-icon
+              class="mat-icon"
               [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
             />
           </button>
@@ -34,7 +36,7 @@
       @if (data.hasPermissionToUseAuthGoogle) {
         <div class="d-flex flex-column">
           <a
-            class="px-4 rounded-pill"
+            class="px-4 py-3 rounded-pill"
             href="../api/v1/auth/google"
             mat-stroked-button
             ><img
@@ -49,7 +51,7 @@
       @if (data.hasPermissionToUseAuthOidc) {
         <div class="d-flex flex-column mt-2">
           <a
-            class="px-4 rounded-pill"
+            class="px-4 py-3 rounded-pill"
             href="../api/auth/oidc"
             mat-stroked-button
             ><ng-container i18n>Sign in with OpenID Connect</ng-container></a

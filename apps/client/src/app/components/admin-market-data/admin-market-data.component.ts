@@ -157,7 +157,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public isLoading = false;
+  public isLoading = true;
   public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
