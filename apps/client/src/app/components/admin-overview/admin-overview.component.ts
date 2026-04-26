@@ -144,6 +144,21 @@ export class GfAdminOverviewComponent implements OnInit {
     });
   }
 
+  public get activitiesCountPerUser() {
+    if (!this.activitiesCount || !this.userCount) {
+      return undefined;
+    }
+
+    const formattedActivitiesCountPerUser = (
+      this.activitiesCount / this.userCount
+    ).toLocaleString(this.user?.settings?.locale, {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2
+    });
+
+    return `(${formattedActivitiesCountPerUser} ${$localize`per User`})`;
+  }
+
   public ngOnInit() {
     this.fetchAdminData();
   }

@@ -1,38 +1,51 @@
 <div class="container">
+  <div class="mb-3 row">
+    <div class="col-lg-4 mb-3 mb-lg-0">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [enableCopyToClipboardButton]="true"
+            [value]="version"
+            >Version</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-4 mb-3 mb-lg-0">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [locale]="user?.settings?.locale"
+            [value]="userCount"
+            >Users</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-lg-4">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [locale]="user?.settings?.locale"
+            [subLabel]="activitiesCountPerUser"
+            [value]="activitiesCount"
+            >Activities</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-content>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>Version</div>
-            <div class="w-50">
-              <gf-value
-                [enableCopyToClipboardButton]="true"
-                [value]="version"
-              />
-            </div>
-          </div>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>User Count</div>
-            <div class="w-50">
-              <gf-value [locale]="user?.settings?.locale" [value]="userCount" />
-            </div>
-          </div>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>Activity Count</div>
-            <div class="w-50">
-              <gf-value
-                [locale]="user?.settings?.locale"
-                [value]="activitiesCount"
-              />
-              @if (activitiesCount && userCount) {
-                <div>
-                  {{ activitiesCount / userCount | number: '1.2-2' }}
-                  <span i18n>per User</span>
-                </div>
-              }
-            </div>
-          </div>
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Signup</div>
             <div class="w-50">
