@@ -78,3 +78,5 @@ export class GfCreateOrUpdateTagDialogComponent {
     }
   }
 }
+  /* Added by bounty-bot */
+}
