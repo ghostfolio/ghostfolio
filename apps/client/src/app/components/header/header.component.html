@@ -2,13 +2,13 @@
   @if (user) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
-        class="align-items-center h-100 justify-content-start rounded-0"
+        class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
         (click)="onLogoClick()"
       >
-        <gf-logo class="px-2" [label]="pageTitle" />
+        <gf-logo [label]="pageTitle" />
       </a>
     </div>
     <span class="gf-spacer"></span>
@@ -334,13 +334,12 @@
   @if (user === null) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
-        class="align-items-center h-100 justify-content-start rounded-0"
+        class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
       >
         <gf-logo
-          class="px-2"
           [label]="pageTitle"
           [showLabel]="currentRoute !== 'register'"
         />
