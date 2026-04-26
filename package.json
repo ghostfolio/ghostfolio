@@ -170,6 +170,7 @@
     "@nx/workspace": "22.6.5",
     "@schematics/angular": "21.2.6",
     "@storybook/addon-docs": "10.1.10",
+    "@storybook/addon-themes": "10.1.10",
     "@storybook/angular": "10.1.10",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
     "@types/big.js": "6.2.2",

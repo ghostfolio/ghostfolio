@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Integrated a theme switcher into _Storybook_ to support toggling between the light and dark mode
+
 ### Fixed
 
 - Optimized the spacing of the logo in the header
+- Fixed the _Storybook_ setup by resolving missing `@angular/material` styles
 
 ## 3.0.1 - 2026-04-26
 
