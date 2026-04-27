@@ -24,6 +24,7 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
@@ -42,6 +43,7 @@ import {
   MatSlideToggleModule
 } from '@angular/material/slide-toggle';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
@@ -62,6 +64,7 @@ import ms, { StringValue } from 'ms';
 
 @Component({
   imports: [
+    ClipboardModule,
     CommonModule,
     FormsModule,
     GfValueComponent,
@@ -72,6 +75,7 @@ import ms, { StringValue } from 'ms';
     MatSelectModule,
     MatSnackBarModule,
     MatSlideToggleModule,
+    MatTableModule,
     ReactiveFormsModule,
     RouterModule
   ],
@@ -82,7 +86,8 @@ import ms, { StringValue } from 'ms';
 export class GfAdminOverviewComponent implements OnInit {
   public activitiesCount: number;
   public couponDuration: StringValue = '14 days';
-  public coupons: Coupon[];
+  public couponsDataSource = new MatTableDataSource<Coupon>();
+  public couponsDisplayedColumns = ['code', 'duration', 'actions'];
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToSyncDemoUserAccount: boolean;
@@ -99,6 +104,7 @@ export class GfAdminOverviewComponent implements OnInit {
     private adminService: AdminService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
+    private clipboard: Clipboard,
     private dataService: DataService,
     private destroyRef: DestroyRef,
     private notificationService: NotificationService,
@@ -188,14 +194,14 @@ export class GfAdminOverviewComponent implements OnInit {
   }
 
   public onAddCoupon() {
-    const coupons = [
-      ...this.coupons,
-      {
-        code: `${ghostfolioPrefix}${this.generateCouponCode(14)}`,
-        duration: this.couponDuration
-      }
-    ];
-    this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
+    const newCoupon: Coupon = {
+      code: `${ghostfolioPrefix}${this.generateCouponCode(14)}`,
+      duration: this.couponDuration
+    };
+
+    const coupons = [...this.couponsDataSource.data, newCoupon];
+
+    this.saveCoupons({ coupons, codeToCopy: newCoupon.code });
   }
 
   public onChangeCouponDuration(aCouponDuration: StringValue) {
@@ -205,10 +211,11 @@ export class GfAdminOverviewComponent implements OnInit {
   public onDeleteCoupon(aCouponCode: string) {
     this.notificationService.confirm({
       confirmFn: () => {
-        const coupons = this.coupons.filter((coupon) => {
-          return coupon.code !== aCouponCode;
+        const coupons = this.couponsDataSource.data.filter(({ code }) => {
+          return code !== aCouponCode;
         });
-        this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
+
+        this.saveCoupons({ coupons });
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this coupon?`
@@ -307,9 +314,13 @@ export class GfAdminOverviewComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ activitiesCount, settings, userCount, version }) => {
         this.activitiesCount = activitiesCount;
-        this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+
+        this.couponsDataSource.data =
+          (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+
         this.isDataGatheringEnabled =
           settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
+
         this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
         this.userCount = userCount;
         this.version = version;
@@ -341,6 +352,35 @@ export class GfAdminOverviewComponent implements OnInit {
         setTimeout(() => {
           window.location.reload();
         }, 300);
+      });
+  }
+
+  private saveCoupons({
+    codeToCopy,
+    coupons
+  }: {
+    codeToCopy?: string;
+    coupons: Coupon[];
+  }) {
+    this.dataService
+      .putAdminSetting(PROPERTY_COUPONS, {
+        value: JSON.stringify(coupons)
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.couponsDataSource.data = coupons;
+
+        if (codeToCopy) {
+          this.clipboard.copy(codeToCopy);
+
+          this.snackBar.open(
+            '✅ ' + $localize`${codeToCopy} has been copied to the clipboard`,
+            undefined,
+            { duration: ms('3 seconds') }
+          );
+        }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 }
