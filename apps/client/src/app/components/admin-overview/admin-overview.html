@@ -168,10 +168,14 @@
                 </ng-container>
 
                 <ng-container matColumnDef="duration">
-                  <th *matHeaderCellDef class="px-1" mat-header-cell>
+                  <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
                     <ng-container i18n>Duration</ng-container>
                   </th>
-                  <td *matCellDef="let element" class="px-1" mat-cell>
+                  <td
+                    *matCellDef="let element"
+                    class="px-1 text-right"
+                    mat-cell
+                  >
                     {{ formatStringValue(element.duration) }}
                   </td>
                 </ng-container>
