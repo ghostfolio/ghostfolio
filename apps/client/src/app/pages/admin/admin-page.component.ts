@@ -1,10 +1,8 @@
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { GfPageTabsComponent } from '@ghostfolio/ui/page-tabs';
 
 import { Component, OnInit } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   flashOutline,
@@ -13,20 +11,18 @@ import {
   serverOutline,
   settingsOutline
 } from 'ionicons/icons';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   host: { class: 'page has-tabs' },
-  imports: [IonIcon, MatTabsModule, RouterModule],
+  imports: [GfPageTabsComponent],
   selector: 'gf-admin-page',
   styleUrls: ['./admin-page.scss'],
   templateUrl: './admin-page.html'
 })
 export class AdminPageComponent implements OnInit {
-  public deviceType: string;
   public tabs: TabConfiguration[] = [];
 
-  public constructor(private deviceDetectorService: DeviceDetectorService) {
+  public constructor() {
     addIcons({
       flashOutline,
       peopleOutline,
@@ -37,8 +33,6 @@ export class AdminPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.tabs = [
       {
         iconName: 'reader-outline',
