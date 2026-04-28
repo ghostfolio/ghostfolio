@@ -1,7 +1,9 @@
-import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
-import { GfPageTabsComponent } from '@ghostfolio/ui/page-tabs';
+import {
+  GfPageTabsComponent,
+  TabConfiguration
+} from '@ghostfolio/ui/page-tabs';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { Component } from '@angular/core';

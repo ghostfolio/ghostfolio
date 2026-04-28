@@ -1,7 +1,10 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { GfPageTabsComponent } from '@ghostfolio/ui/page-tabs';
+import {
+  GfPageTabsComponent,
+  TabConfiguration
+} from '@ghostfolio/ui/page-tabs';
 
 import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

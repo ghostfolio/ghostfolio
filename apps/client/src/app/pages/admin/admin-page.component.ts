@@ -1,6 +1,8 @@
-import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { GfPageTabsComponent } from '@ghostfolio/ui/page-tabs';
+import {
+  GfPageTabsComponent,
+  TabConfiguration
+} from '@ghostfolio/ui/page-tabs';
 
 import { Component, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';

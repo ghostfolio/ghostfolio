@@ -1,10 +1,15 @@
-import { TabConfiguration } from '@ghostfolio/common/interfaces';
-
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input
+} from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { DeviceDetectorService } from 'ngx-device-detector';
+
+import { TabConfiguration } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +22,9 @@ export class GfPageTabsComponent {
   public deviceType: string;
   public readonly tabs = input.required<TabConfiguration[]>();
 
-  public constructor(deviceService: DeviceDetectorService) {
-    this.deviceType = deviceService.getDeviceInfo().deviceType;
+  private readonly deviceService = inject(DeviceDetectorService);
+
+  public constructor() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 }
