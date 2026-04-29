@@ -258,10 +258,6 @@ body {
       }
     }
 
-    .mat-mdc-paginator {
-      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
-    }
-
     .mdc-button {
       &.mat-accent,
       &.mat-primary {
@@ -456,15 +452,6 @@ ngx-skeleton-loader {
       align-items: center;
       display: flex;
     }
-  }
-}
-
-.mat-mdc-paginator {
-  background-color: rgba(var(--palette-foreground-base-light), 0.02);
-
-  .mat-mdc-paginator-page-size,
-  .mat-mdc-paginator-page-size {
-    display: none;
   }
 }
 
