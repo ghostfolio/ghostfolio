@@ -193,7 +193,7 @@
   </table>
 </div>
 
-<mat-paginator class="d-none" [pageSize]="pageSize()" />
+<mat-paginator class="d-none" [hidePageSize]="true" [pageSize]="pageSize()" />
 
 @if (isLoading()) {
   <ngx-skeleton-loader
