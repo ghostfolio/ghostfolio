@@ -273,6 +273,7 @@
       </div>
 
       <mat-paginator
+        [hidePageSize]="true"
         [length]="totalItems"
         [ngClass]="{
           'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
