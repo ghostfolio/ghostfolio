@@ -49,7 +49,9 @@ export class GfFirePageComponent implements OnInit {
   public isLoading = false;
   public projectedTotalAmount: number;
   public retirementDate: Date;
-  public safeWithdrawalRateControl = new FormControl<number>(undefined);
+  public safeWithdrawalRateControl = new FormControl<number | undefined>(
+    undefined
+  );
   public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
   public user: User;
   public withdrawalRatePerMonth: Big;
@@ -76,7 +78,7 @@ export class GfFirePageComponent implements OnInit {
       .subscribe(({ summary }) => {
         this.fireWealth = {
           today: {
-            valueInBaseCurrency: summary.fireWealth
+            valueInBaseCurrency: summary?.fireWealth
               ? summary.fireWealth.today.valueInBaseCurrency
               : 0
           }
@@ -165,7 +167,7 @@ export class GfFirePageComponent implements OnInit {
     this.dataService
       .putUserSetting({
         retirementDate: retirementDate.toISOString(),
-        projectedTotalAmount: null
+        projectedTotalAmount: undefined
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -219,7 +221,7 @@ export class GfFirePageComponent implements OnInit {
     this.dataService
       .putUserSetting({
         projectedTotalAmount,
-        retirementDate: null
+        retirementDate: undefined
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
