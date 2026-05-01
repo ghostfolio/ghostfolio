@@ -42,24 +42,25 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './fire-page.html'
 })
 export class GfFirePageComponent implements OnInit {
-  public deviceType: string;
-  public fireWealth: FireWealth;
-  public hasImpersonationId: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public isLoading = false;
-  public projectedTotalAmount: number;
-  public retirementDate: Date;
-  public readonly safeWithdrawalRateControl = new FormControl<
+  protected deviceType: string;
+  protected fireWealth: FireWealth;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
+  protected isLoading = false;
+  protected retirementDate: Date;
+  protected readonly safeWithdrawalRateControl = new FormControl<
     number | undefined
   >(undefined);
-  public readonly safeWithdrawalRateOptions = [
+  protected readonly safeWithdrawalRateOptions = [
     0.025, 0.03, 0.035, 0.04, 0.045
   ] as const;
-  public user: User;
-  public withdrawalRatePerMonth: Big;
-  public withdrawalRatePerMonthProjected: Big;
-  public withdrawalRatePerYear: Big;
-  public withdrawalRatePerYearProjected: Big;
+  protected user: User;
+  protected withdrawalRatePerMonth: Big;
+  protected withdrawalRatePerMonthProjected: Big;
+  protected withdrawalRatePerYear: Big;
+  protected withdrawalRatePerYearProjected: Big;
+
+  private projectedTotalAmount: number;
 
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -137,7 +138,7 @@ export class GfFirePageComponent implements OnInit {
       });
   }
 
-  public onAnnualInterestRateChange(annualInterestRate: number) {
+  protected onAnnualInterestRateChange(annualInterestRate: number) {
     this.dataService
       .putUserSetting({ annualInterestRate })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -153,7 +154,7 @@ export class GfFirePageComponent implements OnInit {
       });
   }
 
-  public onCalculationComplete({
+  protected onCalculationComplete({
     projectedTotalAmount,
     retirementDate
   }: FireCalculationCompleteEvent) {
@@ -165,7 +166,26 @@ export class GfFirePageComponent implements OnInit {
     this.isLoading = false;
   }
 
-  public onRetirementDateChange(retirementDate: Date) {
+  protected onProjectedTotalAmountChange(projectedTotalAmount: number) {
+    this.dataService
+      .putUserSetting({
+        projectedTotalAmount,
+        retirementDate: undefined
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  protected onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
         retirementDate: retirementDate.toISOString(),
@@ -184,47 +204,9 @@ export class GfFirePageComponent implements OnInit {
       });
   }
 
-  public onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
-    this.dataService
-      .putUserSetting({ safeWithdrawalRate })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.calculateWithdrawalRates();
-            this.calculateWithdrawalRatesProjected();
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
-  public onSavingsRateChange(savingsRate: number) {
+  protected onSavingsRateChange(savingsRate: number) {
     this.dataService
       .putUserSetting({ savingsRate })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
-  public onProjectedTotalAmountChange(projectedTotalAmount: number) {
-    this.dataService
-      .putUserSetting({
-        projectedTotalAmount,
-        retirementDate: undefined
-      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
@@ -261,5 +243,24 @@ export class GfFirePageComponent implements OnInit {
       this.withdrawalRatePerMonthProjected =
         this.withdrawalRatePerYearProjected.div(12);
     }
+  }
+
+  private onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
+    this.dataService
+      .putUserSetting({ safeWithdrawalRate })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.calculateWithdrawalRates();
+            this.calculateWithdrawalRatesProjected();
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 }
