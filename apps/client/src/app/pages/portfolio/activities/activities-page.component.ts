@@ -72,7 +72,7 @@ export class GfActivitiesPageComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
     private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
@@ -112,7 +112,7 @@ export class GfActivitiesPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

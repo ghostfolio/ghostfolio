@@ -42,7 +42,7 @@ export class GfHomePageComponent implements OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
@@ -104,7 +104,7 @@ export class GfHomePageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

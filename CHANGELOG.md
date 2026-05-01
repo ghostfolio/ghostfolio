@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `angular-developer` skills
+
 ### Changed
 
 - Upgraded `stripe` from version `20.4.1` to `21.0.1`

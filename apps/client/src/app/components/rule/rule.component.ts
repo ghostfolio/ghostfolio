@@ -61,7 +61,7 @@ export class GfRuleComponent implements OnInit {
   private deviceType: string;
   public constructor(
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog
   ) {
     addIcons({
@@ -75,7 +75,7 @@ export class GfRuleComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 
   public onCustomizeRule(rule: PortfolioReportRule) {
