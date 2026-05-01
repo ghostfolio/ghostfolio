@@ -13,6 +13,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -89,13 +90,13 @@ export class GfPricingPageComponent implements OnInit {
   private couponId: string | undefined;
   private priceId: string;
 
-  public constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly notificationService: NotificationService,
-    private readonly userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationService = inject(NotificationService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     addIcons({
       checkmarkCircleOutline,
       checkmarkOutline,
