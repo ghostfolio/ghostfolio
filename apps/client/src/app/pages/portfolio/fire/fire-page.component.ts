@@ -17,6 +17,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -62,14 +63,14 @@ export class GfFirePageComponent implements OnInit {
 
   private projectedTotalAmount: number;
 
-  public constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly deviceService: DeviceDetectorService,
-    private readonly impersonationStorageService: ImpersonationStorageService,
-    private readonly userService: UserService
-  ) {}
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly userService = inject(UserService);
 
   public ngOnInit() {
     this.isLoading = true;
