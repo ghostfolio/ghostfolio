@@ -63,11 +63,6 @@ export class GfPricingPageComponent implements OnInit {
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
   );
 
-  public readonly importAndExportTooltipPremium = translate(
-    'DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM'
-  );
-
-  public isLoggedIn: boolean;
   public label: string | undefined;
   public price: number | undefined;
   public priceId: string;
