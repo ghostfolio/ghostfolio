@@ -127,7 +127,7 @@ export class GfAllocationsPageComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
@@ -144,7 +144,7 @@ export class GfAllocationsPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

@@ -46,11 +46,11 @@ export class ResourcesPageComponent implements OnInit {
     }
   ];
 
-  public constructor(private deviceService: DeviceDetectorService) {
+  public constructor(private deviceDetectorService: DeviceDetectorService) {
     addIcons({ bookOutline, libraryOutline, newspaperOutline, readerOutline });
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 }

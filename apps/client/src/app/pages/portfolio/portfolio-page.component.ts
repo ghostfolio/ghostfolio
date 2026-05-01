@@ -36,7 +36,7 @@ export class PortfolioPageComponent implements OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -88,6 +88,6 @@ export class PortfolioPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 }
