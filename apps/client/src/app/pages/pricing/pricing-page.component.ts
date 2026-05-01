@@ -49,9 +49,9 @@ import { catchError } from 'rxjs/operators';
 })
 export class GfPricingPageComponent implements OnInit {
   public baseCurrency: string;
-  public coupon: number;
-  public couponId: string;
-  public durationExtension: StringValue;
+  public coupon: number | undefined;
+  public couponId: string | undefined;
+  public durationExtension: StringValue | undefined;
   public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
 
@@ -68,8 +68,8 @@ export class GfPricingPageComponent implements OnInit {
   );
 
   public isLoggedIn: boolean;
-  public label: string;
-  public price: number;
+  public label: string | undefined;
+  public price: number | undefined;
   public priceId: string;
 
   public professionalDataProviderTooltipPremium = translate(
