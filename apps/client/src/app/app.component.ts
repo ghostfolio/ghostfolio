@@ -67,7 +67,7 @@ export class GfAppComponent implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
   private readonly document = inject(DOCUMENT);
   private readonly impersonationStorageService = inject(
@@ -104,7 +104,7 @@ export class GfAppComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.impersonationStorageService

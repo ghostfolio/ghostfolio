@@ -7,14 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `papaparse` from version `5.3.1` to `5.5.3`
+- Upgraded `stripe` from version `20.4.1` to `21.0.1`
+
+## 3.1.0 - 2026-04-29
+
 ### Added
 
+- Added the _EuroAlternative_ logo to the logo carousel on the landing page
 - Integrated a theme switcher into _Storybook_ to support toggling between the light and dark mode
 
 ### Changed
 
 - Modernized the layout of the overview tab in the admin control panel
-- Upgraded `papaparse` from version `5.3.1` to `5.5.3`
+- Improved the styling of the paginator across various table components
+- Improved the language localization for German (`de`)
 
 ### Fixed
 

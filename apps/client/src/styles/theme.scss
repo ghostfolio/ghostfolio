@@ -359,6 +359,12 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     )
   );
 
+  @include mat.paginator-overrides(
+    (
+      container-background-color: transparent
+    )
+  );
+
   @include mat.progress-bar-overrides(
     (
       active-indicator-color: var(--gf-theme-primary-500)

@@ -113,95 +113,6 @@
               </div>
             </div>
           }
-          @if (hasPermissionForSubscription) {
-            <div class="d-flex my-3 subscription">
-              <div class="w-50" i18n>Coupons</div>
-              <div class="w-50">
-                <table>
-                  @for (coupon of coupons; track coupon) {
-                    <tr>
-                      <td>
-                        <gf-value
-                          class="text-monospace"
-                          [enableCopyToClipboardButton]="true"
-                          [value]="coupon.code"
-                        />
-                      </td>
-                      <td class="pl-2 text-right">
-                        {{ formatStringValue(coupon.duration) }}
-                      </td>
-                      <td>
-                        <button
-                          class="mx-1 no-min-width px-2"
-                          mat-button
-                          [matMenuTriggerFor]="couponActionsMenu"
-                          (click)="$event.stopPropagation()"
-                        >
-                          <ion-icon name="ellipsis-horizontal" />
-                        </button>
-                        <mat-menu
-                          #couponActionsMenu="matMenu"
-                          class="h-100 mx-1 no-min-width px-2"
-                          xPosition="before"
-                        >
-                          <button
-                            mat-menu-item
-                            (click)="onDeleteCoupon(coupon.code)"
-                          >
-                            <span class="align-items-center d-flex">
-                              <ion-icon class="mr-2" name="trash-outline" />
-                              <span i18n>Delete</span>
-                            </span>
-                          </button>
-                        </mat-menu>
-                      </td>
-                    </tr>
-                  }
-                </table>
-                <div class="mt-2">
-                  <form #couponForm="ngForm" class="align-items-center d-flex">
-                    <mat-form-field
-                      appearance="outline"
-                      class="mr-2 without-hint"
-                    >
-                      <mat-select
-                        name="duration"
-                        [value]="couponDuration"
-                        (selectionChange)="onChangeCouponDuration($event.value)"
-                      >
-                        <mat-option value="7 days">{{
-                          formatStringValue('7 days')
-                        }}</mat-option>
-                        <mat-option value="14 days">{{
-                          formatStringValue('14 days')
-                        }}</mat-option>
-                        <mat-option value="30 days">{{
-                          formatStringValue('30 days')
-                        }}</mat-option>
-                        <mat-option value="90 days">{{
-                          formatStringValue('90 days')
-                        }}</mat-option>
-                        <mat-option value="180 days">{{
-                          formatStringValue('180 days')
-                        }}</mat-option>
-                        <mat-option value="1 year">{{
-                          formatStringValue('1 year')
-                        }}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                    <button
-                      class="mt-1"
-                      color="primary"
-                      mat-flat-button
-                      (click)="onAddCoupon()"
-                    >
-                      <span i18n>Add</span>
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          }
           <div class="d-flex my-3">
             <div class="w-50" i18n>Housekeeping</div>
             <div class="w-50">
@@ -228,4 +139,135 @@
       </mat-card>
     </div>
   </div>
+
+  @if (hasPermissionForSubscription) {
+    <div class="row">
+      <div class="col">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title i18n>Coupons</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="overflow-x-auto">
+              <table
+                class="gf-table w-100"
+                mat-table
+                [dataSource]="couponsDataSource"
+              >
+                <ng-container matColumnDef="code">
+                  <th *matHeaderCellDef class="px-1" mat-header-cell>
+                    <ng-container i18n>Code</ng-container>
+                  </th>
+                  <td *matCellDef="let element" class="px-1" mat-cell>
+                    <gf-value
+                      class="text-monospace"
+                      [enableCopyToClipboardButton]="true"
+                      [value]="element.code"
+                    />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="duration">
+                  <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+                    <ng-container i18n>Duration</ng-container>
+                  </th>
+                  <td
+                    *matCellDef="let element"
+                    class="px-1 text-right"
+                    mat-cell
+                  >
+                    {{ formatStringValue(element.duration) }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions" stickyEnd>
+                  <th
+                    *matHeaderCellDef
+                    class="px-1 text-right"
+                    mat-header-cell
+                  ></th>
+                  <td
+                    *matCellDef="let element"
+                    class="px-1 text-right"
+                    mat-cell
+                  >
+                    <button
+                      class="mx-1 no-min-width px-2"
+                      mat-button
+                      [matMenuTriggerFor]="couponActionsMenu"
+                      (click)="$event.stopPropagation()"
+                    >
+                      <ion-icon name="ellipsis-horizontal" />
+                    </button>
+                    <mat-menu
+                      #couponActionsMenu="matMenu"
+                      class="no-max-width"
+                      xPosition="before"
+                    >
+                      <button
+                        mat-menu-item
+                        (click)="onDeleteCoupon(element.code)"
+                      >
+                        <span class="align-items-center d-flex">
+                          <ion-icon class="mr-2" name="trash-outline" />
+                          <span i18n>Delete</span>
+                        </span>
+                      </button>
+                    </mat-menu>
+                  </td>
+                </ng-container>
+
+                <tr
+                  *matHeaderRowDef="couponsDisplayedColumns"
+                  mat-header-row
+                ></tr>
+                <tr
+                  *matRowDef="let row; columns: couponsDisplayedColumns"
+                  mat-row
+                ></tr>
+              </table>
+            </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <form #couponForm="ngForm" class="align-items-stretch d-flex">
+              <mat-form-field appearance="outline" class="mr-1 without-hint">
+                <mat-select
+                  name="duration"
+                  [value]="couponDuration"
+                  (selectionChange)="onChangeCouponDuration($event.value)"
+                >
+                  <mat-option value="7 days">{{
+                    formatStringValue('7 days')
+                  }}</mat-option>
+                  <mat-option value="14 days">{{
+                    formatStringValue('14 days')
+                  }}</mat-option>
+                  <mat-option value="30 days">{{
+                    formatStringValue('30 days')
+                  }}</mat-option>
+                  <mat-option value="90 days">{{
+                    formatStringValue('90 days')
+                  }}</mat-option>
+                  <mat-option value="180 days">{{
+                    formatStringValue('180 days')
+                  }}</mat-option>
+                  <mat-option value="1 year">{{
+                    formatStringValue('1 year')
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button
+                class="h-auto rounded"
+                color="primary"
+                mat-flat-button
+                (click)="onAddCoupon()"
+              >
+                <ng-container i18n>Add</ng-container>
+              </button>
+            </form>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  }
 </div>
