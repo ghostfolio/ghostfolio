@@ -45,7 +45,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 })
 export class GfFirePageComponent implements OnInit {
   protected readonly deviceType = computed(
-    () => this.deviceService.deviceInfo().deviceType
+    () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
   protected fireWealth: FireWealth;
@@ -70,7 +70,7 @@ export class GfFirePageComponent implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
@@ -113,7 +113,7 @@ export class GfFirePageComponent implements OnInit {
     this.safeWithdrawalRateControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
-        this.onSafeWithdrawalRateChange(Number(value));
+        this.updateSafeWithdrawalRate(Number(value));
       });
 
     this.userService.stateChanged
@@ -192,8 +192,8 @@ export class GfFirePageComponent implements OnInit {
   protected onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
-        retirementDate: retirementDate.toISOString(),
-        projectedTotalAmount: undefined
+        projectedTotalAmount: undefined,
+        retirementDate: retirementDate.toISOString()
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -249,7 +249,7 @@ export class GfFirePageComponent implements OnInit {
     }
   }
 
-  private onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
+  private updateSafeWithdrawalRate(safeWithdrawalRate: number) {
     this.dataService
       .putUserSetting({ safeWithdrawalRate })
       .pipe(takeUntilDestroyed(this.destroyRef))
