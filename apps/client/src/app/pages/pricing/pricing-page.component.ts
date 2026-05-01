@@ -48,30 +48,28 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './pricing-page.html'
 })
 export class GfPricingPageComponent implements OnInit {
-  public baseCurrency: string;
-  public coupon: number | undefined;
-  public couponId: string | undefined;
-  public durationExtension: StringValue | undefined;
-  public hasPermissionToCreateUser: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
+  protected baseCurrency: string;
+  protected coupon: number | undefined;
+  protected durationExtension: StringValue | undefined;
+  protected hasPermissionToCreateUser: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
 
-  public readonly importAndExportTooltipBasic = translate(
+  protected readonly importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
   );
 
-  public readonly importAndExportTooltipOSS = translate(
+  protected readonly importAndExportTooltipOSS = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
   );
 
-  public label: string | undefined;
-  public price: number | undefined;
-  public priceId: string;
+  protected label: string | undefined;
+  protected price: number | undefined;
 
-  public readonly professionalDataProviderTooltipPremium = translate(
+  protected readonly professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
 
-  public readonly referralBrokers = [
+  protected readonly referralBrokers = [
     'Alpian',
     'DEGIRO',
     'finpension',
@@ -84,9 +82,12 @@ export class GfPricingPageComponent implements OnInit {
     'Zak'
   ] as const;
 
-  public readonly routerLinkFeatures = publicRoutes.features.routerLink;
-  public readonly routerLinkRegister = publicRoutes.register.routerLink;
-  public user: User;
+  protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+  protected readonly routerLinkRegister = publicRoutes.register.routerLink;
+  protected user: User;
+
+  private couponId: string | undefined;
+  private priceId: string;
 
   public constructor(
     private readonly changeDetectorRef: ChangeDetectorRef,
@@ -142,7 +143,7 @@ export class GfPricingPageComponent implements OnInit {
       });
   }
 
-  public onCheckout() {
+  protected onCheckout() {
     this.dataService
       .createStripeCheckoutSession({
         couponId: this.couponId,
