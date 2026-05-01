@@ -55,15 +55,15 @@ export class GfPricingPageComponent implements OnInit {
   public hasPermissionToCreateUser: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
 
-  public importAndExportTooltipBasic = translate(
+  public readonly importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
   );
 
-  public importAndExportTooltipOSS = translate(
+  public readonly importAndExportTooltipOSS = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
   );
 
-  public importAndExportTooltipPremium = translate(
+  public readonly importAndExportTooltipPremium = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM'
   );
 
@@ -72,11 +72,11 @@ export class GfPricingPageComponent implements OnInit {
   public price: number | undefined;
   public priceId: string;
 
-  public professionalDataProviderTooltipPremium = translate(
+  public readonly professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
 
-  public referralBrokers = [
+  public readonly referralBrokers = [
     'Alpian',
     'DEGIRO',
     'finpension',
@@ -87,18 +87,18 @@ export class GfPricingPageComponent implements OnInit {
     'Swissquote',
     'VIAC',
     'Zak'
-  ];
+  ] as const;
 
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkRegister = publicRoutes.register.routerLink;
+  public readonly routerLinkFeatures = publicRoutes.features.routerLink;
+  public readonly routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private notificationService: NotificationService,
-    private userService: UserService
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly notificationService: NotificationService,
+    private readonly userService: UserService
   ) {
     addIcons({
       checkmarkCircleOutline,
