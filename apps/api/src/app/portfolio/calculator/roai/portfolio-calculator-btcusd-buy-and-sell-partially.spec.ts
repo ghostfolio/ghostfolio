@@ -151,6 +151,11 @@ describe('PortfolioCalculator', () => {
         groupBy: 'year'
       });
 
+      const performanceByYear = portfolioCalculator.getPerformanceByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
+      });
+
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('13298.425356'),
         errors: [],
@@ -265,6 +270,40 @@ describe('PortfolioCalculator', () => {
         { date: '2016-01-01', investment: 0 },
         { date: '2017-01-01', investment: -318.54266729999995 },
         { date: '2018-01-01', investment: 0 }
+      ]);
+
+      expect(performanceByYear.chart).toEqual([
+        expect.objectContaining({
+          date: '2014-01-01',
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0
+        }),
+        expect.objectContaining({
+          date: '2015-01-01',
+          netPerformance: 25984.861407,
+          netPerformanceInPercentage: 40.787097105782344,
+          netPerformanceInPercentageWithCurrencyEffect: 41.893291864515064,
+          netPerformanceWithCurrencyEffect: 26689.601865
+        }),
+        expect.objectContaining({
+          date: '2016-01-01',
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0
+        }),
+        expect.objectContaining({
+          date: '2017-01-01',
+          netPerformance: 972.1720319999986,
+          netPerformanceInPercentage: 1.5306926710921496,
+          netPerformanceInPercentageWithCurrencyEffect: 0.6224618479468005,
+          netPerformanceWithCurrencyEffect: 395.3373599999977
+        }),
+        expect.objectContaining({
+          date: '2018-01-01'
+        })
       ]);
     });
   });
