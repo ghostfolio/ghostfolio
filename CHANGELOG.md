@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated various components from `NgClass` to class bindings
+- Deactivated asset profiles automatically on delisting in the _Financial Modeling Prep_ service
 - Refreshed the cryptocurrencies list
 - Improved the language localization for Spanish (`es`)
 - Cleaned up the _Webpack Bundle Analyzer_ setup
