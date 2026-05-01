@@ -1,6 +1,7 @@
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -10,6 +11,7 @@ import {
   IsString,
   IsUrl
 } from 'class-validator';
+import { isString } from 'lodash';
 
 export class UpdateAssetProfileDto {
   @IsEnum(AssetClass, { each: true })
@@ -67,5 +69,8 @@ export class UpdateAssetProfileDto {
     protocols: ['https'],
     require_protocol: true
   })
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) && value.trim() === '' ? undefined : value
+  )
   url?: string;
 }
