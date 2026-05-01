@@ -1,4 +1,5 @@
 /.agents/skills/angular-developer
+/.agents/skills/nestjs-best-practices
 /.nx/cache
 /.nx/workspace-data
 /apps/client/src/polyfills.ts
