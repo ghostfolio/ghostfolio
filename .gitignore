@@ -32,6 +32,8 @@ npm-debug.log
 .env.prod
 .github/instructions/nx.instructions.md
 .nx/cache
+.nx/polygraph
+.nx/self-healing
 .nx/workspace-data
 /.sass-cache
 /connect.lock
