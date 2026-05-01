@@ -49,10 +49,12 @@ export class GfFirePageComponent implements OnInit {
   public isLoading = false;
   public projectedTotalAmount: number;
   public retirementDate: Date;
-  public safeWithdrawalRateControl = new FormControl<number | undefined>(
-    undefined
-  );
-  public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
+  public readonly safeWithdrawalRateControl = new FormControl<
+    number | undefined
+  >(undefined);
+  public readonly safeWithdrawalRateOptions = [
+    0.025, 0.03, 0.035, 0.04, 0.045
+  ] as const;
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerMonthProjected: Big;
@@ -60,12 +62,12 @@ export class GfFirePageComponent implements OnInit {
   public withdrawalRatePerYearProjected: Big;
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private userService: UserService
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly deviceService: DeviceDetectorService,
+    private readonly impersonationStorageService: ImpersonationStorageService,
+    private readonly userService: UserService
   ) {}
 
   public ngOnInit() {
