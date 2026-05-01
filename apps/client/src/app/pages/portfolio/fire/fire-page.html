@@ -13,7 +13,7 @@
           [annualInterestRate]="user?.settings?.annualInterestRate"
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
-          [deviceType]="deviceType"
+          [deviceType]="deviceType()"
           [fireWealth]="fireWealth?.today.valueInBaseCurrency"
           [hasPermissionToUpdateUserSettings]="
             !hasImpersonationId && hasPermissionToUpdateUserSettings

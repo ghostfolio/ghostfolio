@@ -16,6 +16,7 @@ import { CommonModule, NgStyle } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit
@@ -43,7 +44,10 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './fire-page.html'
 })
 export class GfFirePageComponent implements OnInit {
-  protected deviceType: string;
+  protected readonly deviceType = computed(
+    () => this.deviceService.deviceInfo().deviceType
+  );
+
   protected fireWealth: FireWealth;
   protected hasImpersonationId: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
@@ -74,7 +78,6 @@ export class GfFirePageComponent implements OnInit {
 
   public ngOnInit() {
     this.isLoading = true;
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.dataService
       .fetchPortfolioDetails()
