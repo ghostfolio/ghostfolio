@@ -28,6 +28,7 @@ import { AiService } from './ai.service';
 
 @Module({
   controllers: [AiController],
+  exports: [AiService],
   imports: [
     ActivitiesModule,
     ApiModule,

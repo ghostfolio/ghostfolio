@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  AiServiceHealthResponse,
   DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DividendsResponse,
@@ -13,27 +14,41 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams
+} from '@angular/common/http';
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatCardModule } from '@angular/material/card';
 import { format, startOfYear } from 'date-fns';
-import { map, Observable } from 'rxjs';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { catchError, map, Observable, of, OperatorFunction } from 'rxjs';
+
+import { FetchFailure, FetchResult } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'page' },
-  imports: [CommonModule],
+  imports: [CommonModule, MatCardModule, NgxSkeletonLoaderModule],
   selector: 'gf-api-page',
   styleUrls: ['./api-page.scss'],
   templateUrl: './api-page.html'
 })
 export class GfApiPageComponent implements OnInit {
-  public assetProfile$: Observable<DataProviderGhostfolioAssetProfileResponse>;
-  public dividends$: Observable<DividendsResponse['dividends']>;
-  public historicalData$: Observable<HistoricalResponse['historicalData']>;
-  public isinLookupItems$: Observable<LookupResponse['items']>;
-  public lookupItems$: Observable<LookupResponse['items']>;
-  public quotes$: Observable<QuotesResponse['quotes']>;
-  public status$: Observable<DataProviderGhostfolioStatusResponse>;
+  public aiServiceHealth$: Observable<FetchResult<AiServiceHealthResponse>>;
+  public assetProfile$: Observable<
+    FetchResult<DataProviderGhostfolioAssetProfileResponse>
+  >;
+  public dividends$: Observable<FetchResult<DividendsResponse['dividends']>>;
+  public historicalData$: Observable<
+    FetchResult<HistoricalResponse['historicalData']>
+  >;
+  public isinLookupItems$: Observable<FetchResult<LookupResponse['items']>>;
+  public lookupItems$: Observable<FetchResult<LookupResponse['items']>>;
+  public quotes$: Observable<FetchResult<QuotesResponse['quotes']>>;
+  public status$: Observable<FetchResult<DataProviderGhostfolioStatusResponse>>;
 
   private apiKey: string;
 
@@ -45,6 +60,7 @@ export class GfApiPageComponent implements OnInit {
   public ngOnInit() {
     this.apiKey = prompt($localize`Please enter your Ghostfolio API key:`);
 
+    this.aiServiceHealth$ = this.fetchAiServiceHealth();
     this.assetProfile$ = this.fetchAssetProfile({ symbol: 'AAPL' });
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
@@ -54,13 +70,31 @@ export class GfApiPageComponent implements OnInit {
     this.status$ = this.fetchStatus();
   }
 
+  public isFetchFailure(value: unknown): value is FetchFailure {
+    return typeof value === 'object' && value !== null && 'fetchError' in value;
+  }
+
+  private catchFetchFailure<T>(): OperatorFunction<T, T | FetchFailure> {
+    return catchError(({ error }: HttpErrorResponse) => {
+      const body = error as { status?: string };
+
+      return of<FetchFailure>({ fetchError: body?.status ?? 'Error' });
+    }) as OperatorFunction<T, T | FetchFailure>;
+  }
+
+  private fetchAiServiceHealth() {
+    return this.http
+      .get<AiServiceHealthResponse>('/api/v1/health/ai')
+      .pipe(this.catchFetchFailure(), takeUntilDestroyed(this.destroyRef));
+  }
+
   private fetchAssetProfile({ symbol }: { symbol: string }) {
     return this.http
       .get<DataProviderGhostfolioAssetProfileResponse>(
         `/api/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         { headers: this.getHeaders() }
       )
-      .pipe(takeUntilDestroyed(this.destroyRef));
+      .pipe(this.catchFetchFailure(), takeUntilDestroyed(this.destroyRef));
   }
 
   private fetchDividends({ symbol }: { symbol: string }) {
@@ -80,6 +114,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ dividends }) => {
           return dividends;
         }),
+        this.catchFetchFailure(),
         takeUntilDestroyed(this.destroyRef)
       );
   }
@@ -101,6 +136,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ historicalData }) => {
           return historicalData;
         }),
+        this.catchFetchFailure(),
         takeUntilDestroyed(this.destroyRef)
       );
   }
@@ -127,6 +163,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ items }) => {
           return items;
         }),
+        this.catchFetchFailure(),
         takeUntilDestroyed(this.destroyRef)
       );
   }
@@ -143,6 +180,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ quotes }) => {
           return quotes;
         }),
+        this.catchFetchFailure(),
         takeUntilDestroyed(this.destroyRef)
       );
   }
@@ -153,7 +191,7 @@ export class GfApiPageComponent implements OnInit {
         '/api/v2/data-providers/ghostfolio/status',
         { headers: this.getHeaders() }
       )
-      .pipe(takeUntilDestroyed(this.destroyRef));
+      .pipe(this.catchFetchFailure(), takeUntilDestroyed(this.destroyRef));
   }
 
   private getHeaders() {

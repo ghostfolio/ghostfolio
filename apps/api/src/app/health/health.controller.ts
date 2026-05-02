@@ -1,5 +1,7 @@
+import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import {
+  AiServiceHealthResponse,
   DataEnhancerHealthResponse,
   DataProviderHealthResponse
 } from '@ghostfolio/common/interfaces';
@@ -9,6 +11,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Res,
   UseInterceptors
@@ -21,7 +24,10 @@ import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {
-  public constructor(private readonly healthService: HealthService) {}
+  public constructor(
+    private readonly aiService: AiService,
+    private readonly healthService: HealthService
+  ) {}
 
   @Get()
   public async getHealth(@Res() response: Response) {
@@ -38,6 +44,29 @@ export class HealthController {
         .status(HttpStatus.SERVICE_UNAVAILABLE)
         .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
     }
+  }
+
+  @Get('ai')
+  public async getHealthOfAiService(
+    @Res() response: Response
+  ): Promise<Response<AiServiceHealthResponse>> {
+    try {
+      const { text } = await this.aiService.generateText({
+        prompt: 'Reply with the word "OK" and nothing else.'
+      });
+
+      if (text === 'OK') {
+        return response
+          .status(HttpStatus.OK)
+          .json({ status: getReasonPhrase(StatusCodes.OK) });
+      }
+    } catch (error) {
+      Logger.error(error, 'HealthController');
+    }
+
+    return response
+      .status(HttpStatus.SERVICE_UNAVAILABLE)
+      .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
   }
 
   @Get('data-enhancer/:name')
