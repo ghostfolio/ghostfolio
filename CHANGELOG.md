@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the unit styling in the value component
 - Upgraded `stripe` from version `20.4.1` to `21.0.1`
 
 ## 3.1.0 - 2026-04-29
