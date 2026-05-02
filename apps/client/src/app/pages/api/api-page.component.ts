@@ -77,9 +77,11 @@ export class GfApiPageComponent implements OnInit {
 
   private catchFetchFailure<T>(): OperatorFunction<T, T | FetchFailure> {
     return catchError(({ error }: HttpErrorResponse) => {
-      const body = error as { status?: string };
+      const body = error as { message?: string; status?: string };
+      const status = body?.status ?? 'Error';
+      const fetchError = body?.message ? `${status}: ${body.message}` : status;
 
-      return of<FetchFailure>({ fetchError: body?.status ?? 'Error' });
+      return of<FetchFailure>({ fetchError });
     }) as OperatorFunction<T, T | FetchFailure>;
   }
 

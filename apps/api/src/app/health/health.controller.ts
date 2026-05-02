@@ -52,7 +52,7 @@ export class HealthController {
   ): Promise<Response<AiServiceHealthResponse>> {
     try {
       const { text } = await this.aiService.generateText({
-        prompt: 'Reply with the word "OK" and nothing else.'
+        prompt: `Reply with the word "OK" and nothing else.`
       });
 
       if (text === 'OK') {
