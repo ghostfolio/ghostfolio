@@ -27,7 +27,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
-import { ProxyAgent } from 'undici';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -293,24 +292,12 @@ export class ManualService implements DataProviderInterface {
   }): Promise<number> {
     let locale = scraperConfiguration.locale;
 
-    const fetchOptions: RequestInit & { dispatcher?: ProxyAgent } = {
+    const response = await fetch(scraperConfiguration.url, {
       headers: scraperConfiguration.headers as HeadersInit,
       signal: AbortSignal.timeout(
         this.configurationService.get('REQUEST_TIMEOUT')
       )
-    };
-
-    const proxyUrl =
-      process.env.HTTPS_PROXY ??
-      process.env.https_proxy ??
-      process.env.HTTP_PROXY ??
-      process.env.http_proxy;
-
-    if (proxyUrl) {
-      fetchOptions.dispatcher = new ProxyAgent(proxyUrl);
-    }
-
-    const response = await fetch(scraperConfiguration.url, fetchOptions);
+    });
 
     if (!response.ok) {
       throw new Error(

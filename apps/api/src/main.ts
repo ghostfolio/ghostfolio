@@ -18,9 +18,15 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
+import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+
+// Route Node's global `fetch` (used by all data-provider services) through
+// HTTP_PROXY / HTTPS_PROXY when those env vars are set. Native fetch
+// otherwise ignores them. EnvHttpProxyAgent reads NO_PROXY natively.
+setGlobalDispatcher(new EnvHttpProxyAgent());
 
 async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
