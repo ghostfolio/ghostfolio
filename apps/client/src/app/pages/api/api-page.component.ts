@@ -24,6 +24,7 @@ import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { format, startOfYear } from 'date-fns';
+import { isObject } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { catchError, map, Observable, of, OperatorFunction } from 'rxjs';
 
@@ -71,7 +72,7 @@ export class GfApiPageComponent implements OnInit {
   }
 
   public isFetchFailure(value: unknown): value is FetchFailure {
-    return typeof value === 'object' && value !== null && 'fetchError' in value;
+    return isObject(value) && value !== null && 'fetchError' in value;
   }
 
   private catchFetchFailure<T>(): OperatorFunction<T, T | FetchFailure> {
