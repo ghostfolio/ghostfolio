@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
 - Upgraded `stripe` from version `20.4.1` to `21.0.1`
 
 ## 3.1.0 - 2026-04-29
