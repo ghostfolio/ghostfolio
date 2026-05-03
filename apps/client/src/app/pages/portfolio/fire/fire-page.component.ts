@@ -174,7 +174,7 @@ export class GfFirePageComponent implements OnInit {
     this.dataService
       .putUserSetting({
         projectedTotalAmount,
-        retirementDate: undefined
+        retirementDate: null
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -192,7 +192,7 @@ export class GfFirePageComponent implements OnInit {
   protected onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
-        projectedTotalAmount: undefined,
+        projectedTotalAmount: null,
         retirementDate: retirementDate.toISOString()
       })
       .pipe(takeUntilDestroyed(this.destroyRef))

@@ -139,20 +139,28 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
 @include mat.elevation-classes();
 @include mat.table-density(-1);
 
-// $gf-typography: mat.m2-define-typography-config();
+$gf-typography: (
+  // Font families
+  brand-family: var(--font-family-sans-serif),
+  plain-family: var(--font-family-sans-serif),
+  // Font weights
+  bold-weight: 700,
+  medium-weight: 500,
+  regular-weight: 400
+);
 
 .theme-light {
   $gf-theme-default: mat.define-theme(
     (
       color: (
         primary: $_primary,
-        theme-type: light,
-        tertiary: $_tertiary
+        tertiary: $_tertiary,
+        theme-type: light
       ),
       density: (
         scale: -3
       ),
-      // typography: $gf-typography
+      typography: $gf-typography
     )
   );
 
@@ -229,13 +237,13 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
     (
       color: (
         primary: $_primary,
-        theme-type: dark,
-        tertiary: $_tertiary
+        tertiary: $_tertiary,
+        theme-type: dark
       ),
       density: (
         scale: -3
       ),
-      // typography: $gf-typography
+      typography: $gf-typography
     )
   );
 

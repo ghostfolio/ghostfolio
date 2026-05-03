@@ -28,6 +28,7 @@ import {
   RouterOutlet
 } from '@angular/router';
 import { DataSource } from '@prisma/client';
+import { Chart } from 'chart.js';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -254,6 +255,9 @@ export class GfAppComponent implements OnInit {
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     this.toggleTheme(isDarkTheme);
+
+    // Default chart styles
+    Chart.defaults.font.family = getCssVariable('--font-family-sans-serif');
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.colorScheme) {
