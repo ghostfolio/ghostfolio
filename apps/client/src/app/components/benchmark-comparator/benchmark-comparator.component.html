@@ -53,6 +53,6 @@
   <canvas
     #chartCanvas
     class="h-100"
-    [ngStyle]="{ display: isLoading ? 'none' : 'block' }"
+    [style.display]="isLoading ? 'none' : 'block'"
   ></canvas>
 </div>
