@@ -11,6 +11,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `bull-board` from version `6.20.3` to `7.0.0`
 
+## 3.2.0 - 2026-05-03
+
+### Added
+
+- Added `angular-developer` skills
+
+### Changed
+
+- Harmonized the unit styling in the value component
+- Upgraded `stripe` from version `20.4.1` to `21.0.1`
+
+### Fixed
+
+- Resolved a validation error with an empty URL in the asset profile details dialog of the admin control panel
+- Resolved an issue where charts and components defaulted to _Roboto_ instead of the preconfigured _Inter_ font family
+
+## 3.1.0 - 2026-04-29
+
+### Added
+
+- Added the _EuroAlternative_ logo to the logo carousel on the landing page
+- Integrated a theme switcher into _Storybook_ to support toggling between the light and dark mode
+
+### Changed
+
+- Modernized the layout of the overview tab in the admin control panel
+- Improved the styling of the paginator across various table components
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Optimized the spacing of the logo in the header
+- Fixed the _Storybook_ setup by resolving missing `@angular/material` styles
+
 ## 3.0.1 - 2026-04-26
 
 ### Changed

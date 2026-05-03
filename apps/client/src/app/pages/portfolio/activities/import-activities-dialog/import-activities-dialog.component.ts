@@ -109,7 +109,7 @@ export class GfImportActivitiesDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
     private importActivitiesService: ImportActivitiesService,
@@ -119,7 +119,7 @@ export class GfImportActivitiesDialogComponent {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.stepperOrientation =
       this.deviceType === 'mobile' ? 'vertical' : 'horizontal';
 

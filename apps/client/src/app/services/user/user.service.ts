@@ -26,7 +26,7 @@ export class UserService extends ObservableStore<UserStoreState> {
 
   public constructor(
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
     private http: HttpClient,
     private webAuthnService: WebAuthnService
@@ -35,7 +35,7 @@ export class UserService extends ObservableStore<UserStoreState> {
 
     this.setState({ user: undefined }, UserStoreActions.Initialize);
 
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 
   public get(force = false) {
