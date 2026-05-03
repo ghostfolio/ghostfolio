@@ -444,6 +444,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `angular-developer` skills
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the unit styling in the value component
 - Upgraded `stripe` from version `20.4.1` to `21.0.1`
@@ -461,6 +462,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integrated a theme switcher into _Storybook_ to support toggling between the light and dark mode
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Modernized the layout of the overview tab in the admin control panel
 - Improved the styling of the paginator across various table components
@@ -474,6 +476,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 3.0.1 - 2026-04-26
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the copy-to-clipboard button for the ISIN number in the holding detail dialog from experimental to general availability
 - Moved the copy-to-clipboard button for the symbol in the holding detail dialog from experimental to general availability
@@ -492,6 +495,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Announcing Ghostfolio 3.0_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated from _Material Design_ 2 to _Material Design_ 3
 - Moved the total amount, change and performance with currency effects on the analysis page from experimental to general availability
@@ -510,6 +514,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.255.0 - 2026-04-20
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Sorted the activity types alphabetically on the activities page (experimental)
 - Sorted the asset classes of the assistant alphabetically
@@ -531,6 +536,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added loan as an asset sub class
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
 - Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
@@ -550,6 +556,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the admin control panel by adding a copy-to-clipboard button for the application version
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the terms of service for the _Ghostfolio_ SaaS (cloud) to include _Paid Plans_ and _Refund Policy_
 - Upgraded `prisma` from version `6.19.0` to `6.19.3`
@@ -572,6 +579,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the user detail dialog of the admin control panel’s users section by adding a copy-to-clipboard button for the user id
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refreshed the cryptocurrencies list
 - Improved the language localization for German (`de`)
@@ -587,6 +595,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the quantity column to the holdings table of the portfolio holdings page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hardened the endpoint `DELETE /api/v1/auth-device/:id` by improving the user validation
 - Improved the allocations by ETF holding on the allocations page by refining the grouping of the same assets with diverging names (experimental)
@@ -604,6 +613,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for specific calendar year date ranges (`2025`, `2024`, `2023`, etc.) on the portfolio activities page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Consolidated the sign-out logic within the user service to unify cookie, state and token clearance
 - Improved the language localization for Polish (`pl`)
@@ -625,6 +635,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a debounce to the `PortfolioChangedListener` and `AssetProfileChangedListener` to minimize redundant _Redis_ and database operations
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the _Storybook_ stories of the value component
 - Improved the language localization for Dutch (`nl`)
@@ -642,6 +653,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for column sorting to the data providers management of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Included asset profile data in the endpoint `GET api/v1/portfolio/holdings`
 - Included asset profile data in the holdings of the public page
@@ -657,12 +669,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.247.0 - 2026-03-04
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `yahoo-finance2` from version `3.13.0` to `3.13.2`
 
 ## 2.246.0 - 2026-03-03
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the deprecated `committedFunds` from the summary of the portfolio details endpoint
 - Upgraded `Nx` from version `22.4.5` to `22.5.3`
@@ -674,6 +688,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.245.0 - 2026-03-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Excluded the scraper configuration from the import and export functionality
 - Excluded the symbol mapping from the import and export functionality
@@ -689,6 +704,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.244.0 - 2026-02-28
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the asset profile details dialog in the admin control panel for currencies
 - Removed the deprecated static portfolio analysis rule: _Fees_ (Fee Ratio)
@@ -701,6 +717,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.243.0 - 2026-02-23
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for Chinese (`zh`)
 - Upgraded `nestjs` from version `11.1.8` to `11.1.14`
@@ -712,6 +729,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.242.0 - 2026-02-22
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the account field to optional in the create or update activity dialog
 
@@ -723,6 +741,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.241.0 - 2026-02-21
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the portfolio summary tab on the home page in the _Presenter View_
 - Refreshed the cryptocurrencies list
@@ -746,6 +765,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _Sky_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the validation for the create activity endpoint with the existing import activity logic
 - Upgraded `marked` from version `17.0.1` to `17.0.2`
@@ -759,6 +779,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page with information on derived currencies
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Deprecated the existing static portfolio analysis rule: _Fees_ (Fee Ratio)
 - Ignored nested ETFs when fetching top holdings for ETF and mutual fund assets from _Yahoo Finance_
@@ -775,6 +796,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.238.0 - 2026-02-12
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `ngx-skeleton-loader` from version `11.3.0` to `12.0.0`
 - Upgraded `twitter-api-v2` from version `1.27.0` to `1.29.0`
@@ -788,6 +810,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.237.0 - 2026-02-08
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the deprecated `transactionCount` in the portfolio calculator and service
 - Refreshed the cryptocurrencies list
@@ -801,6 +824,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.236.0 - 2026-02-05
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the deprecated `transactionCount` in the endpoint `GET api/v1/admin`
 - Upgraded `stripe` from version `20.1.0` to `20.3.0`
@@ -818,6 +842,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an action menu to the user detail dialog in the users section of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the value redaction interceptor for the impersonation mode by introducing `fast-redact`
 - Refactored `showTransactions` in favor of `showActivitiesCount` in the accounts table component
@@ -829,6 +854,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.234.0 - 2026-01-30
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the create asset profile dialog in the market data section of the admin control panel
 - Improved the language localization for Chinese (`zh`)
@@ -842,6 +868,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.233.0 - 2026-01-23
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Deprecated `firstBuyDate` in favor of `dateOfFirstActivity` in the portfolio calculator
 - Deprecated `transactionCount` in favor of `activitiesCount` in the portfolio calculator and service
@@ -856,6 +883,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the analysis page to include the total amount, change and performance with currency effects (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Deprecated `firstBuyDate` in favor of `dateOfFirstActivity` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Improved the language localization for German (`de`)
@@ -864,6 +892,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.231.0 - 2026-01-17
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the deprecated platforms from the info service
 - Removed the deprecated activities from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
@@ -881,6 +910,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Korean (`ko`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restored the support for specific calendar year date ranges (`2024`, `2023`, `2022`, etc.) in the holdings table (experimental)
 
@@ -892,6 +922,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.229.0 - 2026-01-11
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set the active sort column in the accounts table component
 - Deprecated `activities` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
@@ -915,6 +946,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the portfolio holdings to include performance with currency effects for cash positions
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Integrated the endpoint to get all platforms (`GET api/v1/platforms`) into the create or update account dialog
 - Extracted the scraper configuration to a dedicated tab in the asset profile details dialog of the admin control panel
@@ -928,6 +960,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.227.0 - 2026-01-02
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Initialized the input properties in the _FIRE_ calculator
 - Removed the deprecated public _Stripe_ key
@@ -944,6 +977,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section by information about additional data providers on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `class-validator` from version `0.14.2` to `0.14.3`
 - Upgraded `yahoo-finance2` from version `3.10.2` to `3.11.2`
@@ -956,6 +990,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the session url to the endpoint response of the _Stripe_ checkout
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the routing of the user detail dialog in the users section of the admin control panel
 - Lifted the asset profile identifier editing restriction for `MANUAL` data sources in the asset profile details dialog of the admin control panel
@@ -986,6 +1021,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the ISIN number to the asset profile details dialog of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restored the support for specific calendar year date ranges (`2024`, `2023`, `2022`, etc.) in the assistant (experimental)
 - Removed the deprecated _Angular CLI_ decorator (`decorate-angular-cli.js`)
@@ -1002,6 +1038,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included wealth projection data calculated for the retirement date in the _FIRE_ section (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the notification module to `@ghostfolio/ui`
 - Improved the language localization for German (`de`)
@@ -1019,6 +1056,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an optional 3D hover effect to the membership card component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the numerical precision for cryptocurrency quantities in the holding detail dialog
 - Upgraded `envalid` from version `8.1.0` to `8.1.1`
@@ -1027,6 +1065,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.221.0 - 2025-12-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the API query parameters in various data provider services
 - Extended the _Storybook_ stories of the portfolio proportion chart component by a story using percentage values
@@ -1042,6 +1081,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.220.0 - 2025-11-29
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restricted the asset profile data gathering on Sundays to only process outdated asset profiles
 - Removed the _Cypress_ testing setup
@@ -1060,6 +1100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the user detail dialog of the admin control panel’s users section by the authentication method
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Disabled the action to delete activities if the activities table is empty
 - Improved the validation of the currency management in the admin control panel
@@ -1083,6 +1124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the _OSS Gallery_ logo to the logo carousel on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the dynamic numerical precision for various values in the portfolio summary tab on the home page
 - Upgraded `yahoo-finance2` from version `3.10.0` to `3.10.1`
@@ -1095,6 +1137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Black Weeks 2025_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the get holding functionality in the portfolio service
 - Changed the user data loading in the user detail dialog of the admin control panel’s users section to fetch data on demand
@@ -1110,6 +1153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.216.0 - 2025-11-10
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for Chinese (`zh`)
 - Upgraded `chart.js` from version `4.5.0` to `4.5.1`
@@ -1122,6 +1166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the endpoint `GET /api/v1/admin/user/:id`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the _Self-Hosting_ section content for the _Compare with..._ concept on the Frequently Asked Questions (FAQ) page
 - Improved the _Self-Hosting_ section content for the _Markets_ concept on the Frequently Asked Questions (FAQ) page
@@ -1140,6 +1185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.214.0 - 2025-11-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the icon of the _View Holding_ menu item in the activities table
 - Ensured atomic data replacement during historical market data gathering
@@ -1157,6 +1203,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the error logging to the symbol lookup in the _Trackinsight_ data enhancer
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the icon of the holdings tab on the home page
 - Improved the icon of the holdings tab on the home page for the _Zen Mode_
@@ -1174,6 +1221,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the user detail dialog in the users section of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the generation of the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Refactored the generation of the holdings table in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
@@ -1193,6 +1241,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a user detail dialog to the users section of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Localized the number formatting in the static portfolio analysis rule: _Liquidity_ (Buying Power)
 - Moved the _Prisma Configuration File_ from `prisma.config.ts` to `.config/prisma.ts`
@@ -1213,6 +1262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for data gathering by date range in the asset profile details dialog of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extracted the portfolio filter form of the assistant to a reusable component
 - Formatted the holdings table in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
@@ -1235,6 +1285,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Storybook_ story for the holdings table component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Disabled the zoom functionality in the _Progressive Web App_ (PWA)
 - Improved the currency validation in the get asset profiles functionality of the data provider service
@@ -1261,6 +1312,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for configuring the safe withdrawal rate in the _FIRE_ section (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the _As seen in_ section on the landing page to an animated carousel
 - Refactored `transactionCount` to `activitiesCount` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
@@ -1286,6 +1338,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Storybook_ story for the activities table component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the spacing around the buttons in the holding detail dialog
 - Extended the _Storybook_ stories of the accounts table component by a loading state story
@@ -1301,6 +1354,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.206.0 - 2025-10-04
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Localized the number formatting in the settings dialog to customize the rule thresholds of the _X-ray_ page
 - Improved the usability of the assistant by preselecting the first search result
@@ -1318,6 +1372,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.205.0 - 2025-10-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restricted the selection of the retirement date picker in the _FIRE_ calculator to a future date
 - Improved the support for mutual funds in the _Financial Modeling Prep_ service (get asset profiles)
@@ -1331,6 +1386,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the safe withdrawal rate to the user settings (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the number formatting of the y-axis labels in the investment chart component
 - Localized the number formatting of the y-axis labels in the line chart component
@@ -1350,6 +1406,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Hacktoberfest 2025_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the deprecated `ITEM` activity type
 
@@ -1360,6 +1417,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `settings` to the `Access` model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the tags selector component to support form control
 - Changed the deprecated `ITEM` activity type to `VALUABLE` in the create or update activity dialog
@@ -1379,6 +1437,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an option to configure the account column of the activities table component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hid the account column from the activities table of the account detail dialog to avoid redundant information
 - Renamed the show access token dialog component to user account registration dialog component
@@ -1393,6 +1452,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.200.0 - 2025-09-17
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the show access token dialog component to standalone
 - Upgraded `prisma` from version `6.15.0` to `6.16.1`
@@ -1409,6 +1469,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Storybook_ story for the entity logo image component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the search in the _Yahoo Finance_ service
 - Moved the holdings table into the holdings section on the public page
@@ -1425,6 +1486,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.198.0 - 2025-09-11
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the variations of the interstitials for the subscription
 - Renamed the job identifier column in the jobs queue view of the admin control panel
@@ -1454,6 +1516,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Storybook_ story for the world map chart component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the response of the portfolio report endpoint (_X-ray_)
 - Modernized the templates with untagged template literals
@@ -1471,6 +1534,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.196.0 - 2025-09-04
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Localized the content of the about page
 - Refactored the public page to standalone
@@ -1495,6 +1559,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.195.0 - 2025-08-29
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reused the request timeout in various functions of the data providers
 - Refactored the _ZEN_ page to standalone
@@ -1511,6 +1576,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the watchlist endpoint by 50-Day and 200-Day trends (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the support to customize rules in the _X-ray_ section from experimental to general availability
 - Improved the create or update activity dialog’s asset sub class selector for valuables to update the options dynamically based on the selected asset class
@@ -1534,6 +1600,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the data providers management of the admin control panel by every data provider in use
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the error handling in data providers
 - Upgraded `yahoo-finance2` from version `3.4.1` to `3.6.4`
@@ -1547,6 +1614,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the quantity column to the holdings table of the account detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the prompt dialog component from `ngModel` to form control
 - Refreshed the cryptocurrencies list
@@ -1560,6 +1628,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the interest and dividend values to the account detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the chart of the account detail dialog from experimental to general availability
 - Improved the dynamic numerical precision for various values in the account detail dialog
@@ -1574,6 +1643,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.190.0 - 2025-08-09
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the import functionality by tags
 - Improved the dynamic numerical precision for various values in the holding detail dialog
@@ -1589,6 +1659,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.189.0 - 2025-08-05
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the meta data in `html` files
 - Removed `ts-node` from the database seeding process
@@ -1599,6 +1670,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.188.0 - 2025-08-02
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Enhanced the performance of the dynamically composed sitemap
 - Improved the language localization for Polish (`pl`)
@@ -1613,6 +1685,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Storybook_ story for the membership card component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the support for changing the asset profile identifier (`dataSource` and `symbol`) in the asset profile details dialog of the admin control panel from experimental to general availability
 - Improved the balance of headings on the landing page
@@ -1632,6 +1705,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the allocation column to the accounts table component of the holding detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the _Top 3_ and _Bottom 3_ performers on the analysis page by removing items without performance
 - Improved the usability of the toggle component
@@ -1659,6 +1733,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Storybook_ story for the toggle component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the import functionality by custom asset profiles
 - Migrated the get country and sector weightings, dividends, ETF holdings, ETF info, historical price, profile, quote and symbol search functionalities of the _Financial Modeling Prep_ service to its stable API version
@@ -1692,6 +1767,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for the static portfolio analysis rule: _Regional Market Cluster Risks_ (North America)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Localized the tooltips of the about page
 - Improved the language localization for Catalan (`ca`)
@@ -1713,6 +1789,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for the static portfolio analysis rule: _Economic Market Cluster Risks_ (Emerging Markets)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the export functionality by custom asset profiles
 - Improved the platform icon in the create or update platform dialog of the admin control
@@ -1745,6 +1822,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the category title to the settings dialog to customize the rule thresholds of the _X-ray_ page (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the asset profile details dialog in the admin control panel
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the holding detail dialog
@@ -1764,6 +1842,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.181.0 - 2025-07-11
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the portfolio calculations for activities without historical market data
 - Improved the asset profile dialog’s asset sub class selector of the admin control panel to update the options dynamically based on the selected asset class
@@ -1788,6 +1867,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added collectible as an asset sub class
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Respected the filter by account for accounts when exporting activities on the portfolio activities page
 - Improved the label for asset profiles with `MANUAL` data source in the chart of the holdings tab on the home page
@@ -1807,6 +1887,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Manage Asset Profile_ button for administrators to the holding detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization in the users table of the admin control panel
 - Refactored the accounts pages to standalone
@@ -1826,6 +1907,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.178.0 - 2025-07-05
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the width of the markets overview
 - Increased the width of the watchlist
@@ -1846,6 +1928,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the _Fear & Greed Index_ (market mood) in the markets overview by cryptocurrencies (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the about pages to standalone
 - Made the `getByKey()` function generic in the property service
@@ -1864,6 +1947,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for generating a new _Security Token_ via the user’s account access panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the main content of the holding detail dialog to a new overview tab
 - Introduced fuzzy search for the holdings of the assistant
@@ -1884,6 +1968,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for the static portfolio analysis rule: _Currency Cluster Risks_ (Investment: Base Currency)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the selector handling of the scraper configuration for more use cases
 - Extended the _AI_ service by an access to _OpenRouter_ (experimental)
@@ -1907,6 +1992,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the data providers management of the admin control panel by the online status
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the `@ghostfolio/ui/value` component to control flow
 - Renamed `Platform` to `platform` in the `Account` database schema
@@ -1923,6 +2009,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up `open-color` for CSS variable usage
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the data providers management of the admin control panel
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
@@ -1946,6 +2033,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included the admin control panel in the quick links of the assistant
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
 - Switched the data provider service to `OnModuleInit`, ensuring (currency) quotes are fetched only once
@@ -1963,6 +2051,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the current holdings as default options of the symbol search in the create or update activity dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the assistant
 - Reused the value component in the data providers management of the admin control panel
@@ -1996,6 +2085,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section by information about additional data providers on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed `ApiKey` to `apiKeys` in the `User` database schema
 - Improved the language localization for French (`fr`)
@@ -2011,6 +2101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.169.0 - 2025-06-08
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed the asset profile icon component to entity logo component and moved to `@ghostfolio/ui`
 - Renamed `Account` to `accounts` in the `User` database schema
@@ -2031,6 +2122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a background gradient to the sidebar navigation
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the `i18n` service to use `@Injectable()`
 - Improved the language localization for German (`de`)
@@ -2046,6 +2138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for the static portfolio analysis rule: _Fees_ (Fee Ratio)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the symbol search component by default options
 - Renamed `Tag` to `tags` in the `User` database schema
@@ -2068,6 +2161,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to create custom tags in the create or update activity dialog (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the card components
 - Improved the style of the system message
@@ -2091,6 +2185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _General_ section by the performance calculation method on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the _Live Demo_ setup by syncing activities based on tags
 - Renamed `orders` to `activities` in the `Tag` database schema
@@ -2110,6 +2205,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.164.0 - 2025-05-28
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
@@ -2121,6 +2217,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.163.0 - 2025-05-26
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Turkish (`tr`)
@@ -2134,6 +2231,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the asset profile count per data provider to the endpoint `GET api/v1/admin`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the robustness of the search in the _Yahoo Finance_ service by catching schema validation errors
 - Improved the symbol lookup results by removing the currency from the name of cryptocurrencies (experimental)
@@ -2172,6 +2270,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the endpoint to get a holding by the date of the last all time high and the current change to the all time high
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed `Order` to `activities` in the `SymbolProfile` database schema
 - Improved the language localization for Turkish (`tr`)
@@ -2189,6 +2288,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the Frequently Asked Questions (FAQ) pages
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the watchlist from experimental to general availability
 - Deprecated the endpoint to get a portfolio position in favor of get a holding
@@ -2208,6 +2308,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the impersonation mode in the watchlist (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for French (`fr`)
 - Upgraded `bootstrap` from version `4.6.0` to `4.6.2`
@@ -2223,6 +2324,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to delete an asset from the watchlist (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed `Order` to `activities` in the `Account` database schema
 - Improved the language localization for German (`de`)
@@ -2238,6 +2340,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a watchlist to follow assets (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the column label from _Index_ to _Name_ in the benchmark component
 - Extended the data providers management of the admin control panel
@@ -2246,6 +2349,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.156.0 - 2025-04-27
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
@@ -2267,6 +2371,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the endpoints (`DELETE`, `GET` and `POST`) for the watchlist
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the data source check in the DTO of the activity creation
 - Simplified the data source check in the DTO of the asset profile update
@@ -2287,6 +2392,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `watchlist` to the `User` database schema as a preparation for watching assets
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Made the historical market data editor expandable in the admin control panel
 - Renamed `Subscription` to `subscriptions` in the `User` database schema
@@ -2301,6 +2407,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.153.0 - 2025-04-18
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Added support for activities in a custom currency
 - Refreshed the cryptocurrencies list
@@ -2315,6 +2422,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.152.1 - 2025-04-17
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Deactivated asset profiles automatically on delisting in the _Yahoo Finance_ service
 - Optimized the query of the data range functionality (`getRange()`) in the market data service
@@ -2330,6 +2438,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the data gathering status column to the historical market data table of the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set the maximum number of symbols per request in the _Financial Modeling Prep_ service
 - Migrated the get quotes functionality of the _Financial Modeling Prep_ service to its stable API version
@@ -2348,6 +2457,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to toggle the data gathering for individual asset profiles in the asset profile details dialog of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the check for duplicates in the preview step of the activities import (allow different comments)
 - Improved the language localization for French (`fr`)
@@ -2363,6 +2473,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the terms of service for the _Ghostfolio_ SaaS (cloud)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the static portfolio analysis rule: Emergency fund setup by supporting assets
 - Restricted the historical market data gathering to active asset profiles
@@ -2376,6 +2487,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `isActive` flag to the asset profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Upgraded `ngx-skeleton-loader` from version `9.0.0` to `10.0.0`
@@ -2390,6 +2502,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the _Storybook_ path to the `sitemap.xml` file
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the export functionality by applying filters on accounts and tags
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
@@ -2409,6 +2522,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.146.0 - 2025-03-15
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the user account registration
 - Improved the usability of the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
@@ -2432,6 +2546,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Copy portfolio data to clipboard for AI prompt_ action to the analysis page (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the summary on the _X-ray_ page
 - Improved the language localization for German (`de`)
@@ -2458,6 +2573,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the Ghostfolio _LinkedIn_ page to the footer
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the asynchronous operations using `Promise.all()` in the portfolio service (`getPerformance`)
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
@@ -2481,6 +2597,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _Storybook_ to the build process
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `eslint` dependencies
 
@@ -2494,6 +2611,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `cusip` to the asset profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `prettier` from version `3.4.2` to `3.5.1`
 
@@ -2504,6 +2622,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.140.0 - 2025-02-20
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reloaded the available tags after creating a custom tag in the holding detail dialog (experimental)
 - Improved the validation of the currency management in the admin control panel
@@ -2531,6 +2650,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added global styles to the _Storybook_ setup
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 - Improved the language localization for German (`de`)
@@ -2551,6 +2671,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added stories for the tags selector component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries when a user changes tags in the holding detail dialog
 - Improved the error handling in the _CoinGecko_ service
@@ -2565,6 +2686,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for ETF sector data in the _Yahoo Finance_ data enhancer
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extracted the scraper configuration to a sub form in the asset profile details dialog of the admin control
 - Migrated the database seeding to _TypeScript_
@@ -2585,6 +2707,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up a _GitHub Action_ to automatically extract locales when the `main` branch changes
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the _Financial Modeling Prep_ service
 - Improved the language localization for Ukrainian (`uk`)
@@ -2601,6 +2724,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.135.0 - 2025-01-19
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the language localization for Polski (`pl`) from experimental to general availability
 - Extended the _Financial Modeling Prep_ service
@@ -2622,6 +2746,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Українська (`uk`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the health check endpoint to include database and cache operations (experimental)
 - Refactored various `lodash` functions with native JavaScript equivalents
@@ -2641,6 +2766,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Copy AI prompt to clipboard_ action to the analysis page (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the _Copy link to clipboard_ action by adding a confirmation on success in the access table to share the portfolio
 - Improved the endpoint to fetch the logo of an asset or a platform by sending the original MIME type
@@ -2666,6 +2792,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the user interface for received access from others
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved support for automatic deletion of unused asset profiles when deleting activities
 - Migrated the coupon redemption to the notification service for prompt dialogs
@@ -2691,6 +2818,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.131.0 - 2024-12-25
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the search for asset profiles with `MANUAL` data source in the create or update activity dialog
 - Improved the usability of the link to manage access with a new icon
@@ -2706,6 +2834,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up a notification service for prompt dialogs
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability to edit the emergency fund
 - Extracted the market data management from the admin control panel endpoint to a dedicated endpoint
@@ -2720,6 +2849,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `userId` to the `SymbolProfile` database schema
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the _X-ray_ page by hiding empty rule categories
 - Improved the language localization for German (`de`)
@@ -2727,6 +2857,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.128.0 - 2024-12-12
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the holding selector in the assistant
 - Improved the language localization for German (`de`)
@@ -2754,6 +2885,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added pagination to the users table of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the labels of the assistant
 - Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries immediately in case of errors
@@ -2764,6 +2896,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.125.0 - 2024-11-30
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the symbol search component
 - Extended the users table in the admin control panel
@@ -2787,6 +2920,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `GHOSTFOLIO` as a new data source type
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the allocations by ETF holding on the allocations page by the parent ETFs (experimental)
 - Improved the language localization for German (`de`)
@@ -2800,6 +2934,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Black Weeks 2024_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the chart of the holdings tab on the home page from experimental to general availability
 - Extended the assistant by a holding selector
@@ -2814,6 +2949,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.122.0 - 2024-11-07
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `countries-list` from version `3.1.0` to `3.1.1`
 
@@ -2830,6 +2966,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the stack and container names in the `docker-compose` files (`docker-compose.yml`, `docker-compose.build.yml` and `docker-compose.dev.yml`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reverted the permissions (`chmod 0700`) on `entrypoint.sh` in the `Dockerfile`
 - Upgraded the _Stripe_ dependencies
@@ -2841,6 +2978,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for log levels (`LOG_LEVELS`) to conditionally log `prisma` query events (`debug` or `verbose`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the resources page
 - Renamed the static portfolio analysis rule from _Allocation Cluster Risk_ to _Economic Market Cluster Risk_ (Developed Markets and Emerging Markets)
@@ -2854,6 +2992,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.119.0 - 2024-10-26
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
@@ -2877,6 +3016,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for mutual funds in the _EOD Historical Data_ service
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the font colors of the chart of the holdings tab on the home page (experimental)
 - Optimized the dialog sizes for mobile (full screen)
@@ -2897,6 +3037,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the data providers management to the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the backgrounds of the chart of the holdings tab on the home page (experimental)
 - Improved the language localization for German (`de`)
@@ -2914,6 +3055,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the permissions (`chmod 0700`) on `entrypoint.sh` in the `Dockerfile`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the empty state in the benchmarks of the markets overview
 - Disabled the text hover effect in the chart of the holdings tab on the home page (experimental)
@@ -2932,6 +3074,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the name to the tooltip of the chart of the holdings tab on the home page (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the backgrounds of the chart of the holdings tab on the home page (experimental)
 - Improved the labels of the chart of the holdings tab on the home page (experimental)
@@ -2961,6 +3104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the _Public API_ with the health check endpoint (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the tags from the info to the user service
 - Switched the `prefer-const` rule from `warn` to `error` in the `eslint` configuration
@@ -2978,6 +3122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `typescript-eslint/stylistic-type-checked` rule to the `eslint` configuration
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the portfolio calculations by reusing date intervals
 - Refactored the calculation of the allocations by market on the allocations page
@@ -2995,6 +3140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to customize the rule thresholds in the _X-ray_ section (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the portfolio calculations with smarter date interval selection
 - Improved the language localization for German (`de`)
@@ -3013,6 +3159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `userId` to the `Tag` database schema
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Considered the availability of the date range selector in the assistant per view
 - Considered the availability of the filters in the assistant per view
@@ -3030,6 +3177,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.110.0 - 2024-09-24
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of various action menus by introducing horizontal lines to separate the delete action
 - Improved the chart in the account detail dialog (experimental)
@@ -3046,6 +3194,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Hacktoberfest 2024_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the create or update access dialog
 - Improved the loading indicator of the accounts table
@@ -3066,6 +3215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced filters (`dataSource` and `symbol`) in the accounts endpoint
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the toggle component
 - Switched to the accounts endpoint in the holding detail dialog
@@ -3084,6 +3234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the filters of the activities endpoint by `dataSource` and `symbol`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the portfolio snapshot calculation to the queue design pattern
 - Optimized the asynchronous operations using `Promise.all()` in the info service
@@ -3103,6 +3254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the attribute `mode` to the scraper configuration to get quotes instantly
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reworked the portfolio calculator
 - Improved the caching of the portfolio snapshot in the portfolio calculator by returning cached data and recalculating in the background when it expires
@@ -3132,6 +3284,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to deactivate rules in the _X-ray_ section (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -3153,6 +3306,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up a notification service for alert and confirmation dialogs
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the dark theme CSS selector
 - Improved the language localization for German (`de`)
@@ -3166,6 +3320,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.103.0 - 2024-08-10
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the color assignment in the chart of the holdings tab on the home page (experimental)
 - Enabled Catalan (`ca`) as an option in the user settings (experimental)
@@ -3185,6 +3340,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to edit an activity from the holding detail dialog (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the caching of the benchmarks in the markets overview by returning cached data and recalculating in the background when it expires
 - Improved the language localization for German (`de`)
@@ -3198,6 +3354,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.101.0 - 2024-08-03
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hardened container security by switching to a non-root user, setting the filesystem to read-only, and dropping unnecessary capabilities
 
@@ -3208,6 +3365,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to manage tags of holdings in the holding detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the color assignment in the chart of the holdings tab on the home page (experimental)
 - Persisted the view mode of the holdings tab on the home page (experimental)
@@ -3217,6 +3375,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.99.0 - 2024-07-29
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the usage of `yarn` to `npm`
 - Upgraded `storybook` from version `7.0.9` to `8.2.5`
@@ -3229,6 +3388,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Catalan (`ca`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the account selector of the create or update activity dialog
 - Improved the handling of the numerical precision in the value component
@@ -3250,6 +3410,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _selfh.st_ to the _As seen in_ section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the numerical precision in the holding detail dialog
 - Improved the handling of the numerical precision in the value component
@@ -3266,6 +3427,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.96.0 - 2024-07-13
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the chart of the holdings tab on the home page (experimental)
 - Separated the icon purposes in the `site.webmanifest`
@@ -3285,6 +3447,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.94.0 - 2024-07-09
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -3301,6 +3464,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section by the platforms concept on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
 - Improved the detection of REST APIs (`JSON`) used via the scraper configuration
@@ -3317,6 +3481,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for bulk deletion of asset profiles from the market data table in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Added support for derived currencies in the currency validation
 - Added support for automatic deletion of unused asset profiles when deleting activities
@@ -3334,6 +3499,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a benchmarks preset to the historical market data table of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `angular` from version `18.0.2` to `18.0.4`
 
@@ -3353,6 +3519,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section by the mobile app question on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the indicator for active filters from experimental to general availability
 - Improved the error handling in the biometric authentication registration
@@ -3371,6 +3538,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the historical market data table with currencies preset by date and activities count in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the date validation in the create, import and update activities endpoints
 - Improved the language localization for German (`de`)
@@ -3382,6 +3550,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the image source label in `Dockerfile`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the blog post list
 - Migrated the `@ghostfolio/client` components to control flow
@@ -3392,6 +3561,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.87.0 - 2024-06-08
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the portfolio summary
 - Improved the allocations by ETF holding on the allocations page (experimental)
@@ -3410,6 +3580,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the allocations by ETF holding on the allocations page (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `prettier` from version `3.2.5` to `3.3.1`
 
@@ -3420,6 +3591,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the ability to close a user account
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.10.0` to `2.12.0`
@@ -3444,6 +3616,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.83.0 - 2024-05-30
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `@nestjs/passport` from version `10.0.0` to `10.0.3`
 - Upgraded `angular` from version `17.3.5` to `17.3.10`
@@ -3458,6 +3631,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.82.0 - 2024-05-22
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the create or update activity dialog by preselecting the (only) account
 - Improved the usability of the date range selector in the assistant
@@ -3475,6 +3649,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an indicator for active filters (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the delete all activities functionality on the portfolio activities page to work with the filters of the assistant
 - Improved the language localization for German (`de`)
@@ -3492,6 +3667,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the absolute change column to the holdings table on the home page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the spacing around the floating action buttons (FAB)
 - Set the icon column of the activities table to stick at the beginning
@@ -3506,6 +3682,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.79.0 - 2024-05-04
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the holdings table to the holdings tab of the home page
 - Improved the performance labels (with and without currency effects) in the position detail dialog
@@ -3526,6 +3703,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a form validation against the DTO in the tag management of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set the performance column of the holdings table to stick at the end
 - Skipped the caching in the portfolio calculator if there are active filters (experimental)
@@ -3544,6 +3722,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the caching to the portfolio calculator (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the `@ghostfolio/ui` components to control flow
 - Updated the browserslist database
@@ -3557,6 +3736,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.76.0 - 2024-04-23
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed `CASH` to `LIQUIDITY` in the asset class enum
 
@@ -3567,6 +3747,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `accountId` and `date` as a unique constraint to the `AccountBalance` database schema
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the chart in the account detail dialog
 - Improved the account balance management
@@ -3583,6 +3764,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to create an account balance
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the date range support in the activities table on the portfolio activities page (experimental)
 - Improved the language localization for German (`de`)
@@ -3601,6 +3783,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a form validation against the DTO in the create or update activity dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the dividend calculations into the portfolio calculator
 - Moved the fee calculations into the portfolio calculator
@@ -3619,6 +3802,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a priority column to the queue jobs view in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Adapted the priorities of queue jobs
 - Upgraded `angular` from version `17.2.4` to `17.3.3`
@@ -3645,6 +3829,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section by the data providers on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the calculation of allocations by market
 - Improved the url validation in the create and update platform endpoint
@@ -3663,6 +3848,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up _Webpack Bundle Analyzer_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Disabled the option to update the cash balance of an account if date is not today
 - Improved the usability of the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
@@ -3682,6 +3868,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability to delete an asset profile in the historical market data table and the asset profile details dialog of the admin control
 
@@ -3697,6 +3884,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to override the name of an asset profile in the asset profile details dialog of the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the portfolio calculations
 
@@ -3712,6 +3900,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _Toncoin_ (`TON11419-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Replaced `Math.random()` with `crypto.randomBytes()` for generating cryptographically secure random strings
 - Upgraded `ionicons` from version `7.1.0` to `7.3.0`
@@ -3726,6 +3915,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an index for `dataSource` / `symbol` to the market data database table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the chart tooltip of the benchmark comparator by adding the benchmark name
 - Upgraded `angular` from version `17.1.3` to `17.2.4`
@@ -3743,6 +3933,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to delete an asset profile in the asset profile details dialog of the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the support to grant private access with permissions from experimental to general availability
 - Set the meta theme color dynamically to respect the appearance (dark mode)
@@ -3758,6 +3949,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _General_ section by the product roadmap on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the platform management in the admin control panel
 - Improved the usability of the tag management in the admin control panel
@@ -3778,6 +3970,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _Real Smurf Cat_ (`SMURFCAT-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `8.3` to `9.0`
 - Upgraded `countries-list` from version `2.6.1` to `3.1.0`
@@ -3792,6 +3985,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.62.0 - 2024-03-09
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the calculation of the accounts table
 - Optimized the calculation of the portfolio holdings
@@ -3812,6 +4006,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.61.0 - 2024-03-04
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the calculation of the portfolio summary
 
@@ -3826,6 +4021,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _Uniswap_ (`UNI7083-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the benchmarks in the markets overview
 - Integrated (wealth) items into the transaction point concept in the portfolio service
@@ -3845,6 +4041,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the activities import by `isin` in the _Yahoo Finance_ service
 
@@ -3855,6 +4052,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.58.0 - 2024-02-27
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the handling of activities without account
 
@@ -3866,6 +4064,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.57.0 - 2024-02-25
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the break down of the performance into asset and currency on the analysis page from experimental to general availability
 - Restructured the `copy-assets` `Nx` target
@@ -3877,6 +4076,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.56.0 - 2024-02-24
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Switched the performance calculations to take the currency effects into account
 - Removed the `isDefault` flag from the `Account` database schema
@@ -3905,6 +4105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added indexes for `accessToken`, `createdAt`, `provider`, `role` and `thirdPartyId` to the user database table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the validation for `currency` in various endpoints
 - Harmonized the setting of a default locale in various components
@@ -3926,6 +4127,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `INACTIVE` as a new user role
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the holdings table
 - Refactored the query to filter activities of excluded accounts
@@ -3942,6 +4144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _Jupiter_ (`JUP29210-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Divided the content of the Frequently Asked Questions (FAQ) page into three sections: _General_, _Cloud (SaaS)_ and _Self-Hosting_
 
@@ -3953,6 +4156,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.51.0 - 2024-02-12
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the ordered list of the _Top 3_ and _Bottom 3_ performers on the analysis page in Safari
 - Replaced `import-sort` with `prettier-plugin-sort-imports`
@@ -3970,6 +4174,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a setting to disable the data gathering in the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the environment variables of various API keys
 - Upgraded `prisma` from version `5.8.1` to `5.9.1`
@@ -3990,6 +4195,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to apply the active filters in the assistant
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the assistant from experimental to general availability
 - Improved the usability by reloading the content with a logo click on the home page
@@ -4009,6 +4215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the data provider information to the search endpoint
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the account selector in the assistant (experimental)
 - Improved the usability of the tag selector in the assistant (experimental)
@@ -4019,6 +4226,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.47.0 - 2024-02-02
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the tag selector to only show used tags in the assistant (experimental)
 - Improved the language localization for German (`de`)
@@ -4037,6 +4245,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to reset the active filters in the assistant (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the portfolio allocations to work with the filters of the assistant (experimental)
 - Migrated the portfolio holdings to work with the filters of the assistant (experimental)
@@ -4050,6 +4259,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `permissions` to the `Access` model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the tag selector to a form group in the assistant (experimental)
 - Formatted the name in the _EOD Historical Data_ service
@@ -4075,6 +4285,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `healthcheck` for the _Ghostfolio_ service to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the link to manage the benchmarks in the benchmark comparator with an icon
 
@@ -4086,6 +4297,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to edit sectors in the asset profile details dialog of the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the handling of derived currencies
 - Improved the labels in the portfolio evolution chart and investment timeline on the analysis page
@@ -4104,6 +4316,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validated the currency of the search results in the _EOD Historical Data_ service
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the timeout to load historical data in the data provider service
 - Improved the asset profile validation for `MANUAL` data source in the activities import
@@ -4111,12 +4324,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.40.0 - 2024-01-15
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the robustness of the exchange rates by always getting quotes in the exchange rate data service
 
 ## 2.39.0 - 2024-01-14
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the alignment in the portfolio performance chart
 
@@ -4134,6 +4349,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the attribute `locale` to the scraper configuration to parse the number
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the indicator for delayed market data in the client
 - Prepared the portfolio calculation for exchange rate effects
@@ -4142,6 +4358,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.37.0 - 2024-01-11
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the chart size in the asset profile details dialog of the admin control
 - Updated the `docker compose` instructions to _Compose V2_ in the documentation
@@ -4159,6 +4376,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to set a _CoinGecko_ Pro API key via environment variable (`API_KEY_COINGECKO_PRO`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Removed the `AccountType` enum
@@ -4175,6 +4393,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up a git-hook to format the code before any commit
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the user interface of the access table to share the portfolio
 - Improved the style of the assistant (experimental)
@@ -4187,6 +4406,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to test the scraper configuration in the asset profile details dialog of the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the _Top 3_ and _Bottom 3_ performers on the analysis page
 - Upgraded `Nx` from version `17.2.7` to `17.2.8`
@@ -4204,6 +4424,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a hint for the community languages in the user settings
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the performance calculation to a time-weighted approach
 - Normalized the benchmark by currency in the benchmark comparator
@@ -4225,6 +4446,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to search for an asset profile by `id` as an administrator
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set the select column of the lazy-loaded activities table to stick at the end (experimental)
 - Dropped the activity id in the activities import
@@ -4243,6 +4465,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.31.0 - 2023-12-16
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Introduced the lazy-loaded activities table to the account detail dialog (experimental)
 - Introduced the lazy-loaded activities table to the import activities dialog (experimental)
@@ -4266,6 +4489,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the benchmarks of the markets overview by the current market condition (all time high)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Adjusted the threshold to skip the data enhancement (_Trackinsight_) if data is inaccurate
 - Upgraded `prisma` from version `5.6.0` to `5.7.0`
@@ -4277,6 +4501,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a lazy-loaded activities table on the portfolio activities page (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set the actions columns of various tables to stick at the end
 - Increased the height of the tabs on mobile
@@ -4298,6 +4523,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a `HasPermission` annotation for endpoints
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Relaxed the check for duplicates in the preview step of the activities import (allow same day)
 - Respected the `withExcludedAccounts` flag in the account balance time series
@@ -4309,12 +4535,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.27.1 - 2023-11-28
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reverted `Nx` from version `17.1.3` to `17.0.2`
 
 ## 2.27.0 - 2023-11-26
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the chart in the account detail dialog by historical cash balances
 - Improved the error log for a timeout in the data source request
@@ -4325,6 +4553,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.26.0 - 2023-11-24
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `prisma` from version `5.5.2` to `5.6.0`
 - Upgraded `yahoo-finance2` from version `2.8.1` to `2.9.0`
@@ -4336,6 +4565,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Black Friday 2023_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `http-status-codes` from version `2.2.0` to `2.3.0`
 
@@ -4346,6 +4576,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.24.0 - 2023-11-16
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -4361,6 +4592,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Polski (`pl`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the data source validation in the activities import
 - Changed _Twitter_ to _𝕏_
@@ -4377,6 +4609,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the platform icon to the account selector of the create or edit activity dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the style of the carousel component on mobile for the testimonial section on the landing page
 - Introduced action menus in the overview of the admin control panel
@@ -4386,6 +4619,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.21.0 - 2023-11-09
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the system message
 
@@ -4397,6 +4631,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.20.0 - 2023-11-08
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the loading indicator of the unit in the overview tab of the home page
 - Improved the import of historical market data in the admin control panel
@@ -4411,6 +4646,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a data migration to set `accountType` to `NULL` in the account database table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for the _Fear & Greed Index_ (market mood)
 - Improved the language localization for German (`de`)
@@ -4428,6 +4664,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Hacktoberfest 2023 Debriefing_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `angular` from version `16.2.1` to `16.2.12`
 
@@ -4444,6 +4681,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to edit the exchange rates in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -4455,6 +4693,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 2.16.0 - 2023-10-29
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Relaxed the check for duplicates in the preview step of the activities import (allow different accounts)
 - Improved the usability and validation in the cash balance transfer from one to another account
@@ -4472,6 +4711,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to edit the name, asset class and asset sub class of asset profiles with `MANUAL` data source in the asset profile details dialog of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style and wording of the position detail dialog
 - Improved the validation in the activities import (expects positive values for `fee`, `quantity` and `unitPrice`)
@@ -4494,6 +4734,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `figi`, `figiComposite` and `figiShareClass` to the asset profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the fees on account level feature from experimental to general availability
 - Moved the interest on account level feature from experimental to general availability
@@ -4515,6 +4756,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an `i18n` service to query `messages.*.xlf` files on the server
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the users table in the admin control panel to an `@angular/material` data table
 - Improved the style of the membership status
@@ -4532,6 +4774,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for creating asset profiles with `MANUAL` data source
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the checkboxes to slide toggles in the user settings of the user account page
 - Extended the `copy-assets` `Nx` target to copy the locales to the server’s assets
@@ -4552,6 +4795,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to import historical market data in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the style of the create button on the page for granting and revoking public access to share the portfolio
 - Improved the language localization for German (`de`)
@@ -4569,6 +4813,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Supported enter key press to submit the form of the create or update access dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the display of the results in the search for a holding
 - Changed the queue jobs view in the admin control panel to an `@angular/material` data table
@@ -4586,6 +4831,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a carousel component for the testimonial section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Displayed the link to the markets overview on the home page without any permission
 
@@ -4602,6 +4848,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the settings icon of the user account page
 - Improved the usability to set an asset profile as a benchmark
@@ -4620,6 +4867,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added tabs to the user account page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set up the _Inter_ font family
 - Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
@@ -4636,6 +4884,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Hacktoberfest 2023_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `prettier` from version `3.0.2` to `3.0.3`
 - Upgraded `yahoo-finance2` from version `2.5.0` to `2.7.0`
@@ -4649,6 +4898,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Türkçe (`tr`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Skipped creating queue jobs for asset profiles with `MANUAL` data source on creating a new activity
 
@@ -4663,6 +4913,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for interest on account level (experimental)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the preselected currency based on the account’s currency in the create or edit activity dialog
 - Unlocked the experimental features setting for all users
@@ -4689,6 +4940,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a sidebar navigation on desktop
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the system message
 - Upgraded _Postgres_ from version `12` to `15` in the `docker-compose` files
@@ -4701,6 +4953,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a timeout to all data source requests
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the style of the user interface for granting and revoking public access to share the portfolio
 - Removed the account type from the user interface as a preparation to remove it from the `Account` database schema
@@ -4724,6 +4977,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Announcing Ghostfolio 2.0_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - **Breaking Change**: Removed the deprecated environment variable `BASE_CURRENCY`
 - Improved the validation in the activities import
@@ -4744,6 +4998,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _Hacker News_ to the _As seen in_ section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Shortened the page titles
 - Improved the language localization for German (`de`)
@@ -4763,6 +5018,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a health check endpoint for data enhancers
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `Nx` from version `16.7.2` to `16.7.4`
 - Upgraded `prettier` from version `2.8.4` to `3.0.2`
@@ -4774,6 +5030,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Ghostfolio joins OSS Friends_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refreshed the cryptocurrencies list
 - Improved the _OSS Friends_ page
@@ -4785,6 +5042,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.302.0 - 2023-08-20
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `16.1.8` to `16.2.1`
@@ -4799,6 +5057,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the _OSS Friends_ page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the localized meta data in `html` files
 
@@ -4814,12 +5073,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added more durations in the coupon system
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the remaining requests from `bent` to `got`
 
 ## 1.299.1 - 2023-08-10
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the activities import by allowing a different currency than the asset’s official one
 - Added a timeout to the _EOD Historical Data_ requests
@@ -4833,6 +5094,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.298.0 - 2023-08-06
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
@@ -4850,6 +5112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a `copy-assets` `Nx` target to the client build
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the alignment of the region percentages on the allocations page
 - Improved the alignment of the region percentages on the public page
@@ -4862,6 +5125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.296.0 - 2023-08-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the validation in the activities import by reducing the list to unique asset profiles
 - Optimized the data gathering in the activities import
@@ -4879,6 +5143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.294.0 - 2023-07-29
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the allocations by market chart on the allocations page by unavailable data
 
@@ -4893,6 +5158,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added error handling for the _Redis_ connections to keep the app running if the connection fails
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set the `lastmod` dates of `sitemap.xml` dynamically
 
@@ -4908,6 +5174,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the allocations by market chart on the allocations page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `yahoo-finance2` from version `2.4.2` to `2.4.3`
 
@@ -4923,6 +5190,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for account balance time series
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed queries to presets in the historical market data table of the admin control panel
 
@@ -4934,6 +5202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added queries to the historical market data table of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the login dialog
 - Disabled the caching in the health check endpoint for data providers
@@ -4943,12 +5212,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.289.0 - 2023-07-14
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `yahoo-finance2` from version `2.4.1` to `2.4.2`
 
 ## 1.288.0 - 2023-07-12
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the loading state during filtering on the allocations page
 - Beautified the names with ampersand (`&amp;`) in the asset profile
@@ -4957,6 +5228,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.287.0 - 2023-07-09
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hid the average buy price in the position detail chart if there is no holding
 - Improved the language localization for French (`fr`)
@@ -4981,6 +5253,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the attribute `headers` to the scraper configuration
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the asset profile details dialog in the admin control panel by the scraper configuration
 - Improved the language localization for German (`de`)
@@ -4993,6 +5266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the ability to add an index for benchmarks as an asset profile in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded the _Internet Identity_ dependencies from version `0.15.1` to `0.15.7`
 
@@ -5009,6 +5283,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the `helmet` middleware to protect the app from web vulnerabilities by setting HTTP headers
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the selected item of the holding selector in the import dividends dialog
 - Extended the symbol search component by asset sub classes
@@ -5021,6 +5296,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the ability to add an asset profile in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the use of permissions on the about page
 - Harmonized the use of permissions on the landing page
@@ -5036,6 +5312,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Portuguese (`pt`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extracted the symbol search to a dedicated component
 - Improved the column headers in the holdings table for mobile
@@ -5054,6 +5331,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Supported a note for accounts
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for French (`fr`)
 
@@ -5065,6 +5343,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.278.0 - 2023-06-09
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the clone functionality of a transaction by the quantity
 - Changed the direction of the ellipsis icon in various tables
@@ -5095,6 +5374,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `changefreq` attribute to the sitemap
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the routes of the tabs
 - Enforced a stricter date format in the activities import: `dd-MM-yyyy` instead of `dd-MM-yy`
@@ -5108,6 +5388,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.275.0 - 2023-05-30
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the footer navigation by the localized Ghostfolio versions
 - Improved the language localization for German (`de`)
@@ -5126,6 +5407,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for localized routes in Spanish (`es`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the activities import dialog
 - Improved the language localization for German (`de`)
@@ -5149,6 +5431,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to set an asset profile as a benchmark
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Decreased the density of the `@angular/material` tables
 - Improved the portfolio proportion chart component by supporting case insensitive names
@@ -5165,6 +5448,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Unlock your Financial Potential with Ghostfolio_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the local number formatting in the value component
 - Changed the uptime to the last 90 days on the _Open Startup_ (`/open`) page
@@ -5184,6 +5468,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the _Open Startup_ (`/open`) page with aggregated key metrics including uptime
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the mobile layout of the portfolio summary tab on the home page
 - Improved the language localization for German (`de`)
@@ -5202,6 +5487,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `FINANCIAL_MODELING_PREP` as a new data source type
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the market price on the first buy date in the chart of the position detail dialog
 - Restructured the admin control panel with a new settings tab
@@ -5217,6 +5503,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `depends_on` and `healthcheck` for the _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the preview step of the activities import by unchecking duplicates
 - Upgraded `yahoo-finance2` from version `2.3.10` to `2.4.1`
@@ -5228,6 +5515,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the _Stripe_ checkout to the pricing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the management of platforms in the admin control panel
 - Improved the style of the interstitial for the subscription
@@ -5243,6 +5531,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _DEV Community_ to the _As seen in_ section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `class-transformer` from version `0.3.2` to `0.5.1`
 - Upgraded `class-validator` from version `0.13.1` to `0.14.0`
@@ -5256,6 +5545,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.265.0 - 2023-05-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the tooltip of the portfolio proportion chart component
 
@@ -5270,6 +5560,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the allocations by platform chart on the allocations page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Deprecated the use of the environment variable `BASE_CURRENCY`
 - Cleaned up initial values from the _X-ray_ section
@@ -5277,6 +5568,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.263.0 - 2023-04-30
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Split the environment variable `DATA_SOURCE_PRIMARY` in `DATA_SOURCE_EXCHANGE_RATES` and `DATA_SOURCE_IMPORT`
 
@@ -5292,6 +5584,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the support of the impersonation mode for local development
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the queue jobs implementation by adding / updating historical market data in bulk
 - Improved the language localization for German (`de`)
@@ -5327,6 +5620,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a health check endpoint for data providers
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Persisted today’s market data continuously
 
@@ -5360,6 +5654,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the _Yahoo Finance_ data enhancer for countries, sectors and urls
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Enabled the configuration to immediately remove queue jobs on complete
 - Refactored the implementation of removing queue jobs
@@ -5376,6 +5671,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made the system message expandable
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Skipped creating queue jobs for asset profiles with `MANUAL` data source not having a scraper configuration
 - Reduced the execution interval of the data gathering to every hour
@@ -5388,6 +5684,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.254.0 - 2023-04-14
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the queue jobs implementation by adding in bulk
 - Improved the queue jobs implementation by introducing unique job ids
@@ -5396,6 +5693,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.253.0 - 2023-04-14
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reduced the execution interval of the data gathering to every 12 hours
 
@@ -5406,12 +5704,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.252.2 - 2023-04-11
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Deprecated the `auth` endpoint of the login with _Security Token_ (`GET`)
 
 ## 1.252.1 - 2023-04-10
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the slide toggles to checkboxes on the user account page
 - Changed the slide toggles to checkboxes in the admin control panel
@@ -5423,6 +5723,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.251.0 - 2023-04-07
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the activities import for `csv` files exported by _Interactive Brokers_
 - Improved the rendering of the chart ticks (`0.5K` → `500`)
@@ -5446,6 +5747,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for multiple subscription offers
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the portfolio evolution chart (ignore first item)
 - Improved the accounts import by handling the platform
@@ -5461,6 +5763,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the testimonial section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the loading state of the value component on the allocations page
 - Improved the value component by always showing the label (also while loading)
@@ -5478,6 +5781,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a breadcrumb navigation to the blog post pages
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the calculation of the chart
 - Hid the platform selector if no platforms are available in the create or update account dialog
@@ -5491,6 +5795,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the subscription expiration date to the users table of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Updated the URL of the Ghostfolio Slack channel
 - Upgraded `prisma` from version `4.10.1` to `4.11.0`
@@ -5507,6 +5812,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `isin` to the asset profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the _Trackinsight_ data enhancer for asset profile data by `isin`
 - Improved the language localization for _Gather Data_
@@ -5522,6 +5828,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the search functionality for the `EOD_HISTORICAL_DATA` data source type
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the _FIRE_ calculator
 - Improved the exchange rate service for a specific date used in activities with a manual currency
@@ -5540,6 +5847,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `COINGECKO` as a default to `DATA_SOURCES`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the validation of the manual currency for the activity fee and unit price
 - Harmonized the axis style of charts
@@ -5549,6 +5857,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.242.0 - 2023-03-04
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the database seeding
 - Upgraded `ngx-skeleton-loader` from version `5.0.0` to `7.0.0`
@@ -5560,6 +5869,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.241.0 - 2023-03-01
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Filtered activities with type `ITEM` from search results
 - Considered the user’s language in the _Stripe_ checkout
@@ -5583,6 +5893,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Ghostfolio meets Umbrel_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the dependency `rimraf`
 
@@ -5597,6 +5908,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _Umbrel_ to the _As seen in_ section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed the example environment variable file from `.env` to `.env.example`
 - Upgraded `zone.js` from version `0.11.8` to `0.12.0`
@@ -5617,6 +5929,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the support details to the pricing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the file size limit for the activities import
 - Improved the style of the search results for symbols
@@ -5632,6 +5945,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.236.0 - 2023-02-17
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Beautified the ETF names in the asset profile
 - Removed the data source type `GHOSTFOLIO`
@@ -5645,6 +5959,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.235.0 - 2023-02-16
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the styles on the about page
 - Eliminated the `GhostfolioScraperApiService`
@@ -5656,6 +5971,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the data import and export feature to the pricing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Copy the logic of `GhostfolioScraperApiService` to `ManualService`
 - Improved the content of the landing page
@@ -5691,6 +6007,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to import accounts
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style in the admin control panel
 - Removed the _Google Play_ badge from the landing page
@@ -5699,6 +6016,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.232.0 - 2023-02-05
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Migrated the style of `ActivitiesPageModule` to `@angular/material` `15` (mdc)
@@ -5719,6 +6037,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to link a (wealth) item to an account
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Relaxed the validation rule of the _Redis_ host environment variable (`REDIS_HOST`)
 - Improved the language localization for German (`de`)
@@ -5735,6 +6054,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a quote to the blog post _Ghostfolio auf Sackgeld.com vorgestellt_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the unit format (`%`) in the global heat map component of the public page
 - Improved the pricing page
@@ -5754,6 +6074,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _Sackgeld.com_ to the _As seen in_ section on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the toggle _Original Shares_ vs. _Current Shares_ on the allocations page
 - Hid error messages related to no current investment in the client
@@ -5770,6 +6091,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the hints in user settings
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the date formatting in the tooltip of the dividend timeline grouped by month / year
 - Improved the date formatting in the tooltip of the investment timeline grouped by month / year
@@ -5779,6 +6101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.227.1 - 2023-01-14
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -5794,6 +6117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for translated tags
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the logo alignment
 
@@ -5810,6 +6134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the thousand separator in the global heat map component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the form of the import dividends dialog (disable while loading)
 - Removed the deprecated `~` in _Sass_ imports
@@ -5825,6 +6150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for importing dividends from a data provider
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the Frequently Asked Questions (FAQ) page
 
@@ -5837,6 +6163,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for French (`fr`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for Dutch (`nl`)
 
@@ -5848,6 +6175,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a prefix to the codes of the coupon system
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the page titles in the header for mobile
 - Extended the asset profile details dialog in the admin control panel
@@ -5860,6 +6188,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the price to the `Subscription` database schema
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the execution time of the asset profile data gathering to every Sunday at lunch time
 - Improved the activities import by providing asset profile details
@@ -5883,6 +6212,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved the title of the blog post
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the activities import by a preview step
 - Improved the labels based on the type in the create or edit activity dialog
@@ -5901,6 +6231,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `dryRun` option to the import activities endpoint
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 365 days
 - Upgraded `color` from version `4.0.1` to `4.2.3`
@@ -5918,6 +6249,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the glossary of the resources page by _Deflation_, _Inflation_ and _Stagflation_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Added the name to the symbol column in the activities table
 - Combined the name and symbol column in the holdings table (former positions table)
@@ -5930,6 +6262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an endpoint to fetch the logo of an asset or a platform
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the asset profile details dialog in the admin control panel
 - Upgraded `chart.js` from version `3.8.0` to `4.0.1`
@@ -5941,6 +6274,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the dividend timeline grouped by month
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the value redaction interceptor (including `comment`)
 - Improved the language localization for Spanish (`es`)
@@ -5962,6 +6296,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the support for column sorting in the positions table (performance)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `big.js` from version `6.1.1` to `6.2.1`
 - Upgraded `date-fns` from version `2.28.0` to `2.29.3`
@@ -5974,6 +6309,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.215.0 - 2022-11-27
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language selector on the user account page
 - Improved the wording in the _X-ray_ section (net worth instead of investment)
@@ -5989,6 +6325,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for sorting in the accounts table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the support for the `MANUAL` data source
 - Improved the _Activities_ tab icon
@@ -6016,6 +6353,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.212.0 - 11.11.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the view mode selector to a slide toggle
 - Upgraded `Nx` from version `15.0.0` to `15.0.13`
@@ -6023,6 +6361,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.211.0 - 11.11.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Converted the client into a _Progressive Web App_ (PWA) with `@angular/pwa`
 - Removed the bottom margin from the body element
@@ -6035,6 +6374,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added tabs to the portfolio page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Merged the _FIRE_ calculator and the _X-ray_ section to a single page
 - Tightened the validation rule of the base currency environment variable (`BASE_CURRENCY`)
@@ -6050,6 +6390,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the _Buy me a coffee_ button to the about page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the activities import
 - Improved the usage of the premium indicator component
@@ -6063,6 +6404,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added pagination to the activities table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the actions in the admin control panel
 
@@ -6078,6 +6420,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for dates in _ISO 8601_ date format (`YYYY-MM-DD`) in the activities import
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Darkened the background color of the dark mode
 
@@ -6089,6 +6432,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.206.2 - 20.10.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Fixed the `rxjs` version to `7.5.6` (resolutions)
 - Migrated the `angular.json` to `project.json` files in the `Nx` workspace
@@ -6102,6 +6446,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.205.2 - 16.10.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Persisted the language on url change
 - Improved the portfolio evolution chart
@@ -6117,6 +6462,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the `prettier` plugin `prettier-plugin-organize-attributes`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Respected the current date in the _FIRE_ calculator
 - Simplified the settings management in the admin control panel
@@ -6138,6 +6484,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Supported a progressive line animation in the line chart component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the benchmark comparator from experimental to general availability
 - Improved the user interface of the benchmark comparator
@@ -6154,6 +6501,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for a translated 4% rule in the _FIRE_ section
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the caching of the benchmarks in the markets overview (only cache if fetching was successful)
 - Improved the wording in the twitter bot service
@@ -6170,6 +6518,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _Hacktoberfest 2022_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usage of the value component in the admin control panel
 - Improved the language localization for Spanish (`es`)
@@ -6187,6 +6536,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for an icon in the value component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `prisma` from version `4.1.1` to `4.4.0`
 
@@ -6212,6 +6562,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the feature overview page by multi-language support (English, German, Italian)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Combined the performance and chart calculation
 - Improved the style of various selectors (density)
@@ -6226,6 +6577,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.195.0 - 20.09.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the algorithm of the performance chart calculation
 
@@ -6241,6 +6593,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Visualized the percentage of the active filter on the allocations page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -6255,6 +6608,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.193.0 - 14.09.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Sorted the benchmarks by name
 - Extended the pricing page
@@ -6267,6 +6621,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.192.0 - 11.09.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the configuration of the benchmarks: `symbolProfileId` instead of `dataSource` and `symbol`
 - Upgraded `yahoo-finance2` from version `2.3.3` to `2.3.6`
@@ -6279,6 +6634,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.191.0 - 10.09.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the `currency` and `viewMode` from the `User` database schema
 
@@ -6293,6 +6649,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the date range component to the benchmark comparator
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the mobile layout of the benchmark comparator
 - Migrated the date range setting from the locale storage to the user settings
@@ -6301,6 +6658,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.189.0 - 08.09.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Distinguished between currency and unit in the chart tooltip
 
@@ -6328,6 +6686,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.186.2 - 03.09.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Decreased the rate limiter duration of queue jobs from 5 to 4 seconds
 - Removed the alias from the `User` database schema
@@ -6347,6 +6706,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a skeleton loader to the market mood component in the markets overview
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the build pipeline from _Travis_ to _GitHub Actions_
 - Increased the caching of the benchmarks
@@ -6364,6 +6724,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _GitHub Action_ to create an `linux/arm64` docker image
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
@@ -6378,12 +6739,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a filter by asset sub class for the asset profiles in the admin control
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 
 ## 1.182.0 - 23.08.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the language localization for German (`de`)
 - Extended and made the columns of the asset profiles sortable in the admin control
@@ -6397,6 +6760,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for translated labels in the value component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Integrated the commands `database:setup` and `database:migrate` into the container start
 
@@ -6417,6 +6781,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved the feature graphic of the blog post
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Tagged template literal strings in components for localization with `$localize`
 
@@ -6433,6 +6798,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post: _500 Stars on GitHub_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reduced the maximum width of the performance chart on the home page
 
@@ -6444,6 +6810,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added default values for `countries` and `sectors` of the symbol profile overrides model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the initialization of the exchange rate service
 - Improved the orders query for `assetClass` with symbol profile overrides
@@ -6461,6 +6828,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `AGPLv3` logo to the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the initialization of the exchange rate service
 - Upgraded `angular` from version `14.0.2` to `14.1.0`
@@ -6479,6 +6847,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added page titles
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the performance of data provider requests by introducing a maximum number of symbols per request (chunk size)
 - Changed the log level settings
@@ -6529,6 +6898,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _Internet Identity_ as a new social login provider
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the empty state of the
   - _Analysis_ section
@@ -6552,6 +6922,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _TerraUSD_ (`UST-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the alias from the user interface as a preparation to remove it from the `User` database schema
 - Removed the activities import limit for users with a subscription
@@ -6565,6 +6936,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a blog post
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refreshed the cryptocurrencies list to support more coins by default
 - Upgraded `date-fns` from version `2.22.1` to `2.28.0`
@@ -6576,6 +6948,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the investment timeline grouped by month
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Handled an occasional currency pair inconsistency in the _Yahoo Finance_ service (`GBP=X` instead of `USDGBP=X`)
 
@@ -6590,6 +6963,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added _Markets_ to the public pages
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the _Create Account_ link in the _Live Demo_
 - Upgraded `ngx-markdown` from version `13.0.0` to `14.0.1`
@@ -6605,6 +6979,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an account detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the label of the (symbol) search
 - Refactored the demo account as a route (`/demo`)
@@ -6621,6 +6996,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a reusable premium indicator component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the positions table to a dedicated section (_Holdings_)
 - Changed the data gathering by symbol endpoint to delete data first
@@ -6634,6 +7010,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.163.0 - 22.06.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the onboarding for iOS
 
@@ -6644,6 +7021,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Privacy Policy_ page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the header
 
@@ -6658,6 +7036,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the vertical hover line to inspect data points in the performance chart on the home page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the landing page
 - Upgraded `angular` from version `13.3.6` to `14.0.2`
@@ -6677,6 +7056,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.159.0 - 15.06.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the default `HOST` to `0.0.0.0`
 - Refactored the endpoint of the public page (filter by equity)
@@ -6688,6 +7068,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the queue jobs view in the admin control panel by a data dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Exposed the environment variable `HOST`
 - Decreased the number of attempts of queue jobs from `20` to `10` (fail earlier)
@@ -6702,6 +7083,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the queue jobs view in the admin control panel by the number of attempts and the status
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the historical market data gathering to the queue design pattern
 - Refreshed the cryptocurrencies list to support more coins by default
@@ -6722,6 +7104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new view with jobs of the queue to the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Simplified the features page
 - Restructured the _FIRE_ section
@@ -6738,6 +7121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `EOD_HISTORICAL_DATA` as a new data source type
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Exposed the environment variable `REDIS_PASSWORD`
 
@@ -6756,6 +7140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a vertical hover line to inspect data points in the line chart component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the tooltips of the chart components (content and style)
 - Simplified the pricing page
@@ -6771,6 +7156,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added value redaction for the impersonation mode in the API response as an interceptor
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the twitter bot service to rest on the weekend
 - Upgraded `prisma` from version `3.12.0` to `3.14.0`
@@ -6799,6 +7185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.150.0 - 21.05.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Skipped data enhancer (_Trackinsight_) if data is inaccurate
 
@@ -6830,6 +7217,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.147.0 - 10.05.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the allocations page with no filtering (include cash positions)
 
@@ -6841,6 +7229,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up _Nx Cloud_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the asset profile data gathering to the queue design pattern
 - Improved the allocations page with no filtering
@@ -6864,6 +7253,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the form to set the asset and asset sub class for (wealth) items
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the filtering (activities table and allocations page)
 
@@ -6883,6 +7273,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for real estate
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the layout of the position detail dialog
 - Upgraded `yahoo-finance2` from version `2.3.1` to `2.3.2`
@@ -6899,6 +7290,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.143.0 - 26.04.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the filtering by tags
 
@@ -6910,6 +7302,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the tags to the position detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the date to UTC in the data gathering service
 - Reused the value component in the users table of the admin control panel
@@ -6931,6 +7324,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a tagging system for activities
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extracted the activities table filter to a dedicated component
 - Changed the url of the _Get Started_ link to `https://ghostfol.io` on the public page
@@ -6949,6 +7343,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a symbol profile overrides model for manual adjustments
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reused the value component in the _Ghostfolio in Numbers_ section of the about page
 - Persisted the savings rate in the _FIRE_ calculator
@@ -6969,6 +7364,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the total amount to the tooltip in the chart of the _FIRE_ calculator
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Beautified the ETF names in the asset profile
 
@@ -6986,6 +7382,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the _Boringly Getting Rich_ guide to the resources section
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Separated the deposit and savings in the chart of the _FIRE_ calculator
 
@@ -6996,6 +7393,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to export future activities (drafts) as an `.ics` file
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated the search functionality to `yahoo-finance2`
 
@@ -7006,6 +7404,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.136.0 - 13.04.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the _Total_ label to _Total Assets_ in the portfolio summary tab on the home page
 
@@ -7025,6 +7424,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.134.0 - 09.04.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Switched to the new calculation engine
 - Improved the 4% rule in the _FIRE_ section
@@ -7033,6 +7433,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.133.0 - 07.04.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the empty state of the portfolio proportion chart component
 
@@ -7053,6 +7454,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for localization (date and number format) in user settings
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the label of the average price from _Ø Buy Price_ to _Average Unit Price_
 
@@ -7070,6 +7472,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added more durations in the coupon system
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Displayed the value in base currency in the accounts table on mobile
 - Displayed the value in base currency in the activities table on mobile
@@ -7113,6 +7516,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.127.0 - 16.03.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the error handling in the scraper configuration
 
@@ -7127,6 +7531,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for bonds
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the portfolio summary tab on the home page
 - Improved the tooltips in the portfolio proportion chart component by introducing multilines
@@ -7143,6 +7548,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the contexts to the logger commands
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `Nx` from version `13.8.1` to `13.8.5`
 
@@ -7153,6 +7559,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for setting a duration in the coupon system
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `ngx-skeleton-loader` from version `2.9.1` to `5.0.0`
 - Upgraded `prisma` from version `3.9.1` to `3.10.0`
@@ -7165,6 +7572,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included data provider errors in the API response
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the redundant attributes (`currency`, `dataSource`, `symbol`) of the activity model
 - Removed the prefix for symbols with the data source `GHOSTFOLIO`
@@ -7195,6 +7603,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the url to the symbol profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Migrated from `yahoo-finance` to `yahoo-finance2`
 
@@ -7205,6 +7614,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.120.0 - 25.02.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Distinguished the labels _Other_ and _Unknown_ in the portfolio proportion chart component
 - Improved the portfolio entry page
@@ -7222,6 +7632,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.118.0 - 20.02.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the calculation of the overall performance percentage in the new calculation engine
 - Displayed features in features overview page based on permissions
@@ -7230,6 +7641,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.117.0 - 19.02.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the countries and sectors charts in the position detail dialog
 - Distinguished today’s data point of historical data in the admin control panel
@@ -7247,6 +7659,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a service to tweet the current _Fear & Greed Index_ (market mood)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the mobile layout of the position detail dialog (countries and sectors charts)
 
@@ -7264,6 +7677,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the countries and sectors to the position detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `angular` from version `13.1.2` to `13.2.2`
 - Upgraded `Nx` from version `13.4.1` to `13.8.1`
@@ -7288,6 +7702,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.113.0 - 09.02.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the position of the currency column in the accounts table
 - Improved the position of the currency column in the activities table
@@ -7309,6 +7724,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the export functionality to the position detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the export functionality for activities (respect filtering)
 - Removed the _Admin_ user from the database seeding
@@ -7333,6 +7749,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for deleting symbol profile data in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Used `dataSource` and `symbol` from `SymbolProfile` instead of the `order` object (in `ExportService` and `PortfolioService`)
 
@@ -7360,6 +7777,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the cryptocurrency _Mina Protocol_ (`MINA-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the form in the create or edit transaction dialog
 - Improved the consistent use of `symbol` in combination with `dataSource`
@@ -7372,6 +7790,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.108.0 - 27.01.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the annualized performance in the new calculation engine
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 90 days
@@ -7393,6 +7812,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the footer row with total fees and total value to the activities table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the historical data view in the admin control panel
 - Upgraded the _Stripe_ dependencies
@@ -7409,6 +7829,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for fetching multiple symbols in the `GOOGLE_SHEETS` data provider
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the data provider with grouping by data source and thereby reducing the number of requests
 
@@ -7427,6 +7848,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.103.0 - 13.01.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Added links to the statistics section on the about page
 
@@ -7437,6 +7859,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.102.0 - 11.01.2022
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Start eliminating `dataSource` from activity
 
@@ -7452,6 +7875,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `GOOGLE_SHEETS` as a new data source type
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Excluded the url pattern of shared portfolios in the `robots.txt` file
 
@@ -7478,6 +7902,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exposed the profile data gathering by symbol as an endpoint
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the portfolio analysis page: show the y-axis and extend the chart in relation to the days in market
 - Restructured the about page
@@ -7502,6 +7927,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the date range component to the holdings tab
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the statistics section on the about page (users in Slack community)
 
@@ -7524,6 +7950,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.96.0 - 27.12.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Made the data provider warning more discreet
 - Upgraded `http-status-codes` from version `2.1.4` to `2.2.0`
@@ -7554,6 +7981,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for cryptocurrencies _Cosmos_ (`ATOM-USD`) and _Polkadot_ (`DOT-USD`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 30 days
 - Made the import functionality for transactions by `csv` files more flexible
@@ -7586,6 +8014,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.91.0 - 18.12.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the redundant all time high and all time low from the performance endpoint
 
@@ -7607,6 +8036,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up pipeline for docker build
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the default transactions import limit
 - Improved the landing page in dark mode
@@ -7623,6 +8053,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the data gathering by symbol endpoint with an optional date
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `Nx` from version `13.2.2` to `13.3.0`
 - Upgraded `storybook` from version `6.4.0-rc.3` to `6.4.9`
@@ -7642,6 +8073,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the read-only mode
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 10 days
 - Upgraded `prisma` from version `2.30.2` to `3.6.0`
@@ -7653,6 +8085,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the historical data chart of the _Fear & Greed Index_ (market mood)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the historical data view in the admin control panel (hide invalid and future dates)
 - Enabled the import functionality for transactions by default
@@ -7677,6 +8110,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.83.0 - 29.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the experimental API
 
@@ -7692,6 +8126,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new tab to manage historical data to the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Introduced tabs with routing to the home page
 
@@ -7702,6 +8137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the value to the position detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `angular` from version `12.2.4` to `13.0.2`
 - Upgraded `angular-material-css-vars` from version `2.1.2` to `3.0.0`
@@ -7729,6 +8165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for cryptocurrency _Algorand_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Locked the symbol input in the edit transaction dialog
 - Filtered the account selector by account type (`SECURITIES`) in the create or edit transaction dialog
@@ -7750,6 +8187,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.77.0 - 16.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hid the _Get Started_ button on the registration page
 
@@ -7775,6 +8213,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.74.0 - 11.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Adapted the decimal places for cryptocurrencies in the position detail dialog
 - Moved the _Fear & Greed Index_ (market mood) to a new tab on the home page
@@ -7782,6 +8221,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.73.0 - 10.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the info messages to add the first transaction
 
@@ -7792,12 +8232,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.72.0 - 08.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Cached the statistics section on the about page
 
 ## 1.71.0 - 07.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the logger from `console.log()` to `Logger.log()`
 
@@ -7808,6 +8250,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.70.0 - 07.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the validation of `json` files in the import functionality for transactions
 - Moved the scraper configuration to the symbol profile model
@@ -7823,6 +8266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the symbol mapping attribute to the symbol profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the registration page
 
@@ -7833,6 +8277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.68.0 - 01.11.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Prettified the generic scraper symbols in the portfolio proportion chart component
 - Extended the statistics section on the about page by the active users count (7d)
@@ -7848,6 +8293,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.66.0 - 30.10.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the landing page
 - Ordered the granted accesses by type
@@ -7859,6 +8305,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the user interface for granting and revoking public access to share the portfolio
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the data enhancer calls from the data provider (`get()`) to the data gathering service to reduce traffic to 3rd party data providers
 - Changed the profile data gathering from every 12 hours to once every weekend
@@ -7870,6 +8317,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for more cryptocurrency symbols like _Avalanche_, _Polygon_, _Shiba Inu_ etc.
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the data provider service to handle a dynamic list of services
 
@@ -7880,6 +8328,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a public page to share the portfolio
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the skeleton loader size of the portfolio proportion chart component
 
@@ -7901,6 +8350,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the primary data source
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restricted the file selector of the import functionality for transactions to `csv` and `json`
 
@@ -7915,6 +8365,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Data provider service returns data for the `dataSource` / `symbol` pair
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the page layouts
 
@@ -7929,6 +8380,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a data enhancer for symbol profile data (countries and sectors) via _Trackinsight_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the values of the global heat map to fixed-point notation
 
@@ -7946,6 +8398,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.58.0 - 02.10.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the symbol conversion for _Yahoo Finance_: Support for _Solana USD_ (`SOL1-USD`)
 - Improved the tooltips of the allocations page
@@ -7958,6 +8411,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a protection for endpoints (subscriptions)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reformatted the exchange rates table in the admin control panel
 
@@ -7969,6 +8423,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a story for the portfolio proportion chart component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the navigation to always show the portfolio page
 - Migrated the data type of currencies from `enum` to `string` in the database
@@ -7988,6 +8443,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.55.0 - 20.09.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Removed the default value of the data source attribute
 - Upgraded `@storybook` dependencies
@@ -8007,6 +8463,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the data source attribute to the symbol profile model
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Respected the data source attribute in the data provider service
 - Respected the data source attribute in the symbol data endpoint
@@ -8024,6 +8481,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.53.0 - 13.09.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the annualized performance calculation
 - Changed the data gathering selection from distinct orders to symbol profiles
@@ -8036,6 +8494,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the Ghostfolio Slack channel to the about page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `3.0.0` to `4.1.0`
 
@@ -8046,6 +8505,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.51.0 - 11.09.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Provided the name in the portfolio position endpoint
 
@@ -8090,6 +8550,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added a story for the value component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Switched from gross to net performance
 - Restructured the portfolio summary tab on the home page (fees and net performance)
@@ -8102,6 +8563,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the allocation chart by symbol
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the allocations page
 - Upgraded `angular` from version `12.0.4` to `12.2.4`
@@ -8116,6 +8578,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.44.0 - 30.08.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Extended the sub classification of assets by cash
 - Upgraded `svgmap` from version `2.1.1` to `2.6.0`
@@ -8150,6 +8613,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a link to the system status page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the wording for the _Restricted View_: _Presenter View_
 - Improved the style of the tables
@@ -8163,6 +8627,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.40.0 - 19.08.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the fault tolerance of the portfolio details endpoint
 
@@ -8179,6 +8644,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an option to hide absolute values like performances and quantities (_Restricted View_)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the allocations page
 
@@ -8203,6 +8669,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the overview menu item on mobile
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the exchange rate service
 - Improved the users table in the admin control panel
@@ -8215,6 +8682,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the calculated time in market to the portfolio summary tab on the home page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the usability of the tabs on the home page
 - Restructured the portfolio summary tab on the home page
@@ -8229,6 +8697,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.36.0 - 09.08.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the data gathering handling on server restart
 - Respected the cash balance on the allocations page
@@ -8241,6 +8710,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.35.0 - 08.08.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hid the pagination of tabs
 - Improved the classification of assets
@@ -8259,6 +8729,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.34.0 - 07.08.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Restructured the page hierarchy
 
@@ -8299,6 +8770,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added more data points to the chart
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Rewritten the core engine for the portfolio calculations
   - Switched to [Time-Weighted Rate of Return](https://www.investopedia.com/terms/t/time-weightedror.asp) (TWR) for the performance calculation
@@ -8314,6 +8786,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.29.0 - 26.07.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Introduced tabs on the home page
 - Changed the menu icon if the menu is open on mobile
@@ -8327,6 +8800,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a positions button on the home page which scrolls into the view
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the active page in the navigation on desktop
 - Removed the footer for users
@@ -8336,6 +8810,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.27.0 - 18.07.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the onboarding
   - Flow of creating a new account
@@ -8354,6 +8829,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `robots.txt` file
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the current pricing plan
 - Improved the style of the transaction type badge
@@ -8371,6 +8847,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the export functionality for transactions
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Respected the cash balance on the analysis page
 - Improved the settings selectors on the user account page
@@ -8390,6 +8867,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Calculated the total balance (cash)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Upgraded `@angular/cdk` and `@angular/material` from version `11.0.4` to `12.0.6`
 - Upgraded `@nestjs` dependencies
@@ -8417,6 +8895,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.21.0 - 22.06.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed _Stripe_ mode from `subscription` to `payment`
 
@@ -8431,6 +8910,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up _Stripe_ for subscriptions
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the _Ghostfolio in Numbers_ section
 
@@ -8443,6 +8923,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.18.0 - 16.06.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the pie chart: Investments by sector
 - Improved the onboarding for TWA by redirecting to the account registration page
@@ -8450,6 +8931,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.17.0 - 15.06.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the error page of the sign in with fingerprint
 - Disable the sign in with fingerprint selector for the demo user
@@ -8464,6 +8946,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.16.0 - 14.06.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the sign in with fingerprint
 
@@ -8477,6 +8960,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added sign in with fingerprint
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Cleaned up the analysis page with an unused chart module
 - Improved the cell alignment in the users table of the admin control panel
@@ -8492,6 +8976,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a connect or create symbol profile model logic on creating a new transaction
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the global heat map to visualize investments by country
 
@@ -8517,6 +9002,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the initial prisma migration
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the buttons to links (`<a>`) on the tools page
 - Upgraded `prisma` from version `2.20.1` to `2.24.1`
@@ -8530,6 +9016,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.10.0 - 02.06.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Moved the tools to a sub path (`/tools`)
 - Extended the pricing page and aligned with the subscription model
@@ -8541,6 +9028,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the year labels to the investment chart on the x-axis
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Respected the data source attribute of the transactions model in the data management for historical data
 - Prettified the generic scraper symbols in the transaction filtering component
@@ -8558,6 +9046,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a section for _Analysis_, _X-ray_ and upcoming tools
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Introduced a user service implemented as an observable store (single source of truth for state)
 
@@ -8569,6 +9058,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.7.0 - 22.05.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Hid footer on mobile (except on landing page)
 
@@ -8583,6 +9073,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an index in the users table of the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the alignment in the users table of the admin control panel
 
@@ -8599,6 +9090,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added filtering by year in the transaction filtering component
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Renamed _Ghostfolio Account_ to _My Ghostfolio_
 - Hid unknown exchange in the position overview
@@ -8612,6 +9104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.3.0 - 15.05.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the active menu item state by parsing the current url
 - Used a desaturated background color for unknown types in pie charts
@@ -8624,12 +9117,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.2.1 - 14.05.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Updated the sitemap
 
 ## 1.2.0 - 14.05.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the style of various tables
 - Keep the color per type when switching between _Initial_ and _Current_ in pie charts
@@ -8648,6 +9143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to fetch the current market price in the create or edit transaction dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the transaction filtering with multi filter support
 
@@ -8664,6 +9160,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a _Google Play_ badge on the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed to maskable icons
 
@@ -8674,6 +9171,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for deleting users in the admin control panel
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Eliminated the platform attribute from the transaction model
 
@@ -8697,6 +9195,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the number of transactions to the position detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Harmonized the slogan to "Open Source Portfolio Tracker"
 
@@ -8715,6 +9214,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.93.0 - 26.04.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the users table style of the admin control panel
 - Improved the background colors in the dark mode
@@ -8739,6 +9239,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prepared for multi accounts support
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style of the rules in the _X-ray_ section
 
@@ -8750,6 +9251,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a third option for the market state: `delayed` (besides `open` and `closed`)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the users table of the admin control panel
 
@@ -8766,6 +9268,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.88.0 - 20.04.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reverted the restoring of the scroll position when opening a new page
 
@@ -8793,6 +9296,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for feature flags to simplify the initial project setup
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the about page for the new license
 - Optimized the data management for historical data
@@ -8806,6 +9310,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.85.0 - 16.04.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored many frontend components
 - Changed the routing to `routerLink` for an improved navigation experience
@@ -8826,6 +9331,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new static portfolio analysis rule: Fees in relation to the initial investment
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Reset the cache on the server start
 
@@ -8849,12 +9355,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an error handling with messages in the client
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the _Ghostfolio_ SaaS (cloud) from a `nano` to a `micro` instance for a better performance
 
 ## 0.80.0 - 05.04.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the spacing in the header
 - Upgraded `chart.js` from version `2.9.4` to `3.0.2`
@@ -8862,6 +9370,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.79.0 - 04.04.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Refactored the data management services
 - Upgraded `bootstrap` from version `4.5.3` to `4.6.0`
@@ -8884,12 +9393,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - edit transaction dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the single platform rule by adding the number of platforms
 
 ## 0.77.1 - 03.04.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Minor improvements
 
@@ -8904,6 +9415,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - _Platform Cluster Risk_ (current investment)
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Grouped the _X-ray_ section visually in _Currency Cluster Risk_ and _Platform Cluster Risk_
 
@@ -8933,6 +9445,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added skeleton loaders to the _X-ray_ section
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the alignment of the _Why Ghostfolio?_ section
 - Improved the style of the _Fear & Greed Index_ (market mood)
@@ -8945,6 +9458,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a link to the info box on the analysis page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the intro text in the _X-ray_ section
 
@@ -8965,6 +9479,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an intro text to the _X-ray_ section
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the editing of transactions
 - Harmonized the page titles
@@ -8980,6 +9495,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the second static portfolio analysis rule: _Platform Cluster Risk_
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the style in the _X-ray_ section
 
@@ -8992,6 +9508,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the first static portfolio analysis rule in the brand new _X-ray_ section
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the spacing in the footer
 
@@ -9004,6 +9521,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.68.0 - 26.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the performance of the position detail dialog
 
@@ -9032,6 +9550,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a placeholder to the filter of the transactions table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the regular data management check to a smarter approach
 
@@ -9042,12 +9561,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an index to the market data database table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Optimized the other dialogs for mobile (full screen and close button)
 
 ## 0.63.0 - 22.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the transactions table
 - Optimized the position detail dialog for mobile (full screen and close button)
@@ -9089,6 +9610,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added meta data: `description` and `keywords`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the icon
 
@@ -9105,6 +9627,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a chart to the landing page
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the performance chart
 - Improved the average buy price in the position detail chart
@@ -9117,6 +9640,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the quantity and investment in the position detail dialog
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the performance chart
 - Improved the performance calculation
@@ -9125,6 +9649,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.55.0 - 16.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the performance calculation
 
@@ -9146,12 +9671,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up database backup
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved `site.webmanifest`
 
 ## 0.52.0 - 14.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Added the membership status to the user account page
 
@@ -9162,6 +9689,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.51.0 - 14.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the default number of rows from 10 to 7 in the positions table
 
@@ -9179,6 +9707,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a button to expand rows in the positions table
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Ordered platforms by name in edit transaction dialog
 - Modularized the date range component
@@ -9195,6 +9724,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an error handling for the data management
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the pricing section
 
@@ -9211,6 +9741,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a pricing section
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the positions and transactions table
   - Harmonized alignment
@@ -9233,6 +9764,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.45.0 - 08.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the data management of benchmarks with extended persistency
 - Changed the data management of currencies with extended persistency
@@ -9240,6 +9772,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.44.0 - 07.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Changed the data management with extended persistency
 - Upgraded `prisma` from version `2.16.1` to `2.18.0`
@@ -9256,6 +9789,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.42.0 - 03.03.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the skeleton loader (minor)
 
@@ -9270,6 +9804,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the possibility to create or edit a transaction with a platform
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Increased the token expiration duration
 
@@ -9288,6 +9823,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.39.0 - 28.02.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved the buy price in the position detail dialog
 
@@ -9310,6 +9846,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.36.1 - 24.02.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Minor improvements in the transactions table
 
@@ -9322,6 +9859,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.35.0 - 23.02.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Added transparent background to header
 - Harmonized currency value formatting
@@ -9333,6 +9871,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.34.0 - 21.02.2021
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Improved skeleton loader of position
 - Simplified sign in / sign up flow
@@ -9344,6 +9883,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added favicon and `site.webmanifest`
 
 ### Changed
+- Improved the language localization for Chinese (zh)
 
 - Set font style of numbers to tabular
 - Rename _Orders_ to _Transactions_
