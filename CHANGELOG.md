@@ -10,7 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
+
+## 3.2.0 - 2026-05-03
+
+### Added
+
+- Added `angular-developer` skills
+
+### Changed
+
+- Harmonized the unit styling in the value component
 - Upgraded `stripe` from version `20.4.1` to `21.0.1`
+
+### Fixed
+
+- Resolved a validation error with an empty URL in the asset profile details dialog of the admin control panel
+- Resolved an issue where charts and components defaulted to _Roboto_ instead of the preconfigured _Inter_ font family
 
 ## 3.1.0 - 2026-04-29
 
