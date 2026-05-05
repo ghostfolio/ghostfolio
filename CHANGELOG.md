@@ -7,15 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-<<<<<<< task/migrate-angular-components-from-NgClass-to-class-bindings
 ### Changed
 
 - Migrated various components from `NgClass` to class bindings
-=======
+
 ### Fixed
 
 - Fixed a visual regression in the bottom navigation bar on mobile
->>>>>>> main
 
 ## 3.2.0 - 2026-05-03
 
