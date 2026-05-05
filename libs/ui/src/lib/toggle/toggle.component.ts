@@ -1,6 +1,5 @@
 import { ToggleOption } from '@ghostfolio/common/interfaces';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatRadioModule, ReactiveFormsModule],
+  imports: [MatRadioModule, ReactiveFormsModule],
   selector: 'gf-toggle',
   styleUrls: ['./toggle.component.scss'],
   templateUrl: './toggle.component.html'

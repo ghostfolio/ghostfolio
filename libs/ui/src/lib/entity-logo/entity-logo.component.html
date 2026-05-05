@@ -1,7 +1,7 @@
 @if (src) {
   <img
     onerror="this.style.display = 'none'"
-    [ngClass]="{ large: size === 'large' }"
+    [class.large]="size === 'large'"
     [src]="src"
     [title]="tooltip ? tooltip : ''"
   />

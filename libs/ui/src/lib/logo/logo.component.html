@@ -1,5 +1,5 @@
 <span class="align-items-center d-flex"
-  ><span class="d-inline-block logo" [ngClass]="{ 'mr-1': showLabel }"></span>
+  ><span class="d-inline-block logo" [class.mr-1]="showLabel"></span>
   @if (showLabel) {
     <span class="label">{{ label ?? 'Ghostfolio' }}</span>
   }

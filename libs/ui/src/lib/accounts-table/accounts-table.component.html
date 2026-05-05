@@ -340,15 +340,13 @@
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
-      [ngClass]="{
-        'cursor-pointer': hasPermissionToOpenDetails()
-      }"
+      [class.cursor-pointer]="hasPermissionToOpenDetails()"
       (click)="onOpenAccountDetailDialog(row.id)"
     ></tr>
     <tr
       *matFooterRowDef="displayedColumns()"
       mat-footer-row
-      [ngClass]="{ 'd-none': isLoading() || !showFooter() }"
+      [class.d-none]="isLoading() || !showFooter()"
     ></tr>
   </table>
 </div>
