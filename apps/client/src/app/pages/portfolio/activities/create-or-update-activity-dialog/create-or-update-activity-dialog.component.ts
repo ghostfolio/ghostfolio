@@ -500,11 +500,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       fee: this.activityForm.get('fee')?.value,
       quantity: this.activityForm.get('quantity')?.value,
       symbol:
-        (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
-          this.activityForm.get('type')?.value
-        )
-          ? undefined
-          : this.activityForm.get('searchSymbol')?.value?.symbol) ??
+        this.activityForm.get('searchSymbol')?.value?.symbol ??
         this.activityForm.get('name')?.value,
       tags: this.activityForm.get('tags')?.value?.map(({ id }) => {
         return id;
