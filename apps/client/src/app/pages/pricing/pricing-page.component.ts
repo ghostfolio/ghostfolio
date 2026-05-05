@@ -76,6 +76,7 @@ export class GfPricingPageComponent implements OnInit {
     'Interactive Brokers',
     'Mintos',
     'Monefit SmartSaver',
+    'Revolut',
     'Swissquote',
     'VIAC',
     'Zak'
