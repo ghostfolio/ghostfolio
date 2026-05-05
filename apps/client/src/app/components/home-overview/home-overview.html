@@ -11,10 +11,7 @@
         <h4 i18n>Welcome to Ghostfolio</h4>
         <p i18n>Ready to take control of your personal finances?</p>
         <ol class="font-weight-bold">
-          <li
-            class="mb-2"
-            [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
-          >
+          <li class="mb-2" [class.text-muted]="user?.accounts?.length > 1">
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
               <span class="font-weight-normal" i18n
@@ -70,13 +67,13 @@
           <gf-line-chart
             class="position-absolute"
             unit="%"
+            [class.pr-3]="deviceType === 'mobile'"
             [colorScheme]="user?.settings?.colorScheme"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
             [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
             [label]="performanceLabel"
             [locale]="user?.settings?.locale"
-            [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
             [showGradient]="true"
             [showLoader]="false"
             [showXAxis]="false"

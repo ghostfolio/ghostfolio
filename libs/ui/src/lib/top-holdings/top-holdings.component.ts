@@ -12,7 +12,6 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -44,7 +43,6 @@ import { GfValueComponent } from '../value/value.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfSymbolPipe,
     GfValueComponent,
     MatButtonModule,

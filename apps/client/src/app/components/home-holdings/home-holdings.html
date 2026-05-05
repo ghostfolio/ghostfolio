@@ -44,7 +44,7 @@
           (treemapChartClicked)="onHoldingClicked($event)"
         />
       }
-      <div [ngClass]="{ 'd-none': viewModeFormControl.value !== 'TABLE' }">
+      <div [class.d-none]="viewModeFormControl.value !== 'TABLE'">
         <gf-holdings-table
           [holdings]="holdings"
           [locale]="user?.settings?.locale"

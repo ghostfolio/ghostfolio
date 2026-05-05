@@ -1,7 +1,7 @@
 <div class="d-flex" mat-dialog-title>
   <span
     class="flex-grow-1 text-truncate"
-    [ngClass]="{ 'text-center': position === 'center' }"
+    [class.text-center]="position === 'center'"
     >{{ title }}</span
   >
   @if (deviceType !== 'mobile') {

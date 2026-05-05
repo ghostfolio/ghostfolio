@@ -1,6 +1,5 @@
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -19,13 +18,7 @@ import { GfLogoComponent } from '../logo';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    GfLogoComponent,
-    IonIcon,
-    MatButtonModule,
-    RouterModule
-  ],
+  imports: [GfLogoComponent, IonIcon, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-membership-card',
   styleUrls: ['./membership-card.component.scss'],

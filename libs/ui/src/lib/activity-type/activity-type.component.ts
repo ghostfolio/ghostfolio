@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -22,7 +21,7 @@ import { translate } from '../i18n';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonIcon],
+  imports: [IonIcon],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activity-type',
   styleUrls: ['./activity-type.component.scss'],
