@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated various components from `NgClass` to class bindings
 - Refreshed the cryptocurrencies list
+- Upgraded `Nx` from version `22.6.5` to `22.7.1`
+
+### Fixed
+
+- Fixed a visual regression in the bottom navigation bar on mobile
 
 ## 3.2.0 - 2026-05-03
 
