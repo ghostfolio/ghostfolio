@@ -6,12 +6,12 @@
   @for (option of options(); track option) {
     <mat-radio-button
       class="d-inline-flex"
-      [disabled]="isLoading()"
-      [ngClass]="{
+      [class]="{
         'cursor-default': option.value === optionFormControl.value,
         'cursor-pointer':
           !isLoading() && option.value !== optionFormControl.value
       }"
+      [disabled]="isLoading()"
       [value]="option.value"
       >{{ option.label }}</mat-radio-button
     >

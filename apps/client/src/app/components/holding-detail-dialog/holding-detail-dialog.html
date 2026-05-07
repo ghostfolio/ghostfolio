@@ -117,13 +117,12 @@
               <gf-value
                 i18n
                 size="medium"
+                [class.text-danger]="
+                  marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
+                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                "
                 [isCurrency]="true"
                 [locale]="data.locale"
-                [ngClass]="{
-                  'text-danger':
-                    marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
-                    marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
-                }"
                 [precision]="marketPriceMinPrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPriceMin"
@@ -134,13 +133,12 @@
               <gf-value
                 i18n
                 size="medium"
+                [class.text-success]="
+                  marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
+                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                "
                 [isCurrency]="true"
                 [locale]="data.locale"
-                [ngClass]="{
-                  'text-success':
-                    marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
-                    marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
-                }"
                 [precision]="marketPriceMaxPrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPriceMax"

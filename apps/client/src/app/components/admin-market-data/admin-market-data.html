@@ -309,11 +309,11 @@
       </div>
 
       <mat-paginator
+        [class.d-none]="
+          (isLoading && totalItems === 0) || totalItems <= pageSize
+        "
         [hidePageSize]="true"
         [length]="totalItems"
-        [ngClass]="{
-          'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
-        }"
         [pageSize]="pageSize"
         [showFirstLastButtons]="true"
         (page)="onChangePage($event)"
