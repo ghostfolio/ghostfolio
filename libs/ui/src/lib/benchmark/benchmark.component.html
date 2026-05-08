@@ -122,14 +122,14 @@
         @if (isNumber(element?.performances?.allTimeHigh?.performancePercent)) {
           <gf-value
             class="d-inline-block justify-content-end"
-            [isPercent]="true"
-            [locale]="locale()"
-            [ngClass]="{
+            [class]="{
               'text-danger':
                 element?.performances?.allTimeHigh?.performancePercent < 0,
               'text-success':
                 element?.performances?.allTimeHigh?.performancePercent === 0
             }"
+            [isPercent]="true"
+            [locale]="locale()"
             [value]="element?.performances?.allTimeHigh?.performancePercent"
           />
         }

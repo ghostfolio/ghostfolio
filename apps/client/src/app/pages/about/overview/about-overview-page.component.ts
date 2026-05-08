@@ -4,7 +4,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -26,7 +25,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
-  imports: [CommonModule, IonIcon, MatButtonModule, RouterModule],
+  imports: [IonIcon, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],

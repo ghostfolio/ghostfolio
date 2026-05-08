@@ -4,7 +4,7 @@ import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
@@ -43,7 +43,6 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    NgClass,
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-account-dialog',

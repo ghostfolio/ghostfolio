@@ -19,7 +19,6 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,7 +55,6 @@ import { catchError } from 'rxjs/operators';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfAssistantComponent,
     GfLogoComponent,
     GfPremiumIndicatorComponent,

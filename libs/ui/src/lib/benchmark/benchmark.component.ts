@@ -11,7 +11,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -46,7 +45,6 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfTrendIndicatorComponent,
     GfValueComponent,
     IonIcon,
