@@ -16,7 +16,6 @@ import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplet
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -70,7 +69,6 @@ import { ActivityType } from './types/activity-type.type';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    NgClass,
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-activity-dialog',

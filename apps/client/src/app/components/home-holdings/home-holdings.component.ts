@@ -14,7 +14,6 @@ import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfTreemapChartComponent } from '@ghostfolio/ui/treemap-chart';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -34,7 +33,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   imports: [
-    CommonModule,
     FormsModule,
     GfHoldingsTableComponent,
     GfToggleComponent,

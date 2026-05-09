@@ -21,7 +21,6 @@ import { GfTopHoldingsComponent } from '@ghostfolio/ui/top-holdings';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -51,8 +50,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     GfValueComponent,
     GfWorldMapChartComponent,
     MatCardModule,
-    MatProgressBarModule,
-    NgClass
+    MatProgressBarModule
   ],
   selector: 'gf-allocations-page',
   styleUrls: ['./allocations-page.scss'],

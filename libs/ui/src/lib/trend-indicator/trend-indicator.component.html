@@ -16,7 +16,7 @@
     <ion-icon
       class="text-danger"
       name="arrow-down-circle-outline"
-      [ngClass]="{ 'rotate-45-down': value > -0.01 }"
+      [class.rotate-45-down]="value > -0.01"
       [size]="size"
     />
   } @else if (value > -0.0005 && value < 0.0005) {
@@ -29,7 +29,7 @@
     <ion-icon
       class="text-success"
       name="arrow-up-circle-outline"
-      [ngClass]="{ 'rotate-45-up': value < 0.01 }"
+      [class.rotate-45-up]="value < 0.01"
       [size]="size"
     />
   }

@@ -14,7 +14,6 @@ import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
-import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
@@ -40,7 +39,6 @@ import { catchError } from 'rxjs/operators';
 @Component({
   host: { class: 'page' },
   imports: [
-    CommonModule,
     GfActivitiesTableComponent,
     GfHoldingsTableComponent,
     GfPortfolioProportionChartComponent,

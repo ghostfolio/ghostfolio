@@ -14,7 +14,6 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -29,7 +28,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   imports: [
-    CommonModule,
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,
     MatButtonModule,

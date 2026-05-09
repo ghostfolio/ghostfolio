@@ -181,12 +181,11 @@
     </div>
     <div
       class="align-items-center d-flex justify-content-end"
-      [ngClass]="{
-        'cursor-pointer':
-          hasPermissionToUpdateUserSettings &&
-          !user?.settings?.isRestrictedView &&
-          user?.subscription?.type !== 'Basic'
-      }"
+      [class.cursor-pointer]="
+        hasPermissionToUpdateUserSettings &&
+        !user?.settings?.isRestrictedView &&
+        user?.subscription?.type !== 'Basic'
+      "
       (click)="
         hasPermissionToUpdateUserSettings &&
           !user?.settings?.isRestrictedView &&
