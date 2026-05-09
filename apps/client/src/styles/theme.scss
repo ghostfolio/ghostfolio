@@ -150,6 +150,8 @@ $gf-typography: (
 );
 
 .theme-light {
+  color-scheme: light;
+
   @include mat.theme(
     (
       color: (
@@ -231,6 +233,8 @@ $gf-typography: (
 }
 
 .theme-dark {
+  color-scheme: dark;
+
   @include mat.theme(
     (
       color: (
