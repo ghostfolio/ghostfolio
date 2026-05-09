@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated various components from `NgClass` to class bindings
 - Refreshed the cryptocurrencies list
 - Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
+- Upgraded `countries-and-timezones` from version `3.8.0` to `3.9.0`
 - Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
 - Upgraded `Nx` from version `22.6.5` to `22.7.1`
 
