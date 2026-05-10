@@ -5,7 +5,6 @@ import {
   XRayRulesSettings
 } from '@ghostfolio/common/interfaces';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -37,13 +36,7 @@ import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-setti
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    IonIcon,
-    MatButtonModule,
-    MatMenuModule,
-    NgxSkeletonLoaderModule
-  ],
+  imports: [IonIcon, MatButtonModule, MatMenuModule, NgxSkeletonLoaderModule],
   selector: 'gf-rule',
   styleUrls: ['./rule.component.scss'],
   templateUrl: './rule.component.html'

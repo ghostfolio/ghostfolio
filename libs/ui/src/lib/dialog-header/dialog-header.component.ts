@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +14,7 @@ import { close } from 'ionicons/icons';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'justify-content-center' },
-  imports: [CommonModule, IonIcon, MatButtonModule, MatDialogModule],
+  imports: [IonIcon, MatButtonModule, MatDialogModule],
   selector: 'gf-dialog-header',
   styleUrls: ['./dialog-header.component.scss'],
   templateUrl: './dialog-header.component.html'

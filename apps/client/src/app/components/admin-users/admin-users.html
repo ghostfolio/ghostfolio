@@ -19,16 +19,12 @@
               <div class="d-flex align-items-center">
                 <span
                   class="d-none d-sm-inline-block text-monospace"
-                  [ngClass]="{
-                    'text-line-through': element.role === 'INACTIVE'
-                  }"
+                  [class.text-line-through]="element.role === 'INACTIVE'"
                   >{{ element.id }}</span
                 >
                 <span
                   class="d-inline-block d-sm-none text-monospace"
-                  [ngClass]="{
-                    'text-line-through': element.role === 'INACTIVE'
-                  }"
+                  [class.text-line-through]="element.role === 'INACTIVE'"
                   >{{ `${(element.id | slice: 0 : 5)}...` }}</span
                 >
                 @if (element.subscription?.expiresAt) {
@@ -273,11 +269,11 @@
       </div>
 
       <mat-paginator
+        [class.d-none]="
+          (isLoading && totalItems === 0) || totalItems <= pageSize
+        "
         [hidePageSize]="true"
         [length]="totalItems"
-        [ngClass]="{
-          'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
-        }"
         [pageSize]="pageSize"
         [showFirstLastButtons]="true"
         (page)="onChangePage($event)"
