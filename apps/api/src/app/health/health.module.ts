@@ -1,3 +1,4 @@
+import { AiModule } from '@ghostfolio/api/app/endpoints/ai/ai.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { DataEnhancerModule } from '@ghostfolio/api/services/data-provider/data-enhancer/data-enhancer.module';
@@ -12,6 +13,7 @@ import { HealthService } from './health.service';
 @Module({
   controllers: [HealthController],
   imports: [
+    AiModule,
     DataEnhancerModule,
     DataProviderModule,
     PropertyModule,
