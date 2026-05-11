@@ -172,7 +172,7 @@
               <ion-icon
                 class="h6 mb-0"
                 name="time-outline"
-                [ngClass]="{ 'text-danger': element.stacktrace?.length > 0 }"
+                [class.text-danger]="element.stacktrace?.length > 0"
               />
             } @else if (element.state === 'failed') {
               <ion-icon

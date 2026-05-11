@@ -319,9 +319,7 @@
     </div>
     <div
       class="col-md-12"
-      [ngClass]="{
-        'd-none': !user?.settings?.isExperimentalFeatures
-      }"
+      [class.d-none]="!user?.settings?.isExperimentalFeatures"
     >
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">

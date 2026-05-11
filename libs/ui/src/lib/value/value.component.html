@@ -27,7 +27,7 @@
   @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
-      [ngClass]="position === 'end' ? 'justify-content-end' : ''"
+      [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
         @if (colorizeSign && !useAbsoluteValue) {
@@ -40,7 +40,7 @@
         }
         <div
           class="mb-0 value"
-          [ngClass]="{
+          [class]="{
             'font-weight-bold h2': size === 'large',
             h4: size === 'medium'
           }"
@@ -60,7 +60,7 @@
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
-          [ngClass]="{
+          [class]="{
             'font-weight-bold h2': size === 'large',
             h4: size === 'medium'
           }"

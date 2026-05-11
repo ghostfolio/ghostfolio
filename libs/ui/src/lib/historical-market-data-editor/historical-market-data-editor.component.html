@@ -6,7 +6,7 @@
         @for (day of days; track day) {
           <div
             class="day"
-            [ngClass]="{
+            [class]="{
               'cursor-pointer valid': isDateOfInterest(
                 `${itemByMonth.key}-${formatDay(day)}`
               ),
