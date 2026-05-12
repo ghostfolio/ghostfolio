@@ -1,10 +1,10 @@
 <mat-toolbar class="px-0">
   @if (user) {
-    <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
+    <div class="d-flex h-100 logo-container" [class.filled]="hasTabs">
       <a
         class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
         mat-button
-        [ngClass]="{ 'w-100': hasTabs }"
+        [class.w-100]="hasTabs"
         [routerLink]="['/']"
         (click)="onLogoClick()"
       >
@@ -18,7 +18,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold':
               currentRoute === internalRoutes.home.path ||
               currentRoute === internalRoutes.zen.path,
@@ -35,7 +35,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
             'text-decoration-underline':
               currentRoute === internalRoutes.portfolio.path
@@ -49,7 +49,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold': currentRoute === internalRoutes.accounts.path,
             'text-decoration-underline':
               currentRoute === internalRoutes.accounts.path
@@ -64,7 +64,7 @@
             class="d-none d-sm-block rounded"
             i18n
             mat-button
-            [ngClass]="{
+            [class]="{
               'font-weight-bold':
                 currentRoute === internalRoutes.adminControl.path,
               'text-decoration-underline':
@@ -80,7 +80,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold': currentRoute === routeResources,
             'text-decoration-underline': currentRoute === routeResources
           }"
@@ -95,7 +95,7 @@
           <a
             class="d-none d-sm-block rounded"
             mat-button
-            [ngClass]="{
+            [class]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
             }"
@@ -115,7 +115,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold': currentRoute === routeAbout,
             'text-decoration-underline': currentRoute === routeAbout
           }"
@@ -239,11 +239,10 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{
-              'font-weight-bold':
-                currentRoute === internalRoutes.home.path ||
-                currentRoute === internalRoutes.zen.path
-            }"
+            [class.font-weight-bold]="
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path
+            "
             [routerLink]="['/']"
             >Overview</a
           >
@@ -251,9 +250,9 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
-            }"
+            [class.font-weight-bold]="
+              currentRoute === internalRoutes.portfolio.path
+            "
             [routerLink]="routerLinkPortfolio"
             >Portfolio</a
           >
@@ -261,18 +260,18 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === internalRoutes.accounts.path
-            }"
+            [class.font-weight-bold]="
+              currentRoute === internalRoutes.accounts.path
+            "
             [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
           <a
             i18n
             mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === internalRoutes.account.path
-            }"
+            [class.font-weight-bold]="
+              currentRoute === internalRoutes.account.path
+            "
             [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
@@ -281,10 +280,9 @@
               class="d-flex d-sm-none"
               i18n
               mat-menu-item
-              [ngClass]="{
-                'font-weight-bold':
-                  currentRoute === internalRoutes.adminControl.path
-              }"
+              [class.font-weight-bold]="
+                currentRoute === internalRoutes.adminControl.path
+              "
               [routerLink]="routerLinkAdminControl"
               >Admin Control</a
             >
@@ -294,9 +292,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{
-              'font-weight-bold': currentRoute === routeResources
-            }"
+            [class.font-weight-bold]="currentRoute === routeResources"
             [routerLink]="routerLinkResources"
             >Resources</a
           >
@@ -306,7 +302,7 @@
             <a
               class="d-flex d-sm-none"
               mat-menu-item
-              [ngClass]="{ 'font-weight-bold': currentRoute === routePricing }"
+              [class.font-weight-bold]="currentRoute === routePricing"
               [routerLink]="routerLinkPricing"
             >
               <span class="align-items-center d-flex">
@@ -321,7 +317,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === routeAbout }"
+            [class.font-weight-bold]="currentRoute === routeAbout"
             [routerLink]="routerLinkAbout"
             >About Ghostfolio</a
           >
@@ -332,11 +328,11 @@
     </ul>
   }
   @if (user === null) {
-    <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
+    <div class="d-flex h-100 logo-container" [class.filled]="hasTabs">
       <a
         class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
         mat-button
-        [ngClass]="{ 'w-100': hasTabs }"
+        [class.w-100]="hasTabs"
         [routerLink]="['/']"
       >
         <gf-logo
@@ -352,7 +348,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold': currentRoute === routeFeatures,
             'text-decoration-underline': currentRoute === routeFeatures
           }"
@@ -365,7 +361,7 @@
           class="d-none d-sm-block rounded"
           i18n
           mat-button
-          [ngClass]="{
+          [class]="{
             'font-weight-bold': currentRoute === routeAbout,
             'text-decoration-underline': currentRoute === routeAbout
           }"
@@ -378,7 +374,7 @@
           <a
             class="d-sm-block rounded"
             mat-button
-            [ngClass]="{
+            [class]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
             }"
@@ -399,7 +395,7 @@
             class="d-none d-sm-block rounded"
             i18n
             mat-button
-            [ngClass]="{
+            [class]="{
               'font-weight-bold': currentRoute === routeMarkets,
               'text-decoration-underline': currentRoute === routeMarkets
             }"

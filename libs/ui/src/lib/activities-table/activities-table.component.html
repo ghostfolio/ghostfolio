@@ -516,9 +516,7 @@
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
-      [ngClass]="{
-        'cursor-pointer': canClickActivity(row)
-      }"
+      [class.cursor-pointer]="canClickActivity(row)"
       (click)="onClickActivity(row)"
     ></tr>
   </table>
@@ -536,11 +534,9 @@
 }
 
 <mat-paginator
+  [class.d-none]="(isLoading() && !totalItems) || totalItems <= pageSize"
   [hidePageSize]="true"
   [length]="totalItems"
-  [ngClass]="{
-    'd-none': (isLoading() && !totalItems) || totalItems <= pageSize
-  }"
   [pageIndex]="pageIndex"
   [pageSize]="pageSize"
   [showFirstLastButtons]="true"

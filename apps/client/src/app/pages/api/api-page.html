@@ -1,77 +1,173 @@
 <div class="container">
-  <div class="mb-3">
-    <h2 class="text-center">Status</h2>
-    <div>{{ status$ | async | json }}</div>
-  </div>
-  <div class="mb-3">
-    <h2 class="text-center">Asset Profile</h2>
-    <div>{{ assetProfile$ | async | json }}</div>
-  </div>
-  <div>
-    <h2 class="text-center">Lookup</h2>
-    @if (lookupItems$) {
-      @let symbols = lookupItems$ | async;
-      <ul>
-        @for (item of symbols; track item.symbol) {
-          <li>{{ item.name }} ({{ item.symbol }})</li>
-        }
-      </ul>
-    }
-  </div>
-  <div>
-    <h2 class="text-center">Lookup (ISIN)</h2>
-    @if (isinLookupItems$) {
-      @let symbols = isinLookupItems$ | async;
-      <ul>
-        @for (item of symbols; track item.symbol) {
-          <li>{{ item.name }} ({{ item.symbol }})</li>
-        }
-      </ul>
-    }
-  </div>
-  <div>
-    <h2 class="text-center">Quotes</h2>
-    @if (quotes$) {
-      @let quotes = quotes$ | async;
-      <ul>
-        @for (quote of quotes | keyvalue; track quote) {
-          <li>
-            {{ quote.key }}: {{ quote.value.marketPrice }}
-            {{ quote.value.currency }}
-          </li>
-        }
-      </ul>
-    }
-  </div>
-  <div>
-    <h2 class="text-center">Historical</h2>
-    @if (historicalData$) {
-      @let historicalData = historicalData$ | async;
-      <ul>
-        @for (
-          historicalDataItem of historicalData | keyvalue;
-          track historicalDataItem
-        ) {
-          <li>
-            {{ historicalDataItem.key }}:
-            {{ historicalDataItem.value.marketPrice }}
-          </li>
-        }
-      </ul>
-    }
-  </div>
-  <div>
-    <h2 class="text-center">Dividends</h2>
-    @if (dividends$) {
-      @let dividends = dividends$ | async;
-      <ul>
-        @for (dividend of dividends | keyvalue; track dividend) {
-          <li>
-            {{ dividend.key }}:
-            {{ dividend.value.marketPrice }}
-          </li>
-        }
-      </ul>
-    }
+  <div class="mb-5 row">
+    <div class="col">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>AI Service Health</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let aiServiceHealth = aiServiceHealth$ | async;
+          @if (isFetchFailure(aiServiceHealth)) {
+            🔴 {{ aiServiceHealth.fetchError }}
+          } @else if (aiServiceHealth) {
+            🟢 {{ aiServiceHealth.status }}
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Status</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let status = status$ | async;
+          @if (isFetchFailure(status)) {
+            🔴 {{ status.fetchError }}
+          } @else if (status) {
+            <pre><code>{{ status | json }}</code></pre>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Asset Profile</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let assetProfile = assetProfile$ | async;
+          @if (isFetchFailure(assetProfile)) {
+            🔴 {{ assetProfile.fetchError }}
+          } @else if (assetProfile) {
+            <pre><code>{{ assetProfile | json }}</code></pre>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Lookup</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let symbols = lookupItems$ | async;
+          @if (isFetchFailure(symbols)) {
+            🔴 {{ symbols.fetchError }}
+          } @else if (symbols) {
+            <ul>
+              @for (item of symbols; track item.symbol) {
+                <li>{{ item.name }} ({{ item.symbol }})</li>
+              }
+            </ul>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Lookup (ISIN)</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let isinSymbols = isinLookupItems$ | async;
+          @if (isFetchFailure(isinSymbols)) {
+            🔴 {{ isinSymbols.fetchError }}
+          } @else if (isinSymbols) {
+            <ul>
+              @for (item of isinSymbols; track item.symbol) {
+                <li>{{ item.name }} ({{ item.symbol }})</li>
+              }
+            </ul>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Quotes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let quotes = quotes$ | async;
+          @if (isFetchFailure(quotes)) {
+            🔴 {{ quotes.fetchError }}
+          } @else if (quotes) {
+            <ul>
+              @for (quote of quotes | keyvalue; track quote) {
+                <li>
+                  {{ quote.key }}: {{ quote.value.marketPrice }}
+                  {{ quote.value.currency }}
+                </li>
+              }
+            </ul>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Historical</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let historicalData = historicalData$ | async;
+          @if (isFetchFailure(historicalData)) {
+            🔴 {{ historicalData.fetchError }}
+          } @else if (historicalData) {
+            <ul>
+              @for (item of historicalData | keyvalue; track item) {
+                <li>{{ item.key }}: {{ item.value.marketPrice }}</li>
+              }
+            </ul>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Dividends</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @let dividends = dividends$ | async;
+          @if (isFetchFailure(dividends)) {
+            🔴 {{ dividends.fetchError }}
+          } @else if (dividends) {
+            <ul>
+              @for (dividend of dividends | keyvalue; track dividend) {
+                <li>{{ dividend.key }}: {{ dividend.value.marketPrice }}</li>
+              }
+            </ul>
+          } @else {
+            <ngx-skeleton-loader
+              animation="pulse"
+              [theme]="{ height: '1.5rem', width: '100%' }"
+            />
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

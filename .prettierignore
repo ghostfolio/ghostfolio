@@ -1,5 +1,6 @@
 /.agents/skills/angular-developer
 /.nx/cache
+/.nx/self-healing
 /.nx/workspace-data
 /apps/client/src/polyfills.ts
 /dist

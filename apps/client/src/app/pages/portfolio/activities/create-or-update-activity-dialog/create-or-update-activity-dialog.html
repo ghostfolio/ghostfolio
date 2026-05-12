@@ -76,11 +76,12 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'mb-3': mode === 'update' }">
+    <div [class.mb-3]="mode === 'update'">
       <mat-form-field
         appearance="outline"
         class="w-100"
-        [ngClass]="{ 'mb-1 without-hint': mode === 'create' }"
+        [class.mb-1]="mode === 'create'"
+        [class.without-hint]="mode === 'create'"
       >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
@@ -103,18 +104,16 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': mode === 'update' }">
+    <div class="mb-3" [class.d-none]="mode === 'update'">
       <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
         >Update Cash Balance</mat-checkbox
       >
     </div>
     <div
       class="mb-3"
-      [ngClass]="{
-        'd-none': !activityForm
-          .get('searchSymbol')
-          ?.hasValidator(Validators.required)
-      }"
+      [class.d-none]="
+        !activityForm.get('searchSymbol')?.hasValidator(Validators.required)
+      "
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name, symbol or ISIN</mat-label>
@@ -127,9 +126,9 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{
-        'd-none': !activityForm.get('name')?.hasValidator(Validators.required)
-      }"
+      [class.d-none]="
+        !activityForm.get('name')?.hasValidator(Validators.required)
+      "
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
@@ -173,13 +172,12 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{
-        'd-none':
-          activityForm.get('type')?.value === 'FEE' ||
-          activityForm.get('type')?.value === 'INTEREST' ||
-          activityForm.get('type')?.value === 'ITEM' ||
-          activityForm.get('type')?.value === 'LIABILITY'
-      }"
+      [class.d-none]="
+        activityForm.get('type')?.value === 'FEE' ||
+        activityForm.get('type')?.value === 'INTEREST' ||
+        activityForm.get('type')?.value === 'ITEM' ||
+        activityForm.get('type')?.value === 'LIABILITY'
+      "
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
@@ -188,7 +186,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.get('type')?.value === 'FEE' }"
+      [class.d-none]="activityForm.get('type')?.value === 'FEE'"
     >
       <div class="align-items-start d-flex">
         <mat-form-field appearance="outline" class="w-100">
@@ -215,7 +213,7 @@
           <div
             class="ml-2"
             matTextSuffix
-            [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
+            [class.d-none]="!activityForm.get('currency')?.value"
           >
             <mat-select formControlName="currencyOfUnitPrice">
               @for (currency of currencies; track currency) {
@@ -247,12 +245,11 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{
-        'd-none':
-          activityForm.get('type')?.value === 'INTEREST' ||
-          activityForm.get('type')?.value === 'ITEM' ||
-          activityForm.get('type')?.value === 'LIABILITY'
-      }"
+      [class.d-none]="
+        activityForm.get('type')?.value === 'INTEREST' ||
+        activityForm.get('type')?.value === 'ITEM' ||
+        activityForm.get('type')?.value === 'LIABILITY'
+      "
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
@@ -260,7 +257,7 @@
         <div
           class="ml-2"
           matTextSuffix
-          [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
+          [class.d-none]="!activityForm.get('currency')?.value"
         >
           {{ activityForm.get('currencyOfUnitPrice')?.value }}
         </div>
@@ -280,7 +277,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.get('type')?.value !== 'ITEM' }"
+      [class.d-none]="activityForm.get('type')?.value !== 'ITEM'"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Class</mat-label>
@@ -299,7 +296,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.get('type')?.value !== 'ITEM' }"
+      [class.d-none]="activityForm.get('type')?.value !== 'ITEM'"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Sub Class</mat-label>
