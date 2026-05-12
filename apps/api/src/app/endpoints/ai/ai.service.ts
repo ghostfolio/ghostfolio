@@ -1,4 +1,5 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_API_KEY_OPENROUTER,
@@ -36,11 +37,18 @@ export class AiService {
   ];
 
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly portfolioService: PortfolioService,
     private readonly propertyService: PropertyService
   ) {}
 
-  public async generateText({ prompt }: { prompt: string }) {
+  public async generateText({
+    prompt,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  }: {
+    prompt: string;
+    requestTimeout?: number;
+  }) {
     const openRouterApiKey = await this.propertyService.getByKey<string>(
       PROPERTY_API_KEY_OPENROUTER
     );
@@ -55,7 +63,8 @@ export class AiService {
 
     return generateText({
       prompt,
-      model: openRouterService.chat(openRouterModel)
+      model: openRouterService.chat(openRouterModel),
+      timeout: requestTimeout
     });
   }
 
