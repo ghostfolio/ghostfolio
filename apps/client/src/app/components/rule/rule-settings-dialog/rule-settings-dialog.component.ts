@@ -26,10 +26,19 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
   templateUrl: './rule-settings-dialog.html'
 })
 export class GfRuleSettingsDialogComponent {
+  public hasChanges = false;
   public settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
+
+  private initialSettings: string;
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: RuleSettingsDialogParams,
     public dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>
-  ) {}
+  ) {
+    this.initialSettings = JSON.stringify(data.settings);
+  }
+
+  public onModelChange() {
+    this.hasChanges = JSON.stringify(this.data.settings) !== this.initialSettings;
+  }
 }
