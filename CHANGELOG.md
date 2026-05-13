@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Spanish (`es`)
 - Migrated various components from `NgClass` to class bindings
 - Refreshed the cryptocurrencies list
 - Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
