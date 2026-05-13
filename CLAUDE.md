@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+See [`DEVELOPMENT.md`](DEVELOPMENT.md) for the canonical contributor setup guide; this file focuses on architecture and command-level guidance for Claude Code.
+
 ## Overview
 
 Ghostfolio is an open-source wealth management application (AGPL-3.0). It is structured as an **Nx monorepo** with two apps and two shared libraries.
@@ -25,13 +27,17 @@ npm run database:setup      # push schema + seed
 ### Running Locally
 
 ```bash
-npm run start:server        # NestJS API on :3333
+npm run start:server        # NestJS API on :3333 (DEFAULT_PORT from libs/common/src/lib/config.ts)
 npm run start:client        # Angular client on https://localhost:4200/en
 ```
 
 Open https://localhost:4200/en. The first registered user gets the `ADMIN` role.
 
 For other languages, change `--configuration=development-en` to e.g. `--configuration=development-de` in `package.json`.
+
+The dev client runs over HTTPS and expects `apps/client/localhost.cert` / `apps/client/localhost.pem`. See [`DEVELOPMENT.md`](DEVELOPMENT.md) for the `openssl` command to generate them. Translation strings live in `apps/client/src/locales/`; extract with `npm run extract-locales`.
+
+If husky pre-commit hooks don't fire, ensure they are executable: `chmod +x .husky/pre-commit`.
 
 ## Commands
 
@@ -50,6 +56,14 @@ For other languages, change `--configuration=development-en` to e.g. `--configur
 | DB GUI | `npm run database:gui` |
 
 Tests require the `.env.example` env vars; the `npm test` script handles this via `dotenv-cli`.
+
+For large branches, prefer the `affected:*` variants which only run targets for projects impacted by the diff:
+
+```bash
+npm run affected:lint
+npm run affected:test
+npm run affected:build
+```
 
 ## Architecture
 
