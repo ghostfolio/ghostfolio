@@ -43,7 +43,7 @@
         }}</span>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
+    <div [class.d-none]="platforms?.length < 1">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
         <input

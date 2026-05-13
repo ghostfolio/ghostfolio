@@ -24,11 +24,11 @@
     }
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
-      [hidden]="isLoading"
-      [ngClass]="{
+      [class]="{
         'text-danger': isAllTimeLow,
         'text-success': isAllTimeHigh
       }"
+      [hidden]="isLoading"
     >
       <span #value id="value"></span>
     </div>

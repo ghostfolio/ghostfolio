@@ -520,14 +520,14 @@ ngx-skeleton-loader {
       padding: 2rem 0;
     }
 
+    @include mat.tabs-overrides(
+      (
+        divider-height: 0
+      )
+    );
+
     @media (min-width: 576px) {
       flex-direction: row-reverse;
-
-      @include mat.tabs-overrides(
-        (
-          divider-height: 0
-        )
-      );
 
       .mat-mdc-tab-header {
         background-color: rgba(var(--palette-foreground-base), 0.02);

@@ -30,7 +30,7 @@
         } @else {
           <div
             class="align-items-center d-flex icon-container mr-2 px-2"
-            [ngClass]="{
+            [class]="{
               okay:
                 statistics?.rulesFulfilledCount ===
                 statistics?.rulesActiveCount,
@@ -60,10 +60,7 @@
         }
       </div>
       @for (category of categories; track category.key) {
-        <div
-          class="mb-4"
-          [ngClass]="{ 'd-none': category.rules?.length === 0 }"
-        >
+        <div class="mb-4" [class.d-none]="category.rules?.length === 0">
           <h4 class="align-items-center d-flex m-0">
             <span>{{ category.name }}</span>
             @if (user?.subscription?.type === 'Basic') {

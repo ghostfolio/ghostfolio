@@ -103,7 +103,7 @@
           <mat-card
             appearance="outlined"
             class="h-100"
-            [ngClass]="{ active: user?.subscription?.type === 'Basic' }"
+            [class.active]="user?.subscription?.type === 'Basic'"
           >
             <mat-card-content class="d-flex flex-column h-100">
               <div class="flex-grow-1">
@@ -169,7 +169,7 @@
           <mat-card
             appearance="outlined"
             class="h-100"
-            [ngClass]="{ active: user?.subscription?.type === 'Premium' }"
+            [class.active]="user?.subscription?.type === 'Premium'"
           >
             <mat-card-content class="d-flex flex-column h-100">
               @if (label) {
