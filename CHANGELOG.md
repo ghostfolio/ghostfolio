@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.3.0 - 2026-05-14
 
 ### Added
 
@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deactivated asset profiles automatically on delisting in the _Financial Modeling Prep_ service
 - Migrated various components from `NgClass` to class bindings
 - Refreshed the cryptocurrencies list
 - Improved the language localization for Spanish (`es`)
@@ -26,9 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
 - Upgraded `Nx` from version `22.6.5` to `22.7.1`
 - Upgraded `papaparse` from version `5.3.1` to `5.5.3`
+- Upgraded `prisma` from version `7.7.0` to `7.8.0`
 
 ### Fixed
 
+- Synchronized the native browser elements with the theme to improve the dark mode
 - Fixed a visual regression in the bottom navigation bar on mobile
 
 ## 3.2.0 - 2026-05-03
