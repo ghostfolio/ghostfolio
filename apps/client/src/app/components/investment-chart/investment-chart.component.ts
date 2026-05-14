@@ -55,16 +55,16 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './investment-chart.component.html'
 })
 export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
-  @Input() public benchmarkDataItems: InvestmentItem[] = [];
-  @Input() public benchmarkDataLabel = '';
-  @Input() public colorScheme: ColorScheme;
-  @Input() public currency: string;
-  @Input() public groupBy: GroupBy;
-  @Input() public historicalDataItems: LineChartItem[] = [];
-  @Input() public isInPercentage = false;
-  @Input() public isLoading = false;
-  @Input() public locale = getLocale();
-  @Input() public savingsRate = 0;
+  @Input() public readonly benchmarkDataItems: InvestmentItem[] = [];
+  @Input() public readonly benchmarkDataLabel = '';
+  @Input() public readonly colorScheme: ColorScheme;
+  @Input() public readonly currency: string;
+  @Input() public readonly groupBy: GroupBy;
+  @Input() public readonly historicalDataItems: LineChartItem[] = [];
+  @Input() public readonly isInPercentage = false;
+  @Input() public readonly isLoading = false;
+  @Input() public readonly locale = getLocale();
+  @Input() public readonly savingsRate = 0;
 
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
