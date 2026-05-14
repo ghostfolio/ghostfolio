@@ -82,40 +82,40 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class GfImportActivitiesDialogComponent {
-  public accounts: CreateAccountWithBalancesDto[] = [];
-  public activities: Activity[] = [];
-  public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
-  public dataSource: MatTableDataSource<Activity>;
-  public details: any[] = [];
-  public deviceType: string;
-  public dialogTitle = $localize`Import Activities`;
-  public errorMessages: string[] = [];
-  public holdings: PortfolioPosition[] = [];
-  public importStep: ImportStep = ImportStep.UPLOAD_FILE;
-  public isLoading = false;
-  public mode: 'DIVIDEND';
-  public pageIndex = 0;
-  public pageSize = 8;
-  public selectedActivities: Activity[] = [];
-  public sortColumn = 'date';
-  public sortDirection: SortDirection = 'desc';
-  public stepperOrientation: StepperOrientation;
-  public tags: CreateTagDto[] = [];
-  public totalItems: number;
-
   protected readonly assetProfileForm = new FormGroup({
     assetProfileIdentifier: new FormControl<PortfolioPosition | null>(null, {
       validators: [Validators.required]
     })
   });
+  protected dataSource: MatTableDataSource<Activity>;
+  protected details: any[] = [];
+  protected dialogTitle = $localize`Import Activities`;
+  protected errorMessages: string[] = [];
+  protected holdings: PortfolioPosition[] = [];
+  protected importStep: ImportStep = ImportStep.UPLOAD_FILE;
+  protected isLoading = false;
+  protected mode: 'DIVIDEND';
+  protected pageIndex = 0;
+  protected pageSize = 8;
+  protected selectedActivities: Activity[] = [];
+  protected sortColumn = 'date';
+  protected sortDirection: SortDirection = 'desc';
+  protected stepperOrientation: StepperOrientation;
+  protected totalItems: number;
+
+  private accounts: CreateAccountWithBalancesDto[] = [];
+  private activities: Activity[] = [];
+  private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+  private deviceType: string;
+  private tags: CreateTagDto[] = [];
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
+    @Inject(MAT_DIALOG_DATA) protected data: ImportActivitiesDialogParams,
     private dataService: DataService,
     private destroyRef: DestroyRef,
     private deviceDetectorService: DeviceDetectorService,
-    public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
+    private dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
   ) {
@@ -165,11 +165,11 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onImportActivities() {
+  protected async onImportActivities() {
     try {
       this.snackBar.open('⏳ ' + $localize`Importing data...`);
 
@@ -202,7 +202,7 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  public onFilesDropped({
+  protected onFilesDropped({
     files,
     stepper
   }: {
@@ -216,7 +216,7 @@ export class GfImportActivitiesDialogComponent {
     this.handleFile({ stepper, file: files[0] });
   }
 
-  public onImportStepChange(event: StepperSelectionEvent) {
+  protected onImportStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
       this.importStep = ImportStep.UPLOAD_FILE;
     } else if (event.selectedIndex === ImportStep.SELECT_ACTIVITIES) {
@@ -224,7 +224,7 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  public onLoadDividends(aStepper: MatStepper) {
+  protected onLoadDividends(aStepper: MatStepper) {
     this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
     const { dataSource, symbol } =
@@ -252,11 +252,11 @@ export class GfImportActivitiesDialogComponent {
       });
   }
 
-  public onPageChanged({ pageIndex }: PageEvent) {
+  protected onPageChanged({ pageIndex }: PageEvent) {
     this.pageIndex = pageIndex;
   }
 
-  public onReset(aStepper: MatStepper) {
+  protected onReset(aStepper: MatStepper) {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
@@ -266,7 +266,7 @@ export class GfImportActivitiesDialogComponent {
     aStepper.reset();
   }
 
-  public onSelectFile(stepper: MatStepper) {
+  protected onSelectFile(stepper: MatStepper) {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
@@ -282,7 +282,7 @@ export class GfImportActivitiesDialogComponent {
     input.click();
   }
 
-  public updateSelection(activities: Activity[]) {
+  protected updateSelection(activities: Activity[]) {
     this.selectedActivities = activities.filter(({ error }) => {
       return !error;
     });
