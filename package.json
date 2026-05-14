@@ -12,7 +12,6 @@
     "affected:libs": "nx affected:libs",
     "affected:lint": "nx affected:lint",
     "affected:test": "nx affected:test",
-    "analyze:client": "nx run client:build:production --stats-json && webpack-bundle-analyzer -p 1234 dist/apps/client/en/stats.json",
     "angular": "node --max_old_space_size=32768 ./node_modules/@angular/cli/bin/ng",
     "build:production": "nx run api:copy-assets && nx run api:build:production && nx run client:copy-assets && nx run client:build:production && nx run ui:build-storybook && npm run replace-placeholders-in-build",
     "build:storybook": "nx run ui:build-storybook",
@@ -71,7 +70,7 @@
     "@bull-board/nestjs": "7.0.0",
     "@codewithdan/observable-store": "2.2.15",
     "@date-fns/utc": "2.1.1",
-    "@internationalized/number": "3.6.5",
+    "@internationalized/number": "3.6.6",
     "@ionic/angular": "8.8.5",
     "@keyv/redis": "4.4.0",
     "@nestjs/bull": "11.0.4",
@@ -206,8 +205,7 @@
     "ts-jest": "29.4.0",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
-    "typescript": "5.9.2",
-    "webpack-bundle-analyzer": "4.10.2"
+    "typescript": "5.9.2"
   },
   "engines": {
     "node": ">=22.18.0"
