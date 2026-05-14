@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Synchronized the native browser elements with the theme to improve the dark mode
 - Fixed a visual regression in the bottom navigation bar on mobile
 
 ## 3.2.0 - 2026-05-03
