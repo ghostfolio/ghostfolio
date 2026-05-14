@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated various components from `NgClass` to class bindings
 - Refreshed the cryptocurrencies list
+- Improved the language localization for Spanish (`es`)
 - Cleaned up the _Webpack Bundle Analyzer_ setup
 - Upgraded `@internationalized/number` from version `3.6.5` to `3.6.6`
 - Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
@@ -25,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
 - Upgraded `Nx` from version `22.6.5` to `22.7.1`
 - Upgraded `papaparse` from version `5.3.1` to `5.5.3`
-- Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
