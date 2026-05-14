@@ -52,7 +52,6 @@ import { addIcons } from 'ionicons';
 import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash';
 import ms from 'ms';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { ImportStep } from './enums/import-step';
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
@@ -102,19 +101,18 @@ export class GfImportActivitiesDialogComponent {
   protected selectedActivities: Activity[] = [];
   protected readonly sortColumn = 'date';
   protected readonly sortDirection: SortDirection = 'desc';
-  protected stepperOrientation: StepperOrientation;
+  protected readonly stepperOrientation: StepperOrientation =
+    this.data.deviceType === 'mobile' ? 'vertical' : 'horizontal';
   protected totalItems: number;
 
   private accounts: CreateAccountWithBalancesDto[] = [];
   private activities: Activity[] = [];
   private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
-  private deviceType: string;
   private tags: CreateTagDto[] = [];
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialogRef =
     inject<MatDialogRef<GfImportActivitiesDialogComponent>>(MatDialogRef);
   private readonly importActivitiesService = inject(ImportActivitiesService);
@@ -125,10 +123,6 @@ export class GfImportActivitiesDialogComponent {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-    this.stepperOrientation =
-      this.deviceType === 'mobile' ? 'vertical' : 'horizontal';
-
     if (
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
