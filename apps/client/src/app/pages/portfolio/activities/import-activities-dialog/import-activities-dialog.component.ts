@@ -96,10 +96,10 @@ export class GfImportActivitiesDialogComponent {
   protected isLoading = false;
   protected mode: 'DIVIDEND';
   protected pageIndex = 0;
-  protected pageSize = 8;
+  protected readonly pageSize = 8;
   protected selectedActivities: Activity[] = [];
-  protected sortColumn = 'date';
-  protected sortDirection: SortDirection = 'desc';
+  protected readonly sortColumn = 'date';
+  protected readonly sortDirection: SortDirection = 'desc';
   protected stepperOrientation: StepperOrientation;
   protected totalItems: number;
 
@@ -110,14 +110,15 @@ export class GfImportActivitiesDialogComponent {
   private tags: CreateTagDto[] = [];
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) protected data: ImportActivitiesDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
-    private importActivitiesService: ImportActivitiesService,
-    private snackBar: MatSnackBar
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA)
+    protected readonly data: ImportActivitiesDialogParams,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly deviceDetectorService: DeviceDetectorService,
+    private readonly dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
+    private readonly importActivitiesService: ImportActivitiesService,
+    private readonly snackBar: MatSnackBar
   ) {
     addIcons({ cloudUploadOutline, warningOutline });
   }
