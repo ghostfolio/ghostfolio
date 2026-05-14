@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators
@@ -84,7 +84,6 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 export class GfImportActivitiesDialogComponent {
   public accounts: CreateAccountWithBalancesDto[] = [];
   public activities: Activity[] = [];
-  public assetProfileForm: FormGroup;
   public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
   public dataSource: MatTableDataSource<Activity>;
   public details: any[] = [];
@@ -104,13 +103,18 @@ export class GfImportActivitiesDialogComponent {
   public tags: CreateTagDto[] = [];
   public totalItems: number;
 
+  protected readonly assetProfileForm = new FormGroup({
+    assetProfileIdentifier: new FormControl<PortfolioPosition | null>(null, {
+      validators: [Validators.required]
+    })
+  });
+
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
     private dataService: DataService,
     private destroyRef: DestroyRef,
     private deviceDetectorService: DeviceDetectorService,
-    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
@@ -123,10 +127,6 @@ export class GfImportActivitiesDialogComponent {
     this.stepperOrientation =
       this.deviceType === 'mobile' ? 'vertical' : 'horizontal';
 
-    this.assetProfileForm = this.formBuilder.group({
-      assetProfileIdentifier: [undefined, Validators.required]
-    });
-
     if (
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
@@ -135,7 +135,7 @@ export class GfImportActivitiesDialogComponent {
 
       this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
-      this.assetProfileForm.get('assetProfileIdentifier').disable();
+      this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
       this.dataService
         .fetchPortfolioHoldings({
@@ -156,7 +156,7 @@ export class GfImportActivitiesDialogComponent {
           this.holdings = sortBy(holdings, ({ name }) => {
             return name.toLowerCase();
           });
-          this.assetProfileForm.get('assetProfileIdentifier').enable();
+          this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
           this.isLoading = false;
 
@@ -225,11 +225,14 @@ export class GfImportActivitiesDialogComponent {
   }
 
   public onLoadDividends(aStepper: MatStepper) {
-    this.assetProfileForm.get('assetProfileIdentifier').disable();
+    this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
-    const { dataSource, symbol } = this.assetProfileForm.get(
-      'assetProfileIdentifier'
-    ).value;
+    const { dataSource, symbol } =
+      this.assetProfileForm.controls.assetProfileIdentifier.value ?? {};
+
+    if (!dataSource || !symbol) {
+      return;
+    }
 
     this.dataService
       .fetchDividendsImport({
@@ -258,7 +261,7 @@ export class GfImportActivitiesDialogComponent {
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
     this.pageIndex = 0;
-    this.assetProfileForm.get('assetProfileIdentifier').enable();
+    this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
     aStepper.reset();
   }
@@ -270,8 +273,10 @@ export class GfImportActivitiesDialogComponent {
 
     input.onchange = (event) => {
       // Getting the file reference
-      const file = (event.target as HTMLInputElement).files[0];
-      this.handleFile({ file, stepper });
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        this.handleFile({ file, stepper });
+      }
     };
 
     input.click();
@@ -283,13 +288,7 @@ export class GfImportActivitiesDialogComponent {
     });
   }
 
-  private async handleFile({
-    file,
-    stepper
-  }: {
-    file: File;
-    stepper: MatStepper;
-  }): Promise<void> {
+  private handleFile({ file, stepper }: { file: File; stepper: MatStepper }) {
     this.snackBar.open('⏳ ' + $localize`Validating data...`);
 
     // Setting up the reader
@@ -297,7 +296,7 @@ export class GfImportActivitiesDialogComponent {
     reader.readAsText(file, 'UTF-8');
 
     reader.onload = async (readerEvent) => {
-      const fileContent = readerEvent.target.result as string;
+      const fileContent = readerEvent.target?.result as string;
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
       try {
