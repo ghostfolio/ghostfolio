@@ -6,14 +6,16 @@
         @for (day of days; track day) {
           <div
             class="day"
-            [class]="{
-              'cursor-pointer valid': isDateOfInterest(
-                `${itemByMonth.key}-${formatDay(day)}`
-              ),
-              available:
-                marketDataByMonth[itemByMonth.key][formatDay(day)]?.marketPrice,
-              today: isToday(`${itemByMonth.key}-${formatDay(day)}`)
-            }"
+            [class.available]="
+              marketDataByMonth[itemByMonth.key][formatDay(day)]?.marketPrice
+            "
+            [class.cursor-pointer]="
+              isDateOfInterest(`${itemByMonth.key}-${formatDay(day)}`)
+            "
+            [class.today]="isToday(`${itemByMonth.key}-${formatDay(day)}`)"
+            [class.valid]="
+              isDateOfInterest(`${itemByMonth.key}-${formatDay(day)}`)
+            "
             [title]="
               (`${itemByMonth.key}-${formatDay(day)}`
                 | date: defaultDateFormat()) ?? ''
