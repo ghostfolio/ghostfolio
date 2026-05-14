@@ -118,7 +118,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           borderWidth: this.groupBy ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {
-              x: parseDate(date).getTime(),
+              x: parseDate(date)?.getTime() ?? null,
               y: this.isInPercentage ? investment * 100 : investment
             };
           }),
@@ -138,7 +138,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           borderWidth: 2,
           data: this.values.map(({ date, value }) => {
             return {
-              x: parseDate(date).getTime(),
+              x: parseDate(date)?.getTime() ?? null,
               y: this.isInPercentage ? value * 100 : value
             };
           }),
@@ -165,14 +165,14 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
           this.getTooltipPluginConfiguration();
 
         const annotations = this.chart.options.plugins.annotation
-          .annotations as Record<string, AnnotationOptions<'line'>>;
+          ?.annotations as Record<string, AnnotationOptions<'line'>>;
         if (this.savingsRate && annotations.savingsRate) {
           annotations.savingsRate.value = this.savingsRate;
         }
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'bar' | 'line'>(this.chartCanvas.nativeElement, {
           data: chartData,
           options: {
             animation: false,
@@ -305,8 +305,12 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   private isInFuture<T>(aContext: ScriptableLineSegmentContext, aValue: T) {
-    return isAfter(new Date(aContext?.p1?.parsed?.x), new Date())
-      ? aValue
-      : undefined;
+    const xValue = aContext?.p1?.parsed?.x;
+
+    if (xValue == null) {
+      return undefined;
+    }
+
+    return isAfter(new Date(xValue), new Date()) ? aValue : undefined;
   }
 }
