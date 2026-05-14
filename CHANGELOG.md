@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
 - Upgraded `Nx` from version `22.6.5` to `22.7.1`
 - Upgraded `papaparse` from version `5.3.1` to `5.5.3`
+- Upgraded `prisma` from version `7.7.0` to `7.8.0`
 
 ### Fixed
 
