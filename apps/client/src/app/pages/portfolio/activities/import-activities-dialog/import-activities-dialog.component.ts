@@ -22,7 +22,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -87,6 +87,8 @@ export class GfImportActivitiesDialogComponent {
       validators: [Validators.required]
     })
   });
+  protected readonly data =
+    inject<ImportActivitiesDialogParams>(MAT_DIALOG_DATA);
   protected dataSource: MatTableDataSource<Activity>;
   protected details: any[] = [];
   protected dialogTitle = $localize`Import Activities`;
@@ -109,17 +111,16 @@ export class GfImportActivitiesDialogComponent {
   private deviceType: string;
   private tags: CreateTagDto[] = [];
 
-  public constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA)
-    protected readonly data: ImportActivitiesDialogParams,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly deviceDetectorService: DeviceDetectorService,
-    private readonly dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
-    private readonly importActivitiesService: ImportActivitiesService,
-    private readonly snackBar: MatSnackBar
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfImportActivitiesDialogComponent>>(MatDialogRef);
+  private readonly importActivitiesService = inject(ImportActivitiesService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  public constructor() {
     addIcons({ cloudUploadOutline, warningOutline });
   }
 
