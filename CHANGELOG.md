@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated various components from `NgClass` to class bindings
 - Refreshed the cryptocurrencies list
+- Improved the language localization for Spanish (`es`)
+- Cleaned up the _Webpack Bundle Analyzer_ setup
 - Upgraded `@internationalized/number` from version `3.6.5` to `3.6.6`
 - Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
 - Upgraded `@openrouter/ai-sdk-provider` from version `0.7.2` to `2.9.0`
