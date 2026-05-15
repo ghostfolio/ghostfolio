@@ -1,39 +1,30 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-
 import {
-  ChangeDetectorRef,
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  DestroyRef,
-  OnInit
-} from '@angular/core';
+  GfPageTabsComponent,
+  TabConfiguration
+} from '@ghostfolio/ui/page-tabs';
+
+import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   host: { class: 'page has-tabs' },
-  imports: [IonIcon, MatTabsModule, RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [GfPageTabsComponent],
   selector: 'gf-user-account-page',
   styleUrls: ['./user-account-page.scss'],
   templateUrl: './user-account-page.html'
 })
-export class GfUserAccountPageComponent implements OnInit {
-  public deviceType: string;
+export class GfUserAccountPageComponent {
   public tabs: TabConfiguration[] = [];
   public user: User;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -67,9 +58,5 @@ export class GfUserAccountPageComponent implements OnInit {
       });
 
     addIcons({ diamondOutline, keyOutline, settingsOutline });
-  }
-
-  public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 }

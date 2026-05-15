@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Extracted the page tabs to a reusable component
+
 ### Fixed
 
 - Resolved an issue with the cash balance calculation of an account for `SELL` activities to ensure fees are correctly subtracted

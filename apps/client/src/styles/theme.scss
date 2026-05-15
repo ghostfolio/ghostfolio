@@ -293,24 +293,6 @@ $gf-typography: (
         container-shape: 4px
       )
     );
-
-    .page.has-tabs {
-      @include mat.tabs-overrides(
-        (
-          container-height: 3rem
-        )
-      );
-    }
-  }
-
-  @media (min-width: 576px) {
-    .page.has-tabs {
-      @include mat.tabs-overrides(
-        (
-          container-height: 2rem
-        )
-      );
-    }
   }
 
   @include mat.badge-overrides(
@@ -433,15 +415,6 @@ $gf-typography: (
         filled-container-color: #f44336,
         filled-label-text-color: white,
         outlined-label-text-color: #f44336
-      )
-    );
-  }
-
-  .page.has-tabs {
-    @include mat.tabs-overrides(
-      (
-        active-indicator-height: 0,
-        label-text-tracking: normal
       )
     );
   }

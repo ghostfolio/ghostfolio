@@ -1,33 +1,27 @@
-import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import {
+  GfPageTabsComponent,
+  TabConfiguration
+} from '@ghostfolio/ui/page-tabs';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
+import { Component } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { cloudyOutline, readerOutline, serverOutline } from 'ionicons/icons';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   host: { class: 'page has-tabs' },
-  imports: [IonIcon, MatTabsModule, RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [GfPageTabsComponent],
   selector: 'gf-faq-page',
   styleUrls: ['./faq-page.scss'],
   templateUrl: './faq-page.html'
 })
-export class GfFaqPageComponent implements OnInit {
-  public deviceType: string;
+export class GfFaqPageComponent {
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];
 
-  public constructor(
-    private dataService: DataService,
-    private deviceDetectorService: DeviceDetectorService
-  ) {
+  public constructor(private dataService: DataService) {
     const { globalPermissions } = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
@@ -55,9 +49,5 @@ export class GfFaqPageComponent implements OnInit {
     ];
 
     addIcons({ cloudyOutline, readerOutline, serverOutline });
-  }
-
-  public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 }
