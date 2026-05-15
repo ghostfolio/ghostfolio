@@ -95,7 +95,8 @@ export class ImportService {
             filters,
             userCurrency,
             userId,
-            startDate: parseDate(dateOfFirstActivity)
+            startDate: parseDate(dateOfFirstActivity),
+            take: Number.MAX_SAFE_INTEGER
           }),
           this.symbolProfileService.getSymbolProfiles([
             {
@@ -649,7 +650,8 @@ export class ImportService {
         userCurrency,
         userId,
         includeDrafts: true,
-        withExcludedAccountsAndActivities: true
+        withExcludedAccountsAndActivities: true,
+        take: Number.MAX_SAFE_INTEGER
       });
 
     return activitiesDto.map(

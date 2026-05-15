@@ -46,6 +46,7 @@ export class ExportService {
       includeDrafts: true,
       sortColumn: 'date',
       sortDirection: 'asc',
+      take: Number.MAX_SAFE_INTEGER,
       types: activityTypes,
       userCurrency: userSettings?.baseCurrency,
       withExcludedAccountsAndActivities: true
