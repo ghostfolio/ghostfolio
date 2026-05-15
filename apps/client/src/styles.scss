@@ -505,46 +505,6 @@ ngx-skeleton-loader {
       padding: 2rem 0;
     }
   }
-
-  &.has-tabs {
-    gf-page-tabs {
-      height: calc(100svh - var(--mat-toolbar-standard-height));
-
-      .fab-container {
-        @media (max-width: 575.98px) {
-          bottom: 5rem;
-        }
-      }
-
-      .mat-mdc-tab-nav-panel {
-        padding: 2rem 0;
-      }
-
-      @include mat.tabs-overrides(
-        (
-          divider-height: 0
-        )
-      );
-
-      @media (min-width: 576px) {
-        flex-direction: row-reverse;
-
-        .mat-mdc-tab-header {
-          background-color: rgba(var(--palette-foreground-base), 0.02);
-          padding: 2rem 0;
-          width: 14rem;
-
-          .mat-mdc-tab-links {
-            flex-direction: column;
-
-            .mat-mdc-tab-link {
-              justify-content: flex-start;
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 .svgMap-tooltip {

@@ -1,5 +1,46 @@
+@use '@angular/material' as mat;
+
 :host {
   display: flex;
   flex-direction: column;
+  height: calc(100svh - var(--mat-toolbar-standard-height));
   width: 100%;
+
+  @include mat.tabs-overrides(
+    (
+      divider-height: 0
+    )
+  );
+
+  .fab-container {
+    @media (max-width: 575.98px) {
+      bottom: 5rem;
+    }
+  }
+
+  ::ng-deep {
+    .mat-mdc-tab-nav-panel {
+      padding: 2rem 0;
+    }
+  }
+
+  @media (min-width: 576px) {
+    flex-direction: row-reverse;
+
+    ::ng-deep {
+      .mat-mdc-tab-header {
+        background-color: rgba(var(--palette-foreground-base), 0.02);
+        padding: 2rem 0;
+        width: 14rem;
+
+        .mat-mdc-tab-links {
+          flex-direction: column;
+
+          .mat-mdc-tab-link {
+            justify-content: flex-start;
+          }
+        }
+      }
+    }
+  }
 }
