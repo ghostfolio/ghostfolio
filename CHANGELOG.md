@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Extracted the page tabs to a reusable component
+
 ### Fixed
 
 - Resolved an exception in the portfolio details endpoint when an asset profile is unmatched
@@ -65,7 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Extracted the page tabs to a reusable component
 - Modernized the layout of the overview tab in the admin control panel
 - Improved the styling of the paginator across various table components
 - Improved the language localization for German (`de`)
