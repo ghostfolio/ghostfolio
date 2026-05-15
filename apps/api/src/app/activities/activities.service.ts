@@ -214,19 +214,18 @@ export class ActivitiesService {
     });
 
     if (updateAccountBalance === true) {
-      let amount = new Big(data.unitPrice)
-        .mul(data.quantity)
-        .plus(data.fee)
-        .toNumber();
+      let amount = new Big(data.unitPrice).mul(data.quantity);
 
       if (['BUY', 'FEE'].includes(data.type)) {
-        amount = new Big(amount).mul(-1).toNumber();
+        amount = amount.mul(-1);
       }
+
+      amount = amount.minus(data.fee);
 
       await this.accountService.updateAccountBalance({
         accountId,
-        amount,
         userId,
+        amount: amount.toNumber(),
         currency: data.SymbolProfile.connectOrCreate.create.currency,
         date: data.date as Date
       });
