@@ -214,14 +214,14 @@ export class ActivitiesService {
     });
 
     if (updateAccountBalance === true) {
-      let amount = new Big(data.unitPrice)
-        .mul(data.quantity)
-        .plus(data.fee)
-        .toNumber();
+      let amount = new Big(data.unitPrice).mul(data.quantity).toNumber();
 
       if (['BUY', 'FEE'].includes(data.type)) {
         amount = new Big(amount).mul(-1).toNumber();
       }
+
+      // Fees always reduce cash regardless of the activity direction
+      amount = new Big(amount).minus(data.fee).toNumber();
 
       await this.accountService.updateAccountBalance({
         accountId,
