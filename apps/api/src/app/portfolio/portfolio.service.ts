@@ -1904,6 +1904,7 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
 
     const { activities } = await this.activitiesService.getActivities({
+      take: Number.MAX_SAFE_INTEGER,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: true

@@ -328,6 +328,7 @@ export class PortfolioController {
       endDate,
       filters,
       startDate,
+      take: Number.MAX_SAFE_INTEGER,
       userCurrency,
       userId: impersonationUserId || this.request.user.id,
       types: ['DIVIDEND']

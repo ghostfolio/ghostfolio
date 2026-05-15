@@ -288,6 +288,7 @@ export class ActivitiesService {
       filters,
       userId,
       includeDrafts: true,
+      take: Number.MAX_SAFE_INTEGER,
       userCurrency: undefined,
       withExcludedAccountsAndActivities: true
     });
@@ -470,7 +471,7 @@ export class ActivitiesService {
     sortColumn,
     sortDirection = 'asc',
     startDate,
-    take = Number.MAX_SAFE_INTEGER,
+    take = 100,
     types,
     userCurrency,
     userId,
@@ -766,6 +767,7 @@ export class ActivitiesService {
   }) {
     const activities = await this.getActivities({
       filters,
+      take: Number.MAX_SAFE_INTEGER,
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO

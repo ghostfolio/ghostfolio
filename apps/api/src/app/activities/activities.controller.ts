@@ -177,6 +177,7 @@ export class ActivitiesController {
 
     const { activities } = await this.activitiesService.getActivities({
       userCurrency,
+      take: Number.MAX_SAFE_INTEGER,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
