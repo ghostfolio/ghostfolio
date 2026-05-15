@@ -149,9 +149,10 @@ export class GfImportActivitiesDialogComponent {
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
-          this.holdings = sortBy(holdings, ({ name }) => {
-            return name.toLowerCase();
+          this.holdings = sortBy(holdings, ({ assetProfile }) => {
+            return assetProfile.name.toLowerCase();
           });
+
           this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
           this.isLoading = false;
