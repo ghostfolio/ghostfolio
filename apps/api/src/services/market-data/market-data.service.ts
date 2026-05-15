@@ -35,8 +35,9 @@ export class MarketDataService {
       where: {
         dataSource,
         symbol,
-        date: resetHours(date)
-      }
+        date: { lte: resetHours(date) }
+      },
+      orderBy: { date: 'desc' }
     });
   }
 

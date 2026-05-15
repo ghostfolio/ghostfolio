@@ -229,36 +229,63 @@ export class ExchangeRateDataService {
       return 0;
     }
 
+    let normalizedValue = aValue;
+    let normalizedFromCurrency = aFromCurrency;
+    let normalizedToCurrency = aToCurrency;
+
+    const fromDerived = DERIVED_CURRENCIES.find(
+      (c) => c.currency === aFromCurrency
+    );
+    if (fromDerived) {
+      normalizedFromCurrency = fromDerived.rootCurrency;
+      normalizedValue = normalizedValue / fromDerived.factor;
+    }
+
+    const toDerived = DERIVED_CURRENCIES.find(
+      (c) => c.currency === aToCurrency
+    );
+    if (toDerived) {
+      normalizedToCurrency = toDerived.rootCurrency;
+      normalizedValue = normalizedValue * toDerived.factor;
+    }
+
     let factor: number;
 
-    if (aFromCurrency === aToCurrency) {
+    if (normalizedFromCurrency === normalizedToCurrency) {
       factor = 1;
     } else {
-      if (this.exchangeRates[`${aFromCurrency}${aToCurrency}`]) {
-        factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
+      if (
+        this.exchangeRates[`${normalizedFromCurrency}${normalizedToCurrency}`]
+      ) {
+        factor =
+          this.exchangeRates[
+            `${normalizedFromCurrency}${normalizedToCurrency}`
+          ];
       } else {
         // Calculate indirectly via base currency
         const factor1 =
-          this.exchangeRates[`${aFromCurrency}${DEFAULT_CURRENCY}`];
-        const factor2 = this.exchangeRates[`${DEFAULT_CURRENCY}${aToCurrency}`];
+          this.exchangeRates[`${normalizedFromCurrency}${DEFAULT_CURRENCY}`];
+        const factor2 =
+          this.exchangeRates[`${DEFAULT_CURRENCY}${normalizedToCurrency}`];
 
         factor = factor1 * factor2;
 
-        this.exchangeRates[`${aFromCurrency}${aToCurrency}`] = factor;
+        this.exchangeRates[`${normalizedFromCurrency}${normalizedToCurrency}`] =
+          factor;
       }
     }
 
     if (isNumber(factor) && !isNaN(factor)) {
-      return factor * aValue;
+      return factor * normalizedValue;
     }
 
     // Fallback with error, if currencies are not available
     Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
+      `No exchange rate has been found for ${normalizedFromCurrency}${normalizedToCurrency}. Please complement market data for USD${normalizedFromCurrency} and USD${normalizedToCurrency}.`,
       'ExchangeRateDataService'
     );
 
-    return aValue;
+    return undefined;
   }
 
   public async toCurrencyAtDate(
@@ -271,22 +298,48 @@ export class ExchangeRateDataService {
       return 0;
     }
 
+    let normalizedValue = aValue;
+    let normalizedFromCurrency = aFromCurrency;
+    let normalizedToCurrency = aToCurrency;
+
+    const fromDerived = DERIVED_CURRENCIES.find(
+      (c) => c.currency === aFromCurrency
+    );
+    if (fromDerived) {
+      normalizedFromCurrency = fromDerived.rootCurrency;
+      normalizedValue = normalizedValue / fromDerived.factor;
+    }
+
+    const toDerived = DERIVED_CURRENCIES.find(
+      (c) => c.currency === aToCurrency
+    );
+    if (toDerived) {
+      normalizedToCurrency = toDerived.rootCurrency;
+      normalizedValue = normalizedValue * toDerived.factor;
+    }
+
     if (isToday(aDate)) {
-      return this.toCurrency(aValue, aFromCurrency, aToCurrency);
+      return this.toCurrency(
+        normalizedValue,
+        normalizedFromCurrency,
+        normalizedToCurrency
+      );
     }
 
     const derivedCurrencyFactor =
-      this.derivedCurrencyFactors[`${aFromCurrency}${aToCurrency}`];
+      this.derivedCurrencyFactors[
+        `${normalizedFromCurrency}${normalizedToCurrency}`
+      ];
     let factor: number;
 
-    if (aFromCurrency === aToCurrency) {
+    if (normalizedFromCurrency === normalizedToCurrency) {
       factor = 1;
     } else if (derivedCurrencyFactor) {
       factor = derivedCurrencyFactor;
     } else {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
-      const symbol = `${aFromCurrency}${aToCurrency}`;
+      const symbol = `${normalizedFromCurrency}${normalizedToCurrency}`;
 
       const marketData = await this.marketDataService.get({
         dataSource,
@@ -303,28 +356,28 @@ export class ExchangeRateDataService {
         let marketPriceBaseCurrencyToCurrency: number;
 
         try {
-          if (aFromCurrency === DEFAULT_CURRENCY) {
+          if (normalizedFromCurrency === DEFAULT_CURRENCY) {
             marketPriceBaseCurrencyFromCurrency = 1;
           } else {
             marketPriceBaseCurrencyFromCurrency = (
               await this.marketDataService.get({
                 dataSource,
                 date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
+                symbol: `${DEFAULT_CURRENCY}${normalizedFromCurrency}`
               })
             )?.marketPrice;
           }
         } catch {}
 
         try {
-          if (aToCurrency === DEFAULT_CURRENCY) {
+          if (normalizedToCurrency === DEFAULT_CURRENCY) {
             marketPriceBaseCurrencyToCurrency = 1;
           } else {
             marketPriceBaseCurrencyToCurrency = (
               await this.marketDataService.get({
                 dataSource,
                 date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
+                symbol: `${DEFAULT_CURRENCY}${normalizedToCurrency}`
               })
             )?.marketPrice;
           }
@@ -338,14 +391,14 @@ export class ExchangeRateDataService {
     }
 
     if (isNumber(factor) && !isNaN(factor)) {
-      return factor * aValue;
+      return factor * normalizedValue;
     }
 
     Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency} at ${format(
+      `No exchange rate has been found for ${normalizedFromCurrency}${normalizedToCurrency} at ${format(
         aDate,
         DATE_FORMAT
-      )}`,
+      )}. Please complement market data for USD${normalizedFromCurrency} and USD${normalizedToCurrency}.`,
       'ExchangeRateDataService'
     );
 
@@ -366,27 +419,50 @@ export class ExchangeRateDataService {
     const dates = eachDayOfInterval({ end: endDate, start: startDate });
     const factors: { [dateString: string]: number } = {};
 
-    if (currencyFrom === currencyTo) {
+    let normalizedCurrencyFrom = currencyFrom;
+    let normalizedCurrencyTo = currencyTo;
+    let conversionFactorFrom = 1;
+    let conversionFactorTo = 1;
+
+    const fromDerived = DERIVED_CURRENCIES.find(
+      (c) => c.currency === currencyFrom
+    );
+    if (fromDerived) {
+      normalizedCurrencyFrom = fromDerived.rootCurrency;
+      conversionFactorFrom = 1 / fromDerived.factor;
+    }
+
+    const toDerived = DERIVED_CURRENCIES.find((c) => c.currency === currencyTo);
+    if (toDerived) {
+      normalizedCurrencyTo = toDerived.rootCurrency;
+      conversionFactorTo = toDerived.factor;
+    }
+
+    if (normalizedCurrencyFrom === normalizedCurrencyTo) {
       for (const date of dates) {
-        factors[format(date, DATE_FORMAT)] = 1;
+        factors[format(date, DATE_FORMAT)] =
+          conversionFactorFrom * conversionFactorTo;
       }
 
       return factors;
     }
 
     const derivedCurrencyFactor =
-      this.derivedCurrencyFactors[`${currencyFrom}${currencyTo}`];
+      this.derivedCurrencyFactors[
+        `${normalizedCurrencyFrom}${normalizedCurrencyTo}`
+      ];
 
     if (derivedCurrencyFactor) {
       for (const date of dates) {
-        factors[format(date, DATE_FORMAT)] = derivedCurrencyFactor;
+        factors[format(date, DATE_FORMAT)] =
+          conversionFactorFrom * derivedCurrencyFactor * conversionFactorTo;
       }
 
       return factors;
     }
 
     const dataSource = this.dataProviderService.getDataSourceForExchangeRates();
-    const symbol = `${currencyFrom}${currencyTo}`;
+    const symbol = `${normalizedCurrencyFrom}${normalizedCurrencyTo}`;
 
     const marketData = await this.marketDataService.getRange({
       assetProfileIdentifiers: [
@@ -400,7 +476,8 @@ export class ExchangeRateDataService {
 
     if (marketData?.length > 0) {
       for (const { date, marketPrice } of marketData) {
-        factors[format(date, DATE_FORMAT)] = marketPrice;
+        factors[format(date, DATE_FORMAT)] =
+          conversionFactorFrom * marketPrice * conversionFactorTo;
       }
     } else {
       // Calculate indirectly via base currency
@@ -413,7 +490,7 @@ export class ExchangeRateDataService {
       } = {};
 
       try {
-        if (currencyFrom === DEFAULT_CURRENCY) {
+        if (normalizedCurrencyFrom === DEFAULT_CURRENCY) {
           for (const date of dates) {
             marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] = 1;
           }
@@ -422,7 +499,7 @@ export class ExchangeRateDataService {
             assetProfileIdentifiers: [
               {
                 dataSource,
-                symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
+                symbol: `${DEFAULT_CURRENCY}${normalizedCurrencyFrom}`
               }
             ],
             dateQuery: { gte: startDate, lt: endDate }
@@ -436,7 +513,7 @@ export class ExchangeRateDataService {
       } catch {}
 
       try {
-        if (currencyTo === DEFAULT_CURRENCY) {
+        if (normalizedCurrencyTo === DEFAULT_CURRENCY) {
           for (const date of dates) {
             marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] = 1;
           }
@@ -445,7 +522,7 @@ export class ExchangeRateDataService {
             assetProfileIdentifiers: [
               {
                 dataSource,
-                symbol: `${DEFAULT_CURRENCY}${currencyTo}`
+                symbol: `${DEFAULT_CURRENCY}${normalizedCurrencyTo}`
               }
             ],
             dateQuery: {
@@ -471,16 +548,17 @@ export class ExchangeRateDataService {
           if (isNaN(factor)) {
             throw new Error('Exchange rate is not a number');
           } else {
-            factors[format(date, DATE_FORMAT)] = factor;
+            factors[format(date, DATE_FORMAT)] =
+              conversionFactorFrom * factor * conversionFactorTo;
           }
         } catch {
-          let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
+          let errorMessage = `No exchange rate has been found for ${normalizedCurrencyFrom}${normalizedCurrencyTo} at ${format(
             date,
             DATE_FORMAT
-          )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
+          )}. Please complement market data for ${DEFAULT_CURRENCY}${normalizedCurrencyFrom}`;
 
-          if (DEFAULT_CURRENCY !== currencyTo) {
-            errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
+          if (DEFAULT_CURRENCY !== normalizedCurrencyTo) {
+            errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${normalizedCurrencyTo}`;
           }
 
           Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
