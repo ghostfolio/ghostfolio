@@ -342,20 +342,6 @@ export function getYesterday() {
   return subDays(new Date(Date.UTC(year, month, day)), 1);
 }
 
-export function groupBy<T, K extends keyof T>(
-  key: K,
-  arr: T[]
-): Map<T[K], T[]> {
-  const map = new Map<T[K], T[]>();
-  arr.forEach((t) => {
-    if (!map.has(t[key])) {
-      map.set(t[key], []);
-    }
-    map.get(t[key])!.push(t);
-  });
-  return map;
-}
-
 export function interpolate(template: string, context: any) {
   return template?.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
     const properties = objectPath.split('.');
