@@ -82,6 +82,7 @@ export class DataProviderService implements OnModuleInit {
     return false;
   }
 
+  // TODO: Change symbol in response to assetProfileIdentifier
   public async getAssetProfiles(items: AssetProfileIdentifier[]): Promise<{
     [symbol: string]: Partial<SymbolProfile>;
   }> {
@@ -330,6 +331,7 @@ export class DataProviderService implements OnModuleInit {
     });
   }
 
+  // TODO: Change symbol in response to assetProfileIdentifier
   public async getHistorical(
     aItems: AssetProfileIdentifier[],
     aGranularity: Granularity = 'month',
@@ -395,6 +397,7 @@ export class DataProviderService implements OnModuleInit {
     }
   }
 
+  // TODO: Change symbol in response to assetProfileIdentifier
   public async getHistoricalRaw({
     assetProfileIdentifiers,
     from,
@@ -508,6 +511,7 @@ export class DataProviderService implements OnModuleInit {
     return result;
   }
 
+  // TODO: Change symbol in response to assetProfileIdentifier
   public async getQuotes({
     items,
     requestTimeout,
