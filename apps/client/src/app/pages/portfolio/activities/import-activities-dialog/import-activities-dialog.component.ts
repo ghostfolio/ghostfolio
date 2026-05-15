@@ -264,12 +264,14 @@ export class GfImportActivitiesDialogComponent {
 
   protected onSelectFile(stepper: MatStepper) {
     const input = document.createElement('input');
+
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
 
     input.onchange = (event) => {
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files?.[0];
+
       if (file) {
         this.handleFile({ file, stepper });
       }
