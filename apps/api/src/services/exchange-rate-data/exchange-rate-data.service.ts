@@ -285,7 +285,7 @@ export class ExchangeRateDataService {
       'ExchangeRateDataService'
     );
 
-    return undefined;
+    return aValue;
   }
 
   public async toCurrencyAtDate(
@@ -326,16 +326,10 @@ export class ExchangeRateDataService {
       );
     }
 
-    const derivedCurrencyFactor =
-      this.derivedCurrencyFactors[
-        `${normalizedFromCurrency}${normalizedToCurrency}`
-      ];
     let factor: number;
 
     if (normalizedFromCurrency === normalizedToCurrency) {
       factor = 1;
-    } else if (derivedCurrencyFactor) {
-      factor = derivedCurrencyFactor;
     } else {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
@@ -402,7 +396,7 @@ export class ExchangeRateDataService {
       'ExchangeRateDataService'
     );
 
-    return undefined;
+    return aValue;
   }
 
   private async getExchangeRates({
@@ -442,20 +436,6 @@ export class ExchangeRateDataService {
       for (const date of dates) {
         factors[format(date, DATE_FORMAT)] =
           conversionFactorFrom * conversionFactorTo;
-      }
-
-      return factors;
-    }
-
-    const derivedCurrencyFactor =
-      this.derivedCurrencyFactors[
-        `${normalizedCurrencyFrom}${normalizedCurrencyTo}`
-      ];
-
-    if (derivedCurrencyFactor) {
-      for (const date of dates) {
-        factors[format(date, DATE_FORMAT)] =
-          conversionFactorFrom * derivedCurrencyFactor * conversionFactorTo;
       }
 
       return factors;
