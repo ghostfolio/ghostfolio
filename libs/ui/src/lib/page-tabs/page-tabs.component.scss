@@ -8,7 +8,9 @@
 
   @include mat.tabs-overrides(
     (
-      divider-height: 0
+      active-indicator-height: 0,
+      divider-height: 0,
+      label-text-tracking: normal
     )
   );
 
@@ -24,8 +26,22 @@
     }
   }
 
+  @media (max-width: 575.98px) {
+    @include mat.tabs-overrides(
+      (
+        container-height: 3rem
+      )
+    );
+  }
+
   @media (min-width: 576px) {
     flex-direction: row-reverse;
+
+    @include mat.tabs-overrides(
+      (
+        container-height: 2rem
+      )
+    );
 
     ::ng-deep {
       .mat-mdc-tab-header {
@@ -41,6 +57,14 @@
           }
         }
       }
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  @media (min-width: 576px) {
+    .mat-mdc-tab-header {
+      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
   }
 }

@@ -265,16 +265,6 @@ body {
       }
     }
 
-    .page {
-      &.has-tabs {
-        @media (min-width: 576px) {
-          .mat-mdc-tab-header {
-            background-color: rgba(var(--palette-foreground-base-dark), 0.02);
-          }
-        }
-      }
-    }
-
     .svgMap-tooltip {
       background: var(--dark-background);
 
