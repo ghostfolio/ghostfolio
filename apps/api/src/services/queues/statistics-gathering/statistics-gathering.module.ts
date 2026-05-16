@@ -13,7 +13,7 @@ import { StatisticsGatheringService } from './statistics-gathering.service';
 @Module({
   exports: [BullModule, StatisticsGatheringService],
   imports: [
-    ...(process.env.ENABLE_FEATURE_BULL_BOARD === 'true'
+    ...(process.env.ENABLE_FEATURE_STATISTICS === 'true'
       ? [
           BullBoardModule.forFeature({
             adapter: BullAdapter,
