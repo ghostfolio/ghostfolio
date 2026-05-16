@@ -74,29 +74,25 @@ import { UserModule } from './user/user.module';
     AuthDeviceModule,
     AuthModule,
     BenchmarksModule,
-    ...(process.env.ENABLE_FEATURE_BULL_BOARD === 'true'
-      ? [
-          BullBoardModule.forRoot({
-            adapter: ExpressAdapter,
-            boardOptions: {
-              uiConfig: {
-                boardLogo: {
-                  height: 0,
-                  path: '',
-                  width: 0
-                },
-                boardTitle: 'Job Queues',
-                favIcon: {
-                  alternative: '/assets/favicon-32x32.png',
-                  default: '/assets/favicon-32x32.png'
-                }
-              }
-            },
-            middleware: BullBoardAuthMiddleware,
-            route: BULL_BOARD_ROUTE
-          })
-        ]
-      : []),
+    BullBoardModule.forRoot({
+      adapter: ExpressAdapter,
+      boardOptions: {
+        uiConfig: {
+          boardLogo: {
+            height: 0,
+            path: '',
+            width: 0
+          },
+          boardTitle: 'Job Queues',
+          favIcon: {
+            alternative: '/assets/favicon-32x32.png',
+            default: '/assets/favicon-32x32.png'
+          }
+        }
+      },
+      middleware: BullBoardAuthMiddleware,
+      route: BULL_BOARD_ROUTE
+    }),
     BullModule.forRoot({
       redis: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
