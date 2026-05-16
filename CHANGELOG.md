@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extracted the page tabs to a reusable component
+- Improved the verification of the _Stripe_ checkout session when creating a subscription
 
 ### Fixed
 
