@@ -93,12 +93,25 @@ export class StatisticsGatheringProcessor {
 
   @Process(GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME)
   public async gatherUptimeStatistics() {
+    const monitorId = await this.propertyService.getByKey<string>(
+      PROPERTY_BETTER_UPTIME_MONITOR_ID
+    );
+
+    if (!monitorId) {
+      Logger.log(
+        `Uptime statistics gathering has been skipped as no ${PROPERTY_BETTER_UPTIME_MONITOR_ID} is configured`,
+        'StatisticsGatheringProcessor'
+      );
+
+      return;
+    }
+
     Logger.log(
       'Uptime statistics gathering has been started',
       'StatisticsGatheringProcessor'
     );
 
-    const uptime = await this.getUptime();
+    const uptime = await this.getUptime(monitorId);
 
     await this.propertyService.put({
       key: PROPERTY_UPTIME,
@@ -179,12 +192,8 @@ export class StatisticsGatheringProcessor {
     }
   }
 
-  private async getUptime(): Promise<number> {
+  private async getUptime(monitorId: string): Promise<number> {
     try {
-      const monitorId = await this.propertyService.getByKey<string>(
-        PROPERTY_BETTER_UPTIME_MONITOR_ID
-      );
-
       const { data } = await fetch(
         `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
           subDays(new Date(), 90),
