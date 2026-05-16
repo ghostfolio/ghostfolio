@@ -182,10 +182,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   }
 
   public ngOnInit() {
-    const filters: Filter[] = [
-      { id: this.data.dataSource, type: 'DATA_SOURCE' },
-      { id: this.data.symbol, type: 'SYMBOL' }
-    ];
+    const filters = this.getActivityFilters();
 
     this.holdingForm = this.formBuilder.group({
       tags: [] as string[]
@@ -536,6 +533,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       });
   }
 
+  public onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.fetchActivities();
+  }
+
   public onCloneActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
@@ -608,12 +611,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     }
   }
 
-  public onChangePage(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
-
-    this.fetchActivities();
-  }
-
   public onUpdateActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
@@ -625,7 +622,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  private fetchActivities(filters = this.getActivityFilters()) {
+  private fetchActivities(filters: Filter[] = this.getActivityFilters()) {
     this.dataService
       .fetchActivities({
         filters,
@@ -640,13 +637,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  private getActivityFilters(): Filter[] {
-    return [
-      { id: this.data.dataSource, type: 'DATA_SOURCE' },
-      { id: this.data.symbol, type: 'SYMBOL' }
-    ];
   }
 
   private fetchMarketData() {
@@ -670,5 +660,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private getActivityFilters(): Filter[] {
+    return [
+      { id: this.data.dataSource, type: 'DATA_SOURCE' },
+      { id: this.data.symbol, type: 'SYMBOL' }
+    ];
   }
 }

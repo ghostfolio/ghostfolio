@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Improved pagination for activities in the holding detail dialog
 - Resolved an issue with the cash balance calculation of an account for `SELL` activities to ensure fees are correctly subtracted
 - Resolved an exception in the portfolio details endpoint when an asset profile is unmatched
 
