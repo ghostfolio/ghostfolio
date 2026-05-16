@@ -13,18 +13,14 @@ import { StatisticsGatheringService } from './statistics-gathering.service';
 @Module({
   exports: [BullModule, StatisticsGatheringService],
   imports: [
-    ...(process.env.ENABLE_FEATURE_BULL_BOARD === 'true'
-      ? [
-          BullBoardModule.forFeature({
-            adapter: BullAdapter,
-            name: STATISTICS_GATHERING_QUEUE,
-            options: {
-              displayName: 'Statistics Gathering',
-              readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
-            }
-          })
-        ]
-      : []),
+    BullBoardModule.forFeature({
+      adapter: BullAdapter,
+      name: STATISTICS_GATHERING_QUEUE,
+      options: {
+        displayName: 'Statistics Gathering',
+        readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
+      }
+    }),
     BullModule.registerQueue({
       name: STATISTICS_GATHERING_QUEUE
     }),

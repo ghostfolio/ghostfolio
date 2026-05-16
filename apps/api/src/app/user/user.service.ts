@@ -532,7 +532,7 @@ export class UserService {
     }
 
     if (hasRole(user, Role.ADMIN)) {
-      if (this.configurationService.get('ENABLE_FEATURE_BULL_BOARD')) {
+      if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
         currentPermissions.push(permissions.accessAdminControlBullBoard);
       }
 
