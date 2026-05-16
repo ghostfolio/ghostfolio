@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
 - Extracted the page tabs to a reusable component
 - Upgraded `bull-board` from version `7.0.0` to `7.1.5`
 
