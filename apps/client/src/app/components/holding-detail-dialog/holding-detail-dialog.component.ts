@@ -1,5 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  DEFAULT_PAGE_SIZE,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_5_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
@@ -48,6 +49,7 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { PageEvent } from '@angular/material/paginator';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -140,6 +142,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public netPerformancePercentWithCurrencyEffectPrecision = 2;
   public netPerformanceWithCurrencyEffect: number;
   public netPerformanceWithCurrencyEffectPrecision = 2;
+  public pageIndex = 0;
+  public pageSize = DEFAULT_PAGE_SIZE;
   public quantity: number;
   public quantityPrecision = 2;
   public reportDataGlitchMail: string;
@@ -178,10 +182,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   }
 
   public ngOnInit() {
-    const filters: Filter[] = [
-      { id: this.data.dataSource, type: 'DATA_SOURCE' },
-      { id: this.data.symbol, type: 'SYMBOL' }
-    ];
+    const filters = this.getActivityFilters();
 
     this.holdingForm = this.formBuilder.group({
       tags: [] as string[]
@@ -240,18 +241,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.dataService
-      .fetchActivities({
-        filters,
-        sortColumn: this.sortColumn,
-        sortDirection: this.sortDirection
-      })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ activities }) => {
-        this.dataSource = new MatTableDataSource(activities);
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.fetchActivities(filters);
 
     this.dataService
       .fetchHoldingDetail({
@@ -543,6 +533,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       });
   }
 
+  public onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.fetchActivities();
+  }
+
   public onCloneActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
@@ -626,6 +622,23 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  private fetchActivities(filters: Filter[] = this.getActivityFilters()) {
+    this.dataService
+      .fetchActivities({
+        filters,
+        skip: this.pageIndex * this.pageSize,
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection,
+        take: this.pageSize
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ activities }) => {
+        this.dataSource = new MatTableDataSource(activities);
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private fetchMarketData() {
     this.dataService
       .fetchMarketDataBySymbol({
@@ -647,5 +660,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private getActivityFilters(): Filter[] {
+    return [
+      { id: this.data.dataSource, type: 'DATA_SOURCE' },
+      { id: this.data.symbol, type: 'SYMBOL' }
+    ];
   }
 }
