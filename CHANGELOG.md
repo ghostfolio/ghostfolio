@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the `DIRECT_URL` environment variable to enable direct database connections
+
 ### Changed
 
 - Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
