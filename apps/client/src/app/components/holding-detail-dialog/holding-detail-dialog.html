@@ -353,6 +353,8 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
           [showActions]="
             !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
@@ -367,6 +369,7 @@
           (activityToClone)="onCloneActivity($event)"
           (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
+          (pageChanged)="onChangePage($event)"
         />
       </mat-tab>
       <mat-tab>

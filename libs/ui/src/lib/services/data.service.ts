@@ -235,7 +235,7 @@ export class DataService {
       params = params.append('range', range);
     }
 
-    if (skip) {
+    if (skip !== undefined) {
       params = params.append('skip', skip);
     }
 
@@ -247,7 +247,7 @@ export class DataService {
       params = params.append('sortDirection', sortDirection);
     }
 
-    if (take) {
+    if (take !== undefined) {
       params = params.append('take', take);
     }
 
