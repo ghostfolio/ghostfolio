@@ -101,7 +101,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) private paginator: MatPaginator;
   @ViewChild(MatSort) private sort: MatSort;
 
-  protected allFilters: Filter[] = [
+  protected readonly allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
         return assetSubClass !== 'CASH';
@@ -148,10 +148,10 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   ];
   protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
   protected defaultDateFormat: string;
-  protected displayedColumns: string[] = [];
-  protected filters$ = new Subject<Filter[]>();
+  protected readonly displayedColumns: string[] = [];
+  protected readonly filters$ = new Subject<Filter[]>();
   protected isLoading = true;
-  protected isUUID = isUUID;
+  protected readonly isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected placeholder = '';
   protected selection: SelectionModel<AdminMarketDataItem>;
@@ -161,20 +161,20 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   private activeFilters: Filter[] = [];
   private benchmarks: Partial<SymbolProfile>[];
   private deviceType: string;
-  private hasPermissionForSubscription: boolean;
-  private info: InfoItem;
+  private readonly hasPermissionForSubscription: boolean;
+  private readonly info: InfoItem;
 
   public constructor(
-    protected adminMarketDataService: AdminMarketDataService,
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
+    protected readonly adminMarketDataService: AdminMarketDataService,
+    private readonly adminService: AdminService,
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly deviceDetectorService: DeviceDetectorService,
+    private readonly dialog: MatDialog,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
 
