@@ -2,7 +2,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_COLOR_SCHEME,
   DEFAULT_PAGE_SIZE,
-  ghostfolioScraperApiSymbolPrefix,
   locale
 } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
@@ -147,13 +146,10 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       type: 'PRESET_ID' as Filter['type']
     }
   ];
-  public currentDataSource: DataSource;
-  public currentSymbol: string;
   protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
   protected filters$ = new Subject<Filter[]>();
-  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   protected isLoading = true;
   protected isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
@@ -328,23 +324,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected onGatherProfileData() {
     this.adminService
       .gatherProfileData()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-  }
-
-  protected onGatherProfileDataBySymbol({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
-    this.adminService
-      .gatherProfileDataBySymbol({ dataSource, symbol })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-  }
-
-  protected onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.adminService
-      .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
