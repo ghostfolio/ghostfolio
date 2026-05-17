@@ -14,7 +14,7 @@ import {
   computed,
   DestroyRef,
   inject,
-  Input,
+  input,
   OnInit,
   viewChild
 } from '@angular/core';
@@ -56,7 +56,7 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
   templateUrl: './admin-platform.component.html'
 })
 export class GfAdminPlatformComponent implements OnInit {
-  @Input() locale = getLocale();
+  public readonly locale = input(getLocale());
 
   protected dataSource = new MatTableDataSource<Platform>();
   protected readonly displayedColumns = ['name', 'url', 'accounts', 'actions'];
