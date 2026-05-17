@@ -161,7 +161,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
-  public selection: SelectionModel<Partial<SymbolProfile>>;
+  public selection: SelectionModel<AdminMarketDataItem>;
   public totalItems = 0;
   public user: User;
 
