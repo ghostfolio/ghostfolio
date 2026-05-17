@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the pagination in the activities table of the account detail dialog
 - Improved the pagination in the activities table of the holding detail dialog
 - Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
 - Extracted the page tabs to a reusable component
