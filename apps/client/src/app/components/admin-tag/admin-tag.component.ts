@@ -56,9 +56,14 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
 export class GfAdminTagComponent implements OnInit {
   public readonly locale = input(getLocale());
 
-  public dataSource = new MatTableDataSource<Tag>();
-  public displayedColumns = ['name', 'userId', 'activities', 'actions'];
-  public tags: Tag[];
+  protected dataSource = new MatTableDataSource<Tag>();
+  protected readonly displayedColumns = [
+    'name',
+    'userId',
+    'activities',
+    'actions'
+  ];
+  protected tags: Tag[];
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -103,7 +108,7 @@ export class GfAdminTagComponent implements OnInit {
     this.fetchTags();
   }
 
-  public onDeleteTag(aId: string) {
+  protected onDeleteTag(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.deleteTag(aId);
@@ -113,7 +118,7 @@ export class GfAdminTagComponent implements OnInit {
     });
   }
 
-  public onUpdateTag({ id }: Tag) {
+  protected onUpdateTag({ id }: Tag) {
     this.router.navigate([], {
       queryParams: { editTagDialog: true, tagId: id }
     });
