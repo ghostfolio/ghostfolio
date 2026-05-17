@@ -187,7 +187,7 @@ export function getCurrencyFromSymbol(aSymbol = '') {
   return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
-export function getDateFnsLocale(aLanguageCode: string) {
+export function getDateFnsLocale(aLanguageCode?: string) {
   if (aLanguageCode === 'ca') {
     return ca;
   } else if (aLanguageCode === 'de') {
