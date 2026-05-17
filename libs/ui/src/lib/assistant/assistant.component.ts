@@ -40,7 +40,7 @@ import {
   closeOutline,
   searchOutline
 } from 'ionicons/icons';
-import { isFunction } from 'lodash';
+import { isFunction, sample } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, merge, of } from 'rxjs';
 import {
@@ -106,14 +106,17 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public dateRangeFormControl = new FormControl<string | null>(null);
   public dateRangeOptions: DateRangeOption[] = [];
   public holdings: PortfolioPosition[] = [];
+
   public isLoading = {
     accounts: false,
     assetProfiles: false,
     holdings: false,
     quickLinks: false
   };
+
   public isOpen = false;
-  public placeholder = $localize`Find account, holding or page...`;
+  public placeholder: string;
+
   public portfolioFilterFormControl = new FormControl<PortfolioFilterFormValue>(
     {
       account: null,
@@ -122,13 +125,16 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       tag: null
     }
   );
+
   public searchFormControl = new FormControl('');
+
   public searchResults: SearchResults = {
     accounts: [],
     assetProfiles: [],
     holdings: [],
     quickLinks: []
   };
+
   public tags: Filter[] = [];
 
   protected readonly closed = output<void>();
@@ -458,7 +464,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       holdings: true,
       quickLinks: true
     };
+
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
+
+    this.placeholder = sample([
+      $localize`Find an account...`,
+      $localize`Find a holding...`,
+      $localize`Jump to a page...`
+    ]);
+
     this.searchResults = {
       accounts: [],
       assetProfiles: [],
@@ -471,6 +485,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     this.searchFormControl.setValue('');
+
     setTimeout(() => {
       this.searchElement?.nativeElement?.focus();
     });
@@ -481,6 +496,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       holdings: false,
       quickLinks: false
     };
+
     this.setIsOpen(true);
 
     this.dataService
