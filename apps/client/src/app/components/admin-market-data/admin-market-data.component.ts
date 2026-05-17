@@ -27,6 +27,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -159,7 +160,9 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
 
   private activeFilters: Filter[] = [];
   private benchmarks: Partial<SymbolProfile>[];
-  private deviceType: string;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   private readonly hasPermissionForSubscription: boolean;
   private readonly info: InfoItem;
   private readonly paginator = viewChild.required(MatPaginator);
@@ -271,7 +274,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     const { benchmarks } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 
   protected onChangePage(page: PageEvent) {
@@ -420,11 +422,11 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             symbol,
             colorScheme:
               this.user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
-            deviceType: this.deviceType,
+            deviceType: this.deviceType(),
             locale: this.user?.settings?.locale ?? locale
           } satisfies AssetProfileDialogParams,
-          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });
 
         dialogRef
@@ -455,10 +457,10 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         >(GfCreateAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
-            deviceType: this.deviceType,
+            deviceType: this.deviceType(),
             locale: this.user?.settings?.locale ?? locale
           } satisfies CreateAssetProfileDialogParams,
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });
 
         dialogRef
