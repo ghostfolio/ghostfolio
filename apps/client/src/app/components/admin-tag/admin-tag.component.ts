@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   Input,
@@ -56,10 +57,12 @@ export class GfAdminTagComponent implements OnInit {
   @Input() locale = getLocale();
 
   public dataSource = new MatTableDataSource<Tag>();
-  public deviceType: string;
   public displayedColumns = ['name', 'userId', 'activities', 'actions'];
   public tags: Tag[];
 
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   private readonly sort = viewChild.required(MatSort);
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -97,8 +100,6 @@ export class GfAdminTagComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.fetchTags();
   }
 
@@ -157,8 +158,8 @@ export class GfAdminTagComponent implements OnInit {
       CreateOrUpdateTagDialogParams
     >(GfCreateOrUpdateTagDialogComponent, {
       data: {} satisfies CreateOrUpdateTagDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -196,8 +197,8 @@ export class GfAdminTagComponent implements OnInit {
           name
         }
       } satisfies CreateOrUpdateTagDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
