@@ -154,7 +154,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected placeholder = '';
-  protected selection: SelectionModel<AdminMarketDataItem>;
+  protected readonly selection = new SelectionModel<AdminMarketDataItem>(true);
   protected totalItems = 0;
   protected user: User;
 
@@ -272,8 +272,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
 
     this.benchmarks = benchmarks;
     this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
-    this.selection = new SelectionModel(true);
   }
 
   protected onChangePage(page: PageEvent) {
