@@ -1,7 +1,8 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  DEFAULT_COLOR_SCHEME,
   DEFAULT_PAGE_SIZE,
-  ghostfolioScraperApiSymbolPrefix
+  locale
 } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
@@ -26,9 +27,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
+  inject,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -97,11 +100,8 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
   templateUrl: './admin-market-data.html'
 })
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  public activeFilters: Filter[] = [];
-  public allFilters: Filter[] = [
+  protected readonly adminMarketDataService = inject(AdminMarketDataService);
+  protected readonly allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
         return assetSubClass !== 'CASH';
@@ -146,37 +146,39 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       type: 'PRESET_ID' as Filter['type']
     }
   ];
-  public benchmarks: Partial<SymbolProfile>[];
-  public currentDataSource: DataSource;
-  public currentSymbol: string;
-  public dataSource = new MatTableDataSource<AdminMarketDataItem>();
-  public defaultDateFormat: string;
-  public deviceType: string;
-  public displayedColumns: string[] = [];
-  public filters$ = new Subject<Filter[]>();
-  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
-  public hasPermissionForSubscription: boolean;
-  public info: InfoItem;
-  public isLoading = true;
-  public isUUID = isUUID;
-  public placeholder = '';
-  public pageSize = DEFAULT_PAGE_SIZE;
-  public selection: SelectionModel<Partial<SymbolProfile>>;
-  public totalItems = 0;
-  public user: User;
+  protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
+  protected defaultDateFormat: string;
+  protected readonly displayedColumns: string[] = [];
+  protected readonly filters$ = new Subject<Filter[]>();
+  protected isLoading = true;
+  protected readonly isUUID = isUUID;
+  protected pageSize = DEFAULT_PAGE_SIZE;
+  protected placeholder = '';
+  protected readonly selection = new SelectionModel<AdminMarketDataItem>(true);
+  protected totalItems = 0;
+  protected user: User;
 
-  public constructor(
-    public adminMarketDataService: AdminMarketDataService,
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private activeFilters: Filter[] = [];
+  private benchmarks: Partial<SymbolProfile>[];
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  private readonly hasPermissionForSubscription: boolean;
+  private readonly info: InfoItem;
+  private readonly paginator = viewChild.required(MatPaginator);
+  private readonly sort = viewChild.required(MatSort);
+
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
@@ -255,14 +257,14 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   }
 
   public ngAfterViewInit() {
-    this.sort.sortChange.subscribe(
+    this.sort().sortChange.subscribe(
       ({ active: sortColumn, direction }: Sort) => {
-        this.paginator.pageIndex = 0;
+        this.paginator().pageIndex = 0;
 
         this.loadData({
           sortColumn,
           sortDirection: direction,
-          pageIndex: this.paginator.pageIndex
+          pageIndex: this.paginator().pageIndex
         });
       }
     );
@@ -272,24 +274,24 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     const { benchmarks } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
-    this.selection = new SelectionModel(true);
   }
 
-  public onChangePage(page: PageEvent) {
+  protected onChangePage(page: PageEvent) {
     this.loadData({
       pageIndex: page.pageIndex,
-      sortColumn: this.sort.active,
-      sortDirection: this.sort.direction
+      sortColumn: this.sort().active,
+      sortDirection: this.sort().direction
     });
   }
 
-  public onDeleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onDeleteAssetProfile({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
   }
 
-  public onDeleteAssetProfiles() {
+  protected onDeleteAssetProfiles() {
     this.adminMarketDataService.deleteAssetProfiles(
       this.selection.selected.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
@@ -297,7 +299,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     );
   }
 
-  public onGather7Days() {
+  protected onGather7Days() {
     this.adminService
       .gather7Days()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -308,7 +310,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       });
   }
 
-  public onGatherMax() {
+  protected onGatherMax() {
     this.adminService
       .gatherMax()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -319,31 +321,14 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       });
   }
 
-  public onGatherProfileData() {
+  protected onGatherProfileData() {
     this.adminService
       .gatherProfileData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
-  public onGatherProfileDataBySymbol({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
-    this.adminService
-      .gatherProfileDataBySymbol({ dataSource, symbol })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-  }
-
-  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.adminService
-      .gatherSymbol({ dataSource, symbol })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
-  }
-
-  public onOpenAssetProfileDialog({
+  protected onOpenAssetProfileDialog({
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
@@ -375,8 +360,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         ? Number.MAX_SAFE_INTEGER
         : DEFAULT_PAGE_SIZE;
 
-    if (pageIndex === 0 && this.paginator) {
-      this.paginator.pageIndex = 0;
+    if (pageIndex === 0 && this.paginator()) {
+      this.paginator().pageIndex = 0;
     }
 
     this.placeholder =
@@ -406,7 +391,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             };
           })
         );
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort();
 
         this.isLoading = false;
 
@@ -435,12 +420,13 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           data: {
             dataSource,
             symbol,
-            colorScheme: this.user?.settings.colorScheme,
-            deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+            colorScheme:
+              this.user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
+            deviceType: this.deviceType(),
+            locale: this.user?.settings?.locale ?? locale
+          } satisfies AssetProfileDialogParams,
+          height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });
 
         dialogRef
@@ -471,10 +457,10 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         >(GfCreateAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
-            deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          },
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+            deviceType: this.deviceType(),
+            locale: this.user?.settings?.locale ?? locale
+          } satisfies CreateAssetProfileDialogParams,
+          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });
 
         dialogRef

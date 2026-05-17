@@ -14,13 +14,13 @@
     )
   );
 
-  .fab-container {
-    @media (max-width: 575.98px) {
-      bottom: 5rem;
-    }
-  }
-
   ::ng-deep {
+    .fab-container {
+      @media (max-width: 575.98px) {
+        bottom: 5rem;
+      }
+    }
+
     .mat-mdc-tab-nav-panel {
       padding: 2rem 0;
     }
