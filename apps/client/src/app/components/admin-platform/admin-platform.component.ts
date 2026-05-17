@@ -11,6 +11,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   Input,
@@ -58,10 +59,13 @@ export class GfAdminPlatformComponent implements OnInit {
   @Input() locale = getLocale();
 
   public dataSource = new MatTableDataSource<Platform>();
-  public deviceType: string;
-  public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];
 
+  protected readonly displayedColumns = ['name', 'url', 'accounts', 'actions'];
+
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   private readonly sort = viewChild.required(MatSort);
 
   private readonly adminService = inject(AdminService);
@@ -100,8 +104,6 @@ export class GfAdminPlatformComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.fetchPlatforms();
   }
 
@@ -160,8 +162,8 @@ export class GfAdminPlatformComponent implements OnInit {
       CreateOrUpdatePlatformDialogParams
     >(GfCreateOrUpdatePlatformDialogComponent, {
       data: {} satisfies CreateOrUpdatePlatformDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -200,8 +202,8 @@ export class GfAdminPlatformComponent implements OnInit {
           url
         }
       } satisfies CreateOrUpdatePlatformDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
