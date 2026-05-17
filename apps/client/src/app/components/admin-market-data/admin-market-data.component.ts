@@ -29,7 +29,7 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -98,9 +98,6 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
   templateUrl: './admin-market-data.html'
 })
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
-  @ViewChild(MatPaginator) private paginator: MatPaginator;
-  @ViewChild(MatSort) private sort: MatSort;
-
   protected readonly allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
@@ -163,6 +160,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   private deviceType: string;
   private readonly hasPermissionForSubscription: boolean;
   private readonly info: InfoItem;
+  private readonly paginator = viewChild.required(MatPaginator);
+  private readonly sort = viewChild.required(MatSort);
 
   public constructor(
     protected readonly adminMarketDataService: AdminMarketDataService,
@@ -254,14 +253,14 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   }
 
   public ngAfterViewInit() {
-    this.sort.sortChange.subscribe(
+    this.sort().sortChange.subscribe(
       ({ active: sortColumn, direction }: Sort) => {
-        this.paginator.pageIndex = 0;
+        this.paginator().pageIndex = 0;
 
         this.loadData({
           sortColumn,
           sortDirection: direction,
-          pageIndex: this.paginator.pageIndex
+          pageIndex: this.paginator().pageIndex
         });
       }
     );
@@ -277,8 +276,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected onChangePage(page: PageEvent) {
     this.loadData({
       pageIndex: page.pageIndex,
-      sortColumn: this.sort.active,
-      sortDirection: this.sort.direction
+      sortColumn: this.sort().active,
+      sortDirection: this.sort().direction
     });
   }
 
@@ -358,8 +357,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         ? Number.MAX_SAFE_INTEGER
         : DEFAULT_PAGE_SIZE;
 
-    if (pageIndex === 0 && this.paginator) {
-      this.paginator.pageIndex = 0;
+    if (pageIndex === 0 && this.paginator()) {
+      this.paginator().pageIndex = 0;
     }
 
     this.placeholder =
@@ -389,7 +388,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             };
           })
         );
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort();
 
         this.isLoading = false;
 
