@@ -15,7 +15,7 @@ import {
   inject,
   Input,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -57,12 +57,12 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
 export class GfAdminPlatformComponent implements OnInit {
   @Input() locale = getLocale();
 
-  @ViewChild(MatSort) sort: MatSort;
-
   public dataSource = new MatTableDataSource<Platform>();
   public deviceType: string;
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];
+
+  private readonly sort = viewChild.required(MatSort);
 
   private readonly adminService = inject(AdminService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -145,7 +145,7 @@ export class GfAdminPlatformComponent implements OnInit {
         this.platforms = platforms;
 
         this.dataSource = new MatTableDataSource(platforms);
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort();
         this.dataSource.sortingDataAccessor = get;
 
         this.dataService.updateInfo();
