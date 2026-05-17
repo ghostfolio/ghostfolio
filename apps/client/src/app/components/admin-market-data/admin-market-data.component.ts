@@ -1,7 +1,9 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  DEFAULT_COLOR_SCHEME,
   DEFAULT_PAGE_SIZE,
-  ghostfolioScraperApiSymbolPrefix
+  ghostfolioScraperApiSymbolPrefix,
+  locale
 } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
@@ -435,10 +437,11 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           data: {
             dataSource,
             symbol,
-            colorScheme: this.user?.settings.colorScheme,
+            colorScheme:
+              this.user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
             deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          },
+            locale: this.user?.settings?.locale ?? locale
+          } satisfies AssetProfileDialogParams,
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
@@ -472,8 +475,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           autoFocus: false,
           data: {
             deviceType: this.deviceType,
-            locale: this.user?.settings?.locale
-          },
+            locale: this.user?.settings?.locale ?? locale
+          } satisfies CreateAssetProfileDialogParams,
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 
