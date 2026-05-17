@@ -86,7 +86,9 @@ export class GfAdminPlatformComponent implements OnInit {
               return id === params['platformId'];
             });
 
-            this.openUpdatePlatformDialog(platform);
+            if (platform) {
+              this.openUpdatePlatformDialog(platform);
+            }
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -156,13 +158,7 @@ export class GfAdminPlatformComponent implements OnInit {
       GfCreateOrUpdatePlatformDialogComponent,
       CreateOrUpdatePlatformDialogParams
     >(GfCreateOrUpdatePlatformDialogComponent, {
-      data: {
-        platform: {
-          id: null,
-          name: null,
-          url: null
-        }
-      },
+      data: {} satisfies CreateOrUpdatePlatformDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -191,15 +187,7 @@ export class GfAdminPlatformComponent implements OnInit {
       });
   }
 
-  private openUpdatePlatformDialog({
-    id,
-    name,
-    url
-  }: {
-    id: string;
-    name: string;
-    url: string;
-  }) {
+  private openUpdatePlatformDialog({ id, name, url }: Platform) {
     const dialogRef = this.dialog.open<
       GfCreateOrUpdatePlatformDialogComponent,
       CreateOrUpdatePlatformDialogParams
@@ -210,7 +198,7 @@ export class GfAdminPlatformComponent implements OnInit {
           name,
           url
         }
-      },
+      } satisfies CreateOrUpdatePlatformDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
