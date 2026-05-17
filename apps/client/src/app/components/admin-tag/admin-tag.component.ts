@@ -14,7 +14,7 @@ import {
   inject,
   Input,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -55,12 +55,12 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
 export class GfAdminTagComponent implements OnInit {
   @Input() locale = getLocale();
 
-  @ViewChild(MatSort) sort: MatSort;
-
   public dataSource = new MatTableDataSource<Tag>();
   public deviceType: string;
   public displayedColumns = ['name', 'userId', 'activities', 'actions'];
   public tags: Tag[];
+
+  private readonly sort = viewChild.required(MatSort);
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -142,7 +142,7 @@ export class GfAdminTagComponent implements OnInit {
         this.tags = tags;
 
         this.dataSource = new MatTableDataSource(this.tags);
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort();
         this.dataSource.sortingDataAccessor = get;
 
         this.dataService.updateInfo();
