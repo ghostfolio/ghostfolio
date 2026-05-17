@@ -13,7 +13,7 @@ import {
   computed,
   DestroyRef,
   inject,
-  Input,
+  input,
   OnInit,
   viewChild
 } from '@angular/core';
@@ -54,7 +54,7 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
   templateUrl: './admin-tag.component.html'
 })
 export class GfAdminTagComponent implements OnInit {
-  @Input() locale = getLocale();
+  public readonly locale = input(getLocale());
 
   public dataSource = new MatTableDataSource<Tag>();
   public displayedColumns = ['name', 'userId', 'activities', 'actions'];
