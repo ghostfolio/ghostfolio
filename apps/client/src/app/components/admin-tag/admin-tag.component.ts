@@ -83,7 +83,9 @@ export class GfAdminTagComponent implements OnInit {
               return id === params['tagId'];
             });
 
-            this.openUpdateTagDialog(tag);
+            if (tag) {
+              this.openUpdateTagDialog(tag);
+            }
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -153,12 +155,7 @@ export class GfAdminTagComponent implements OnInit {
       GfCreateOrUpdateTagDialogComponent,
       CreateOrUpdateTagDialogParams
     >(GfCreateOrUpdateTagDialogComponent, {
-      data: {
-        tag: {
-          id: null,
-          name: null
-        }
-      },
+      data: {} satisfies CreateOrUpdateTagDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -197,7 +194,7 @@ export class GfAdminTagComponent implements OnInit {
           id,
           name
         }
-      },
+      } satisfies CreateOrUpdateTagDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
