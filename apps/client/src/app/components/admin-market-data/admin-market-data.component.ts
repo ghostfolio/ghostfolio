@@ -28,6 +28,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit,
   viewChild
 } from '@angular/core';
@@ -98,6 +99,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
   templateUrl: './admin-market-data.html'
 })
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
+  protected readonly adminMarketDataService = inject(AdminMarketDataService);
   protected readonly allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
@@ -163,18 +165,17 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
-  public constructor(
-    protected readonly adminMarketDataService: AdminMarketDataService,
-    private readonly adminService: AdminService,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly deviceDetectorService: DeviceDetectorService,
-    private readonly dialog: MatDialog,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly userService: UserService
-  ) {
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
