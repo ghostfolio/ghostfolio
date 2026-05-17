@@ -93,14 +93,13 @@ export class GfAdminOverviewComponent implements OnInit {
   protected hasPermissionForSystemMessage: boolean;
   protected hasPermissionToSyncDemoUserAccount: boolean;
   protected hasPermissionToToggleReadOnlyMode: boolean;
+  protected readonly info: InfoItem;
   protected isDataGatheringEnabled: boolean;
   protected readonly permissions = permissions;
   protected systemMessage: SystemMessage;
   protected userCount: number;
   protected user: User;
   protected version: string;
-
-  private info: InfoItem;
 
   private readonly adminService = inject(AdminService);
   private readonly cacheService = inject(CacheService);
@@ -152,7 +151,7 @@ export class GfAdminOverviewComponent implements OnInit {
     });
   }
 
-  public get activitiesCountPerUser() {
+  protected get activitiesCountPerUser() {
     if (!this.activitiesCount || !this.userCount) {
       return undefined;
     }
