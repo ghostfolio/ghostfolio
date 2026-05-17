@@ -58,10 +58,9 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
 export class GfAdminPlatformComponent implements OnInit {
   @Input() locale = getLocale();
 
-  public dataSource = new MatTableDataSource<Platform>();
-  public platforms: Platform[];
-
+  protected dataSource = new MatTableDataSource<Platform>();
   protected readonly displayedColumns = ['name', 'url', 'accounts', 'actions'];
+  protected platforms: Platform[];
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -107,7 +106,7 @@ export class GfAdminPlatformComponent implements OnInit {
     this.fetchPlatforms();
   }
 
-  public onDeletePlatform(aId: string) {
+  protected onDeletePlatform(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.deletePlatform(aId);
@@ -117,7 +116,7 @@ export class GfAdminPlatformComponent implements OnInit {
     });
   }
 
-  public onUpdatePlatform({ id }: Platform) {
+  protected onUpdatePlatform({ id }: Platform) {
     this.router.navigate([], {
       queryParams: { editPlatformDialog: true, platformId: id }
     });
