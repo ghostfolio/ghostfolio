@@ -30,6 +30,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -101,17 +102,17 @@ export class GfAdminOverviewComponent implements OnInit {
 
   private info: InfoItem;
 
-  public constructor(
-    private adminService: AdminService,
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private clipboard: Clipboard,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar,
-    private userService: UserService
-  ) {
+  private readonly adminService = inject(AdminService);
+  private readonly cacheService = inject(CacheService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly clipboard = inject(Clipboard);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationService = inject(NotificationService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
