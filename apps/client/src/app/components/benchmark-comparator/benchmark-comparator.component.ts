@@ -113,12 +113,12 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onChangeBenchmark(symbolProfileId: string) {
-    this.benchmarkChanged.emit(symbolProfileId);
-  }
-
   public ngOnDestroy() {
     this.chart?.destroy();
+  }
+
+  protected onChangeBenchmark(symbolProfileId: string) {
+    this.benchmarkChanged.emit(symbolProfileId);
   }
 
   private initialize() {
