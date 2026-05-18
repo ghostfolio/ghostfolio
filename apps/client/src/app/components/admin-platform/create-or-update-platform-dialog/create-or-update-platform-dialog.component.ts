@@ -46,8 +46,8 @@ export class GfCreateOrUpdatePlatformDialogComponent {
     private formBuilder: FormBuilder
   ) {
     this.platformForm = this.formBuilder.group({
-      name: [this.data.platform.name, Validators.required],
-      url: [this.data.platform.url ?? 'https://', Validators.required]
+      name: [this.data.platform?.name, Validators.required],
+      url: [this.data.platform?.url ?? 'https://', Validators.required]
     });
   }
 
@@ -62,7 +62,7 @@ export class GfCreateOrUpdatePlatformDialogComponent {
         url: this.platformForm.get('url')?.value
       };
 
-      if (this.data.platform.id) {
+      if (this.data.platform?.id) {
         (platform as UpdatePlatformDto).id = this.data.platform.id;
         await validateObjectForForm({
           classDto: UpdatePlatformDto,
