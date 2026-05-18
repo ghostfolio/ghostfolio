@@ -6,6 +6,7 @@ import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   DataSource,
   MarketData,
@@ -15,7 +16,10 @@ import {
 
 @Injectable()
 export class MarketDataService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly eventEmitter: EventEmitter2,
+    private readonly prismaService: PrismaService
+  ) {}
 
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.deleteMany({
@@ -185,6 +189,8 @@ export class MarketDataService {
         });
       }
     });
+
+    this.eventEmitter.emit('market-data.updated', { symbol });
   }
 
   public async updateAssetProfileIdentifier(
@@ -211,7 +217,7 @@ export class MarketDataService {
   }): Promise<MarketData> {
     const { data, where } = params;
 
-    return this.prismaService.marketData.upsert({
+    const result = await this.prismaService.marketData.upsert({
       where,
       create: {
         dataSource: where.dataSource_date_symbol.dataSource,
@@ -222,6 +228,12 @@ export class MarketDataService {
       },
       update: { marketPrice: data.marketPrice, state: data.state }
     });
+
+    this.eventEmitter.emit('market-data.updated', {
+      symbol: where.dataSource_date_symbol.symbol
+    });
+
+    return result;
   }
 
   /**
@@ -258,6 +270,13 @@ export class MarketDataService {
       }
     );
 
-    return this.prismaService.$transaction(upsertPromises);
+    const result = await this.prismaService.$transaction(upsertPromises);
+
+    const symbols = [...new Set(data.map((d) => d.symbol as string))];
+    for (const symbol of symbols) {
+      this.eventEmitter.emit('market-data.updated', { symbol });
+    }
+
+    return result;
   }
 }

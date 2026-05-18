@@ -16,6 +16,7 @@ import {
 } from '@ghostfolio/common/helper';
 
 import { Injectable, Logger } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import {
   eachDayOfInterval,
   format,
@@ -34,6 +35,8 @@ export class ExchangeRateDataService {
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
+  private exchangeRateCache = new Map<string, Float32Array>();
+  private pendingLoads = new Map<string, Promise<Float32Array>>();
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -284,56 +287,34 @@ export class ExchangeRateDataService {
     } else if (derivedCurrencyFactor) {
       factor = derivedCurrencyFactor;
     } else {
-      const dataSource =
-        this.dataProviderService.getDataSourceForExchangeRates();
-      const symbol = `${aFromCurrency}${aToCurrency}`;
+      const marketPrice = await this.getRateFromCache(
+        `${aFromCurrency}${aToCurrency}`,
+        aDate
+      );
 
-      const marketData = await this.marketDataService.get({
-        dataSource,
-        symbol,
-        date: aDate
-      });
-
-      if (marketData?.marketPrice) {
-        factor = marketData?.marketPrice;
+      if (marketPrice !== undefined) {
+        factor = marketPrice;
       } else {
-        // Calculate indirectly via base currency
-
-        let marketPriceBaseCurrencyFromCurrency: number;
-        let marketPriceBaseCurrencyToCurrency: number;
-
         try {
-          if (aFromCurrency === DEFAULT_CURRENCY) {
-            marketPriceBaseCurrencyFromCurrency = 1;
-          } else {
-            marketPriceBaseCurrencyFromCurrency = (
-              await this.marketDataService.get({
-                dataSource,
-                date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
-              })
-            )?.marketPrice;
-          }
-        } catch {}
+          let baseFromPrice = 1;
+          let baseToPrice = 1;
 
-        try {
-          if (aToCurrency === DEFAULT_CURRENCY) {
-            marketPriceBaseCurrencyToCurrency = 1;
-          } else {
-            marketPriceBaseCurrencyToCurrency = (
-              await this.marketDataService.get({
-                dataSource,
-                date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
-              })
-            )?.marketPrice;
+          if (aFromCurrency !== DEFAULT_CURRENCY) {
+            baseFromPrice = await this.getRateFromCache(
+              `${DEFAULT_CURRENCY}${aFromCurrency}`,
+              aDate
+            );
           }
-        } catch {}
 
-        // Calculate the opposite direction
-        factor =
-          (1 / marketPriceBaseCurrencyFromCurrency) *
-          marketPriceBaseCurrencyToCurrency;
+          if (aToCurrency !== DEFAULT_CURRENCY) {
+            baseToPrice = await this.getRateFromCache(
+              `${DEFAULT_CURRENCY}${aToCurrency}`,
+              aDate
+            );
+          }
+
+          factor = (1 / baseFromPrice) * baseToPrice;
+        } catch {}
       }
     }
 
@@ -350,6 +331,97 @@ export class ExchangeRateDataService {
     );
 
     return undefined;
+  }
+
+  @OnEvent('market-data.updated')
+  public onMarketDataUpdated(event: { symbol: string }) {
+    this.exchangeRateCache.delete(event.symbol);
+    this.pendingLoads.delete(event.symbol);
+  }
+
+  private getDaysSinceEpoch(aDate: Date) {
+    return Math.floor(aDate.getTime() / 86400000);
+  }
+
+  private async loadCache(aSymbol: string): Promise<Float32Array> {
+    const dataSource = this.dataProviderService.getDataSourceForExchangeRates();
+    const marketData = await this.prismaService.marketData.findMany({
+      where: { dataSource, symbol: aSymbol },
+      orderBy: { date: 'asc' },
+      select: { date: true, marketPrice: true }
+    });
+
+    const todayDays = this.getDaysSinceEpoch(new Date());
+    const array = new Float32Array(todayDays + 1);
+
+    if (marketData.length > 0) {
+      let lastRate = marketData[0].marketPrice;
+      let currentIndex = this.getDaysSinceEpoch(marketData[0].date);
+
+      for (const data of marketData) {
+        const dataIndex = this.getDaysSinceEpoch(data.date);
+        while (currentIndex < dataIndex && currentIndex <= todayDays) {
+          array[currentIndex++] = lastRate;
+        }
+        lastRate = data.marketPrice;
+        array[dataIndex] = lastRate;
+        currentIndex = dataIndex + 1;
+      }
+
+      while (currentIndex <= todayDays) {
+        array[currentIndex++] = lastRate;
+      }
+    }
+
+    return array;
+  }
+
+  private async getRateFromCache(
+    aSymbol: string,
+    aDate: Date
+  ): Promise<number | undefined> {
+    let cache = this.exchangeRateCache.get(aSymbol);
+
+    if (!cache) {
+      if (this.pendingLoads.has(aSymbol)) {
+        await this.pendingLoads.get(aSymbol);
+        cache = this.exchangeRateCache.get(aSymbol);
+
+        if (!cache) {
+          cache = await this.loadAndCommit(aSymbol);
+        }
+      } else {
+        cache = await this.loadAndCommit(aSymbol);
+      }
+    }
+
+    const days = Math.min(this.getDaysSinceEpoch(aDate), cache.length - 1);
+
+    if (days >= 0) {
+      const rate = cache[days];
+      return rate === 0 ? undefined : rate;
+    }
+
+    return undefined;
+  }
+
+  private async loadAndCommit(aSymbol: string): Promise<Float32Array> {
+    const loadPromise = this.loadCache(aSymbol);
+    this.pendingLoads.set(aSymbol, loadPromise);
+
+    try {
+      const cache = await loadPromise;
+
+      if (this.pendingLoads.get(aSymbol) === loadPromise) {
+        this.exchangeRateCache.set(aSymbol, cache);
+      }
+
+      return this.exchangeRateCache.get(aSymbol) ?? cache;
+    } finally {
+      if (this.pendingLoads.get(aSymbol) === loadPromise) {
+        this.pendingLoads.delete(aSymbol);
+      }
+    }
   }
 
   private async getExchangeRates({
