@@ -27,7 +27,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -79,12 +79,13 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @Output() benchmarkChanged = new EventEmitter<string>();
 
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
-
   public chart: Chart<'line'>;
   public hasPermissionToAccessAdminControl: boolean;
   public routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
+
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   public constructor() {
     Chart.register(
@@ -166,7 +167,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
         this.chart.update();
       } else {
-        this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'line'>(this.chartCanvas().nativeElement, {
           data,
           options: {
             animation: false,
@@ -250,7 +251,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
             }
           },
           plugins: [
-            getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
+            getVerticalHoverLinePlugin(this.chartCanvas(), this.colorScheme)
           ],
           type: 'line'
         });
