@@ -135,7 +135,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
           data: this.performanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date).getTime(), y: value * 100 };
+            return {
+              x: parseDate(date)?.getTime() ?? null,
+              y: value * 100
+            };
           }),
           label: $localize`Portfolio`
         },
@@ -145,7 +148,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           borderWidth: 2,
           data: this.performanceDataItems.map(({ date }) => {
             return {
-              x: parseDate(date).getTime(),
+              x: parseDate(date)?.getTime() ?? null,
               y: benchmarkDataValues[date]
             };
           }),
@@ -163,7 +166,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animation: false,
