@@ -28,6 +28,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -82,7 +83,6 @@ import { switchMap, tap } from 'rxjs/operators';
 export class GfAdminUsersComponent implements OnInit {
   public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
   public defaultDateFormat: string;
-  public deviceType: string;
   public displayedColumns: string[] = [];
   public getEmojiFlag = getEmojiFlag;
   public hasPermissionForSubscription: boolean;
@@ -95,6 +95,9 @@ export class GfAdminUsersComponent implements OnInit {
   public totalItems = 0;
   public user: User;
 
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   private readonly paginator = viewChild.required(MatPaginator);
 
   private readonly adminService = inject(AdminService);
@@ -112,7 +115,6 @@ export class GfAdminUsersComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
@@ -295,13 +297,13 @@ export class GfAdminUsersComponent implements OnInit {
       autoFocus: false,
       data: {
         currentUserId: this.user?.id,
-        deviceType: this.deviceType,
+        deviceType: this.deviceType(),
         hasPermissionForSubscription: this.hasPermissionForSubscription,
         locale: this.user?.settings?.locale ?? locale,
         userId: aUserId
       } satisfies UserDetailDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : '60vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '60vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
