@@ -1,8 +1,11 @@
-import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
+import {
+  UserDetailDialogParams,
+  UserDetailDialogResult
+} from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { DEFAULT_PAGE_SIZE, locale } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   getDateFnsLocale,
@@ -283,16 +286,17 @@ export class GfAdminUsersComponent implements OnInit {
   private openUserDetailDialog(aUserId: string) {
     const dialogRef = this.dialog.open<
       GfUserDetailDialogComponent,
-      UserDetailDialogParams
+      UserDetailDialogParams,
+      UserDetailDialogResult
     >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
         currentUserId: this.user?.id,
         deviceType: this.deviceType,
         hasPermissionForSubscription: this.hasPermissionForSubscription,
-        locale: this.user?.settings?.locale,
+        locale: this.user?.settings?.locale ?? locale,
         userId: aUserId
-      },
+      } satisfies UserDetailDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : '60vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
