@@ -22,12 +22,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   type ElementRef,
-  EventEmitter,
-  Input,
+  input,
   OnChanges,
   OnDestroy,
-  Output,
-  ViewChild
+  output,
+  viewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -68,23 +67,24 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './benchmark-comparator.component.html'
 })
 export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
-  @Input() benchmark: Partial<SymbolProfile>;
-  @Input() benchmarkDataItems: LineChartItem[] = [];
-  @Input() benchmarks: Partial<SymbolProfile>[];
-  @Input() colorScheme: ColorScheme;
-  @Input() isLoading: boolean;
-  @Input() locale = getLocale();
-  @Input() performanceDataItems: LineChartItem[];
-  @Input() user: User;
+  public readonly benchmark = input<Partial<SymbolProfile>>();
+  public readonly benchmarkDataItems = input<LineChartItem[]>([]);
+  public readonly benchmarks = input<Partial<SymbolProfile>[]>();
+  public readonly colorScheme = input.required<ColorScheme>();
+  public readonly isLoading = input<boolean>();
+  public readonly locale = input(getLocale());
+  public readonly performanceDataItems = input.required<LineChartItem[]>();
+  public readonly user = input<User>();
 
-  @Output() benchmarkChanged = new EventEmitter<string>();
+  public readonly benchmarkChanged = output<string>();
 
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
-
-  public chart: Chart<'line'>;
-  public hasPermissionToAccessAdminControl: boolean;
-  public routerLinkAdminControlMarketData =
+  protected chart: Chart<'line'>;
+  protected hasPermissionToAccessAdminControl: boolean;
+  protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
+
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   public constructor() {
     Chart.register(
@@ -104,27 +104,27 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public ngOnChanges() {
     this.hasPermissionToAccessAdminControl = hasPermission(
-      this.user?.permissions,
+      this.user()?.permissions,
       permissions.accessAdminControl
     );
 
-    if (this.performanceDataItems) {
+    if (this.performanceDataItems()) {
       this.initialize();
     }
-  }
-
-  public onChangeBenchmark(symbolProfileId: string) {
-    this.benchmarkChanged.next(symbolProfileId);
   }
 
   public ngOnDestroy() {
     this.chart?.destroy();
   }
 
+  protected onChangeBenchmark(symbolProfileId: string) {
+    this.benchmarkChanged.emit(symbolProfileId);
+  }
+
   private initialize() {
     const benchmarkDataValues: Record<string, number> = {};
 
-    for (const { date, value } of this.benchmarkDataItems) {
+    for (const { date, value } of this.benchmarkDataItems()) {
       benchmarkDataValues[date] = value;
     }
 
@@ -134,8 +134,11 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.performanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date).getTime(), y: value * 100 };
+          data: this.performanceDataItems().map(({ date, value }) => {
+            return {
+              x: parseDate(date)?.getTime() ?? null,
+              y: value * 100
+            };
           }),
           label: $localize`Portfolio`
         },
@@ -143,9 +146,9 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.performanceDataItems.map(({ date }) => {
+          data: this.performanceDataItems().map(({ date }) => {
             return {
-              x: parseDate(date).getTime(),
+              x: parseDate(date)?.getTime() ?? null,
               y: benchmarkDataValues[date]
             };
           }),
@@ -163,7 +166,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'line'>(this.chartCanvas().nativeElement, {
           data,
           options: {
             animation: false,
@@ -172,7 +175,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 tension: 0
               },
               point: {
-                hoverBackgroundColor: getBackgroundColor(this.colorScheme),
+                hoverBackgroundColor: getBackgroundColor(this.colorScheme()),
                 hoverRadius: 2,
                 radius: 0
               }
@@ -183,7 +186,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
               annotation: {
                 annotations: {
                   yAxis: {
-                    borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                    borderColor: `rgba(${getTextColor(this.colorScheme())}, 0.1)`,
                     borderWidth: 1,
                     scaleID: 'y',
                     type: 'line',
@@ -196,14 +199,14 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                color: `rgba(${getTextColor(this.colorScheme())}, 0.1)`
               }
             },
             responsive: true,
             scales: {
               x: {
                 border: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  color: `rgba(${getTextColor(this.colorScheme())}, 0.1)`,
                   width: 1
                 },
                 display: true,
@@ -212,7 +215,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 },
                 type: 'time',
                 time: {
-                  tooltipFormat: getDateFormatString(this.locale),
+                  tooltipFormat: getDateFormatString(this.locale()),
                   unit: 'year'
                 }
               },
@@ -228,7 +231,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                       tick.value === scale.max ||
                       tick.value === scale.min
                     ) {
-                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                      return `rgba(${getTextColor(this.colorScheme())}, 0.1)`;
                     }
 
                     return 'transparent';
@@ -247,7 +250,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
             }
           },
           plugins: [
-            getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
+            getVerticalHoverLinePlugin(this.chartCanvas(), this.colorScheme())
           ],
           type: 'line'
         });
@@ -258,8 +261,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
     return {
       ...getTooltipOptions({
-        colorScheme: this.colorScheme,
-        locale: this.locale,
+        colorScheme: this.colorScheme(),
+        locale: this.locale(),
         unit: '%'
       }),
       mode: 'index',
