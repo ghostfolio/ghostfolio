@@ -31,7 +31,7 @@ import {
   DestroyRef,
   inject,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -80,8 +80,6 @@ import { switchMap, tap } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class GfAdminUsersComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
   public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
   public defaultDateFormat: string;
   public deviceType: string;
@@ -96,6 +94,8 @@ export class GfAdminUsersComponent implements OnInit {
     internalRoutes.adminControl.subRoutes.users.routerLink;
   public totalItems = 0;
   public user: User;
+
+  private readonly paginator = viewChild.required(MatPaginator);
 
   private readonly adminService = inject(AdminService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -266,8 +266,8 @@ export class GfAdminUsersComponent implements OnInit {
   private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
     this.isLoading = true;
 
-    if (pageIndex === 0 && this.paginator) {
-      this.paginator.pageIndex = 0;
+    if (pageIndex === 0 && this.paginator()) {
+      this.paginator().pageIndex = 0;
     }
 
     this.adminService
