@@ -362,7 +362,7 @@ export class ExchangeRateDataService {
   }
 
   private getDaysSinceEpoch(aDate: Date) {
-    return Math.floor(aDate.getTime() / 86400000);
+    return Math.floor(aDate.getTime() / 86400000) + 25569;
   }
 
   private async loadCache(aSymbol: string): Promise<Float64Array> {
@@ -374,7 +374,12 @@ export class ExchangeRateDataService {
     });
 
     const todayDays = this.getDaysSinceEpoch(new Date());
-    const array = new Float64Array(todayDays + 1);
+    const maxDataDays =
+      marketData.length > 0
+        ? this.getDaysSinceEpoch(marketData[marketData.length - 1].date)
+        : 0;
+
+    const array = new Float64Array(Math.max(todayDays, maxDataDays) + 1);
 
     if (marketData.length > 0) {
       let lastRate = marketData[0].marketPrice;
@@ -404,14 +409,10 @@ export class ExchangeRateDataService {
   ): Promise<number | undefined> {
     let cache = this.exchangeRateCache.get(aSymbol);
 
-    if (!cache) {
+    while (!cache) {
       if (this.pendingLoads.has(aSymbol)) {
         await this.pendingLoads.get(aSymbol);
         cache = this.exchangeRateCache.get(aSymbol);
-
-        if (!cache) {
-          cache = await this.loadAndCommit(aSymbol);
-        }
       } else {
         cache = await this.loadAndCommit(aSymbol);
       }

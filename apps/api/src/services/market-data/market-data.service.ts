@@ -22,13 +22,16 @@ export class MarketDataService {
   ) {}
 
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.eventEmitter.emit('market-data.updated', { symbol });
-    return this.prismaService.marketData.deleteMany({
+    const result = await this.prismaService.marketData.deleteMany({
       where: {
         dataSource,
         symbol
       }
     });
+
+    this.eventEmitter.emit('market-data.updated', { symbol });
+
+    return result;
   }
 
   public async get({
@@ -198,14 +201,7 @@ export class MarketDataService {
     oldAssetProfileIdentifier: AssetProfileIdentifier,
     newAssetProfileIdentifier: AssetProfileIdentifier
   ) {
-    this.eventEmitter.emit('market-data.updated', {
-      symbol: oldAssetProfileIdentifier.symbol
-    });
-    this.eventEmitter.emit('market-data.updated', {
-      symbol: newAssetProfileIdentifier.symbol
-    });
-
-    return this.prismaService.marketData.updateMany({
+    const result = await this.prismaService.marketData.updateMany({
       data: {
         dataSource: newAssetProfileIdentifier.dataSource,
         symbol: newAssetProfileIdentifier.symbol
@@ -215,6 +211,15 @@ export class MarketDataService {
         symbol: oldAssetProfileIdentifier.symbol
       }
     });
+
+    this.eventEmitter.emit('market-data.updated', {
+      symbol: oldAssetProfileIdentifier.symbol
+    });
+    this.eventEmitter.emit('market-data.updated', {
+      symbol: newAssetProfileIdentifier.symbol
+    });
+
+    return result;
   }
 
   public async updateMarketData(params: {
