@@ -22,11 +22,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   type ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
+  output,
   viewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -77,7 +76,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
 
-  @Output() benchmarkChanged = new EventEmitter<string>();
+  public readonly benchmarkChanged = output<string>();
 
   protected chart: Chart<'line'>;
   protected hasPermissionToAccessAdminControl: boolean;
@@ -115,7 +114,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   public onChangeBenchmark(symbolProfileId: string) {
-    this.benchmarkChanged.next(symbolProfileId);
+    this.benchmarkChanged.emit(symbolProfileId);
   }
 
   public ngOnDestroy() {
