@@ -22,6 +22,7 @@ export class MarketDataService {
   ) {}
 
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
+    this.eventEmitter.emit('market-data.updated', { symbol });
     return this.prismaService.marketData.deleteMany({
       where: {
         dataSource,
@@ -197,6 +198,13 @@ export class MarketDataService {
     oldAssetProfileIdentifier: AssetProfileIdentifier,
     newAssetProfileIdentifier: AssetProfileIdentifier
   ) {
+    this.eventEmitter.emit('market-data.updated', {
+      symbol: oldAssetProfileIdentifier.symbol
+    });
+    this.eventEmitter.emit('market-data.updated', {
+      symbol: newAssetProfileIdentifier.symbol
+    });
+
     return this.prismaService.marketData.updateMany({
       data: {
         dataSource: newAssetProfileIdentifier.dataSource,

@@ -35,8 +35,8 @@ export class ExchangeRateDataService {
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
-  private exchangeRateCache = new Map<string, Float32Array>();
-  private pendingLoads = new Map<string, Promise<Float32Array>>();
+  private exchangeRateCache = new Map<string, Float64Array>();
+  private pendingLoads = new Map<string, Promise<Float64Array>>();
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -296,14 +296,26 @@ export class ExchangeRateDataService {
         factor = marketPrice;
       } else {
         try {
-          let baseFromPrice = 1;
-          let baseToPrice = 1;
+          let baseFromPrice: number | undefined =
+            aFromCurrency === DEFAULT_CURRENCY ? 1 : undefined;
+          let baseToPrice: number | undefined =
+            aToCurrency === DEFAULT_CURRENCY ? 1 : undefined;
 
           if (aFromCurrency !== DEFAULT_CURRENCY) {
             baseFromPrice = await this.getRateFromCache(
               `${DEFAULT_CURRENCY}${aFromCurrency}`,
               aDate
             );
+
+            if (baseFromPrice === undefined) {
+              const crossPrice = await this.getRateFromCache(
+                `${aFromCurrency}${DEFAULT_CURRENCY}`,
+                aDate
+              );
+              if (crossPrice !== undefined) {
+                baseFromPrice = 1 / crossPrice;
+              }
+            }
           }
 
           if (aToCurrency !== DEFAULT_CURRENCY) {
@@ -311,6 +323,16 @@ export class ExchangeRateDataService {
               `${DEFAULT_CURRENCY}${aToCurrency}`,
               aDate
             );
+
+            if (baseToPrice === undefined) {
+              const crossPrice = await this.getRateFromCache(
+                `${aToCurrency}${DEFAULT_CURRENCY}`,
+                aDate
+              );
+              if (crossPrice !== undefined) {
+                baseToPrice = 1 / crossPrice;
+              }
+            }
           }
 
           factor = (1 / baseFromPrice) * baseToPrice;
@@ -343,7 +365,7 @@ export class ExchangeRateDataService {
     return Math.floor(aDate.getTime() / 86400000);
   }
 
-  private async loadCache(aSymbol: string): Promise<Float32Array> {
+  private async loadCache(aSymbol: string): Promise<Float64Array> {
     const dataSource = this.dataProviderService.getDataSourceForExchangeRates();
     const marketData = await this.prismaService.marketData.findMany({
       where: { dataSource, symbol: aSymbol },
@@ -352,7 +374,7 @@ export class ExchangeRateDataService {
     });
 
     const todayDays = this.getDaysSinceEpoch(new Date());
-    const array = new Float32Array(todayDays + 1);
+    const array = new Float64Array(todayDays + 1);
 
     if (marketData.length > 0) {
       let lastRate = marketData[0].marketPrice;
@@ -405,7 +427,7 @@ export class ExchangeRateDataService {
     return undefined;
   }
 
-  private async loadAndCommit(aSymbol: string): Promise<Float32Array> {
+  private async loadAndCommit(aSymbol: string): Promise<Float64Array> {
     const loadPromise = this.loadCache(aSymbol);
     this.pendingLoads.set(aSymbol, loadPromise);
 
