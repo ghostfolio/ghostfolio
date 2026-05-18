@@ -81,19 +81,21 @@ import { switchMap, tap } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class GfAdminUsersComponent implements OnInit {
-  public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
-  public defaultDateFormat: string;
-  public displayedColumns: string[] = [];
-  public getEmojiFlag = getEmojiFlag;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToImpersonateAllUsers: boolean;
-  public info: InfoItem;
-  public isLoading = false;
-  public pageSize = DEFAULT_PAGE_SIZE;
-  public routerLinkAdminControlUsers =
+  protected dataSource = new MatTableDataSource<
+    AdminUsersResponse['users'][0]
+  >();
+  protected defaultDateFormat: string;
+  protected displayedColumns: string[] = [];
+  protected readonly getEmojiFlag = getEmojiFlag;
+  protected hasPermissionForSubscription: boolean;
+  protected hasPermissionToImpersonateAllUsers: boolean;
+  protected info: InfoItem;
+  protected isLoading = false;
+  protected readonly pageSize = DEFAULT_PAGE_SIZE;
+  protected readonly routerLinkAdminControlUsers =
     internalRoutes.adminControl.subRoutes.users.routerLink;
-  public totalItems = 0;
-  public user: User;
+  protected totalItems = 0;
+  protected user: User;
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -184,7 +186,7 @@ export class GfAdminUsersComponent implements OnInit {
     this.fetchUsers();
   }
 
-  public formatDistanceToNow(aDateString: string) {
+  protected formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
         addSuffix: true,
@@ -200,13 +202,13 @@ export class GfAdminUsersComponent implements OnInit {
     return '';
   }
 
-  public onChangePage(page: PageEvent) {
+  protected onChangePage(page: PageEvent) {
     this.fetchUsers({
       pageIndex: page.pageIndex
     });
   }
 
-  public onDeleteUser(aId: string) {
+  protected onDeleteUser(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -224,7 +226,7 @@ export class GfAdminUsersComponent implements OnInit {
     });
   }
 
-  public onGenerateAccessToken(aUserId: string) {
+  protected onGenerateAccessToken(aUserId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -249,7 +251,7 @@ export class GfAdminUsersComponent implements OnInit {
     });
   }
 
-  public onImpersonateUser(aId: string) {
+  protected onImpersonateUser(aId: string) {
     if (aId) {
       this.impersonationStorageService.setId(aId);
     } else {
@@ -259,7 +261,7 @@ export class GfAdminUsersComponent implements OnInit {
     window.location.reload();
   }
 
-  public onOpenUserDetailDialog(userId: string) {
+  protected onOpenUserDetailDialog(userId: string) {
     this.router.navigate(
       internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
     );
