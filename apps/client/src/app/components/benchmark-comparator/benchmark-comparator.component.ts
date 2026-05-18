@@ -79,9 +79,9 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @Output() benchmarkChanged = new EventEmitter<string>();
 
-  public chart: Chart<'line'>;
-  public hasPermissionToAccessAdminControl: boolean;
-  public routerLinkAdminControlMarketData =
+  protected chart: Chart<'line'>;
+  protected hasPermissionToAccessAdminControl: boolean;
+  protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
 
   private readonly chartCanvas =
