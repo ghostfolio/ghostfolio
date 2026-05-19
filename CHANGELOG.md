@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the pagination in the activities table of the holding detail dialog
 - Randomized the placeholder in the assistant
 - Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
+- Relaxed the URL validation in the asset profile DTOs to accept both `HTTP` and `HTTPS` protocols
+- Relaxed the URL validation in the platform DTOs to accept both `HTTP` and `HTTPS` protocols
 - Extracted the page tabs to a reusable component
 - Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
