@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="mb-5 row">
+  <div class="row">
     <div class="col">
       <h1 class="h3 line-height-1 mb-4 text-center">
         <span class="d-none d-sm-block"
@@ -11,7 +11,7 @@
       </h1>
       <div class="row">
         @for (ossFriend of ossFriends; track ossFriend) {
-          <div class="col-xs-12 col-md-4 mb-3">
+          <div class="col-xs-12 col-md-4" [class.mb-3]="!$last">
             <a target="_blank" [href]="ossFriend.href">
               <mat-card appearance="outlined" class="d-flex flex-column h-100">
                 <mat-card-header>
