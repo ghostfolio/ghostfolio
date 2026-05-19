@@ -479,6 +479,7 @@ ngx-skeleton-loader {
 
 .page {
   display: flex;
+  height: calc(100svh - var(--mat-toolbar-standard-height));
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom);
   padding-bottom: constant(safe-area-inset-bottom);
