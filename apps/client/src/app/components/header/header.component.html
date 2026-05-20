@@ -36,7 +36,8 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute() === internalRoutes.portfolio.path,
+            'font-weight-bold':
+              currentRoute() === internalRoutes.portfolio.path,
             'text-decoration-underline':
               currentRoute() === internalRoutes.portfolio.path
           }"
@@ -151,7 +152,9 @@
               [hasPermissionToAccessAdminControl]="
                 hasPermissionToAccessAdminControl
               "
-              [hasPermissionToChangeDateRange]="hasPermissionToChangeDateRange()"
+              [hasPermissionToChangeDateRange]="
+                hasPermissionToChangeDateRange()
+              "
               [hasPermissionToChangeFilters]="hasPermissionToChangeFilters()"
               [user]="user()"
               (closed)="closeAssistant()"
@@ -182,7 +185,8 @@
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
           @if (
-            hasPermissionForSubscription && user()?.subscription?.type === 'Basic'
+            hasPermissionForSubscription &&
+            user()?.subscription?.type === 'Basic'
           ) {
             <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
               ><span class="align-items-center d-flex"
@@ -297,7 +301,8 @@
             >Resources</a
           >
           @if (
-            hasPermissionForSubscription && user()?.subscription?.type === 'Basic'
+            hasPermissionForSubscription &&
+            user()?.subscription?.type === 'Basic'
           ) {
             <a
               class="d-flex d-sm-none"
