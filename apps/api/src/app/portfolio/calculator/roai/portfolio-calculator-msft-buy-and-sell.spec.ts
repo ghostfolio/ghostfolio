@@ -72,7 +72,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get transaction point', () => {
-    it('with MSFT buy and sell with fractional quantities (multiples of 1/3)', () => {
+    it('with MSFT buy and sell with fractional quantities (multiples of 1/3)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-04-01').getTime());
 
       const activities: Activity[] = [
@@ -133,6 +133,7 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
+      await portfolioCalculator.computeSnapshot();
       const transactionPoints = portfolioCalculator.getTransactionPoints();
       const lastTransactionPoint =
         transactionPoints[transactionPoints.length - 1];
