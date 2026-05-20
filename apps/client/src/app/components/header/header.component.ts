@@ -29,6 +29,7 @@ import {
   DestroyRef,
   EventEmitter,
   HostListener,
+  inject,
   Input,
   OnChanges,
   Output,
@@ -120,18 +121,20 @@ export class GfHeaderComponent implements OnChanges {
   protected readonly routerLinkRegister = publicRoutes.register.routerLink;
   protected readonly routerLinkResources = publicRoutes.resources.routerLink;
 
-  public constructor(
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly dialog: MatDialog,
-    private readonly impersonationStorageService: ImpersonationStorageService,
-    private readonly layoutService: LayoutService,
-    private readonly notificationService: NotificationService,
-    private readonly router: Router,
-    private readonly settingsStorageService: SettingsStorageService,
-    private readonly tokenStorageService: TokenStorageService,
-    private readonly userService: UserService
-  ) {
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly layoutService = inject(LayoutService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly router = inject(Router);
+  private readonly settingsStorageService = inject(SettingsStorageService);
+  private readonly tokenStorageService = inject(TokenStorageService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
