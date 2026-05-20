@@ -74,65 +74,50 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./header.component.scss']
 })
 export class GfHeaderComponent implements OnChanges {
-  @HostListener('window:keydown', ['$event'])
-  openAssistantWithHotKey(event: KeyboardEvent) {
-    if (
-      event.key === '/' &&
-      event.target instanceof Element &&
-      event.target?.nodeName?.toLowerCase() !== 'input' &&
-      event.target?.nodeName?.toLowerCase() !== 'textarea' &&
-      this.hasPermissionToAccessAssistant
-    ) {
-      this.assistantElement.setIsOpen(true);
-      this.assistentMenuTriggerElement.openMenu();
+  @Input() public currentRoute: string;
+  @Input() public deviceType: string;
+  @Input() public hasPermissionToChangeDateRange: boolean;
+  @Input() public hasPermissionToChangeFilters: boolean;
+  @Input() public hasPromotion: boolean;
+  @Input() public hasTabs: boolean;
+  @Input() public info: InfoItem;
+  @Input() public pageTitle: string;
+  @Input() public user: User;
 
-      event.preventDefault();
-    }
-  }
+  @Output() public signOut = new EventEmitter<void>();
 
-  @Input() currentRoute: string;
-  @Input() deviceType: string;
-  @Input() hasPermissionToChangeDateRange: boolean;
-  @Input() hasPermissionToChangeFilters: boolean;
-  @Input() hasPromotion: boolean;
-  @Input() hasTabs: boolean;
-  @Input() info: InfoItem;
-  @Input() pageTitle: string;
-  @Input() user: User;
+  @ViewChild('assistant') protected assistantElement: GfAssistantComponent;
+  @ViewChild('assistantTrigger')
+  protected assistentMenuTriggerElement: MatMenuTrigger;
 
-  @Output() signOut = new EventEmitter<void>();
-
-  @ViewChild('assistant') assistantElement: GfAssistantComponent;
-  @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
-
-  public hasFilters: boolean;
-  public hasImpersonationId: boolean;
-  public hasPermissionForAuthGoogle: boolean;
-  public hasPermissionForAuthOidc: boolean;
-  public hasPermissionForAuthToken: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToAccessAdminControl: boolean;
-  public hasPermissionToAccessAssistant: boolean;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public hasPermissionToCreateUser: boolean;
-  public impersonationId: string;
-  public internalRoutes = internalRoutes;
-  public isMenuOpen: boolean;
-  public routeAbout = publicRoutes.about.path;
-  public routeFeatures = publicRoutes.features.path;
-  public routeMarkets = publicRoutes.markets.path;
-  public routePricing = publicRoutes.pricing.path;
-  public routeResources = publicRoutes.resources.path;
-  public routerLinkAbout = publicRoutes.about.routerLink;
-  public routerLinkAccount = internalRoutes.account.routerLink;
-  public routerLinkAccounts = internalRoutes.accounts.routerLink;
-  public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = publicRoutes.markets.routerLink;
-  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
-  public routerLinkRegister = publicRoutes.register.routerLink;
-  public routerLinkResources = publicRoutes.resources.routerLink;
+  protected hasFilters: boolean;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionForAuthGoogle: boolean;
+  protected hasPermissionForAuthOidc: boolean;
+  protected hasPermissionForAuthToken: boolean;
+  protected hasPermissionForSubscription: boolean;
+  protected hasPermissionToAccessAdminControl: boolean;
+  protected hasPermissionToAccessAssistant: boolean;
+  protected hasPermissionToAccessFearAndGreedIndex: boolean;
+  protected hasPermissionToCreateUser: boolean;
+  protected impersonationId: string;
+  protected internalRoutes = internalRoutes;
+  protected isMenuOpen: boolean;
+  protected routeAbout = publicRoutes.about.path;
+  protected routeFeatures = publicRoutes.features.path;
+  protected routeMarkets = publicRoutes.markets.path;
+  protected routePricing = publicRoutes.pricing.path;
+  protected routeResources = publicRoutes.resources.path;
+  protected routerLinkAbout = publicRoutes.about.routerLink;
+  protected routerLinkAccount = internalRoutes.account.routerLink;
+  protected routerLinkAccounts = internalRoutes.accounts.routerLink;
+  protected routerLinkAdminControl = internalRoutes.adminControl.routerLink;
+  protected routerLinkFeatures = publicRoutes.features.routerLink;
+  protected routerLinkMarkets = publicRoutes.markets.routerLink;
+  protected routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  protected routerLinkPricing = publicRoutes.pricing.routerLink;
+  protected routerLinkRegister = publicRoutes.register.routerLink;
+  protected routerLinkResources = publicRoutes.resources.routerLink;
 
   public constructor(
     private dataService: DataService,
@@ -163,6 +148,22 @@ export class GfHeaderComponent implements OnChanges {
       radioButtonOffOutline,
       radioButtonOnOutline
     });
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  protected openAssistantWithHotKey(event: KeyboardEvent) {
+    if (
+      event.key === '/' &&
+      event.target instanceof Element &&
+      event.target?.nodeName?.toLowerCase() !== 'input' &&
+      event.target?.nodeName?.toLowerCase() !== 'textarea' &&
+      this.hasPermissionToAccessAssistant
+    ) {
+      this.assistantElement.setIsOpen(true);
+      this.assistentMenuTriggerElement.openMenu();
+
+      event.preventDefault();
+    }
   }
 
   public ngOnChanges() {
@@ -209,11 +210,11 @@ export class GfHeaderComponent implements OnChanges {
     );
   }
 
-  public closeAssistant() {
+  protected closeAssistant() {
     this.assistentMenuTriggerElement?.closeMenu();
   }
 
-  public impersonateAccount(aId: string) {
+  protected impersonateAccount(aId: string) {
     if (aId) {
       this.impersonationStorageService.setId(aId);
     } else {
@@ -223,7 +224,7 @@ export class GfHeaderComponent implements OnChanges {
     window.location.reload();
   }
 
-  public onDateRangeChange(dateRange: DateRange) {
+  protected onDateRangeChange(dateRange: DateRange) {
     this.dataService
       .putUserSetting({ dateRange })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -235,7 +236,7 @@ export class GfHeaderComponent implements OnChanges {
       });
   }
 
-  public onFiltersChanged(filters: Filter[]) {
+  protected onFiltersChanged(filters: Filter[]) {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
@@ -263,29 +264,29 @@ export class GfHeaderComponent implements OnChanges {
       });
   }
 
-  public onLogoClick() {
+  protected onLogoClick() {
     if (['home', 'zen'].includes(this.currentRoute)) {
       this.layoutService.getShouldReloadSubject().next();
     }
   }
 
-  public onMenuClosed() {
+  protected onMenuClosed() {
     this.isMenuOpen = false;
   }
 
-  public onMenuOpened() {
+  protected onMenuOpened() {
     this.isMenuOpen = true;
   }
 
-  public onOpenAssistant() {
+  protected onOpenAssistant() {
     this.assistantElement.initialize();
   }
 
-  public onSignOut() {
+  protected onSignOut() {
     this.signOut.next();
   }
 
-  public openLoginDialog() {
+  protected openLoginDialog() {
     const dialogRef = this.dialog.open<
       GfLoginWithAccessTokenDialogComponent,
       LoginWithAccessTokenDialogParams,
@@ -326,7 +327,7 @@ export class GfHeaderComponent implements OnChanges {
       });
   }
 
-  public setToken(aToken: string) {
+  private setToken(aToken: string) {
     this.tokenStorageService.saveToken(
       aToken,
       this.settingsStorageService.getSetting(KEY_STAY_SIGNED_IN) === 'true'
