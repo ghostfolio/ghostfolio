@@ -34,6 +34,7 @@ export class PortfolioCalculatorFactory {
     calculationType,
     currency,
     filters = [],
+    skipInitialize = false,
     userId
   }: {
     accountBalanceItems?: HistoricalDataItem[];
@@ -41,6 +42,7 @@ export class PortfolioCalculatorFactory {
     calculationType: PerformanceCalculationType;
     currency: string;
     filters?: Filter[];
+    skipInitialize?: boolean;
     userId: string;
   }): PortfolioCalculator {
     switch (calculationType) {
@@ -55,7 +57,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          skipInitialize
         });
 
       case PerformanceCalculationType.ROAI:
@@ -69,7 +72,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          skipInitialize
         });
 
       case PerformanceCalculationType.ROI:
@@ -83,7 +87,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          skipInitialize
         });
 
       case PerformanceCalculationType.TWR:
@@ -97,7 +102,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          skipInitialize
         });
 
       default:

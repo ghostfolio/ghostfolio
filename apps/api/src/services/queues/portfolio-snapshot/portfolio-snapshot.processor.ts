@@ -67,6 +67,7 @@ export class PortfolioSnapshotProcessor {
         calculationType: job.data.calculationType,
         currency: job.data.userCurrency,
         filters: job.data.filters,
+        skipInitialize: true,
         userId: job.data.userId
       });
 
