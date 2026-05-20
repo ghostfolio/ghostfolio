@@ -1,4 +1,7 @@
-import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
+import {
+  LoginWithAccessTokenDialogParams,
+  LoginWithAccessTokenDialogResult
+} from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
 import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -285,7 +288,8 @@ export class GfHeaderComponent implements OnChanges {
   public openLoginDialog() {
     const dialogRef = this.dialog.open<
       GfLoginWithAccessTokenDialogComponent,
-      LoginWithAccessTokenDialogParams
+      LoginWithAccessTokenDialogParams,
+      LoginWithAccessTokenDialogResult
     >(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
