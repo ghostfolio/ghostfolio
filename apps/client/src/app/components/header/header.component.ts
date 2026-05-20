@@ -27,12 +27,11 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  EventEmitter,
   HostListener,
   inject,
   Input,
   OnChanges,
-  Output,
+  output,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -85,11 +84,11 @@ export class GfHeaderComponent implements OnChanges {
   @Input() public pageTitle: string;
   @Input() public user: User;
 
-  @Output() public readonly signOut = new EventEmitter<void>();
+  public readonly signOut = output<void>();
 
-  protected assistantElement =
+  protected readonly assistantElement =
     viewChild.required<GfAssistantComponent>('assistant');
-  protected assistentMenuTriggerElement =
+  protected readonly assistentMenuTriggerElement =
     viewChild.required<MatMenuTrigger>('assistantTrigger');
 
   protected hasFilters: boolean;
@@ -288,7 +287,7 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   protected onSignOut() {
-    this.signOut.next();
+    this.signOut.emit();
   }
 
   protected openLoginDialog() {
