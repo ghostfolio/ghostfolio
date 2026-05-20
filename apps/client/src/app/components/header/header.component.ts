@@ -29,7 +29,7 @@ import {
   DestroyRef,
   HostListener,
   inject,
-  Input,
+  input,
   OnChanges,
   output,
   viewChild
@@ -74,15 +74,15 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./header.component.scss']
 })
 export class GfHeaderComponent implements OnChanges {
-  @Input() public currentRoute: string;
-  @Input() public deviceType: string;
-  @Input() public hasPermissionToChangeDateRange: boolean;
-  @Input() public hasPermissionToChangeFilters: boolean;
-  @Input() public hasPromotion: boolean;
-  @Input() public hasTabs: boolean;
-  @Input() public info: InfoItem;
-  @Input() public pageTitle: string;
-  @Input() public user: User;
+  public readonly currentRoute = input.required<string>();
+  public readonly deviceType = input.required<string>();
+  public readonly hasPermissionToChangeDateRange = input.required<boolean>();
+  public readonly hasPermissionToChangeFilters = input.required<boolean>();
+  public readonly hasPromotion = input.required<boolean>();
+  public readonly hasTabs = input.required<boolean>();
+  public readonly info = input.required<InfoItem | undefined>();
+  public readonly pageTitle = input.required<string>();
+  public readonly user = input.required<User | undefined>();
 
   public readonly signOut = output<void>();
 
@@ -174,42 +174,42 @@ export class GfHeaderComponent implements OnChanges {
     this.hasFilters = this.userService.hasFilters();
 
     this.hasPermissionForAuthGoogle = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableAuthGoogle
     );
 
     this.hasPermissionForAuthOidc = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableAuthOidc
     );
 
     this.hasPermissionForAuthToken = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableSubscription
     );
 
     this.hasPermissionToAccessAdminControl = hasPermission(
-      this.user?.permissions,
+      this.user()?.permissions,
       permissions.accessAdminControl
     );
 
     this.hasPermissionToAccessAssistant = hasPermission(
-      this.user?.permissions,
+      this.user()?.permissions,
       permissions.accessAssistant
     );
 
     this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableFearAndGreedIndex
     );
 
     this.hasPermissionToCreateUser = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.createUserAccount
     );
   }
@@ -269,7 +269,7 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   protected onLogoClick() {
-    if (['home', 'zen'].includes(this.currentRoute)) {
+    if (['home', 'zen'].includes(this.currentRoute())) {
       this.layoutService.getShouldReloadSubject().next();
     }
   }
