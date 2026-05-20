@@ -33,7 +33,7 @@ import {
   Input,
   OnChanges,
   Output,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -87,9 +87,10 @@ export class GfHeaderComponent implements OnChanges {
 
   @Output() public readonly signOut = new EventEmitter<void>();
 
-  @ViewChild('assistant') protected assistantElement: GfAssistantComponent;
-  @ViewChild('assistantTrigger')
-  protected assistentMenuTriggerElement: MatMenuTrigger;
+  protected assistantElement =
+    viewChild.required<GfAssistantComponent>('assistant');
+  protected assistentMenuTriggerElement =
+    viewChild.required<MatMenuTrigger>('assistantTrigger');
 
   protected hasFilters: boolean;
   protected hasImpersonationId: boolean;
@@ -163,8 +164,8 @@ export class GfHeaderComponent implements OnChanges {
       event.target?.nodeName?.toLowerCase() !== 'textarea' &&
       this.hasPermissionToAccessAssistant
     ) {
-      this.assistantElement.setIsOpen(true);
-      this.assistentMenuTriggerElement.openMenu();
+      this.assistantElement().setIsOpen(true);
+      this.assistentMenuTriggerElement().openMenu();
 
       event.preventDefault();
     }
@@ -215,7 +216,7 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   protected closeAssistant() {
-    this.assistentMenuTriggerElement?.closeMenu();
+    this.assistentMenuTriggerElement().closeMenu();
   }
 
   protected impersonateAccount(aId: string) {
@@ -283,7 +284,7 @@ export class GfHeaderComponent implements OnChanges {
   }
 
   protected onOpenAssistant() {
-    this.assistantElement.initialize();
+    this.assistantElement().initialize();
   }
 
   protected onSignOut() {
