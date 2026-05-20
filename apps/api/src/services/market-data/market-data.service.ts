@@ -92,26 +92,6 @@ export class MarketDataService {
     });
   }
 
-  public async getRangeCount({
-    assetProfileIdentifiers,
-    dateQuery
-  }: {
-    assetProfileIdentifiers: AssetProfileIdentifier[];
-    dateQuery: DateQuery;
-  }): Promise<number> {
-    return this.prismaService.marketData.count({
-      where: {
-        date: dateQuery,
-        OR: assetProfileIdentifiers.map(({ dataSource, symbol }) => {
-          return {
-            dataSource,
-            symbol
-          };
-        })
-      }
-    });
-  }
-
   public async marketDataItems(params: {
     select?: Prisma.MarketDataSelectScalar;
     skip?: number;
