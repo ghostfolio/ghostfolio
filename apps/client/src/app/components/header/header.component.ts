@@ -84,7 +84,7 @@ export class GfHeaderComponent implements OnChanges {
   @Input() public pageTitle: string;
   @Input() public user: User;
 
-  @Output() public signOut = new EventEmitter<void>();
+  @Output() public readonly signOut = new EventEmitter<void>();
 
   @ViewChild('assistant') protected assistantElement: GfAssistantComponent;
   @ViewChild('assistantTrigger')
@@ -101,35 +101,36 @@ export class GfHeaderComponent implements OnChanges {
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected hasPermissionToCreateUser: boolean;
   protected impersonationId: string;
-  protected internalRoutes = internalRoutes;
+  protected readonly internalRoutes = internalRoutes;
   protected isMenuOpen: boolean;
-  protected routeAbout = publicRoutes.about.path;
-  protected routeFeatures = publicRoutes.features.path;
-  protected routeMarkets = publicRoutes.markets.path;
-  protected routePricing = publicRoutes.pricing.path;
-  protected routeResources = publicRoutes.resources.path;
-  protected routerLinkAbout = publicRoutes.about.routerLink;
-  protected routerLinkAccount = internalRoutes.account.routerLink;
-  protected routerLinkAccounts = internalRoutes.accounts.routerLink;
-  protected routerLinkAdminControl = internalRoutes.adminControl.routerLink;
-  protected routerLinkFeatures = publicRoutes.features.routerLink;
-  protected routerLinkMarkets = publicRoutes.markets.routerLink;
-  protected routerLinkPortfolio = internalRoutes.portfolio.routerLink;
-  protected routerLinkPricing = publicRoutes.pricing.routerLink;
-  protected routerLinkRegister = publicRoutes.register.routerLink;
-  protected routerLinkResources = publicRoutes.resources.routerLink;
+  protected readonly routeAbout = publicRoutes.about.path;
+  protected readonly routeFeatures = publicRoutes.features.path;
+  protected readonly routeMarkets = publicRoutes.markets.path;
+  protected readonly routePricing = publicRoutes.pricing.path;
+  protected readonly routeResources = publicRoutes.resources.path;
+  protected readonly routerLinkAbout = publicRoutes.about.routerLink;
+  protected readonly routerLinkAccount = internalRoutes.account.routerLink;
+  protected readonly routerLinkAccounts = internalRoutes.accounts.routerLink;
+  protected readonly routerLinkAdminControl =
+    internalRoutes.adminControl.routerLink;
+  protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+  protected readonly routerLinkMarkets = publicRoutes.markets.routerLink;
+  protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  protected readonly routerLinkPricing = publicRoutes.pricing.routerLink;
+  protected readonly routerLinkRegister = publicRoutes.register.routerLink;
+  protected readonly routerLinkResources = publicRoutes.resources.routerLink;
 
   public constructor(
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private dialog: MatDialog,
-    private impersonationStorageService: ImpersonationStorageService,
-    private layoutService: LayoutService,
-    private notificationService: NotificationService,
-    private router: Router,
-    private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService,
-    private userService: UserService
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly dialog: MatDialog,
+    private readonly impersonationStorageService: ImpersonationStorageService,
+    private readonly layoutService: LayoutService,
+    private readonly notificationService: NotificationService,
+    private readonly router: Router,
+    private readonly settingsStorageService: SettingsStorageService,
+    private readonly tokenStorageService: TokenStorageService,
+    private readonly userService: UserService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
