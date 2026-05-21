@@ -36,6 +36,7 @@ import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { translate } from '../i18n';
 import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.component';
 import { GfValueComponent } from '../value/value.component';
@@ -45,6 +46,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    GfEntityLogoComponent,
     GfTrendIndicatorComponent,
     GfValueComponent,
     IonIcon,
@@ -65,6 +67,7 @@ export class GfBenchmarkComponent {
   public readonly deviceType = input.required<string>();
   public readonly hasPermissionToDeleteItem = input<boolean>();
   public readonly locale = input(getLocale());
+  public readonly showIcon = input(false);
   public readonly showSymbol = input(true);
   public readonly user = input<User>();
 
@@ -75,6 +78,7 @@ export class GfBenchmarkComponent {
   protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
   protected readonly displayedColumns = computed(() => {
     return [
+      ...(this.showIcon() ? ['icon'] : []),
       'name',
       ...(this.user()?.settings?.isExperimentalFeatures
         ? ['trend50d', 'trend200d']
