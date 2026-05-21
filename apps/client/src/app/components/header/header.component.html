@@ -1,14 +1,14 @@
 <mat-toolbar class="px-0">
-  @if (user) {
-    <div class="d-flex h-100 logo-container" [class.filled]="hasTabs">
+  @if (user()) {
+    <div class="d-flex h-100 logo-container" [class.filled]="hasTabs()">
       <a
         class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
         mat-button
-        [class.w-100]="hasTabs"
+        [class.w-100]="hasTabs()"
         [routerLink]="['/']"
         (click)="onLogoClick()"
       >
-        <gf-logo [label]="pageTitle" />
+        <gf-logo [label]="pageTitle()" />
       </a>
     </div>
     <span class="gf-spacer"></span>
@@ -20,11 +20,11 @@
           mat-button
           [class]="{
             'font-weight-bold':
-              currentRoute === internalRoutes.home.path ||
-              currentRoute === internalRoutes.zen.path,
+              currentRoute() === internalRoutes.home.path ||
+              currentRoute() === internalRoutes.zen.path,
             'text-decoration-underline':
-              currentRoute === internalRoutes.home.path ||
-              currentRoute === internalRoutes.zen.path
+              currentRoute() === internalRoutes.home.path ||
+              currentRoute() === internalRoutes.zen.path
           }"
           [routerLink]="['/']"
           >Overview</a
@@ -36,9 +36,10 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
+            'font-weight-bold':
+              currentRoute() === internalRoutes.portfolio.path,
             'text-decoration-underline':
-              currentRoute === internalRoutes.portfolio.path
+              currentRoute() === internalRoutes.portfolio.path
           }"
           [routerLink]="routerLinkPortfolio"
           >Portfolio</a
@@ -50,9 +51,9 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute === internalRoutes.accounts.path,
+            'font-weight-bold': currentRoute() === internalRoutes.accounts.path,
             'text-decoration-underline':
-              currentRoute === internalRoutes.accounts.path
+              currentRoute() === internalRoutes.accounts.path
           }"
           [routerLink]="routerLinkAccounts"
           >Accounts</a
@@ -66,9 +67,9 @@
             mat-button
             [class]="{
               'font-weight-bold':
-                currentRoute === internalRoutes.adminControl.path,
+                currentRoute() === internalRoutes.adminControl.path,
               'text-decoration-underline':
-                currentRoute === internalRoutes.adminControl.path
+                currentRoute() === internalRoutes.adminControl.path
             }"
             [routerLink]="routerLinkAdminControl"
             >Admin Control</a
@@ -81,29 +82,29 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute === routeResources,
-            'text-decoration-underline': currentRoute === routeResources
+            'font-weight-bold': currentRoute() === routeResources,
+            'text-decoration-underline': currentRoute() === routeResources
           }"
           [routerLink]="routerLinkResources"
           >Resources</a
         >
       </li>
       @if (
-        hasPermissionForSubscription && user?.subscription?.type === 'Basic'
+        hasPermissionForSubscription && user()?.subscription?.type === 'Basic'
       ) {
         <li class="list-inline-item">
           <a
             class="d-none d-sm-block rounded"
             mat-button
             [class]="{
-              'font-weight-bold': currentRoute === routePricing,
-              'text-decoration-underline': currentRoute === routePricing
+              'font-weight-bold': currentRoute() === routePricing,
+              'text-decoration-underline': currentRoute() === routePricing
             }"
             [routerLink]="routerLinkPricing"
           >
             <span class="align-items-center d-flex">
               <span i18n>Pricing</span>
-              @if (currentRoute !== routePricing && hasPromotion) {
+              @if (currentRoute() !== routePricing && hasPromotion()) {
                 <span class="badge badge-warning ml-1">%</span>
               }
             </span>
@@ -116,8 +117,8 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute === routeAbout,
-            'text-decoration-underline': currentRoute === routeAbout
+            'font-weight-bold': currentRoute() === routeAbout,
+            'text-decoration-underline': currentRoute() === routeAbout
           }"
           [routerLink]="routerLinkAbout"
           >About</a
@@ -131,7 +132,7 @@
             matBadge="&NoBreak;"
             matBadgeSize="small"
             matButton
-            [matBadgeHidden]="!hasFilters || !hasPermissionToChangeFilters"
+            [matBadgeHidden]="!hasFilters || !hasPermissionToChangeFilters()"
             [matMenuTriggerFor]="assistantMenu"
             [matMenuTriggerRestoreFocus]="false"
             (menuOpened)="onOpenAssistant()"
@@ -143,17 +144,19 @@
             class="no-max-width"
             xPosition="before"
             [overlapTrigger]="true"
-            (closed)="assistantElement?.setIsOpen(false)"
+            (closed)="assistantElement()?.setIsOpen(false)"
           >
             <gf-assistant
               #assistant
-              [deviceType]="deviceType"
+              [deviceType]="deviceType()"
               [hasPermissionToAccessAdminControl]="
                 hasPermissionToAccessAdminControl
               "
-              [hasPermissionToChangeDateRange]="hasPermissionToChangeDateRange"
-              [hasPermissionToChangeFilters]="hasPermissionToChangeFilters"
-              [user]="user"
+              [hasPermissionToChangeDateRange]="
+                hasPermissionToChangeDateRange()
+              "
+              [hasPermissionToChangeFilters]="hasPermissionToChangeFilters()"
+              [user]="user()"
               (closed)="closeAssistant()"
               (dateRangeChanged)="onDateRangeChange($event)"
               (filtersChanged)="onFiltersChanged($event)"
@@ -182,12 +185,13 @@
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
           @if (
-            hasPermissionForSubscription && user?.subscription?.type === 'Basic'
+            hasPermissionForSubscription &&
+            user()?.subscription?.type === 'Basic'
           ) {
             <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
               ><span class="align-items-center d-flex"
                 ><span>
-                  @if (user.subscription.offer.isRenewal) {
+                  @if (user().subscription.offer.isRenewal) {
                     <ng-container i18n>Renew Plan</ng-container>
                   } @else {
                     <ng-container i18n>Upgrade Plan</ng-container>
@@ -199,7 +203,7 @@
             ></a>
             <hr class="m-0" />
           }
-          @if (user?.access?.length > 0) {
+          @if (user()?.access?.length > 0) {
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
                 <ion-icon
@@ -213,7 +217,7 @@
                 <span i18n>Me</span>
               </span>
             </button>
-            @for (accessItem of user?.access; track accessItem) {
+            @for (accessItem of user()?.access; track accessItem) {
               <button mat-menu-item (click)="impersonateAccount(accessItem.id)">
                 <span class="align-items-center d-flex">
                   <ion-icon
@@ -240,8 +244,8 @@
             i18n
             mat-menu-item
             [class.font-weight-bold]="
-              currentRoute === internalRoutes.home.path ||
-              currentRoute === internalRoutes.zen.path
+              currentRoute() === internalRoutes.home.path ||
+              currentRoute() === internalRoutes.zen.path
             "
             [routerLink]="['/']"
             >Overview</a
@@ -251,7 +255,7 @@
             i18n
             mat-menu-item
             [class.font-weight-bold]="
-              currentRoute === internalRoutes.portfolio.path
+              currentRoute() === internalRoutes.portfolio.path
             "
             [routerLink]="routerLinkPortfolio"
             >Portfolio</a
@@ -261,7 +265,7 @@
             i18n
             mat-menu-item
             [class.font-weight-bold]="
-              currentRoute === internalRoutes.accounts.path
+              currentRoute() === internalRoutes.accounts.path
             "
             [routerLink]="routerLinkAccounts"
             >Accounts</a
@@ -270,7 +274,7 @@
             i18n
             mat-menu-item
             [class.font-weight-bold]="
-              currentRoute === internalRoutes.account.path
+              currentRoute() === internalRoutes.account.path
             "
             [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
@@ -281,7 +285,7 @@
               i18n
               mat-menu-item
               [class.font-weight-bold]="
-                currentRoute === internalRoutes.adminControl.path
+                currentRoute() === internalRoutes.adminControl.path
               "
               [routerLink]="routerLinkAdminControl"
               >Admin Control</a
@@ -292,22 +296,23 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="currentRoute === routeResources"
+            [class.font-weight-bold]="currentRoute() === routeResources"
             [routerLink]="routerLinkResources"
             >Resources</a
           >
           @if (
-            hasPermissionForSubscription && user?.subscription?.type === 'Basic'
+            hasPermissionForSubscription &&
+            user()?.subscription?.type === 'Basic'
           ) {
             <a
               class="d-flex d-sm-none"
               mat-menu-item
-              [class.font-weight-bold]="currentRoute === routePricing"
+              [class.font-weight-bold]="currentRoute() === routePricing"
               [routerLink]="routerLinkPricing"
             >
               <span class="align-items-center d-flex">
                 <span i18n>Pricing</span>
-                @if (currentRoute !== routePricing && hasPromotion) {
+                @if (currentRoute() !== routePricing && hasPromotion()) {
                   <span class="badge badge-warning ml-1">%</span>
                 }
               </span>
@@ -317,7 +322,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="currentRoute === routeAbout"
+            [class.font-weight-bold]="currentRoute() === routeAbout"
             [routerLink]="routerLinkAbout"
             >About Ghostfolio</a
           >
@@ -327,17 +332,17 @@
       </li>
     </ul>
   }
-  @if (user === null) {
-    <div class="d-flex h-100 logo-container" [class.filled]="hasTabs">
+  @if (user() === null) {
+    <div class="d-flex h-100 logo-container" [class.filled]="hasTabs()">
       <a
         class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
         mat-button
-        [class.w-100]="hasTabs"
+        [class.w-100]="hasTabs()"
         [routerLink]="['/']"
       >
         <gf-logo
-          [label]="pageTitle"
-          [showLabel]="currentRoute !== 'register'"
+          [label]="pageTitle()"
+          [showLabel]="currentRoute() !== 'register'"
         />
       </a>
     </div>
@@ -349,8 +354,8 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute === routeFeatures,
-            'text-decoration-underline': currentRoute === routeFeatures
+            'font-weight-bold': currentRoute() === routeFeatures,
+            'text-decoration-underline': currentRoute() === routeFeatures
           }"
           [routerLink]="routerLinkFeatures"
           >Features</a
@@ -362,8 +367,8 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute === routeAbout,
-            'text-decoration-underline': currentRoute === routeAbout
+            'font-weight-bold': currentRoute() === routeAbout,
+            'text-decoration-underline': currentRoute() === routeAbout
           }"
           [routerLink]="routerLinkAbout"
           >About</a
@@ -375,14 +380,14 @@
             class="d-sm-block rounded"
             mat-button
             [class]="{
-              'font-weight-bold': currentRoute === routePricing,
-              'text-decoration-underline': currentRoute === routePricing
+              'font-weight-bold': currentRoute() === routePricing,
+              'text-decoration-underline': currentRoute() === routePricing
             }"
             [routerLink]="routerLinkPricing"
           >
             <span class="align-items-center d-flex">
               <span i18n>Pricing</span>
-              @if (currentRoute !== routePricing && hasPromotion) {
+              @if (currentRoute() !== routePricing && hasPromotion()) {
                 <span class="badge badge-warning ml-1">%</span>
               }
             </span>
@@ -396,8 +401,8 @@
             i18n
             mat-button
             [class]="{
-              'font-weight-bold': currentRoute === routeMarkets,
-              'text-decoration-underline': currentRoute === routeMarkets
+              'font-weight-bold': currentRoute() === routeMarkets,
+              'text-decoration-underline': currentRoute() === routeMarkets
             }"
             [routerLink]="routerLinkMarkets"
             >Markets</a
@@ -421,7 +426,7 @@
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
-      @if (currentRoute !== 'register' && hasPermissionToCreateUser) {
+      @if (currentRoute() !== 'register' && hasPermissionToCreateUser) {
         <li class="list-inline-item ml-1">
           <a
             class="d-none d-sm-block px-3 rounded"

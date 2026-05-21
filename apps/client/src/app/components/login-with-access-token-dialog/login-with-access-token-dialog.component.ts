@@ -22,7 +22,10 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 
-import { LoginWithAccessTokenDialogParams } from './interfaces/interfaces';
+import {
+  LoginWithAccessTokenDialogParams,
+  LoginWithAccessTokenDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,7 +52,10 @@ export class GfLoginWithAccessTokenDialogComponent {
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: LoginWithAccessTokenDialogParams,
-    public dialogRef: MatDialogRef<GfLoginWithAccessTokenDialogComponent>,
+    public dialogRef: MatDialogRef<
+      GfLoginWithAccessTokenDialogComponent,
+      LoginWithAccessTokenDialogResult
+    >,
     private settingsStorageService: SettingsStorageService
   ) {
     addIcons({ eyeOffOutline, eyeOutline });
