@@ -8,7 +8,7 @@ export class UpdatePlatformDto {
   name: string;
 
   @IsUrl({
-    protocols: ['https'],
+    protocols: ['http', 'https'],
     require_protocol: true
   })
   url: string;
