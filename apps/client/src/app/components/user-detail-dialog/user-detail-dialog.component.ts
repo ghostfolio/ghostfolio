@@ -22,7 +22,10 @@ import { ellipsisVertical } from 'ionicons/icons';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { UserDetailDialogParams } from './interfaces/interfaces';
+import {
+  UserDetailDialogParams,
+  UserDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,7 +50,10 @@ export class GfUserDetailDialogComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
     private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<GfUserDetailDialogComponent>
+    public dialogRef: MatDialogRef<
+      GfUserDetailDialogComponent,
+      UserDetailDialogResult
+    >
   ) {
     addIcons({
       ellipsisVertical

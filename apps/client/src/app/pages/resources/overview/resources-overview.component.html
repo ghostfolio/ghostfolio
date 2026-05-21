@@ -4,7 +4,7 @@
       <h1 class="h3 mb-4 text-center" i18n>Resources</h1>
       <div class="overview-list">
         @for (item of overviewItems; track item) {
-          <div class="mb-4">
+          <div [class.mb-4]="!$last">
             <h2 class="h5 mb-1 mt-0">{{ item.title }}</h2>
             <p class="mb-1">{{ item.description }}</p>
             <a [routerLink]="item.routerLink"

@@ -3,7 +3,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: calc(100svh - var(--mat-toolbar-standard-height));
+  height: 100%;
   width: 100%;
 
   @include mat.tabs-overrides(
@@ -23,6 +23,10 @@
 
     .mat-mdc-tab-nav-panel {
       padding: 2rem 0;
+
+      @media (max-width: 575.98px) {
+        padding: 1rem 0;
+      }
     }
   }
 

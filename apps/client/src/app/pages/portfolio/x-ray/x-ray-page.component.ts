@@ -107,7 +107,10 @@ export class GfXRayPageComponent {
       .fetchPortfolioReport()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ xRay: { categories, statistics } }) => {
-        this.categories = categories;
+        this.categories = categories.filter(({ rules }) => {
+          return rules?.length > 0;
+        });
+
         this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
 

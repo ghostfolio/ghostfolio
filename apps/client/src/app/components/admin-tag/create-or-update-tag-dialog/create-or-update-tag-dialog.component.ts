@@ -43,7 +43,7 @@ export class GfCreateOrUpdateTagDialogComponent {
     private formBuilder: FormBuilder
   ) {
     this.tagForm = this.formBuilder.group({
-      name: [this.data.tag.name]
+      name: [this.data.tag?.name]
     });
   }
 
@@ -57,7 +57,7 @@ export class GfCreateOrUpdateTagDialogComponent {
         name: this.tagForm.get('name')?.value
       };
 
-      if (this.data.tag.id) {
+      if (this.data.tag?.id) {
         (tag as UpdateTagDto).id = this.data.tag.id;
         await validateObjectForForm({
           classDto: UpdateTagDto,
