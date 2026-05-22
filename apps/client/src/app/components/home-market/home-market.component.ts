@@ -42,7 +42,7 @@ export class GfHomeMarketComponent implements OnInit {
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected fearAndGreedIndex: number;
+  protected readonly fearAndGreedIndex = signal<number | undefined>(undefined);
   protected readonly fearLabel = $localize`Fear`;
   protected readonly greedLabel = $localize`Greed`;
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
@@ -90,7 +90,7 @@ export class GfHomeMarketComponent implements OnInit {
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ historicalData, marketPrice }) => {
-          this.fearAndGreedIndex = marketPrice;
+          this.fearAndGreedIndex.set(marketPrice);
           this.historicalDataItems.set([
             ...historicalData,
             {
@@ -98,8 +98,6 @@ export class GfHomeMarketComponent implements OnInit {
               value: marketPrice
             }
           ]);
-
-          this.changeDetectorRef.markForCheck();
         });
     }
 
