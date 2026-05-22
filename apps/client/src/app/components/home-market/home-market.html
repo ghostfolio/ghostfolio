@@ -10,7 +10,7 @@
           class="mb-3"
           label="Fear & Greed Index"
           [colorScheme]="user?.settings?.colorScheme"
-          [historicalDataItems]="historicalDataItems"
+          [historicalDataItems]="historicalDataItems()"
           [isAnimated]="true"
           [locale]="user?.settings?.locale || undefined"
           [showXAxis]="true"

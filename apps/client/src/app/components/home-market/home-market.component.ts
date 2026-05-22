@@ -46,7 +46,7 @@ export class GfHomeMarketComponent implements OnInit {
   protected readonly fearLabel = $localize`Fear`;
   protected readonly greedLabel = $localize`Greed`;
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
-  protected historicalDataItems: HistoricalDataItem[];
+  protected readonly historicalDataItems = signal<HistoricalDataItem[]>([]);
   protected readonly numberOfDays = 365;
   protected user: User;
 
@@ -91,13 +91,13 @@ export class GfHomeMarketComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ historicalData, marketPrice }) => {
           this.fearAndGreedIndex = marketPrice;
-          this.historicalDataItems = [
+          this.historicalDataItems.set([
             ...historicalData,
             {
               date: resetHours(new Date()).toISOString(),
               value: marketPrice
             }
-          ];
+          ]);
 
           this.changeDetectorRef.markForCheck();
         });
