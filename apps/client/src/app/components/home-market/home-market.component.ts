@@ -35,16 +35,17 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-market.html'
 })
 export class GfHomeMarketComponent implements OnInit {
-  public benchmarks: Benchmark[];
-  public deviceType: string;
-  public fearAndGreedIndex: number;
-  public fearLabel = $localize`Fear`;
-  public greedLabel = $localize`Greed`;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public historicalDataItems: HistoricalDataItem[];
-  public info: InfoItem;
-  public readonly numberOfDays = 365;
-  public user: User;
+  protected benchmarks: Benchmark[];
+  protected deviceType: string;
+  protected fearAndGreedIndex: number;
+  protected fearLabel = $localize`Fear`;
+  protected greedLabel = $localize`Greed`;
+  protected hasPermissionToAccessFearAndGreedIndex: boolean;
+  protected historicalDataItems: HistoricalDataItem[];
+  protected readonly numberOfDays = 365;
+  protected user: User;
+
+  private info: InfoItem;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
