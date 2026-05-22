@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
+
 ## 3.4.0 - 2026-05-21
 
 ### Added
@@ -26,7 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `bull-board` from version `7.0.0` to `7.1.5`
-- Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
 - Upgraded `Nx` from version `22.7.1` to `22.7.2`
 
 ### Fixed
