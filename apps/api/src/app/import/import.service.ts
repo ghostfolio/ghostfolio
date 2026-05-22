@@ -284,7 +284,11 @@ export class ImportService {
         );
 
         // If there is no asset profile or if the asset profile belongs to a different user, then create a new asset profile
-        if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
+        if (
+          !existingAssetProfile ||
+          (existingAssetProfile.userId !== null &&
+            existingAssetProfile.userId !== user.id)
+        ) {
           const assetProfile: CreateAssetProfileDto = omit(
             assetProfileWithMarketData,
             'marketData'
