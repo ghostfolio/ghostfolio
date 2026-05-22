@@ -5,6 +5,7 @@ import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -42,9 +43,9 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'has-fab' },
   imports: [
     GfAccessTableComponent,
+    GfPageFabComponent,
     GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,

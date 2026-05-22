@@ -12,6 +12,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -41,9 +42,9 @@ import { GfImportActivitiesDialogComponent } from './import-activities-dialog/im
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
-  host: { class: 'has-fab' },
   imports: [
     GfActivitiesTableComponent,
+    GfPageFabComponent,
     IonIcon,
     MatButtonModule,
     MatSnackBarModule,

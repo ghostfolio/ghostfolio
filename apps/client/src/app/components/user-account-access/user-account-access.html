@@ -69,7 +69,7 @@
     (accessToUpdate)="onUpdateAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {
-    <div class="fab-container">
+    <gf-page-fab>
       <a
         class="align-items-center d-flex justify-content-center"
         color="primary"
@@ -79,6 +79,6 @@
       >
         <ion-icon name="add-outline" size="large" />
       </a>
-    </div>
+    </gf-page-fab>
   }
 </div>

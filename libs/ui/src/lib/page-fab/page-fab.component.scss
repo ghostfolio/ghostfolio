@@ -1,0 +1,14 @@
+:host {
+  bottom: calc(constant(safe-area-inset-bottom) + 2rem);
+  bottom: calc(env(safe-area-inset-bottom) + 2rem);
+  position: fixed;
+  right: 2rem;
+  z-index: 999;
+}
+
+:host-context(gf-page-tabs) {
+  @media (max-width: 575.98px) {
+    bottom: calc(constant(safe-area-inset-bottom) + 5rem);
+    bottom: calc(env(safe-area-inset-bottom) + 5rem);
+  }
+}

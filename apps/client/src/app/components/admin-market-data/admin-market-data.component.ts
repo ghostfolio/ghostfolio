@@ -19,6 +19,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -80,10 +81,10 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'has-fab' },
   imports: [
     CommonModule,
     GfActivitiesFilterComponent,
+    GfPageFabComponent,
     GfPremiumIndicatorComponent,
     GfSymbolPipe,
     GfValueComponent,

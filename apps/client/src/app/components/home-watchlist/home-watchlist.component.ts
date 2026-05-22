@@ -8,6 +8,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
+import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -37,6 +38,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComponent,
+    GfPageFabComponent,
     GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,

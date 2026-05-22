@@ -11,6 +11,7 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -36,8 +37,13 @@ import { TransferBalanceDialogParams } from './transfer-balance/interfaces/inter
 import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
-  host: { class: 'has-fab page' },
-  imports: [GfAccountsTableComponent, MatButtonModule, RouterModule],
+  host: { class: 'page' },
+  imports: [
+    GfAccountsTableComponent,
+    GfPageFabComponent,
+    MatButtonModule,
+    RouterModule
+  ],
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
