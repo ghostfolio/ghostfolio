@@ -16,6 +16,7 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
@@ -37,7 +38,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class GfHomeMarketComponent implements OnInit {
   protected benchmarks: Benchmark[];
-  protected readonly deviceType: string;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   protected fearAndGreedIndex: number;
   protected readonly fearLabel = $localize`Fear`;
   protected readonly greedLabel = $localize`Greed`;
@@ -55,7 +58,6 @@ export class GfHomeMarketComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
