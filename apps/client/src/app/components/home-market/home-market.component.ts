@@ -20,7 +20,8 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -37,7 +38,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-market.html'
 })
 export class GfHomeMarketComponent implements OnInit {
-  protected benchmarks: Benchmark[];
+  protected readonly benchmarks = signal<Benchmark[]>([]);
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
@@ -106,9 +107,7 @@ export class GfHomeMarketComponent implements OnInit {
       .fetchBenchmarks()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ benchmarks }) => {
-        this.benchmarks = benchmarks;
-
-        this.changeDetectorRef.markForCheck();
+        this.benchmarks.set(benchmarks);
       });
   }
 }

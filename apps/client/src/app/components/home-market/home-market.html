@@ -31,13 +31,13 @@
   <div class="mb-3 row">
     <div class="col-xs-12 col-md-10 offset-md-1">
       <gf-benchmark
-        [benchmarks]="benchmarks"
+        [benchmarks]="benchmarks()"
         [deviceType]="deviceType()"
         [locale]="user?.settings?.locale || undefined"
         [showSymbol]="false"
         [user]="user"
       />
-      @if (benchmarks?.length > 0) {
+      @if (benchmarks()?.length > 0) {
         <div
           class="gf-text-wrap-balance line-height-1 mt-3 text-center text-muted"
         >
