@@ -73,7 +73,10 @@ export class GfHomeMarketComponent implements OnInit {
       permissions.enableFearAndGreedIndex
     );
 
-    if (this.hasPermissionToAccessFearAndGreedIndex) {
+    if (
+      this.hasPermissionToAccessFearAndGreedIndex &&
+      this.info.fearAndGreedDataSource
+    ) {
       this.dataService
         .fetchSymbolItem({
           dataSource: this.info.fearAndGreedDataSource,
