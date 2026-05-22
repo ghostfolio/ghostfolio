@@ -36,23 +36,23 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class GfHomeMarketComponent implements OnInit {
   protected benchmarks: Benchmark[];
-  protected deviceType: string;
+  protected readonly deviceType: string;
   protected fearAndGreedIndex: number;
-  protected fearLabel = $localize`Fear`;
-  protected greedLabel = $localize`Greed`;
+  protected readonly fearLabel = $localize`Fear`;
+  protected readonly greedLabel = $localize`Greed`;
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected historicalDataItems: HistoricalDataItem[];
   protected readonly numberOfDays = 365;
   protected user: User;
 
-  private info: InfoItem;
+  private readonly info: InfoItem;
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private userService: UserService
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly deviceDetectorService: DeviceDetectorService,
+    private readonly userService: UserService
   ) {
     this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
