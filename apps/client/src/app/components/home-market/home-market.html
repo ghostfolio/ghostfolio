@@ -10,7 +10,7 @@
           class="mb-3"
           label="Fear & Greed Index"
           [colorScheme]="user?.settings?.colorScheme"
-          [historicalDataItems]="historicalDataItems"
+          [historicalDataItems]="historicalDataItems()"
           [isAnimated]="true"
           [locale]="user?.settings?.locale || undefined"
           [showXAxis]="true"
@@ -22,7 +22,7 @@
         />
         <gf-fear-and-greed-index
           class="d-flex justify-content-center"
-          [fearAndGreedIndex]="fearAndGreedIndex"
+          [fearAndGreedIndex]="fearAndGreedIndex()"
         />
       </div>
     </div>
@@ -31,13 +31,13 @@
   <div class="mb-3 row">
     <div class="col-xs-12 col-md-10 offset-md-1">
       <gf-benchmark
-        [benchmarks]="benchmarks"
-        [deviceType]="deviceType"
+        [benchmarks]="benchmarks()"
+        [deviceType]="deviceType()"
         [locale]="user?.settings?.locale || undefined"
         [showSymbol]="false"
         [user]="user"
       />
-      @if (benchmarks?.length > 0) {
+      @if (benchmarks()?.length > 0) {
         <div
           class="gf-text-wrap-balance line-height-1 mt-3 text-center text-muted"
         >
