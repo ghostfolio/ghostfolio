@@ -30,15 +30,16 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-summary.html'
 })
 export class GfHomeSummaryComponent implements OnInit {
-  public deviceType: string;
-  public hasImpersonationId: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public info: InfoItem;
-  public isLoading = true;
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
-  public summary: PortfolioSummary;
-  public user: User;
+  protected deviceType: string;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
+  protected isLoading = true;
+  protected summary: PortfolioSummary;
+  protected user: User;
+
+  private hasPermissionForSubscription: boolean;
+  private info: InfoItem;
+  private snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -84,7 +85,7 @@ export class GfHomeSummaryComponent implements OnInit {
       });
   }
 
-  public onChangeEmergencyFund(emergencyFund: number) {
+  protected onChangeEmergencyFund(emergencyFund: number) {
     this.dataService
       .putUserSetting({ emergencyFund })
       .pipe(takeUntilDestroyed(this.destroyRef))
