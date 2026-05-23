@@ -40,6 +40,7 @@ export class GfHomeSummaryComponent implements OnInit {
 
   protected readonly hasPermissionToUpdateUserSettings = computed(() => {
     const user = this.user();
+
     return user
       ? hasPermission(user.permissions, permissions.updateUserSettings)
       : false;
