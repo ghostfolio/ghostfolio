@@ -6,6 +6,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -19,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [GfPortfolioSummaryComponent, MatCardModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-summary',
