@@ -67,7 +67,7 @@
           <gf-line-chart
             class="position-absolute"
             unit="%"
-            [class.pr-3]="deviceType === 'mobile'"
+            [class.pr-3]="deviceType() === 'mobile'"
             [colorScheme]="user?.settings?.colorScheme"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
@@ -86,7 +86,7 @@
       <div class="col">
         <gf-portfolio-performance
           class="pb-4"
-          [deviceType]="deviceType"
+          [deviceType]="deviceType()"
           [errors]="errors"
           [isLoading]="isLoadingPerformance"
           [locale]="user?.settings?.locale"

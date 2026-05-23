@@ -21,6 +21,7 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit
@@ -42,7 +43,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnInit {
-  protected deviceType: string;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
   protected errors: AssetProfileIdentifier[];
   protected hasImpersonationId: boolean;
   protected hasPermissionToCreateActivity: boolean;
@@ -87,8 +91,6 @@ export class GfHomeOverviewComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.showDetails =
       !this.user.settings.isRestrictedView &&
       this.user.settings.viewMode !== 'ZEN';
@@ -137,7 +139,7 @@ export class GfHomeOverviewComponent implements OnInit {
           ) ?? null;
 
         if (
-          this.deviceType === 'mobile' &&
+          this.deviceType() === 'mobile' &&
           this.performance.currentValueInBaseCurrency >=
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
