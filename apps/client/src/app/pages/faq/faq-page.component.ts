@@ -11,7 +11,7 @@ import { addIcons } from 'ionicons';
 import { cloudyOutline, readerOutline, serverOutline } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'page has-tabs' },
+  host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-faq-page',
   styleUrls: ['./faq-page.scss'],

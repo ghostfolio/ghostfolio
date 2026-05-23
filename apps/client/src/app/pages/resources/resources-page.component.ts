@@ -14,7 +14,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'page has-tabs' },
+  host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-resources-page',
   styleUrls: ['./resources-page.scss'],
