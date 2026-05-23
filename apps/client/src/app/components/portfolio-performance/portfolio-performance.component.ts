@@ -35,8 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() deviceType: string;
   @Input() errors: ResponseError['errors'];
-  @Input() isAllTimeHigh: boolean;
-  @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;

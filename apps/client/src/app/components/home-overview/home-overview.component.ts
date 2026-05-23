@@ -21,7 +21,6 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
   OnInit
@@ -38,7 +37,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     MatButtonModule,
     RouterModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-overview',
   styleUrls: ['./home-overview.scss'],
   templateUrl: './home-overview.html'
@@ -46,12 +44,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class GfHomeOverviewComponent implements OnInit {
   protected deviceType: string;
   protected errors: AssetProfileIdentifier[];
-  protected hasError: boolean;
   protected hasImpersonationId: boolean;
   protected hasPermissionToCreateActivity: boolean;
   protected historicalDataItems: LineChartItem[] | null;
-  protected isAllTimeHigh: boolean;
-  protected isAllTimeLow: boolean;
   protected isLoadingPerformance = true;
   protected performance: PortfolioPerformance;
   protected performanceLabel = $localize`Performance`;
