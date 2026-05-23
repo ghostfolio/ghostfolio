@@ -365,7 +365,7 @@ ngx-skeleton-loader {
 }
 
 .has-info-message {
-  // Restrict viewport height of tabbed views when the live-demo banner or system announcements are displayed
+  // Restrict viewport height of tabbed views when the Live Demo or system announcements banner are displayed
   .page:has(gf-page-tabs) {
     height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
   }
