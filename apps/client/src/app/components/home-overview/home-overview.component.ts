@@ -49,11 +49,11 @@ export class GfHomeOverviewComponent implements OnInit {
   protected historicalDataItems: LineChartItem[] | null;
   protected isLoadingPerformance = true;
   protected performance: PortfolioPerformance;
-  protected performanceLabel = $localize`Performance`;
+  protected readonly performanceLabel = $localize`Performance`;
   protected precision = 2;
-  protected routerLinkAccounts = internalRoutes.accounts.routerLink;
-  protected routerLinkPortfolio = internalRoutes.portfolio.routerLink;
-  protected routerLinkPortfolioActivities =
+  protected readonly routerLinkAccounts = internalRoutes.accounts.routerLink;
+  protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
   protected showDetails = false;
   protected unit: string;
