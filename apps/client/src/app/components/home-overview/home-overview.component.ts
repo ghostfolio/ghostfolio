@@ -49,7 +49,7 @@ export class GfHomeOverviewComponent implements OnInit {
   );
 
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
-  protected hasImpersonationId: boolean;
+  protected readonly hasImpersonationId = signal(false);
   protected hasPermissionToCreateActivity: boolean;
   protected historicalDataItems: LineChartItem[] | null;
   protected isLoadingPerformance = true;
@@ -104,9 +104,7 @@ export class GfHomeOverviewComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-
-        this.changeDetectorRef.markForCheck();
+        this.hasImpersonationId.set(!!impersonationId);
       });
 
     this.layoutService.shouldReloadContent$

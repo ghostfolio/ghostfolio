@@ -2,7 +2,7 @@
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
   @if (
-    !hasImpersonationId &&
+    !hasImpersonationId() &&
     hasPermissionToCreateActivity &&
     user?.activitiesCount === 0
   ) {
