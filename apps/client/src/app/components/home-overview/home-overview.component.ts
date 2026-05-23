@@ -2,7 +2,10 @@ import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/p
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_DATE_RANGE,
+  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+} from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   LineChartItem,
@@ -115,7 +118,7 @@ export class GfHomeOverviewComponent implements OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
