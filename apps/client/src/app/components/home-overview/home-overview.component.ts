@@ -19,6 +19,7 @@ import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -32,6 +33,7 @@ import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,
