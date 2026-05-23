@@ -43,11 +43,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ActivitiesService } from './activities.service';
 
-@Controller([
-  'activities',
-  /** @deprecated */
-  'order'
-])
+@Controller('activities')
 export class ActivitiesController {
   public constructor(
     private readonly activitiesService: ActivitiesService,
