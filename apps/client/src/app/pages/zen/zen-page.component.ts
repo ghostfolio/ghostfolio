@@ -12,7 +12,7 @@ import { addIcons } from 'ionicons';
 import { albumsOutline, analyticsOutline } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'page has-tabs' },
+  host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-zen-page',
   styleUrls: ['./zen-page.scss'],

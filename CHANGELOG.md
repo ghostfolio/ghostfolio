@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated attributes (`assetClass`, `countries`, `currency`, `dataSource`, `name`, `sectors`, `symbol` and `url`) from the holdings of the public portfolio endpoint response
 - Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
 
+### Fixed
+
+- Fixed a layout regression that caused a double scrollbar on pages without tabs
+
 ## 3.4.0 - 2026-05-21
 
 ### Added

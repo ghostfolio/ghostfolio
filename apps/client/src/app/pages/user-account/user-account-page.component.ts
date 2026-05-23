@@ -12,7 +12,7 @@ import { addIcons } from 'ionicons';
 import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'page has-tabs' },
+  host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-user-account-page',
   styleUrls: ['./user-account-page.scss'],
