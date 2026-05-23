@@ -3,7 +3,7 @@
 >
   @if (
     !hasImpersonationId() &&
-    hasPermissionToCreateActivity &&
+    hasPermissionToCreateActivity() &&
     user()?.activitiesCount === 0
   ) {
     <div class="justify-content-center row w-100">
@@ -92,8 +92,8 @@
           [locale]="user()?.settings?.locale"
           [performance]="performance"
           [precision]="precision"
-          [showDetails]="showDetails"
-          [unit]="unit"
+          [showDetails]="showDetails()"
+          [unit]="unit()"
         />
       </div>
     </div>

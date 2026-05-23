@@ -44,13 +44,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnInit {
-  protected readonly deviceType = computed(
-    () => this.deviceDetectorService.deviceInfo().deviceType
-  );
-
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected readonly hasImpersonationId = signal(false);
-  protected hasPermissionToCreateActivity: boolean;
   protected historicalDataItems: LineChartItem[] | null;
   protected isLoadingPerformance = true;
   protected performance: PortfolioPerformance;
@@ -60,9 +55,29 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
-  protected showDetails = false;
-  protected unit: string;
   protected readonly user = signal<User | null>(null);
+
+  // Computed signals
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
+  protected readonly hasPermissionToCreateActivity = computed(() => {
+    return hasPermission(this.user()?.permissions, permissions.createActivity);
+  });
+
+  protected readonly showDetails = computed(() => {
+    const user = this.user();
+    return user
+      ? !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN'
+      : false;
+  });
+
+  protected readonly unit = computed(() => {
+    return this.showDetails()
+      ? (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY)
+      : '%';
+  });
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -80,28 +95,12 @@ export class GfHomeOverviewComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user.set(state.user);
-
-          this.hasPermissionToCreateActivity = hasPermission(
-            this.user()?.permissions,
-            permissions.createActivity
-          );
-
           this.update();
         }
       });
   }
 
   public ngOnInit() {
-    const user = this.user();
-    if (user) {
-      this.showDetails =
-        !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN';
-
-      this.unit = this.showDetails
-        ? (user.settings.baseCurrency ?? DEFAULT_CURRENCY)
-        : '%';
-    }
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
