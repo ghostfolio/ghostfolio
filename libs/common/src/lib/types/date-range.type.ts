@@ -6,4 +6,4 @@ export type DateRange =
   | 'mtd'
   | 'wtd'
   | 'ytd'
-  | `${number}`; // '2024', '2023', '2022', etc.
+  | string; // '2024', '2023', '2022', etc.
