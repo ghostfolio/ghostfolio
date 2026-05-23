@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the deprecated attributes (`assetClass`, `countries`, `currency`, `dataSource`, `name`, `sectors`, `symbol` and `url`) from the holdings of the public portfolio endpoint response
+- Removed the deprecated `api/v1/order` endpoints
 - Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
 
 ### Fixed
