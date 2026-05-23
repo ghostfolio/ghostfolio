@@ -1,6 +1,7 @@
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  DEFAULT_DATE_RANGE,
   DEFAULT_PAGE_SIZE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
@@ -330,7 +331,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
               type: 'ACCOUNT'
             }
           ],
-          range: 'max',
+          range: DEFAULT_DATE_RANGE,
           withExcludedAccounts: true,
           withItems: true
         })

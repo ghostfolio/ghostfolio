@@ -26,6 +26,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_DATE_RANGE,
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
@@ -281,7 +282,8 @@ export class UserService {
     (user.settings.settings as UserSettings).dateRange =
       (user.settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : ((user.settings.settings as UserSettings)?.dateRange ?? 'max');
+        : ((user.settings.settings as UserSettings)?.dateRange ??
+          DEFAULT_DATE_RANGE);
 
     // Set default value for performance calculation type
     if (!(user.settings.settings as UserSettings)?.performanceCalculationType) {

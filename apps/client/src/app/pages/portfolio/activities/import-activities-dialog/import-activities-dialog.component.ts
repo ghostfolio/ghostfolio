@@ -1,5 +1,6 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { DEFAULT_DATE_RANGE } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
@@ -145,7 +146,7 @@ export class GfImportActivitiesDialogComponent {
               type: 'ASSET_CLASS'
             }
           ],
-          range: 'max'
+          range: DEFAULT_DATE_RANGE
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
