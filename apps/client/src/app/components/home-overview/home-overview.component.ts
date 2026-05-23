@@ -24,7 +24,8 @@ import {
   computed,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,7 +48,7 @@ export class GfHomeOverviewComponent implements OnInit {
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
-  protected errors: AssetProfileIdentifier[];
+  protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected hasImpersonationId: boolean;
   protected hasPermissionToCreateActivity: boolean;
   protected historicalDataItems: LineChartItem[] | null;
@@ -125,7 +126,7 @@ export class GfHomeOverviewComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
-        this.errors = errors ?? [];
+        this.errors.set(errors ?? []);
         this.performance = performance;
 
         this.historicalDataItems =
