@@ -33,7 +33,7 @@ export class GfHomeSummaryComponent implements OnInit {
   protected readonly hasImpersonationId = signal<boolean>(false);
   protected hasPermissionToUpdateUserSettings: boolean;
   protected readonly isLoading = signal(true);
-  protected summary: PortfolioSummary;
+  protected readonly summary = signal<PortfolioSummary | undefined>(undefined);
   protected user: User;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -95,14 +95,10 @@ export class GfHomeSummaryComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ summary }) => {
         if (summary) {
-          this.summary = summary;
+          this.summary.set(summary);
         }
 
         this.isLoading.set(false);
-
-        this.changeDetectorRef.markForCheck();
       });
-
-    this.changeDetectorRef.markForCheck();
   }
 }

@@ -14,7 +14,7 @@
             [isLoading]="isLoading()"
             [language]="user?.settings?.language"
             [locale]="user?.settings?.locale"
-            [summary]="summary"
+            [summary]="summary()"
             [user]="user"
             (emergencyFundChanged)="onChangeEmergencyFund($event)"
           />
