@@ -1,11 +1,7 @@
 import { GfPortfolioSummaryComponent } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  InfoItem,
-  PortfolioSummary,
-  User
-} from '@ghostfolio/common/interfaces';
+import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -19,7 +15,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
-import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
@@ -37,10 +32,6 @@ export class GfHomeSummaryComponent implements OnInit {
   protected summary: PortfolioSummary;
   protected user: User;
 
-  private hasPermissionForSubscription: boolean;
-  private info: InfoItem;
-  private snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
-
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
@@ -51,13 +42,6 @@ export class GfHomeSummaryComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
-    this.info = this.dataService.fetchInfo();
-
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
-
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
