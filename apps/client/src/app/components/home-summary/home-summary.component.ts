@@ -8,6 +8,7 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
@@ -25,7 +26,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-summary.html'
 })
 export class GfHomeSummaryComponent implements OnInit {
-  protected deviceType: string;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   protected hasImpersonationId: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isLoading = true;
@@ -59,8 +62,6 @@ export class GfHomeSummaryComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
