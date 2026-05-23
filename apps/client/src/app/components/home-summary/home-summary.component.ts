@@ -6,7 +6,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
-  ChangeDetectorRef,
   Component,
   computed,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -27,16 +26,22 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-summary.html'
 })
 export class GfHomeSummaryComponent implements OnInit {
+  protected readonly hasImpersonationId = signal<boolean>(false);
+  protected readonly isLoading = signal(true);
+  protected readonly summary = signal<PortfolioSummary | undefined>(undefined);
+  protected readonly user = signal<User | undefined>(undefined);
+
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected readonly hasImpersonationId = signal<boolean>(false);
-  protected hasPermissionToUpdateUserSettings: boolean;
-  protected readonly isLoading = signal(true);
-  protected readonly summary = signal<PortfolioSummary | undefined>(undefined);
-  protected user: User;
 
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  protected readonly hasPermissionToUpdateUserSettings = computed(() => {
+    const user = this.user();
+    return user
+      ? hasPermission(user.permissions, permissions.updateUserSettings)
+      : false;
+  });
+
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -50,13 +55,7 @@ export class GfHomeSummaryComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
-
-          this.hasPermissionToUpdateUserSettings = hasPermission(
-            this.user.permissions,
-            permissions.updateUserSettings
-          );
-
+          this.user.set(state.user);
           this.update();
         }
       });
@@ -80,9 +79,7 @@ export class GfHomeSummaryComponent implements OnInit {
           .get(true)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
+            this.user.set(user);
           });
       });
   }
