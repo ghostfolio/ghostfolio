@@ -104,7 +104,10 @@ export class GfHomeSummaryComponent implements OnInit {
       .fetchPortfolioDetails()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ summary }) => {
-        this.summary = summary;
+        if (summary) {
+          this.summary = summary;
+        }
+
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
