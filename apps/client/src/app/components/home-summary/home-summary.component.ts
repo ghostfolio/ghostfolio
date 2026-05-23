@@ -30,7 +30,7 @@ export class GfHomeSummaryComponent implements OnInit {
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected hasImpersonationId: boolean;
+  protected readonly hasImpersonationId = signal<boolean>(false);
   protected hasPermissionToUpdateUserSettings: boolean;
   protected readonly isLoading = signal(true);
   protected summary: PortfolioSummary;
@@ -67,7 +67,7 @@ export class GfHomeSummaryComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.hasImpersonationId.set(!!impersonationId);
       });
   }
 
