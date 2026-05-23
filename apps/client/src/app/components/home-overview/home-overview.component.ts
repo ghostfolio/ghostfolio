@@ -3,6 +3,7 @@ import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
@@ -47,7 +48,7 @@ export class GfHomeOverviewComponent implements OnInit {
   public hasError: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
-  public historicalDataItems: LineChartItem[];
+  public historicalDataItems: LineChartItem[] | null;
   public isAllTimeHigh: boolean;
   public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
@@ -94,7 +95,9 @@ export class GfHomeOverviewComponent implements OnInit {
       !this.user.settings.isRestrictedView &&
       this.user.settings.viewMode !== 'ZEN';
 
-    this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
+    this.unit = this.showDetails
+      ? (this.user.settings.baseCurrency ?? DEFAULT_CURRENCY)
+      : '%';
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -122,17 +125,18 @@ export class GfHomeOverviewComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
-        this.errors = errors;
+        this.errors = errors ?? [];
         this.performance = performance;
 
-        this.historicalDataItems = chart.map(
-          ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
-            return {
-              date,
-              value: netPerformanceInPercentageWithCurrencyEffect * 100
-            };
-          }
-        );
+        this.historicalDataItems =
+          chart?.map(
+            ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
+              return {
+                date,
+                value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
+              };
+            }
+          ) ?? null;
 
         if (
           this.deviceType === 'mobile' &&
