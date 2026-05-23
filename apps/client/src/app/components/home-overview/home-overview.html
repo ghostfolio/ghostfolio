@@ -4,14 +4,14 @@
   @if (
     !hasImpersonationId() &&
     hasPermissionToCreateActivity &&
-    user?.activitiesCount === 0
+    user()?.activitiesCount === 0
   ) {
     <div class="justify-content-center row w-100">
       <div class="col introduction">
         <h4 i18n>Welcome to Ghostfolio</h4>
         <p i18n>Ready to take control of your personal finances?</p>
         <ol class="font-weight-bold">
-          <li class="mb-2" [class.text-muted]="user?.accounts?.length > 1">
+          <li class="mb-2" [class.text-muted]="user()?.accounts?.length > 1">
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
               <span class="font-weight-normal" i18n
@@ -40,7 +40,7 @@
           </li>
         </ol>
         <div class="d-flex justify-content-center">
-          @if (user?.accounts?.length === 1) {
+          @if (user()?.accounts?.length === 1) {
             <a
               color="primary"
               mat-flat-button
@@ -48,7 +48,7 @@
             >
               <ng-container i18n>Setup accounts</ng-container>
             </a>
-          } @else if (user?.accounts?.length > 1) {
+          } @else if (user()?.accounts?.length > 1) {
             <a
               color="primary"
               mat-flat-button
@@ -68,12 +68,12 @@
             class="position-absolute"
             unit="%"
             [class.pr-3]="deviceType() === 'mobile'"
-            [colorScheme]="user?.settings?.colorScheme"
+            [colorScheme]="user()?.settings?.colorScheme"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
-            [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
+            [isAnimated]="user()?.settings?.dateRange === '1d' ? false : true"
             [label]="performanceLabel"
-            [locale]="user?.settings?.locale"
+            [locale]="user()?.settings?.locale"
             [showGradient]="true"
             [showLoader]="false"
             [showXAxis]="false"
@@ -89,7 +89,7 @@
           [deviceType]="deviceType()"
           [errors]="errors()"
           [isLoading]="isLoadingPerformance"
-          [locale]="user?.settings?.locale"
+          [locale]="user()?.settings?.locale"
           [performance]="performance"
           [precision]="precision"
           [showDetails]="showDetails"

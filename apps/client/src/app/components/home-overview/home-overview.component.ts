@@ -62,7 +62,7 @@ export class GfHomeOverviewComponent implements OnInit {
     internalRoutes.portfolio.subRoutes.activities.routerLink;
   protected showDetails = false;
   protected unit: string;
-  protected user: User;
+  protected readonly user = signal<User | null>(null);
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -79,10 +79,10 @@ export class GfHomeOverviewComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
+          this.user.set(state.user);
 
           this.hasPermissionToCreateActivity = hasPermission(
-            this.user.permissions,
+            this.user()?.permissions,
             permissions.createActivity
           );
 
@@ -92,13 +92,15 @@ export class GfHomeOverviewComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.showDetails =
-      !this.user.settings.isRestrictedView &&
-      this.user.settings.viewMode !== 'ZEN';
+    const user = this.user();
+    if (user) {
+      this.showDetails =
+        !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN';
 
-    this.unit = this.showDetails
-      ? (this.user.settings.baseCurrency ?? DEFAULT_CURRENCY)
-      : '%';
+      this.unit = this.showDetails
+        ? (user.settings.baseCurrency ?? DEFAULT_CURRENCY)
+        : '%';
+    }
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -120,7 +122,7 @@ export class GfHomeOverviewComponent implements OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
