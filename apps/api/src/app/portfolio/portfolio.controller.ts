@@ -220,6 +220,21 @@ export class PortfolioController {
           hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
             ? portfolioPosition.assetClass
             : undefined,
+        assetProfile: {
+          ...portfolioPosition.assetProfile,
+          ...(hasDetails
+            ? {}
+            : {
+                assetClass: undefined,
+                assetClassLabel: undefined,
+                assetSubClass: undefined,
+                assetSubClassLabel: undefined,
+                countries: [],
+                currency: undefined,
+                holdings: [],
+                sectors: []
+              })
+        },
         assetSubClass:
           hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
             ? portfolioPosition.assetSubClass

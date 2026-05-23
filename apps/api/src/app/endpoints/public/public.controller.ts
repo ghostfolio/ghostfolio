@@ -167,19 +167,25 @@ export class PublicController {
       publicPortfolioResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
-        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
-        assetProfile: hasDetails ? portfolioPosition.assetProfile : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        dataSource: portfolioPosition.dataSource,
+        assetProfile: {
+          ...portfolioPosition.assetProfile,
+          ...(hasDetails
+            ? {}
+            : {
+                assetClass: undefined,
+                assetClassLabel: undefined,
+                assetSubClass: undefined,
+                assetSubClassLabel: undefined,
+                countries: [],
+                currency: undefined,
+                holdings: [],
+                sectors: []
+              })
+        },
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
-        name: portfolioPosition.name,
         netPerformancePercentWithCurrencyEffect:
           portfolioPosition.netPerformancePercentWithCurrencyEffect,
-        sectors: hasDetails ? portfolioPosition.sectors : [],
-        symbol: portfolioPosition.symbol,
-        url: portfolioPosition.url,
         valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
       };
     }
