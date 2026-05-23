@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a layout regression that caused a double scrollbar on pages without tabs
+- Resolved an issue with missing cash positions caused by an incorrect data source
 
 ## 3.4.0 - 2026-05-21
 
