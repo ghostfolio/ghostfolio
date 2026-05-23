@@ -18,6 +18,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { switchMap } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,14 +76,12 @@ export class GfHomeSummaryComponent implements OnInit {
   protected onChangeEmergencyFund(emergencyFund: number) {
     this.dataService
       .putUserSetting({ emergencyFund })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user.set(user);
-          });
+      .pipe(
+        switchMap(() => this.userService.get(true)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((user) => {
+        this.user.set(user);
       });
   }
 
