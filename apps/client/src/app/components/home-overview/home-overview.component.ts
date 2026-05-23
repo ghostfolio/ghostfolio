@@ -46,8 +46,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class GfHomeOverviewComponent implements OnInit {
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected readonly hasImpersonationId = signal(false);
-  protected historicalDataItems: LineChartItem[] | null;
-  protected isLoadingPerformance = true;
+  protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
+  protected readonly isLoadingPerformance = signal(true);
   protected performance: PortfolioPerformance;
   protected readonly performanceLabel = $localize`Performance`;
   protected precision = 2;
@@ -116,8 +116,8 @@ export class GfHomeOverviewComponent implements OnInit {
   }
 
   private update() {
-    this.historicalDataItems = null;
-    this.isLoadingPerformance = true;
+    this.historicalDataItems.set(null);
+    this.isLoadingPerformance.set(true);
 
     this.dataService
       .fetchPortfolioPerformance({
@@ -128,7 +128,7 @@ export class GfHomeOverviewComponent implements OnInit {
         this.errors.set(errors ?? []);
         this.performance = performance;
 
-        this.historicalDataItems =
+        this.historicalDataItems.set(
           chart?.map(
             ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
               return {
@@ -136,7 +136,8 @@ export class GfHomeOverviewComponent implements OnInit {
                 value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
               };
             }
-          ) ?? null;
+          ) ?? null
+        );
 
         if (
           this.deviceType() === 'mobile' &&
@@ -146,7 +147,7 @@ export class GfHomeOverviewComponent implements OnInit {
           this.precision = 0;
         }
 
-        this.isLoadingPerformance = false;
+        this.isLoadingPerformance.set(false);
 
         this.changeDetectorRef.markForCheck();
       });
