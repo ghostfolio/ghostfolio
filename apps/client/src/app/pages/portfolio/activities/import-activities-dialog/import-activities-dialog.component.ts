@@ -1,5 +1,6 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { DEFAULT_DATE_RANGE } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
@@ -9,7 +10,6 @@ import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
-import { DEFAULT_DATE_RANGE } from '@ghostfolio/common/config';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { DataService } from '@ghostfolio/ui/services';
 
