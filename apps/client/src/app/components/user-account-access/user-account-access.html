@@ -69,16 +69,6 @@
     (accessToUpdate)="onUpdateAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {
-    <gf-page-fab>
-      <a
-        class="align-items-center d-flex justify-content-center"
-        color="primary"
-        mat-fab
-        [queryParams]="{ createDialog: true }"
-        [routerLink]="[]"
-      >
-        <ion-icon name="add-outline" size="large" />
-      </a>
-    </gf-page-fab>
+    <gf-fab [queryParams]="{ createDialog: true }" />
   }
 </div>

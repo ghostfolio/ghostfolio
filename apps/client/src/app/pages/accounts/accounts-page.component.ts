@@ -10,8 +10,8 @@ import {
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
+import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { NotificationService } from '@ghostfolio/ui/notifications';
-import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -40,7 +40,7 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   host: { class: 'page' },
   imports: [
     GfAccountsTableComponent,
-    GfPageFabComponent,
+    GfFabComponent,
     MatButtonModule,
     RouterModule
   ],

@@ -12,7 +12,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
-import { GfPageFabComponent } from '@ghostfolio/ui/page-fab';
+import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -44,7 +44,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 @Component({
   imports: [
     GfActivitiesTableComponent,
-    GfPageFabComponent,
+    GfFabComponent,
     IonIcon,
     MatButtonModule,
     MatSnackBarModule,
