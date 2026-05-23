@@ -44,25 +44,25 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnInit {
-  public deviceType: string;
-  public errors: AssetProfileIdentifier[];
-  public hasError: boolean;
-  public hasImpersonationId: boolean;
-  public hasPermissionToCreateActivity: boolean;
-  public historicalDataItems: LineChartItem[] | null;
-  public isAllTimeHigh: boolean;
-  public isAllTimeLow: boolean;
-  public isLoadingPerformance = true;
-  public performance: PortfolioPerformance;
-  public performanceLabel = $localize`Performance`;
-  public precision = 2;
-  public routerLinkAccounts = internalRoutes.accounts.routerLink;
-  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
-  public routerLinkPortfolioActivities =
+  protected deviceType: string;
+  protected errors: AssetProfileIdentifier[];
+  protected hasError: boolean;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToCreateActivity: boolean;
+  protected historicalDataItems: LineChartItem[] | null;
+  protected isAllTimeHigh: boolean;
+  protected isAllTimeLow: boolean;
+  protected isLoadingPerformance = true;
+  protected performance: PortfolioPerformance;
+  protected performanceLabel = $localize`Performance`;
+  protected precision = 2;
+  protected routerLinkAccounts = internalRoutes.accounts.routerLink;
+  protected routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  protected routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
-  public showDetails = false;
-  public unit: string;
-  public user: User;
+  protected showDetails = false;
+  protected unit: string;
+  protected user: User;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
