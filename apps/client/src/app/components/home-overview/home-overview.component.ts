@@ -19,7 +19,6 @@ import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
-  ChangeDetectorRef,
   Component,
   computed,
   DestroyRef,
@@ -48,14 +47,15 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly hasImpersonationId = signal(false);
   protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
   protected readonly isLoadingPerformance = signal(true);
-  protected performance: PortfolioPerformance;
+  protected readonly performance = signal<PortfolioPerformance | null>(null);
   protected readonly performanceLabel = $localize`Performance`;
-  protected precision = 2;
+  protected readonly precision = signal(2);
+  protected readonly user = signal<User | null>(null);
+
   protected readonly routerLinkAccounts = internalRoutes.accounts.routerLink;
   protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
-  protected readonly user = signal<User | null>(null);
 
   // Computed signals
   protected readonly deviceType = computed(
@@ -79,7 +79,6 @@ export class GfHomeOverviewComponent implements OnInit {
       : '%';
   });
 
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -126,7 +125,7 @@ export class GfHomeOverviewComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
         this.errors.set(errors ?? []);
-        this.performance = performance;
+        this.performance.set(performance);
 
         this.historicalDataItems.set(
           chart?.map(
@@ -139,19 +138,17 @@ export class GfHomeOverviewComponent implements OnInit {
           ) ?? null
         );
 
+        this.precision.set(2);
+
         if (
           this.deviceType() === 'mobile' &&
-          this.performance.currentValueInBaseCurrency >=
+          performance.currentValueInBaseCurrency >=
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
-          this.precision = 0;
+          this.precision.set(0);
         }
 
         this.isLoadingPerformance.set(false);
-
-        this.changeDetectorRef.markForCheck();
       });
-
-    this.changeDetectorRef.markForCheck();
   }
 }
