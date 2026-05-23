@@ -59,7 +59,6 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
 
-  // Computed signals
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
@@ -70,6 +69,7 @@ export class GfHomeOverviewComponent implements OnInit {
 
   protected readonly showDetails = computed(() => {
     const user = this.user();
+
     return user
       ? !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN'
       : false;

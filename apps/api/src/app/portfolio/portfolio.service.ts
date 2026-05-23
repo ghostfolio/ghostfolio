@@ -32,6 +32,7 @@ import {
 } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_DATE_RANGE,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
@@ -470,7 +471,7 @@ export class PortfolioService {
   }
 
   public async getDetails({
-    dateRange = 'max',
+    dateRange = DEFAULT_DATE_RANGE,
     filters,
     impersonationId,
     userId,
@@ -1013,7 +1014,7 @@ export class PortfolioService {
   }
 
   public async getPerformance({
-    dateRange = 'max',
+    dateRange = DEFAULT_DATE_RANGE,
     filters,
     impersonationId,
     userId
