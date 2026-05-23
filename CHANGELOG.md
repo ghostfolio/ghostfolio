@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Configured the `min-release-age` in `.npmrc`
+
 ### Changed
 
 - Removed the deprecated attributes (`assetClass`, `countries`, `currency`, `dataSource`, `name`, `sectors`, `symbol` and `url`) from the holdings of the public portfolio endpoint response
@@ -18,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the icon column to the benchmark component
 - Added support for the `DIRECT_URL` environment variable to enable direct database connections
-- Configured the `min-release-age` in `.npmrc`
 
 ### Changed
 
