@@ -12,7 +12,8 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +32,7 @@ export class GfHomeSummaryComponent implements OnInit {
   );
   protected hasImpersonationId: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
-  protected isLoading = true;
+  protected readonly isLoading = signal(true);
   protected summary: PortfolioSummary;
   protected user: User;
 
@@ -87,7 +88,7 @@ export class GfHomeSummaryComponent implements OnInit {
   }
 
   private update() {
-    this.isLoading = true;
+    this.isLoading.set(true);
 
     this.dataService
       .fetchPortfolioDetails()
@@ -97,7 +98,7 @@ export class GfHomeSummaryComponent implements OnInit {
           this.summary = summary;
         }
 
-        this.isLoading = false;
+        this.isLoading.set(false);
 
         this.changeDetectorRef.markForCheck();
       });

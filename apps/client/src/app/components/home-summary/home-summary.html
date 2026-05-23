@@ -11,7 +11,7 @@
             [hasPermissionToUpdateUserSettings]="
               !hasImpersonationId && hasPermissionToUpdateUserSettings
             "
-            [isLoading]="isLoading"
+            [isLoading]="isLoading()"
             [language]="user?.settings?.language"
             [locale]="user?.settings?.locale"
             [summary]="summary"
