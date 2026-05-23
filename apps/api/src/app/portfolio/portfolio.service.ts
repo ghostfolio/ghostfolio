@@ -1612,7 +1612,7 @@ export class PortfolioService {
         assetSubClass: AssetSubClass.CASH,
         countries: [],
         createdAt: account.createdAt,
-        dataSource: DataSource.MANUAL,
+        dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
         holdings: [],
         id: currency,
         isActive: true,
