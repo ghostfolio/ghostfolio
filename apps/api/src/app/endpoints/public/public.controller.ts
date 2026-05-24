@@ -21,7 +21,11 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Type as ActivityType } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  Type as ActivityType
+} from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -169,13 +173,29 @@ export class PublicController {
           portfolioPosition.valueInBaseCurrency / totalValue,
         assetProfile: {
           ...portfolioPosition.assetProfile,
+          assetClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClass
+              : undefined,
+          assetClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClassLabel
+              : undefined,
+          assetSubClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClass
+              : undefined,
+          assetSubClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClassLabel
+              : undefined,
           ...(hasDetails
             ? {}
             : {
-                assetClass: undefined,
-                assetClassLabel: undefined,
-                assetSubClass: undefined,
-                assetSubClassLabel: undefined,
                 countries: [],
                 currency: undefined,
                 holdings: [],
