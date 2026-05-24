@@ -69,21 +69,25 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
 
   public constructor() {
-    this.mode = this.data.access?.id ? 'update' : 'create';
+    this.mode = this.data.access ? 'update' : 'create';
   }
 
   public ngOnInit() {
-    const isPublic = this.data.access.type === 'PUBLIC';
+    const access = this.data?.access;
+    const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
-      alias: [this.data.access.alias],
+      alias: [access?.alias ?? ''],
       granteeUserId: [
-        this.data.access.grantee,
+        access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      permissions: [this.data.access.permissions[0], Validators.required],
+      permissions: [
+        access?.permissions[0] ?? 'READ_RESTRICTED',
+        Validators.required
+      ],
       type: [
-        { disabled: this.mode === 'update', value: this.data.access.type },
+        { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
       ]
     });
@@ -100,7 +104,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(this.data.access.permissions[0]);
+          permissionsControl?.setValue(
+            access?.permissions[0] ?? 'READ_RESTRICTED'
+          );
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -158,10 +164,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private async updateAccess() {
+    const accessId = this.data.access?.id;
+
+    if (!accessId) {
+      return;
+    }
+
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      id: this.data.access.id,
+      id: accessId,
       permissions: [this.accessForm.get('permissions')?.value]
     };
 

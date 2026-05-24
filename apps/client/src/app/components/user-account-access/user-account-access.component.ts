@@ -17,7 +17,12 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -60,8 +65,11 @@ export class GfUserAccountAccessComponent implements OnInit {
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateOwnAccessToken: boolean;
   public isAccessTokenHidden = true;
-  public updateOwnAccessTokenForm = this.formBuilder.group({
-    accessToken: ['', Validators.required]
+  public updateOwnAccessTokenForm = new FormGroup({
+    accessToken: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required]
+    })
   });
   public user: User;
 
@@ -71,7 +79,6 @@ export class GfUserAccountAccessComponent implements OnInit {
     private destroyRef: DestroyRef,
     private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
-    private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
@@ -144,7 +151,8 @@ export class GfUserAccountAccessComponent implements OnInit {
       confirmFn: () => {
         this.dataService
           .updateOwnAccessToken({
-            accessToken: this.updateOwnAccessTokenForm.get('accessToken').value
+            accessToken:
+              this.updateOwnAccessTokenForm.controls.accessToken.value
           })
           .pipe(
             catchError(() => {
@@ -184,15 +192,7 @@ export class GfUserAccountAccessComponent implements OnInit {
       GfCreateOrUpdateAccessDialogComponent,
       CreateOrUpdateAccessDialogParams
     >(GfCreateOrUpdateAccessDialogComponent, {
-      data: {
-        access: {
-          alias: '',
-          grantee: null,
-          id: null,
-          permissions: ['READ_RESTRICTED'],
-          type: 'PRIVATE'
-        }
-      },
+      data: {} satisfies CreateOrUpdateAccessDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -222,12 +222,12 @@ export class GfUserAccountAccessComponent implements OnInit {
       data: {
         access: {
           alias: access.alias,
-          grantee: access.grantee === 'Public' ? null : access.grantee,
+          grantee: access.grantee === 'Public' ? undefined : access.grantee,
           id: access.id,
           permissions: access.permissions,
           type: access.type
         }
-      },
+      } satisfies CreateOrUpdateAccessDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -244,9 +244,9 @@ export class GfUserAccountAccessComponent implements OnInit {
   private update() {
     this.accessesGet = this.user.access.map(({ alias, id, permissions }) => {
       return {
-        alias,
         id,
         permissions,
+        alias: alias ?? '',
         grantee: $localize`Me`,
         type: 'PRIVATE'
       };
