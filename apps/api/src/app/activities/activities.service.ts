@@ -4,8 +4,10 @@ import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -16,7 +18,10 @@ import {
   ghostfolioPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  canDeleteAssetProfile,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   Activity,
@@ -48,10 +53,12 @@ export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -262,7 +269,26 @@ export class ActivitiesService {
         activity.symbolProfileId
       ]);
 
-    if (symbolProfile.activitiesCount === 0) {
+    const benchmarkAssetProfiles =
+      await this.benchmarkService.getBenchmarkAssetProfiles();
+
+    const isBenchmark = benchmarkAssetProfiles.some(({ id }) => {
+      return id === symbolProfile.id;
+    });
+
+    if (
+      canDeleteAssetProfile({
+        isBenchmark,
+        activitiesCount: symbolProfile.activitiesCount,
+        symbol: symbolProfile.symbol,
+        watchedByCount: symbolProfile.watchedByCount
+      })
+    ) {
+      await this.marketDataService.deleteMany({
+        dataSource: symbolProfile.dataSource,
+        symbol: symbolProfile.symbol
+      });
+
       await this.symbolProfileService.deleteById(activity.symbolProfileId);
     }
 
@@ -308,8 +334,31 @@ export class ActivitiesService {
         })
       );
 
-    for (const { activitiesCount, id } of symbolProfiles) {
-      if (activitiesCount === 0) {
+    const benchmarkAssetProfiles =
+      await this.benchmarkService.getBenchmarkAssetProfiles();
+
+    for (const {
+      activitiesCount,
+      dataSource,
+      id,
+      symbol,
+      watchedByCount
+    } of symbolProfiles) {
+      const isBenchmark = benchmarkAssetProfiles.some(
+        (benchmarkAssetProfile) => {
+          return benchmarkAssetProfile.id === id;
+        }
+      );
+
+      if (
+        canDeleteAssetProfile({
+          activitiesCount,
+          isBenchmark,
+          symbol,
+          watchedByCount
+        })
+      ) {
+        await this.marketDataService.deleteMany({ dataSource, symbol });
         await this.symbolProfileService.deleteById(id);
       }
     }
