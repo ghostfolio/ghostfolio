@@ -175,10 +175,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: {
-    age: ms('1 week') / 1000,
-    count: 5000
-  }
+  removeOnComplete: true
 };
 
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
@@ -189,10 +186,7 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: {
-    age: ms('1 week') / 1000,
-    count: 5000
-  }
+  removeOnComplete: true
 };
 
 export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {
@@ -201,10 +195,7 @@ export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: {
-    age: ms('1 week') / 1000,
-    count: 5000
-  }
+  removeOnComplete: true
 };
 
 export const GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME =
@@ -227,10 +218,7 @@ export const INVESTMENT_ACTIVITY_TYPES = [
 
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
-  removeOnComplete: {
-    age: ms('1 week') / 1000,
-    count: 5000
-  }
+  removeOnComplete: true
 };
 
 export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
