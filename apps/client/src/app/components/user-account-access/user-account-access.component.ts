@@ -65,7 +65,7 @@ export class GfUserAccountAccessComponent implements OnInit {
   protected hasPermissionToDeleteAccess: boolean;
   protected hasPermissionToUpdateOwnAccessToken: boolean;
   protected isAccessTokenHidden = true;
-  protected updateOwnAccessTokenForm = new FormGroup({
+  protected readonly updateOwnAccessTokenForm = new FormGroup({
     accessToken: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required]

@@ -52,7 +52,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   protected accessForm: FormGroup;
-  protected mode: 'create' | 'update';
+  protected readonly mode: 'create' | 'update';
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
