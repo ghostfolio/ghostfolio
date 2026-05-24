@@ -29,6 +29,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -83,7 +84,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         isPublic ? null : Validators.required
       ],
       permissions: [
-        access?.permissions[0] ?? 'READ_RESTRICTED',
+        access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
         Validators.required
       ],
       type: [
@@ -105,7 +106,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
           permissionsControl?.setValue(
-            access?.permissions[0] ?? 'READ_RESTRICTED'
+            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
           );
         }
 
