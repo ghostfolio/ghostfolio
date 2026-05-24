@@ -52,7 +52,7 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell></th>
             <td *matCellDef="let element" class="px-1" mat-cell>
               @if (
-                adminMarketDataService.hasPermissionToDeleteAssetProfile({
+                canDeleteAssetProfile({
                   activitiesCount: element.activitiesCount,
                   isBenchmark: element.isBenchmark,
                   symbol: element.symbol,
@@ -271,7 +271,7 @@
                 <button
                   mat-menu-item
                   [disabled]="
-                    !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+                    !canDeleteAssetProfile({
                       activitiesCount: element.activitiesCount,
                       isBenchmark: element.isBenchmark,
                       symbol: element.symbol
