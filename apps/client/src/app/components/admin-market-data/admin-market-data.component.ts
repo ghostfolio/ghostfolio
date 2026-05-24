@@ -4,7 +4,10 @@ import {
   DEFAULT_PAGE_SIZE,
   locale
 } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import {
+  canDeleteAssetProfile,
+  getDateFormatString
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Filter,
@@ -101,6 +104,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 })
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly adminMarketDataService = inject(AdminMarketDataService);
+
   protected readonly allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
@@ -146,6 +150,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       type: 'PRESET_ID' as Filter['type']
     }
   ];
+  protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
   protected defaultDateFormat: string;
   protected readonly displayedColumns: string[] = [];

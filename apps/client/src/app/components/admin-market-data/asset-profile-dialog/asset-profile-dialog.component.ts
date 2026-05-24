@@ -6,6 +6,7 @@ import {
 } from '@ghostfolio/common/config';
 import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import {
+  canDeleteAssetProfile,
   DATE_FORMAT,
   getCurrencyFromSymbol,
   isCurrency
@@ -188,6 +189,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   );
 
+  protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected canEditAssetProfile = true;
 
   protected countries: {

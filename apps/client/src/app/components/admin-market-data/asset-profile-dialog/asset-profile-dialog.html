@@ -70,7 +70,7 @@
         mat-menu-item
         type="button"
         [disabled]="
-          !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+          !canDeleteAssetProfile({
             activitiesCount: assetProfile?.activitiesCount,
             isBenchmark: isBenchmark,
             symbol: data.symbol,
