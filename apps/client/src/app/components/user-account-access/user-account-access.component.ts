@@ -12,12 +12,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -53,30 +60,35 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
   templateUrl: './user-account-access.html'
 })
 export class GfUserAccountAccessComponent implements OnInit {
-  public accessesGet: Access[];
-  public accessesGive: Access[];
-  public deviceType: string;
-  public hasPermissionToCreateAccess: boolean;
-  public hasPermissionToDeleteAccess: boolean;
-  public hasPermissionToUpdateOwnAccessToken: boolean;
-  public isAccessTokenHidden = true;
-  public updateOwnAccessTokenForm = this.formBuilder.group({
-    accessToken: ['', Validators.required]
+  protected accessesGet: Access[];
+  protected accessesGive: Access[];
+  protected hasPermissionToCreateAccess: boolean;
+  protected hasPermissionToDeleteAccess: boolean;
+  protected hasPermissionToUpdateOwnAccessToken: boolean;
+  protected isAccessTokenHidden = true;
+  protected readonly updateOwnAccessTokenForm = new FormGroup({
+    accessToken: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required]
+    })
   });
-  public user: User;
+  protected user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     const { globalPermissions } = this.dataService.fetchInfo();
 
     this.hasPermissionToDeleteAccess = hasPermission(
@@ -123,12 +135,10 @@ export class GfUserAccountAccessComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.update();
   }
 
-  public onDeleteAccess(aId: string) {
+  protected onDeleteAccess(aId: string) {
     this.dataService
       .deleteAccess(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -139,12 +149,13 @@ export class GfUserAccountAccessComponent implements OnInit {
       });
   }
 
-  public onGenerateAccessToken() {
+  protected onGenerateAccessToken() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
           .updateOwnAccessToken({
-            accessToken: this.updateOwnAccessTokenForm.get('accessToken').value
+            accessToken:
+              this.updateOwnAccessTokenForm.controls.accessToken.value
           })
           .pipe(
             catchError(() => {
@@ -173,7 +184,7 @@ export class GfUserAccountAccessComponent implements OnInit {
     });
   }
 
-  public onUpdateAccess(aId: string) {
+  protected onUpdateAccess(aId: string) {
     this.router.navigate([], {
       queryParams: { accessId: aId, editDialog: true }
     });
@@ -184,17 +195,9 @@ export class GfUserAccountAccessComponent implements OnInit {
       GfCreateOrUpdateAccessDialogComponent,
       CreateOrUpdateAccessDialogParams
     >(GfCreateOrUpdateAccessDialogComponent, {
-      data: {
-        access: {
-          alias: '',
-          grantee: null,
-          id: null,
-          permissions: ['READ_RESTRICTED'],
-          type: 'PRIVATE'
-        }
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      data: {} satisfies CreateOrUpdateAccessDialogParams,
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
@@ -222,14 +225,14 @@ export class GfUserAccountAccessComponent implements OnInit {
       data: {
         access: {
           alias: access.alias,
-          grantee: access.grantee === 'Public' ? null : access.grantee,
+          grantee: access.grantee === 'Public' ? undefined : access.grantee,
           id: access.id,
           permissions: access.permissions,
           type: access.type
         }
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      } satisfies CreateOrUpdateAccessDialogParams,
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -244,9 +247,9 @@ export class GfUserAccountAccessComponent implements OnInit {
   private update() {
     this.accessesGet = this.user.access.map(({ alias, id, permissions }) => {
       return {
-        alias,
         id,
         permissions,
+        alias: alias ?? '',
         grantee: $localize`Me`,
         type: 'PRIVATE'
       };
