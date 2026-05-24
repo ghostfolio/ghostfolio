@@ -576,8 +576,8 @@ export class AdminService {
       }
 
       try {
-        Promise.all([
-          await this.symbolProfileService.updateAssetProfileIdentifier(
+        await Promise.all([
+          this.symbolProfileService.updateAssetProfileIdentifier(
             {
               dataSource,
               symbol
@@ -587,7 +587,7 @@ export class AdminService {
               symbol: newSymbol as string
             }
           ),
-          await this.marketDataService.updateAssetProfileIdentifier(
+          this.marketDataService.updateAssetProfileIdentifier(
             {
               dataSource,
               symbol
@@ -599,12 +599,15 @@ export class AdminService {
           )
         ]);
 
-        return this.symbolProfileService.getSymbolProfiles([
-          {
-            dataSource: DataSource[newDataSource.toString()],
-            symbol: newSymbol as string
-          }
-        ])?.[0];
+        const [updatedAssetProfile] =
+          await this.symbolProfileService.getSymbolProfiles([
+            {
+              dataSource: DataSource[newDataSource.toString()],
+              symbol: newSymbol as string
+            }
+          ]);
+
+        return updatedAssetProfile;
       } catch {
         throw new HttpException(
           getReasonPhrase(StatusCodes.BAD_REQUEST),
@@ -650,12 +653,15 @@ export class AdminService {
         updatedSymbolProfile
       );
 
-      return this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource: dataSource as DataSource,
-          symbol: symbol as string
-        }
-      ])?.[0];
+      const [updatedAssetProfile] =
+        await this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource: dataSource as DataSource,
+            symbol: symbol as string
+          }
+        ]);
+
+      return updatedAssetProfile;
     }
   }
 
