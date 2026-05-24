@@ -115,11 +115,11 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       });
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     if (this.mode === 'create') {
       await this.createAccess();
     } else {

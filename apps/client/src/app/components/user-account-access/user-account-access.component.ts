@@ -59,20 +59,21 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
   templateUrl: './user-account-access.html'
 })
 export class GfUserAccountAccessComponent implements OnInit {
-  public accessesGet: Access[];
-  public accessesGive: Access[];
-  public deviceType: string;
-  public hasPermissionToCreateAccess: boolean;
-  public hasPermissionToDeleteAccess: boolean;
-  public hasPermissionToUpdateOwnAccessToken: boolean;
-  public isAccessTokenHidden = true;
-  public updateOwnAccessTokenForm = new FormGroup({
+  protected accessesGet: Access[];
+  protected accessesGive: Access[];
+  protected hasPermissionToCreateAccess: boolean;
+  protected hasPermissionToDeleteAccess: boolean;
+  protected hasPermissionToUpdateOwnAccessToken: boolean;
+  protected isAccessTokenHidden = true;
+  protected updateOwnAccessTokenForm = new FormGroup({
     accessToken: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required]
     })
   });
-  public user: User;
+  protected user: User;
+
+  private deviceType: string;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -136,7 +137,7 @@ export class GfUserAccountAccessComponent implements OnInit {
     this.update();
   }
 
-  public onDeleteAccess(aId: string) {
+  protected onDeleteAccess(aId: string) {
     this.dataService
       .deleteAccess(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -147,7 +148,7 @@ export class GfUserAccountAccessComponent implements OnInit {
       });
   }
 
-  public onGenerateAccessToken() {
+  protected onGenerateAccessToken() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -182,7 +183,7 @@ export class GfUserAccountAccessComponent implements OnInit {
     });
   }
 
-  public onUpdateAccess(aId: string) {
+  protected onUpdateAccess(aId: string) {
     this.router.navigate([], {
       queryParams: { accessId: aId, editDialog: true }
     });
