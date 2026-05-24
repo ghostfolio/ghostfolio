@@ -12,6 +12,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
@@ -73,7 +74,9 @@ export class GfUserAccountAccessComponent implements OnInit {
   });
   protected user: User;
 
-  private deviceType: string;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -132,8 +135,6 @@ export class GfUserAccountAccessComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.update();
   }
 
@@ -195,8 +196,8 @@ export class GfUserAccountAccessComponent implements OnInit {
       CreateOrUpdateAccessDialogParams
     >(GfCreateOrUpdateAccessDialogComponent, {
       data: {} satisfies CreateOrUpdateAccessDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
@@ -230,8 +231,8 @@ export class GfUserAccountAccessComponent implements OnInit {
           type: access.type
         }
       } satisfies CreateOrUpdateAccessDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef.afterClosed().subscribe((result) => {
