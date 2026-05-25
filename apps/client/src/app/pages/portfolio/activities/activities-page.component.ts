@@ -22,17 +22,13 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 import { format, parseISO } from 'date-fns';
-import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 
@@ -45,8 +41,6 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   imports: [
     GfActivitiesTableComponent,
     GfFabComponent,
-    IonIcon,
-    MatButtonModule,
     MatSnackBarModule,
     RouterModule
   ],
@@ -108,8 +102,6 @@ export class GfActivitiesPageComponent implements OnInit {
           }
         }
       });
-
-    addIcons({ addOutline });
   }
 
   public ngOnInit() {

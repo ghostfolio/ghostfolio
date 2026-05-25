@@ -23,12 +23,8 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { GfCreateWatchlistItemDialogComponent } from './create-watchlist-item-dialog/create-watchlist-item-dialog.component';
@@ -40,8 +36,6 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
     GfBenchmarkComponent,
     GfFabComponent,
     GfPremiumIndicatorComponent,
-    IonIcon,
-    MatButtonModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -110,8 +104,6 @@ export class GfHomeWatchlistComponent implements OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-
-    addIcons({ addOutline });
   }
 
   public ngOnInit() {

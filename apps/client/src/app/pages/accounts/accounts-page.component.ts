@@ -21,12 +21,9 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
-import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -38,12 +35,7 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
 
 @Component({
   host: { class: 'page' },
-  imports: [
-    GfAccountsTableComponent,
-    GfFabComponent,
-    MatButtonModule,
-    RouterModule
-  ],
+  imports: [GfAccountsTableComponent, GfFabComponent, RouterModule],
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
@@ -96,8 +88,6 @@ export class GfAccountsPageComponent implements OnInit {
           this.openTransferBalanceDialog();
         }
       });
-
-    addIcons({ addOutline });
   }
 
   public ngOnInit() {
