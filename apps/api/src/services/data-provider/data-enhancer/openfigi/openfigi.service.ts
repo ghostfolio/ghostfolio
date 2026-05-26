@@ -1,9 +1,9 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { parseSymbol } from '@ghostfolio/common/helper';
-
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
+import OpenFIGI from 'openfigi';
 
 @Injectable()
 export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
@@ -31,46 +31,40 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const headers: HeadersInit = {};
     const { exchange, ticker } = parseSymbol({
       symbol,
       dataSource: response.dataSource
     });
 
-    if (this.configurationService.get('API_KEY_OPEN_FIGI')) {
-      headers['X-OPENFIGI-APIKEY'] =
-        this.configurationService.get('API_KEY_OPEN_FIGI');
-    }
+    const openfigi = new OpenFIGI({
+      apiKey: this.configurationService.get('API_KEY_OPEN_FIGI') || undefined
+    });
 
-    const mappings = (await fetch(
-      `${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`,
-      {
-        body: JSON.stringify([
-          { exchCode: exchange, idType: 'TICKER', idValue: ticker }
-        ]),
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers
-        },
-        method: 'POST',
-        signal: AbortSignal.timeout(requestTimeout)
+    try {
+      const mappings = await openfigi.mapping(
+        [
+          {
+            idType: 'TICKER',
+            idValue: ticker,
+            exchCode: exchange
+          }
+        ],
+        {
+          fetchOptions: {
+            signal: AbortSignal.timeout(requestTimeout ?? 5000)
+          }
+        }
+      );
+
+      if (mappings?.length === 1 && mappings[0].data?.length === 1) {
+        const { compositeFIGI, figi, shareClassFIGI } = mappings[0].data[0];
+
+        if (figi) response.figi = figi;
+        if (compositeFIGI) response.figiComposite = compositeFIGI;
+        if (shareClassFIGI) response.figiShareClass = shareClassFIGI;
       }
-    ).then((res) => res.json())) as any[];
-
-    if (mappings?.length === 1 && mappings[0].data?.length === 1) {
-      const { compositeFIGI, figi, shareClassFIGI } = mappings[0].data[0];
-
-      if (figi) {
-        response.figi = figi;
-      }
-
-      if (compositeFIGI) {
-        response.figiComposite = compositeFIGI;
-      }
-
-      if (shareClassFIGI) {
-        response.figiShareClass = shareClassFIGI;
-      }
+    } catch (error) {
+      console.error('OpenFIGI mapping failed:', error);
     }
 
     return response;
