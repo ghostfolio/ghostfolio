@@ -265,8 +265,8 @@ describe('PortfolioService', () => {
       });
 
       expect(holdings['USD']).toBeDefined();
-      expect(holdings['USD'].dataSource).toBe(DataSource.YAHOO);
-      expect(holdings['USD'].symbol).toBe('USD');
+      expect(holdings['USD'].assetProfile.dataSource).toBe(DataSource.YAHOO);
+      expect(holdings['USD'].assetProfile.symbol).toBe('USD');
     });
   });
 });
