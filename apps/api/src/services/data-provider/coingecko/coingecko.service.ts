@@ -67,7 +67,13 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     };
 
     try {
-      const { name } = await fetch(`${this.apiUrl}/coins/${symbol}`, {
+      let url = `${this.apiUrl}/coins/${symbol}`;
+      if (symbol.startsWith('nft:')) {
+        response.assetSubClass = AssetSubClass.NFT;
+        url = `${this.apiUrl}/nfts/${symbol.replace('nft:', '')}`;
+      }
+
+      const { name } = await fetch(url, {
         headers: this.headers,
         signal: AbortSignal.timeout(
           this.configurationService.get('REQUEST_TIMEOUT')
@@ -112,19 +118,30 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
-      const queryParams = new URLSearchParams({
-        from: getUnixTime(from).toString(),
-        to: getUnixTime(to).toString(),
-        vs_currency: DEFAULT_CURRENCY.toLowerCase()
-      });
+      let url: string;
+      let field = 'prices';
 
-      const { error, prices, status } = await fetch(
-        `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`,
-        {
-          headers: this.headers,
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+      if (symbol.startsWith('nft:')) {
+        // note: pro only
+        url = `${this.apiUrl}/nfts/${symbol.replace(
+          'nft:',
+          ''
+        )}/market_chart?days=max`;
+        field = 'floor_prices_usd';
+      } else {
+        const queryParams = new URLSearchParams({
+          from: getUnixTime(from).toString(),
+          to: getUnixTime(to).toString(),
+          vs_currency: DEFAULT_CURRENCY.toLowerCase()
+        });
+
+        url = `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`;
+      }
+
+      const { error, status, ...data } = await fetch(url, {
+        headers: this.headers,
+        signal: AbortSignal.timeout(requestTimeout)
+      }).then((res) => res.json());
 
       if (error?.status) {
         throw new Error(error.status.error_message);
@@ -132,6 +149,12 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
 
       if (status) {
         throw new Error(status.error_message);
+      }
+
+      const prices = data[field];
+
+      if (!prices) {
+        throw new Error(`No ${field} data available for ${symbol}`);
       }
 
       const result: {
@@ -176,8 +199,9 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     }
 
     try {
+      // note: simple price endpoint does not currently support nft ids
       const queryParams = new URLSearchParams({
-        ids: symbols.join(','),
+        ids: symbols.filter((s) => !s.startsWith('nft:')).join(','),
         vs_currencies: DEFAULT_CURRENCY.toLowerCase()
       });
 
@@ -195,6 +219,27 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.COINGECKO,
           marketPrice: quotes[symbol][DEFAULT_CURRENCY.toLowerCase()],
+          marketState: 'open'
+        };
+      }
+
+      // nfts
+      for (const symbol of symbols.filter((s) => s.startsWith('nft:'))) {
+        const s = symbol.replace('nft:', '');
+        const { floor_price } = await fetch(`${this.apiUrl}/nfts/${s}`, {
+          headers: this.headers,
+          signal: AbortSignal.timeout(requestTimeout)
+        }).then((res) => res.json());
+
+        if (!floor_price) {
+          continue;
+        }
+
+        response[symbol] = {
+          currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: DataSource.COINGECKO,
+          marketPrice: floor_price[DEFAULT_CURRENCY.toLowerCase()],
           marketState: 'open'
         };
       }
@@ -230,7 +275,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         query
       });
 
-      const { coins } = await fetch(
+      const { coins, nfts } = await fetch(
         `${this.apiUrl}/search?${queryParams.toString()}`,
         {
           headers: this.headers,
@@ -238,7 +283,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         }
       ).then((res) => res.json());
 
-      items = coins.map(({ id: symbol, name }) => {
+      let itemsCoins = coins.map(({ id: symbol, name }) => {
         return {
           name,
           symbol,
@@ -249,6 +294,18 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
           dataSource: this.getName()
         };
       });
+      let itemsNfts = nfts.map(({ id: symbol, name }) => {
+        return {
+          name,
+          symbol: `nft:${symbol}`,
+          assetClass: AssetClass.LIQUIDITY,
+          assetSubClass: AssetSubClass.NFT,
+          currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: this.getName()
+        };
+      });
+      items = itemsCoins.concat(itemsNfts);
     } catch (error) {
       let message = error;
 
