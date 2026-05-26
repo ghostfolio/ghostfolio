@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Params, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { addOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,4 +15,8 @@ import { IonIcon } from '@ionic/angular/standalone';
 export class GfFabComponent {
   public readonly icon = input('add-outline');
   public readonly queryParams = input.required<Params>();
+
+  public constructor() {
+    addIcons({ addOutline });
+  }
 }
