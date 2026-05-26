@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated attributes (`assetClass`, `assetClassLabel`, `assetSubClass`, `assetSubClassLabel`, `countries`, `currency`, `dataSource`, `holdings`, `name`, `sectors`, `symbol` and `url`) from the holdings of the portfolio details endpoint response
 - Upgraded `nestjs` from version `11.1.19` to `11.1.21`
 
 ## 3.5.0 - 2026-05-24
