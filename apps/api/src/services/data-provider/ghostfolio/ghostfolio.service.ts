@@ -8,6 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   HEADER_KEY_TOKEN,
@@ -38,6 +39,7 @@ export class GhostfolioService implements DataProviderInterface {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly propertyService: PropertyService
   ) {}
 
@@ -52,7 +54,7 @@ export class GhostfolioService implements DataProviderInterface {
     let assetProfile: DataProviderGhostfolioAssetProfileResponse;
 
     try {
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         {
           headers: await this.getRequestHeaders(),
@@ -122,7 +124,7 @@ export class GhostfolioService implements DataProviderInterface {
         to: format(to, DATE_FORMAT)
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -174,7 +176,7 @@ export class GhostfolioService implements DataProviderInterface {
         to: format(to, DATE_FORMAT)
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -245,7 +247,7 @@ export class GhostfolioService implements DataProviderInterface {
         symbols: symbols.join(',')
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/quotes?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -302,7 +304,7 @@ export class GhostfolioService implements DataProviderInterface {
         query
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/lookup?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
