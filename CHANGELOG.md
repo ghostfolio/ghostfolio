@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the `FetchService` to centralize outbound HTTP requests
+
 ### Changed
 
 - Upgraded `nestjs` from version `11.1.19` to `11.1.21`
