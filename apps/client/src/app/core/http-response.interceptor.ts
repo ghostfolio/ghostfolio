@@ -12,7 +12,7 @@ import {
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarRef,
@@ -29,13 +29,13 @@ export class HttpResponseInterceptor implements HttpInterceptor {
   public info: InfoItem;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
 
-  public constructor(
-    private dataService: DataService,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private userService: UserService,
-    private webAuthnService: WebAuthnService
-  ) {
+  private readonly dataService = inject(DataService);
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+  private readonly webAuthnService = inject(WebAuthnService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
   }
 
