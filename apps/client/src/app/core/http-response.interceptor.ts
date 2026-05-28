@@ -27,7 +27,7 @@ import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
   public info: InfoItem;
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+  public snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
 
   public constructor(
     private dataService: DataService,
@@ -61,7 +61,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                 }
               );
             } else if (
-              !error.url.includes(internalRoutes.auth.routerLink.join(''))
+              !error.url?.includes(internalRoutes.auth.routerLink.join(''))
             ) {
               this.snackBarRef = this.snackBar.open(
                 $localize`This action is not allowed.`,
@@ -72,11 +72,11 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               );
             }
 
-            this.snackBarRef.afterDismissed().subscribe(() => {
+            this.snackBarRef?.afterDismissed().subscribe(() => {
               this.snackBarRef = undefined;
             });
 
-            this.snackBarRef.onAction().subscribe(() => {
+            this.snackBarRef?.onAction().subscribe(() => {
               this.router.navigate(publicRoutes.pricing.routerLink);
             });
           }
@@ -92,11 +92,11 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               }
             );
 
-            this.snackBarRef.afterDismissed().subscribe(() => {
+            this.snackBarRef?.afterDismissed().subscribe(() => {
               this.snackBarRef = undefined;
             });
 
-            this.snackBarRef.onAction().subscribe(() => {
+            this.snackBarRef?.onAction().subscribe(() => {
               window.location.reload();
             });
           }
@@ -106,12 +106,12 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               $localize`Oops! It looks like you’re making too many requests. Please slow down a bit.`
             );
 
-            this.snackBarRef.afterDismissed().subscribe(() => {
+            this.snackBarRef?.afterDismissed().subscribe(() => {
               this.snackBarRef = undefined;
             });
           }
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
-          if (!error.url.includes('/data-providers/ghostfolio/status')) {
+          if (!error.url?.includes('/data-providers/ghostfolio/status')) {
             if (this.webAuthnService.isEnabled()) {
               this.router.navigate(internalRoutes.webauthn.routerLink);
             } else {
