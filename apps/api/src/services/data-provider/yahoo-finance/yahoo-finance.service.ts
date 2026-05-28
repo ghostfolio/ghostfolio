@@ -37,7 +37,10 @@ import {
   Price,
   QuoteSummaryResult
 } from 'yahoo-finance2/esm/src/modules/quoteSummary';
-import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
+import {
+  SearchQuoteNonYahoo,
+  SearchResult
+} from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -252,7 +255,26 @@ export class YahooFinanceService implements DataProviderInterface {
         quoteTypes.push('INDEX');
       }
 
-      const searchResult = await this.yahooFinance.search(query);
+      // Yahoo's /v1/finance/search returns OPTION/FUTURE quoteTypes alongside
+      // EQUITY/ETF, but yahoo-finance2's SearchQuoteYahoo* schemas don't list
+      // OPTION, so AJV rejects the entire payload and the search call throws.
+      // The library still parses the JSON and attaches it to `error.result` —
+      // catch and fall back to it, mirroring the pattern used for the
+      // `quote()` call below. The downstream `quoteTypes.includes(quoteType)`
+      // filter excludes OPTION rows from the user-facing results.
+      // Symptoms in the UI without this fix: typing any US-listed ETF with
+      // an active options chain (IXUS, VTI, IVV, VOO, QQQM, SCHF, VIG, ...)
+      // returns nothing in the Add Activity dropdown except CoinGecko
+      // fuzzy matches.
+      let searchResult: SearchResult = { quotes: [] } as SearchResult;
+
+      try {
+        searchResult = await this.yahooFinance.search(query);
+      } catch (error) {
+        if (error?.result) {
+          searchResult = error.result;
+        }
+      }
 
       const quotes = searchResult.quotes
         .filter(

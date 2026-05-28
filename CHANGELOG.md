@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `nestjs` from version `11.1.19` to `11.1.21`
 
+### Fixed
+
+- Fixed the symbol lookup for US-listed ETFs with active options chains (e.g. `IXUS`, `VTI`, `IVV`, `VOO`, `QQQM`, `SCHF`, `VIG`) by disabling strict AJV validation on the Yahoo Finance search response (Yahoo returns `OPTION`/`FUTURE` quoteTypes that `yahoo-finance2`'s schemas reject, causing the entire payload to be discarded; the downstream `quoteType` filter already excludes options)
+
 ## 3.5.0 - 2026-05-24
 
 ### Added
@@ -22,39 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated attributes (`assetClass`, `countries`, `currency`, `dataSource`, `name`, `sectors`, `symbol` and `url`) from the holdings of the public portfolio endpoint response
 - Removed the deprecated `api/v1/order` endpoints
 - Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
-
-### Fixed
-
-- Fixed a layout regression that caused a double scrollbar on pages without tabs
-- Resolved an issue with missing cash positions caused by an incorrect data source
-
-## 3.4.0 - 2026-05-21
-
-### Added
-
-- Added the icon column to the benchmark component
-- Added support for the `DIRECT_URL` environment variable to enable direct database connections
-
-### Changed
-
-- Improved the pagination in the activities table of the account detail dialog
-- Improved the pagination in the activities table of the holding detail dialog
-- Randomized the placeholder in the assistant
-- Filtered out sectors with zero weight for ETF and mutual fund assets in the _Yahoo Finance_ data enhancer
-- Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
-- Improved the verification of the _Stripe_ checkout session when creating a subscription
-- Relaxed the URL validation in the asset profile DTOs to accept both `HTTP` and `HTTPS` protocols
-- Relaxed the URL validation in the platform DTOs to accept both `HTTP` and `HTTPS` protocols
-- Extracted the page tabs to a reusable component
-- Improved the language localization for German (`de`)
-- Improved the language localization for Spanish (`es`)
-- Upgraded `bull-board` from version `7.0.0` to `7.1.5`
-- Upgraded `Nx` from version `22.7.1` to `22.7.2`
-
-### Fixed
-
-- Resolved an issue with the cash balance calculation of an account for `SELL` activities to ensure fees are correctly subtracted
-- Resolved an exception in the portfolio details endpoint when an asset profile is unmatched
 
 ## 3.3.0 - 2026-05-14
 
