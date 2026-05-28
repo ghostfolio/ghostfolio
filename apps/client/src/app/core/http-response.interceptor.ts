@@ -39,10 +39,10 @@ export class HttpResponseInterceptor implements HttpInterceptor {
     this.info = this.dataService.fetchInfo();
   }
 
-  public intercept(
-    request: HttpRequest<any>,
+  public intercept<T>(
+    request: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === StatusCodes.FORBIDDEN) {
