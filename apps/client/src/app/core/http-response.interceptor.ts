@@ -26,8 +26,8 @@ import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
-  public info: InfoItem;
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
+  private readonly info: InfoItem;
+  private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
 
   private readonly dataService = inject(DataService);
   private readonly router = inject(Router);
