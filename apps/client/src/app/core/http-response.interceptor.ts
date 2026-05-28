@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 import { StatusCodes } from 'http-status-codes';
 import ms from 'ms';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
@@ -44,9 +44,6 @@ export class HttpResponseInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      tap((event: HttpEvent<any>) => {
-        return event;
-      }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === StatusCodes.FORBIDDEN) {
           if (!this.snackBarRef) {
