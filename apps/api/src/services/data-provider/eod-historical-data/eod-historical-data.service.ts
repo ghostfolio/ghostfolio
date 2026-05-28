@@ -7,6 +7,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -41,6 +42,7 @@ export class EodHistoricalDataService
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -111,12 +113,11 @@ export class EodHistoricalDataService
         [date: string]: DataProviderHistoricalResponse;
       } = {};
 
-      const historicalResult = await fetch(
-        `${this.URL}/div/${symbol}?${queryParams.toString()}`,
-        {
+      const historicalResult = await this.fetchService
+        .fetch(`${this.URL}/div/${symbol}?${queryParams.toString()}`, {
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       for (const { date, value } of historicalResult) {
         response[date] = {
@@ -158,12 +159,11 @@ export class EodHistoricalDataService
         to: format(to, DATE_FORMAT)
       });
 
-      const response = await fetch(
-        `${this.URL}/eod/${symbol}?${queryParams.toString()}`,
-        {
+      const response = await this.fetchService
+        .fetch(`${this.URL}/eod/${symbol}?${queryParams.toString()}`, {
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       return response.reduce(
         (result, { adjusted_close, date }) => {
@@ -223,12 +223,14 @@ export class EodHistoricalDataService
         s: eodHistoricalDataSymbols.join(',')
       });
 
-      const realTimeResponse = await fetch(
-        `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?${queryParams.toString()}`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+      const realTimeResponse = await this.fetchService
+        .fetch(
+          `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?${queryParams.toString()}`,
+          {
+            signal: AbortSignal.timeout(requestTimeout)
+          }
+        )
+        .then((res) => res.json());
 
       const quotes: {
         close: number;
@@ -430,12 +432,11 @@ export class EodHistoricalDataService
         api_token: this.apiKey
       });
 
-      const response = await fetch(
-        `${this.URL}/search/${query}?${queryParams.toString()}`,
-        {
+      const response = await this.fetchService
+        .fetch(`${this.URL}/search/${query}?${queryParams.toString()}`, {
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       searchResult = response.map(
         ({ Code, Currency, Exchange, ISIN: isin, Name: name, Type }) => {
