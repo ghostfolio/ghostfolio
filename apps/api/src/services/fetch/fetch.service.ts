@@ -8,6 +8,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText, jsonSchema, tool } from 'ai';
+import ms from 'ms';
 
 @Injectable()
 export class FetchService {
@@ -59,56 +60,6 @@ export class FetchService {
     }
   }
 
-  private extractJsonFromWebFetchResult({
-    response,
-    sources,
-    text
-  }: {
-    response: { body?: unknown };
-    sources: { providerMetadata?: Record<string, Record<string, unknown>> }[];
-    text: string;
-  }): string | undefined {
-    const candidates: string[] = [];
-
-    for (const source of sources ?? []) {
-      const content = source?.providerMetadata?.openrouter?.content;
-
-      if (typeof content === 'string' && content) {
-        candidates.push(content);
-      }
-    }
-
-    const body = response?.body as
-      | {
-          choices?: {
-            message?: {
-              annotations?: { url_citation?: { content?: string } }[];
-            };
-          }[];
-        }
-      | undefined;
-
-    for (const annotation of body?.choices?.[0]?.message?.annotations ?? []) {
-      if (annotation?.url_citation?.content) {
-        candidates.push(annotation.url_citation.content);
-      }
-    }
-
-    if (text) {
-      candidates.push(text);
-    }
-
-    for (const candidate of candidates) {
-      const sanitized = this.sanitizeJson(candidate);
-
-      if (sanitized) {
-        return sanitized;
-      }
-    }
-
-    return undefined;
-  }
-
   private async fetchViaWebFetchTool(
     url: string
   ): Promise<Response | undefined> {
@@ -124,11 +75,12 @@ export class FetchService {
     try {
       const openRouterService = createOpenRouter({ apiKey: openRouterApiKey });
 
-      const { response, sources, text } = await generateText({
+      const { sources, text } = await generateText({
+        abortSignal: AbortSignal.timeout(ms('30 seconds')),
         model: openRouterService.chat(openRouterModel),
         prompt: [
-          'Fetch the following URL and return its response body exactly as received.',
-          'Respond with the raw body only (no commentary, no Markdown, and no code fences).',
+          'You have access to a web_fetch tool. You MUST call it to retrieve the URL below, do not answer from prior knowledge.',
+          'Return the fetched response body exactly as received: raw body only, no commentary, no Markdown, and no code fences.',
           `URL: ${url}`
         ].join('\n'),
         tools: {
@@ -144,24 +96,37 @@ export class FetchService {
         }
       });
 
-      const body = this.extractJsonFromWebFetchResult({
-        response,
-        sources,
+      const candidates = [
+        ...sources.map((source) => {
+          return source.providerMetadata?.openrouter?.content;
+        }),
         text
-      });
+      ];
 
-      if (!body) {
-        return undefined;
+      for (const candidate of candidates) {
+        if (typeof candidate !== 'string') {
+          continue;
+        }
+
+        const body = candidate.trim();
+
+        try {
+          JSON.parse(body);
+        } catch {
+          continue;
+        }
+
+        Logger.debug(
+          `Routed ${this.redactUrl(url)} via web fetch tool`,
+          'FetchService'
+        );
+
+        return new Response(body, {
+          headers: { 'content-type': 'application/json' }
+        });
       }
 
-      Logger.debug(
-        `Routed ${this.redactUrl(url)} via web fetch tool`,
-        'FetchService'
-      );
-
-      return new Response(body, {
-        headers: { 'content-type': 'application/json' }
-      });
+      return undefined;
     } catch (error) {
       Logger.error(
         `Web fetch tool failed for ${this.redactUrl(url)}: ${
@@ -204,22 +169,6 @@ export class FetchService {
       return url.toString();
     } catch {
       return rawUrl;
-    }
-  }
-
-  private sanitizeJson(value: string): string | undefined {
-    const sanitized = value
-      .trim()
-      .replace(/^```(?:json)?/i, '')
-      .replace(/```$/, '')
-      .trim();
-
-    try {
-      JSON.parse(sanitized);
-
-      return sanitized;
-    } catch {
-      return undefined;
     }
   }
 }
