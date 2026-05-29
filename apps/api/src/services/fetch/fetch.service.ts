@@ -2,21 +2,31 @@ import { redactPaths } from '@ghostfolio/api/helper/object.helper';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_API_KEY_OPENROUTER,
-  PROPERTY_OPENROUTER_MODEL
+  PROPERTY_OPENROUTER_MODEL,
+  PROPERTY_WEB_FETCH_DOMAINS
 } from '@ghostfolio/common/config';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText, jsonSchema, tool } from 'ai';
 import ms from 'ms';
 
+import { WebFetchDomain } from './interfaces/web-fetch-domain.interface';
+
 @Injectable()
-export class FetchService {
+export class FetchService implements OnModuleInit {
   private static readonly REDACTED_QUERY_PARAM_NAMES = ['apikey', 'api_token'];
 
-  private webFetchDomains: { domain: string }[] = [];
+  private webFetchDomains: WebFetchDomain[] = [];
 
   public constructor(private readonly propertyService: PropertyService) {}
+
+  public async onModuleInit() {
+    this.webFetchDomains =
+      (await this.propertyService.getByKey<WebFetchDomain[]>(
+        PROPERTY_WEB_FETCH_DOMAINS
+      )) ?? [];
+  }
 
   public async fetch(
     input: RequestInfo | URL,
