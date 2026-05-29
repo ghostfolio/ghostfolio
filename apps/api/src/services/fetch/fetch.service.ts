@@ -61,12 +61,22 @@ export class FetchService {
 
   private extractJsonFromWebFetchResult({
     response,
+    sources,
     text
   }: {
     response: { body?: unknown };
+    sources: { providerMetadata?: Record<string, Record<string, unknown>> }[];
     text: string;
   }): string | undefined {
     const candidates: string[] = [];
+
+    for (const source of sources ?? []) {
+      const content = source?.providerMetadata?.openrouter?.content;
+
+      if (typeof content === 'string' && content) {
+        candidates.push(content);
+      }
+    }
 
     const body = response?.body as
       | {
@@ -114,7 +124,7 @@ export class FetchService {
     try {
       const openRouterService = createOpenRouter({ apiKey: openRouterApiKey });
 
-      const { response, text } = await generateText({
+      const { response, sources, text } = await generateText({
         model: openRouterService.chat(openRouterModel),
         prompt: [
           'Fetch the following URL and return its response body exactly as received.',
@@ -123,7 +133,7 @@ export class FetchService {
         ].join('\n'),
         tools: {
           web_fetch: tool({
-            args: { engine: 'auto' },
+            args: { engine: 'openrouter' },
             id: 'openrouter.web_fetch',
             inputSchema: jsonSchema({
               additionalProperties: true,
@@ -134,7 +144,11 @@ export class FetchService {
         }
       });
 
-      const body = this.extractJsonFromWebFetchResult({ response, text });
+      const body = this.extractJsonFromWebFetchResult({
+        response,
+        sources,
+        text
+      });
 
       if (!body) {
         return undefined;
