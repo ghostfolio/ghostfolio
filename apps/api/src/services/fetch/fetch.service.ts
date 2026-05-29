@@ -40,11 +40,15 @@ export class FetchService implements OnModuleInit {
 
     const url = input instanceof Request ? input.url : input.toString();
     const urlRedacted = this.redactUrl(url);
+    const matchedWebFetchDomain = this.getMatchingWebFetchDomain(url, method);
 
     Logger.debug(`${method} ${urlRedacted}`, 'FetchService');
 
-    if (method === 'GET' && this.matchesWebFetchDomain(url)) {
-      const response = await this.fetchViaWebFetchTool(url);
+    if (matchedWebFetchDomain) {
+      const response = await this.fetchViaWebFetchTool(
+        url,
+        matchedWebFetchDomain
+      );
 
       if (response) {
         return response;
@@ -71,7 +75,8 @@ export class FetchService implements OnModuleInit {
   }
 
   private async fetchViaWebFetchTool(
-    url: string
+    url: string,
+    webFetchDomain: WebFetchDomain
   ): Promise<Response | undefined> {
     const [openRouterApiKey, openRouterModel] = await Promise.all([
       this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
@@ -107,7 +112,7 @@ export class FetchService implements OnModuleInit {
       });
 
       const candidates = [
-        ...sources.map((source) => {
+        ...(sources ?? []).map((source) => {
           return source.providerMetadata?.openrouter?.content;
         }),
         text
@@ -120,10 +125,16 @@ export class FetchService implements OnModuleInit {
 
         const body = candidate.trim();
 
-        try {
-          JSON.parse(body);
-        } catch {
+        if (!body) {
           continue;
+        }
+
+        if (webFetchDomain.responseContentType.includes('application/json')) {
+          try {
+            JSON.parse(body);
+          } catch {
+            continue;
+          }
         }
 
         Logger.debug(
@@ -132,7 +143,7 @@ export class FetchService implements OnModuleInit {
         );
 
         return new Response(body, {
-          headers: { 'content-type': 'application/json' }
+          headers: { 'content-type': webFetchDomain.responseContentType }
         });
       }
 
@@ -149,15 +160,22 @@ export class FetchService implements OnModuleInit {
     }
   }
 
-  private matchesWebFetchDomain(rawUrl: string): boolean {
+  private getMatchingWebFetchDomain(
+    rawUrl: string,
+    method: string
+  ): WebFetchDomain | undefined {
     try {
       const { hostname } = new URL(rawUrl);
 
-      return this.webFetchDomains.some(({ domain }) => {
-        return hostname === domain || hostname.endsWith(`.${domain}`);
+      return this.webFetchDomains.find((webFetchDomain) => {
+        const { domain, methods } = webFetchDomain;
+        const matchesDomain =
+          hostname === domain || hostname.endsWith(`.${domain}`);
+
+        return matchesDomain && methods.includes(method);
       });
     } catch {
-      return false;
+      return undefined;
     }
   }
 
