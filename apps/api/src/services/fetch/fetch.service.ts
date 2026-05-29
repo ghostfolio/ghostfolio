@@ -102,13 +102,10 @@ export class FetchService {
   private async fetchViaWebFetchTool(
     url: string
   ): Promise<Response | undefined> {
-    const openRouterApiKey = await this.propertyService.getByKey<string>(
-      PROPERTY_API_KEY_OPENROUTER
-    );
-
-    const openRouterModel = await this.propertyService.getByKey<string>(
-      PROPERTY_OPENROUTER_MODEL
-    );
+    const [openRouterApiKey, openRouterModel] = await Promise.all([
+      this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
+      this.propertyService.getByKey<string>(PROPERTY_OPENROUTER_MODEL)
+    ]);
 
     if (!openRouterApiKey || !openRouterModel) {
       return undefined;
