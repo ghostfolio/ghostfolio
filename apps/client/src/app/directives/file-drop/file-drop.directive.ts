@@ -1,10 +1,10 @@
-import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, HostListener, output } from '@angular/core';
 
 @Directive({
   selector: '[gfFileDrop]'
 })
 export class GfFileDropDirective {
-  @Output() filesDropped = new EventEmitter<FileList>();
+  public readonly filesDropped = output<FileList>();
 
   @HostListener('dragenter', ['$event']) onDragEnter(event: DragEvent) {
     event.preventDefault();
