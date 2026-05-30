@@ -11,7 +11,10 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText, jsonSchema, tool } from 'ai';
 import ms from 'ms';
 
-import { WebFetchDomain } from './interfaces/web-fetch-domain.interface';
+import {
+  HttpRequestMethod,
+  WebFetchDomain
+} from './interfaces/web-fetch-domain.interface';
 
 @Injectable()
 export class FetchService implements OnModuleInit {
@@ -36,7 +39,7 @@ export class FetchService implements OnModuleInit {
       init?.method ??
       (input instanceof Request ? input.method : undefined) ??
       'GET'
-    ).toUpperCase();
+    ).toUpperCase() as HttpRequestMethod;
 
     const url = input instanceof Request ? input.url : input.toString();
     const urlRedacted = this.redactUrl(url);
@@ -167,7 +170,7 @@ export class FetchService implements OnModuleInit {
     method,
     url
   }: {
-    method: string;
+    method: HttpRequestMethod;
     url: string;
   }) {
     try {
