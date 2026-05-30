@@ -20,9 +20,10 @@ export class GfFileDropDirective {
     event.preventDefault();
     event.stopPropagation();
 
-    // Prevent the browser's default behavior for handling the file drop
-    event.dataTransfer.dropEffect = 'copy';
-
-    this.filesDropped.emit(event.dataTransfer.files);
+    if (event.dataTransfer) {
+      // Prevent the browser's default behavior for handling the file drop
+      event.dataTransfer.dropEffect = 'copy';
+      this.filesDropped.emit(event.dataTransfer.files);
+    }
   }
 }
