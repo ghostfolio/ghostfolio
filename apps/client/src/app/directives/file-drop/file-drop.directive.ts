@@ -1,22 +1,27 @@
-import { Directive, HostListener, output } from '@angular/core';
+import { Directive, output } from '@angular/core';
 
 @Directive({
+  host: {
+    '(dragenter)': 'onDragEnter($event)',
+    '(dragover)': 'onDragOver($event)',
+    '(drop)': 'onDrop($event)'
+  },
   selector: '[gfFileDrop]'
 })
 export class GfFileDropDirective {
   public readonly filesDropped = output<FileList>();
 
-  @HostListener('dragenter', ['$event']) onDragEnter(event: DragEvent) {
+  public onDragEnter(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  @HostListener('dragover', ['$event']) onDragOver(event: DragEvent) {
+  public onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  @HostListener('drop', ['$event']) onDrop(event: DragEvent) {
+  public onDrop(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
 
