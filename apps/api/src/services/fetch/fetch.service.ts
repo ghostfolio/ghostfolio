@@ -3,7 +3,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL,
-  PROPERTY_WEB_FETCH_DOMAINS
+  PROPERTY_WEB_FETCH_ROUTES
 } from '@ghostfolio/common/config';
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
@@ -11,23 +11,21 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText, jsonSchema, tool } from 'ai';
 import ms from 'ms';
 
-import {
-  HttpRequestMethod,
-  WebFetchDomain
-} from './interfaces/web-fetch-domain.interface';
+import { WebFetchRoute } from './interfaces/web-fetch-route.interface';
 
 @Injectable()
 export class FetchService implements OnModuleInit {
   private static readonly REDACTED_QUERY_PARAM_NAMES = ['apikey', 'api_token'];
+  private static readonly WEB_FETCH_TIMEOUT = ms('30 seconds');
 
-  private webFetchDomains: WebFetchDomain[] = [];
+  private webFetchRoutes: WebFetchRoute[] = [];
 
   public constructor(private readonly propertyService: PropertyService) {}
 
   public async onModuleInit() {
-    this.webFetchDomains =
-      (await this.propertyService.getByKey<WebFetchDomain[]>(
-        PROPERTY_WEB_FETCH_DOMAINS
+    this.webFetchRoutes =
+      (await this.propertyService.getByKey<WebFetchRoute[]>(
+        PROPERTY_WEB_FETCH_ROUTES
       )) ?? [];
   }
 
@@ -39,25 +37,25 @@ export class FetchService implements OnModuleInit {
       init?.method ??
       (input instanceof Request ? input.method : undefined) ??
       'GET'
-    ).toUpperCase() as HttpRequestMethod;
+    ).toUpperCase();
 
     const url = input instanceof Request ? input.url : input.toString();
     const urlRedacted = this.redactUrl(url);
-    const matchedWebFetchDomain = this.getMatchingWebFetchDomain({
-      method,
-      url
-    });
 
     Logger.debug(`${method} ${urlRedacted}`, 'FetchService');
 
-    if (matchedWebFetchDomain) {
-      const response = await this.fetchViaWebFetchTool(
-        url,
-        matchedWebFetchDomain
-      );
+    if (method === 'GET') {
+      const matchedWebFetchRoute = this.getMatchingWebFetchRoute(url);
 
-      if (response) {
-        return response;
+      if (matchedWebFetchRoute) {
+        const response = await this.fetchViaWebFetchTool(
+          url,
+          matchedWebFetchRoute
+        );
+
+        if (response) {
+          return response;
+        }
       }
     }
 
@@ -82,7 +80,7 @@ export class FetchService implements OnModuleInit {
 
   private async fetchViaWebFetchTool(
     url: string,
-    webFetchDomain: WebFetchDomain
+    webFetchRoute: WebFetchRoute
   ): Promise<Response | undefined> {
     const [openRouterApiKey, openRouterModel] = await Promise.all([
       this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
@@ -97,14 +95,18 @@ export class FetchService implements OnModuleInit {
       const openRouterService = createOpenRouter({ apiKey: openRouterApiKey });
 
       const { sources, text } = await generateText({
-        abortSignal: AbortSignal.timeout(ms('30 seconds')),
         model: openRouterService.chat(openRouterModel),
         prompt: [
           'You have access to a web_fetch tool. You MUST call it to retrieve the URL below, do not answer from prior knowledge.',
           'Return the fetched response body exactly as received: raw body only, no commentary, no Markdown, and no code fences.',
           `URL: ${url}`
         ].join('\n'),
+        timeout: FetchService.WEB_FETCH_TIMEOUT,
         tools: {
+          // Provider-defined tool: lets OpenRouter perform the actual web
+          // request server-side via its `web_fetch` engine. `id` and `args`
+          // are the OpenRouter-specific identifiers; the input schema is left
+          // open as the arguments are supplied by the model.
           web_fetch: tool({
             args: { engine: 'openrouter' },
             id: 'openrouter.web_fetch',
@@ -135,7 +137,7 @@ export class FetchService implements OnModuleInit {
           continue;
         }
 
-        if (webFetchDomain.responseContentType.includes('application/json')) {
+        if (webFetchRoute.responseContentType?.includes('application/json')) {
           try {
             JSON.parse(body);
           } catch {
@@ -149,7 +151,9 @@ export class FetchService implements OnModuleInit {
         );
 
         return new Response(body, {
-          headers: { 'content-type': webFetchDomain.responseContentType }
+          headers: webFetchRoute.responseContentType
+            ? { 'content-type': webFetchRoute.responseContentType }
+            : undefined
         });
       }
 
@@ -166,21 +170,12 @@ export class FetchService implements OnModuleInit {
     }
   }
 
-  private getMatchingWebFetchDomain({
-    method,
-    url
-  }: {
-    method: HttpRequestMethod;
-    url: string;
-  }) {
+  private getMatchingWebFetchRoute(url: string) {
     try {
       const { hostname } = new URL(url);
 
-      return this.webFetchDomains.find(({ domain, methods }) => {
-        const matchesDomain =
-          hostname === domain || hostname.endsWith(`.${domain}`);
-
-        return matchesDomain && methods.includes(method);
+      return this.webFetchRoutes.find(({ domain }) => {
+        return hostname === domain || hostname.endsWith(`.${domain}`);
       });
     } catch {
       return undefined;
