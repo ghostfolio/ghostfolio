@@ -40,7 +40,10 @@ export class FetchService implements OnModuleInit {
 
     const url = input instanceof Request ? input.url : input.toString();
     const urlRedacted = this.redactUrl(url);
-    const matchedWebFetchDomain = this.getMatchingWebFetchDomain(url, method);
+    const matchedWebFetchDomain = this.getMatchingWebFetchDomain({
+      method,
+      url
+    });
 
     Logger.debug(`${method} ${urlRedacted}`, 'FetchService');
 
@@ -160,15 +163,17 @@ export class FetchService implements OnModuleInit {
     }
   }
 
-  private getMatchingWebFetchDomain(
-    rawUrl: string,
-    method: string
-  ): WebFetchDomain | undefined {
+  private getMatchingWebFetchDomain({
+    method,
+    url
+  }: {
+    method: string;
+    url: string;
+  }) {
     try {
-      const { hostname } = new URL(rawUrl);
+      const { hostname } = new URL(url);
 
-      return this.webFetchDomains.find((webFetchDomain) => {
-        const { domain, methods } = webFetchDomain;
+      return this.webFetchDomains.find(({ domain, methods }) => {
         const matchesDomain =
           hostname === domain || hostname.endsWith(`.${domain}`);
 
