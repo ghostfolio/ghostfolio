@@ -29,10 +29,7 @@ export class FetchService implements OnModuleInit {
       )) ?? [];
   }
 
-  public async fetch(
-    input: RequestInfo | URL,
-    init?: RequestInit
-  ): Promise<Response> {
+  public async fetch(input: RequestInfo | URL, init?: RequestInit) {
     const method = (
       init?.method ??
       (input instanceof Request ? input.method : undefined) ??
@@ -45,13 +42,13 @@ export class FetchService implements OnModuleInit {
     Logger.debug(`${method} ${urlRedacted}`, 'FetchService');
 
     if (method === 'GET') {
-      const matchedWebFetchRoute = this.getMatchingWebFetchRoute(url);
+      const webFetchRoute = this.getMatchingWebFetchRoute(url);
 
-      if (matchedWebFetchRoute) {
-        const response = await this.fetchViaWebFetchTool(
+      if (webFetchRoute) {
+        const response = await this.fetchViaWebFetchTool({
           url,
-          matchedWebFetchRoute
-        );
+          webFetchRoute
+        });
 
         if (response) {
           return response;
@@ -78,10 +75,13 @@ export class FetchService implements OnModuleInit {
     }
   }
 
-  private async fetchViaWebFetchTool(
-    url: string,
-    webFetchRoute: WebFetchRoute
-  ): Promise<Response | undefined> {
+  private async fetchViaWebFetchTool({
+    url,
+    webFetchRoute
+  }: {
+    url: string;
+    webFetchRoute: WebFetchRoute;
+  }) {
     const [openRouterApiKey, openRouterModel] = await Promise.all([
       this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
       this.propertyService.getByKey<string>(PROPERTY_OPENROUTER_MODEL)
