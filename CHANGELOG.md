@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for routing selected requests through the _OpenRouter_ `web_fetch` tool in the `FetchService`
 
+### Changed
+
+- Extended the countries mapping in the data enhancer for asset profile data via _Trackinsight_
+
 ## 3.6.0 - 2026-05-28
 
 ### Added

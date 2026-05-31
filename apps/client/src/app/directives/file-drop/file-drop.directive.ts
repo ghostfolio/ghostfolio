@@ -1,28 +1,34 @@
-import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, output } from '@angular/core';
 
 @Directive({
+  host: {
+    '(dragenter)': 'onDragEnter($event)',
+    '(dragover)': 'onDragOver($event)',
+    '(drop)': 'onDrop($event)'
+  },
   selector: '[gfFileDrop]'
 })
 export class GfFileDropDirective {
-  @Output() filesDropped = new EventEmitter<FileList>();
+  public readonly filesDropped = output<FileList>();
 
-  @HostListener('dragenter', ['$event']) onDragEnter(event: DragEvent) {
+  public onDragEnter(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  @HostListener('dragover', ['$event']) onDragOver(event: DragEvent) {
+  public onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  @HostListener('drop', ['$event']) onDrop(event: DragEvent) {
+  public onDrop(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
 
-    // Prevent the browser's default behavior for handling the file drop
-    event.dataTransfer.dropEffect = 'copy';
-
-    this.filesDropped.emit(event.dataTransfer.files);
+    if (event.dataTransfer) {
+      // Prevent the browser's default behavior for handling the file drop
+      event.dataTransfer.dropEffect = 'copy';
+      this.filesDropped.emit(event.dataTransfer.files);
+    }
   }
 }
