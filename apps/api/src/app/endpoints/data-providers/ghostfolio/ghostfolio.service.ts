@@ -8,6 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -36,6 +37,7 @@ export class GhostfolioService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
+    private readonly fetchService: FetchService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {}
@@ -355,6 +357,7 @@ export class GhostfolioService {
   private getDataProviderInfo(): DataProviderInfo {
     const ghostfolioDataProviderService = new GhostfolioDataProviderService(
       this.configurationService,
+      this.fetchService,
       this.propertyService
     );
 

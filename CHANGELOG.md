@@ -10,7 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the deprecated attributes (`assetClass`, `assetClassLabel`, `assetSubClass`, `assetSubClassLabel`, `countries`, `currency`, `dataSource`, `holdings`, `name`, `sectors`, `symbol` and `url`) from the holdings of the portfolio details endpoint response
+
+## 3.6.0 - 2026-05-28
+
+### Added
+
+- Added `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variable support to outbound HTTP requests
+- Added the `FetchService` to centralize outbound HTTP requests
+
+### Changed
+
+- Extracted the floating action buttons (FAB) to a reusable component
 - Upgraded `nestjs` from version `11.1.19` to `11.1.21`
+- Upgraded `yahoo-finance2` from version `3.14.0` to `3.14.2`
 
 ## 3.5.0 - 2026-05-24
 

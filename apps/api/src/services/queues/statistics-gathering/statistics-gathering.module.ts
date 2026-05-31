@@ -1,4 +1,5 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { FetchModule } from '@ghostfolio/api/services/fetch/fetch.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { STATISTICS_GATHERING_QUEUE } from '@ghostfolio/common/config';
 
@@ -29,6 +30,7 @@ import { StatisticsGatheringService } from './statistics-gathering.service';
       name: STATISTICS_GATHERING_QUEUE
     }),
     ConfigurationModule,
+    FetchModule,
     PropertyModule
   ],
   providers: [StatisticsGatheringProcessor, StatisticsGatheringService]

@@ -84,6 +84,12 @@ https://ghostfol.io/development/storybook
 
 1. Run `npx npm-check-updates --upgrade --target "minor" --filter "/@angular.*/"`
 
+### NestJS
+
+#### Upgrade (minor versions)
+
+1. Run `npx npm-check-updates --upgrade --target "minor" --filter "/@nestjs.*/"`
+
 ### Nx
 
 #### Upgrade

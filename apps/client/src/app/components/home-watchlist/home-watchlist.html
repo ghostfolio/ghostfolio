@@ -22,15 +22,5 @@
   </div>
 </div>
 @if (!hasImpersonationId && hasPermissionToCreateWatchlistItem) {
-  <div class="fab-container">
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createWatchlistItemDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large" />
-    </a>
-  </div>
+  <gf-fab [queryParams]="{ createWatchlistItemDialog: true }" />
 }
