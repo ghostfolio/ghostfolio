@@ -28,6 +28,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -104,16 +105,18 @@ export class GfAnalysisPageComponent implements OnInit {
   public unitLongestStreak: string;
   public user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private clipboard: Clipboard,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private snackBar: MatSnackBar,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly clipboard = inject(Clipboard);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
 
