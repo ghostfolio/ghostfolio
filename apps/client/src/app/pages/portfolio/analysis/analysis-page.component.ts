@@ -70,14 +70,14 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAnalysisPageComponent implements OnInit {
   protected benchmark?: Partial<SymbolProfile>;
   protected benchmarkDataItems: HistoricalDataItem[] = [];
-  protected benchmarks: Partial<SymbolProfile>[];
+  protected readonly benchmarks: Partial<SymbolProfile>[];
   protected bottom3: PortfolioPosition[];
   protected dividendsByGroup: InvestmentItem[];
-  protected dividendTimelineDataLabel = $localize`Dividend`;
+  protected readonly dividendTimelineDataLabel = $localize`Dividend`;
   protected hasImpersonationId: boolean;
   protected hasPermissionToReadAiPrompt: boolean;
   protected investments: InvestmentItem[];
-  protected investmentTimelineDataLabel = $localize`Investment`;
+  protected readonly investmentTimelineDataLabel = $localize`Investment`;
   protected investmentsByGroup: InvestmentItem[];
   protected isLoadingAnalysisPrompt: boolean;
   protected isLoadingBenchmarkComparator: boolean;
@@ -86,14 +86,14 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingInvestmentTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
   protected mode: GroupBy = 'month';
-  protected modeOptions: ToggleOption[] = [
+  protected readonly modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
   ];
   protected performance: PortfolioPerformance;
   protected performanceDataItems: HistoricalDataItem[];
   protected performanceDataItemsInPercentage: HistoricalDataItem[];
-  protected portfolioEvolutionDataLabel = $localize`Investment`;
+  protected readonly portfolioEvolutionDataLabel = $localize`Investment`;
   protected precision = 2;
   protected streaks: PortfolioInvestmentsResponse['streaks'];
   protected top3: PortfolioPosition[];
