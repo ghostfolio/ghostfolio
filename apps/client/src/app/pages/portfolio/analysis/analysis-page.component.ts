@@ -30,7 +30,7 @@ import {
   DestroyRef,
   inject,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -68,8 +68,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './analysis-page.html'
 })
 export class GfAnalysisPageComponent implements OnInit {
-  @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
-
   public benchmark?: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
@@ -104,6 +102,8 @@ export class GfAnalysisPageComponent implements OnInit {
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
   public user: User;
+
+  private readonly actionsMenuButton = viewChild.required(MatMenuTrigger);
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly clipboard = inject(Clipboard);
@@ -220,7 +220,7 @@ export class GfAnalysisPageComponent implements OnInit {
             window.open('https://duck.ai', '_blank');
           });
 
-        this.actionsMenuButton.closeMenu();
+        this.actionsMenuButton().closeMenu();
 
         if (mode === 'analysis') {
           this.isLoadingAnalysisPrompt = false;
