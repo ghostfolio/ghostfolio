@@ -1,6 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { DataSource, MarketData } from '@prisma/client';
@@ -148,5 +149,44 @@ describe('CurrentRateService', () => {
         }
       ]
     });
+  });
+
+  it('getValues should fallback to the latest historical price if live quote is missing', async () => {
+    jest.spyOn(dataProviderService, 'getQuotes').mockResolvedValueOnce({});
+
+    const today = resetHours(new Date());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    jest.spyOn(marketDataService, 'getRange').mockResolvedValueOnce([
+      {
+        createdAt: yesterday,
+        dataSource: DataSource.YAHOO,
+        date: yesterday,
+        id: '082d6893-df27-4c91-8a5d-092e84315b56',
+        marketPrice: 1847.839966,
+        state: 'CLOSE',
+        symbol: 'AMZN'
+      }
+    ]);
+
+    const response = await currentRateService.getValues({
+      dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
+      dateQuery: {
+        gte: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
+        lt: tomorrow
+      }
+    });
+
+    expect(response.errors).toEqual([]);
+
+    const todayPrice = response.values.find(
+      ({ date, symbol }) =>
+        symbol === 'AMZN' && date.getTime() === today.getTime()
+    );
+
+    expect(todayPrice?.marketPrice).toBe(1847.839966);
   });
 });

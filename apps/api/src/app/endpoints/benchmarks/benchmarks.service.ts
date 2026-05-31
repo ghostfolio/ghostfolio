@@ -3,6 +3,7 @@ import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -12,6 +13,7 @@ import {
 import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
+import { MarketData } from '@prisma/client';
 import { format, isSameDay } from 'date-fns';
 import { isNumber } from 'lodash';
 
@@ -22,6 +24,7 @@ export class BenchmarksService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly portfolioService: PortfolioService,
+    private readonly prismaService: PrismaService,
     private readonly symbolService: SymbolService
   ) {}
 
@@ -56,7 +59,19 @@ export class BenchmarksService {
       withExcludedAccounts
     });
 
-    const [currentSymbolItem, marketDataItems] = await Promise.all([
+    const chartDates = chart.map(({ date }) => {
+      return format(parseDate(date), DATE_FORMAT);
+    });
+
+    const rangeStart = resetHours(startDate);
+    const rangeEnd = resetHours(endDate);
+
+    const [
+      currentSymbolItem,
+      marketDataItems,
+      startMarketDataItems,
+      symbolProfile
+    ] = await Promise.all([
       this.symbolService.get({
         dataGatheringItem: {
           dataSource,
@@ -71,47 +86,95 @@ export class BenchmarksService {
           dataSource,
           symbol,
           date: {
-            in: chart.map(({ date }) => {
-              return resetHours(parseDate(date));
-            })
+            gte: rangeStart,
+            lte: rangeEnd
           }
+        }
+      }),
+      this.marketDataService.marketDataItems({
+        orderBy: {
+          date: 'desc'
+        },
+        take: 1,
+        where: {
+          dataSource,
+          symbol,
+          date: {
+            lte: rangeStart
+          }
+        }
+      }),
+      this.prismaService.symbolProfile.findFirst({
+        where: {
+          dataSource,
+          symbol
         }
       })
     ]);
 
-    const exchangeRates =
-      await this.exchangeRateDataService.getExchangeRatesByCurrency({
-        startDate,
-        currencies: [currentSymbolItem.currency],
-        targetCurrency: userCurrency
-      });
+    const benchmarkCurrency =
+      currentSymbolItem?.currency ?? symbolProfile?.currency;
 
-    const exchangeRateAtStartDate =
-      exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-        format(startDate, DATE_FORMAT)
-      ];
-
-    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
-      return isSameDay(date, startDate);
-    })?.marketPrice;
-
-    if (!marketPriceAtStartDate) {
+    if (!benchmarkCurrency) {
       Logger.error(
-        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
-          startDate,
-          DATE_FORMAT
-        )}`,
-        'BenchmarkService'
+        `No currency has been found for ${symbol} (${dataSource})`,
+        'BenchmarksService'
       );
 
       return { marketData };
     }
 
-    for (const marketDataItem of marketDataItems) {
-      const exchangeRate =
-        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-          format(marketDataItem.date, DATE_FORMAT)
-        ];
+    const exchangeRates =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        startDate: rangeStart,
+        currencies: [benchmarkCurrency],
+        endDate: rangeEnd,
+        targetCurrency: userCurrency
+      });
+
+    const exchangeRateAtStartDate = this.getExchangeRateOnOrBefore({
+      currencyPair: `${benchmarkCurrency}${userCurrency}`,
+      date: rangeStart,
+      exchangeRates
+    });
+
+    const marketDataItemsWithInitialValue = [
+      ...startMarketDataItems,
+      ...marketDataItems
+    ];
+    const marketPriceAtStartDate = this.getMarketPriceOnOrBefore({
+      marketDataItems: marketDataItemsWithInitialValue,
+      targetDate: rangeStart
+    });
+
+    if (!isNumber(marketPriceAtStartDate)) {
+      Logger.error(
+        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
+          rangeStart,
+          DATE_FORMAT
+        )}`,
+        'BenchmarksService'
+      );
+
+      return { marketData };
+    }
+
+    for (const chartDate of chartDates) {
+      const targetDate = resetHours(parseDate(chartDate));
+      const marketPrice = this.getMarketPriceOnOrBefore({
+        marketDataItems: marketDataItemsWithInitialValue,
+        targetDate
+      });
+
+      if (!isNumber(marketPrice)) {
+        continue;
+      }
+
+      const exchangeRate = this.getExchangeRateOnOrBefore({
+        currencyPair: `${benchmarkCurrency}${userCurrency}`,
+        date: targetDate,
+        exchangeRates
+      });
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
@@ -119,45 +182,98 @@ export class BenchmarksService {
           : 1;
 
       marketData.push({
-        date: format(marketDataItem.date, DATE_FORMAT),
+        date: chartDate,
         value:
           marketPriceAtStartDate === 0
             ? 0
             : this.benchmarkService.calculateChangeInPercentage(
                 marketPriceAtStartDate,
-                marketDataItem.marketPrice * exchangeRateFactor
+                marketPrice * exchangeRateFactor
               ) * 100
       });
     }
 
-    const includesEndDate = isSameDay(
-      parseDate(marketData.at(-1).date),
-      endDate
-    );
+    const endDateIndex = marketData.findIndex(({ date }) => {
+      return isSameDay(parseDate(date), endDate);
+    });
 
-    if (currentSymbolItem?.marketPrice && !includesEndDate) {
-      const exchangeRate =
-        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-          format(endDate, DATE_FORMAT)
-        ];
+    if (currentSymbolItem?.marketPrice) {
+      const exchangeRate = this.getExchangeRateOnOrBefore({
+        currencyPair: `${benchmarkCurrency}${userCurrency}`,
+        date: resetHours(endDate),
+        exchangeRates
+      });
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
           ? exchangeRate / exchangeRateAtStartDate
           : 1;
 
-      marketData.push({
+      const endDateMarketData = {
         date: format(endDate, DATE_FORMAT),
         value:
           this.benchmarkService.calculateChangeInPercentage(
             marketPriceAtStartDate,
             currentSymbolItem.marketPrice * exchangeRateFactor
           ) * 100
-      });
+      };
+
+      if (endDateIndex >= 0) {
+        marketData[endDateIndex] = endDateMarketData;
+      } else {
+        marketData.push(endDateMarketData);
+      }
     }
 
     return {
       marketData
     };
+  }
+
+  private getExchangeRateOnOrBefore({
+    currencyPair,
+    date,
+    exchangeRates
+  }: {
+    currencyPair: string;
+    date: Date;
+    exchangeRates: Record<string, Record<string, number>>;
+  }) {
+    const ratesByDate = exchangeRates[currencyPair] ?? {};
+    const targetDateString = format(date, DATE_FORMAT);
+    let latestDate: string | undefined;
+    let latestRate: number | undefined;
+
+    for (const [dateString, rate] of Object.entries(ratesByDate)) {
+      if (
+        dateString <= targetDateString &&
+        (!latestDate || dateString > latestDate)
+      ) {
+        latestDate = dateString;
+        latestRate = rate;
+      }
+    }
+
+    return latestRate;
+  }
+
+  private getMarketPriceOnOrBefore({
+    marketDataItems,
+    targetDate
+  }: {
+    marketDataItems: MarketData[];
+    targetDate: Date;
+  }) {
+    let latestMarketPrice: number | undefined;
+
+    for (const { date, marketPrice } of marketDataItems) {
+      if (date <= targetDate) {
+        latestMarketPrice = marketPrice;
+      } else {
+        break;
+      }
+    }
+
+    return latestMarketPrice;
   }
 }

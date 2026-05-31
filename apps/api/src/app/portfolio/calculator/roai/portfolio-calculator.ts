@@ -1,6 +1,9 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import {
+  getFactor,
+  getLatestMarketPriceOnOrBefore
+} from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -243,8 +246,20 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);
 
-    const unitPriceAtStartDate = marketSymbolMap[startDateString]?.[symbol];
-    let unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
+    const unitPriceAtStartDate =
+      marketSymbolMap[startDateString]?.[symbol] ??
+      getLatestMarketPriceOnOrBefore({
+        dateString: startDateString,
+        marketSymbolMap,
+        symbol
+      });
+    let unitPriceAtEndDate =
+      marketSymbolMap[endDateString]?.[symbol] ??
+      getLatestMarketPriceOnOrBefore({
+        dateString: endDateString,
+        marketSymbolMap,
+        symbol
+      });
 
     let latestActivity = orders.at(-1);
 

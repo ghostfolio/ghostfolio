@@ -4,7 +4,10 @@ import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import {
+  getFactor,
+  getLatestMarketPriceOnOrBefore
+} from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -275,6 +278,21 @@ export abstract class PortfolioCalculator {
     }
 
     const endDateString = format(this.endDate, DATE_FORMAT);
+
+    for (const { symbol } of dataGatheringItems) {
+      if (!marketSymbolMap[endDateString]?.[symbol]) {
+        const latestMarketPrice = getLatestMarketPriceOnOrBefore({
+          dateString: endDateString,
+          marketSymbolMap,
+          symbol
+        });
+
+        if (latestMarketPrice) {
+          marketSymbolMap[endDateString] ??= {};
+          marketSymbolMap[endDateString][symbol] = latestMarketPrice;
+        }
+      }
+    }
 
     const daysInMarket = differenceInDays(this.endDate, this.startDate);
 

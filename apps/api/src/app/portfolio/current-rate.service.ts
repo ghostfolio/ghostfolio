@@ -123,58 +123,55 @@ export class CurrentRateService {
     };
 
     if (!isEmpty(quoteErrors)) {
+      const unresolvedErrors: ResponseError['errors'] = [];
+
       for (const { dataSource, symbol } of quoteErrors) {
         try {
-          // If missing quote, fallback to the latest available historical market price
-          let value: GetValueObject = response.values.find((currentValue) => {
-            return (
-              currentValue.dataSource === dataSource &&
-              currentValue.symbol === symbol &&
-              isToday(currentValue.date)
-            );
-          });
+          const latestHistoricalValue = response.values
+            .filter((currentValue) => {
+              return (
+                currentValue.dataSource === dataSource &&
+                isBefore(currentValue.date, today) &&
+                currentValue.marketPrice > 0 &&
+                currentValue.symbol === symbol
+              );
+            })
+            .sort((a, b) => b.date.getTime() - a.date.getTime())[0];
 
-          if (!value) {
-            // Fallback to unit price of latest activity
+          let marketPrice = latestHistoricalValue?.marketPrice ?? 0;
+
+          if (marketPrice <= 0) {
             const latestActivity =
               await this.activitiesService.getLatestActivity({
                 dataSource,
                 symbol
               });
 
-            value = {
+            marketPrice = latestActivity?.unitPrice ?? 0;
+          }
+
+          if (marketPrice > 0) {
+            response.values.push({
               dataSource,
               symbol,
               date: today,
-              marketPrice: latestActivity?.unitPrice ?? 0
-            };
-
-            response.values.push(value);
-          }
-
-          const [latestValue] = response.values
-            .filter((currentValue) => {
-              return (
-                currentValue.dataSource === dataSource &&
-                currentValue.marketPrice &&
-                currentValue.symbol === symbol
-              );
-            })
-            .sort((a, b) => {
-              if (a.date < b.date) {
-                return 1;
-              }
-
-              if (a.date > b.date) {
-                return -1;
-              }
-
-              return 0;
+              marketPrice
             });
-
-          value.marketPrice = latestValue.marketPrice;
-        } catch {}
+          } else {
+            unresolvedErrors.push({ dataSource, symbol });
+          }
+        } catch {
+          unresolvedErrors.push({ dataSource, symbol });
+        }
       }
+
+      response.errors = unresolvedErrors;
+      response.values = uniqBy(
+        response.values,
+        ({ dataSource, date, symbol }) => {
+          return `${date}-${getAssetProfileIdentifier({ dataSource, symbol })}`;
+        }
+      );
     }
 
     return response;
