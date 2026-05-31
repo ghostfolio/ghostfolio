@@ -1,5 +1,6 @@
 import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
+import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -23,7 +24,8 @@ import { AccountService } from './account.service';
     ImpersonationModule,
     PortfolioModule,
     PrismaModule,
-    RedactValuesInResponseModule
+    RedactValuesInResponseModule,
+    UserModule
   ],
   providers: [AccountService]
 })
