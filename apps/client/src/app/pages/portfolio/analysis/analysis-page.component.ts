@@ -27,6 +27,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -102,7 +103,9 @@ export class GfAnalysisPageComponent implements OnInit {
   protected user: User;
 
   private readonly actionsMenuButton = viewChild.required(MatMenuTrigger);
-  private deviceType: string;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   private firstOrderDate: Date;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -139,8 +142,6 @@ export class GfAnalysisPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -333,7 +334,7 @@ export class GfAnalysisPageComponent implements OnInit {
         }
 
         if (
-          this.deviceType === 'mobile' &&
+          this.deviceType() === 'mobile' &&
           this.performance.currentValueInBaseCurrency >=
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
