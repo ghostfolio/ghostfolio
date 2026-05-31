@@ -108,6 +108,8 @@ const europeMarkets = require('../../assets/countries/europe-markets.json');
 
 @Injectable()
 export class PortfolioService {
+  private readonly logger = new Logger(PortfolioService.name);
+
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
@@ -619,9 +621,8 @@ export class PortfolioService {
         symbolProfileMap[getAssetProfileIdentifier({ dataSource, symbol })];
 
       if (!assetProfile) {
-        Logger.warn(
-          `Asset profile not found for ${symbol} (${dataSource})`,
-          'PortfolioService'
+        this.logger.warn(
+          `Asset profile not found for ${symbol} (${dataSource})`
         );
 
         continue;

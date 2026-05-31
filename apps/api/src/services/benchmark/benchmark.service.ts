@@ -28,6 +28,8 @@ import { BenchmarkValue } from './interfaces/benchmark-value.interface';
 
 @Injectable()
 export class BenchmarkService {
+  private readonly logger = new Logger(BenchmarkService.name);
+
   private readonly CACHE_KEY_BENCHMARKS = 'BENCHMARKS';
 
   public constructor(
@@ -87,7 +89,7 @@ export class BenchmarkService {
         const { benchmarks, expiration }: BenchmarkValue =
           JSON.parse(cachedBenchmarkValue);
 
-        Logger.debug('Fetched benchmarks from cache', 'BenchmarkService');
+        this.logger.debug('Fetched benchmarks from cache');
 
         if (isAfter(new Date(), new Date(expiration))) {
           this.calculateAndCacheBenchmarks({
@@ -227,7 +229,7 @@ export class BenchmarkService {
   private async calculateAndCacheBenchmarks({
     enableSharing = false
   }): Promise<BenchmarkResponse['benchmarks']> {
-    Logger.debug('Calculate benchmarks', 'BenchmarkService');
+    this.logger.debug('Calculate benchmarks');
 
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles({
       enableSharing
