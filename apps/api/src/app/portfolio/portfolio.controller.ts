@@ -144,10 +144,10 @@ export class PortfolioController {
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .filter(({ assetClass, assetSubClass }) => {
+        .filter(({ assetProfile }) => {
           return (
-            assetClass !== AssetClass.LIQUIDITY &&
-            assetSubClass !== AssetSubClass.CASH
+            assetProfile.assetClass !== AssetClass.LIQUIDITY &&
+            assetProfile.assetSubClass !== AssetSubClass.CASH
           );
         })
         .map(({ valueInBaseCurrency }) => {
@@ -217,37 +217,41 @@ export class PortfolioController {
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       holdings[symbol] = {
         ...portfolioPosition,
-        assetClass:
-          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
-            ? portfolioPosition.assetClass
-            : undefined,
         assetProfile: {
           ...portfolioPosition.assetProfile,
+          assetClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClass
+              : undefined,
+          assetClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClassLabel
+              : undefined,
+          assetSubClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClass
+              : undefined,
+          assetSubClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClassLabel
+              : undefined,
           ...(hasDetails
             ? {}
             : {
-                assetClass: undefined,
-                assetClassLabel: undefined,
-                assetSubClass: undefined,
-                assetSubClassLabel: undefined,
                 countries: [],
                 currency: undefined,
                 holdings: [],
                 sectors: []
               })
         },
-        assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
-            ? portfolioPosition.assetSubClass
-            : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        holdings: hasDetails ? portfolioPosition.holdings : [],
         markets: hasDetails ? portfolioPosition.markets : undefined,
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
-          : undefined,
-        sectors: hasDetails ? portfolioPosition.sectors : []
+          : undefined
       };
     }
 
