@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added toggle to switch between open or closed top/bottom holdings in the analysis
 - Added support for routing selected requests through the _OpenRouter_ `web_fetch` tool in the `FetchService`
 
 ### Changed
