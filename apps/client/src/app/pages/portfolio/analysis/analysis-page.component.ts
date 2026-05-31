@@ -31,6 +31,7 @@ import {
   DestroyRef,
   inject,
   OnInit,
+  signal,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -86,7 +87,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingInvestmentChart: boolean;
   protected isLoadingInvestmentTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
-  protected mode: GroupBy = 'month';
+  protected readonly mode = signal<GroupBy>('month');
   protected readonly modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
@@ -136,7 +137,7 @@ export class GfAnalysisPageComponent implements OnInit {
       return undefined;
     }
 
-    return this.mode === 'year'
+    return this.mode() === 'year'
       ? savingsRatePerMonth * 12
       : savingsRatePerMonth;
   }
@@ -186,7 +187,7 @@ export class GfAnalysisPageComponent implements OnInit {
   }
 
   protected onChangeGroupBy(aMode: GroupBy) {
-    this.mode = aMode;
+    this.mode.set(aMode);
     this.fetchDividendsAndInvestments();
   }
 
@@ -238,7 +239,7 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchDividends({
         filters: this.userService.getFilters(),
-        groupBy: this.mode,
+        groupBy: this.mode(),
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -253,7 +254,7 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchInvestments({
         filters: this.userService.getFilters(),
-        groupBy: this.mode,
+        groupBy: this.mode(),
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -261,7 +262,7 @@ export class GfAnalysisPageComponent implements OnInit {
         this.investmentsByGroup = investments;
         this.streaks = streaks;
         this.unitCurrentStreak =
-          this.mode === 'year'
+          this.mode() === 'year'
             ? this.streaks?.currentStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
@@ -269,7 +270,7 @@ export class GfAnalysisPageComponent implements OnInit {
               ? translate('MONTH')
               : translate('MONTHS');
         this.unitLongestStreak =
-          this.mode === 'year'
+          this.mode() === 'year'
             ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
