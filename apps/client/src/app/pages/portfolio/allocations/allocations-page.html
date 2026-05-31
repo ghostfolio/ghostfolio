@@ -63,14 +63,23 @@
               <gf-premium-indicator class="ml-1" />
             }
           </mat-card-title>
+          @if (user?.settings?.isExperimentalFeatures) {
+            <gf-toggle
+              class="d-none d-lg-block"
+              [defaultValue]="currencyMode"
+              [isLoading]="false"
+              [options]="currencyModeOptions"
+              (valueChange)="onCurrencyModeChanged($event.value)"
+            />
+          }
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
-            [data]="holdings"
+            [data]="currencyHoldings"
             [isInPercentage]="showValuesInPercentage()"
-            [keys]="['currency']"
+            [keys]="['name']"
             [locale]="user?.settings?.locale"
           />
         </mat-card-content>
