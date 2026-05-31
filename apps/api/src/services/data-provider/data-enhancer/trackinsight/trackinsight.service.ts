@@ -13,7 +13,8 @@ import { countries } from 'countries-list';
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
-    'Russian Federation': 'Russia'
+    'Russian Federation': 'Russia',
+    USA: 'United States'
   };
   private static holdingsWeightTreshold = 0.85;
   private static sectorsMapping = {
