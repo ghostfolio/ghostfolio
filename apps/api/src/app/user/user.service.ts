@@ -49,7 +49,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { without } from 'lodash';
 import { createHmac } from 'node:crypto';
@@ -134,6 +134,11 @@ export class UserService {
         },
         where: { userId: impersonationUserId || user.id }
       }),
+      impersonationUserId
+        ? this.prismaService.settings.findUnique({
+            where: { userId: impersonationUserId }
+          })
+        : Promise.resolve<Settings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
@@ -141,9 +146,15 @@ export class UserService {
     const accounts = userData[1];
     const activitiesCount = userData[2];
     const firstActivity = userData[3];
-    let tags = userData[4].filter((tag) => {
+    const impersonationUserSettings = userData[4];
+
+    let tags = userData[5].filter((tag) => {
       return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
     });
+
+    const baseCurrency =
+      (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
+      (settings.settings as UserSettings)?.baseCurrency;
 
     let systemMessage: SystemMessage;
 
@@ -183,6 +194,7 @@ export class UserService {
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
+        baseCurrency,
         locale: (settings.settings as UserSettings)?.locale ?? locale
       }
     };

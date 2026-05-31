@@ -164,7 +164,7 @@ export class PortfolioService {
       };
     }
 
-    const [accounts, details] = await Promise.all([
+    const [accounts, details, user] = await Promise.all([
       this.accountService.accounts({
         where,
         include: {
@@ -178,10 +178,11 @@ export class PortfolioService {
         withExcludedAccounts,
         impersonationId: userId,
         userId: this.request.user.id
-      })
+      }),
+      this.userService.user({ id: userId })
     ]);
 
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
+    const userCurrency = this.getUserCurrency(user);
 
     return Promise.all(
       accounts.map(async (account) => {
