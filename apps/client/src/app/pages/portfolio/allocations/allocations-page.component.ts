@@ -348,8 +348,11 @@ export class GfAllocationsPageComponent implements OnInit {
         name: position.assetProfile.name
       };
 
-      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
-        // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
+      if (
+        position.assetProfile.assetClass !== AssetClass.LIQUIDITY &&
+        position.assetProfile.assetSubClass !== AssetClass.COMMODITY
+      ) {
+        // Prepare analysis data by continents, countries, holdings and sectors except for liquidity and commodity
 
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {

@@ -1453,7 +1453,10 @@ export class PortfolioService {
     for (const [, position] of Object.entries(holdings)) {
       const value = position.valueInBaseCurrency;
 
-      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
+      if (
+        position.assetProfile.assetClass !== AssetClass.LIQUIDITY &&
+        position.assetProfile.assetSubClass !== AssetClass.COMMODITY
+      ) {
         if (position.assetProfile.countries.length > 0) {
           markets.developedMarkets.valueInBaseCurrency +=
             position.markets.developedMarkets * value;

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+
+- Removed precious metals (Commodities) from the analysis data by continents, countries, sectors and markets.
+
 ### Added
 
 - Added an automatic refresh every 30 seconds to the users table in the admin control panel
