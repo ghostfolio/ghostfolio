@@ -109,7 +109,14 @@ export class UserService {
   }): Promise<IUser> {
     const { id, permissions, settings, subscription } = user;
 
-    const userData = await Promise.all([
+    const [
+      access,
+      accounts,
+      activitiesCount,
+      firstActivity,
+      impersonationUserSettings,
+      tagsForUser
+    ] = await Promise.all([
       this.prismaService.access.findMany({
         include: {
           user: true
@@ -142,16 +149,6 @@ export class UserService {
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const access = userData[0];
-    const accounts = userData[1];
-    const activitiesCount = userData[2];
-    const firstActivity = userData[3];
-    const impersonationUserSettings = userData[4];
-
-    let tags = userData[5].filter((tag) => {
-      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
-    });
-
     const baseCurrency =
       (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
       (settings.settings as UserSettings)?.baseCurrency;
@@ -166,6 +163,10 @@ export class UserService {
     if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
       systemMessage = systemMessageProperty;
     }
+
+    let tags = tagsForUser.filter((tag) => {
+      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    });
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
