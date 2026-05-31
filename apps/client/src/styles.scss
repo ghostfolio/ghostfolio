@@ -5,7 +5,7 @@
 @use './styles/table' as t;
 @use './styles/variables' as v;
 
-@import 'svgmap/style.min';
+@use 'svgmap/style.min';
 
 :root {
   --dark-background: rgb(25, 25, 25);
