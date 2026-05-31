@@ -1,7 +1,7 @@
 @use '@angular/material' as mat;
 
 @import './styles/bootstrap';
-@import './styles/table';
+@use './styles/table' as t;
 @import './styles/variables';
 
 @import 'svgmap/style.min';
@@ -240,7 +240,7 @@ body {
     }
 
     .gf-table {
-      @include gf-table(true);
+      @include t.gf-table(true);
     }
 
     .mat-mdc-dialog-container {
@@ -353,7 +353,7 @@ ngx-skeleton-loader {
 }
 
 .gf-table {
-  @include gf-table;
+  @include t.gf-table;
 }
 
 .gf-text-wrap-balance {
