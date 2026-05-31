@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the countries mapping in the data enhancer for asset profile data via _Trackinsight_
 - Removed the deprecated attributes (`assetClass`, `assetClassLabel`, `assetSubClass`, `assetSubClassLabel`, `countries`, `currency`, `dataSource`, `holdings`, `name`, `sectors`, `symbol` and `url`) from the holdings of the portfolio details endpoint response
 
+### Fixed
+
+- Resolved an issue in the impersonation mode where the values did not match the owner’s currency
+
 ## 3.6.0 - 2026-05-28
 
 ### Added
