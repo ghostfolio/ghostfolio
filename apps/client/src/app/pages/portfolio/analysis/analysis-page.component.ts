@@ -2,7 +2,10 @@ import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/be
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_DATE_RANGE,
+  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+} from '@ghostfolio/common/config';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -66,7 +69,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfAnalysisPageComponent implements OnInit {
   @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
 
-  public benchmark: Partial<SymbolProfile>;
+  public benchmark?: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: PortfolioPosition[];
@@ -122,6 +125,10 @@ export class GfAnalysisPageComponent implements OnInit {
       this.hasImpersonationId || this.user.settings.isRestrictedView
         ? undefined
         : this.user?.settings?.savingsRate;
+
+    if (savingsRatePerMonth === undefined) {
+      return undefined;
+    }
 
     return this.mode === 'year'
       ? savingsRatePerMonth * 12
@@ -228,7 +235,7 @@ export class GfAnalysisPageComponent implements OnInit {
       .fetchDividends({
         filters: this.userService.getFilters(),
         groupBy: this.mode,
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ dividends }) => {
@@ -243,7 +250,7 @@ export class GfAnalysisPageComponent implements OnInit {
       .fetchInvestments({
         filters: this.userService.getFilters(),
         groupBy: this.mode,
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ investments, streaks }) => {
@@ -278,7 +285,7 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         filters: this.userService.getFilters(),
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, firstOrderDate, performance }) => {
@@ -298,13 +305,16 @@ export class GfAnalysisPageComponent implements OnInit {
             valueInPercentage,
             valueWithCurrencyEffect
           }
-        ] of chart.entries()) {
+        ] of (chart ?? []).entries()) {
+          // Ignore first item where value is 0
           if (index > 0 || this.user?.settings?.dateRange === 'max') {
-            // Ignore first item where value is 0
-            this.investments.push({
-              date,
-              investment: totalInvestmentValueWithCurrencyEffect
-            });
+            if (totalInvestmentValueWithCurrencyEffect !== undefined) {
+              this.investments.push({
+                date,
+                investment: totalInvestmentValueWithCurrencyEffect
+              });
+            }
+
             this.performanceDataItems.push({
               date,
               value: isNumber(valueWithCurrencyEffect)
@@ -387,7 +397,7 @@ export class GfAnalysisPageComponent implements OnInit {
             dataSource,
             symbol,
             filters: this.userService.getFilters(),
-            range: this.user?.settings?.dateRange,
+            range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE,
             startDate: this.firstOrderDate
           })
           .pipe(takeUntilDestroyed(this.destroyRef))
