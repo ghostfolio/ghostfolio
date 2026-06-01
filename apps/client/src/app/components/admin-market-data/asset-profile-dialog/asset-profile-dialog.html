@@ -162,6 +162,16 @@
                     <ng-container i18n>Cancel</ng-container>
                   </button>
                 </form>
+                <p class="text-muted">or</p>
+                <button
+                  class="no-min-width px-2"
+                  color="accent"
+                  mat-flat-button
+                  type="submit"
+                  (click)="onConvertToManual()"
+                >
+                  <ng-container i18n>Convert to MANUAL</ng-container>
+                </button>
               </div>
             } @else {
               <div class="col-6 mb-3">

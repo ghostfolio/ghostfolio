@@ -599,10 +599,58 @@ export class AdminService {
           )
         ]);
 
+        // Apply field updates after renaming
+        const finalDataSource = DataSource[newDataSource.toString()];
+        const symbolProfileOverrides = {
+          assetClass: assetClass as AssetClass,
+          assetSubClass: assetSubClass as AssetSubClass,
+          countries: countries as Prisma.JsonArray,
+          name: name as string,
+          sectors: sectors as Prisma.JsonArray,
+          url: url as string
+        };
+
+        const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
+          comment,
+          currency,
+          holdings,
+          isActive,
+          scraperConfiguration,
+          symbolMapping,
+          ...(finalDataSource === 'MANUAL'
+            ? {
+                assetClass,
+                assetSubClass,
+                countries,
+                name,
+                sectors,
+                url,
+                SymbolProfileOverrides: {
+                  delete: true
+                }
+              }
+            : {
+                SymbolProfileOverrides: {
+                  upsert: {
+                    create: symbolProfileOverrides,
+                    update: symbolProfileOverrides
+                  }
+                }
+              })
+        };
+
+        await this.symbolProfileService.updateSymbolProfile(
+          {
+            dataSource: finalDataSource,
+            symbol: newSymbol as string
+          },
+          updatedSymbolProfile
+        );
+
         const [updatedAssetProfile] =
           await this.symbolProfileService.getSymbolProfiles([
             {
-              dataSource: DataSource[newDataSource.toString()],
+              dataSource: finalDataSource,
               symbol: newSymbol as string
             }
           ]);

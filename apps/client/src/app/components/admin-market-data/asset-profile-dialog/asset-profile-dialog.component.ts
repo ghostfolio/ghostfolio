@@ -73,6 +73,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
   AssetSubClass,
+  DataSource,
   MarketData,
   Prisma,
   SymbolProfile
@@ -698,6 +699,56 @@ export class GfAssetProfileDialogComponent implements OnInit {
         const newAssetProfileIdentifier = {
           dataSource: assetProfileIdentifier.dataSource,
           symbol: assetProfileIdentifier.symbol
+        };
+
+        this.dialogRef.close(newAssetProfileIdentifier);
+      });
+  }
+
+  protected onConvertToManual() {
+    const uuid = crypto.randomUUID();
+
+    this.adminService
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        {
+          assetClass:
+            this.assetProfileForm.controls.assetClass.value ?? undefined,
+          assetSubClass:
+            this.assetProfileForm.controls.assetSubClass.value ?? undefined,
+          countries: JSON.parse(
+            this.assetProfileForm.controls.countries.value ?? '[]'
+          ) as Prisma.InputJsonArray,
+          dataSource: 'MANUAL' as DataSource,
+          name: this.assetProfileForm.controls.name.value || undefined,
+          sectors: JSON.parse(
+            this.assetProfileForm.controls.sectors.value ?? '[]'
+          ) as Prisma.InputJsonArray,
+          symbol: uuid,
+          url: this.assetProfileForm.controls.url.value || undefined
+        }
+      )
+      .pipe(
+        catchError(() => {
+          this.snackBar.open(
+            $localize`An error occurred while converting to MANUAL.`,
+            undefined,
+            {
+              duration: ms('3 seconds')
+            }
+          );
+
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        const newAssetProfileIdentifier = {
+          dataSource: 'MANUAL',
+          symbol: uuid
         };
 
         this.dialogRef.close(newAssetProfileIdentifier);
