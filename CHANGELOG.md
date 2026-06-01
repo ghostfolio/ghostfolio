@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.7.0 - 2026-06-02
 
+### Changed
+
+- Improved the language localization for Ukrainian (`uk`)
+
+## Unreleased
+
 ### Added
 
 - Added support for routing selected requests through the _OpenRouter_ `web_fetch` tool in the `FetchService`
