@@ -1,4 +1,5 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -70,7 +71,8 @@ export class PortfolioController {
     private readonly configurationService: ConfigurationService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Get('details')
@@ -340,7 +342,10 @@ export class PortfolioController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
+    const userId = impersonationUserId || this.request.user.id;
+
+    const { settings } = await this.userService.user({ id: userId });
+    const userCurrency = settings.settings.baseCurrency;
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
@@ -349,7 +354,7 @@ export class PortfolioController {
       filters,
       startDate,
       userCurrency,
-      userId: impersonationUserId || this.request.user.id,
+      userId,
       types: ['DIVIDEND']
     });
 
