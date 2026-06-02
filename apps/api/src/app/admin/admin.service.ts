@@ -593,6 +593,7 @@ export class AdminService {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,
         countries: countries as Prisma.JsonArray,
+        holdings: holdings as Prisma.JsonArray,
         name: name as string,
         sectors: sectors as Prisma.JsonArray,
         url: url as string
