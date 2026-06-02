@@ -610,6 +610,20 @@ export class AdminService {
           url: url as string
         };
 
+        // Check if we need to delete SymbolProfileOverrides when converting to MANUAL
+        let deleteOverrides = false;
+        if (finalDataSource === 'MANUAL') {
+          const [renamedProfile] =
+            await this.symbolProfileService.getSymbolProfiles([
+              {
+                dataSource: finalDataSource,
+                symbol: newSymbol as string
+              }
+            ]);
+
+          deleteOverrides = !!renamedProfile?.SymbolProfileOverrides;
+        }
+
         const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
           comment,
           currency,
@@ -625,9 +639,11 @@ export class AdminService {
                 name,
                 sectors,
                 url,
-                SymbolProfileOverrides: {
-                  delete: true
-                }
+                ...(deleteOverrides && {
+                  SymbolProfileOverrides: {
+                    delete: true
+                  }
+                })
               }
             : {
                 SymbolProfileOverrides: {

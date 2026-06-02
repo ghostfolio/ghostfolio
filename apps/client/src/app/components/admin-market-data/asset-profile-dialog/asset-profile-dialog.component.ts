@@ -716,19 +716,19 @@ export class GfAssetProfileDialogComponent implements OnInit {
         },
         {
           assetClass:
-            this.assetProfileForm.controls.assetClass.value ?? undefined,
+            this.assetProfileForm.controls.assetClass?.value ?? undefined,
           assetSubClass:
-            this.assetProfileForm.controls.assetSubClass.value ?? undefined,
+            this.assetProfileForm.controls.assetSubClass?.value ?? undefined,
           countries: JSON.parse(
-            this.assetProfileForm.controls.countries.value ?? '[]'
+            this.assetProfileForm.controls.countries?.value ?? '[]'
           ) as Prisma.InputJsonArray,
           dataSource: 'MANUAL' as DataSource,
-          name: this.assetProfileForm.controls.name.value || undefined,
+          name: this.assetProfileForm.controls.name?.value || undefined,
           sectors: JSON.parse(
-            this.assetProfileForm.controls.sectors.value ?? '[]'
+            this.assetProfileForm.controls.sectors?.value ?? '[]'
           ) as Prisma.InputJsonArray,
           symbol: uuid,
-          url: this.assetProfileForm.controls.url.value || undefined
+          url: this.assetProfileForm.controls.url?.value || undefined
         }
       )
       .pipe(
