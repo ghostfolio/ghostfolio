@@ -613,13 +613,16 @@ export class AdminService {
         // Check if we need to delete SymbolProfileOverrides when converting to MANUAL
         let deleteOverrides = false;
         if (finalDataSource === 'MANUAL') {
-          const [renamedProfile] =
-            await this.symbolProfileService.getSymbolProfiles([
-              {
+          const renamedProfile =
+            await this.prismaService.symbolProfile.findFirst({
+              where: {
                 dataSource: finalDataSource,
                 symbol: newSymbol as string
+              },
+              select: {
+                SymbolProfileOverrides: true
               }
-            ]);
+            });
 
           deleteOverrides = !!renamedProfile?.SymbolProfileOverrides;
         }
