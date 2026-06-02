@@ -295,8 +295,25 @@
     </div>
   </div>
 
+  <div class="row align-items-center mb-4">
+    <div class="col-md-6 mb-3 mb-md-0">
+      <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
+        <span i18n>Top and Bottom Holdings</span>
+      </div>
+    </div>
+    <div class="col-md-6 d-flex justify-content-md-end">
+      <gf-toggle
+        class="d-none d-lg-block"
+        [defaultValue]="holdingType"
+        [isLoading]="false"
+        [options]="holdingTypeOptions"
+        (valueChange)="onChangeHoldingType($event.value)"
+      />
+    </div>
+  </div>
+
   <div class="mb-5 row">
-    <div class="col-md-6 mb-3">
+    <div class="col-md-6 mb-3 mb-md-0">
       <mat-card appearance="outlined" class="h-100">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n
@@ -347,7 +364,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-6 mb-3">
+    <div class="col-md-6">
       <mat-card appearance="outlined" class="h-100">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n

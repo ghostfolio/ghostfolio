@@ -13,7 +13,11 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
+import type {
+  AiPromptMode,
+  GroupBy,
+  HoldingType
+} from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
@@ -76,6 +80,11 @@ export class GfAnalysisPageComponent implements OnInit {
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public hasPermissionToReadAiPrompt: boolean;
+  public holdingType: HoldingType = 'ACTIVE';
+  public holdingTypeOptions: ToggleOption[] = [
+    { label: $localize`Open`, value: 'ACTIVE' },
+    { label: $localize`Closed`, value: 'CLOSED' }
+  ];
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
@@ -177,6 +186,11 @@ export class GfAnalysisPageComponent implements OnInit {
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
     this.fetchDividendsAndInvestments();
+  }
+
+  public onChangeHoldingType(aHoldingType: HoldingType) {
+    this.holdingType = aHoldingType;
+    this.updateTopAndBottomHoldings();
   }
 
   public onCopyPromptToClipboard(mode: AiPromptMode) {
@@ -334,37 +348,7 @@ export class GfAnalysisPageComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.dataService
-      .fetchPortfolioHoldings({
-        filters: this.userService.getFilters(),
-        range: this.user?.settings?.dateRange
-      })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ holdings }) => {
-        const holdingsSorted = sortBy(
-          holdings.filter(({ netPerformancePercentWithCurrencyEffect }) => {
-            return isNumber(netPerformancePercentWithCurrencyEffect);
-          }),
-          'netPerformancePercentWithCurrencyEffect'
-        ).reverse();
-
-        this.top3 = holdingsSorted
-          .filter(
-            ({ netPerformancePercentWithCurrencyEffect }) =>
-              netPerformancePercentWithCurrencyEffect > 0
-          )
-          .slice(0, 3);
-
-        this.bottom3 = holdingsSorted
-          .filter(
-            ({ netPerformancePercentWithCurrencyEffect }) =>
-              netPerformancePercentWithCurrencyEffect < 0
-          )
-          .slice(-3)
-          .reverse();
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.updateTopAndBottomHoldings();
 
     this.fetchDividendsAndInvestments();
     this.changeDetectorRef.markForCheck();
@@ -405,5 +389,48 @@ export class GfAnalysisPageComponent implements OnInit {
           });
       }
     }
+  }
+
+  private updateTopAndBottomHoldings() {
+    const filters = this.userService.getFilters();
+
+    if (this.holdingType === 'CLOSED') {
+      filters.push({ id: 'CLOSED', type: 'HOLDING_TYPE' });
+    }
+
+    this.top3 = undefined;
+    this.bottom3 = undefined;
+
+    this.dataService
+      .fetchPortfolioHoldings({
+        filters,
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ holdings }) => {
+        const holdingsSorted = sortBy(
+          holdings.filter(({ netPerformancePercentWithCurrencyEffect }) => {
+            return isNumber(netPerformancePercentWithCurrencyEffect);
+          }),
+          'netPerformancePercentWithCurrencyEffect'
+        ).reverse();
+
+        this.top3 = holdingsSorted
+          .filter(
+            ({ netPerformancePercentWithCurrencyEffect }) =>
+              netPerformancePercentWithCurrencyEffect > 0
+          )
+          .slice(0, 3);
+
+        this.bottom3 = holdingsSorted
+          .filter(
+            ({ netPerformancePercentWithCurrencyEffect }) =>
+              netPerformancePercentWithCurrencyEffect < 0
+          )
+          .slice(-3)
+          .reverse();
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }
