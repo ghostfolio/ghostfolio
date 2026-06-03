@@ -7,7 +7,8 @@ export const personalFinanceTools: Product[] = [
     key: 'allinvestview',
     languages: ['English'],
     name: 'AllInvestView',
-    slogan: 'All your Investments in One View'
+    slogan: 'All your Investments in One View',
+    url: 'https://www.allinvestview.com'
   },
   {
     founded: 2019,
@@ -16,14 +17,16 @@ export const personalFinanceTools: Product[] = [
     key: 'allvue-systems',
     name: 'Allvue Systems',
     origin: 'United States',
-    slogan: 'Investment Software Suite'
+    slogan: 'Investment Software Suite',
+    url: 'https://www.allvuesystems.com'
   },
   {
     founded: 2016,
     key: 'alphatrackr',
     languages: ['English'],
     name: 'AlphaTrackr',
-    slogan: 'Investment Portfolio Tracking Tool'
+    slogan: 'Investment Portfolio Tracking Tool',
+    url: 'https://www.alphatrackr.com'
   },
   {
     founded: 2017,
@@ -31,7 +34,8 @@ export const personalFinanceTools: Product[] = [
     key: 'altoo',
     name: 'Altoo Wealth Platform',
     origin: 'Switzerland',
-    slogan: 'Simplicity for Complex Wealth'
+    slogan: 'Simplicity for Complex Wealth',
+    url: 'https://altoo.io'
   },
   {
     founded: 2018,
@@ -40,7 +44,8 @@ export const personalFinanceTools: Product[] = [
     key: 'altruist',
     name: 'Altruist',
     origin: 'United States',
-    slogan: 'The wealth platform built for independent advisors'
+    slogan: 'The wealth platform built for independent advisors',
+    url: 'https://altruist.com'
   },
   {
     founded: 2023,
@@ -50,7 +55,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Amsflow Portfolio',
     origin: 'Singapore',
     pricingPerYear: '$228',
-    slogan: 'Portfolio Visualizer'
+    slogan: 'Portfolio Visualizer',
+    url: 'https://amsflow.com'
   },
   {
     founded: 2018,
@@ -61,7 +67,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Anlage.App',
     origin: 'Austria',
     pricingPerYear: '$120',
-    slogan: 'Analyze and track your portfolio.'
+    slogan: 'Analyze and track your portfolio.',
+    url: 'https://anlage.app'
   },
   {
     founded: 2022,
@@ -70,14 +77,16 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Asseta',
     origin: 'United States',
-    slogan: 'The Intelligent Family Office Suite'
+    slogan: 'The Intelligent Family Office Suite',
+    url: 'https://www.asseta.ai'
   },
   {
     founded: 2016,
     key: 'atominvest',
     name: 'Atominvest',
     origin: 'United Kingdom',
-    slogan: 'Portfolio Management'
+    slogan: 'Portfolio Management',
+    url: 'https://www.atominvest.co'
   },
   {
     founded: 2020,
@@ -87,7 +96,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Balance Pro',
     origin: 'United States',
     pricingPerYear: '$47.99',
-    slogan: 'The Smarter Way to Track Your Finances'
+    slogan: 'The Smarter Way to Track Your Finances',
+    url: 'https://www.balancepro.app'
   },
   {
     hasFreePlan: false,
@@ -96,7 +106,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Banktivity',
     origin: 'United States',
     pricingPerYear: '$59.99',
-    slogan: 'Proactive money management app for macOS & iOS'
+    slogan: 'Proactive money management app for macOS & iOS',
+    url: 'https://www.banktivity.com'
   },
   {
     founded: 2022,
@@ -104,7 +115,8 @@ export const personalFinanceTools: Product[] = [
     hasSelfHostingAbility: false,
     key: 'basil-finance',
     name: 'Basil Finance',
-    slogan: 'The ultimate solution for tracking and managing your investments'
+    slogan: 'The ultimate solution for tracking and managing your investments',
+    url: 'https://basil.fi'
   },
   {
     founded: 2020,
@@ -114,7 +126,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Beanvest',
     origin: 'France',
     pricingPerYear: '$100',
-    slogan: 'Stock Portfolio Tracker for Smart Investors'
+    slogan: 'Stock Portfolio Tracker for Smart Investors',
+    url: 'https://beanvest.com'
   },
   {
     founded: 2024,
@@ -123,7 +136,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English', 'Français', 'Italiano'],
     name: 'BlueBudget',
     origin: 'Switzerland',
-    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung'
+    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung',
+    url: 'https://www.bluebudget.ch'
   },
   {
     founded: 2015,
@@ -134,13 +148,15 @@ export const personalFinanceTools: Product[] = [
     note: 'Originally named as NewRetirement',
     origin: 'United States',
     pricingPerYear: '$144',
-    slogan: 'Take control with retirement planning tools that begin with you'
+    slogan: 'Take control with retirement planning tools that begin with you',
+    url: 'https://www.boldin.com'
   },
   {
     key: 'budgetpulse',
     name: 'BudgetPulse',
     origin: 'United States',
-    slogan: 'Giving life to your finance!'
+    slogan: 'Giving life to your finance!',
+    url: 'https://www.budgetpulse.com'
   },
   {
     founded: 2007,
@@ -151,7 +167,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$48',
     regions: ['Global'],
-    slogan: 'Take control of your financial future'
+    slogan: 'Take control of your financial future',
+    url: 'https://www.buxfer.com'
   },
   {
     hasFreePlan: true,
@@ -160,7 +177,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Capitally',
     origin: 'Poland',
     pricingPerYear: '€80',
-    slogan: 'Optimize your investments performance'
+    slogan: 'Optimize your investments performance',
+    url: 'https://www.mycapitally.com'
   },
   {
     founded: 2022,
@@ -185,7 +203,8 @@ export const personalFinanceTools: Product[] = [
     key: 'cobalt',
     name: 'Cobalt',
     origin: 'United States',
-    slogan: 'Next-Level Portfolio Monitoring'
+    slogan: 'Next-Level Portfolio Monitoring',
+    url: 'https://www.cobalt.pe'
   },
   {
     founded: 2017,
@@ -195,7 +214,8 @@ export const personalFinanceTools: Product[] = [
     name: 'CoinStats',
     origin: 'Armenia',
     pricingPerYear: '$168',
-    slogan: 'Manage All Your Wallets & Exchanges From One Place'
+    slogan: 'Manage All Your Wallets & Exchanges From One Place',
+    url: 'https://coinstats.app'
   },
   {
     founded: 2013,
@@ -206,14 +226,16 @@ export const personalFinanceTools: Product[] = [
     name: 'CoinTracking',
     origin: 'Germany',
     pricingPerYear: '$120',
-    slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator'
+    slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator',
+    url: 'https://cointracking.info'
   },
   {
     founded: 2019,
     key: 'compound-planning',
     name: 'Compound Planning',
     origin: 'United States',
-    slogan: 'Modern Wealth & Investment Management'
+    slogan: 'Modern Wealth & Investment Management',
+    url: 'https://compoundplanning.com'
   },
   {
     founded: 2019,
@@ -223,7 +245,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Copilot Money',
     origin: 'United States',
     pricingPerYear: '$95',
-    slogan: 'Do money better with Copilot'
+    slogan: 'Do money better with Copilot',
+    url: 'https://www.copilot.money'
   },
   {
     founded: 2014,
@@ -232,7 +255,8 @@ export const personalFinanceTools: Product[] = [
     name: 'CountAbout',
     origin: 'United States',
     pricingPerYear: '$9.99',
-    slogan: 'Customizable and Secure Personal Finance App'
+    slogan: 'Customizable and Secure Personal Finance App',
+    url: 'https://countabout.com'
   },
   {
     founded: 2023,
@@ -240,14 +264,16 @@ export const personalFinanceTools: Product[] = [
     key: 'danti',
     name: 'Danti',
     origin: 'United Kingdom',
-    slogan: 'Digitising Generational Wealth'
+    slogan: 'Digitising Generational Wealth',
+    url: 'https://danti.io'
   },
   {
     founded: 2020,
     key: 'de.fi',
     languages: ['English'],
     name: 'De.Fi',
-    slogan: 'DeFi Portfolio Tracker'
+    slogan: 'DeFi Portfolio Tracker',
+    url: 'https://de.fi'
   },
   {
     founded: 2016,
@@ -258,7 +284,8 @@ export const personalFinanceTools: Product[] = [
     name: 'DeFi Portfolio Tracker by Zerion',
     origin: 'United States',
     pricingPerYear: '$99',
-    slogan: 'DeFi Portfolio Tracker for All Chains'
+    slogan: 'DeFi Portfolio Tracker for All Chains',
+    url: 'https://zerion.io/defi-portfolio-tracker'
   },
   {
     founded: 2022,
@@ -269,7 +296,8 @@ export const personalFinanceTools: Product[] = [
     name: 'DEGIRO Portfolio Tracker by Capitalyse',
     origin: 'Netherlands',
     pricingPerYear: '€24',
-    slogan: 'Democratizing Data Analytics'
+    slogan: 'Democratizing Data Analytics',
+    url: 'https://capitalyse.app/app/degiro'
   },
   {
     founded: 2017,
@@ -280,7 +308,8 @@ export const personalFinanceTools: Product[] = [
     note: 'Acquired by eToro',
     origin: 'Belgium',
     pricingPerYear: '$150',
-    slogan: 'The app to track all your investments. Make smart moves only.'
+    slogan: 'The app to track all your investments. Make smart moves only.',
+    url: 'https://delta.app'
   },
   {
     hasFreePlan: true,
@@ -289,7 +318,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Digrin',
     pricingPerYear: '$49.90',
-    slogan: 'Dividend Portfolio Tracker'
+    slogan: 'Dividend Portfolio Tracker',
+    url: 'https://www.digrin.com'
   },
   {
     founded: 2019,
@@ -300,7 +330,8 @@ export const personalFinanceTools: Product[] = [
     name: 'DivvyDiary',
     origin: 'Germany',
     pricingPerYear: '€65',
-    slogan: 'Your personal Dividend Calendar'
+    slogan: 'Your personal Dividend Calendar',
+    url: 'https://divvydiary.com'
   },
   {
     founded: 2009,
@@ -309,7 +340,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Empower',
     note: 'Originally named as Personal Capital',
     origin: 'United States',
-    slogan: 'Get answers to your money questions'
+    slogan: 'Get answers to your money questions',
+    url: 'https://www.empower.com'
   },
   {
     alias: '8figures',
@@ -317,7 +349,8 @@ export const personalFinanceTools: Product[] = [
     key: 'eightfigures',
     name: '8FIGURES',
     origin: 'United States',
-    slogan: 'Portfolio Tracker Designed by Professional Investors'
+    slogan: 'Portfolio Tracker Designed by Professional Investors',
+    url: 'https://8figures.com'
   },
   {
     founded: 2010,
@@ -325,7 +358,8 @@ export const personalFinanceTools: Product[] = [
     key: 'etops',
     name: 'etops',
     origin: 'Switzerland',
-    slogan: 'Your financial superpower'
+    slogan: 'Your financial superpower',
+    url: 'https://www.etops.com'
   },
   {
     founded: 2020,
@@ -335,7 +369,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Exirio',
     origin: 'United States',
     pricingPerYear: '$100',
-    slogan: 'All your wealth, in one place.'
+    slogan: 'All your wealth, in one place.',
+    url: 'https://www.exirio.com'
   },
   {
     founded: 2018,
@@ -345,7 +380,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Fey',
     origin: 'Canada',
     pricingPerYear: '$300',
-    slogan: 'Make better investments.'
+    slogan: 'Make better investments.',
+    url: 'https://fey.com'
   },
   {
     founded: 2023,
@@ -356,7 +392,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Fina',
     origin: 'United States',
     pricingPerYear: '$115',
-    slogan: 'Flexible Financial Management'
+    slogan: 'Flexible Financial Management',
+    url: 'https://www.fina.money'
   },
   {
     founded: 2023,
@@ -366,7 +403,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Finanzfluss Copilot',
     origin: 'Germany',
     pricingPerYear: '€69.99',
-    slogan: 'Portfolio Tracker für dein Vermögen'
+    slogan: 'Portfolio Tracker für dein Vermögen',
+    url: 'https://www.finanzfluss.de/copilot'
   },
   {
     founded: 2020,
@@ -374,7 +412,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English', 'Français'],
     name: 'Finary',
     origin: 'United States',
-    slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+    slogan: 'Real-Time Portfolio Tracker & Stock Tracker',
+    url: 'https://finary.com'
   },
   {
     founded: 2021,
@@ -385,14 +424,16 @@ export const personalFinanceTools: Product[] = [
     name: 'FINATEKA',
     origin: 'United States',
     slogan:
-      'The most convenient mobile application for personal finance accounting'
+      'The most convenient mobile application for personal finance accounting',
+    url: 'https://finateka.com'
   },
   {
     founded: 2022,
     key: 'fincake',
     name: 'Fincake',
     origin: 'British Virgin Islands',
-    slogan: 'Easy-to-use Portfolio Tracker'
+    slogan: 'Easy-to-use Portfolio Tracker',
+    url: 'https://fincake.io'
   },
   {
     founded: 2021,
@@ -400,7 +441,8 @@ export const personalFinanceTools: Product[] = [
     key: 'finvest',
     name: 'Finvest',
     origin: 'United States',
-    slogan: 'Grow your wealth in a stress-free way'
+    slogan: 'Grow your wealth in a stress-free way',
+    url: 'https://www.getfinvest.com'
   },
   {
     founded: 2023,
@@ -409,7 +451,8 @@ export const personalFinanceTools: Product[] = [
     name: 'FinWise',
     origin: 'South Africa',
     pricingPerYear: '€69.99',
-    slogan: 'Personal finances, simplified'
+    slogan: 'Personal finances, simplified',
+    url: 'https://finwiseapp.io'
   },
   {
     founded: 2021,
@@ -420,7 +463,8 @@ export const personalFinanceTools: Product[] = [
     name: 'FIREkit',
     origin: 'Ukraine',
     pricingPerYear: '$40',
-    slogan: 'A simple solution to track your wealth online'
+    slogan: 'A simple solution to track your wealth online',
+    url: 'https://firekit.space'
   },
   {
     hasFreePlan: true,
@@ -430,7 +474,8 @@ export const personalFinanceTools: Product[] = [
     name: 'folishare',
     origin: 'Austria',
     pricingPerYear: '$65',
-    slogan: 'Take control over your investments'
+    slogan: 'Take control over your investments',
+    url: 'https://www.folishare.com'
   },
   {
     hasFreePlan: true,
@@ -448,7 +493,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'Argentina',
     pricingPerYear: '$60',
     regions: ['Global'],
-    slogan: 'Take control of your finances from WhatsApp'
+    slogan: 'Take control of your finances from WhatsApp',
+    url: 'https://gasti.pro'
   },
   {
     founded: 2020,
@@ -459,7 +505,8 @@ export const personalFinanceTools: Product[] = [
     name: 'getquin',
     origin: 'Germany',
     pricingPerYear: '€48',
-    slogan: 'Portfolio Tracker, Analysis & Community'
+    slogan: 'Portfolio Tracker, Analysis & Community',
+    url: 'https://www.getquin.com'
   },
   {
     hasFreePlan: true,
@@ -479,6 +526,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Holistic',
     origin: 'Germany',
     slogan: 'Die All-in-One Lösung für dein Vermögen.',
+    url: 'https://holistic.capital',
     useAnonymously: true
   },
   {
@@ -487,7 +535,8 @@ export const personalFinanceTools: Product[] = [
     key: 'honeydue',
     name: 'Honeydue',
     origin: 'United States',
-    slogan: 'Finance App for Couples'
+    slogan: 'Finance App for Couples',
+    url: 'https://www.honeydue.com'
   },
   {
     founded: 2022,
@@ -515,7 +564,8 @@ export const personalFinanceTools: Product[] = [
     key: 'investify',
     name: 'Investify',
     origin: 'Pakistan',
-    slogan: 'Advanced portfolio tracking and stock market information'
+    slogan: 'Advanced portfolio tracking and stock market information',
+    url: 'https://www.investify.pk'
   },
   {
     founded: 2021,
@@ -527,6 +577,7 @@ export const personalFinanceTools: Product[] = [
     origin: 'Switzerland',
     pricingPerYear: '$156',
     slogan: 'Track all your assets, investments and portfolios in one place',
+    url: 'https://invmon.com',
     useAnonymously: true
   },
   {
@@ -537,7 +588,8 @@ export const personalFinanceTools: Product[] = [
     name: 'justETF',
     origin: 'Germany',
     pricingPerYear: '€119',
-    slogan: 'ETF portfolios made simple'
+    slogan: 'ETF portfolios made simple',
+    url: 'https://www.justetf.com'
   },
   {
     founded: 2018,
@@ -546,7 +598,8 @@ export const personalFinanceTools: Product[] = [
     key: 'koinly',
     name: 'Koinly',
     origin: 'Singapore',
-    slogan: 'Track all your crypto wallets in one place'
+    slogan: 'Track all your crypto wallets in one place',
+    url: 'https://koinly.io'
   },
   {
     founded: 2016,
@@ -556,7 +609,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Koyfin',
     origin: 'United States',
     pricingPerYear: '$468',
-    slogan: 'Comprehensive financial data analysis'
+    slogan: 'Comprehensive financial data analysis',
+    url: 'https://www.koyfin.com'
   },
   {
     founded: 2019,
@@ -566,7 +620,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Kubera®',
     origin: 'United States',
     pricingPerYear: '$249',
-    slogan: 'The Time Machine for your Net Worth'
+    slogan: 'The Time Machine for your Net Worth',
+    url: 'https://www.kubera.com'
   },
   {
     founded: 2021,
@@ -575,7 +630,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English'],
     name: 'Leafs',
     origin: 'Switzerland',
-    slogan: 'Sustainability insights for wealth managers'
+    slogan: 'Sustainability insights for wealth managers',
+    url: 'https://leafs.ch'
   },
   {
     founded: 2018,
@@ -585,7 +641,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Magnifi',
     origin: 'United States',
     pricingPerYear: '$132',
-    slogan: 'AI Investing Assistant'
+    slogan: 'AI Investing Assistant',
+    url: 'https://magnifi.com'
   },
   {
     founded: 2022,
@@ -597,14 +654,16 @@ export const personalFinanceTools: Product[] = [
     origin: 'Germany',
     pricingPerYear: '€168',
     regions: ['Global'],
-    slogan: 'Track your investments'
+    slogan: 'Track your investments',
+    url: 'https://markets.sh'
   },
   {
     founded: 2010,
     key: 'masttro',
     name: 'Masttro',
     origin: 'United States',
-    slogan: 'Your platform for wealth in full view'
+    slogan: 'Your platform for wealth in full view',
+    url: 'https://masttro.com'
   },
   {
     founded: 2021,
@@ -619,7 +678,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$145',
     regions: ['United States'],
-    slogan: 'Your financial future, in your control'
+    slogan: 'Your financial future, in your control',
+    url: 'https://github.com/maybe-finance/maybe'
   },
   {
     hasFreePlan: false,
@@ -630,7 +690,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$204',
     regions: ['Canada', 'United States'],
-    slogan: 'The smartest way to track your crypto'
+    slogan: 'The smartest way to track your crypto',
+    url: 'https://www.merlincrypto.com'
   },
   {
     founded: 1991,
@@ -649,7 +710,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Monarch Money',
     origin: 'United States',
     pricingPerYear: '$99.99',
-    slogan: 'The modern way to manage your money'
+    slogan: 'The modern way to manage your money',
+    url: 'https://www.monarch.com'
   },
   {
     founded: 1999,
@@ -659,7 +721,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Moneydance',
     origin: 'Scotland',
     pricingPerYear: '$100',
-    slogan: 'Personal Finance Manager for Mac, Windows, and Linux'
+    slogan: 'Personal Finance Manager for Mac, Windows, and Linux',
+    url: 'https://moneydance.com'
   },
   {
     hasFreePlan: true,
@@ -668,7 +731,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Money Peak',
     note: 'Originally named as goSPATZ',
     origin: 'Germany',
-    slogan: 'Dein smarter Finance Assistant'
+    slogan: 'Dein smarter Finance Assistant',
+    url: 'https://moneypeak.ai'
   },
   {
     founded: 2007,
@@ -677,14 +741,16 @@ export const personalFinanceTools: Product[] = [
     note: 'License is a perpetual license',
     origin: 'United States',
     pricingPerYear: '$59.99',
-    slogan: 'Have total control of your financial life'
+    slogan: 'Have total control of your financial life',
+    url: 'https://www.moneyspire.com'
   },
   {
     key: 'moneywiz',
     name: 'MoneyWiz',
     origin: 'United States',
     pricingPerYear: '$29.99',
-    slogan: 'Get money management superpowers'
+    slogan: 'Get money management superpowers',
+    url: 'https://www.wiz.money'
   },
   {
     hasFreePlan: false,
@@ -692,7 +758,8 @@ export const personalFinanceTools: Product[] = [
     key: 'monse',
     name: 'Monse',
     pricingPerYear: '$60',
-    slogan: 'Gain financial control and keep your data private.'
+    slogan: 'Gain financial control and keep your data private.',
+    url: 'https://monse.app'
   },
   {
     founded: 2025,
@@ -703,7 +770,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Monsy',
     origin: 'Indonesia',
     pricingPerYear: '$20',
-    slogan: 'Smart, simple, stress-free money tracking.'
+    slogan: 'Smart, simple, stress-free money tracking.',
+    url: 'https://www.monsy.app'
   },
   {
     hasFreePlan: true,
@@ -713,7 +781,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Morningstar® Portfolio Manager',
     origin: 'United States',
     slogan:
-      'Track your equity, fund, investment trust, ETF and pension investments in one place.'
+      'Track your equity, fund, investment trust, ETF and pension investments in one place.',
+    url: 'https://www.morningstar.com/mm'
   },
   {
     founded: 2020,
@@ -723,7 +792,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Crypto Portfolio Tracker by Nansen',
     origin: 'Singapore',
     pricingPerYear: '$1188',
-    slogan: 'Your Complete Crypto Portfolio, Reimagined'
+    slogan: 'Your Complete Crypto Portfolio, Reimagined',
+    url: 'https://www.nansen.ai/crypto-portfolio-tracker'
   },
   {
     founded: 2017,
@@ -733,7 +803,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Navexa',
     origin: 'Australia',
     pricingPerYear: '$90',
-    slogan: 'The Intelligent Portfolio Tracker'
+    slogan: 'The Intelligent Portfolio Tracker',
+    url: 'https://www.navexa.com'
   },
   {
     founded: 2020,
@@ -745,21 +816,24 @@ export const personalFinanceTools: Product[] = [
     origin: 'Germany',
     pricingPerYear: '€99.99',
     regions: ['Austria', 'Germany', 'Switzerland'],
-    slogan: 'Dein Vermögen immer im Blick'
+    slogan: 'Dein Vermögen immer im Blick',
+    url: 'https://www.parqet.com'
   },
   {
     hasSelfHostingAbility: false,
     key: 'peek',
     name: 'Peek',
     origin: 'Singapore',
-    slogan: 'Feel in control of your money without spreadsheets or shame'
+    slogan: 'Feel in control of your money without spreadsheets or shame',
+    url: 'https://peek.money'
   },
   {
     key: 'pennies',
     name: 'Pennies',
     origin: 'United States',
     pricingPerYear: '$39.99',
-    slogan: 'Your money. Made simple.'
+    slogan: 'Your money. Made simple.',
+    url: 'https://www.getpennies.com'
   },
   {
     founded: 2022,
@@ -769,7 +843,8 @@ export const personalFinanceTools: Product[] = [
     name: 'PinkLion',
     origin: 'Germany',
     pricingPerYear: '€50',
-    slogan: 'Invest smarter, not harder'
+    slogan: 'Invest smarter, not harder',
+    url: 'https://pinklion.xyz'
   },
   {
     founded: 2023,
@@ -780,7 +855,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Plainzer',
     origin: 'Poland',
     pricingPerYear: '$74',
-    slogan: 'Free dividend tracker for your portfolio'
+    slogan: 'Free dividend tracker for your portfolio',
+    url: 'https://plainzer.com'
   },
   {
     founded: 2023,
@@ -788,7 +864,8 @@ export const personalFinanceTools: Product[] = [
     key: 'plannix',
     name: 'Plannix',
     origin: 'Italy',
-    slogan: 'Your Personal Finance Hub'
+    slogan: 'Your Personal Finance Hub',
+    url: 'https://www.plannix.co'
   },
   {
     founded: 2015,
@@ -798,7 +875,8 @@ export const personalFinanceTools: Product[] = [
     name: 'PocketGuard',
     origin: 'United States',
     pricingPerYear: '$74.99',
-    slogan: 'Budgeting App & Finance Planner'
+    slogan: 'Budgeting App & Finance Planner',
+    url: 'https://pocketguard.com'
   },
   {
     founded: 2008,
@@ -810,7 +888,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'New Zealand',
     pricingPerYear: '$120',
     regions: ['Global'],
-    slogan: 'Know where your money is going'
+    slogan: 'Know where your money is going',
+    url: 'https://www.pocketsmith.com'
   },
   {
     hasFreePlan: false,
@@ -820,7 +899,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Portfolio Dividend Tracker',
     origin: 'Netherlands',
     pricingPerYear: '€60',
-    slogan: 'Manage all your portfolios'
+    slogan: 'Manage all your portfolios',
+    url: 'https://portfoliodividendtracker.com'
   },
   {
     hasFreePlan: true,
@@ -829,7 +909,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Portfolio Visualizer',
     pricingPerYear: '$360',
-    slogan: 'Tools for Better Investors'
+    slogan: 'Tools for Better Investors',
+    url: 'https://www.portfoliovisualizer.com'
   },
   {
     hasFreePlan: true,
@@ -849,7 +930,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Portseido',
     origin: 'Thailand',
     pricingPerYear: '$96',
-    slogan: 'Portfolio Performance and Dividend Tracker'
+    slogan: 'Portfolio Performance and Dividend Tracker',
+    url: 'https://www.portseido.com'
   },
   {
     founded: 2021,
@@ -859,7 +941,8 @@ export const personalFinanceTools: Product[] = [
     name: 'ProjectionLab',
     origin: 'United States',
     pricingPerYear: '$108',
-    slogan: 'Build Financial Plans You Love.'
+    slogan: 'Build Financial Plans You Love.',
+    url: 'https://projectionlab.com'
   },
   {
     founded: 2022,
@@ -869,7 +952,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Pro Stock Tracker',
     origin: 'United Kingdom',
     pricingPerYear: '$60',
-    slogan: 'The stock portfolio tracker built for long-term investors'
+    slogan: 'The stock portfolio tracker built for long-term investors',
+    url: 'https://prostocktracker.com'
   },
   {
     founded: 2015,
@@ -877,7 +961,8 @@ export const personalFinanceTools: Product[] = [
     key: 'rocket-money',
     name: 'Rocket Money',
     origin: 'United States',
-    slogan: 'Track your net worth'
+    slogan: 'Track your net worth',
+    url: 'https://www.rocketmoney.com'
   },
   {
     founded: 2019,
@@ -897,14 +982,16 @@ export const personalFinanceTools: Product[] = [
     name: 'Seeking Alpha',
     origin: 'United States',
     pricingPerYear: '$239',
-    slogan: 'Stock Market Analysis & Tools for Investors'
+    slogan: 'Stock Market Analysis & Tools for Investors',
+    url: 'https://seekingalpha.com'
   },
   {
     founded: 2022,
     key: 'segmio',
     name: 'Segmio',
     origin: 'Romania',
-    slogan: 'Wealth Management and Net Worth Tracking'
+    slogan: 'Wealth Management and Net Worth Tracking',
+    url: 'https://www.segmio.com'
   },
   {
     founded: 2007,
@@ -915,7 +1002,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'New Zealand',
     pricingPerYear: '$135',
     regions: ['Global'],
-    slogan: 'Stock Portfolio Tracker'
+    slogan: 'Stock Portfolio Tracker',
+    url: 'https://www.sharesight.com'
   },
   {
     hasFreePlan: true,
@@ -932,7 +1020,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Simple Portfolio',
     origin: 'Czech Republic',
     pricingPerYear: '€80',
-    slogan: 'Stock Portfolio Tracker'
+    slogan: 'Stock Portfolio Tracker',
+    url: 'https://simpleportfolio.app'
   },
   {
     founded: 2014,
@@ -942,7 +1031,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Stock Portfolio Tracker & Visualizer by Simply Wall St',
     origin: 'Australia',
     pricingPerYear: '$120',
-    slogan: 'Smart portfolio tracker for informed investors'
+    slogan: 'Smart portfolio tracker for informed investors',
+    url: 'https://simplywall.st'
   },
   {
     founded: 2021,
@@ -952,7 +1042,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Snowball Analytics',
     origin: 'France',
     pricingPerYear: '$80',
-    slogan: 'Simple and powerful portfolio tracker'
+    slogan: 'Simple and powerful portfolio tracker',
+    url: 'https://snowball-analytics.com'
   },
   {
     key: 'splashmoney',
@@ -966,13 +1057,15 @@ export const personalFinanceTools: Product[] = [
     key: 'stock-events',
     name: 'Stock Events',
     origin: 'Germany',
-    slogan: 'Track all your Investments'
+    slogan: 'Track all your Investments',
+    url: 'https://stockevents.app'
   },
   {
     key: 'stockle',
     name: 'Stockle',
     origin: 'Finland',
-    slogan: 'Supercharge your investments tracking experience'
+    slogan: 'Supercharge your investments tracking experience',
+    url: 'https://stockle.app'
   },
   {
     founded: 2008,
@@ -991,7 +1084,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Stock Rover',
     origin: 'United States',
     pricingPerYear: '$79.99',
-    slogan: 'Investment Research and Portfolio Management'
+    slogan: 'Investment Research and Portfolio Management',
+    url: 'https://www.stockrover.com'
   },
   {
     hasFreePlan: true,
@@ -1001,7 +1095,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Stonksfolio',
     origin: 'Bulgaria',
     pricingPerYear: '€49.90',
-    slogan: 'Visualize all of your portfolios'
+    slogan: 'Visualize all of your portfolios',
+    url: 'https://stonksfolio.com'
   },
   {
     hasFreePlan: true,
@@ -1010,7 +1105,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Sumio',
     origin: 'Czech Republic',
     pricingPerYear: '$20',
-    slogan: 'Sum up and build your wealth.'
+    slogan: 'Sum up and build your wealth.',
+    url: 'https://www.sumio.app'
   },
   {
     founded: 2016,
@@ -1020,7 +1116,8 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$79',
     slogan:
-      'Your financial life in a spreadsheet, automatically updated each day'
+      'Your financial life in a spreadsheet, automatically updated each day',
+    url: 'https://tiller.com'
   },
   {
     founded: 2011,
@@ -1030,7 +1127,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Tradervue',
     origin: 'United States',
     pricingPerYear: '$360',
-    slogan: 'The Trading Journal to Improve Your Trading Performance'
+    slogan: 'The Trading Journal to Improve Your Trading Performance',
+    url: 'https://www.tradervue.com'
   },
   {
     founded: 2020,
@@ -1052,7 +1150,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Turbobulls',
     origin: 'Romania',
     pricingPerYear: '€39.99',
-    slogan: 'Your complete financial dashboard. Actually private.'
+    slogan: 'Your complete financial dashboard. Actually private.',
+    url: 'https://www.turbobulls.com'
   },
   {
     hasFreePlan: true,
@@ -1063,6 +1162,7 @@ export const personalFinanceTools: Product[] = [
     origin: 'Switzerland',
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
+    url: 'https://www.utluna.com',
     useAnonymously: true
   },
   {
@@ -1072,7 +1172,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Vyzer',
     origin: 'United States',
     pricingPerYear: '$348',
-    slogan: 'Virtual Family Office for Smart Wealth Management'
+    slogan: 'Virtual Family Office for Smart Wealth Management',
+    url: 'https://vyzer.co'
   },
   {
     founded: 2020,
@@ -1082,7 +1183,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Walletguide',
     origin: 'Germany',
     pricingPerYear: '€90',
-    slogan: 'Personal finance reimagined with AI'
+    slogan: 'Personal finance reimagined with AI',
+    url: 'https://walletguide.com'
   },
   {
     hasSelfHostingAbility: false,
@@ -1102,7 +1204,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Wealthbrain',
     origin: 'United Arab Emirates',
-    slogan: 'Portfolio Management System'
+    slogan: 'Portfolio Management System',
+    url: 'https://wealthbrain.com'
   },
   {
     founded: 2024,
@@ -1113,7 +1216,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Wealthfolio',
     origin: 'Canada',
-    slogan: 'Desktop Investment Tracker'
+    slogan: 'Desktop Investment Tracker',
+    url: 'https://wealthfolio.app'
   },
   {
     founded: 2015,
@@ -1124,7 +1228,8 @@ export const personalFinanceTools: Product[] = [
     name: 'Wealthica',
     origin: 'Canada',
     pricingPerYear: '$50',
-    slogan: 'See all your investments in one place'
+    slogan: 'See all your investments in one place',
+    url: 'https://wealthica.com'
   },
   {
     founded: 2018,
@@ -1132,7 +1237,8 @@ export const personalFinanceTools: Product[] = [
     key: 'wealthposition',
     name: 'WealthPosition',
     pricingPerYear: '$60',
-    slogan: 'Personal Finance & Budgeting App'
+    slogan: 'Personal Finance & Budgeting App',
+    url: 'https://www.wealthposition.com'
   },
   {
     founded: 2018,
@@ -1141,7 +1247,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Wealthy Tracker',
     origin: 'India',
-    slogan: 'One app to manage all your investments'
+    slogan: 'One app to manage all your investments',
+    url: 'https://www.wealthy.in/tracker'
   },
   {
     key: 'whal',
@@ -1170,7 +1277,8 @@ export const personalFinanceTools: Product[] = [
     name: 'YNAB (You Need a Budget)',
     origin: 'United States',
     pricingPerYear: '$109',
-    slogan: 'Change Your Relationship With Money'
+    slogan: 'Change Your Relationship With Money',
+    url: 'https://www.ynab.com'
   },
   {
     founded: 2019,
@@ -1180,6 +1288,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Ziggma',
     origin: 'United States',
     pricingPerYear: '$84',
-    slogan: 'Your solution for investing success'
+    slogan: 'Your solution for investing success',
+    url: 'https://ziggma.com'
   }
 ];
