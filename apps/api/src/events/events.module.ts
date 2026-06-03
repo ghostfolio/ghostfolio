@@ -8,6 +8,7 @@ import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-g
 import { Module } from '@nestjs/common';
 
 import { AssetProfileChangedListener } from './asset-profile-changed.listener';
+import { MarketDataUpdatedListener } from './market-data-updated.listener';
 import { PortfolioChangedListener } from './portfolio-changed.listener';
 
 @Module({
@@ -19,6 +20,10 @@ import { PortfolioChangedListener } from './portfolio-changed.listener';
     ExchangeRateDataModule,
     RedisCacheModule
   ],
-  providers: [AssetProfileChangedListener, PortfolioChangedListener]
+  providers: [
+    AssetProfileChangedListener,
+    MarketDataUpdatedListener,
+    PortfolioChangedListener
+  ]
 })
 export class EventsModule {}

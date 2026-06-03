@@ -13,6 +13,9 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
+import { uniqBy } from 'lodash';
+
+import { MarketDataUpdatedEvent } from '../../events/market-data-updated.event';
 
 @Injectable()
 export class MarketDataService {
@@ -29,7 +32,10 @@ export class MarketDataService {
       }
     });
 
-    this.eventEmitter.emit('market-data.updated', { symbol });
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent({ dataSource, symbol })
+    );
 
     return result;
   }
@@ -194,7 +200,10 @@ export class MarketDataService {
       }
     });
 
-    this.eventEmitter.emit('market-data.updated', { symbol });
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent({ dataSource, symbol })
+    );
   }
 
   public async updateAssetProfileIdentifier(
@@ -212,12 +221,14 @@ export class MarketDataService {
       }
     });
 
-    this.eventEmitter.emit('market-data.updated', {
-      symbol: oldAssetProfileIdentifier.symbol
-    });
-    this.eventEmitter.emit('market-data.updated', {
-      symbol: newAssetProfileIdentifier.symbol
-    });
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent(oldAssetProfileIdentifier)
+    );
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent(newAssetProfileIdentifier)
+    );
 
     return result;
   }
@@ -242,9 +253,13 @@ export class MarketDataService {
       update: { marketPrice: data.marketPrice, state: data.state }
     });
 
-    this.eventEmitter.emit('market-data.updated', {
-      symbol: where.dataSource_date_symbol.symbol
-    });
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent({
+        dataSource: where.dataSource_date_symbol.dataSource,
+        symbol: where.dataSource_date_symbol.symbol
+      })
+    );
 
     return result;
   }
@@ -285,9 +300,19 @@ export class MarketDataService {
 
     const result = await this.prismaService.$transaction(upsertPromises);
 
-    const symbols = [...new Set(data.map((d) => d.symbol as string))];
-    for (const symbol of symbols) {
-      this.eventEmitter.emit('market-data.updated', { symbol });
+    const uniquePairs = uniqBy(
+      data.map((d) => ({
+        dataSource: d.dataSource as DataSource,
+        symbol: d.symbol as string
+      })),
+      (d) => `${d.dataSource}:${d.symbol}`
+    );
+
+    for (const pair of uniquePairs) {
+      this.eventEmitter.emit(
+        MarketDataUpdatedEvent.getName(),
+        new MarketDataUpdatedEvent(pair)
+      );
     }
 
     return result;

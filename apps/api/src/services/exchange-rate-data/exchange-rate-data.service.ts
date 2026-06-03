@@ -16,7 +16,6 @@ import {
 } from '@ghostfolio/common/helper';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
 import {
   eachDayOfInterval,
   format,
@@ -29,14 +28,15 @@ import ms from 'ms';
 
 import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interface';
 
+const EPOCH_OFFSET_DAYS = 25569;
+
 @Injectable()
 export class ExchangeRateDataService {
   private currencies: string[] = [];
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
-  private exchangeRateCache = new Map<string, Float64Array>();
-  private pendingLoads = new Map<string, Promise<Float64Array>>();
+  private exchangeRateCache = new Map<string, Promise<Float64Array>>();
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -355,14 +355,12 @@ export class ExchangeRateDataService {
     return undefined;
   }
 
-  @OnEvent('market-data.updated')
-  public onMarketDataUpdated(event: { symbol: string }) {
-    this.exchangeRateCache.delete(event.symbol);
-    this.pendingLoads.delete(event.symbol);
+  public invalidateCache(aSymbol: string) {
+    this.exchangeRateCache.delete(aSymbol);
   }
 
   private getDaysSinceEpoch(aDate: Date) {
-    return Math.floor(aDate.getTime() / 86400000) + 25569;
+    return Math.floor(aDate.getTime() / ms('1d')) + EPOCH_OFFSET_DAYS;
   }
 
   private async loadCache(aSymbol: string): Promise<Float64Array> {
@@ -407,17 +405,17 @@ export class ExchangeRateDataService {
     aSymbol: string,
     aDate: Date
   ): Promise<number | undefined> {
-    let cache = this.exchangeRateCache.get(aSymbol);
+    let cachePromise = this.exchangeRateCache.get(aSymbol);
 
-    while (!cache) {
-      if (this.pendingLoads.has(aSymbol)) {
-        await this.pendingLoads.get(aSymbol);
-        cache = this.exchangeRateCache.get(aSymbol);
-      } else {
-        cache = await this.loadAndCommit(aSymbol);
-      }
+    if (!cachePromise) {
+      cachePromise = this.loadCache(aSymbol).catch((error) => {
+        this.exchangeRateCache.delete(aSymbol);
+        throw error;
+      });
+      this.exchangeRateCache.set(aSymbol, cachePromise);
     }
 
+    const cache = await cachePromise;
     const days = Math.min(this.getDaysSinceEpoch(aDate), cache.length - 1);
 
     if (days >= 0) {
@@ -426,25 +424,6 @@ export class ExchangeRateDataService {
     }
 
     return undefined;
-  }
-
-  private async loadAndCommit(aSymbol: string): Promise<Float64Array> {
-    const loadPromise = this.loadCache(aSymbol);
-    this.pendingLoads.set(aSymbol, loadPromise);
-
-    try {
-      const cache = await loadPromise;
-
-      if (this.pendingLoads.get(aSymbol) === loadPromise) {
-        this.exchangeRateCache.set(aSymbol, cache);
-      }
-
-      return this.exchangeRateCache.get(aSymbol) ?? cache;
-    } finally {
-      if (this.pendingLoads.get(aSymbol) === loadPromise) {
-        this.pendingLoads.delete(aSymbol);
-      }
-    }
   }
 
   private async getExchangeRates({
