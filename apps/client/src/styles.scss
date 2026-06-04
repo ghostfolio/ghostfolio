@@ -2,8 +2,8 @@
 @use 'sass:color';
 
 @use './styles/bootstrap';
-@use './styles/table' as t;
-@use './styles/variables' as v;
+@use './styles/table' as table;
+@use './styles/variables' as variables;
 
 @use 'svgmap/style.min';
 
@@ -13,10 +13,10 @@
   --light-background: rgb(255, 255, 255);
 
   --dark-primary-text:
-    #{color.channel(v.$dark-primary-text, 'red')},
-    #{color.channel(v.$dark-primary-text, 'green')},
-    #{color.channel(v.$dark-primary-text, 'blue')},
-    #{color.channel(v.$dark-primary-text, 'alpha')};
+    #{color.channel(variables.$dark-primary-text, 'red')},
+    #{color.channel(variables.$dark-primary-text, 'green')},
+    #{color.channel(variables.$dark-primary-text, 'blue')},
+    #{color.channel(variables.$dark-primary-text, 'alpha')};
   --dark-secondary-text: 0, 0, 0, 0.54;
   --dark-accent-text: 0, 0, 0, 0.87;
   --dark-warn-text: 0, 0, 0, 0.87;
@@ -24,10 +24,10 @@
   --dark-dividers: 0, 0, 0, 0.12;
   --dark-focused: 0, 0, 0, 0.12;
   --light-primary-text:
-    #{color.channel(v.$light-primary-text, 'red')},
-    #{color.channel(v.$light-primary-text, 'green')},
-    #{color.channel(v.$light-primary-text, 'blue')},
-    #{color.channel(v.$light-primary-text, 'alpha')};
+    #{color.channel(variables.$light-primary-text, 'red')},
+    #{color.channel(variables.$light-primary-text, 'green')},
+    #{color.channel(variables.$light-primary-text, 'blue')},
+    #{color.channel(variables.$light-primary-text, 'alpha')};
   --light-secondary-text: 255, 255, 255, 0.7;
   --light-accent-text: 255, 255, 255, 1;
   --light-warn-text: 255, 255, 255, 1;
@@ -245,7 +245,7 @@ body {
     }
 
     .gf-table {
-      @include t.gf-table(true);
+      @include table.gf-table(true);
     }
 
     .mat-mdc-dialog-container {
@@ -358,7 +358,7 @@ ngx-skeleton-loader {
 }
 
 .gf-table {
-  @include t.gf-table;
+  @include table.gf-table;
 }
 
 .gf-text-wrap-balance {
