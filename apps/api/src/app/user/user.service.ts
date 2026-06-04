@@ -49,7 +49,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { without } from 'lodash';
 import { createHmac } from 'node:crypto';
@@ -109,7 +109,14 @@ export class UserService {
   }): Promise<IUser> {
     const { id, permissions, settings, subscription } = user;
 
-    const userData = await Promise.all([
+    const [
+      access,
+      accounts,
+      activitiesCount,
+      firstActivity,
+      impersonationUserSettings,
+      tagsForUser
+    ] = await Promise.all([
       this.prismaService.access.findMany({
         include: {
           user: true
@@ -134,16 +141,17 @@ export class UserService {
         },
         where: { userId: impersonationUserId || user.id }
       }),
+      impersonationUserId
+        ? this.prismaService.settings.findUnique({
+            where: { userId: impersonationUserId }
+          })
+        : Promise.resolve<Settings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const access = userData[0];
-    const accounts = userData[1];
-    const activitiesCount = userData[2];
-    const firstActivity = userData[3];
-    let tags = userData[4].filter((tag) => {
-      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
-    });
+    const baseCurrency =
+      (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
+      (settings.settings as UserSettings)?.baseCurrency;
 
     let systemMessage: SystemMessage;
 
@@ -155,6 +163,10 @@ export class UserService {
     if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
       systemMessage = systemMessageProperty;
     }
+
+    let tags = tagsForUser.filter((tag) => {
+      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    });
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
@@ -183,6 +195,7 @@ export class UserService {
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
+        baseCurrency,
         locale: (settings.settings as UserSettings)?.locale ?? locale
       }
     };
