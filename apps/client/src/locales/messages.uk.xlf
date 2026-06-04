@@ -1388,7 +1388,7 @@
       </trans-unit>
       <trans-unit id="7702646444963497962" datatype="html">
         <source>By</source>
-        <target state="translated">Автор</target>
+        <target state="translated">До</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">139</context>
@@ -7532,7 +7532,7 @@
       </trans-unit>
       <trans-unit id="4547068148181074902" datatype="html">
         <source>real-time</source>
-        <target state="translated">реальний-час</target>
+        <target state="translated">реальний час</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">239</context>
@@ -7732,7 +7732,7 @@
       </trans-unit>
       <trans-unit id="routes.about.termsOfService" datatype="html">
         <source>terms-of-service</source>
-        <target state="translated">умови-надання-послуг</target>
+        <target state="translated">umovy-nadannia-posluh</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7897,7 +7897,7 @@
       </trans-unit>
       <trans-unit id="routes.about.changelog" datatype="html">
         <source>changelog</source>
-        <target state="translated">Журнал змін</target>
+        <target state="translated">zhurnal-zmin</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -8030,7 +8030,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
         <source>personal-finance-tools</source>
-        <target state="translated">інструменти-особистих-фінансів</target>
+        <target state="translated">instrumenty-osobystykh-finansiv</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -8047,7 +8047,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.markets" datatype="html">
         <source>markets</source>
-        <target state="translated">ринки</target>
+        <target state="translated">rynky</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -8164,7 +8164,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity" datatype="html">
         <source>Equity</source>
-        <target state="translated">Власний капітал</target>
+        <target state="translated">Акції</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">41</context>
@@ -8276,7 +8276,7 @@
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
         <source>start</source>
-        <target state="translated">початок</target>
+        <target state="translated">pochatok</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
