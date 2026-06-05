@@ -519,6 +519,18 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
+    founded: 2024,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'gustav',
+    languages: ['Français'],
+    name: 'Gustav',
+    origin: 'France',
+    pricingPerYear: '€59.99',
+    slogan: 'Prenez enfin le contrôle de votre argent',
+    url: 'https://get-gustav.com'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'holistic-capital',
@@ -785,6 +797,16 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.morningstar.com/mm'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'myfinancetools',
+    languages: ['Deutsch', 'English', 'Español', 'Français', 'Português'],
+    name: 'MyFinanceTools',
+    pricingPerYear: '$36',
+    slogan: 'Your Personal Finance Command Center',
+    url: 'https://myfinancetools.io'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -805,6 +827,15 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$90',
     slogan: 'The Intelligent Portfolio Tracker',
     url: 'https://www.navexa.com'
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'networthy',
+    name: 'Networthy',
+    pricingPerYear: '€49.99',
+    slogan: 'Your Personal Financial Analyst, powered by AI.',
+    url: 'https://networthy.pro'
   },
   {
     founded: 2020,
@@ -954,6 +985,17 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$60',
     slogan: 'The stock portfolio tracker built for long-term investors',
     url: 'https://prostocktracker.com'
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'rallies',
+    languages: ['English'],
+    name: 'Rallies',
+    pricingPerYear: '$99.99',
+    slogan:
+      'Your entire financial life in one app, monitored continuously by agents',
+    url: 'https://rallies.ai'
   },
   {
     founded: 2015,
@@ -1129,6 +1171,25 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$360',
     slogan: 'The Trading Journal to Improve Your Trading Performance',
     url: 'https://www.tradervue.com'
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'trefolio',
+    languages: [
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Nederlands',
+      'Polski',
+      'Português'
+    ],
+    name: 'trefolio',
+    pricingPerYear: '€60',
+    slogan: 'The Extra Leaf for Your Portfolio',
+    url: 'https://trefolio.com'
   },
   {
     founded: 2020,
