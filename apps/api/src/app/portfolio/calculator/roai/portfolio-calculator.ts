@@ -23,6 +23,13 @@ import {
 } from 'date-fns';
 import { cloneDeep, sortBy } from 'lodash';
 
+const yieldToEventLoop = async () => {
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
+  await new Promise((resolve) => setImmediate(resolve));
+};
+
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
 
@@ -127,7 +134,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     return PerformanceCalculationType.ROAI;
   }
 
-  protected getSymbolMetrics({
+  protected async getSymbolMetrics({
     chartDateMap,
     dataSource,
     end,
@@ -143,7 +150,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       [date: string]: { [symbol: string]: Big };
     };
     start: Date;
-  } & AssetProfileIdentifier): SymbolMetrics {
+  } & AssetProfileIdentifier): Promise<SymbolMetrics> {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
@@ -345,7 +352,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       this.chartDates = Object.keys(chartDateMap).sort();
     }
 
-    for (const dateString of this.chartDates) {
+    for (let d = 0; d < this.chartDates.length; d++) {
+      if (d % 500 === 0) {
+        await yieldToEventLoop();
+      }
+      const dateString = this.chartDates[d];
       if (dateString < startDateString) {
         continue;
       } else if (dateString > endDateString) {
@@ -408,6 +419,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let sumOfTimeWeightedInvestmentsWithCurrencyEffect = new Big(0);
 
     for (let i = 0; i < orders.length; i += 1) {
+      if (i % 500 === 0) {
+        await yieldToEventLoop();
+      }
+
       const order = orders[i];
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -887,6 +902,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       let dayCount = 0;
 
       for (let i = this.chartDates.length - 1; i >= 0; i -= 1) {
+        if (i % 500 === 0) {
+          await yieldToEventLoop();
+        }
+
         const date = this.chartDates[i];
 
         if (date > rangeEndDateString) {

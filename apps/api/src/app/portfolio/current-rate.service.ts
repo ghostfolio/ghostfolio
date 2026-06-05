@@ -24,8 +24,6 @@ import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 @Injectable()
 export class CurrentRateService {
-  private static readonly MARKET_DATA_PAGE_SIZE = 50000;
-
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly dataProviderService: DataProviderService,
@@ -84,32 +82,27 @@ export class CurrentRateService {
         return { dataSource, symbol };
       });
 
-    const marketDataCount = await this.marketDataService.getRangeCount({
-      assetProfileIdentifiers,
-      dateQuery
-    });
-
-    for (
-      let i = 0;
-      i < marketDataCount;
-      i += CurrentRateService.MARKET_DATA_PAGE_SIZE
-    ) {
-      // Use page size to limit the number of records fetched at once
-      const data = await this.marketDataService.getRange({
-        assetProfileIdentifiers,
-        dateQuery,
-        skip: i,
-        take: CurrentRateService.MARKET_DATA_PAGE_SIZE
-      });
-
-      values.push(
-        ...data.map(({ dataSource, date, marketPrice, symbol }) => ({
+    // Fetch each asset profile individually to use the composite index efficiently
+    // Process in batches of 10 to avoid overwhelming the database
+    const batchSize = 10;
+    for (let i = 0; i < assetProfileIdentifiers.length; i += batchSize) {
+      const batch = assetProfileIdentifiers.slice(i, i + batchSize);
+      const promises = batch.map(async (assetProfile) => {
+        const data = await this.marketDataService.getRange({
+          assetProfileIdentifiers: [assetProfile],
+          dateQuery
+        });
+        return data.map(({ dataSource, date, marketPrice, symbol }) => ({
           dataSource,
           date,
           marketPrice,
           symbol
-        }))
-      );
+        }));
+      });
+      const results = await Promise.all(promises);
+      for (const result of results) {
+        values.push(...result);
+      }
     }
 
     const response: GetValuesObject = {

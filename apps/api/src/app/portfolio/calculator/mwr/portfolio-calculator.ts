@@ -23,7 +23,7 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
     };
     start: Date;
     step?: number;
-  } & AssetProfileIdentifier): SymbolMetrics {
+  } & AssetProfileIdentifier): Promise<SymbolMetrics> {
     throw new Error('Method not implemented.');
   }
 }

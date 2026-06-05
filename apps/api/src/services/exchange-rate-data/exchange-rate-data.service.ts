@@ -53,16 +53,18 @@ export class ExchangeRateDataService {
   @LogPerformance
   public async getExchangeRatesByCurrency({
     currencies,
+    dates,
     endDate = new Date(),
     startDate,
     targetCurrency
   }: {
     currencies: string[];
+    dates?: Date[];
     endDate?: Date;
-    startDate: Date;
+    startDate?: Date;
     targetCurrency: string;
   }): Promise<ExchangeRatesByCurrency> {
-    if (!startDate) {
+    if (!startDate && !dates?.length) {
       return {};
     }
 
@@ -73,6 +75,8 @@ export class ExchangeRateDataService {
     for (const currency of currencies) {
       exchangeRatesByCurrency[`${currency}${targetCurrency}`] =
         await this.getExchangeRates({
+          dates,
+          endDate,
           startDate,
           currencyFrom: currency,
           currencyTo: targetCurrency
@@ -90,11 +94,14 @@ export class ExchangeRateDataService {
           lastDateString
         ] ?? 1;
 
+      const loopStartDate =
+        startDate || dates?.reduce((min, d) => (d < min ? d : min), dates[0]);
+
       // Start from the most recent date and fill in missing exchange rates
       // using the latest available rate
       for (
         let date = endDate;
-        !isBefore(date, startDate);
+        loopStartDate && !isBefore(date, loopStartDate);
         date = subDays(resetHours(date), 1)
       ) {
         const dateString = format(date, DATE_FORMAT);
@@ -110,7 +117,7 @@ export class ExchangeRateDataService {
             previousExchangeRate;
 
           if (currency === DEFAULT_CURRENCY && isBefore(date, new Date())) {
-            Logger.error(
+            Logger.debug(
               `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`,
               'ExchangeRateDataService'
             );
@@ -355,19 +362,22 @@ export class ExchangeRateDataService {
   private async getExchangeRates({
     currencyFrom,
     currencyTo,
+    dates,
     endDate = new Date(),
     startDate
   }: {
     currencyFrom: string;
     currencyTo: string;
+    dates?: Date[];
     endDate?: Date;
-    startDate: Date;
+    startDate?: Date;
   }) {
-    const dates = eachDayOfInterval({ end: endDate, start: startDate });
+    const datesToProcess =
+      dates ?? eachDayOfInterval({ end: endDate, start: startDate });
     const factors: { [dateString: string]: number } = {};
 
     if (currencyFrom === currencyTo) {
-      for (const date of dates) {
+      for (const date of datesToProcess) {
         factors[format(date, DATE_FORMAT)] = 1;
       }
 
@@ -378,7 +388,7 @@ export class ExchangeRateDataService {
       this.derivedCurrencyFactors[`${currencyFrom}${currencyTo}`];
 
     if (derivedCurrencyFactor) {
-      for (const date of dates) {
+      for (const date of datesToProcess) {
         factors[format(date, DATE_FORMAT)] = derivedCurrencyFactor;
       }
 
@@ -395,7 +405,8 @@ export class ExchangeRateDataService {
           symbol
         }
       ],
-      dateQuery: { gte: startDate, lt: endDate }
+      dateQuery:
+        dates?.length > 0 ? { in: dates } : { gte: startDate, lt: endDate }
     });
 
     if (marketData?.length > 0) {
@@ -414,7 +425,7 @@ export class ExchangeRateDataService {
 
       try {
         if (currencyFrom === DEFAULT_CURRENCY) {
-          for (const date of dates) {
+          for (const date of datesToProcess) {
             marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] = 1;
           }
         } else {
@@ -425,7 +436,10 @@ export class ExchangeRateDataService {
                 symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
               }
             ],
-            dateQuery: { gte: startDate, lt: endDate }
+            dateQuery:
+              dates?.length > 0
+                ? { in: dates }
+                : { gte: startDate, lt: endDate }
           });
 
           for (const { date, marketPrice } of marketData) {
@@ -437,7 +451,7 @@ export class ExchangeRateDataService {
 
       try {
         if (currencyTo === DEFAULT_CURRENCY) {
-          for (const date of dates) {
+          for (const date of datesToProcess) {
             marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] = 1;
           }
         } else {
@@ -448,10 +462,10 @@ export class ExchangeRateDataService {
                 symbol: `${DEFAULT_CURRENCY}${currencyTo}`
               }
             ],
-            dateQuery: {
-              gte: startDate,
-              lt: endDate
-            }
+            dateQuery:
+              dates?.length > 0
+                ? { in: dates }
+                : { gte: startDate, lt: endDate }
           });
 
           for (const { date, marketPrice } of marketData) {
@@ -461,30 +475,32 @@ export class ExchangeRateDataService {
         }
       } catch {}
 
-      for (const date of dates) {
-        try {
-          const factor =
-            (1 /
-              marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)]) *
-            marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)];
-
-          if (isNaN(factor)) {
-            throw new Error('Exchange rate is not a number');
-          } else {
-            factors[format(date, DATE_FORMAT)] = factor;
-          }
-        } catch {
-          let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
-            date,
-            DATE_FORMAT
-          )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
-
-          if (DEFAULT_CURRENCY !== currencyTo) {
-            errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
-          }
-
-          Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
+      for (let i = 0; i < datesToProcess.length; i++) {
+        if (i % 500 === 0 && process.env.NODE_ENV !== 'test') {
+          await new Promise((resolve) => setImmediate(resolve));
         }
+
+        const date = datesToProcess[i];
+        const dateString = format(date, DATE_FORMAT);
+
+        const priceFrom = marketPriceBaseCurrencyFromCurrency[dateString];
+        const priceTo = marketPriceBaseCurrencyToCurrency[dateString];
+
+        if (priceFrom && priceTo) {
+          const factor = (1 / priceFrom) * priceTo;
+          if (!isNaN(factor) && isFinite(factor)) {
+            factors[dateString] = factor;
+            continue;
+          }
+        }
+
+        let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${dateString}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
+
+        if (DEFAULT_CURRENCY !== currencyTo) {
+          errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
+        }
+
+        Logger.debug(`${errorMessage}.`, 'ExchangeRateDataService');
       }
     }
 

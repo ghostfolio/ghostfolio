@@ -59,6 +59,13 @@ import {
 } from 'date-fns';
 import { isNumber, sortBy, sum, uniqBy } from 'lodash';
 
+const yieldToEventLoop = async () => {
+  if (process.env.NODE_ENV === 'test') {
+    return;
+  }
+  await new Promise((resolve) => setImmediate(resolve));
+};
+
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
 
@@ -90,6 +97,7 @@ export abstract class PortfolioCalculator {
     filters,
     portfolioSnapshotService,
     redisCacheService,
+    skipInitialize = false,
     userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
@@ -101,6 +109,7 @@ export abstract class PortfolioCalculator {
     filters: Filter[];
     portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
+    skipInitialize?: boolean;
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
@@ -166,9 +175,9 @@ export abstract class PortfolioCalculator {
     this.endDate = endOfDay(endDate);
     this.startDate = startOfDay(startDate);
 
-    this.computeTransactionPoints();
-
-    this.snapshotPromise = this.initialize();
+    if (!skipInitialize) {
+      this.snapshotPromise = this.initialize();
+    }
   }
 
   protected abstract calculateOverallPerformance(
@@ -177,6 +186,11 @@ export abstract class PortfolioCalculator {
 
   @LogPerformance
   public async computeSnapshot(): Promise<PortfolioSnapshot> {
+    console.log('[Trace] computeSnapshot started');
+    if (!this.transactionPoints) {
+      await this.computeTransactionPoints();
+    }
+
     const lastTransactionPoint = this.transactionPoints.at(-1);
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
@@ -234,6 +248,8 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    Logger.log('Fetching exchange rates...', 'Trace');
+    const t1 = Date.now();
     const exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: Array.from(new Set(Object.values(currencies))),
@@ -242,6 +258,13 @@ export abstract class PortfolioCalculator {
         targetCurrency: this.currency
       });
 
+    Logger.log(
+      'Exchange rates fetched in ' +
+        (Date.now() - t1) +
+        'ms. Fetching market data...',
+      'Trace'
+    );
+    const t2 = Date.now();
     const {
       dataProviderInfos,
       errors: currentRateErrors,
@@ -256,6 +279,13 @@ export abstract class PortfolioCalculator {
 
     this.dataProviderInfos = dataProviderInfos;
 
+    Logger.log(
+      'Market data fetched in ' +
+        (Date.now() - t2) +
+        'ms. Processing symbols...',
+      'Trace'
+    );
+    const t3 = Date.now();
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     } = {};
@@ -294,6 +324,13 @@ export abstract class PortfolioCalculator {
       chartDateMap[accountBalanceItem.date] = true;
     }
 
+    Logger.log(
+      'Symbols processed in ' +
+        (Date.now() - t3) +
+        'ms. Processing positions...',
+      'Trace'
+    );
+    console.log('t4', Date.now());
     const chartDates = sortBy(Object.keys(chartDateMap), (chartDate) => {
       return chartDate;
     });
@@ -338,7 +375,13 @@ export abstract class PortfolioCalculator {
       };
     } = {};
 
-    for (const item of lastTransactionPoint.items) {
+    Logger.log('Starting symbol metrics loop...', 'Trace');
+    console.log('t5', Date.now());
+    for (let i = 0; i < lastTransactionPoint.items.length; i++) {
+      if (i % 5 === 0) {
+        await yieldToEventLoop();
+      }
+      const item = lastTransactionPoint.items[i];
       const marketPriceInBaseCurrency = (
         marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
       ).mul(
@@ -374,7 +417,7 @@ export abstract class PortfolioCalculator {
         totalInvestment,
         totalInvestmentWithCurrencyEffect,
         totalLiabilitiesInBaseCurrency
-      } = this.getSymbolMetrics({
+      } = await this.getSymbolMetrics({
         chartDateMap,
         marketSymbolMap,
         dataSource: item.dataSource,
@@ -483,7 +526,11 @@ export abstract class PortfolioCalculator {
 
     let lastKnownBalance = new Big(0);
 
-    for (const dateString of chartDates) {
+    for (let c = 0; c < chartDates.length; c++) {
+      if (c % 100 === 0) {
+        await yieldToEventLoop();
+      }
+      const dateString = chartDates[c];
       if (accountBalanceItemsMap[dateString] !== undefined) {
         // If there's an exact balance for this date, update lastKnownBalance
         lastKnownBalance = accountBalanceItemsMap[dateString];
@@ -831,7 +878,7 @@ export abstract class PortfolioCalculator {
       [date: string]: { [symbol: string]: Big };
     };
     start: Date;
-  } & AssetProfileIdentifier): SymbolMetrics;
+  } & AssetProfileIdentifier): Promise<SymbolMetrics>;
 
   public getTransactionPoints() {
     return this.transactionPoints;
@@ -924,23 +971,38 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
-  private computeTransactionPoints() {
+  protected async computeTransactionPoints() {
+    console.log(
+      '[Trace] computeTransactionPoints started, activities count: ' +
+        this.activities.length
+    );
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
 
     let lastDate: string = null;
     let lastTransactionPoint: TransactionPoint = null;
 
-    for (const {
-      date,
-      fee,
-      feeInBaseCurrency,
-      quantity,
-      SymbolProfile,
-      tags,
-      type,
-      unitPrice
-    } of this.activities) {
+    for (let i = 0; i < this.activities.length; i++) {
+      if (i % 500 === 0) {
+        console.log(
+          '[Trace] computeTransactionPoints progress: ' +
+            i +
+            '/' +
+            this.activities.length
+        );
+        await yieldToEventLoop();
+      }
+
+      const {
+        date,
+        fee,
+        feeInBaseCurrency,
+        quantity,
+        SymbolProfile,
+        tags,
+        type,
+        unitPrice
+      } = this.activities[i];
       let currentTransactionPointItem: TransactionPointSymbol;
 
       const assetSubClass = SymbolProfile.assetSubClass;
