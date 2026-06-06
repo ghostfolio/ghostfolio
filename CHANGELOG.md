@@ -11,8 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an automatic refresh every 30 seconds to the users table in the admin control panel
 
+### Changed
+
+- Centralized the asset profile override logic for manual adjustments
+
 ### Fixed
 
+- Fixed an issue where the asset profile override (asset class and asset sub class) was not applied to the data enhancers when gathering asset profiles
 - Fixed a layout issue in the asset profile dialog of the admin control by truncating long titles
 
 ## 3.7.0 - 2026-06-02
