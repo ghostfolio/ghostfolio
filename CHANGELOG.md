@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the sector names across the data providers
+- Localized the sector names
 - Centralized the asset profile override logic for manual adjustments
 - Improved the styling in the user detail dialog of the admin control panel’s users section
 - Prevented the deletion of asset profiles that are currently in use
