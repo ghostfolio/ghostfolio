@@ -1,5 +1,5 @@
 <div class="d-flex flex-column h-100">
-  <h1 class="align-items-center d-flex mb-3" mat-dialog-title>
+  <div class="align-items-center d-flex mb-3" mat-dialog-title>
     <span class="flex-grow-1 text-truncate">{{
       assetProfile?.name ?? data.symbol
     }}</span>
@@ -87,7 +87,7 @@
         <ng-container i18n>Delete</ng-container>
       </button>
     </mat-menu>
-  </h1>
+  </div>
 
   <div class="flex-grow-1" mat-dialog-content>
     <gf-line-chart

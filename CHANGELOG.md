@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Centralized the asset profile override logic for manual adjustments
+- Improved the styling in the user detail dialog of the admin control panel’s users section
 - Prevented the deletion of asset profiles that are currently in use
 - Ensured market data is correctly removed when an asset profile with no remaining activities is deleted
 - Refactored the backend logging to use the instance-based `Logger`
@@ -22,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue where the asset profile override (asset class and asset sub class) was not applied to the data enhancers when gathering asset profiles
-- Fixed a layout issue in the asset profile dialog of the admin control by truncating long titles
+- Fixed a layout issue in the asset profile dialog of the admin control panel by truncating long titles
 
 ## 3.7.0 - 2026-06-02
 
