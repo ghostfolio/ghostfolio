@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevented the deletion of asset profiles that are currently in use
 - Ensured market data is correctly removed when an asset profile with no remaining activities is deleted
 - Refactored the backend logging to use the instance-based `Logger`
+- Improved the language localization for German (`de`)
 - Improved the language localization for Ukrainian (`uk`)
 
 ### Fixed
