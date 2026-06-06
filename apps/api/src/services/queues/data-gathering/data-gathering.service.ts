@@ -178,14 +178,27 @@ export class DataGatheringService {
     );
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
-      const symbolMapping = symbolProfiles.find((symbolProfile) => {
-        return symbolProfile.symbol === symbol;
-      })?.symbolMapping;
+      const symbolProfile = symbolProfiles.find(
+        ({ symbol: symbolProfileSymbol }) => {
+          return symbolProfileSymbol === symbol;
+        }
+      );
+
+      const symbolMapping = symbolProfile?.symbolMapping;
+
+      let enhancedAssetProfile = symbolProfile
+        ? {
+            ...assetProfile,
+            assetClass: symbolProfile.assetClass ?? assetProfile.assetClass,
+            assetSubClass:
+              symbolProfile.assetSubClass ?? assetProfile.assetSubClass
+          }
+        : assetProfile;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
-          assetProfiles[symbol] = await dataEnhancer.enhance({
-            response: assetProfile,
+          enhancedAssetProfile = await dataEnhancer.enhance({
+            response: enhancedAssetProfile,
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
@@ -198,9 +211,9 @@ export class DataGatheringService {
         }
       }
 
+      const { assetClass, assetSubClass } = assetProfile;
+
       const {
-        assetClass,
-        assetSubClass,
         countries,
         currency,
         cusip,
@@ -213,7 +226,7 @@ export class DataGatheringService {
         name,
         sectors,
         url
-      } = assetProfile;
+      } = enhancedAssetProfile;
 
       try {
         await this.prismaService.symbolProfile.upsert({
