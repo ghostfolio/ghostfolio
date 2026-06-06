@@ -50,6 +50,8 @@ import { OidcStrategy } from './oidc.strategy';
         configurationService: ConfigurationService,
         fetchService: FetchService
       ) => {
+        const logger = new Logger('OidcStrategy');
+
         const isOidcEnabled = configurationService.get(
           'ENABLE_FEATURE_AUTH_OIDC'
         );
@@ -101,7 +103,7 @@ import { OidcStrategy } from './oidc.strategy';
             tokenURL = manualTokenUrl || config.token_endpoint;
             userInfoURL = manualUserInfoUrl || config.userinfo_endpoint;
           } catch (error) {
-            Logger.error(error, 'OidcStrategy');
+            logger.error(error);
             throw new Error('Failed to fetch OIDC configuration from issuer');
           }
         }

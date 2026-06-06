@@ -11,7 +11,6 @@ import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import {
   addMilliseconds,
@@ -96,9 +95,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             currentPosition.timeWeightedInvestmentWithCurrencyEffect
           );
       } else if (!currentPosition.quantity.eq(0)) {
-        Logger.warn(
-          `Missing historical market data for ${currentPosition.symbol} (${currentPosition.dataSource})`,
-          'PortfolioCalculator'
+        this.logger.warn(
+          `Missing historical market data for ${currentPosition.symbol} (${currentPosition.dataSource})`
         );
 
         hasErrors = true;

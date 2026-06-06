@@ -29,6 +29,8 @@ import { format, fromUnixTime, getUnixTime } from 'date-fns';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
+  private readonly logger = new Logger(CoinGeckoService.name);
+
   private apiUrl: string;
   private headers: HeadersInit = {};
 
@@ -88,7 +90,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'CoinGeckoService');
+      this.logger.error(message);
     }
 
     return response;
@@ -214,7 +216,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'CoinGeckoService');
+      this.logger.error(message);
     }
 
     return response;
@@ -262,7 +264,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'CoinGeckoService');
+      this.logger.error(message);
     }
 
     return { items };

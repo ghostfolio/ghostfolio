@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the backend logging to use the instance-based `Logger`
 - Improved the language localization for Ukrainian (`uk`)
 
 ### Fixed

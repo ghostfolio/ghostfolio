@@ -58,6 +58,8 @@ import { AdminService } from './admin.service';
 
 @Controller('admin')
 export class AdminController {
+  private readonly logger = new Logger(AdminController.name);
+
   public constructor(
     private readonly adminService: AdminService,
     private readonly apiService: ApiService,
@@ -260,7 +262,7 @@ export class AdminController {
         `Could not parse the market price for ${symbol} (${dataSource})`
       );
     } catch (error) {
-      Logger.error(error, 'AdminController');
+      this.logger.error(error);
 
       throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
     }

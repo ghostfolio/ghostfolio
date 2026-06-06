@@ -27,6 +27,8 @@ import { format, subDays } from 'date-fns';
 @Injectable()
 @Processor(STATISTICS_GATHERING_QUEUE)
 export class StatisticsGatheringProcessor {
+  private readonly logger = new Logger(StatisticsGatheringProcessor.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly fetchService: FetchService,
@@ -35,10 +37,7 @@ export class StatisticsGatheringProcessor {
 
   @Process(GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME)
   public async gatherDockerHubPullsStatistics() {
-    Logger.log(
-      'Docker Hub pulls statistics gathering has been started',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Docker Hub pulls statistics gathering has been started');
 
     const dockerHubPulls = await this.countDockerHubPulls();
 
@@ -47,17 +46,13 @@ export class StatisticsGatheringProcessor {
       value: String(dockerHubPulls)
     });
 
-    Logger.log(
-      'Docker Hub pulls statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Docker Hub pulls statistics gathering has been completed');
   }
 
   @Process(GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME)
   public async gatherGitHubContributorsStatistics() {
-    Logger.log(
-      'GitHub contributors statistics gathering has been started',
-      'StatisticsGatheringProcessor'
+    this.logger.log(
+      'GitHub contributors statistics gathering has been started'
     );
 
     const gitHubContributors = await this.countGitHubContributors();
@@ -67,18 +62,14 @@ export class StatisticsGatheringProcessor {
       value: String(gitHubContributors)
     });
 
-    Logger.log(
-      'GitHub contributors statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
+    this.logger.log(
+      'GitHub contributors statistics gathering has been completed'
     );
   }
 
   @Process(GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME)
   public async gatherGitHubStargazersStatistics() {
-    Logger.log(
-      'GitHub stargazers statistics gathering has been started',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('GitHub stargazers statistics gathering has been started');
 
     const gitHubStargazers = await this.countGitHubStargazers();
 
@@ -87,9 +78,8 @@ export class StatisticsGatheringProcessor {
       value: String(gitHubStargazers)
     });
 
-    Logger.log(
-      'GitHub stargazers statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
+    this.logger.log(
+      'GitHub stargazers statistics gathering has been completed'
     );
   }
 
@@ -100,18 +90,14 @@ export class StatisticsGatheringProcessor {
     );
 
     if (!monitorId) {
-      Logger.log(
-        `Uptime statistics gathering has been skipped as no ${PROPERTY_BETTER_UPTIME_MONITOR_ID} is configured`,
-        'StatisticsGatheringProcessor'
+      this.logger.log(
+        `Uptime statistics gathering has been skipped as no ${PROPERTY_BETTER_UPTIME_MONITOR_ID} is configured`
       );
 
       return;
     }
 
-    Logger.log(
-      'Uptime statistics gathering has been started',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Uptime statistics gathering has been started');
 
     const uptime = await this.getUptime(monitorId);
 
@@ -120,10 +106,7 @@ export class StatisticsGatheringProcessor {
       value: String(uptime)
     });
 
-    Logger.log(
-      'Uptime statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Uptime statistics gathering has been completed');
   }
 
   private async countDockerHubPulls(): Promise<number> {
@@ -139,7 +122,7 @@ export class StatisticsGatheringProcessor {
 
       return pull_count;
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - DockerHub');
+      this.logger.error(error);
 
       throw error;
     }
@@ -169,7 +152,7 @@ export class StatisticsGatheringProcessor {
         value
       });
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
+      this.logger.error(error);
 
       throw error;
     }
@@ -188,7 +171,7 @@ export class StatisticsGatheringProcessor {
 
       return stargazers_count;
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
+      this.logger.error(error);
 
       throw error;
     }
@@ -217,7 +200,7 @@ export class StatisticsGatheringProcessor {
 
       return data.attributes.availability / 100;
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - Better Stack');
+      this.logger.error(error);
 
       throw error;
     }

@@ -31,6 +31,8 @@ import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
+  private readonly logger = new Logger(ManualService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly fetchService: FetchService,
@@ -181,9 +183,8 @@ export class ManualService implements DataProviderInterface {
               });
               return { marketPrice, symbol };
             } catch (error) {
-              Logger.error(
-                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`,
-                'ManualService'
+              this.logger.error(
+                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
               );
               return { symbol, marketPrice: undefined };
             }
@@ -216,7 +217,7 @@ export class ManualService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'ManualService');
+      this.logger.error(error);
     }
 
     return {};

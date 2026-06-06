@@ -49,6 +49,8 @@ import { uniqBy } from 'lodash';
 export class FinancialModelingPrepService
   implements DataProviderInterface, OnModuleInit
 {
+  private readonly logger = new Logger(FinancialModelingPrepService.name);
+
   private static countriesMapping = {
     'Korea (the Republic of)': 'South Korea',
     'Russian Federation': 'Russia',
@@ -265,7 +267,7 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      this.logger.error(message);
     }
 
     return response;
@@ -325,12 +327,11 @@ export class FinancialModelingPrepService
 
       return response;
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
-        'FinancialModelingPrepService'
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
 
       return {};
@@ -518,7 +519,7 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      this.logger.error(message);
     }
 
     return response;
@@ -638,7 +639,7 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      this.logger.error(message);
     }
 
     return { items };
