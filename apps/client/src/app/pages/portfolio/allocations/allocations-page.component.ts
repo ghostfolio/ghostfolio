@@ -3,7 +3,7 @@ import { AccountDetailDialogParams } from '@ghostfolio/client/components/account
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents,
@@ -353,7 +353,7 @@ export class GfAllocationsPageComponent implements OnInit {
 
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {
-            const { code, continent, name, weight } = country;
+            const { code, continent, weight } = country;
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
@@ -363,7 +363,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.continents[continent] = {
-                name: continent,
+                name: translate(continent),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)
@@ -380,7 +380,10 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.countries[code] = {
-                name,
+                name: getCountryName({
+                  code,
+                  locale: this.user?.settings?.locale
+                }),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)

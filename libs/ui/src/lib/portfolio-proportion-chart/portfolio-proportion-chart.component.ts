@@ -37,8 +37,6 @@ import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
-import { translate } from '../i18n';
-
 const {
   blue,
   cyan,
@@ -390,7 +388,7 @@ export class GfPortfolioProportionChartComponent
 
                       return value > 0
                         ? isUUID(symbol)
-                          ? (translate(this.data[symbol]?.name) ?? symbol)
+                          ? (this.data[symbol]?.name ?? symbol)
                           : symbol
                         : '';
                     },
@@ -453,7 +451,7 @@ export class GfPortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = translate(this.data[symbol]?.name);
+          const name = this.data[symbol]?.name;
 
           let sum = 0;
 

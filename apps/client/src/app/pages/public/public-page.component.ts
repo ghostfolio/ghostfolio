@@ -1,5 +1,5 @@
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
 import {
   InfoItem,
   PortfolioPosition,
@@ -186,14 +186,14 @@ export class GfPublicPageComponent implements OnInit {
 
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {
-            const { code, continent, name, weight } = country;
+            const { code, continent, weight } = country;
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.continents[continent] = {
-                name: continent,
+                name: translate(continent),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]
@@ -206,7 +206,7 @@ export class GfPublicPageComponent implements OnInit {
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.countries[code] = {
-                name,
+                name: getCountryName({ code }),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]
