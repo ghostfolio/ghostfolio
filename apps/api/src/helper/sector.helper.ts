@@ -10,10 +10,8 @@ export function getSectorName({
   aliases?: Record<string, SectorName>;
   name: string;
 }): SectorName {
-  const mappedName = aliases[name];
-
-  if (mappedName) {
-    return mappedName;
+  if (aliases[name]) {
+    return aliases[name];
   }
 
   if ((SECTORS as readonly string[]).includes(name)) {
