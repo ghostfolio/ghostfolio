@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an automatic refresh every 30 seconds to the users table in the admin control panel
+
 ### Changed
 
 - Improved the language localization for Ukrainian (`uk`)
