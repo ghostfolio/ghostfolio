@@ -363,7 +363,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.continents[continent] = {
-                name: continent,
+                name: translate(continent),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)
@@ -380,7 +380,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.countries[code] = {
-                name,
+                name: translate(name),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)

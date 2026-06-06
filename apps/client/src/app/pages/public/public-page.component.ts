@@ -193,7 +193,7 @@ export class GfPublicPageComponent implements OnInit {
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.continents[continent] = {
-                name: continent,
+                name: translate(continent),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]
@@ -206,7 +206,7 @@ export class GfPublicPageComponent implements OnInit {
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.countries[code] = {
-                name,
+                name: translate(name),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]
