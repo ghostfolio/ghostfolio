@@ -1,6 +1,6 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { applySymbolProfileOverrides } from '@ghostfolio/common/helper';
+import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
@@ -193,7 +193,7 @@ export class SymbolProfileService {
     })[]
   ): EnhancedSymbolProfile[] {
     return symbolProfiles.map((symbolProfile) => {
-      const symbolProfileWithOverrides = applySymbolProfileOverrides(
+      const symbolProfileWithOverrides = applyAssetProfileOverrides(
         symbolProfile,
         symbolProfile.SymbolProfileOverrides
       );

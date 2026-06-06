@@ -54,41 +54,40 @@ export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
 
-export function applySymbolProfileOverrides<T extends Partial<SymbolProfile>>(
-  symbolProfile: T,
-  symbolProfileOverrides: SymbolProfileOverrides | null
+export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
+  assetProfile: T,
+  assetProfileOverrides: SymbolProfileOverrides | null
 ): T {
-  if (!symbolProfileOverrides) {
-    return symbolProfile;
+  if (!assetProfileOverrides) {
+    return assetProfile;
   }
 
-  const symbolProfileWithOverrides = { ...symbolProfile } as T;
+  const assetProfileWithOverrides = { ...assetProfile } as T;
 
-  symbolProfileWithOverrides.assetClass =
-    symbolProfileOverrides.assetClass ?? symbolProfile.assetClass;
+  assetProfileWithOverrides.assetClass =
+    assetProfileOverrides.assetClass ?? assetProfile.assetClass;
 
-  symbolProfileWithOverrides.assetSubClass =
-    symbolProfileOverrides.assetSubClass ?? symbolProfile.assetSubClass;
+  assetProfileWithOverrides.assetSubClass =
+    assetProfileOverrides.assetSubClass ?? assetProfile.assetSubClass;
 
-  if ((symbolProfileOverrides.countries as Prisma.JsonArray)?.length > 0) {
-    symbolProfileWithOverrides.countries = symbolProfileOverrides.countries;
+  if ((assetProfileOverrides.countries as Prisma.JsonArray)?.length > 0) {
+    assetProfileWithOverrides.countries = assetProfileOverrides.countries;
   }
 
-  if ((symbolProfileOverrides.holdings as Prisma.JsonArray)?.length > 0) {
-    symbolProfileWithOverrides.holdings = symbolProfileOverrides.holdings;
+  if ((assetProfileOverrides.holdings as Prisma.JsonArray)?.length > 0) {
+    assetProfileWithOverrides.holdings = assetProfileOverrides.holdings;
   }
 
-  symbolProfileWithOverrides.name =
-    symbolProfileOverrides.name ?? symbolProfile.name;
+  assetProfileWithOverrides.name =
+    assetProfileOverrides.name ?? assetProfile.name;
 
-  if ((symbolProfileOverrides.sectors as Prisma.JsonArray)?.length > 0) {
-    symbolProfileWithOverrides.sectors = symbolProfileOverrides.sectors;
+  if ((assetProfileOverrides.sectors as Prisma.JsonArray)?.length > 0) {
+    assetProfileWithOverrides.sectors = assetProfileOverrides.sectors;
   }
 
-  symbolProfileWithOverrides.url =
-    symbolProfileOverrides.url ?? symbolProfile.url;
+  assetProfileWithOverrides.url = assetProfileOverrides.url ?? assetProfile.url;
 
-  return symbolProfileWithOverrides;
+  return assetProfileWithOverrides;
 }
 
 export function calculateBenchmarkTrend({
