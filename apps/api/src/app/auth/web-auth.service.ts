@@ -33,6 +33,8 @@ import ms from 'ms';
 
 @Injectable()
 export class WebAuthService {
+  private readonly logger = new Logger(WebAuthService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly deviceService: AuthDeviceService,
@@ -103,7 +105,7 @@ export class WebAuthService {
 
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
-      Logger.error(error, 'WebAuthService');
+      this.logger.error(error);
       throw new InternalServerErrorException(error.message);
     }
 
@@ -210,7 +212,7 @@ export class WebAuthService {
 
       verification = await verifyAuthenticationResponse(opts);
     } catch (error) {
-      Logger.error(error, 'WebAuthService');
+      this.logger.error(error);
       throw new InternalServerErrorException({ error: error.message });
     }
 

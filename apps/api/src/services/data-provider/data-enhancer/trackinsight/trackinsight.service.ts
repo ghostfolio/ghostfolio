@@ -11,6 +11,8 @@ import { countries } from 'countries-list';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
+  private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
+
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
     'Russian Federation': 'Russia',
@@ -209,9 +211,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         return undefined;
       })
       .catch(({ message }) => {
-        Logger.error(
-          `Failed to search Trackinsight symbol for ${symbol} (${message})`,
-          'TrackinsightDataEnhancerService'
+        this.logger.error(
+          `Failed to search Trackinsight symbol for ${symbol} (${message})`
         );
 
         return undefined;

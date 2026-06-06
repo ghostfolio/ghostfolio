@@ -23,6 +23,8 @@ import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
+  private readonly logger = new Logger(YahooFinanceDataEnhancerService.name);
+
   private readonly yahooFinance = new YahooFinance({
     suppressNotices: ['yahooSurvey']
   });
@@ -123,7 +125,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         response.url = url;
       }
     } catch (error) {
-      Logger.error(error, 'YahooFinanceDataEnhancerService');
+      this.logger.error(error);
     }
 
     return response;
@@ -266,7 +268,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           `No data found, ${aSymbol} (${this.getName()}) may be delisted`
         );
       } else {
-        Logger.error(error, 'YahooFinanceService');
+        this.logger.error(error);
       }
     }
 

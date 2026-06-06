@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Centralized the asset profile override logic for manual adjustments
+- Refactored the backend logging to use the instance-based `Logger`
+- Improved the language localization for Ukrainian (`uk`)
 
 ### Fixed
 
