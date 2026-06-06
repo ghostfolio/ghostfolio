@@ -15,6 +15,8 @@ import { format, subDays } from 'date-fns';
 
 @Injectable()
 export class SymbolService {
+  private readonly logger = new Logger(SymbolService.name);
+
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService
@@ -119,7 +121,7 @@ export class SymbolService {
       results.items = items;
       return results;
     } catch (error) {
-      Logger.error(error, 'SymbolService');
+      this.logger.error(error);
 
       throw error;
     }

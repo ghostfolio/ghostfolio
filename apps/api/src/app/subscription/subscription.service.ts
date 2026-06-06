@@ -24,6 +24,8 @@ import Stripe from 'stripe';
 
 @Injectable()
 export class SubscriptionService {
+  private readonly logger = new Logger(SubscriptionService.name);
+
   private stripe: Stripe;
 
   public constructor(
@@ -166,9 +168,8 @@ export class SubscriptionService {
           error instanceof Prisma.PrismaClientKnownRequestError &&
           error.code === 'P2002'
         ) {
-          Logger.log(
-            `Stripe Checkout Session '${session.id}' has already been redeemed`,
-            'SubscriptionService'
+          this.logger.log(
+            `Stripe Checkout Session '${session.id}' has already been redeemed`
           );
         } else {
           throw error;
@@ -177,7 +178,7 @@ export class SubscriptionService {
 
       return session.client_reference_id;
     } catch (error) {
-      Logger.error(error, 'SubscriptionService');
+      this.logger.error(error);
     }
   }
 

@@ -23,6 +23,8 @@ import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
+const logger = new Logger('Bootstrap');
+
 async function bootstrap() {
   // Respect HTTP_PROXY / HTTPS_PROXY / NO_PROXY for outbound HTTP requests
   setGlobalDispatcher(new EnvHttpProxyAgent());
@@ -114,20 +116,20 @@ async function bootstrap() {
       address = `${host}:${addressObject.port}`;
     }
 
-    Logger.log(`Listening at http://${address}`);
-    Logger.log('');
+    logger.log(`Listening at http://${address}`);
+    logger.log('');
   });
 }
 
 function logLogo() {
-  Logger.log('   ________               __  ____      ___');
-  Logger.log('  / ____/ /_  ____  _____/ /_/ __/___  / (_)___');
-  Logger.log(' / / __/ __ \\/ __ \\/ ___/ __/ /_/ __ \\/ / / __ \\');
-  Logger.log('/ /_/ / / / / /_/ (__  ) /_/ __/ /_/ / / / /_/ /');
-  Logger.log(
+  logger.log('   ________               __  ____      ___');
+  logger.log('  / ____/ /_  ____  _____/ /_/ __/___  / (_)___');
+  logger.log(' / / __/ __ \\/ __ \\/ ___/ __/ /_/ __ \\/ / / __ \\');
+  logger.log('/ /_/ / / / / /_/ (__  ) /_/ __/ /_/ / / / /_/ /');
+  logger.log(
     `\\____/_/ /_/\\____/____/\\__/_/  \\____/_/_/\\____/ ${environment.version}`
   );
-  Logger.log('');
+  logger.log('');
 }
 
 bootstrap();

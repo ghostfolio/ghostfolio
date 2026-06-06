@@ -37,6 +37,8 @@ import { isNumber } from 'lodash';
 export class EodHistoricalDataService
   implements DataProviderInterface, OnModuleInit
 {
+  private readonly logger = new Logger(EodHistoricalDataService.name);
+
   private apiKey: string;
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
@@ -127,12 +129,11 @@ export class EodHistoricalDataService
 
       return response;
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
-        'EodHistoricalDataService'
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
 
       return {};
@@ -172,9 +173,8 @@ export class EodHistoricalDataService
               marketPrice: adjusted_close
             };
           } else {
-            Logger.error(
-              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`,
-              'EodHistoricalDataService'
+            this.logger.error(
+              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`
             );
           }
 
@@ -292,9 +292,8 @@ export class EodHistoricalDataService
             dataSource: this.getName()
           };
         } else {
-          Logger.error(
-            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
-            'EodHistoricalDataService'
+          this.logger.error(
+            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`
           );
         }
       }
@@ -311,7 +310,7 @@ export class EodHistoricalDataService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'EodHistoricalDataService');
+      this.logger.error(message);
     }
 
     return {};
@@ -465,7 +464,7 @@ export class EodHistoricalDataService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'EodHistoricalDataService');
+      this.logger.error(message);
     }
 
     return searchResult;

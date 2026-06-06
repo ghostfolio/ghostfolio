@@ -34,6 +34,8 @@ import ms, { StringValue } from 'ms';
 
 @Injectable()
 export class DataGatheringService {
+  private readonly logger = new Logger(DataGatheringService.name);
+
   public constructor(
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
@@ -145,7 +147,7 @@ export class DataGatheringService {
         });
       }
     } catch (error) {
-      Logger.error(error, 'DataGatheringService');
+      this.logger.error(error);
     } finally {
       return undefined;
     }
@@ -187,12 +189,11 @@ export class DataGatheringService {
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
-          Logger.error(
+          this.logger.error(
             `Failed to enhance data for ${symbol} (${
               assetProfile.dataSource
             }) by ${dataEnhancer.getName()}`,
-            error,
-            'DataGatheringService'
+            error
           );
         }
       }
@@ -256,11 +257,7 @@ export class DataGatheringService {
           }
         });
       } catch (error) {
-        Logger.error(
-          `${symbol}: ${error?.meta?.cause}`,
-          error,
-          'DataGatheringService'
-        );
+        this.logger.error(`${symbol}: ${error?.meta?.cause}`, error);
 
         if (assetProfileIdentifiers.length === 1) {
           throw error;

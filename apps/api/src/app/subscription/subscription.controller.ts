@@ -33,6 +33,8 @@ import { SubscriptionService } from './subscription.service';
 
 @Controller('subscription')
 export class SubscriptionController {
+  private readonly logger = new Logger(SubscriptionController.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly propertyService: PropertyService,
@@ -80,9 +82,8 @@ export class SubscriptionController {
       value: JSON.stringify(coupons)
     });
 
-    Logger.log(
-      `Subscription for user '${this.request.user.id}' has been created with a coupon for ${coupon.duration}`,
-      'SubscriptionController'
+    this.logger.log(
+      `Subscription for user '${this.request.user.id}' has been created with a coupon for ${coupon.duration}`
     );
 
     return {
@@ -101,9 +102,8 @@ export class SubscriptionController {
     );
 
     if (userId) {
-      Logger.log(
-        `Subscription for user '${userId}' has been created via Stripe`,
-        'SubscriptionController'
+      this.logger.log(
+        `Subscription for user '${userId}' has been created via Stripe`
       );
     }
 
@@ -126,7 +126,7 @@ export class SubscriptionController {
         user: this.request.user
       });
     } catch (error) {
-      Logger.error(error, 'SubscriptionController');
+      this.logger.error(error);
 
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
