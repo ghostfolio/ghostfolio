@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an automatic refresh every 30 seconds to the users table in the admin control panel
 
+### Fixed
+
+- Fixed a layout issue in the asset profile dialog of the admin control by truncating long titles
+
 ## 3.7.0 - 2026-06-02
 
 ### Added
