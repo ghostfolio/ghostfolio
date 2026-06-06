@@ -441,6 +441,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (SymbolProfile?.sectors?.length > 0) {
             for (const sector of SymbolProfile.sectors) {
+              sector.name = translate(sector.name);
+
               this.sectors[sector.name] = {
                 name: sector.name,
                 value: sector.weight

@@ -442,7 +442,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.sectors[name] = {
-                name,
+                name: translate(name),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)

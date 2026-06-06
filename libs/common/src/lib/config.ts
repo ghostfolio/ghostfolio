@@ -2,7 +2,7 @@ import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ColorScheme, DateRange } from './types';
+import { ColorScheme, DateRange, SectorName } from './types';
 
 export const ghostfolioPrefix = 'GF';
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
@@ -54,6 +54,21 @@ export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
 ]);
 
 export const BULL_BOARD_COOKIE_NAME = 'bull_board_token';
+
+export const SECTORS = [
+  'Basic Materials',
+  'Communication Services',
+  'Consumer Cyclical',
+  'Consumer Defensive',
+  'Energy',
+  'Financial Services',
+  'Healthcare',
+  'Industrials',
+  'Other',
+  'Real Estate',
+  'Technology',
+  'Utilities'
+] as const satisfies readonly SectorName[];
 
 /**
  * WARNING: This route is mirrored in `apps/client/proxy.conf.json`.

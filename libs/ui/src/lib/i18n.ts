@@ -1,3 +1,5 @@
+import type { SectorName } from '@ghostfolio/common/types';
+
 import '@angular/localize/init';
 
 const locales = {
@@ -107,8 +109,22 @@ const locales = {
   EXTREME_GREED: $localize`Extreme Greed`,
   FEAR: $localize`Fear`,
   GREED: $localize`Greed`,
-  NEUTRAL: $localize`Neutral`
-};
+  NEUTRAL: $localize`Neutral`,
+
+  // Sectors
+  'Basic Materials': $localize`Basic Materials`,
+  'Communication Services': $localize`Communication Services`,
+  'Consumer Cyclical': $localize`Consumer Cyclical`,
+  'Consumer Defensive': $localize`Consumer Defensive`,
+  Energy: $localize`Energy`,
+  'Financial Services': $localize`Financial Services`,
+  Healthcare: $localize`Healthcare`,
+  Industrials: $localize`Industrials`,
+  Other: $localize`Other`,
+  'Real Estate': $localize`Real Estate`,
+  Technology: $localize`Technology`,
+  Utilities: $localize`Utilities`
+} satisfies Record<SectorName, string> & Record<string, string>;
 
 export function translate(aKey: string): string {
   return locales[aKey] ?? aKey;
