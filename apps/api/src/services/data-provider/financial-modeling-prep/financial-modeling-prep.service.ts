@@ -1,3 +1,4 @@
+import { getCountryCodeByName } from '@ghostfolio/api/helper/country.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
@@ -33,7 +34,6 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { isISIN } from 'class-validator';
-import { countries } from 'countries-list';
 import {
   addDays,
   addYears,
@@ -49,13 +49,13 @@ import { uniqBy } from 'lodash';
 export class FinancialModelingPrepService
   implements DataProviderInterface, OnModuleInit
 {
-  private readonly logger = new Logger(FinancialModelingPrepService.name);
-
   private static countriesMapping = {
     'Korea (the Republic of)': 'South Korea',
     'Russian Federation': 'Russia',
     'Taiwan (Province of China)': 'Taiwan'
   };
+
+  private readonly logger = new Logger(FinancialModelingPrepService.name);
 
   private apiKey: string;
 
@@ -165,21 +165,11 @@ export class FinancialModelingPrepService
               return countryName.toLowerCase() !== 'other';
             })
             .map(({ country: countryName, weightPercentage }) => {
-              let countryCode: string;
-
-              for (const [code, country] of Object.entries(countries)) {
-                if (
-                  country.name === countryName ||
-                  country.name ===
-                    FinancialModelingPrepService.countriesMapping[countryName]
-                ) {
-                  countryCode = code;
-                  break;
-                }
-              }
-
               return {
-                code: countryCode,
+                code: getCountryCodeByName({
+                  aliases: FinancialModelingPrepService.countriesMapping,
+                  name: countryName
+                }),
                 weight: parseFloat(weightPercentage.slice(0, -1)) / 100
               };
             });

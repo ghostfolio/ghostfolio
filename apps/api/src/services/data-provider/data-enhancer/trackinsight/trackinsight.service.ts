@@ -1,3 +1,4 @@
+import { getCountryCodeByName } from '@ghostfolio/api/helper/country.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
@@ -7,12 +8,9 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import { countries } from 'countries-list';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
-
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
     'Russian Federation': 'Russia',
@@ -25,6 +23,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     'Health Care': 'Healthcare',
     'Information Technology': 'Technology'
   };
+
+  private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -117,21 +117,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       for (const [name, value] of Object.entries<any>(
         holdings?.countries ?? {}
       )) {
-        let countryCode: string;
-
-        for (const [code, country] of Object.entries(countries)) {
-          if (
-            country.name === name ||
-            country.name ===
-              TrackinsightDataEnhancerService.countriesMapping[name]
-          ) {
-            countryCode = code;
-            break;
-          }
-        }
-
         response.countries.push({
-          code: countryCode,
+          code: getCountryCodeByName({
+            name,
+            aliases: TrackinsightDataEnhancerService.countriesMapping
+          }),
           weight: value.weight
         });
       }
