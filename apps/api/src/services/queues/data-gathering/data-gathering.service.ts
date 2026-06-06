@@ -210,8 +210,6 @@ export class DataGatheringService {
         }
       }
 
-      assetProfiles[symbol] = enhancedAssetProfile;
-
       const { assetClass, assetSubClass } = assetProfile;
 
       const {
