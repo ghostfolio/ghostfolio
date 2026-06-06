@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Ukrainian (`uk`)
 
+### Fixed
+
+- Fixed a layout issue in the asset profile dialog of the admin control by truncating long titles
+
 ## 3.7.0 - 2026-06-02
 
 ### Added
