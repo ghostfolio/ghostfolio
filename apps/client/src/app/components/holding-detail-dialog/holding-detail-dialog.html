@@ -272,7 +272,12 @@
                       i18n
                       size="medium"
                       [locale]="data.locale"
-                      [value]="translate(SymbolProfile.countries[0].name)"
+                      [value]="
+                        getCountryName({
+                          code: SymbolProfile.countries[0].code,
+                          locale: data.locale
+                        })
+                      "
                       >Country</gf-value
                     >
                   </div>
