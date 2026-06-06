@@ -1,5 +1,12 @@
 import { NumberParser } from '@internationalized/number';
-import { Type as ActivityType, DataSource, MarketData } from '@prisma/client';
+import {
+  Type as ActivityType,
+  DataSource,
+  MarketData,
+  Prisma,
+  SymbolProfile,
+  SymbolProfileOverrides
+} from '@prisma/client';
 import { Big } from 'big.js';
 import { isISO4217CurrencyCode } from 'class-validator';
 import {
@@ -46,6 +53,43 @@ import { BenchmarkTrend, ColorScheme } from './types';
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
+
+export function applySymbolProfileOverrides<T extends Partial<SymbolProfile>>(
+  symbolProfile: T,
+  symbolProfileOverrides: SymbolProfileOverrides | null
+): T {
+  if (!symbolProfileOverrides) {
+    return symbolProfile;
+  }
+
+  const symbolProfileWithOverrides = { ...symbolProfile } as T;
+
+  symbolProfileWithOverrides.assetClass =
+    symbolProfileOverrides.assetClass ?? symbolProfile.assetClass;
+
+  symbolProfileWithOverrides.assetSubClass =
+    symbolProfileOverrides.assetSubClass ?? symbolProfile.assetSubClass;
+
+  if ((symbolProfileOverrides.countries as Prisma.JsonArray)?.length > 0) {
+    symbolProfileWithOverrides.countries = symbolProfileOverrides.countries;
+  }
+
+  if ((symbolProfileOverrides.holdings as Prisma.JsonArray)?.length > 0) {
+    symbolProfileWithOverrides.holdings = symbolProfileOverrides.holdings;
+  }
+
+  symbolProfileWithOverrides.name =
+    symbolProfileOverrides.name ?? symbolProfile.name;
+
+  if ((symbolProfileOverrides.sectors as Prisma.JsonArray)?.length > 0) {
+    symbolProfileWithOverrides.sectors = symbolProfileOverrides.sectors;
+  }
+
+  symbolProfileWithOverrides.url =
+    symbolProfileOverrides.url ?? symbolProfile.url;
+
+  return symbolProfileWithOverrides;
+}
 
 export function calculateBenchmarkTrend({
   days,

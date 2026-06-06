@@ -176,9 +176,28 @@ export class DataGatheringService {
     );
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
-      const symbolMapping = symbolProfiles.find((symbolProfile) => {
-        return symbolProfile.symbol === symbol;
-      })?.symbolMapping;
+      const symbolProfile = symbolProfiles.find(
+        ({ symbol: symbolProfileSymbol }) => {
+          return symbolProfileSymbol === symbol;
+        }
+      );
+
+      const symbolMapping = symbolProfile?.symbolMapping;
+
+      // Persist the data provider’s classification in the base asset profile;
+      // the asset profile override stays a separate layer applied at read time
+      const {
+        assetClass: assetClassFromDataProvider,
+        assetSubClass: assetSubClassFromDataProvider
+      } = assetProfile;
+
+      // Apply the asset profile override so the data enhancers treat the asset
+      // profile correctly (e.g. enrich an ETF that the data provider classifies
+      // as a stock)
+      if (symbolProfile) {
+        assetProfile.assetClass = symbolProfile.assetClass;
+        assetProfile.assetSubClass = symbolProfile.assetSubClass;
+      }
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
@@ -196,6 +215,10 @@ export class DataGatheringService {
           );
         }
       }
+
+      // Restore the data provider’s classification before persisting
+      assetProfile.assetClass = assetClassFromDataProvider;
+      assetProfile.assetSubClass = assetSubClassFromDataProvider;
 
       const {
         assetClass,
