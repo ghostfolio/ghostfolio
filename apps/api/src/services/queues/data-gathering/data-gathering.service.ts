@@ -184,25 +184,19 @@ export class DataGatheringService {
 
       const symbolMapping = symbolProfile?.symbolMapping;
 
-      // Persist the data provider’s classification in the base asset profile;
-      // the asset profile override stays a separate layer applied at read time
-      const {
-        assetClass: assetClassFromDataProvider,
-        assetSubClass: assetSubClassFromDataProvider
-      } = assetProfile;
-
-      // Apply the asset profile override so the data enhancers treat the asset
-      // profile correctly (e.g. enrich an ETF that the data provider classifies
-      // as a stock)
-      if (symbolProfile) {
-        assetProfile.assetClass = symbolProfile.assetClass;
-        assetProfile.assetSubClass = symbolProfile.assetSubClass;
-      }
+      let enhancedAssetProfile = symbolProfile
+        ? {
+            ...assetProfile,
+            assetClass: symbolProfile.assetClass ?? assetProfile.assetClass,
+            assetSubClass:
+              symbolProfile.assetSubClass ?? assetProfile.assetSubClass
+          }
+        : assetProfile;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
-          assetProfiles[symbol] = await dataEnhancer.enhance({
-            response: assetProfile,
+          enhancedAssetProfile = await dataEnhancer.enhance({
+            response: enhancedAssetProfile,
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
@@ -216,13 +210,11 @@ export class DataGatheringService {
         }
       }
 
-      // Restore the data provider’s classification before persisting
-      assetProfile.assetClass = assetClassFromDataProvider;
-      assetProfile.assetSubClass = assetSubClassFromDataProvider;
+      assetProfiles[symbol] = enhancedAssetProfile;
+
+      const { assetClass, assetSubClass } = assetProfile;
 
       const {
-        assetClass,
-        assetSubClass,
         countries,
         currency,
         cusip,
@@ -235,7 +227,7 @@ export class DataGatheringService {
         name,
         sectors,
         url
-      } = assetProfile;
+      } = enhancedAssetProfile;
 
       try {
         await this.prismaService.symbolProfile.upsert({
