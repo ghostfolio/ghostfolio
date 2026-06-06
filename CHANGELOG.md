@@ -13,12 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the styling in the user detail dialog of the admin control panel’s users section
 - Refactored the backend logging to use the instance-based `Logger`
 - Improved the language localization for Ukrainian (`uk`)
 
 ### Fixed
 
-- Fixed a layout issue in the asset profile dialog of the admin control by truncating long titles
+- Fixed a layout issue in the asset profile dialog of the admin control panel by truncating long titles
 
 ## 3.7.0 - 2026-06-02
 
