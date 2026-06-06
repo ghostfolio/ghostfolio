@@ -1,10 +1,10 @@
 <div class="d-flex flex-column h-100">
-  <div class="d-flex mb-3">
-    <h1 class="flex-grow-1 m-0" mat-dialog-title>
-      <span>{{ assetProfile?.name ?? data.symbol }}</span>
-    </h1>
+  <h1 class="align-items-center d-flex mb-3" mat-dialog-title>
+    <span class="flex-grow-1 text-truncate">{{
+      assetProfile?.name ?? data.symbol
+    }}</span>
     <button
-      class="mx-1 no-min-width px-2"
+      class="ml-1 no-min-width px-2"
       mat-button
       type="button"
       [matMenuTriggerFor]="assetProfileActionsMenu"
@@ -87,7 +87,7 @@
         <ng-container i18n>Delete</ng-container>
       </button>
     </mat-menu>
-  </div>
+  </h1>
 
   <div class="flex-grow-1" mat-dialog-content>
     <gf-line-chart

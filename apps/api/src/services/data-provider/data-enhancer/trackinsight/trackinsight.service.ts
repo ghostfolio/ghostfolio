@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
@@ -10,9 +11,12 @@ import { countries } from 'countries-list';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
+  private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
+
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
-    'Russian Federation': 'Russia'
+    'Russian Federation': 'Russia',
+    USA: 'United States'
   };
   private static holdingsWeightTreshold = 0.85;
   private static sectorsMapping = {
@@ -23,7 +27,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   };
 
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService
   ) {}
 
   public async enhance({
@@ -60,12 +65,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
+    const profile = await this.fetchService
+      .fetch(
+        `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      )
       .then((res) => res.json())
       .catch(() => {
         return {};
@@ -83,12 +89,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.isin = isin;
     }
 
-    const holdings = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
+    const holdings = await this.fetchService
+      .fetch(
+        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      )
       .then((res) => res.json())
       .catch(() => {
         return {};
@@ -182,12 +189,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     requestTimeout: number;
     symbol: string;
   }) {
-    return fetch(
-      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
+    return this.fetchService
+      .fetch(
+        `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      )
       .then((res) => res.json())
       .then((jsonRes) => {
         if (
@@ -203,9 +211,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         return undefined;
       })
       .catch(({ message }) => {
-        Logger.error(
-          `Failed to search Trackinsight symbol for ${symbol} (${message})`,
-          'TrackinsightDataEnhancerService'
+        this.logger.error(
+          `Failed to search Trackinsight symbol for ${symbol} (${message})`
         );
 
         return undefined;

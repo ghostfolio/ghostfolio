@@ -1,10 +1,11 @@
 @use '@angular/material' as mat;
+@use 'sass:color';
 
-@import './styles/bootstrap';
-@import './styles/table';
-@import './styles/variables';
+@use './styles/bootstrap';
+@use './styles/table' as table;
+@use './styles/variables' as variables;
 
-@import 'svgmap/style.min';
+@use 'svgmap/style.min';
 
 :root {
   --dark-background: rgb(25, 25, 25);
@@ -12,8 +13,10 @@
   --light-background: rgb(255, 255, 255);
 
   --dark-primary-text:
-    #{red($dark-primary-text)}, #{green($dark-primary-text)},
-    #{blue($dark-primary-text)}, #{alpha($dark-primary-text)};
+    #{color.channel(variables.$dark-primary-text, 'red')},
+    #{color.channel(variables.$dark-primary-text, 'green')},
+    #{color.channel(variables.$dark-primary-text, 'blue')},
+    #{color.channel(variables.$dark-primary-text, 'alpha')};
   --dark-secondary-text: 0, 0, 0, 0.54;
   --dark-accent-text: 0, 0, 0, 0.87;
   --dark-warn-text: 0, 0, 0, 0.87;
@@ -21,8 +24,10 @@
   --dark-dividers: 0, 0, 0, 0.12;
   --dark-focused: 0, 0, 0, 0.12;
   --light-primary-text:
-    #{red($light-primary-text)}, #{green($light-primary-text)},
-    #{blue($light-primary-text)}, #{alpha($light-primary-text)};
+    #{color.channel(variables.$light-primary-text, 'red')},
+    #{color.channel(variables.$light-primary-text, 'green')},
+    #{color.channel(variables.$light-primary-text, 'blue')},
+    #{color.channel(variables.$light-primary-text, 'alpha')};
   --light-secondary-text: 255, 255, 255, 0.7;
   --light-accent-text: 255, 255, 255, 1;
   --light-warn-text: 255, 255, 255, 1;
@@ -240,7 +245,7 @@ body {
     }
 
     .gf-table {
-      @include gf-table(true);
+      @include table.gf-table(true);
     }
 
     .mat-mdc-dialog-container {
@@ -353,15 +358,11 @@ ngx-skeleton-loader {
 }
 
 .gf-table {
-  @include gf-table;
+  @include table.gf-table;
 }
 
 .gf-text-wrap-balance {
   text-wrap: balance;
-}
-
-.has-fab {
-  padding-bottom: 3rem !important;
 }
 
 .has-info-message {
@@ -483,13 +484,6 @@ ngx-skeleton-loader {
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom);
   padding-bottom: constant(safe-area-inset-bottom);
-
-  .fab-container {
-    bottom: 2rem;
-    position: fixed;
-    right: 2rem;
-    z-index: 999;
-  }
 
   // Restrict viewport height and layout boundaries only when the page hosts tab navigation
   &:has(gf-page-tabs) {

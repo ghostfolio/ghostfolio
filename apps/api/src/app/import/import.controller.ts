@@ -31,6 +31,8 @@ import { ImportService } from './import.service';
 
 @Controller('import')
 export class ImportController {
+  private readonly logger = new Logger(ImportController.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
@@ -81,7 +83,7 @@ export class ImportController {
 
       return { activities };
     } catch (error) {
-      Logger.error(error, ImportController);
+      this.logger.error(error);
 
       throw new HttpException(
         {

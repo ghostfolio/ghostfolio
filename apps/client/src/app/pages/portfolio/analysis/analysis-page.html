@@ -310,13 +310,15 @@
                 <a
                   class="d-flex"
                   [queryParams]="{
-                    dataSource: holding.dataSource,
+                    dataSource: holding.assetProfile.dataSource,
                     holdingDetailDialog: true,
-                    symbol: holding.symbol
+                    symbol: holding.assetProfile.symbol
                   }"
                   [routerLink]="[]"
                 >
-                  <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
+                  <div class="flex-grow-1 mr-2">
+                    {{ holding.assetProfile.name }}
+                  </div>
                   <div class="d-flex justify-content-end">
                     <gf-value
                       class="justify-content-end"
@@ -359,13 +361,15 @@
                 <a
                   class="d-flex"
                   [queryParams]="{
-                    dataSource: holding.dataSource,
+                    dataSource: holding.assetProfile.dataSource,
                     holdingDetailDialog: true,
-                    symbol: holding.symbol
+                    symbol: holding.assetProfile.symbol
                   }"
                   [routerLink]="[]"
                 >
-                  <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
+                  <div class="flex-grow-1 mr-2">
+                    {{ holding.assetProfile.name }}
+                  </div>
                   <div class="d-flex justify-content-end">
                     <gf-value
                       class="justify-content-end"
@@ -438,7 +442,7 @@
         </div>
         <gf-toggle
           class="d-none d-lg-block"
-          [defaultValue]="mode"
+          [defaultValue]="mode()"
           [isLoading]="false"
           [options]="modeOptions"
           (valueChange)="onChangeGroupBy($event.value)"
@@ -472,7 +476,7 @@
           [benchmarkDataItems]="investmentsByGroup"
           [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
-          [groupBy]="mode"
+          [groupBy]="mode()"
           [isInPercentage]="
             hasImpersonationId || user.settings.isRestrictedView
           "
@@ -497,7 +501,7 @@
         </div>
         <gf-toggle
           class="d-none d-lg-block"
-          [defaultValue]="mode"
+          [defaultValue]="mode()"
           [isLoading]="false"
           [options]="modeOptions"
           (valueChange)="onChangeGroupBy($event.value)"
@@ -509,7 +513,7 @@
           [benchmarkDataItems]="dividendsByGroup"
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
-          [groupBy]="mode"
+          [groupBy]="mode()"
           [isInPercentage]="
             hasImpersonationId || user.settings.isRestrictedView
           "

@@ -7,6 +7,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -28,11 +29,14 @@ import { format, fromUnixTime, getUnixTime } from 'date-fns';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
+  private readonly logger = new Logger(CoinGeckoService.name);
+
   private apiUrl: string;
   private headers: HeadersInit = {};
 
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService
   ) {}
 
   public onModuleInit() {
@@ -67,12 +71,14 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     };
 
     try {
-      const { name } = await fetch(`${this.apiUrl}/coins/${symbol}`, {
-        headers: this.headers,
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
-      }).then((res) => res.json());
+      const { name } = await this.fetchService
+        .fetch(`${this.apiUrl}/coins/${symbol}`, {
+          headers: this.headers,
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
+        })
+        .then((res) => res.json());
 
       response.name = name;
     } catch (error) {
@@ -84,7 +90,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'CoinGeckoService');
+      this.logger.error(message);
     }
 
     return response;
@@ -118,13 +124,15 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         vs_currency: DEFAULT_CURRENCY.toLowerCase()
       });
 
-      const { error, prices, status } = await fetch(
-        `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`,
-        {
-          headers: this.headers,
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+      const { error, prices, status } = await this.fetchService
+        .fetch(
+          `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`,
+          {
+            headers: this.headers,
+            signal: AbortSignal.timeout(requestTimeout)
+          }
+        )
+        .then((res) => res.json());
 
       if (error?.status) {
         throw new Error(error.status.error_message);
@@ -181,13 +189,12 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         vs_currencies: DEFAULT_CURRENCY.toLowerCase()
       });
 
-      const quotes = await fetch(
-        `${this.apiUrl}/simple/price?${queryParams.toString()}`,
-        {
+      const quotes = await this.fetchService
+        .fetch(`${this.apiUrl}/simple/price?${queryParams.toString()}`, {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       for (const symbol in quotes) {
         response[symbol] = {
@@ -209,7 +216,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'CoinGeckoService');
+      this.logger.error(message);
     }
 
     return response;
@@ -230,13 +237,12 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         query
       });
 
-      const { coins } = await fetch(
-        `${this.apiUrl}/search?${queryParams.toString()}`,
-        {
+      const { coins } = await this.fetchService
+        .fetch(`${this.apiUrl}/search?${queryParams.toString()}`, {
           headers: this.headers,
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       items = coins.map(({ id: symbol, name }) => {
         return {
@@ -258,7 +264,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'CoinGeckoService');
+      this.logger.error(message);
     }
 
     return { items };

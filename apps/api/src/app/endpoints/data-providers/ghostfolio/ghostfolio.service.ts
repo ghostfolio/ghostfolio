@@ -8,6 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -33,9 +34,12 @@ import { Big } from 'big.js';
 
 @Injectable()
 export class GhostfolioService {
+  private readonly logger = new Logger(GhostfolioService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
+    private readonly fetchService: FetchService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {}
@@ -97,7 +101,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -139,7 +143,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -181,7 +185,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -269,7 +273,7 @@ export class GhostfolioService {
 
       return results;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -346,7 +350,7 @@ export class GhostfolioService {
 
       return results;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -355,6 +359,7 @@ export class GhostfolioService {
   private getDataProviderInfo(): DataProviderInfo {
     const ghostfolioDataProviderService = new GhostfolioDataProviderService(
       this.configurationService,
+      this.fetchService,
       this.propertyService
     );
 

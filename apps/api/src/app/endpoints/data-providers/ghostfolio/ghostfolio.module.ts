@@ -12,6 +12,7 @@ import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/goog
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
+import { FetchModule } from '@ghostfolio/api/services/fetch/fetch.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
@@ -27,6 +28,7 @@ import { GhostfolioService } from './ghostfolio.service';
   imports: [
     CryptocurrencyModule,
     DataProviderModule,
+    FetchModule,
     MarketDataModule,
     PrismaModule,
     PropertyModule,

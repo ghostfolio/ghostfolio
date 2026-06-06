@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -10,6 +11,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 export class LogoService {
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -43,15 +45,17 @@ export class LogoService {
   }
 
   private async getBuffer(aUrl: string) {
-    const blob = await fetch(
-      `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
-      {
-        headers: { 'User-Agent': 'request' },
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
-      }
-    ).then((res) => res.blob());
+    const blob = await this.fetchService
+      .fetch(
+        `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
+        {
+          headers: { 'User-Agent': 'request' },
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
+        }
+      )
+      .then((res) => res.blob());
 
     return {
       buffer: await blob.arrayBuffer().then((arrayBuffer) => {

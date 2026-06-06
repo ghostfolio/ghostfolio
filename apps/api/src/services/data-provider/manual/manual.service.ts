@@ -8,6 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -30,8 +31,11 @@ import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
+  private readonly logger = new Logger(ManualService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -179,9 +183,8 @@ export class ManualService implements DataProviderInterface {
               });
               return { marketPrice, symbol };
             } catch (error) {
-              Logger.error(
-                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`,
-                'ManualService'
+              this.logger.error(
+                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
               );
               return { symbol, marketPrice: undefined };
             }
@@ -214,7 +217,7 @@ export class ManualService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'ManualService');
+      this.logger.error(error);
     }
 
     return {};
@@ -292,7 +295,7 @@ export class ManualService implements DataProviderInterface {
   }): Promise<number> {
     let locale = scraperConfiguration.locale;
 
-    const response = await fetch(scraperConfiguration.url, {
+    const response = await this.fetchService.fetch(scraperConfiguration.url, {
       headers: scraperConfiguration.headers as HeadersInit,
       signal: AbortSignal.timeout(
         this.configurationService.get('REQUEST_TIMEOUT')

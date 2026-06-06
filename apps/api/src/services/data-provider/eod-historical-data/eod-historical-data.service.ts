@@ -7,6 +7,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -36,11 +37,14 @@ import { isNumber } from 'lodash';
 export class EodHistoricalDataService
   implements DataProviderInterface, OnModuleInit
 {
+  private readonly logger = new Logger(EodHistoricalDataService.name);
+
   private apiKey: string;
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -111,12 +115,11 @@ export class EodHistoricalDataService
         [date: string]: DataProviderHistoricalResponse;
       } = {};
 
-      const historicalResult = await fetch(
-        `${this.URL}/div/${symbol}?${queryParams.toString()}`,
-        {
+      const historicalResult = await this.fetchService
+        .fetch(`${this.URL}/div/${symbol}?${queryParams.toString()}`, {
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       for (const { date, value } of historicalResult) {
         response[date] = {
@@ -126,12 +129,11 @@ export class EodHistoricalDataService
 
       return response;
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
-        'EodHistoricalDataService'
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
 
       return {};
@@ -158,12 +160,11 @@ export class EodHistoricalDataService
         to: format(to, DATE_FORMAT)
       });
 
-      const response = await fetch(
-        `${this.URL}/eod/${symbol}?${queryParams.toString()}`,
-        {
+      const response = await this.fetchService
+        .fetch(`${this.URL}/eod/${symbol}?${queryParams.toString()}`, {
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       return response.reduce(
         (result, { adjusted_close, date }) => {
@@ -172,9 +173,8 @@ export class EodHistoricalDataService
               marketPrice: adjusted_close
             };
           } else {
-            Logger.error(
-              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`,
-              'EodHistoricalDataService'
+            this.logger.error(
+              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`
             );
           }
 
@@ -223,12 +223,14 @@ export class EodHistoricalDataService
         s: eodHistoricalDataSymbols.join(',')
       });
 
-      const realTimeResponse = await fetch(
-        `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?${queryParams.toString()}`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+      const realTimeResponse = await this.fetchService
+        .fetch(
+          `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?${queryParams.toString()}`,
+          {
+            signal: AbortSignal.timeout(requestTimeout)
+          }
+        )
+        .then((res) => res.json());
 
       const quotes: {
         close: number;
@@ -290,9 +292,8 @@ export class EodHistoricalDataService
             dataSource: this.getName()
           };
         } else {
-          Logger.error(
-            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
-            'EodHistoricalDataService'
+          this.logger.error(
+            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`
           );
         }
       }
@@ -309,7 +310,7 @@ export class EodHistoricalDataService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'EodHistoricalDataService');
+      this.logger.error(message);
     }
 
     return {};
@@ -430,12 +431,11 @@ export class EodHistoricalDataService
         api_token: this.apiKey
       });
 
-      const response = await fetch(
-        `${this.URL}/search/${query}?${queryParams.toString()}`,
-        {
+      const response = await this.fetchService
+        .fetch(`${this.URL}/search/${query}?${queryParams.toString()}`, {
           signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       searchResult = response.map(
         ({ Code, Currency, Exchange, ISIN: isin, Name: name, Type }) => {
@@ -464,7 +464,7 @@ export class EodHistoricalDataService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'EodHistoricalDataService');
+      this.logger.error(message);
     }
 
     return searchResult;

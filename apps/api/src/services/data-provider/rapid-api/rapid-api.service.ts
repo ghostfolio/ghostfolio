@@ -7,6 +7,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import {
   ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolStocks
@@ -25,8 +26,11 @@ import { format } from 'date-fns';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
+  private readonly logger = new Logger(RapidApiService.name);
+
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService
   ) {}
 
   public canHandle() {
@@ -120,7 +124,7 @@ export class RapidApiService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error, 'RapidApiService');
+      this.logger.error(error);
     }
 
     return {};
@@ -142,9 +146,8 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const { fgi } = await fetch(
-        `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
-        {
+      const { fgi } = await this.fetchService
+        .fetch(`https://fear-and-greed-index.p.rapidapi.com/v1/fgi`, {
           headers: {
             useQueryString: 'true',
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
@@ -153,8 +156,8 @@ export class RapidApiService implements DataProviderInterface {
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       return fgi;
     } catch (error) {
@@ -166,7 +169,7 @@ export class RapidApiService implements DataProviderInterface {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'RapidApiService');
+      this.logger.error(message);
 
       return undefined;
     }
