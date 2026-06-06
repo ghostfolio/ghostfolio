@@ -9,6 +9,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
+import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -232,7 +233,7 @@ export class GfPublicPageComponent implements OnInit {
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.sectors[name] = {
-                name,
+                name: translate(name),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]

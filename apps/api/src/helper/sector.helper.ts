@@ -1,4 +1,5 @@
-import { SECTORS, UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { SECTORS } from '@ghostfolio/common/config';
+import { SectorName } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
 
@@ -6,9 +7,9 @@ export function getSectorName({
   aliases = {},
   name
 }: {
-  aliases?: Record<string, string>;
+  aliases?: Record<string, SectorName>;
   name: string;
-}): string {
+}): SectorName {
   const mappedName = aliases[name];
 
   if (mappedName) {
@@ -16,7 +17,7 @@ export function getSectorName({
   }
 
   if ((SECTORS as readonly string[]).includes(name)) {
-    return name;
+    return name as SectorName;
   }
 
   if (name) {
@@ -25,5 +26,5 @@ export function getSectorName({
     logger.warn(`Could not map the sector "${name}" to the ontology`);
   }
 
-  return UNKNOWN_KEY;
+  return 'Other';
 }
