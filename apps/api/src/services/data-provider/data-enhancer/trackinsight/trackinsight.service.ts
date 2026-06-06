@@ -1,10 +1,12 @@
 import { getCountryCodeByName } from '@ghostfolio/api/helper/country.helper';
+import { getSectorName } from '@ghostfolio/api/helper/sector.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
@@ -17,11 +19,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     USA: 'United States'
   };
   private static holdingsWeightTreshold = 0.85;
-  private static sectorsMapping = {
+  private static sectorsMapping: Record<string, SectorName> = {
     'Consumer Discretionary': 'Consumer Cyclical',
-    'Consumer Defensive': 'Consumer Staples',
+    'Consumer Staples': 'Consumer Defensive',
+    Financials: 'Financial Services',
     'Health Care': 'Healthcare',
-    'Information Technology': 'Technology'
+    'Information Technology': 'Technology',
+    Materials: 'Basic Materials'
   };
 
   private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
@@ -155,7 +159,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         holdings?.sectors ?? {}
       )) {
         response.sectors.push({
-          name: TrackinsightDataEnhancerService.sectorsMapping[name] ?? name,
+          name: getSectorName({
+            name,
+            aliases: TrackinsightDataEnhancerService.sectorsMapping
+          }),
           weight: value.weight
         });
       }

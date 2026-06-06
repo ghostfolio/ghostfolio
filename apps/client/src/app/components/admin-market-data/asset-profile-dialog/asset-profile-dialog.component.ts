@@ -246,6 +246,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
     [name: string]: { name: string; value: number };
   };
 
+  protected readonly translate = translate;
+
   protected user: User;
 
   private benchmarks: Partial<SymbolProfile>[];
@@ -381,7 +383,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ) {
           for (const { name, weight } of this.assetProfile.sectors) {
             this.sectors[name] = {
-              name,
+              name: translate(name),
               value: weight
             };
           }

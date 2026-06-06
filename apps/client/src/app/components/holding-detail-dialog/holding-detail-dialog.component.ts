@@ -157,6 +157,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
   public tagsAvailable: Tag[];
+  public translate = translate;
   public user: User;
   public value: number;
 
@@ -442,7 +443,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (SymbolProfile?.sectors?.length > 0) {
             for (const sector of SymbolProfile.sectors) {
               this.sectors[sector.name] = {
-                name: sector.name,
+                name: translate(sector.name),
                 value: sector.weight
               };
             }

@@ -282,6 +282,21 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const SECTORS = [
+  'Basic Materials',
+  'Communication Services',
+  'Consumer Cyclical',
+  'Consumer Defensive',
+  'Energy',
+  'Financial Services',
+  'Healthcare',
+  'Industrials',
+  'Other',
+  'Real Estate',
+  'Technology',
+  'Utilities'
+] as const;
+
 export const STORYBOOK_PATH = '/development/storybook';
 
 export const SUPPORTED_LANGUAGE_CODES = [
