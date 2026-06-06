@@ -59,8 +59,10 @@ import {
   personOutline,
   trashOutline
 } from 'ionicons/icons';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { interval } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
@@ -184,6 +186,15 @@ export class GfAdminUsersComponent implements OnInit {
 
   public ngOnInit() {
     this.fetchUsers();
+
+    interval(ms('30 seconds'))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.fetchUsers({
+          pageIndex: this.paginator().pageIndex,
+          showLoading: false
+        });
+      });
   }
 
   protected formatDistanceToNow(aDateString: string) {
@@ -267,8 +278,13 @@ export class GfAdminUsersComponent implements OnInit {
     );
   }
 
-  private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
-    this.isLoading = true;
+  private fetchUsers({
+    pageIndex = 0,
+    showLoading = true
+  }: { pageIndex?: number; showLoading?: boolean } = {}) {
+    if (showLoading) {
+      this.isLoading = true;
+    }
 
     if (pageIndex === 0 && this.paginator()) {
       this.paginator().pageIndex = 0;
@@ -281,7 +297,7 @@ export class GfAdminUsersComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ count, users }) => {
-        this.dataSource = new MatTableDataSource(users);
+        this.dataSource.data = users;
         this.totalItems = count;
 
         this.isLoading = false;

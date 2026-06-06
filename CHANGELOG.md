@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an automatic refresh every 30 seconds to the users table in the admin control panel
+
 ### Changed
 
 - Refactored the backend logging to use the instance-based `Logger`
+
+### Fixed
+
+- Fixed a layout issue in the asset profile dialog of the admin control by truncating long titles
 
 ## 3.7.0 - 2026-06-02
 
