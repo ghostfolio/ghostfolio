@@ -157,6 +157,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
   public tagsAvailable: Tag[];
+  public translate = translate;
   public user: User;
   public value: number;
 
