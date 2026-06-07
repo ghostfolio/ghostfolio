@@ -460,6 +460,22 @@ export class ExchangeRateDataService {
         }
       } catch {}
 
+      // The base-currency market data is gathered from the first activity date
+      // onwards and skips non-trading days, so it does not cover every date in
+      // the requested interval. Carry the nearest known price into those gaps
+      // (as getExchangeRatesByCurrency already does for the resulting factors)
+      // so a weekend or a date just outside the gathered range does not log a
+      // spurious "No exchange rate has been found" error. A pair with no data at
+      // all still has nothing to carry and is reported as before.
+      this.fillMissingMarketPrices({
+        dates,
+        marketPricesByDateString: marketPriceBaseCurrencyFromCurrency
+      });
+      this.fillMissingMarketPrices({
+        dates,
+        marketPricesByDateString: marketPriceBaseCurrencyToCurrency
+      });
+
       for (const date of dates) {
         try {
           const factor =
@@ -488,6 +504,40 @@ export class ExchangeRateDataService {
     }
 
     return factors;
+  }
+
+  private fillMissingMarketPrices({
+    dates,
+    marketPricesByDateString
+  }: {
+    dates: Date[];
+    marketPricesByDateString: { [dateString: string]: number };
+  }) {
+    // Forward pass: carry the most recent known price across later gaps
+    let lastKnownMarketPrice: number;
+
+    for (const date of dates) {
+      const dateString = format(date, DATE_FORMAT);
+
+      if (isNumber(marketPricesByDateString[dateString])) {
+        lastKnownMarketPrice = marketPricesByDateString[dateString];
+      } else if (isNumber(lastKnownMarketPrice)) {
+        marketPricesByDateString[dateString] = lastKnownMarketPrice;
+      }
+    }
+
+    // Backward pass: back-fill a leading gap with the earliest known price
+    let nextKnownMarketPrice: number;
+
+    for (let i = dates.length - 1; i >= 0; i--) {
+      const dateString = format(dates[i], DATE_FORMAT);
+
+      if (isNumber(marketPricesByDateString[dateString])) {
+        nextKnownMarketPrice = marketPricesByDateString[dateString];
+      } else if (isNumber(nextKnownMarketPrice)) {
+        marketPricesByDateString[dateString] = nextKnownMarketPrice;
+      }
+    }
   }
 
   private async prepareCurrencies(): Promise<string[]> {
