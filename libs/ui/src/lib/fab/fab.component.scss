@@ -1,14 +1,32 @@
 :host {
-  bottom: calc(constant(safe-area-inset-bottom) + 2rem);
-  bottom: calc(env(safe-area-inset-bottom) + 2rem);
-  position: fixed;
-  right: 2rem;
-  z-index: 999;
+  display: block;
+
+  // Reserve space so a floating action button does not overlap trailing content
+  height: calc(constant(safe-area-inset-bottom) + 7rem);
+  height: calc(env(safe-area-inset-bottom) + 7rem);
+
+  @media (min-width: 576px) {
+    height: calc(constant(safe-area-inset-bottom) + 5rem);
+    height: calc(env(safe-area-inset-bottom) + 5rem);
+  }
+
+  .mat-mdc-fab {
+    bottom: calc(constant(safe-area-inset-bottom) + 2rem);
+    bottom: calc(env(safe-area-inset-bottom) + 2rem);
+    position: fixed;
+    right: 2rem;
+    z-index: 999;
+  }
 }
 
 :host-context(gf-page-tabs) {
   @media (max-width: 575.98px) {
-    bottom: calc(constant(safe-area-inset-bottom) + 5rem);
-    bottom: calc(env(safe-area-inset-bottom) + 5rem);
+    height: calc(constant(safe-area-inset-bottom) + 6rem);
+    height: calc(env(safe-area-inset-bottom) + 6rem);
+
+    .mat-mdc-fab {
+      bottom: calc(constant(safe-area-inset-bottom) + 5rem);
+      bottom: calc(env(safe-area-inset-bottom) + 5rem);
+    }
   }
 }

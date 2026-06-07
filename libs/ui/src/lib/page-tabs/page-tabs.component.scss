@@ -21,17 +21,6 @@
       @media (max-width: 575.98px) {
         padding: 1rem 0;
       }
-
-      // Reserve space so a floating action button does not overlap trailing content
-      &:has(gf-fab) {
-        padding-bottom: calc(env(safe-area-inset-bottom) + 6rem);
-        padding-bottom: calc(constant(safe-area-inset-bottom) + 6rem);
-
-        @media (max-width: 575.98px) {
-          padding-bottom: calc(env(safe-area-inset-bottom) + 7.5rem);
-          padding-bottom: calc(constant(safe-area-inset-bottom) + 7.5rem);
-        }
-      }
     }
   }
 

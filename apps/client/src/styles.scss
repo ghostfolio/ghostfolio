@@ -495,12 +495,6 @@ ngx-skeleton-loader {
     @media (min-width: 576px) {
       padding: 2rem 0;
     }
-
-    // Reserve space so a floating action button does not overlap trailing content
-    &:has(gf-fab) {
-      padding-bottom: calc(env(safe-area-inset-bottom) + 6rem);
-      padding-bottom: calc(constant(safe-area-inset-bottom) + 6rem);
-    }
   }
 }
 
