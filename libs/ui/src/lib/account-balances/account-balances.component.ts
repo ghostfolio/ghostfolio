@@ -70,6 +70,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
     input.required<AccountBalancesResponse['balances']>();
   public readonly accountCurrency = input.required<string>();
   public readonly accountId = input.required<string>();
+  public readonly currentBalance = input<number | null>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
   public readonly locale = input(getLocale());
   public readonly showActions = input(true);
@@ -102,6 +103,8 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
       this.dataSource.sort = this.sort();
       this.dataSource.sortingDataAccessor = get;
     }
+
+    this.prefillAccountBalanceForm();
   }
 
   public onDeleteAccountBalance(aId: string) {
@@ -139,5 +142,18 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
     }
 
     this.accountBalanceCreated.emit(accountBalance);
+  }
+
+  private prefillAccountBalanceForm() {
+    const currentBalance = this.currentBalance();
+
+    if (
+      typeof currentBalance !== 'number' ||
+      !this.accountBalanceForm.controls.balance.pristine
+    ) {
+      return;
+    }
+
+    this.accountBalanceForm.patchValue({ balance: currentBalance });
   }
 }
