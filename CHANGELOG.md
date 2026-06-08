@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Removed
+### Changed
 
-- Removed precious metals (Commodities) from the analysis data by continents, countries, sectors and markets.
+- Prefilled the form in the account balance management with the current cash balance
+- Removed precious metals (Commodities) from the analysis data by continents, countries, sectors and markets
+
+## 3.8.0 - 2026-06-07
 
 ### Added
 
@@ -17,13 +20,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the sector names across the data providers
+- Localized the country names
+- Localized the sector names
 - Centralized the asset profile override logic for manual adjustments
 - Improved the styling in the user detail dialog of the admin control panel’s users section
+- Prevented the deletion of asset profiles that are currently in use
+- Ensured market data is correctly removed when an asset profile with no remaining activities is deleted
 - Refactored the backend logging to use the instance-based `Logger`
+- Improved the language localization for German (`de`)
 - Improved the language localization for Ukrainian (`uk`)
 
 ### Fixed
 
+- Prevented the floating action button from overlapping the paginator on mobile
 - Fixed an issue where the asset profile override (asset class and asset sub class) was not applied to the data enhancers when gathering asset profiles
 - Fixed a layout issue in the asset profile dialog of the admin control panel by truncating long titles
 

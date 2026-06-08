@@ -1,30 +1,34 @@
+import { getCountryCodeByName } from '@ghostfolio/api/helper/country.helper';
+import { getSectorName } from '@ghostfolio/api/helper/sector.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import { countries } from 'countries-list';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
-
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
     'Russian Federation': 'Russia',
     USA: 'United States'
   };
   private static holdingsWeightTreshold = 0.85;
-  private static sectorsMapping = {
+  private static sectorsMapping: Record<string, SectorName> = {
     'Consumer Discretionary': 'Consumer Cyclical',
-    'Consumer Defensive': 'Consumer Staples',
+    'Consumer Staples': 'Consumer Defensive',
+    Financials: 'Financial Services',
     'Health Care': 'Healthcare',
-    'Information Technology': 'Technology'
+    'Information Technology': 'Technology',
+    Materials: 'Basic Materials'
   };
+
+  private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -117,21 +121,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       for (const [name, value] of Object.entries<any>(
         holdings?.countries ?? {}
       )) {
-        let countryCode: string;
-
-        for (const [code, country] of Object.entries(countries)) {
-          if (
-            country.name === name ||
-            country.name ===
-              TrackinsightDataEnhancerService.countriesMapping[name]
-          ) {
-            countryCode = code;
-            break;
-          }
-        }
-
         response.countries.push({
-          code: countryCode,
+          code: getCountryCodeByName({
+            name,
+            aliases: TrackinsightDataEnhancerService.countriesMapping
+          }),
           weight: value.weight
         });
       }
@@ -165,7 +159,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         holdings?.sectors ?? {}
       )) {
         response.sectors.push({
-          name: TrackinsightDataEnhancerService.sectorsMapping[name] ?? name,
+          name: getSectorName({
+            name,
+            aliases: TrackinsightDataEnhancerService.sectorsMapping
+          }),
           weight: value.weight
         });
       }

@@ -2,9 +2,11 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
@@ -16,7 +18,10 @@ import {
   UpdateAssetProfileDto,
   UpdatePropertyDto
 } from '@ghostfolio/common/dtos';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  canDeleteAssetProfile,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -63,10 +68,12 @@ export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
     private readonly apiService: ApiService,
+    private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly demoService: DemoService,
     private readonly manualService: ManualService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Get()
@@ -290,6 +297,33 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
+    const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
+      { dataSource, symbol }
+    ]);
+
+    if (assetProfile) {
+      const benchmarkAssetProfiles =
+        await this.benchmarkService.getBenchmarkAssetProfiles();
+
+      const isBenchmark = benchmarkAssetProfiles.some(({ id }) => {
+        return id === assetProfile.id;
+      });
+
+      if (
+        !canDeleteAssetProfile({
+          isBenchmark,
+          activitiesCount: assetProfile.activitiesCount,
+          symbol: assetProfile.symbol,
+          watchedByCount: assetProfile.watchedByCount
+        })
+      ) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.FORBIDDEN),
+          StatusCodes.FORBIDDEN
+        );
+      }
+    }
+
     return this.adminService.deleteProfileData({ dataSource, symbol });
   }
 

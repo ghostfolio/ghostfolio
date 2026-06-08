@@ -258,7 +258,7 @@
                       i18n
                       size="medium"
                       [locale]="data.locale"
-                      [value]="assetProfile?.sectors[0].name"
+                      [value]="translate(assetProfile?.sectors[0].name)"
                       >Sector</gf-value
                     >
                   </div>
@@ -269,7 +269,12 @@
                       i18n
                       size="medium"
                       [locale]="data.locale"
-                      [value]="assetProfile?.countries[0].name"
+                      [value]="
+                        getCountryName({
+                          code: assetProfile?.countries[0].code,
+                          locale: data.locale
+                        })
+                      "
                       >Country</gf-value
                     >
                   </div>
