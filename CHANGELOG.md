@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevented the floating action button from overlapping the paginator on mobile
 - Fixed an issue where the asset profile override (asset class and asset sub class) was not applied to the data enhancers when gathering asset profiles
 - Fixed a layout issue in the asset profile dialog of the admin control panel by truncating long titles
+- Prefilled the account balance form in the account detail dialog with the current cash balance
 
 ## 3.7.0 - 2026-06-02
 
