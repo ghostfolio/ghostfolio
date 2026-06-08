@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for a dedicated _OpenRouter_ model for the `web_fetch` tool in the `FetchService`
+
 ### Changed
 
 - Prefilled the form in the account balance management with the current cash balance
