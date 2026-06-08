@@ -1,8 +1,8 @@
 @if (src) {
   <img
-    onerror="this.style.display = 'none'"
     [class.large]="size === 'large'"
     [src]="src"
     [title]="tooltip ? tooltip : ''"
+    (error)="onLogoError()"
   />
 }

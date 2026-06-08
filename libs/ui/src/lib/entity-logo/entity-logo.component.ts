@@ -23,7 +23,7 @@ export class GfEntityLogoComponent implements OnChanges {
   @Input() tooltip: string;
   @Input() url: string;
 
-  public src: string;
+  public src: string | undefined;
 
   public constructor(
     private readonly imageSourceService: EntityLogoImageSourceService
@@ -31,12 +31,28 @@ export class GfEntityLogoComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.dataSource && this.symbol) {
-      this.src = this.imageSourceService.getLogoUrlByAssetProfileIdentifier({
-        dataSource: this.dataSource,
-        symbol: this.symbol
-      });
+      const candidateSrc =
+        this.imageSourceService.getLogoUrlByAssetProfileIdentifier({
+          dataSource: this.dataSource,
+          symbol: this.symbol
+        });
+
+      this.src = this.imageSourceService.hasFailed(candidateSrc)
+        ? undefined
+        : candidateSrc;
     } else if (this.url) {
-      this.src = this.imageSourceService.getLogoUrlByUrl(this.url);
+      const candidateSrc = this.imageSourceService.getLogoUrlByUrl(this.url);
+
+      this.src = this.imageSourceService.hasFailed(candidateSrc)
+        ? undefined
+        : candidateSrc;
+    }
+  }
+
+  public onLogoError() {
+    if (this.src) {
+      this.imageSourceService.markAsFailed(this.src);
+      this.src = undefined;
     }
   }
 }
