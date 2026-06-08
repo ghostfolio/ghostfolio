@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Prefilled the form in the account balance management with the current cash balance
 - Disabled the selection of future dates in the account balance management
 
 ## 3.8.0 - 2026-06-07
