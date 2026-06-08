@@ -3,6 +3,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL,
+  PROPERTY_OPENROUTER_MODEL_WEB_FETCH,
   PROPERTY_WEB_FETCH_ROUTES
 } from '@ghostfolio/common/config';
 
@@ -80,12 +81,18 @@ export class FetchService implements OnModuleInit {
     url: string;
     webFetchRoute: WebFetchRoute;
   }) {
-    const [openRouterApiKey, openRouterModel] = await Promise.all([
-      this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
-      this.propertyService.getByKey<string>(PROPERTY_OPENROUTER_MODEL)
-    ]);
+    const [openRouterApiKey, openRouterModel, openRouterModelWebFetch] =
+      await Promise.all([
+        this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
+        this.propertyService.getByKey<string>(PROPERTY_OPENROUTER_MODEL),
+        this.propertyService.getByKey<string>(
+          PROPERTY_OPENROUTER_MODEL_WEB_FETCH
+        )
+      ]);
 
-    if (!openRouterApiKey || !openRouterModel) {
+    const model = openRouterModelWebFetch || openRouterModel;
+
+    if (!model || !openRouterApiKey) {
       return undefined;
     }
 
@@ -93,7 +100,7 @@ export class FetchService implements OnModuleInit {
       const openRouterService = createOpenRouter({ apiKey: openRouterApiKey });
 
       const { sources, text } = await generateText({
-        model: openRouterService.chat(openRouterModel),
+        model: openRouterService.chat(model),
         prompt: [
           'You have access to a web_fetch tool. You MUST call it to retrieve the URL below, do not answer from prior knowledge.',
           'Return the fetched response body exactly as received: raw body only, no commentary, no Markdown, and no code fences.',
