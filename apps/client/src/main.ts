@@ -22,7 +22,7 @@ import {
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { RouterModule, TitleStrategy } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
@@ -79,7 +79,7 @@ import { environment } from './environments/environment';
       ),
       LanguageService,
       ModulePreloadService,
-      provideAnimations(),
+      provideAnimationsAsync(),
       provideHttpClient(withInterceptorsFromDi()),
       provideIonicAngular(),
       provideMarkdown(),
