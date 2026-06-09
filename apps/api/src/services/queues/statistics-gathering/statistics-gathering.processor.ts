@@ -4,12 +4,14 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME,
   GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME,
+  GATHER_STATISTICS_GITHUB_FORKS_PROCESS_JOB_NAME,
   GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME,
   GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME,
   HEADER_KEY_TOKEN,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_DOCKER_HUB_PULLS,
   PROPERTY_GITHUB_CONTRIBUTORS,
+  PROPERTY_GITHUB_FORKS,
   PROPERTY_GITHUB_STARGAZERS,
   PROPERTY_UPTIME,
   STATISTICS_GATHERING_QUEUE
@@ -64,6 +66,26 @@ export class StatisticsGatheringProcessor {
 
     this.logger.log(
       'GitHub contributors statistics gathering has been completed'
+    );
+  }
+
+  @Process(GATHER_STATISTICS_GITHUB_FORKS_PROCESS_JOB_NAME)
+  public async gatherGitHubForksStatistics() {
+    Logger.log(
+      'GitHub forks statistics gathering has been started',
+      'StatisticsGatheringProcessor'
+    );
+
+    const gitHubForks = await this.countGitHubForks();
+
+    await this.propertyService.put({
+      key: PROPERTY_GITHUB_FORKS,
+      value: String(gitHubForks)
+    });
+
+    Logger.log(
+      'GitHub forks statistics gathering has been completed',
+      'StatisticsGatheringProcessor'
     );
   }
 
@@ -153,6 +175,26 @@ export class StatisticsGatheringProcessor {
       });
     } catch (error) {
       this.logger.error(error);
+
+      throw error;
+    }
+  }
+
+  private async countGitHubForks(): Promise<number> {
+    try {
+      const { forks_count } = (await fetch(
+        'https://api.github.com/repos/ghostfolio/ghostfolio',
+        {
+          headers: { 'User-Agent': 'request' },
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
+        }
+      ).then((res) => res.json())) as { forks_count: number };
+
+      return forks_count;
+    } catch (error) {
+      Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
 
       throw error;
     }
