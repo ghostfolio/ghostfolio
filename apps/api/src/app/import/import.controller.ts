@@ -5,7 +5,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -50,15 +50,6 @@ export class ImportController {
   ): Promise<ImportResponse> {
     const isDryRun = isDryRunParam === 'true';
 
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createAccount)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     let maxActivitiesToImport = this.configurationService.get(
       'MAX_ACTIVITIES_TO_IMPORT'
     );
@@ -77,6 +68,7 @@ export class ImportController {
         accountsWithBalancesDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
+        platformsDto: importData.platforms ?? [],
         tagsDto: importData.tags ?? [],
         user: this.request.user
       });

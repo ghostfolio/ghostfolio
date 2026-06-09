@@ -179,6 +179,7 @@ export class ImportService {
     assetProfilesWithMarketDataDto,
     isDryRun = false,
     maxActivitiesToImport,
+    platformsDto,
     tagsDto,
     user
   }: {
@@ -187,11 +188,13 @@ export class ImportService {
     assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
+    platformsDto: ImportDataDto['platforms'];
     tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
     const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
+    const platformIdMapping: { [oldPlatformId: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
 
@@ -208,6 +211,37 @@ export class ImportService {
         }),
         this.platformService.getPlatforms()
       ]);
+
+      const canCreatePlatform = hasPermission(
+        user.permissions,
+        permissions.createPlatform
+      );
+
+      for (const platform of platformsDto ?? []) {
+        const existingPlatform = existingPlatforms.find(({ url }) => {
+          return url === platform.url;
+        });
+
+        if (existingPlatform) {
+          if (platform.id && platform.id !== existingPlatform.id) {
+            platformIdMapping[platform.id] = existingPlatform.id;
+          }
+
+          continue;
+        }
+
+        if (!canCreatePlatform) {
+          continue;
+        }
+
+        const newPlatform = await this.platformService.createPlatform({
+          ...(platform.id && { id: platform.id }),
+          name: platform.name,
+          url: platform.url
+        });
+
+        existingPlatforms.push(newPlatform);
+      }
 
       for (const accountWithBalances of accountsWithBalancesDto) {
         // Check if there is any existing account with the same ID
@@ -240,14 +274,19 @@ export class ImportService {
             user: { connect: { id: user.id } }
           };
 
+          const resolvedPlatformId = platformId
+            ? (platformIdMapping[platformId] ?? platformId)
+            : undefined;
+
           if (
+            resolvedPlatformId &&
             existingPlatforms.some(({ id }) => {
-              return id === platformId;
+              return id === resolvedPlatformId;
             })
           ) {
             accountObject = {
               ...accountObject,
-              platform: { connect: { id: platformId } }
+              platform: { connect: { id: resolvedPlatformId } }
             };
           }
 
