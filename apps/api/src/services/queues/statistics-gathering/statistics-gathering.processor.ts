@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME,
@@ -26,17 +27,17 @@ import { format, subDays } from 'date-fns';
 @Injectable()
 @Processor(STATISTICS_GATHERING_QUEUE)
 export class StatisticsGatheringProcessor {
+  private readonly logger = new Logger(StatisticsGatheringProcessor.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly propertyService: PropertyService
   ) {}
 
   @Process(GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME)
   public async gatherDockerHubPullsStatistics() {
-    Logger.log(
-      'Docker Hub pulls statistics gathering has been started',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Docker Hub pulls statistics gathering has been started');
 
     const dockerHubPulls = await this.countDockerHubPulls();
 
@@ -45,17 +46,13 @@ export class StatisticsGatheringProcessor {
       value: String(dockerHubPulls)
     });
 
-    Logger.log(
-      'Docker Hub pulls statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Docker Hub pulls statistics gathering has been completed');
   }
 
   @Process(GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME)
   public async gatherGitHubContributorsStatistics() {
-    Logger.log(
-      'GitHub contributors statistics gathering has been started',
-      'StatisticsGatheringProcessor'
+    this.logger.log(
+      'GitHub contributors statistics gathering has been started'
     );
 
     const gitHubContributors = await this.countGitHubContributors();
@@ -65,18 +62,14 @@ export class StatisticsGatheringProcessor {
       value: String(gitHubContributors)
     });
 
-    Logger.log(
-      'GitHub contributors statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
+    this.logger.log(
+      'GitHub contributors statistics gathering has been completed'
     );
   }
 
   @Process(GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME)
   public async gatherGitHubStargazersStatistics() {
-    Logger.log(
-      'GitHub stargazers statistics gathering has been started',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('GitHub stargazers statistics gathering has been started');
 
     const gitHubStargazers = await this.countGitHubStargazers();
 
@@ -85,9 +78,8 @@ export class StatisticsGatheringProcessor {
       value: String(gitHubStargazers)
     });
 
-    Logger.log(
-      'GitHub stargazers statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
+    this.logger.log(
+      'GitHub stargazers statistics gathering has been completed'
     );
   }
 
@@ -98,18 +90,14 @@ export class StatisticsGatheringProcessor {
     );
 
     if (!monitorId) {
-      Logger.log(
-        `Uptime statistics gathering has been skipped as no ${PROPERTY_BETTER_UPTIME_MONITOR_ID} is configured`,
-        'StatisticsGatheringProcessor'
+      this.logger.log(
+        `Uptime statistics gathering has been skipped as no ${PROPERTY_BETTER_UPTIME_MONITOR_ID} is configured`
       );
 
       return;
     }
 
-    Logger.log(
-      'Uptime statistics gathering has been started',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Uptime statistics gathering has been started');
 
     const uptime = await this.getUptime(monitorId);
 
@@ -118,27 +106,23 @@ export class StatisticsGatheringProcessor {
       value: String(uptime)
     });
 
-    Logger.log(
-      'Uptime statistics gathering has been completed',
-      'StatisticsGatheringProcessor'
-    );
+    this.logger.log('Uptime statistics gathering has been completed');
   }
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const { pull_count } = (await fetch(
-        'https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio',
-        {
+      const { pull_count } = (await this.fetchService
+        .fetch('https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio', {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
-        }
-      ).then((res) => res.json())) as { pull_count: number };
+        })
+        .then((res) => res.json())) as { pull_count: number };
 
       return pull_count;
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - DockerHub');
+      this.logger.error(error);
 
       throw error;
     }
@@ -146,11 +130,13 @@ export class StatisticsGatheringProcessor {
 
   private async countGitHubContributors(): Promise<number> {
     try {
-      const body = await fetch('https://github.com/ghostfolio/ghostfolio', {
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
-      }).then((res) => res.text());
+      const body = await this.fetchService
+        .fetch('https://github.com/ghostfolio/ghostfolio', {
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
+        })
+        .then((res) => res.text());
 
       const $ = cheerio.load(body);
 
@@ -166,7 +152,7 @@ export class StatisticsGatheringProcessor {
         value
       });
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
+      this.logger.error(error);
 
       throw error;
     }
@@ -174,19 +160,18 @@ export class StatisticsGatheringProcessor {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const { stargazers_count } = (await fetch(
-        'https://api.github.com/repos/ghostfolio/ghostfolio',
-        {
+      const { stargazers_count } = (await this.fetchService
+        .fetch('https://api.github.com/repos/ghostfolio/ghostfolio', {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
-        }
-      ).then((res) => res.json())) as { stargazers_count: number };
+        })
+        .then((res) => res.json())) as { stargazers_count: number };
 
       return stargazers_count;
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - GitHub');
+      this.logger.error(error);
 
       throw error;
     }
@@ -194,26 +179,28 @@ export class StatisticsGatheringProcessor {
 
   private async getUptime(monitorId: string): Promise<number> {
     try {
-      const { data } = await fetch(
-        `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
-          subDays(new Date(), 90),
-          DATE_FORMAT
-        )}&to${format(new Date(), DATE_FORMAT)}`,
-        {
-          headers: {
-            [HEADER_KEY_TOKEN]: `Bearer ${this.configurationService.get(
-              'API_KEY_BETTER_UPTIME'
-            )}`
-          },
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
-        }
-      ).then((res) => res.json());
+      const { data } = await this.fetchService
+        .fetch(
+          `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
+            subDays(new Date(), 90),
+            DATE_FORMAT
+          )}&to${format(new Date(), DATE_FORMAT)}`,
+          {
+            headers: {
+              [HEADER_KEY_TOKEN]: `Bearer ${this.configurationService.get(
+                'API_KEY_BETTER_UPTIME'
+              )}`
+            },
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        )
+        .then((res) => res.json());
 
       return data.attributes.availability / 100;
     } catch (error) {
-      Logger.error(error, 'StatisticsGatheringProcessor - Better Stack');
+      this.logger.error(error);
 
       throw error;
     }

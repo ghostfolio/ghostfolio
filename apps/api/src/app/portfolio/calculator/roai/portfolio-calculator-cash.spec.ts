@@ -116,9 +116,11 @@ describe('PortfolioCalculator', () => {
       accountBalanceService,
       accountService,
       null,
+      null,
       dataProviderService,
       null,
       exchangeRateDataService,
+      null,
       null,
       null
     );

@@ -6,7 +6,11 @@ import {
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
-import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  downloadAsFile,
+  getCountryName
+} from '@ghostfolio/common/helper';
 import {
   Activity,
   DataProviderInfo,
@@ -121,6 +125,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
+  public getCountryName = getCountryName;
   public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
@@ -157,6 +162,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
   public tagsAvailable: Tag[];
+  public translate = translate;
   public user: User;
   public value: number;
 
@@ -433,7 +439,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (SymbolProfile?.countries?.length > 0) {
             for (const country of SymbolProfile.countries) {
               this.countries[country.code] = {
-                name: country.name,
+                name: getCountryName({
+                  code: country.code,
+                  locale: this.data.locale
+                }),
                 value: country.weight
               };
             }
@@ -442,7 +451,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (SymbolProfile?.sectors?.length > 0) {
             for (const sector of SymbolProfile.sectors) {
               this.sectors[sector.name] = {
-                name: sector.name,
+                name: translate(sector.name),
                 value: sector.weight
               };
             }

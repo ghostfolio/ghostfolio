@@ -10,6 +10,8 @@ import { createHash, randomUUID } from 'node:crypto';
 
 @Injectable()
 export class RedisCacheService {
+  private readonly logger = new Logger(RedisCacheService.name);
+
   private client: Keyv;
 
   public constructor(
@@ -27,7 +29,7 @@ export class RedisCacheService {
     };
 
     this.client.on('error', (error) => {
-      Logger.error(error, 'RedisCacheService');
+      this.logger.error(error);
     });
   }
 
@@ -101,7 +103,7 @@ export class RedisCacheService {
 
       return true;
     } catch (error) {
-      Logger.error(error?.message, 'RedisCacheService');
+      this.logger.error(error?.message);
 
       return false;
     } finally {

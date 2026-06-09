@@ -9,7 +9,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Prefilled the form in the account balance management with the current cash balance
+
+## 3.8.0 - 2026-06-07
+
+### Added
+
+- Added an automatic refresh every 30 seconds to the users table in the admin control panel
+
+### Changed
+
+- Harmonized the sector names across the data providers
+- Localized the country names
+- Localized the sector names
+- Centralized the asset profile override logic for manual adjustments
+- Improved the styling in the user detail dialog of the admin control panel’s users section
+- Prevented the deletion of asset profiles that are currently in use
+- Ensured market data is correctly removed when an asset profile with no remaining activities is deleted
+- Refactored the backend logging to use the instance-based `Logger`
+- Improved the language localization for German (`de`)
+- Improved the language localization for Ukrainian (`uk`)
+
+### Fixed
+
+- Prevented the floating action button from overlapping the paginator on mobile
+- Fixed an issue where the asset profile override (asset class and asset sub class) was not applied to the data enhancers when gathering asset profiles
+- Fixed a layout issue in the asset profile dialog of the admin control panel by truncating long titles
+
+## 3.7.0 - 2026-06-02
+
+### Added
+
+- Added support for routing selected requests through the _OpenRouter_ `web_fetch` tool in the `FetchService`
+
+### Changed
+
+- Extended the countries mapping in the data enhancer for asset profile data via _Trackinsight_
+- Removed the deprecated attributes (`assetClass`, `assetClassLabel`, `assetSubClass`, `assetSubClassLabel`, `countries`, `currency`, `dataSource`, `holdings`, `name`, `sectors`, `symbol` and `url`) from the holdings of the portfolio details endpoint response
+- Upgraded `Nx` from version `22.7.2` to `22.7.5`
+
+### Fixed
+
+- Resolved an issue in the impersonation mode where the values did not match the owner’s currency
+- Fixed the environment variable expansion in the `.env` file when debugging via _Visual Studio Code_
+
+## 3.6.0 - 2026-05-28
+
+### Added
+
+- Added `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variable support to outbound HTTP requests
+- Added the `FetchService` to centralize outbound HTTP requests
+
+### Changed
+
+- Extracted the floating action buttons (FAB) to a reusable component
 - Upgraded `nestjs` from version `11.1.19` to `11.1.21`
+- Upgraded `yahoo-finance2` from version `3.14.0` to `3.14.2`
 
 ## 3.5.0 - 2026-05-24
 

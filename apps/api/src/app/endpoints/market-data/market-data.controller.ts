@@ -120,10 +120,10 @@ export class MarketDataController {
 
     if (!canReadAllAssetProfiles && !canReadOwnAssetProfile) {
       throw new HttpException(
-        assetProfile.userId
+        assetProfile?.userId
           ? getReasonPhrase(StatusCodes.NOT_FOUND)
           : getReasonPhrase(StatusCodes.FORBIDDEN),
-        assetProfile.userId ? StatusCodes.NOT_FOUND : StatusCodes.FORBIDDEN
+        assetProfile?.userId ? StatusCodes.NOT_FOUND : StatusCodes.FORBIDDEN
       );
     }
 

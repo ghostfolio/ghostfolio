@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="mb-3 row">
+  <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Activities</h1>
       <gf-activities-table
@@ -43,16 +43,6 @@
     hasPermissionToCreateActivity &&
     !user.settings.isRestrictedView
   ) {
-    <div class="fab-container">
-      <a
-        class="align-items-center d-flex justify-content-center"
-        color="primary"
-        mat-fab
-        [queryParams]="{ createDialog: true }"
-        [routerLink]="[]"
-      >
-        <ion-icon name="add-outline" size="large" />
-      </a>
-    </div>
+    <gf-fab [queryParams]="{ createDialog: true }" />
   }
 </div>

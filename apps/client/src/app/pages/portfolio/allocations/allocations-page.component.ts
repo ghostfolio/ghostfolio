@@ -3,7 +3,7 @@ import { AccountDetailDialogParams } from '@ghostfolio/client/components/account
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents,
@@ -73,15 +73,14 @@ export class GfAllocationsPageComponent implements OnInit {
   public hasImpersonationId: boolean;
   public holdings: {
     [symbol: string]: Pick<
-      PortfolioPosition,
+      PortfolioPosition['assetProfile'],
       | 'assetClass'
       | 'assetClassLabel'
       | 'assetSubClass'
       | 'assetSubClassLabel'
       | 'currency'
-      | 'exchange'
       | 'name'
-    > & { etfProvider: string; value: number };
+    > & { etfProvider: string; exchange?: string; value: number };
   };
   public isLoading = false;
   public markets: {
@@ -206,7 +205,7 @@ export class GfAllocationsPageComponent implements OnInit {
     assetSubClass,
     name
   }: {
-    assetSubClass: PortfolioPosition['assetSubClass'];
+    assetSubClass: PortfolioPosition['assetProfile']['assetSubClass'];
     name: string;
   }) {
     if (assetSubClass === 'ETF') {
@@ -333,25 +332,28 @@ export class GfAllocationsPageComponent implements OnInit {
 
       this.holdings[symbol] = {
         value,
-        assetClass: position.assetClass || (UNKNOWN_KEY as AssetClass),
-        assetClassLabel: position.assetClassLabel || UNKNOWN_KEY,
-        assetSubClass: position.assetSubClass || (UNKNOWN_KEY as AssetSubClass),
-        assetSubClassLabel: position.assetSubClassLabel || UNKNOWN_KEY,
-        currency: position.currency,
+        assetClass:
+          position.assetProfile.assetClass || (UNKNOWN_KEY as AssetClass),
+        assetClassLabel: position.assetProfile.assetClassLabel || UNKNOWN_KEY,
+        assetSubClass:
+          position.assetProfile.assetSubClass || (UNKNOWN_KEY as AssetSubClass),
+        assetSubClassLabel:
+          position.assetProfile.assetSubClassLabel || UNKNOWN_KEY,
+        currency: position.assetProfile.currency,
         etfProvider: this.extractEtfProvider({
-          assetSubClass: position.assetSubClass,
-          name: position.name
+          assetSubClass: position.assetProfile.assetSubClass,
+          name: position.assetProfile.name
         }),
         exchange: position.exchange,
-        name: position.name
+        name: position.assetProfile.name
       };
 
-      if (position.assetClass !== AssetClass.LIQUIDITY) {
+      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
-        if (position.countries.length > 0) {
-          for (const country of position.countries) {
-            const { code, continent, name, weight } = country;
+        if (position.assetProfile.countries.length > 0) {
+          for (const country of position.assetProfile.countries) {
+            const { code, continent, weight } = country;
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
@@ -361,7 +363,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.continents[continent] = {
-                name: continent,
+                name: translate(continent),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)
@@ -378,7 +380,10 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.countries[code] = {
-                name,
+                name: getCountryName({
+                  code,
+                  locale: this.user?.settings?.locale
+                }),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)
@@ -401,12 +406,12 @@ export class GfAllocationsPageComponent implements OnInit {
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
 
-        if (position.holdings.length > 0) {
+        if (position.assetProfile.holdings.length > 0) {
           for (const {
             allocationInPercentage,
             name,
             valueInBaseCurrency
-          } of position.holdings) {
+          } of position.assetProfile.holdings) {
             const normalizedAssetName = this.normalizeAssetName(name);
 
             if (this.topHoldingsMap[normalizedAssetName]?.value) {
@@ -428,8 +433,8 @@ export class GfAllocationsPageComponent implements OnInit {
           }
         }
 
-        if (position.sectors.length > 0) {
-          for (const sector of position.sectors) {
+        if (position.assetProfile.sectors.length > 0) {
+          for (const sector of position.assetProfile.sectors) {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
@@ -440,7 +445,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   : position.valueInPercentage);
             } else {
               this.sectors[name] = {
-                name,
+                name: translate(name),
                 value:
                   weight *
                   (isNumber(position.valueInBaseCurrency)
@@ -463,8 +468,8 @@ export class GfAllocationsPageComponent implements OnInit {
       }
 
       this.symbols[prettifySymbol(symbol)] = {
-        dataSource: position.dataSource,
-        name: position.name,
+        dataSource: position.assetProfile.dataSource,
+        name: position.assetProfile.name,
         symbol: prettifySymbol(symbol),
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
@@ -517,8 +522,8 @@ export class GfAllocationsPageComponent implements OnInit {
             this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
           parents: Object.entries(this.portfolioDetails.holdings)
             .map(([symbol, holding]) => {
-              if (holding.holdings.length > 0) {
-                const currentParentHolding = holding.holdings.find(
+              if (holding.assetProfile.holdings.length > 0) {
+                const currentParentHolding = holding.assetProfile.holdings.find(
                   (parentHolding) => {
                     return (
                       this.normalizeAssetName(parentHolding.name) ===
@@ -531,7 +536,7 @@ export class GfAllocationsPageComponent implements OnInit {
                   ? {
                       allocationInPercentage:
                         currentParentHolding.valueInBaseCurrency / value,
-                      name: holding.name,
+                      name: holding.assetProfile.name,
                       position: holding,
                       symbol: prettifySymbol(symbol),
                       valueInBaseCurrency:

@@ -4,4 +4,8 @@
   .mat-mdc-dialog-content {
     max-height: unset;
   }
+
+  .mat-mdc-dialog-title {
+    padding-right: 0.5rem !important;
+  }
 }
