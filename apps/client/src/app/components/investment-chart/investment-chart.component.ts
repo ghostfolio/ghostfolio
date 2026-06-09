@@ -16,7 +16,6 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -49,7 +48,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-investment-chart',
   styleUrls: ['./investment-chart.component.scss'],
   templateUrl: './investment-chart.component.html'

@@ -7,7 +7,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -56,7 +55,7 @@ const {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-portfolio-proportion-chart',
   styleUrls: ['./portfolio-proportion-chart.component.scss'],
   templateUrl: './portfolio-proportion-chart.component.html'

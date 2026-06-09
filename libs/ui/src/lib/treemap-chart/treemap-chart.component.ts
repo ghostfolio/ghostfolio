@@ -10,7 +10,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { ColorScheme, DateRange } from '@ghostfolio/common/types';
 
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -45,7 +44,7 @@ const { gray, green, red } = OpenColor;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-treemap-chart',
   styleUrls: ['./treemap-chart.component.scss'],
   templateUrl: './treemap-chart.component.html'
