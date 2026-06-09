@@ -157,6 +157,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceFromSellsWithCurrencyEffect = new Big(0);
     let initialValue: Big;
     let initialValueWithCurrencyEffect: Big;
+    let hasClosedPosition = false;
     let investmentAtStartDate: Big;
     let investmentAtStartDateWithCurrencyEffect: Big;
     const investmentValuesAccumulated: { [date: string]: Big } = {};
@@ -625,6 +626,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           );
 
       if (totalUnits.eq(0)) {
+        if (order.type === 'SELL') {
+          hasClosedPosition = true;
+        }
+
         // Reset tracking variables when position is fully closed
         totalInvestmentFromBuyTransactions = new Big(0);
         totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
@@ -922,9 +927,20 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
                 new Big(0))
         ) ?? new Big(0);
 
-      netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
-        ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
-        : new Big(0);
+      if (
+        dateRange === 'max' &&
+        hasClosedPosition &&
+        totalInvestmentWithCurrencyEffect.gt(0)
+      ) {
+        netPerformancePercentageWithCurrencyEffectMap[dateRange] =
+          netPerformanceWithCurrencyEffectMap[dateRange].div(
+            totalInvestmentWithCurrencyEffect
+          );
+      } else {
+        netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
+          ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
+          : new Big(0);
+      }
     }
 
     if (PortfolioCalculator.ENABLE_LOGGING) {
