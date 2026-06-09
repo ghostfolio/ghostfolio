@@ -9,6 +9,7 @@ import {
   HoldingWithParents,
   PortfolioDetails,
   PortfolioPosition,
+  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -17,6 +18,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
+import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfTopHoldingsComponent } from '@ghostfolio/ui/top-holdings';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
@@ -46,6 +48,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   imports: [
     GfPortfolioProportionChartComponent,
     GfPremiumIndicatorComponent,
+    GfToggleComponent,
     GfTopHoldingsComponent,
     GfValueComponent,
     GfWorldMapChartComponent,
@@ -69,6 +72,14 @@ export class GfAllocationsPageComponent implements OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public currencyHoldings: {
+    [key: string]: { name: string; value: number };
+  };
+  public currencyMode: 'exposure' | 'tracking' = 'tracking';
+  public currencyModeOptions: ToggleOption[] = [
+    { label: $localize`Tracking`, value: 'tracking' },
+    { label: $localize`Exposure`, value: 'exposure' }
+  ];
   public deviceType: string;
   public hasImpersonationId: boolean;
   public holdings: {
@@ -119,6 +130,13 @@ export class GfAllocationsPageComponent implements OnInit {
   public UNKNOWN_KEY = UNKNOWN_KEY;
   public user: User;
   public worldMapChartFormat: string;
+
+  private currencyHoldingsExposure: {
+    [key: string]: { name: string; value: number };
+  };
+  private currencyHoldingsTracking: {
+    [key: string]: { name: string; value: number };
+  };
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -193,6 +211,15 @@ export class GfAllocationsPageComponent implements OnInit {
     }
   }
 
+  public onCurrencyModeChanged(mode: 'exposure' | 'tracking') {
+    this.currencyMode = mode;
+    this.currencyHoldings =
+      mode === 'exposure'
+        ? this.currencyHoldingsExposure
+        : this.currencyHoldingsTracking;
+    this.changeDetectorRef.markForCheck();
+  }
+
   public onSymbolChartClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
@@ -237,6 +264,9 @@ export class GfAllocationsPageComponent implements OnInit {
         value: 0
       }
     };
+    this.currencyHoldings = {};
+    this.currencyHoldingsExposure = {};
+    this.currencyHoldingsTracking = {};
     this.holdings = {};
     this.marketsAdvanced = {
       [UNKNOWN_KEY]: {
@@ -347,6 +377,44 @@ export class GfAllocationsPageComponent implements OnInit {
         exchange: position.exchange,
         name: position.assetProfile.name
       };
+
+      // For the "By Currency" chart:
+      // - Exposure: shows crypto names instead of tracking currency
+      // - Tracking: shows the tracking currency for all assets
+      const exposureKey =
+        position.assetProfile.assetSubClass === 'CRYPTOCURRENCY' ||
+        position.assetProfile.assetSubClass === 'PRECIOUS_METAL'
+          ? position.assetProfile.name
+          : position.assetProfile.currency;
+
+      const trackingKey = position.assetProfile.currency;
+
+      if (this.currencyHoldingsExposure[exposureKey]?.value) {
+        this.currencyHoldingsExposure[exposureKey].value += value;
+      } else {
+        this.currencyHoldingsExposure[exposureKey] = {
+          name: exposureKey,
+          value
+        };
+      }
+
+      if (this.currencyHoldingsTracking[trackingKey]?.value) {
+        this.currencyHoldingsTracking[trackingKey].value += value;
+      } else {
+        this.currencyHoldingsTracking[trackingKey] = {
+          name: trackingKey,
+          value
+        };
+      }
+
+      // Set default based on experimental features setting
+      if (
+        !this.currencyHoldings ||
+        Object.keys(this.currencyHoldings).length === 0
+      ) {
+        this.currencyMode = 'tracking';
+        this.currencyHoldings = this.currencyHoldingsTracking;
+      }
 
       if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
