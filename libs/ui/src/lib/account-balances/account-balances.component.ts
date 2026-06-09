@@ -85,6 +85,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   public dataSource = new MatTableDataSource<
     AccountBalancesResponse['balances'][0]
   >();
+  public maxDate = new Date();
 
   private dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private notificationService = inject(NotificationService);
