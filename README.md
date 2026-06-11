@@ -302,6 +302,58 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 }
 ```
 
+### Update Asset Profile Data (experimental)
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization with admin role
+
+#### Request
+
+`PATCH http://localhost:3333/api/v1/asset-profiles/<INSERT_DATA_SOURCE>/<INSERT_SYMBOL>`
+
+#### Body
+
+```
+{
+  "countries": [
+    {
+      "code": "US",
+      "weight": 1
+    }
+  ],
+  "sectors": [
+    {
+      "name": "Technology",
+      "weight": 1
+    }
+  ]
+}
+```
+
+| Field       | Type               | Description                                                            |
+| ----------- | ------------------ | ---------------------------------------------------------------------- |
+| `countries` | `array` (optional) | Countries with `code` (`ISO 3166-1 alpha-2`) and `weight` (`0` to `1`) |
+| `holdings`  | `array` (optional) | Holdings with `name` and `weight` (`0` to `1`)                         |
+| `sectors`   | `array` (optional) | Sectors with `name` and `weight` (`0` to `1`)                          |
+
+#### Response
+
+##### Success
+
+`200 OK`
+
+##### Error
+
+`404 Not Found`
+
+```
+{
+  "error": "Not Found",
+  "message": "Could not find the asset profile for MSFT (YAHOO)"
+}
+```
+
 ## Community Projects
 
 Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
