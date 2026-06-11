@@ -1,9 +1,16 @@
-import { PickType } from '@nestjs/mapped-types';
+import { Prisma } from '@prisma/client';
+import { IsArray, IsOptional } from 'class-validator';
 
-import { UpdateAssetProfileDto } from './update-asset-profile.dto';
+export class UpdateAssetProfileDataDto {
+  @IsArray()
+  @IsOptional()
+  countries?: Prisma.InputJsonArray;
 
-export class UpdateAssetProfileDataDto extends PickType(UpdateAssetProfileDto, [
-  'countries',
-  'holdings',
-  'sectors'
-]) {}
+  @IsArray()
+  @IsOptional()
+  holdings?: Prisma.InputJsonArray;
+
+  @IsArray()
+  @IsOptional()
+  sectors?: Prisma.InputJsonArray;
+}
