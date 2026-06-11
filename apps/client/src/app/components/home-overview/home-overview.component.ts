@@ -143,7 +143,7 @@ export class GfHomeOverviewComponent implements OnInit {
         this.precision.set(2);
 
         if (
-          this.deviceType() === 'mobile' &&
+          window.matchMedia('(max-width: 575.98px)').matches &&
           performance.currentValueInBaseCurrency >=
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
