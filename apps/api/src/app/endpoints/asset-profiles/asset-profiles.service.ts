@@ -18,6 +18,34 @@ export class AssetProfilesService {
     { dataSource, symbol }: AssetProfileIdentifier,
     assetProfileData: UpdateAssetProfileDataDto
   ): Promise<EnhancedSymbolProfile> {
+    const notFoundMessage = `Could not find the asset profile for ${symbol} (${dataSource})`;
+
+    const data = this.getAssetProfileDataUpdate(assetProfileData);
+
+    if (Object.keys(data).length > 0) {
+      try {
+        await this.symbolProfileService.updateSymbolProfile(
+          {
+            dataSource,
+            symbol
+          },
+          this.symbolProfileService.getAssetProfileUpdateInput(
+            { dataSource, symbol },
+            data
+          )
+        );
+      } catch (error) {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2025'
+        ) {
+          throw new NotFoundException(notFoundMessage);
+        }
+
+        throw error;
+      }
+    }
+
     const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
       {
         dataSource,
@@ -26,37 +54,10 @@ export class AssetProfilesService {
     ]);
 
     if (!assetProfile) {
-      throw new NotFoundException(
-        `Could not find the asset profile for ${symbol} (${dataSource})`
-      );
+      throw new NotFoundException(notFoundMessage);
     }
 
-    const data = this.getAssetProfileDataUpdate(assetProfileData);
-
-    if (Object.keys(data).length === 0) {
-      return assetProfile;
-    }
-
-    await this.symbolProfileService.updateSymbolProfile(
-      {
-        dataSource,
-        symbol
-      },
-      this.symbolProfileService.getAssetProfileUpdateInput(
-        { dataSource, symbol },
-        data
-      )
-    );
-
-    const [updatedAssetProfile] =
-      await this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource,
-          symbol
-        }
-      ]);
-
-    return updatedAssetProfile;
+    return assetProfile;
   }
 
   private getAssetProfileDataUpdate({
