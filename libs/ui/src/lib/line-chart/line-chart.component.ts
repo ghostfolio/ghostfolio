@@ -12,7 +12,6 @@ import {
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -43,7 +42,7 @@ import { registerChartConfiguration } from '../chart';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-line-chart',
   styleUrls: ['./line-chart.component.scss'],
   templateUrl: './line-chart.component.html'

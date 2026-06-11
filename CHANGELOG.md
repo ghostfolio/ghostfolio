@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Prefilled the form in the account balance management with the current cash balance
 - Disabled the selection of future dates in the account balance management
+- Migrated various components from `NgStyle` to style bindings
 - Improved the language localization for Korean (`ko`)
 
 ## 3.8.0 - 2026-06-07

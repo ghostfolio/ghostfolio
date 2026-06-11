@@ -17,7 +17,6 @@ import { ColorScheme } from '@ghostfolio/common/types';
 import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -53,7 +52,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     GfPremiumIndicatorComponent,
     IonIcon,
