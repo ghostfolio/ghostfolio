@@ -27,7 +27,7 @@ export class AssetProfilesService {
 
     if (!assetProfile) {
       throw new NotFoundException(
-        `Asset profile with data source ${dataSource} and symbol ${symbol} not found`
+        `Could not find the asset profile for ${symbol} (${dataSource})`
       );
     }
 
