@@ -603,21 +603,14 @@ export class AdminService {
         comment,
         currency,
         dataSource,
-        holdings,
         isActive,
         scraperConfiguration,
         symbol,
         symbolMapping,
-        ...(dataSource === 'MANUAL'
-          ? { assetClass, assetSubClass, countries, name, sectors, url }
-          : {
-              SymbolProfileOverrides: {
-                upsert: {
-                  create: symbolProfileOverrides,
-                  update: symbolProfileOverrides
-                }
-              }
-            })
+        ...this.symbolProfileService.getAssetProfileUpdateInput(
+          { dataSource, symbol },
+          symbolProfileOverrides
+        )
       };
 
       await this.symbolProfileService.updateSymbolProfile(

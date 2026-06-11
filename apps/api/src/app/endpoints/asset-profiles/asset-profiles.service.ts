@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DataSource, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AssetProfilesService {
@@ -42,16 +42,10 @@ export class AssetProfilesService {
         dataSource,
         symbol
       },
-      dataSource === DataSource.MANUAL
-        ? data
-        : {
-            SymbolProfileOverrides: {
-              upsert: {
-                create: data,
-                update: data
-              }
-            }
-          }
+      this.symbolProfileService.getAssetProfileUpdateInput(
+        { dataSource, symbol },
+        data
+      )
     );
 
     const [updatedAssetProfile] =

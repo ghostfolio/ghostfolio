@@ -36,6 +36,10 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   dataSource?: DataSource;
 
+  @IsArray()
+  @IsOptional()
+  holdings?: Prisma.InputJsonArray;
+
   @IsBoolean()
   @IsOptional()
   isActive?: boolean;

@@ -11,7 +11,12 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
+import {
+  DataSource,
+  Prisma,
+  SymbolProfile,
+  SymbolProfileOverrides
+} from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 @Injectable()
@@ -69,6 +74,26 @@ export class SymbolProfileService {
         isActive: true
       }
     });
+  }
+
+  public getAssetProfileUpdateInput(
+    { dataSource }: AssetProfileIdentifier,
+    data: Prisma.SymbolProfileUpdateInput
+  ): Prisma.SymbolProfileUpdateInput {
+    if (dataSource === DataSource.MANUAL) {
+      return data;
+    }
+
+    return {
+      SymbolProfileOverrides: {
+        upsert: {
+          create:
+            data as Prisma.SymbolProfileOverridesCreateWithoutSymbolProfileInput,
+          update:
+            data as Prisma.SymbolProfileOverridesUpdateWithoutSymbolProfileInput
+        }
+      }
+    };
   }
 
   public async getSymbolProfiles(
