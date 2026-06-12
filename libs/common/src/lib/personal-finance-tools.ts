@@ -373,11 +373,22 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.exirio.com'
   },
   {
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
+    key: 'expersoft',
+    name: 'Expersoft',
+    origin: 'CH',
+    slogan: 'Investment Management Platforms',
+    url: 'https://www.expersoft.com'
+  },
+  {
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'fey',
     name: 'Fey',
+    note: 'Fey was discontinued in 2025',
     origin: 'CA',
     pricingPerYear: '$300',
     slogan: 'Make better investments.',
@@ -434,6 +445,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'VG',
     slogan: 'Easy-to-use Portfolio Tracker',
     url: 'https://fincake.io'
+  },
+  {
+    founded: 2015,
+    hasFreePlan: false,
+    key: 'fincite',
+    name: 'Fincite',
+    origin: 'DE',
+    slogan: 'Wealth Management Software',
+    url: 'https://fincite.de'
   },
   {
     founded: 2021,
@@ -851,6 +871,23 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.parqet.com'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'patrice',
+    languages: [
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Português'
+    ],
+    name: 'Patrice',
+    pricingPerYear: '€49',
+    slogan: 'Votre patrimoine, enfin clair',
+    url: 'https://mypatrice.com'
+  },
+  {
     hasSelfHostingAbility: false,
     key: 'peek',
     name: 'Peek',
@@ -985,6 +1022,13 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$60',
     slogan: 'The stock portfolio tracker built for long-term investors',
     url: 'https://prostocktracker.com'
+  },
+  {
+    hasSelfHostingAbility: false,
+    key: 'quantive',
+    name: 'Quantive',
+    slogan: 'See your financial life clearly',
+    url: 'https://usequantive.app'
   },
   {
     hasFreePlan: true,
@@ -1225,6 +1269,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Your Portfolio. Revealed.',
     url: 'https://www.utluna.com',
     useAnonymously: true
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'valuedge',
+    name: 'ValuEdge',
+    pricingPerYear: '€78',
+    slogan: 'Track your real portfolio. Not a watchlist.',
+    url: 'https://valuedge.app'
   },
   {
     founded: 2020,
