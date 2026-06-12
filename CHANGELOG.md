@@ -119,9 +119,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Spanish (`es`)
 - Upgraded `bull-board` from version `7.0.0` to `7.1.5`
 - Upgraded `Nx` from version `22.7.1` to `22.7.2`
+- Increased the default timeout of the portfolio snapshot computation from 30 to 300 seconds to support portfolios with a large transaction history
 
 ### Fixed
 
+- Resolved a permanent internal server error on the portfolio and account endpoints by removing failed portfolio snapshot jobs from the queue so that a stalled computation is retried on the next request
 - Resolved an issue with the cash balance calculation of an account for `SELL` activities to ensure fees are correctly subtracted
 - Resolved an exception in the portfolio details endpoint when an asset profile is unmatched
 
