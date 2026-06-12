@@ -397,19 +397,17 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       });
     }
 
-    if (this.user?.settings?.isExperimentalFeatures) {
-      this.dateRangeOptions = this.dateRangeOptions.concat(
-        eachYearOfInterval({
-          end: new Date(),
-          start: this.user?.dateOfFirstActivity ?? new Date()
+    this.dateRangeOptions = this.dateRangeOptions.concat(
+      eachYearOfInterval({
+        end: new Date(),
+        start: this.user?.dateOfFirstActivity ?? new Date()
+      })
+        .map((date) => {
+          return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
         })
-          .map((date) => {
-            return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
-          })
-          .slice(0, -1)
-          .reverse()
-      );
-    }
+        .slice(0, -1)
+        .reverse()
+    );
 
     if (
       this.user?.dateOfFirstActivity &&
