@@ -73,26 +73,21 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
    *                  DOGEUSD -> DOGE-USD
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
-    if (
-      aSymbol.includes(DEFAULT_CURRENCY) &&
-      aSymbol.length > DEFAULT_CURRENCY.length
+    if (isCurrencySymbol(aSymbol)) {
+      return `${aSymbol}=X`;
+    } else if (
+      this.cryptocurrencyService.isCryptocurrency(
+        aSymbol.replace(new RegExp(`-${DEFAULT_CURRENCY}$`), DEFAULT_CURRENCY)
+      )
     ) {
-      if (isCurrencySymbol(aSymbol)) {
-        return `${aSymbol}=X`;
-      } else if (
-        this.cryptocurrencyService.isCryptocurrency(
-          aSymbol.replace(new RegExp(`-${DEFAULT_CURRENCY}$`), DEFAULT_CURRENCY)
-        )
-      ) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        // SOL1USD -> SOL1-USD
-        return aSymbol.replace(
-          new RegExp(`-?${DEFAULT_CURRENCY}$`),
-          `-${DEFAULT_CURRENCY}`
-        );
-      }
+      // Add a dash before the last three characters
+      // BTCUSD  -> BTC-USD
+      // DOGEUSD -> DOGE-USD
+      // SOL1USD -> SOL1-USD
+      return aSymbol.replace(
+        new RegExp(`-?${DEFAULT_CURRENCY}$`),
+        `-${DEFAULT_CURRENCY}`
+      );
     }
 
     return aSymbol;
