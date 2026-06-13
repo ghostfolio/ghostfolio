@@ -6,7 +6,7 @@ import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
-import { isCurrency } from '@ghostfolio/common/helper';
+import { isCurrencySymbol } from '@ghostfolio/common/helper';
 import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -77,12 +77,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       aSymbol.includes(DEFAULT_CURRENCY) &&
       aSymbol.length > DEFAULT_CURRENCY.length
     ) {
-      if (
-        isCurrency(
-          aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
-        ) &&
-        isCurrency(aSymbol.substring(aSymbol.length - DEFAULT_CURRENCY.length))
-      ) {
+      if (isCurrencySymbol(aSymbol)) {
         return `${aSymbol}=X`;
       } else if (
         this.cryptocurrencyService.isCryptocurrency(

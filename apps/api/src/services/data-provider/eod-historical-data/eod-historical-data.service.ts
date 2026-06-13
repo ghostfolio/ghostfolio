@@ -13,7 +13,7 @@ import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, isCurrencySymbol } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
@@ -382,20 +382,11 @@ export class EodHistoricalDataService
    * Currency:  USDCHF  -> USDCHF.FOREX
    */
   private convertToEodSymbol(aSymbol: string) {
-    if (
-      aSymbol.startsWith(DEFAULT_CURRENCY) &&
-      aSymbol.length > DEFAULT_CURRENCY.length
-    ) {
-      if (
-        isCurrency(
-          aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
-        )
-      ) {
-        let symbol = aSymbol;
-        symbol = symbol.replace('GBp', 'GBX');
+    if (isCurrencySymbol(aSymbol)) {
+      let symbol = aSymbol;
+      symbol = symbol.replace('GBp', 'GBX');
 
-        return `${symbol}.FOREX`;
-      }
+      return `${symbol}.FOREX`;
     }
 
     return aSymbol;
