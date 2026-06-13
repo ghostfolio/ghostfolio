@@ -76,6 +76,10 @@ export class RedisCacheService {
     return `quote-${getAssetProfileIdentifier({ dataSource, symbol })}`;
   }
 
+  public getWatchlistKey({ userId }: { userId: string }) {
+    return `watchlist-${userId}`;
+  }
+
   public async isHealthy() {
     const HEALTH_CHECK_TIMEOUT = ms('5 seconds');
 

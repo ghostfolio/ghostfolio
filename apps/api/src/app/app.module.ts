@@ -10,6 +10,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
+import { WatchlistComputationQueueModule } from '@ghostfolio/api/services/queues/watchlist/watchlist.module';
 import {
   BULL_BOARD_ROUTE,
   DEFAULT_LANGUAGE_CODE,
@@ -167,6 +168,7 @@ import { UserModule } from './user/user.module';
     SymbolModule,
     TagsModule,
     UserModule,
+    WatchlistComputationQueueModule,
     WatchlistModule
   ],
   providers: [I18nService]
