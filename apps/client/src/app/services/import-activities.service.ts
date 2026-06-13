@@ -15,6 +15,12 @@ import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+interface ImportPlatform {
+  id?: string;
+  name: string;
+  url: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -116,12 +122,14 @@ export class ImportActivitiesService {
     activities,
     assetProfiles,
     isDryRun = false,
+    platforms,
     tags
   }: {
     activities: CreateOrderDto[];
     accounts?: CreateAccountWithBalancesDto[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
     isDryRun?: boolean;
+    platforms?: ImportPlatform[];
     tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
@@ -132,6 +140,7 @@ export class ImportActivitiesService {
           accounts,
           activities,
           assetProfiles,
+          platforms,
           tags
         },
         isDryRun
@@ -154,11 +163,13 @@ export class ImportActivitiesService {
     accounts,
     activities,
     assetProfiles,
+    platforms,
     tags
   }: {
     accounts?: CreateAccountWithBalancesDto[];
     activities: Activity[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+    platforms?: ImportPlatform[];
     tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
@@ -172,6 +183,7 @@ export class ImportActivitiesService {
     return this.importJson({
       accounts,
       assetProfiles,
+      platforms,
       tags,
       activities: importData
     });
@@ -445,6 +457,7 @@ export class ImportActivitiesService {
       accounts?: CreateAccountWithBalancesDto[];
       activities: CreateOrderDto[];
       assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+      platforms?: ImportPlatform[];
       tags?: CreateTagDto[];
     },
     aIsDryRun = false

@@ -109,6 +109,7 @@ export class GfImportActivitiesDialogComponent {
   private accounts: CreateAccountWithBalancesDto[] = [];
   private activities: Activity[] = [];
   private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+  private platforms: { id?: string; name: string; url: string }[] = [];
   private tags: CreateTagDto[] = [];
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -175,6 +176,7 @@ export class GfImportActivitiesDialogComponent {
         accounts: this.accounts,
         activities: this.selectedActivities,
         assetProfiles: this.assetProfiles,
+        platforms: this.platforms,
         tags: this.tags
       });
 
@@ -306,6 +308,7 @@ export class GfImportActivitiesDialogComponent {
 
           this.accounts = content.accounts;
           this.assetProfiles = content.assetProfiles;
+          this.platforms = content.platforms ?? [];
           this.tags = content.tags;
 
           if (!isArray(content.activities)) {
@@ -339,6 +342,7 @@ export class GfImportActivitiesDialogComponent {
                 activities: content.activities,
                 assetProfiles: content.assetProfiles,
                 isDryRun: true,
+                platforms: content.platforms ?? [],
                 tags: content.tags
               });
 
