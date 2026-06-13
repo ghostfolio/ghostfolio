@@ -385,10 +385,11 @@ export class DataProviderService implements OnModuleInit {
       response = marketDataByGranularity.reduce((r, marketData) => {
         const { date, marketPrice, symbol } = marketData;
 
-        r[symbol] = {
-          ...(r[symbol] || {}),
-          [format(new Date(date), DATE_FORMAT)]: { marketPrice }
-        };
+        if (!r[symbol]) {
+          r[symbol] = {};
+        }
+
+        r[symbol][format(new Date(date), DATE_FORMAT)] = { marketPrice };
 
         return r;
       }, {});
