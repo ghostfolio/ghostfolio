@@ -1,23 +1,34 @@
-import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { WatchlistComputationService } from '@ghostfolio/api/services/queues/watchlist/watchlist-computation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import {
+  WATCHLIST_COMPUTATION_QUEUE_PRIORITY_HIGH,
+  WATCHLIST_COMPUTATION_QUEUE_PRIORITY_LOW,
+  WATCHLIST_PROCESS_JOB_NAME,
+  WATCHLIST_PROCESS_JOB_OPTIONS
+} from '@ghostfolio/common/config';
 import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { DataSource, Prisma } from '@prisma/client';
+import { isAfter } from 'date-fns';
+
+import { WatchlistValue } from './interfaces/watchlist-value.interface';
 
 @Injectable()
 export class WatchlistService {
+  private readonly logger = new Logger(WatchlistService.name);
+
   public constructor(
-    private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly redisCacheService: RedisCacheService,
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly watchlistComputationService: WatchlistComputationService
   ) {}
 
   public async createWatchlistItem({
@@ -66,6 +77,10 @@ export class WatchlistService {
       },
       where: { id: userId }
     });
+
+    await this.redisCacheService.remove(
+      this.redisCacheService.getWatchlistKey({ userId })
+    );
   }
 
   public async deleteWatchlistItem({
@@ -87,69 +102,69 @@ export class WatchlistService {
       },
       where: { id: userId }
     });
+
+    await this.redisCacheService.remove(
+      this.redisCacheService.getWatchlistKey({ userId })
+    );
   }
 
   public async getWatchlistItems(
     userId: string
   ): Promise<WatchlistResponse['watchlist']> {
-    const user = await this.prismaService.user.findUnique({
-      select: {
-        watchlist: {
-          select: { dataSource: true, symbol: true }
-        }
-      },
-      where: { id: userId }
-    });
+    let cachedWatchlist: WatchlistResponse['watchlist'];
+    let isCachedWatchlistExpired = false;
 
-    const [assetProfiles, quotes] = await Promise.all([
-      this.symbolProfileService.getSymbolProfiles(user.watchlist),
-      this.dataProviderService.getQuotes({
-        items: user.watchlist.map(({ dataSource, symbol }) => {
-          return { dataSource, symbol };
-        })
-      })
-    ]);
+    try {
+      const cachedWatchlistValue = await this.redisCacheService.get(
+        this.redisCacheService.getWatchlistKey({ userId })
+      );
 
-    const watchlist = await Promise.all(
-      user.watchlist.map(async ({ dataSource, symbol }) => {
-        const assetProfile = assetProfiles.find((profile) => {
-          return profile.dataSource === dataSource && profile.symbol === symbol;
+      const { expiration, watchlist }: WatchlistValue =
+        JSON.parse(cachedWatchlistValue);
+
+      cachedWatchlist = watchlist;
+
+      if (isAfter(new Date(), new Date(expiration))) {
+        isCachedWatchlistExpired = true;
+      }
+    } catch {}
+
+    if (cachedWatchlist) {
+      this.logger.debug(`Fetched watchlist of user '${userId}' from cache`);
+
+      if (isCachedWatchlistExpired) {
+        // Compute in the background
+        this.watchlistComputationService.addJobToQueue({
+          data: { userId },
+          name: WATCHLIST_PROCESS_JOB_NAME,
+          opts: {
+            ...WATCHLIST_PROCESS_JOB_OPTIONS,
+            jobId: userId,
+            priority: WATCHLIST_COMPUTATION_QUEUE_PRIORITY_LOW
+          }
         });
+      }
 
-        const [allTimeHigh, trends] = await Promise.all([
-          this.marketDataService.getMax({
-            dataSource,
-            symbol
-          }),
-          this.benchmarkService.getBenchmarkTrends({ dataSource, symbol })
-        ]);
+      return cachedWatchlist;
+    }
 
-        const performancePercent =
-          this.benchmarkService.calculateChangeInPercentage(
-            allTimeHigh?.marketPrice,
-            quotes[symbol]?.marketPrice
-          );
-
-        return {
-          dataSource,
-          symbol,
-          marketCondition:
-            this.benchmarkService.getMarketCondition(performancePercent),
-          name: assetProfile?.name,
-          performances: {
-            allTimeHigh: {
-              performancePercent,
-              date: allTimeHigh?.date
-            }
-          },
-          trend50d: trends.trend50d,
-          trend200d: trends.trend200d
-        };
-      })
-    );
-
-    return watchlist.sort((a, b) => {
-      return a.name.localeCompare(b.name);
+    // Wait for computation
+    await this.watchlistComputationService.addJobToQueue({
+      data: { userId },
+      name: WATCHLIST_PROCESS_JOB_NAME,
+      opts: {
+        ...WATCHLIST_PROCESS_JOB_OPTIONS,
+        jobId: userId,
+        priority: WATCHLIST_COMPUTATION_QUEUE_PRIORITY_HIGH
+      }
     });
+
+    const job = await this.watchlistComputationService.getJob(userId);
+
+    if (job) {
+      await job.finished();
+    }
+
+    return this.getWatchlistItems(userId);
   }
 }

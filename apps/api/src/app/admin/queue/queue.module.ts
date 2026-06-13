@@ -1,6 +1,7 @@
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { StatisticsGatheringQueueModule } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.module';
+import { WatchlistComputationQueueModule } from '@ghostfolio/api/services/queues/watchlist/watchlist.module';
 
 import { Module } from '@nestjs/common';
 
@@ -12,7 +13,8 @@ import { QueueService } from './queue.service';
   imports: [
     DataGatheringQueueModule,
     PortfolioSnapshotQueueModule,
-    StatisticsGatheringQueueModule
+    StatisticsGatheringQueueModule,
+    WatchlistComputationQueueModule
   ],
   providers: [QueueService]
 })

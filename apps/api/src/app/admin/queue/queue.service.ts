@@ -2,7 +2,8 @@ import {
   DATA_GATHERING_QUEUE,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
   QUEUE_JOB_STATUS_LIST,
-  STATISTICS_GATHERING_QUEUE
+  STATISTICS_GATHERING_QUEUE,
+  WATCHLIST_COMPUTATION_QUEUE
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
 
@@ -18,7 +19,9 @@ export class QueueService {
     @InjectQueue(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
     private readonly portfolioSnapshotQueue: Queue,
     @InjectQueue(STATISTICS_GATHERING_QUEUE)
-    private readonly statisticsGatheringQueue: Queue
+    private readonly statisticsGatheringQueue: Queue,
+    @InjectQueue(WATCHLIST_COMPUTATION_QUEUE)
+    private readonly watchlistComputationQueue: Queue
   ) {}
 
   public async deleteJob(aId: string) {
@@ -26,6 +29,10 @@ export class QueueService {
 
     if (!job) {
       job = await this.portfolioSnapshotQueue.getJob(aId);
+    }
+
+    if (!job) {
+      job = await this.watchlistComputationQueue.getJob(aId);
     }
 
     return job?.remove();
@@ -42,6 +49,7 @@ export class QueueService {
       await this.dataGatheringQueue.clean(300, queueStatus);
       await this.portfolioSnapshotQueue.clean(300, queueStatus);
       await this.statisticsGatheringQueue.clean(300, queueStatus);
+      await this.watchlistComputationQueue.clean(300, queueStatus);
     }
   }
 
@@ -50,6 +58,10 @@ export class QueueService {
 
     if (!job) {
       job = await this.portfolioSnapshotQueue.getJob(aId);
+    }
+
+    if (!job) {
+      job = await this.watchlistComputationQueue.getJob(aId);
     }
 
     return job?.promote();
@@ -62,18 +74,24 @@ export class QueueService {
     limit?: number;
     status?: JobStatus[];
   }): Promise<AdminJobs> {
-    const [dataGatheringJobs, portfolioSnapshotJobs, statisticsGatheringJobs] =
-      await Promise.all([
-        this.dataGatheringQueue.getJobs(status),
-        this.portfolioSnapshotQueue.getJobs(status),
-        this.statisticsGatheringQueue.getJobs(status)
-      ]);
+    const [
+      dataGatheringJobs,
+      portfolioSnapshotJobs,
+      statisticsGatheringJobs,
+      watchlistComputationJobs
+    ] = await Promise.all([
+      this.dataGatheringQueue.getJobs(status),
+      this.portfolioSnapshotQueue.getJobs(status),
+      this.statisticsGatheringQueue.getJobs(status),
+      this.watchlistComputationQueue.getJobs(status)
+    ]);
 
     const jobsWithState = await Promise.all(
       [
         ...dataGatheringJobs,
         ...portfolioSnapshotJobs,
-        ...statisticsGatheringJobs
+        ...statisticsGatheringJobs,
+        ...watchlistComputationJobs
       ]
         .filter((job) => {
           return job;
