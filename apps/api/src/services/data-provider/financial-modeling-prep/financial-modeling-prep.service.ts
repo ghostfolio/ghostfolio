@@ -16,7 +16,11 @@ import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCurrency, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  isCurrencySymbol,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
@@ -86,9 +90,7 @@ export class FinancialModelingPrepService
     };
 
     try {
-      if (
-        isCurrency(symbol.substring(0, symbol.length - DEFAULT_CURRENCY.length))
-      ) {
+      if (isCurrencySymbol(symbol)) {
         response.assetClass = AssetClass.LIQUIDITY;
         response.assetSubClass = AssetSubClass.CASH;
         response.currency = symbol.substring(
@@ -482,11 +484,7 @@ export class FinancialModelingPrepService
       for (const { price, symbol } of quotes) {
         let marketState: MarketState = 'delayed';
 
-        if (
-          isCurrency(
-            symbol.substring(0, symbol.length - DEFAULT_CURRENCY.length)
-          )
-        ) {
+        if (isCurrencySymbol(symbol)) {
           marketState = 'open';
         }
 
