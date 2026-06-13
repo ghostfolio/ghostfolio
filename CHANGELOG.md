@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Enabled the _Bull Dashboard_ tab in the admin control panel (experimental)
 - Upgraded `bull-board` from version `7.1.5` to `7.2.1`
 
 ## 3.10.0 - 2026-06-13
