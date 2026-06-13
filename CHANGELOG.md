@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the dynamic numerical precision for various values in the account detail dialog on mobile
+- Improved the dynamic numerical precision for various values in the holding detail dialog on mobile
+
 ### Fixed
 
 - Fixed an issue in the import dividends dialog
