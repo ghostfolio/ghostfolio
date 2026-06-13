@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Enabled the _Bull Dashboard_ via the _Job Queue_ tab in the admin control panel (experimental)
+- Enabled the _Bull Dashboard_ tab in the admin control panel (experimental)
 
 ## 3.10.0 - 2026-06-13
 
