@@ -12,7 +12,7 @@ import {
   TabConfiguration
 } from '@ghostfolio/ui/page-tabs';
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { addIcons } from 'ionicons';
 import {
@@ -30,7 +30,7 @@ import {
   styleUrls: ['./admin-page.scss'],
   templateUrl: './admin-page.html'
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent {
   public tabs: TabConfiguration[] = [];
 
   private user: User;
@@ -54,10 +54,6 @@ export class AdminPageComponent implements OnInit {
       serverOutline,
       settingsOutline
     });
-  }
-
-  public ngOnInit() {
-    this.initializeTabs();
   }
 
   private initializeTabs() {

@@ -11,11 +11,16 @@
   @for (tab of tabs(); track tab) {
     @if (tab.showCondition !== false) {
       @if (tab.onClick) {
-        <a class="no-min-width px-3" mat-tab-link (click)="tab.onClick()">
+        <button
+          class="no-min-width px-3"
+          mat-tab-link
+          type="button"
+          (click)="tab.onClick()"
+        >
           <ng-container
             *ngTemplateOutlet="tabContent; context: { $implicit: tab }"
           />
-        </a>
+        </button>
       } @else {
         <a
           #rla="routerLinkActive"
