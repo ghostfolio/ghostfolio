@@ -32,15 +32,18 @@
               <mat-label i18n>Holding</mat-label>
               <mat-select formControlName="assetProfileIdentifier">
                 <mat-select-trigger>{{
-                  assetProfileForm.get('assetProfileIdentifier')?.value?.name
+                  assetProfileForm.get('assetProfileIdentifier')?.value
+                    ?.assetProfile?.name
                 }}</mat-select-trigger>
                 @for (holding of holdings; track holding) {
                   <mat-option
                     class="line-height-1"
                     [value]="{
-                      dataSource: holding.assetProfile.dataSource,
-                      name: holding.assetProfile.name,
-                      symbol: holding.assetProfile.symbol
+                      assetProfile: {
+                        dataSource: holding.assetProfile.dataSource,
+                        name: holding.assetProfile.name,
+                        symbol: holding.assetProfile.symbol
+                      }
                     }"
                   >
                     <span
