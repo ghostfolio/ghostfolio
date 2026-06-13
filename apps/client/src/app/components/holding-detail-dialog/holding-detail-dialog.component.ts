@@ -2,8 +2,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
-  NUMERICAL_PRECISION_THRESHOLD_5_FIGURES,
-  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
@@ -282,7 +281,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           this.averagePrice = averagePrice;
 
           if (
-            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES &&
+            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES &&
             this.data.deviceType === 'mobile'
           ) {
             this.averagePricePrecision = 0;
@@ -297,7 +296,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.dividendInBaseCurrency >=
-              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.dividendInBaseCurrencyPrecision = 0;
           }
@@ -335,7 +334,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.investmentInBaseCurrencyWithCurrencyEffect >=
-              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.investmentInBaseCurrencyWithCurrencyEffectPrecision = 0;
           }
@@ -345,7 +344,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPriceMax >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+            this.marketPriceMax >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.marketPriceMaxPrecision = 0;
           }
@@ -354,14 +353,14 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPriceMin >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+            this.marketPriceMin >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.marketPriceMinPrecision = 0;
           }
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPrice >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+            this.marketPrice >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.marketPricePrecision = 0;
           }
@@ -370,7 +369,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+            this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.netPerformancePrecision = 0;
           }
