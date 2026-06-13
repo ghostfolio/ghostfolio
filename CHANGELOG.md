@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the import dividends dialog
+- Fixed the last request date in the users table of the admin control panel
 
 ## 3.9.0 - 2026-06-12
 

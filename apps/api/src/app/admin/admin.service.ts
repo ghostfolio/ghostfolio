@@ -850,7 +850,7 @@ export class AdminService {
             activityCount: true,
             country: true,
             dataProviderGhostfolioDailyRequests: true,
-            updatedAt: true
+            lastRequestAt: true
           }
         },
         createdAt: true,
@@ -896,7 +896,7 @@ export class AdminService {
           activityCount: _count.activities || 0,
           country: analytics?.country,
           dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: analytics?.updatedAt
+          lastActivity: analytics?.lastRequestAt
         };
       }
     );
