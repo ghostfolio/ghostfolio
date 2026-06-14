@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `bull-board` from version `7.1.5` to `7.2.1`
 - Upgraded `date-fns` from version `4.1.0` to `4.4.0`
 
+### Fixed
+
+- Improved the loading state when customizing the rule thresholds on the _X-ray_ page
+
 ## 3.10.0 - 2026-06-13
 
 ### Changed
