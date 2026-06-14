@@ -23,8 +23,7 @@ import { DataGatheringProcessor } from './data-gathering.processor';
       adapter: BullAdapter,
       name: DATA_GATHERING_QUEUE,
       options: {
-        displayName: 'Data Gathering',
-        readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
+        displayName: 'Data Gathering'
       }
     }),
     BullModule.registerQueue({

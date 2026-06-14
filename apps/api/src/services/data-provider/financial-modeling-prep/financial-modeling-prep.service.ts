@@ -1,3 +1,4 @@
+import { getCountryCodeByName } from '@ghostfolio/api/helper/country.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
@@ -15,7 +16,11 @@ import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCurrency, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  isCurrencySymbol,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
@@ -33,7 +38,6 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { isISIN } from 'class-validator';
-import { countries } from 'countries-list';
 import {
   addDays,
   addYears,
@@ -54,6 +58,8 @@ export class FinancialModelingPrepService
     'Russian Federation': 'Russia',
     'Taiwan (Province of China)': 'Taiwan'
   };
+
+  private readonly logger = new Logger(FinancialModelingPrepService.name);
 
   private apiKey: string;
 
@@ -84,9 +90,7 @@ export class FinancialModelingPrepService
     };
 
     try {
-      if (
-        isCurrency(symbol.substring(0, symbol.length - DEFAULT_CURRENCY.length))
-      ) {
+      if (isCurrencySymbol(symbol)) {
         response.assetClass = AssetClass.LIQUIDITY;
         response.assetSubClass = AssetSubClass.CASH;
         response.currency = symbol.substring(
@@ -163,21 +167,11 @@ export class FinancialModelingPrepService
               return countryName.toLowerCase() !== 'other';
             })
             .map(({ country: countryName, weightPercentage }) => {
-              let countryCode: string;
-
-              for (const [code, country] of Object.entries(countries)) {
-                if (
-                  country.name === countryName ||
-                  country.name ===
-                    FinancialModelingPrepService.countriesMapping[countryName]
-                ) {
-                  countryCode = code;
-                  break;
-                }
-              }
-
               return {
-                code: countryCode,
+                code: getCountryCodeByName({
+                  aliases: FinancialModelingPrepService.countriesMapping,
+                  name: countryName
+                }),
                 weight: parseFloat(weightPercentage.slice(0, -1)) / 100
               };
             });
@@ -265,7 +259,7 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      this.logger.error(message);
     }
 
     return response;
@@ -325,12 +319,11 @@ export class FinancialModelingPrepService
 
       return response;
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
-        'FinancialModelingPrepService'
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
 
       return {};
@@ -491,11 +484,7 @@ export class FinancialModelingPrepService
       for (const { price, symbol } of quotes) {
         let marketState: MarketState = 'delayed';
 
-        if (
-          isCurrency(
-            symbol.substring(0, symbol.length - DEFAULT_CURRENCY.length)
-          )
-        ) {
+        if (isCurrencySymbol(symbol)) {
           marketState = 'open';
         }
 
@@ -518,7 +507,7 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      this.logger.error(message);
     }
 
     return response;
@@ -638,7 +627,7 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      this.logger.error(message);
     }
 
     return { items };

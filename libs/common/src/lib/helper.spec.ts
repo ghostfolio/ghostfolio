@@ -1,6 +1,8 @@
 import {
   extractNumberFromString,
-  getNumberFormatGroup
+  getNumberFormatGroup,
+  isCurrency,
+  isCurrencySymbol
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -114,6 +116,63 @@ describe('Helper', () => {
     it('Get zh-CN number format group when it is default', () => {
       languageGetter.mockReturnValue('zh-CN');
       expect(getNumberFormatGroup()).toEqual(',');
+    });
+  });
+
+  describe('Is currency', () => {
+    it('ISO 4217 currency code', () => {
+      expect(isCurrency('USD')).toEqual(true);
+    });
+
+    it('Derived currency', () => {
+      expect(isCurrency('GBp')).toEqual(true);
+    });
+
+    it('Non-currency', () => {
+      expect(isCurrency('AAPL')).toEqual(false);
+    });
+
+    it('Empty currency', () => {
+      expect(isCurrency('')).toEqual(false);
+    });
+  });
+
+  describe('Is currency symbol', () => {
+    it('Currency symbol (default currency as base)', () => {
+      expect(isCurrencySymbol('USDCHF')).toEqual(true);
+      expect(isCurrencySymbol('USDZAR')).toEqual(true);
+    });
+
+    it('Currency symbol (default currency as quote)', () => {
+      expect(isCurrencySymbol('EURUSD')).toEqual(true);
+    });
+
+    it('Currency symbol (derived currency)', () => {
+      expect(isCurrencySymbol('USDGBp')).toEqual(true);
+    });
+
+    it('Stock symbol with currency-like prefix', () => {
+      expect(isCurrencySymbol('ERNA.L')).toEqual(false);
+    });
+
+    it('Cryptocurrency symbol', () => {
+      expect(isCurrencySymbol('BTCUSD')).toEqual(false);
+    });
+
+    it('Stock symbol', () => {
+      expect(isCurrencySymbol('AAPL')).toEqual(false);
+    });
+
+    it('Symbol with non-currency suffix', () => {
+      expect(isCurrencySymbol('USD.AX')).toEqual(false);
+    });
+
+    it('Plain currency code', () => {
+      expect(isCurrencySymbol('USD')).toEqual(false);
+    });
+
+    it('Empty symbol', () => {
+      expect(isCurrencySymbol('')).toEqual(false);
     });
   });
 });

@@ -8,6 +8,7 @@ import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import {
   canDeleteAssetProfile,
   DATE_FORMAT,
+  getCountryName,
   getCurrencyFromSymbol,
   isCurrency
 } from '@ghostfolio/common/helper';
@@ -224,6 +225,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       value: 'max'
     }
   ];
+  protected readonly getCountryName = getCountryName;
   protected historicalDataItems: LineChartItem[];
   protected isBenchmark = false;
   protected isDataGatheringEnabled: boolean;
@@ -245,6 +247,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected sectors: {
     [name: string]: { name: string; value: number };
   };
+
+  protected readonly translate = translate;
 
   protected user: User;
 
@@ -367,9 +371,9 @@ export class GfAssetProfileDialogComponent implements OnInit {
           this.assetProfile?.countries &&
           this.assetProfile.countries.length > 0
         ) {
-          for (const { code, name, weight } of this.assetProfile.countries) {
+          for (const { code, weight } of this.assetProfile.countries) {
             this.countries[code] = {
-              name,
+              name: getCountryName({ code, locale: this.data.locale }),
               value: weight
             };
           }
@@ -381,7 +385,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ) {
           for (const { name, weight } of this.assetProfile.sectors) {
             this.sectors[name] = {
-              name,
+              name: translate(name),
               value: weight
             };
           }

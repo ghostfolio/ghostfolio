@@ -62,6 +62,8 @@ import { isNumber, sortBy, sum, uniqBy } from 'lodash';
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
 
+  protected readonly logger = new Logger(PortfolioCalculator.name);
+
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioOrder[];
 
@@ -1119,12 +1121,11 @@ export abstract class PortfolioCalculator {
     if (cachedPortfolioSnapshot) {
       this.snapshot = cachedPortfolioSnapshot;
 
-      Logger.debug(
+      this.logger.debug(
         `Fetched portfolio snapshot from cache in ${(
           (performance.now() - startTimeTotal) /
           1000
-        ).toFixed(3)} seconds`,
-        'PortfolioCalculator'
+        ).toFixed(3)} seconds`
       );
 
       if (isCachedPortfolioSnapshotExpired) {

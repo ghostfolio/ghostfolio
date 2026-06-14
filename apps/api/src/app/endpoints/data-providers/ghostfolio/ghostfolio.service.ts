@@ -34,6 +34,8 @@ import { Big } from 'big.js';
 
 @Injectable()
 export class GhostfolioService {
+  private readonly logger = new Logger(GhostfolioService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
@@ -99,7 +101,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -141,7 +143,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -183,7 +185,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -271,7 +273,7 @@ export class GhostfolioService {
 
       return results;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -348,7 +350,7 @@ export class GhostfolioService {
 
       return results;
     } catch (error) {
-      Logger.error(error, 'GhostfolioService');
+      this.logger.error(error);
 
       throw error;
     }

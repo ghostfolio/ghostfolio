@@ -14,6 +14,7 @@ import {
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
+  applyAssetProfileOverrides,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol,
   isCurrency
@@ -29,7 +30,6 @@ import {
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
-import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import {
@@ -349,87 +349,61 @@ export class AdminService {
     }
 
     let marketData: AdminMarketDataItem[] = await Promise.all(
-      assetProfiles.map(
-        async ({
+      assetProfiles.map(async (assetProfile) => {
+        const {
           _count,
           activities,
-          assetClass,
-          assetSubClass,
           comment,
-          countries,
           currency,
           dataSource,
           id,
           isActive,
           isUsedByUsersWithSubscription,
-          name,
-          sectors,
-          symbol,
-          SymbolProfileOverrides
-        }) => {
-          let countriesCount = countries ? Object.keys(countries).length : 0;
+          symbol
+        } = assetProfile;
 
-          const lastMarketPrice = lastMarketPriceMap.get(
-            getAssetProfileIdentifier({ dataSource, symbol })
+        const { assetClass, assetSubClass, countries, name, sectors } =
+          applyAssetProfileOverrides(
+            assetProfile,
+            assetProfile.SymbolProfileOverrides
           );
 
-          const marketDataItemCount =
-            marketDataItems.find((marketDataItem) => {
-              return (
-                marketDataItem.dataSource === dataSource &&
-                marketDataItem.symbol === symbol
-              );
-            })?._count ?? 0;
+        const countriesCount = countries ? Object.keys(countries).length : 0;
 
-          let sectorsCount = sectors ? Object.keys(sectors).length : 0;
+        const lastMarketPrice = lastMarketPriceMap.get(
+          getAssetProfileIdentifier({ dataSource, symbol })
+        );
 
-          if (SymbolProfileOverrides) {
-            assetClass = SymbolProfileOverrides.assetClass ?? assetClass;
-            assetSubClass =
-              SymbolProfileOverrides.assetSubClass ?? assetSubClass;
+        const marketDataItemCount =
+          marketDataItems.find((marketDataItem) => {
+            return (
+              marketDataItem.dataSource === dataSource &&
+              marketDataItem.symbol === symbol
+            );
+          })?._count ?? 0;
 
-            if (
-              (SymbolProfileOverrides.countries as unknown as Prisma.JsonArray)
-                ?.length > 0
-            ) {
-              countriesCount = (
-                SymbolProfileOverrides.countries as unknown as Prisma.JsonArray
-              ).length;
-            }
+        const sectorsCount = sectors ? Object.keys(sectors).length : 0;
 
-            name = SymbolProfileOverrides.name ?? name;
-
-            if (
-              (SymbolProfileOverrides.sectors as unknown as Sector[])?.length >
-              0
-            ) {
-              sectorsCount = (
-                SymbolProfileOverrides.sectors as unknown as Prisma.JsonArray
-              ).length;
-            }
-          }
-
-          return {
-            assetClass,
-            assetSubClass,
-            comment,
-            countriesCount,
-            currency,
-            dataSource,
-            id,
-            isActive,
-            lastMarketPrice,
-            marketDataItemCount,
-            name,
-            sectorsCount,
-            symbol,
-            activitiesCount: _count.activities,
-            date: activities?.[0]?.date,
-            isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription,
-            watchedByCount: _count.watchedBy
-          };
-        }
-      )
+        return {
+          assetClass,
+          assetSubClass,
+          comment,
+          countriesCount,
+          currency,
+          dataSource,
+          id,
+          isActive,
+          lastMarketPrice,
+          marketDataItemCount,
+          name,
+          sectorsCount,
+          symbol,
+          activitiesCount: _count.activities,
+          date: activities?.[0]?.date,
+          isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription,
+          watchedByCount: _count.watchedBy
+        };
+      })
     );
 
     if (presetId) {
@@ -619,6 +593,7 @@ export class AdminService {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,
         countries: countries as Prisma.JsonArray,
+        holdings: holdings as Prisma.JsonArray,
         name: name as string,
         sectors: sectors as Prisma.JsonArray,
         url: url as string
@@ -628,21 +603,14 @@ export class AdminService {
         comment,
         currency,
         dataSource,
-        holdings,
         isActive,
         scraperConfiguration,
         symbol,
         symbolMapping,
-        ...(dataSource === 'MANUAL'
-          ? { assetClass, assetSubClass, countries, name, sectors, url }
-          : {
-              SymbolProfileOverrides: {
-                upsert: {
-                  create: symbolProfileOverrides,
-                  update: symbolProfileOverrides
-                }
-              }
-            })
+        ...this.symbolProfileService.getAssetProfileUpdateInput(
+          { dataSource, symbol },
+          symbolProfileOverrides
+        )
       };
 
       await this.symbolProfileService.updateSymbolProfile(
@@ -882,7 +850,7 @@ export class AdminService {
             activityCount: true,
             country: true,
             dataProviderGhostfolioDailyRequests: true,
-            updatedAt: true
+            lastRequestAt: true
           }
         },
         createdAt: true,
@@ -928,7 +896,7 @@ export class AdminService {
           activityCount: _count.activities || 0,
           country: analytics?.country,
           dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: analytics?.updatedAt
+          lastActivity: analytics?.lastRequestAt
         };
       }
     );

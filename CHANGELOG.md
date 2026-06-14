@@ -5,6 +5,86 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.11.0 - 2026-06-14
+
+### Added
+
+- Added support for a click handler in the page tabs component
+
+### Changed
+
+- Improved the styling of the tabs across various dialogs
+- Improved the styling of the page tabs component on desktop
+- Enabled the _Bull Dashboard_ tab in the admin control panel (experimental)
+- Migrated the settings dialog to customize the rule thresholds of the _X-ray_ page from `ngModel` to form control
+- Improved the language localization for Spanish (`es`)
+- Upgraded `bull-board` from version `7.1.5` to `7.2.1`
+- Upgraded `date-fns` from version `4.1.0` to `4.4.0`
+
+### Fixed
+
+- Improved the loading state when customizing the rule thresholds on the _X-ray_ page
+
+## 3.10.0 - 2026-06-13
+
+### Changed
+
+- Improved the dynamic numerical precision for various values in the account detail dialog on mobile
+- Improved the dynamic numerical precision for various values in the holding detail dialog on mobile
+- Improved the account name display in the activities table
+- Optimized the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol` by improving the processing of the historical market data
+
+### Fixed
+
+- Fixed an issue in the import dividends dialog
+- Fixed an issue where certain symbols were incorrectly identified as currencies in various data providers
+- Fixed the last request date in the users table of the admin control panel
+
+## 3.9.0 - 2026-06-12
+
+### Added
+
+- Extended the _Public API_ with the endpoint to update the asset profile data (`PATCH api/v1/asset-profiles/:dataSource/:symbol`) (experimental)
+- Added support for a dedicated _OpenRouter_ model for the `web_fetch` tool in the `FetchService`
+
+### Changed
+
+- Prefilled the form in the account balance management with the current cash balance
+- Disabled the selection of future dates in the account balance management
+- Grouped commodities and cryptocurrencies into the unknown bucket of the allocations by continent, country, currency, market and sector charts on the allocations page
+- Moved the support for specific calendar year date ranges (`2025`, `2024`, `2023`, etc.) in the assistant from experimental to general availability
+- Migrated various components from `NgStyle` to style bindings
+- Improved the language localization for Korean (`ko`)
+
+### Fixed
+
+- Grouped activities without an account into the unknown bucket of the allocations by account and platform charts on the allocations page
+
+## 3.8.0 - 2026-06-07
+
+### Added
+
+- Added an automatic refresh every 30 seconds to the users table in the admin control panel
+
+### Changed
+
+- Harmonized the sector names across the data providers
+- Localized the country names
+- Localized the sector names
+- Centralized the asset profile override logic for manual adjustments
+- Improved the styling in the user detail dialog of the admin control panel’s users section
+- Prevented the deletion of asset profiles that are currently in use
+- Ensured market data is correctly removed when an asset profile with no remaining activities is deleted
+- Refactored the backend logging to use the instance-based `Logger`
+- Improved the language localization for German (`de`)
+- Improved the language localization for Ukrainian (`uk`)
+
+### Fixed
+
+- Prevented the floating action button from overlapping the paginator on mobile
+- Fixed an issue where the asset profile override (asset class and asset sub class) was not applied to the data enhancers when gathering asset profiles
+- Fixed a layout issue in the asset profile dialog of the admin control panel by truncating long titles
+
 ## 3.7.0 - 2026-06-02
 
 ### Added

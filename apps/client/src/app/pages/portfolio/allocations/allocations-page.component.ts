@@ -3,7 +3,7 @@ import { AccountDetailDialogParams } from '@ghostfolio/client/components/account
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents,
@@ -201,6 +201,26 @@ export class GfAllocationsPageComponent implements OnInit {
     }
   }
 
+  private extractCurrency({
+    assetClass,
+    assetSubClass,
+    currency
+  }: {
+    assetClass: PortfolioPosition['assetProfile']['assetClass'];
+    assetSubClass: PortfolioPosition['assetProfile']['assetSubClass'];
+    currency?: PortfolioPosition['assetProfile']['currency'];
+  }) {
+    if (
+      assetClass === AssetClass.COMMODITY ||
+      assetSubClass === AssetSubClass.CRYPTOCURRENCY
+    ) {
+      // Commodities and cryptocurrencies have no meaningful currency exposure
+      return UNKNOWN_KEY;
+    }
+
+    return currency;
+  }
+
   private extractEtfProvider({
     assetSubClass,
     name
@@ -339,7 +359,7 @@ export class GfAllocationsPageComponent implements OnInit {
           position.assetProfile.assetSubClass || (UNKNOWN_KEY as AssetSubClass),
         assetSubClassLabel:
           position.assetProfile.assetSubClassLabel || UNKNOWN_KEY,
-        currency: position.assetProfile.currency,
+        currency: this.extractCurrency(position.assetProfile),
         etfProvider: this.extractEtfProvider({
           assetSubClass: position.assetProfile.assetSubClass,
           name: position.assetProfile.name
@@ -348,116 +368,117 @@ export class GfAllocationsPageComponent implements OnInit {
         name: position.assetProfile.name
       };
 
-      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
-        // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
+      // Prepare analysis data by continents, countries, holdings and sectors
 
-        if (position.assetProfile.countries.length > 0) {
-          for (const country of position.assetProfile.countries) {
-            const { code, continent, name, weight } = country;
+      if (position.assetProfile.countries.length > 0) {
+        for (const country of position.assetProfile.countries) {
+          const { code, continent, weight } = country;
 
-            if (this.continents[continent]?.value) {
-              this.continents[continent].value +=
+          if (this.continents[continent]?.value) {
+            this.continents[continent].value +=
+              weight *
+              (isNumber(position.valueInBaseCurrency)
+                ? position.valueInBaseCurrency
+                : position.valueInPercentage);
+          } else {
+            this.continents[continent] = {
+              name: translate(continent),
+              value:
                 weight *
                 (isNumber(position.valueInBaseCurrency)
-                  ? position.valueInBaseCurrency
-                  : position.valueInPercentage);
-            } else {
-              this.continents[continent] = {
-                name: continent,
-                value:
-                  weight *
-                  (isNumber(position.valueInBaseCurrency)
-                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
-              };
-            }
-
-            if (this.countries[code]?.value) {
-              this.countries[code].value +=
-                weight *
-                (isNumber(position.valueInBaseCurrency)
-                  ? position.valueInBaseCurrency
-                  : position.valueInPercentage);
-            } else {
-              this.countries[code] = {
-                name,
-                value:
-                  weight *
-                  (isNumber(position.valueInBaseCurrency)
-                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
-              };
-            }
+                  ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  : this.portfolioDetails.holdings[symbol].valueInPercentage)
+            };
           }
-        } else {
-          this.continents[UNKNOWN_KEY].value += isNumber(
-            position.valueInBaseCurrency
-          )
-            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-            : this.portfolioDetails.holdings[symbol].valueInPercentage;
 
-          this.countries[UNKNOWN_KEY].value += isNumber(
-            position.valueInBaseCurrency
-          )
-            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-            : this.portfolioDetails.holdings[symbol].valueInPercentage;
+          if (this.countries[code]?.value) {
+            this.countries[code].value +=
+              weight *
+              (isNumber(position.valueInBaseCurrency)
+                ? position.valueInBaseCurrency
+                : position.valueInPercentage);
+          } else {
+            this.countries[code] = {
+              name: getCountryName({
+                code,
+                locale: this.user?.settings?.locale
+              }),
+              value:
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  : this.portfolioDetails.holdings[symbol].valueInPercentage)
+            };
+          }
         }
+      } else {
+        this.continents[UNKNOWN_KEY].value += isNumber(
+          position.valueInBaseCurrency
+        )
+          ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+          : this.portfolioDetails.holdings[symbol].valueInPercentage;
 
-        if (position.assetProfile.holdings.length > 0) {
-          for (const {
-            allocationInPercentage,
-            name,
-            valueInBaseCurrency
-          } of position.assetProfile.holdings) {
-            const normalizedAssetName = this.normalizeAssetName(name);
+        this.countries[UNKNOWN_KEY].value += isNumber(
+          position.valueInBaseCurrency
+        )
+          ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+          : this.portfolioDetails.holdings[symbol].valueInPercentage;
+      }
 
-            if (this.topHoldingsMap[normalizedAssetName]?.value) {
-              this.topHoldingsMap[normalizedAssetName].value += isNumber(
-                valueInBaseCurrency
-              )
+      if (position.assetProfile.holdings.length > 0) {
+        for (const {
+          allocationInPercentage,
+          name,
+          valueInBaseCurrency
+        } of position.assetProfile.holdings) {
+          const normalizedAssetName = this.normalizeAssetName(name);
+
+          if (this.topHoldingsMap[normalizedAssetName]?.value) {
+            this.topHoldingsMap[normalizedAssetName].value += isNumber(
+              valueInBaseCurrency
+            )
+              ? valueInBaseCurrency
+              : allocationInPercentage *
+                this.portfolioDetails.holdings[symbol].valueInPercentage;
+          } else {
+            this.topHoldingsMap[normalizedAssetName] = {
+              name,
+              value: isNumber(valueInBaseCurrency)
                 ? valueInBaseCurrency
                 : allocationInPercentage *
-                  this.portfolioDetails.holdings[symbol].valueInPercentage;
-            } else {
-              this.topHoldingsMap[normalizedAssetName] = {
-                name,
-                value: isNumber(valueInBaseCurrency)
-                  ? valueInBaseCurrency
-                  : allocationInPercentage *
-                    this.portfolioDetails.holdings[symbol].valueInPercentage
-              };
-            }
+                  this.portfolioDetails.holdings[symbol].valueInPercentage
+            };
           }
         }
+      }
 
-        if (position.assetProfile.sectors.length > 0) {
-          for (const sector of position.assetProfile.sectors) {
-            const { name, weight } = sector;
+      if (position.assetProfile.sectors.length > 0) {
+        for (const sector of position.assetProfile.sectors) {
+          const { name, weight } = sector;
 
-            if (this.sectors[name]?.value) {
-              this.sectors[name].value +=
+          if (this.sectors[name]?.value) {
+            this.sectors[name].value +=
+              weight *
+              (isNumber(position.valueInBaseCurrency)
+                ? position.valueInBaseCurrency
+                : position.valueInPercentage);
+          } else {
+            this.sectors[name] = {
+              name: translate(name),
+              value:
                 weight *
                 (isNumber(position.valueInBaseCurrency)
-                  ? position.valueInBaseCurrency
-                  : position.valueInPercentage);
-            } else {
-              this.sectors[name] = {
-                name,
-                value:
-                  weight *
-                  (isNumber(position.valueInBaseCurrency)
-                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
-              };
-            }
+                  ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  : this.portfolioDetails.holdings[symbol].valueInPercentage)
+            };
           }
-        } else {
-          this.sectors[UNKNOWN_KEY].value += isNumber(
-            position.valueInBaseCurrency
-          )
-            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-            : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
+      } else {
+        this.sectors[UNKNOWN_KEY].value += isNumber(
+          position.valueInBaseCurrency
+        )
+          ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+          : this.portfolioDetails.holdings[symbol].valueInPercentage;
       }
 
       if (this.holdings[symbol].assetSubClass === 'ETF') {

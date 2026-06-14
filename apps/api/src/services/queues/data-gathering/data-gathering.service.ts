@@ -34,6 +34,8 @@ import ms, { StringValue } from 'ms';
 
 @Injectable()
 export class DataGatheringService {
+  private readonly logger = new Logger(DataGatheringService.name);
+
   public constructor(
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
@@ -145,7 +147,7 @@ export class DataGatheringService {
         });
       }
     } catch (error) {
-      Logger.error(error, 'DataGatheringService');
+      this.logger.error(error);
     } finally {
       return undefined;
     }
@@ -176,30 +178,42 @@ export class DataGatheringService {
     );
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
-      const symbolMapping = symbolProfiles.find((symbolProfile) => {
-        return symbolProfile.symbol === symbol;
-      })?.symbolMapping;
+      const symbolProfile = symbolProfiles.find(
+        ({ symbol: symbolProfileSymbol }) => {
+          return symbolProfileSymbol === symbol;
+        }
+      );
+
+      const symbolMapping = symbolProfile?.symbolMapping;
+
+      let enhancedAssetProfile = symbolProfile
+        ? {
+            ...assetProfile,
+            assetClass: symbolProfile.assetClass ?? assetProfile.assetClass,
+            assetSubClass:
+              symbolProfile.assetSubClass ?? assetProfile.assetSubClass
+          }
+        : assetProfile;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
-          assetProfiles[symbol] = await dataEnhancer.enhance({
-            response: assetProfile,
+          enhancedAssetProfile = await dataEnhancer.enhance({
+            response: enhancedAssetProfile,
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
-          Logger.error(
+          this.logger.error(
             `Failed to enhance data for ${symbol} (${
               assetProfile.dataSource
             }) by ${dataEnhancer.getName()}`,
-            error,
-            'DataGatheringService'
+            error
           );
         }
       }
 
+      const { assetClass, assetSubClass } = assetProfile;
+
       const {
-        assetClass,
-        assetSubClass,
         countries,
         currency,
         cusip,
@@ -212,7 +226,7 @@ export class DataGatheringService {
         name,
         sectors,
         url
-      } = assetProfile;
+      } = enhancedAssetProfile;
 
       try {
         await this.prismaService.symbolProfile.upsert({
@@ -256,11 +270,7 @@ export class DataGatheringService {
           }
         });
       } catch (error) {
-        Logger.error(
-          `${symbol}: ${error?.meta?.cause}`,
-          error,
-          'DataGatheringService'
-        );
+        this.logger.error(`${symbol}: ${error?.meta?.cause}`, error);
 
         if (assetProfileIdentifiers.length === 1) {
           throw error;

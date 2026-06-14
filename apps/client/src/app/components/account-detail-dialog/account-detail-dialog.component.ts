@@ -3,7 +3,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
   DEFAULT_PAGE_SIZE,
-  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
 } from '@ghostfolio/common/config';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -245,7 +245,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
           this.balance = balance;
 
           if (
-            this.balance >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES &&
+            this.balance >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES &&
             this.data.deviceType === 'mobile'
           ) {
             this.balancePrecision = 0;
@@ -257,7 +257,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.dividendInBaseCurrency >=
-              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.dividendInBaseCurrencyPrecision = 0;
           }
@@ -267,7 +267,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
             if (
               this.data.deviceType === 'mobile' &&
-              this.equity >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+              this.equity >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
             ) {
               this.equityPrecision = 0;
             }
@@ -280,7 +280,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.interestInBaseCurrency >=
-              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.interestInBaseCurrencyPrecision = 0;
           }

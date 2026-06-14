@@ -252,6 +252,7 @@ export const PROPERTY_IS_DATA_GATHERING_ENABLED = 'IS_DATA_GATHERING_ENABLED';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
+export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
@@ -281,6 +282,21 @@ export const REPLACE_NAME_PARTS = [
   'Vanguard Index Funds -',
   'Xtrackers (IE) Plc -'
 ];
+
+export const SECTORS = [
+  'Basic Materials',
+  'Communication Services',
+  'Consumer Cyclical',
+  'Consumer Defensive',
+  'Energy',
+  'Financial Services',
+  'Healthcare',
+  'Industrials',
+  'Other',
+  'Real Estate',
+  'Technology',
+  'Utilities'
+] as const;
 
 export const STORYBOOK_PATH = '/development/storybook';
 
