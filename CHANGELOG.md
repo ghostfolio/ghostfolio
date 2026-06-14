@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for a click handler in the page tabs component
+
 ### Changed
 
 - Enabled the _Bull Dashboard_ tab in the admin control panel (experimental)
