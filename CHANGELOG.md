@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the styling of the tabs across various dialogs
 - Improved the styling of the page tabs component on desktop
 - Enabled the _Bull Dashboard_ tab in the admin control panel (experimental)
+- Migrated the settings dialog to customize the rule thresholds of the _X-ray_ page from `ngModel` to form control
 - Improved the language localization for Spanish (`es`)
 - Upgraded `bull-board` from version `7.1.5` to `7.2.1`
 - Upgraded `date-fns` from version `4.1.0` to `4.4.0`
