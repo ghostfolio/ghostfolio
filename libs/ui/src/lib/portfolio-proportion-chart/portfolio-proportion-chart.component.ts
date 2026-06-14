@@ -1,10 +1,7 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  PortfolioPosition
-} from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { CommonModule } from '@angular/common';
@@ -38,6 +35,11 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
 import { translate } from '../i18n';
+
+export interface PortfolioProportionChartClickEvent {
+  dataSource?: DataSource;
+  symbol: string;
+}
 
 const {
   blue,
@@ -83,7 +85,8 @@ export class GfPortfolioProportionChartComponent
   public chart: Chart<'doughnut'>;
   public isLoading = true;
 
-  protected readonly proportionChartClicked = output<AssetProfileIdentifier>();
+  protected readonly proportionChartClicked =
+    output<PortfolioProportionChartClickEvent>();
 
   private readonly OTHER_KEY = 'OTHER';
 

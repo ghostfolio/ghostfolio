@@ -1,6 +1,6 @@
 import { DataSource } from '@prisma/client';
 
 export interface AssetProfileIdentifier {
-  dataSource?: DataSource;
+  dataSource: DataSource;
   symbol: string;
 }
