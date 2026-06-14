@@ -130,7 +130,12 @@
     <button mat-button type="button" (click)="dialogRef.close()">
       <ng-container i18n>Close</ng-container>
     </button>
-    <button color="primary" mat-flat-button type="submit">
+    <button
+      color="primary"
+      mat-flat-button
+      type="submit"
+      [disabled]="!settingsForm.dirty"
+    >
       <ng-container i18n>Save</ng-container>
     </button>
   </div>
