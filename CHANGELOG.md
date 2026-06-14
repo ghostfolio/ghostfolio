@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for a click handler in the page tabs component
+- Added the Korean (`ko`) language to the footer
 
 ### Changed
 
