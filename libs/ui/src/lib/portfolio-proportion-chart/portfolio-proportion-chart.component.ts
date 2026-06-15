@@ -354,6 +354,7 @@ export class GfPortfolioProportionChartComponent
               try {
                 const dataIndex = activeElements[0].index;
                 const symbol = chart.data.labels?.[dataIndex] as string;
+
                 const dataSource = this.data[symbol]?.dataSource;
 
                 this.proportionChartClicked.emit(
