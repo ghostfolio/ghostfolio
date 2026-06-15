@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the styling of the checkboxes to consistently use the primary color in their states
 
+### Fixed
+
+- Fixed a chart error on interaction by registering the annotation plugin early
+
 ## 3.11.0 - 2026-06-14
 
 ### Added
