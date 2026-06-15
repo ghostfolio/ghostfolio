@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the styling of the checkboxes to consistently use the primary color in their states
 - Improved the account name display in the accounts table
+- Improved the user id display in the users table of the admin control panel
 
 ## 3.11.0 - 2026-06-14
 
