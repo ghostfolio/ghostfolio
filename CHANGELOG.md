@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the styling of the checkboxes to consistently use the primary color in their states
+- Improved the name display in the activities table
 - Improved the user id display in the users table of the admin control panel
 - Improved the language localization for German (`de`)
 
