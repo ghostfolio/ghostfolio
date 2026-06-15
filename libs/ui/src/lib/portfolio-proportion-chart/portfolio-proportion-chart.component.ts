@@ -33,10 +33,7 @@ import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
-export interface PortfolioProportionChartClickEvent {
-  dataSource?: DataSource;
-  symbol: string;
-}
+import { PortfolioProportionChartClickEvent } from './interfaces/interfaces';
 
 const {
   blue,
@@ -359,7 +356,9 @@ export class GfPortfolioProportionChartComponent
                 const symbol = chart.data.labels?.[dataIndex] as string;
                 const dataSource = this.data[symbol]?.dataSource;
 
-                this.proportionChartClicked.emit({ dataSource, symbol });
+                this.proportionChartClicked.emit(
+                  dataSource ? { dataSource, symbol } : { accountId: symbol }
+                );
               } catch {}
             },
             onHover: (event, chartElement) => {
