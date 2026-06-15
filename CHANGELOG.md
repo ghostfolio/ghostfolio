@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the loading state when customizing the rule thresholds on the _X-ray_ page
+- Fixed an issue where the import activities dialog could overflow the screen
 
 ## 3.10.0 - 2026-06-13
 
