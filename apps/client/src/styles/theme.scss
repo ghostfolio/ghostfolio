@@ -312,7 +312,10 @@ $gf-typography: (
 
   @include mat.checkbox-overrides(
     (
-      selected-icon-color: var(--gf-theme-primary-500)
+      selected-focus-icon-color: var(--gf-theme-primary-500),
+      selected-hover-icon-color: var(--gf-theme-primary-500),
+      selected-icon-color: var(--gf-theme-primary-500),
+      selected-pressed-icon-color: var(--gf-theme-primary-500)
     )
   );
 
