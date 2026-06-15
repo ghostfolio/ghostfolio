@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the styling of the checkboxes to consistently use the primary color in their states
+
 ### Fixed
 
 - Fixed an issue on the allocations page where clicking an account in the _By Account_ chart did not open the detail dialog
