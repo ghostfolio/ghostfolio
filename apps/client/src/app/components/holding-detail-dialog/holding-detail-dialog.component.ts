@@ -108,64 +108,65 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnInit {
-  public activitiesCount: number;
-  public accounts: Account[];
-  public assetClass: string;
-  public assetSubClass: string;
-  public averagePrice: number;
-  public averagePricePrecision = 2;
-  public benchmarkDataItems: NullableLineChartItem[];
-  public benchmarkLabel = $localize`Average Unit Price`;
-  public countries: {
+  protected accounts: Account[];
+  protected activitiesCount: number;
+  protected assetClass: string;
+  protected assetSubClass: string;
+  protected averagePrice: number;
+  protected averagePricePrecision = 2;
+  protected benchmarkDataItems: NullableLineChartItem[];
+  protected benchmarkLabel = $localize`Average Unit Price`;
+  protected countries: {
     [code: string]: { name: string; value: number };
   };
-  public dataProviderInfo: DataProviderInfo;
-  public dataSource: MatTableDataSource<Activity>;
-  public dateOfFirstActivity: string;
-  public dividendInBaseCurrency: number;
-  public dividendInBaseCurrencyPrecision = 2;
-  public dividendYieldPercentWithCurrencyEffect: number;
-  public feeInBaseCurrency: number;
-  public getCountryName = getCountryName;
-  public hasPermissionToCreateOwnTag: boolean;
-  public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
-  public historicalDataItems: LineChartItem[];
-  public holdingForm: FormGroup;
-  public investmentInBaseCurrencyWithCurrencyEffect: number;
-  public investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
-  public isUUID = isUUID;
-  public marketDataItems: MarketData[] = [];
-  public marketPrice: number;
-  public marketPriceMax: number;
-  public marketPriceMaxPrecision = 2;
-  public marketPriceMin: number;
-  public marketPriceMinPrecision = 2;
-  public marketPricePrecision = 2;
-  public netPerformance: number;
-  public netPerformancePrecision = 2;
-  public netPerformancePercent: number;
-  public netPerformancePercentWithCurrencyEffect: number;
-  public netPerformancePercentWithCurrencyEffectPrecision = 2;
-  public netPerformanceWithCurrencyEffect: number;
-  public netPerformanceWithCurrencyEffectPrecision = 2;
-  public pageIndex = 0;
-  public pageSize = DEFAULT_PAGE_SIZE;
-  public quantity: number;
-  public quantityPrecision = 2;
-  public reportDataGlitchMail: string;
-  public routerLinkAdminControlMarketData =
+  protected dataProviderInfo: DataProviderInfo;
+  protected dataSource: MatTableDataSource<Activity>;
+  protected dateOfFirstActivity: string;
+  protected dividendInBaseCurrency: number;
+  protected dividendInBaseCurrencyPrecision = 2;
+  protected dividendYieldPercentWithCurrencyEffect: number;
+  protected feeInBaseCurrency: number;
+  protected getCountryName = getCountryName;
+  protected hasPermissionToCreateOwnTag: boolean;
+  protected hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
+  protected historicalDataItems: LineChartItem[];
+  protected holdingForm: FormGroup;
+  protected investmentInBaseCurrencyWithCurrencyEffect: number;
+  protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
+  protected isUUID = isUUID;
+  protected marketDataItems: MarketData[] = [];
+  protected marketPrice: number;
+  protected marketPriceMax: number;
+  protected marketPriceMaxPrecision = 2;
+  protected marketPriceMin: number;
+  protected marketPriceMinPrecision = 2;
+  protected marketPricePrecision = 2;
+  protected netPerformancePercentWithCurrencyEffect: number;
+  protected netPerformancePercentWithCurrencyEffectPrecision = 2;
+  protected netPerformanceWithCurrencyEffect: number;
+  protected netPerformanceWithCurrencyEffectPrecision = 2;
+  protected pageIndex = 0;
+  protected pageSize = DEFAULT_PAGE_SIZE;
+  protected quantity: number;
+  protected quantityPrecision = 2;
+  protected reportDataGlitchMail: string;
+  protected routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
-  public sectors: {
+  protected sectors: {
     [name: string]: { name: string; value: number };
   };
-  public sortColumn = 'date';
-  public sortDirection: SortDirection = 'desc';
-  public SymbolProfile: EnhancedSymbolProfile;
-  public tags: Tag[];
-  public tagsAvailable: Tag[];
-  public translate = translate;
-  public user: User;
-  public value: number;
+  protected sortColumn = 'date';
+  protected sortDirection: SortDirection = 'desc';
+  protected SymbolProfile: EnhancedSymbolProfile;
+  protected tagsAvailable: Tag[];
+  protected translate = translate;
+  protected user: User;
+  protected value: number;
+
+  private netPerformance: number;
+  private netPerformancePrecision = 2;
+  private netPerformancePercent: number;
+  private tags: Tag[];
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -543,13 +544,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       });
   }
 
-  public onChangePage(page: PageEvent) {
+  protected onChangePage(page: PageEvent) {
     this.pageIndex = page.pageIndex;
 
     this.fetchActivities();
   }
 
-  public onCloneActivity(aActivity: Activity) {
+  protected onCloneActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
@@ -560,11 +561,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  public onCloseHolding() {
+  protected onCloseHolding() {
     const today = new Date();
 
     const activity: CreateOrderDto = {
@@ -595,7 +596,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       });
   }
 
-  public onExport() {
+  protected onExport() {
     const activityIds = this.dataSource.data.map(({ id }) => {
       return id;
     });
@@ -615,13 +616,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       });
   }
 
-  public onMarketDataChanged(withRefresh = false) {
+  protected onMarketDataChanged(withRefresh = false) {
     if (withRefresh) {
       this.fetchMarketData();
     }
   }
 
-  public onUpdateActivity(aActivity: Activity) {
+  protected onUpdateActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
