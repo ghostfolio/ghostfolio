@@ -11,7 +11,7 @@ export interface PortfolioHoldingResponse {
   activitiesCount: number;
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
-  dateOfFirstActivity: Date;
+  dateOfFirstActivity: string;
   dividendInBaseCurrency: number;
   dividendYieldPercent: number;
   dividendYieldPercentWithCurrencyEffect: number;

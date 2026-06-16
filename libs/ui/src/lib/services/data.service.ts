@@ -445,19 +445,21 @@ export class DataService {
   }: {
     dataSource: DataSource;
     symbol: string;
-  }) {
+  }): Observable<
+    Omit<PortfolioHoldingResponse, 'dateOfFirstActivity'> & {
+      dateOfFirstActivity: Date;
+    }
+  > {
     return this.http
       .get<PortfolioHoldingResponse>(
         `/api/v1/portfolio/holding/${dataSource}/${symbol}`
       )
       .pipe(
         map((response) => {
-          if (response.dateOfFirstActivity) {
-            response.dateOfFirstActivity = parseISO(
-              response.dateOfFirstActivity as unknown as string
-            );
-          }
-          return response;
+          return {
+            ...response,
+            dateOfFirstActivity: parseISO(response.dateOfFirstActivity)
+          };
         })
       );
   }
