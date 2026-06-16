@@ -44,7 +44,12 @@ import {
   inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -130,7 +135,9 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected hasPermissionToCreateOwnTag: boolean;
   protected hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   protected historicalDataItems: LineChartItem[];
-  protected holdingForm: FormGroup;
+  protected holdingForm: FormGroup<{
+    tags: FormControl<Tag[] | null>;
+  }>;
   protected investmentInBaseCurrencyWithCurrencyEffect: number;
   protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
   protected readonly isUUID = isUUID;
@@ -193,12 +200,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     const filters = this.getActivityFilters();
 
     this.holdingForm = this.formBuilder.group({
-      tags: [] as string[]
+      tags: new FormControl<Tag[]>([])
     });
 
-    this.holdingForm
-      .get('tags')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+    this.holdingForm.controls.tags.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((tags: Tag[]) => {
         const newTag = tags.find(({ id }) => {
           return id === undefined;
