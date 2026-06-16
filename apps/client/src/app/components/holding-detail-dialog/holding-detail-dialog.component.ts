@@ -40,8 +40,8 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -163,18 +163,21 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected user: User;
   protected value: number;
 
+  protected readonly data = inject<HoldingDetailDialogParams>(MAT_DIALOG_DATA);
+  protected readonly dialogRef = inject(
+    MatDialogRef<GfHoldingDetailDialogComponent>
+  );
+
   private tags: Tag[];
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     addIcons({
       arrowDownCircleOutline,
       createOutline,
