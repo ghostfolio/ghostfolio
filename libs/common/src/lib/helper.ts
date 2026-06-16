@@ -44,7 +44,7 @@ import {
   locale
 } from './config';
 import {
-  AdminMarketDataItem,
+  AssetProfileItem,
   AssetProfileIdentifier,
   Benchmark
 } from './interfaces';
@@ -149,7 +149,7 @@ export function canDeleteAssetProfile({
   symbol,
   watchedByCount
 }: Pick<
-  AdminMarketDataItem,
+  AssetProfileItem,
   'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
 >): boolean {
   return (

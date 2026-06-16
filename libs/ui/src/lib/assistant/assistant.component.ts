@@ -675,7 +675,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     aSearchTerm: string
   ): Observable<SearchResultItem[]> {
     return this.adminService
-      .fetchAdminMarketData({
+      .fetchAssetProfiles({
         filters: [
           {
             id: aSearchTerm,

@@ -11,10 +11,10 @@ import {
 import {
   AdminData,
   AdminJobs,
-  AdminMarketData,
   AdminUserResponse,
   AdminUsersResponse,
   AssetProfileIdentifier,
+  AssetProfilesResponse,
   DataProviderGhostfolioStatusResponse,
   DataProviderHistoricalResponse,
   EnhancedSymbolProfile,
@@ -81,7 +81,7 @@ export class AdminService {
     return this.http.get<AdminData>('/api/v1/admin');
   }
 
-  public fetchAdminMarketData({
+  public fetchAssetProfiles({
     filters,
     skip,
     sortColumn,
@@ -112,7 +112,7 @@ export class AdminService {
       params = params.append('take', take);
     }
 
-    return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
+    return this.http.get<AssetProfilesResponse>('/api/v1/asset-profiles', {
       params
     });
   }

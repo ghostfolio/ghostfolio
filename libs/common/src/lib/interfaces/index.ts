@@ -4,13 +4,13 @@ import type { Activity, ActivityError } from './activities.interface';
 import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
 import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
-import type {
-  AdminMarketData,
-  AdminMarketDataItem
-} from './admin-market-data.interface';
 import type { AdminUser } from './admin-user.interface';
 import type { AssetClassSelectorOption } from './asset-class-selector-option.interface';
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
+import type {
+  AssetProfileItem,
+  AssetProfilesResponse
+} from './asset-profiles-response.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
@@ -110,9 +110,7 @@ export {
   ActivityResponse,
   AdminData,
   AdminJobs,
-  AdminMarketData,
   AdminMarketDataDetails,
-  AdminMarketDataItem,
   AdminUser,
   AdminUserResponse,
   AdminUsersResponse,
@@ -122,6 +120,8 @@ export {
   AssertionCredentialJSON,
   AssetClassSelectorOption,
   AssetProfileIdentifier,
+  AssetProfileItem,
+  AssetProfilesResponse,
   AssetResponse,
   AttestationCredentialJSON,
   Benchmark,

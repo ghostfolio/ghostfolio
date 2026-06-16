@@ -1,19 +1,21 @@
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
-export interface AdminMarketData {
+export interface AssetProfilesResponse {
   count: number;
-  marketData: AdminMarketDataItem[];
+  marketData: AssetProfileItem[];
 }
 
-export interface AdminMarketDataItem {
+export interface AssetProfileItem {
   activitiesCount: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
+  comment?: string | null;
   countriesCount: number;
   currency: string;
   dataSource: DataSource;
   date: Date;
   id: string;
+  isin?: string | null;
   isActive: boolean;
   isBenchmark?: boolean;
   isUsedByUsersWithSubscription?: boolean;

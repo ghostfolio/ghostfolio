@@ -14,7 +14,7 @@ import {
   InfoItem,
   User
 } from '@ghostfolio/common/interfaces';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { AssetProfileItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
@@ -152,7 +152,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     }
   ];
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
-  protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
+  protected dataSource = new MatTableDataSource<AssetProfileItem>();
   protected defaultDateFormat: string;
   protected readonly displayedColumns: string[] = [];
   protected readonly filters$ = new Subject<Filter[]>();
@@ -160,7 +160,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected placeholder = '';
-  protected readonly selection = new SelectionModel<AdminMarketDataItem>(true);
+  protected readonly selection = new SelectionModel<AssetProfileItem>(true);
   protected totalItems = 0;
   protected user: User;
 
@@ -376,7 +376,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     this.selection.clear();
 
     this.adminService
-      .fetchAdminMarketData({
+      .fetchAssetProfiles({
         sortColumn,
         sortDirection,
         filters: this.activeFilters,
