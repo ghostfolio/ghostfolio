@@ -163,9 +163,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected user: User;
   protected value: number;
 
-  private netPerformance: number;
-  private netPerformancePrecision = 2;
-  private netPerformancePercent: number;
   private tags: Tag[];
 
   public constructor(
@@ -271,8 +268,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           marketPrice,
           marketPriceMax,
           marketPriceMin,
-          netPerformance,
-          netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
           netPerformanceWithCurrencyEffect,
           quantity,
@@ -367,17 +362,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           ) {
             this.marketPricePrecision = 0;
           }
-
-          this.netPerformance = netPerformance;
-
-          if (
-            this.data.deviceType === 'mobile' &&
-            this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
-          ) {
-            this.netPerformancePrecision = 0;
-          }
-
-          this.netPerformancePercent = netPerformancePercent;
 
           this.netPerformancePercentWithCurrencyEffect =
             netPerformancePercentWithCurrencyEffect;
