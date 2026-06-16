@@ -16,6 +16,7 @@ import {
   EnhancedSymbolProfile,
   Filter,
   LineChartItem,
+  NullableLineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -71,6 +72,7 @@ import {
   swapVerticalOutline,
   walletOutline
 } from 'ionicons/icons';
+import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { switchMap } from 'rxjs/operators';
 
@@ -112,7 +114,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   public assetSubClass: string;
   public averagePrice: number;
   public averagePricePrecision = 2;
-  public benchmarkDataItems: LineChartItem[];
+  public benchmarkDataItems: NullableLineChartItem[];
   public benchmarkLabel = $localize`Average Unit Price`;
   public countries: {
     [code: string]: { name: string; value: number };
@@ -195,7 +197,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
     this.holdingForm
       .get('tags')
-      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((tags: Tag[]) => {
         const newTag = tags.find(({ id }) => {
           return id === undefined;
@@ -318,12 +320,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             ({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
                 date,
-                value: averagePrice
+                value: isNumber(averagePrice) ? averagePrice : null
               });
 
               return {
                 date,
-                value: marketPrice
+                value: marketPrice ?? 0
               };
             }
           );
@@ -526,7 +528,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.hasPermissionToCreateOwnTag =
             hasPermission(this.user.permissions, permissions.createOwnTag) &&
-            this.user?.settings?.isExperimentalFeatures;
+            (this.user?.settings?.isExperimentalFeatures ?? false);
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {
@@ -566,14 +568,14 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     const today = new Date();
 
     const activity: CreateOrderDto = {
-      accountId: this.accounts.length === 1 ? this.accounts[0].id : null,
-      comment: null,
-      currency: this.SymbolProfile.currency,
-      dataSource: this.SymbolProfile.dataSource,
+      accountId: this.accounts.length === 1 ? this.accounts[0].id : undefined,
+      comment: undefined,
+      currency: this.SymbolProfile?.currency ?? '',
+      dataSource: this.SymbolProfile?.dataSource,
       date: today.toISOString(),
       fee: 0,
       quantity: this.quantity,
-      symbol: this.SymbolProfile.symbol,
+      symbol: this.SymbolProfile?.symbol ?? '',
       tags: this.tags.map(({ id }) => {
         return id;
       }),
