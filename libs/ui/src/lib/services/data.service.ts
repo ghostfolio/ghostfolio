@@ -447,7 +447,7 @@ export class DataService {
     symbol: string;
   }): Observable<
     Omit<PortfolioHoldingResponse, 'dateOfFirstActivity'> & {
-      dateOfFirstActivity: Date;
+      dateOfFirstActivity: Date | undefined;
     }
   > {
     return this.http
@@ -456,9 +456,13 @@ export class DataService {
       )
       .pipe(
         map((response) => {
+          const dateOfFirstActivity = response.dateOfFirstActivity
+            ? parseISO(response.dateOfFirstActivity)
+            : undefined;
+
           return {
             ...response,
-            dateOfFirstActivity: parseISO(response.dateOfFirstActivity)
+            dateOfFirstActivity
           };
         })
       );

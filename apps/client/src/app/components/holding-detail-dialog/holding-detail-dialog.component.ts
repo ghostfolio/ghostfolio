@@ -297,7 +297,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
-          this.dateOfFirstActivity = dateOfFirstActivity;
+
+          if (dateOfFirstActivity) {
+            this.dateOfFirstActivity = dateOfFirstActivity;
+          }
+
           this.dividendInBaseCurrency = dividendInBaseCurrency;
 
           if (
