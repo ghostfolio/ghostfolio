@@ -951,7 +951,6 @@ export class PortfolioService {
 
     return {
       activitiesCount,
-      dateOfFirstActivity,
       marketPrice,
       marketPriceMax,
       marketPriceMin,
@@ -959,6 +958,7 @@ export class PortfolioService {
       tags,
       averagePrice: averagePrice.toNumber(),
       dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
+      dateOfFirstActivity: parseISO(dateOfFirstActivity),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       dividendYieldPercent: dividendYieldPercent.toNumber(),
       dividendYieldPercentWithCurrencyEffect:
