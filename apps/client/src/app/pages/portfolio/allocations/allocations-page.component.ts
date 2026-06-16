@@ -185,10 +185,10 @@ export class GfAllocationsPageComponent implements OnInit {
     this.initialize();
   }
 
-  public onAccountChartClicked({ symbol }: AssetProfileIdentifier) {
-    if (symbol && symbol !== UNKNOWN_KEY) {
+  public onAccountChartClicked({ accountId }: { accountId: string }) {
+    if (accountId && accountId !== UNKNOWN_KEY) {
       this.router.navigate([], {
-        queryParams: { accountId: symbol, accountDetailDialog: true }
+        queryParams: { accountId, accountDetailDialog: true }
       });
     }
   }

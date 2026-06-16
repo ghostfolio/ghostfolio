@@ -1,10 +1,7 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  PortfolioPosition
-} from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
@@ -35,6 +32,8 @@ import { isUUID } from 'class-validator';
 import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
+
+import { PortfolioProportionChartClickEvent } from './interfaces/interfaces';
 
 const {
   blue,
@@ -80,7 +79,8 @@ export class GfPortfolioProportionChartComponent
   public chart: Chart<'doughnut'>;
   public isLoading = true;
 
-  protected readonly proportionChartClicked = output<AssetProfileIdentifier>();
+  protected readonly proportionChartClicked =
+    output<PortfolioProportionChartClickEvent>();
 
   private readonly OTHER_KEY = 'OTHER';
 
@@ -355,11 +355,11 @@ export class GfPortfolioProportionChartComponent
                 const dataIndex = activeElements[0].index;
                 const symbol = chart.data.labels?.[dataIndex] as string;
 
-                const dataSource = this.data[symbol].dataSource;
+                const dataSource = this.data[symbol]?.dataSource;
 
-                if (dataSource) {
-                  this.proportionChartClicked.emit({ dataSource, symbol });
-                }
+                this.proportionChartClicked.emit(
+                  dataSource ? { dataSource, symbol } : { accountId: symbol }
+                );
               } catch {}
             },
             onHover: (event, chartElement) => {
