@@ -25,7 +25,10 @@ import type { HoldingWithParents } from './holding-with-parents.interface';
 import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
-import type { LineChartItem } from './line-chart-item.interface';
+import type {
+  LineChartItem,
+  NullableLineChartItem
+} from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
@@ -158,6 +161,7 @@ export {
   MarketData,
   MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
+  NullableLineChartItem,
   OAuthResponse,
   PlatformsResponse,
   PortfolioChart,
