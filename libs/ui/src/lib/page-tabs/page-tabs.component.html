@@ -42,8 +42,13 @@
 
 <ng-template #tabContent let-tab>
   <ion-icon
+    class="flex-shrink-0"
     [name]="tab.iconName"
     [size]="deviceType === 'mobile' ? 'large' : 'small'"
   />
-  <div class="d-none d-sm-block ml-1" [innerHTML]="tab.label"></div>
+  <div
+    class="d-none d-sm-block ml-1 text-truncate"
+    style="max-width: 10.5rem"
+    [innerHTML]="tab.label"
+  ></div>
 </ng-template>
