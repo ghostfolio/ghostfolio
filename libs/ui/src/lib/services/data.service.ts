@@ -446,9 +446,20 @@ export class DataService {
     dataSource: DataSource;
     symbol: string;
   }) {
-    return this.http.get<PortfolioHoldingResponse>(
-      `/api/v1/portfolio/holding/${dataSource}/${symbol}`
-    );
+    return this.http
+      .get<PortfolioHoldingResponse>(
+        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((response) => {
+          if (response.dateOfFirstActivity) {
+            response.dateOfFirstActivity = parseISO(
+              response.dateOfFirstActivity as unknown as string
+            );
+          }
+          return response;
+        })
+      );
   }
 
   public fetchInfo(): InfoItem {

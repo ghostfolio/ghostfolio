@@ -126,7 +126,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   };
   protected dataProviderInfo: DataProviderInfo;
   protected dataSource: MatTableDataSource<Activity>;
-  protected dateOfFirstActivity: string;
+  protected dateOfFirstActivity: Date;
   protected dividendInBaseCurrency: number;
   protected dividendInBaseCurrencyPrecision = 2;
   protected dividendYieldPercentWithCurrencyEffect: number;
@@ -452,16 +452,16 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
-          if (isToday(parseISO(this.dateOfFirstActivity))) {
+          if (isToday(this.dateOfFirstActivity)) {
             // Add average price
             this.historicalDataItems.push({
-              date: this.dateOfFirstActivity,
+              date: this.dateOfFirstActivity.toISOString(),
               value: this.averagePrice
             });
 
             // Add benchmark 1
             this.benchmarkDataItems.push({
-              date: this.dateOfFirstActivity,
+              date: this.dateOfFirstActivity.toISOString(),
               value: averagePrice
             });
 
@@ -492,7 +492,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.benchmarkDataItems[0]?.value === undefined &&
-            isSameMonth(parseISO(this.dateOfFirstActivity), new Date())
+            isSameMonth(this.dateOfFirstActivity, new Date())
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
