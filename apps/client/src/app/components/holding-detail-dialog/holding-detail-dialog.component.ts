@@ -115,7 +115,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected averagePrice: number;
   protected averagePricePrecision = 2;
   protected benchmarkDataItems: NullableLineChartItem[];
-  protected benchmarkLabel = $localize`Average Unit Price`;
+  protected readonly benchmarkLabel = $localize`Average Unit Price`;
   protected countries: {
     [code: string]: { name: string; value: number };
   };
@@ -126,14 +126,14 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected dividendInBaseCurrencyPrecision = 2;
   protected dividendYieldPercentWithCurrencyEffect: number;
   protected feeInBaseCurrency: number;
-  protected getCountryName = getCountryName;
+  protected readonly getCountryName = getCountryName;
   protected hasPermissionToCreateOwnTag: boolean;
   protected hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   protected historicalDataItems: LineChartItem[];
   protected holdingForm: FormGroup;
   protected investmentInBaseCurrencyWithCurrencyEffect: number;
   protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
-  protected isUUID = isUUID;
+  protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
   protected marketPrice: number;
   protected marketPriceMax: number;
@@ -146,11 +146,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected netPerformanceWithCurrencyEffect: number;
   protected netPerformanceWithCurrencyEffectPrecision = 2;
   protected pageIndex = 0;
-  protected pageSize = DEFAULT_PAGE_SIZE;
+  protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected quantity: number;
   protected quantityPrecision = 2;
   protected reportDataGlitchMail: string;
-  protected routerLinkAdminControlMarketData =
+  protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
   protected sectors: {
     [name: string]: { name: string; value: number };
@@ -159,7 +159,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected sortDirection: SortDirection = 'desc';
   protected SymbolProfile: EnhancedSymbolProfile;
   protected tagsAvailable: Tag[];
-  protected translate = translate;
+  protected readonly translate = translate;
   protected user: User;
   protected value: number;
 
