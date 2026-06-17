@@ -77,7 +77,7 @@
             </th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2"
+              class="mat-mdc-cell px-1 py-2 text-nowrap"
               mat-cell
             >
               {{ formatDistanceToNow(element.createdAt) }}
@@ -183,7 +183,7 @@
               </th>
               <td
                 *matCellDef="let element"
-                class="mat-mdc-cell px-1 py-2"
+                class="mat-mdc-cell px-1 py-2 text-nowrap"
                 mat-cell
               >
                 {{ formatDistanceToNow(element.lastActivity) }}
