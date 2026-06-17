@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a chart error on interaction by registering the annotation plugin early
 - Fixed an issue on the allocations page where clicking an account in the _By Account_ chart did not open the detail dialog
 - Restricted the maximum height of the import activities dialog
+- Fixed the dark mode styling of the safe withdrawal rate selector in the _FIRE_ section (experimental)
 
 ## 3.11.0 - 2026-06-14
 
