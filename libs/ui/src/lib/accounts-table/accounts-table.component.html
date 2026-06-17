@@ -49,7 +49,7 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         @if (element.platform?.url) {
           <gf-entity-logo
             class="d-inline d-sm-none mr-1"
