@@ -68,20 +68,6 @@ export class GfPricingPageComponent implements OnInit {
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
 
-  protected readonly referralBrokers = [
-    'Alpian',
-    'DEGIRO',
-    'finpension',
-    'frankly',
-    'Interactive Brokers',
-    'Mintos',
-    'Monefit SmartSaver',
-    'Revolut',
-    'Swissquote',
-    'VIAC',
-    'Zak'
-  ] as const;
-
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
   protected readonly routerLinkRegister = publicRoutes.register.routerLink;
   protected user: User;
