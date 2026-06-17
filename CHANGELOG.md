@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the account name display in the accounts table
 - Improved the name display in the activities table
 - Improved the user id display in the users table of the admin control panel
+- Improved the sorting to be case-insensitive in the platform management of the admin control panel
+- Improved the sorting to be case-insensitive in the tag management of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `svgmap` from version `2.19.3` to `2.21.0`
 
