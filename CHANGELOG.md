@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the styling of the checkboxes to consistently use the primary color in their states
 - Improved the account name display in the accounts table
 - Improved the name display in the activities table
+- Improved the last activity display in the users table of the admin control panel
+- Improved the registration display in the users table of the admin control panel
 - Improved the user id display in the users table of the admin control panel
 - Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Improved the language localization for German (`de`)
