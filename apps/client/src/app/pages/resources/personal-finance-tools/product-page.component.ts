@@ -33,7 +33,6 @@ export class GfProductPageComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    const locale = document.documentElement.lang;
     const { subscriptionOffer } = this.dataService.fetchInfo();
 
     this.price = subscriptionOffer?.price;
@@ -57,7 +56,7 @@ export class GfProductPageComponent implements OnInit {
         'Türkçe'
       ],
       name: 'Ghostfolio',
-      origin: getCountryName({ locale, code: 'CH' }),
+      origin: getCountryName({ code: 'CH' }),
       regions: [$localize`Global`],
       slogan: 'Open Source Wealth Management',
       useAnonymously: true
@@ -70,10 +69,7 @@ export class GfProductPageComponent implements OnInit {
     };
 
     if (this.product2.origin) {
-      this.product2.origin = getCountryName({
-        locale,
-        code: this.product2.origin
-      });
+      this.product2.origin = getCountryName({ code: this.product2.origin });
     }
 
     if (this.product2.regions) {
