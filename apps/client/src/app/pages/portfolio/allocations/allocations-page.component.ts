@@ -399,10 +399,7 @@ export class GfAllocationsPageComponent implements OnInit {
                 : position.valueInPercentage);
           } else {
             this.countries[code] = {
-              name: getCountryName({
-                code,
-                locale: this.user?.settings?.locale
-              }),
+              name: getCountryName({ code }),
               value:
                 weight *
                 (isNumber(position.valueInBaseCurrency)
