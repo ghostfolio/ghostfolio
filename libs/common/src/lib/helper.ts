@@ -261,7 +261,7 @@ export function getCurrencyFromSymbol(aSymbol = '') {
 export function getCountryName({ code }: { code: string }): string {
   try {
     return (
-      new Intl.DisplayNames([document.documentElement.lang || locale], {
+      new Intl.DisplayNames([document.documentElement.lang || DEFAULT_LOCALE], {
         type: 'region'
       }).of(code) ?? code
     );
