@@ -239,7 +239,10 @@
                   [disabled]="!selection.hasValue()"
                   (click)="onDeleteAssetProfiles()"
                 >
-                  <ng-container i18n>Delete Profiles</ng-container>
+                  <ng-container i18n>{selection.selected.length, plural,
+                    =1 {Delete 1 Profile}
+                    other {Delete # Profiles}
+                  }</ng-container>
                 </button>
               </mat-menu>
             </th>
