@@ -1,6 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { locale as defaultLocale } from '@ghostfolio/common/config';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   Benchmark,
@@ -149,7 +149,7 @@ export class GfHomeWatchlistComponent implements OnInit {
           autoFocus: false,
           data: {
             deviceType: this.deviceType(),
-            locale: this.user?.settings?.locale ?? defaultLocale
+            locale: this.user?.settings?.locale ?? DEFAULT_LOCALE
           },
           width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });

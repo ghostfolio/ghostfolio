@@ -1,8 +1,8 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_COLOR_SCHEME,
-  DEFAULT_PAGE_SIZE,
-  locale
+  DEFAULT_LOCALE,
+  DEFAULT_PAGE_SIZE
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
@@ -429,7 +429,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             colorScheme:
               this.user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
             deviceType: this.deviceType(),
-            locale: this.user?.settings?.locale ?? locale
+            locale: this.user?.settings?.locale ?? DEFAULT_LOCALE
           } satisfies AssetProfileDialogParams,
           height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
@@ -464,7 +464,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           autoFocus: false,
           data: {
             deviceType: this.deviceType(),
-            locale: this.user?.settings?.locale ?? locale
+            locale: this.user?.settings?.locale ?? DEFAULT_LOCALE
           } satisfies CreateAssetProfileDialogParams,
           width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
         });

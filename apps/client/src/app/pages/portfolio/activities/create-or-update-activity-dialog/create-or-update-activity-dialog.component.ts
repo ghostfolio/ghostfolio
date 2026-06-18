@@ -1,6 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { ASSET_CLASS_MAPPING } from '@ghostfolio/common/config';
-import { locale as defaultLocale } from '@ghostfolio/common/config';
+import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
@@ -120,7 +119,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.hasPermissionToCreateOwnTag =
       this.data.user?.settings?.isExperimentalFeatures &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
-    this.locale = this.data.user.settings.locale ?? defaultLocale;
+    this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
     this.dateAdapter.setLocale(this.locale);

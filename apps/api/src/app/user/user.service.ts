@@ -28,11 +28,11 @@ import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
   DEFAULT_LANGUAGE_CODE,
+  DEFAULT_LOCALE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_REFERRAL_PARTNERS,
   PROPERTY_SYSTEM_MESSAGE,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS,
-  locale as defaultLocale
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
@@ -102,7 +102,7 @@ export class UserService {
 
   public async getUser({
     impersonationUserId,
-    locale = defaultLocale,
+    locale = DEFAULT_LOCALE,
     user
   }: {
     impersonationUserId: string;

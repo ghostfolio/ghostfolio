@@ -36,12 +36,12 @@ import { get, isNil, isString } from 'lodash';
 
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix,
-  locale
+  ghostfolioScraperApiSymbolPrefix
 } from './config';
 import {
   AdminMarketDataItem,
@@ -338,7 +338,7 @@ export function getEmojiFlag(aCountryCode: string) {
 }
 
 export function getLocale() {
-  return navigator.language ?? locale;
+  return navigator.language ?? DEFAULT_LOCALE;
 }
 
 export function getLowercase(object: object, path: string) {
