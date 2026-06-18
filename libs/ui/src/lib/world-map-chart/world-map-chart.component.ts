@@ -95,7 +95,7 @@ export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
     this.svgMapElement.options.countryNames = Object.keys(
       this.svgMapElement.countries
     ).reduce<{ [code: string]: string }>((names, code) => {
-      names[code] = getCountryName({ code, locale: this.locale });
+      names[code] = getCountryName({ code });
 
       return names;
     }, {});
