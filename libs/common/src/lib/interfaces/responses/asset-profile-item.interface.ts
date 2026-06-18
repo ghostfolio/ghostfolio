@@ -1,10 +1,5 @@
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
-export interface AssetProfilesResponse {
-  count: number;
-  marketData: AssetProfileItem[];
-}
-
 export interface AssetProfileItem {
   activitiesCount: number;
   assetClass?: AssetClass;
@@ -15,9 +10,9 @@ export interface AssetProfileItem {
   dataSource: DataSource;
   date: Date;
   id: string;
-  isin?: string | null;
   isActive: boolean;
   isBenchmark?: boolean;
+  isin?: string | null;
   isUsedByUsersWithSubscription?: boolean;
   lastMarketPrice: number;
   marketDataItemCount: number;
@@ -25,4 +20,9 @@ export interface AssetProfileItem {
   sectorsCount: number;
   symbol: string;
   watchedByCount: number;
+}
+
+export interface AssetProfilesResponse {
+  assetProfiles: AssetProfileItem[];
+  count: number;
 }

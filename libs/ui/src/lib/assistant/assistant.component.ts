@@ -688,8 +688,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         catchError(() => {
           return EMPTY;
         }),
-        map(({ marketData }) => {
-          return marketData.map(
+        map(({ assetProfiles }) => {
+          return assetProfiles.map(
             ({ assetSubClass, currency, dataSource, name, symbol }) => {
               return {
                 currency,
