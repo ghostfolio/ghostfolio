@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `yahoo-finance2` from version `3.14.2` to `3.15.3`
+
 ### Fixed
 
 - Fixed an issue with the localization of the country names
