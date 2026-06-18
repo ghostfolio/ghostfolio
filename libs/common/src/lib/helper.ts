@@ -258,15 +258,13 @@ export function getCurrencyFromSymbol(aSymbol = '') {
   return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
-export function getCountryName({
-  code,
-  locale = getLocale()
-}: {
-  code: string;
-  locale?: string;
-}): string {
+export function getCountryName({ code }: { code: string }): string {
   try {
-    return new Intl.DisplayNames([locale], { type: 'region' }).of(code) ?? code;
+    return (
+      new Intl.DisplayNames([document.documentElement.lang || locale], {
+        type: 'region'
+      }).of(code) ?? code
+    );
   } catch {
     return code;
   }

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the sorting to be case-insensitive in the platform management of the admin control panel
 - Improved the sorting to be case-insensitive in the tag management of the admin control panel
 
+### Fixed
+
+- Fixed an issue with the localization of the country names
+
 ## 3.12.0 - 2026-06-17
 
 ### Changed

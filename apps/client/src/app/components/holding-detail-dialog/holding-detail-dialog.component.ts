@@ -438,10 +438,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (SymbolProfile?.countries?.length > 0) {
             for (const country of SymbolProfile.countries) {
               this.countries[country.code] = {
-                name: getCountryName({
-                  code: country.code,
-                  locale: this.data.locale
-                }),
+                name: getCountryName({ code: country.code }),
                 value: country.weight
               };
             }
