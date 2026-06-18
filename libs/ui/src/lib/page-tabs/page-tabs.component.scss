@@ -61,6 +61,16 @@
             justify-content: flex-start;
             margin: 0 0.5rem 0.1rem 0.5rem;
 
+            .mdc-tab__content,
+            .mdc-tab__text-label {
+              min-width: 0;
+              width: 100%;
+            }
+
+            .mdc-tab__text-label {
+              display: flex;
+            }
+
             &.mdc-tab--active {
               background-color: rgba(var(--palette-foreground-base), 0.05);
               font-weight: 500;
@@ -70,6 +80,10 @@
       }
     }
   }
+}
+
+.page-tab-label {
+  min-width: 0;
 }
 
 :host-context(.theme-dark) {
