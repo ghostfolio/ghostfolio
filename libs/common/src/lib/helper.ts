@@ -36,16 +36,16 @@ import { get, isNil, isString } from 'lodash';
 
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix,
-  locale
+  ghostfolioScraperApiSymbolPrefix
 } from './config';
 import {
-  AdminMarketDataItem,
   AssetProfileIdentifier,
+  AssetProfileItem,
   Benchmark
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
@@ -149,7 +149,7 @@ export function canDeleteAssetProfile({
   symbol,
   watchedByCount
 }: Pick<
-  AdminMarketDataItem,
+  AssetProfileItem,
   'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
 >): boolean {
   return (
@@ -261,7 +261,7 @@ export function getCurrencyFromSymbol(aSymbol = '') {
 export function getCountryName({ code }: { code: string }): string {
   try {
     return (
-      new Intl.DisplayNames([document.documentElement.lang || locale], {
+      new Intl.DisplayNames([document.documentElement.lang || DEFAULT_LOCALE], {
         type: 'region'
       }).of(code) ?? code
     );
@@ -338,7 +338,7 @@ export function getEmojiFlag(aCountryCode: string) {
 }
 
 export function getLocale() {
-  return navigator.language ?? locale;
+  return navigator.language ?? DEFAULT_LOCALE;
 }
 
 export function getLowercase(object: object, path: string) {

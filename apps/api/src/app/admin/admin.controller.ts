@@ -1,7 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
-import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
@@ -24,18 +23,13 @@ import {
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
-  AdminMarketData,
   AdminUserResponse,
   AdminUsersResponse,
   EnhancedSymbolProfile,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type {
-  DateRange,
-  MarketDataPreset,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -67,7 +61,6 @@ export class AdminController {
 
   public constructor(
     private readonly adminService: AdminService,
-    private readonly apiService: ApiService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly demoService: DemoService,
@@ -215,35 +208,6 @@ export class AdminController {
       dataSource,
       date,
       symbol
-    });
-  }
-
-  @Get('market-data')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getMarketData(
-    @Query('assetSubClasses') filterByAssetSubClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('presetId') presetId?: MarketDataPreset,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('skip') skip?: number,
-    @Query('sortColumn') sortColumn?: string,
-    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('take') take?: number
-  ): Promise<AdminMarketData> {
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAssetSubClasses,
-      filterByDataSource,
-      filterBySearchQuery
-    });
-
-    return this.adminService.getMarketData({
-      filters,
-      presetId,
-      sortColumn,
-      sortDirection,
-      skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take
     });
   }
 
