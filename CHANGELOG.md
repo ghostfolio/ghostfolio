@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Added the selected asset profile count to the delete menu item of the historical market data table in the admin control panel
+
 ### Fixed
 
 - Fixed an issue with the localization of the country names
