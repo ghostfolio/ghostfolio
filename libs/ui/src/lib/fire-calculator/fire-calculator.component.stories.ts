@@ -1,4 +1,4 @@
-import { locale } from '@ghostfolio/common/config';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -47,7 +47,7 @@ export const Simple: Story = {
     annualInterestRate: 5,
     currency: 'USD',
     fireWealth: 50000,
-    locale: locale,
+    locale: DEFAULT_LOCALE,
     savingsRate: 1000
   }
 };
