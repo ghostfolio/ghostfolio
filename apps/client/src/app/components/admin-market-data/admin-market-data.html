@@ -240,7 +240,12 @@
                   (click)="onDeleteAssetProfiles()"
                 >
                   <ng-container i18n
-                    >Delete {{ selection.selected.length }}
+                    >Delete
+                    {{
+                      selection.selected.length > 1
+                        ? selection.selected.length
+                        : ''
+                    }}
                     {selection.selected.length, plural,
                       =1 {Profile}
                       other {Profiles}
