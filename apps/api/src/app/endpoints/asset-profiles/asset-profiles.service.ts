@@ -199,7 +199,6 @@ export class AssetProfilesService {
         const {
           _count,
           activities,
-          comment,
           currency,
           dataSource,
           id,
@@ -234,7 +233,6 @@ export class AssetProfilesService {
         return {
           assetClass,
           assetSubClass,
-          comment,
           countriesCount,
           currency,
           dataSource,
@@ -414,21 +412,20 @@ export class AssetProfilesService {
 
         return {
           activitiesCount,
-          assetClass: AssetClass.LIQUIDITY,
-          assetSubClass: AssetSubClass.CASH,
-          comment: null,
-          countriesCount: 0,
           currency,
           dataSource,
+          lastMarketPrice,
+          marketDataItemCount,
+          symbol,
+          assetClass: AssetClass.LIQUIDITY,
+          assetSubClass: AssetSubClass.CASH,
+          countriesCount: 0,
           date: dateOfFirstActivity,
           id: undefined,
           isActive: true,
           isin: null,
-          lastMarketPrice,
-          marketDataItemCount,
           name: symbol,
           sectorsCount: 0,
-          symbol,
           watchedByCount: 0
         };
       }

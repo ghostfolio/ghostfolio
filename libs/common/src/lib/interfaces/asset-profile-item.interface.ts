@@ -4,7 +4,6 @@ export interface AssetProfileItem {
   activitiesCount: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
-  comment?: string | null;
   countriesCount: number;
   currency: string;
   dataSource: DataSource;
@@ -20,9 +19,4 @@ export interface AssetProfileItem {
   sectorsCount: number;
   symbol: string;
   watchedByCount: number;
-}
-
-export interface AssetProfilesResponse {
-  assetProfiles: AssetProfileItem[];
-  count: number;
 }
