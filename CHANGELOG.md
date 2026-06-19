@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with the localization of the country names
+- Fixed the detection of not defined values in nested objects of the portfolio details endpoint
 
 ## 3.12.0 - 2026-06-17
 

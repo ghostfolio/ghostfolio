@@ -7,7 +7,9 @@ export function hasNotDefinedValuesInObject(aObject: Object): boolean {
     if (aObject[key] === null || aObject[key] === undefined) {
       return true;
     } else if (isObject(aObject[key])) {
-      return hasNotDefinedValuesInObject(aObject[key]);
+      if (hasNotDefinedValuesInObject(aObject[key])) {
+        return true;
+      }
     }
   }
 
