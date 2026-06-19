@@ -305,23 +305,23 @@
       </div>
     </div>
   </div>
-  @if (user?.subscription?.type === 'Basic') {
+  @if (user?.referralPartners?.length) {
     <div class="row">
       <div class="col mt-3">
         <p>
           <ng-container i18n>If you plan to open an account at</ng-container>
           <ng-container>&nbsp;</ng-container>
           @for (
-            broker of referralBrokers;
-            track broker;
+            partner of user.referralPartners;
+            track partner.name;
             let i = $index;
             let last = $last
           ) {
-            <i>{{ broker }}</i>
+            <i>{{ partner.name }}</i>
             @if (last) {
               <span>, </span>
             } @else {
-              @if (i === referralBrokers.length - 2) {
+              @if (i === user.referralPartners.length - 2) {
                 <ng-container>&nbsp;</ng-container>
                 <ng-container i18n>or</ng-container>
                 <ng-container>&nbsp;</ng-container>

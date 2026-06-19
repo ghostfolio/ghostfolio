@@ -185,10 +185,10 @@ export class GfAllocationsPageComponent implements OnInit {
     this.initialize();
   }
 
-  public onAccountChartClicked({ symbol }: AssetProfileIdentifier) {
-    if (symbol && symbol !== UNKNOWN_KEY) {
+  public onAccountChartClicked({ accountId }: { accountId: string }) {
+    if (accountId && accountId !== UNKNOWN_KEY) {
       this.router.navigate([], {
-        queryParams: { accountId: symbol, accountDetailDialog: true }
+        queryParams: { accountId, accountDetailDialog: true }
       });
     }
   }
@@ -399,10 +399,7 @@ export class GfAllocationsPageComponent implements OnInit {
                 : position.valueInPercentage);
           } else {
             this.countries[code] = {
-              name: getCountryName({
-                code,
-                locale: this.user?.settings?.locale
-              }),
+              name: getCountryName({ code }),
               value:
                 weight *
                 (isNumber(position.valueInBaseCurrency)

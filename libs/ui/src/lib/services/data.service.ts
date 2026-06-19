@@ -445,10 +445,27 @@ export class DataService {
   }: {
     dataSource: DataSource;
     symbol: string;
-  }) {
-    return this.http.get<PortfolioHoldingResponse>(
-      `/api/v1/portfolio/holding/${dataSource}/${symbol}`
-    );
+  }): Observable<
+    Omit<PortfolioHoldingResponse, 'dateOfFirstActivity'> & {
+      dateOfFirstActivity: Date | undefined;
+    }
+  > {
+    return this.http
+      .get<PortfolioHoldingResponse>(
+        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((response) => {
+          const dateOfFirstActivity = response.dateOfFirstActivity
+            ? parseISO(response.dateOfFirstActivity)
+            : undefined;
+
+          return {
+            ...response,
+            dateOfFirstActivity
+          };
+        })
+      );
   }
 
   public fetchInfo(): InfoItem {

@@ -40,9 +40,7 @@ import {
   type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import annotationPlugin, {
-  type AnnotationOptions
-} from 'chartjs-plugin-annotation';
+import { type AnnotationOptions } from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -74,7 +72,6 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
 
   public constructor() {
     Chart.register(
-      annotationPlugin,
       BarController,
       BarElement,
       LinearScale,
