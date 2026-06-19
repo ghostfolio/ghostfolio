@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a negative number of periods returned by the _FIRE_ calculator when the goal is already met with no interest rate
 - Fixed an issue with the localization of the country names
 
 ## 3.12.0 - 2026-06-17
