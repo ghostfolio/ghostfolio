@@ -10,11 +10,11 @@ import {
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  AssetProfileItem,
   Filter,
   InfoItem,
   User
 } from '@ghostfolio/common/interfaces';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
@@ -152,7 +152,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     }
   ];
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
-  protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
+  protected dataSource = new MatTableDataSource<AssetProfileItem>();
   protected defaultDateFormat: string;
   protected readonly displayedColumns: string[] = [];
   protected readonly filters$ = new Subject<Filter[]>();
@@ -160,7 +160,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected placeholder = '';
-  protected readonly selection = new SelectionModel<AdminMarketDataItem>(true);
+  protected readonly selection = new SelectionModel<AssetProfileItem>(true);
   protected totalItems = 0;
   protected user: User;
 
@@ -375,8 +375,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
 
     this.selection.clear();
 
-    this.adminService
-      .fetchAdminMarketData({
+    this.dataService
+      .fetchAssetProfiles({
         sortColumn,
         sortDirection,
         filters: this.activeFilters,
@@ -384,15 +384,15 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         take: this.pageSize
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ count, marketData }) => {
+      .subscribe(({ assetProfiles, count }) => {
         this.totalItems = count;
 
         this.dataSource = new MatTableDataSource(
-          marketData.map((marketDataItem) => {
+          assetProfiles.map((assetProfile) => {
             return {
-              ...marketDataItem,
+              ...assetProfile,
               isBenchmark: this.benchmarks.some(({ id }) => {
-                return id === marketDataItem.id;
+                return id === assetProfile.id;
               })
             };
           })

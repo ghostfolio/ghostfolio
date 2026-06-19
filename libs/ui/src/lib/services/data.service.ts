@@ -28,6 +28,7 @@ import {
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
+  AssetProfilesResponse,
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
@@ -376,6 +377,42 @@ export class DataService {
         return data;
       })
     );
+  }
+
+  public fetchAssetProfiles({
+    filters,
+    skip,
+    sortColumn,
+    sortDirection,
+    take
+  }: {
+    filters?: Filter[];
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: SortDirection;
+    take: number;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (skip) {
+      params = params.append('skip', skip);
+    }
+
+    if (sortColumn) {
+      params = params.append('sortColumn', sortColumn);
+    }
+
+    if (sortDirection) {
+      params = params.append('sortDirection', sortDirection);
+    }
+
+    if (take) {
+      params = params.append('take', take);
+    }
+
+    return this.http.get<AssetProfilesResponse>('/api/v1/asset-profiles', {
+      params
+    });
   }
 
   public fetchBenchmarkForUser({

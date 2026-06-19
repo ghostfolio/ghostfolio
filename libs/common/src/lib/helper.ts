@@ -44,8 +44,8 @@ import {
   ghostfolioScraperApiSymbolPrefix
 } from './config';
 import {
-  AdminMarketDataItem,
   AssetProfileIdentifier,
+  AssetProfileItem,
   Benchmark
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
@@ -149,7 +149,7 @@ export function canDeleteAssetProfile({
   symbol,
   watchedByCount
 }: Pick<
-  AdminMarketDataItem,
+  AssetProfileItem,
   'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
 >): boolean {
   return (
