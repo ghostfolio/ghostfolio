@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Added the selected asset profile count to the delete menu item of the historical market data table in the admin control panel
+
 ### Fixed
 
 - Fixed an issue with the localization of the country names
@@ -21,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the last activity display in the users table of the admin control panel
 - Improved the registration display in the users table of the admin control panel
 - Improved the user id display in the users table of the admin control panel
-- Improved the delete menu item in the market data management of the admin control panel
 - Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Improved the language localization for German (`de`)
 - Upgraded `svgmap` from version `2.19.3` to `2.21.0`
