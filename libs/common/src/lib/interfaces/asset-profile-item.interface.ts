@@ -4,6 +4,7 @@ export interface AssetProfileItem {
   activitiesCount: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
+  comment?: string;
   countriesCount: number;
   currency: string;
   dataSource: DataSource;
@@ -11,7 +12,7 @@ export interface AssetProfileItem {
   id: string;
   isActive: boolean;
   isBenchmark?: boolean;
-  isin?: string | null;
+  isin?: string;
   isUsedByUsersWithSubscription?: boolean;
   lastMarketPrice: number;
   marketDataItemCount: number;
