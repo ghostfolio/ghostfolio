@@ -44,8 +44,8 @@ import {
   ghostfolioScraperApiSymbolPrefix
 } from './config';
 import {
-  AssetProfileItem,
   AssetProfileIdentifier,
+  AssetProfileItem,
   Benchmark
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';

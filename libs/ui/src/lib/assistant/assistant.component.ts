@@ -3,7 +3,7 @@ import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
-import { AdminService, DataService } from '@ghostfolio/ui/services';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
@@ -155,7 +155,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private preselectionTimeout: ReturnType<typeof setTimeout>;
 
   public constructor(
-    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef
@@ -674,7 +673,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private searchAssetProfiles(
     aSearchTerm: string
   ): Observable<SearchResultItem[]> {
-    return this.adminService
+    return this.dataService
       .fetchAssetProfiles({
         filters: [
           {

@@ -375,7 +375,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
 
     this.selection.clear();
 
-    this.adminService
+    this.dataService
       .fetchAssetProfiles({
         sortColumn,
         sortDirection,
