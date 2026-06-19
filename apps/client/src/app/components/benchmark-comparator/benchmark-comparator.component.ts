@@ -44,7 +44,6 @@ import {
   type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import annotationPlugin from 'chartjs-plugin-annotation';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -86,7 +85,6 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public constructor() {
     Chart.register(
-      annotationPlugin,
       LinearScale,
       LineController,
       LineElement,

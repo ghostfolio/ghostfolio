@@ -872,7 +872,7 @@
       </trans-unit>
       <trans-unit id="273949409065292025" datatype="html">
         <source>Energy</source>
-        <target state="new">Energy</target>
+        <target state="translated">Energía</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">90</context>
@@ -1208,7 +1208,7 @@
       </trans-unit>
       <trans-unit id="4432485267082955422" datatype="html">
         <source>Consumer Defensive</source>
-        <target state="new">Consumer Defensive</target>
+        <target state="translated">Consumo Básico</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">89</context>
@@ -1276,7 +1276,7 @@
       </trans-unit>
       <trans-unit id="3848479214898655176" datatype="html">
         <source>Utilities</source>
-        <target state="new">Utilities</target>
+        <target state="translated">Servicios Públicos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">97</context>
@@ -2004,7 +2004,7 @@
       </trans-unit>
       <trans-unit id="2691624743109891676" datatype="html">
         <source>Consumer Cyclical</source>
-        <target state="new">Consumer Cyclical</target>
+        <target state="translated">Consumo Discrecional</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">88</context>
@@ -2948,7 +2948,7 @@
       </trans-unit>
       <trans-unit id="8432027249343784512" datatype="html">
         <source>Real Estate</source>
-        <target state="translated">Propiedad inmobiliaria</target>
+        <target state="translated">Inmobiliario</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">52</context>
@@ -3108,7 +3108,7 @@
       </trans-unit>
       <trans-unit id="8340410730497371637" datatype="html">
         <source>Communication Services</source>
-        <target state="new">Communication Services</target>
+        <target state="translated">Servicios de Comunicación</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">87</context>
@@ -4316,7 +4316,7 @@
       </trans-unit>
       <trans-unit id="5765523585863707029" datatype="html">
         <source>Technology</source>
-        <target state="new">Technology</target>
+        <target state="translated">Tecnología</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">96</context>
@@ -4964,7 +4964,7 @@
       </trans-unit>
       <trans-unit id="6945194064393203435" datatype="html">
         <source>Basic Materials</source>
-        <target state="new">Basic Materials</target>
+        <target state="translated">Materiales Básicos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">86</context>
@@ -5690,7 +5690,7 @@
       </trans-unit>
       <trans-unit id="4581276194280068721" datatype="html">
         <source>Industrials</source>
-        <target state="new">Industrials</target>
+        <target state="translated">Industriales</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">93</context>
@@ -5806,7 +5806,7 @@
       </trans-unit>
       <trans-unit id="7194017842579795231" datatype="html">
         <source>Healthcare</source>
-        <target state="new">Healthcare</target>
+        <target state="translated">Salud</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">92</context>
@@ -6951,7 +6951,7 @@
       </trans-unit>
       <trans-unit id="7521745345796915891" datatype="html">
         <source>Financial Services</source>
-        <target state="new">Financial Services</target>
+        <target state="translated">Servicios Financieros</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">91</context>

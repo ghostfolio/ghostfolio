@@ -373,7 +373,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ) {
           for (const { code, weight } of this.assetProfile.countries) {
             this.countries[code] = {
-              name: getCountryName({ code, locale: this.data.locale }),
+              name: getCountryName({ code }),
               value: weight
             };
           }

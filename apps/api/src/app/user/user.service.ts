@@ -28,14 +28,16 @@ import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
   DEFAULT_LANGUAGE_CODE,
+  DEFAULT_LOCALE,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_REFERRAL_PARTNERS,
   PROPERTY_SYSTEM_MESSAGE,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS,
-  locale as defaultLocale
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   User as IUser,
+  ReferralPartner,
   SystemMessage,
   UserSettings
 } from '@ghostfolio/common/interfaces';
@@ -100,7 +102,7 @@ export class UserService {
 
   public async getUser({
     impersonationUserId,
-    locale = defaultLocale,
+    locale = DEFAULT_LOCALE,
     user
   }: {
     impersonationUserId: string;
@@ -153,6 +155,17 @@ export class UserService {
       (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
       (settings.settings as UserSettings)?.baseCurrency;
 
+    let referralPartners: ReferralPartner[];
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      subscription.type === SubscriptionType.Basic
+    ) {
+      referralPartners = await this.propertyService.getByKey<ReferralPartner[]>(
+        PROPERTY_REFERRAL_PARTNERS
+      );
+    }
+
     let systemMessage: SystemMessage;
 
     const systemMessageProperty =
@@ -179,6 +192,7 @@ export class UserService {
       activitiesCount,
       id,
       permissions,
+      referralPartners,
       subscription,
       systemMessage,
       tags,

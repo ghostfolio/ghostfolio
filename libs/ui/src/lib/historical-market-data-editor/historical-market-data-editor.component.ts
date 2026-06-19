@@ -68,7 +68,7 @@ export class GfHistoricalMarketDataEditorComponent
 
   @Input() currency: string;
   @Input() dataSource: DataSource;
-  @Input() dateOfFirstActivity: string;
+  @Input() dateOfFirstActivity: Date;
   @Input() symbol: string;
   @Input() user: User;
 
@@ -124,7 +124,7 @@ export class GfHistoricalMarketDataEditorComponent
 
   public ngOnChanges() {
     if (this.dateOfFirstActivity) {
-      let date = parseISO(this.dateOfFirstActivity);
+      let date = this.dateOfFirstActivity;
 
       const missingMarketData: { date: Date; marketPrice?: number }[] = [];
 
@@ -174,7 +174,7 @@ export class GfHistoricalMarketDataEditorComponent
       const dates = Object.keys(this.marketDataByMonth).sort();
       const startDateString = first(dates);
       const startDate = min([
-        parseISO(this.dateOfFirstActivity),
+        this.dateOfFirstActivity,
         ...(startDateString ? [parseISO(startDateString)] : [])
       ]);
       const endDateString = last(dates);

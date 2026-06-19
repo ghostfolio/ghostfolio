@@ -10,6 +10,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the endpoint to get the asset profiles from `GET api/v1/admin/market-data` to `GET api/v1/asset-profiles`
+- Added the selected asset profile count to the delete menu item of the historical market data table in the admin control panel
+- Added the selected asset profile count to the deletion confirmation dialog of the historical market data table in the admin control panel
+
+### Fixed
+
+- Fixed an issue with the localization of the country names
+
+## 3.12.0 - 2026-06-17
+
+### Changed
+
+- Improved the styling of the checkboxes to consistently use the primary color in their states
+- Improved the account name display in the accounts table
+- Improved the name display in the activities table
+- Improved the last activity display in the users table of the admin control panel
+- Improved the registration display in the users table of the admin control panel
+- Improved the user id display in the users table of the admin control panel
+- Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+- Improved the language localization for German (`de`)
+- Upgraded `svgmap` from version `2.19.3` to `2.21.0`
+
+### Fixed
+
+- Fixed a chart error on interaction by registering the annotation plugin early
+- Fixed an issue on the allocations page where clicking an account in the _By Account_ chart did not open the detail dialog
+- Restricted the maximum height of the import activities dialog
+- Fixed the dark mode styling of the safe withdrawal rate selector in the _FIRE_ section (experimental)
+
+## 3.11.0 - 2026-06-14
+
+### Added
+
+- Added support for a click handler in the page tabs component
+
+### Changed
+
+- Improved the styling of the tabs across various dialogs
+- Improved the styling of the page tabs component on desktop
+- Enabled the _Bull Dashboard_ tab in the admin control panel (experimental)
+- Migrated the settings dialog to customize the rule thresholds of the _X-ray_ page from `ngModel` to form control
+- Improved the language localization for Spanish (`es`)
+- Upgraded `bull-board` from version `7.1.5` to `7.2.1`
+- Upgraded `date-fns` from version `4.1.0` to `4.4.0`
+
+### Fixed
+
+- Improved the loading state when customizing the rule thresholds on the _X-ray_ page
 
 ## 3.10.0 - 2026-06-13
 

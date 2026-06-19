@@ -22,7 +22,10 @@ import type { HoldingWithParents } from './holding-with-parents.interface';
 import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
-import type { LineChartItem } from './line-chart-item.interface';
+import type {
+  LineChartItem,
+  NullableLineChartItem
+} from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
 import type { MarketData } from './market-data.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
@@ -32,6 +35,7 @@ import type { PortfolioPosition } from './portfolio-position.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Product } from './product';
+import type { ReferralPartner } from './referral-partner.interface';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { AccountResponse } from './responses/account-response.interface';
@@ -156,6 +160,7 @@ export {
   MarketData,
   MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
+  NullableLineChartItem,
   OAuthResponse,
   PlatformsResponse,
   PortfolioChart,
@@ -175,6 +180,7 @@ export {
   PublicKeyCredentialRequestOptionsJSON,
   PublicPortfolioResponse,
   QuotesResponse,
+  ReferralPartner,
   ResponseError,
   RuleSettings,
   ScraperConfiguration,

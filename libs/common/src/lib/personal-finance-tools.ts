@@ -2,6 +2,17 @@ import { Product } from '@ghostfolio/common/interfaces';
 
 export const personalFinanceTools: Product[] = [
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    key: 'acemoney',
+    name: 'AceMoney',
+    note: 'License is a perpetual license',
+    origin: 'US',
+    pricingPerYear: '$44.95',
+    slogan: 'Lifetime Personal Finance Control, One Single Payment.',
+    url: 'https://www.mechcad.net'
+  },
+  {
     founded: 2023,
     hasSelfHostingAbility: false,
     key: 'allinvestview',
@@ -362,6 +373,16 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.etops.com'
   },
   {
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'everydollar',
+    name: 'EveryDollar',
+    origin: 'US',
+    slogan: 'Plan, track, find more margin',
+    url: 'https://www.ramseysolutions.com/money/everydollar'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -498,6 +519,17 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.folishare.com'
   },
   {
+    founded: 1993,
+    hasSelfHostingAbility: true,
+    key: 'fund-manager',
+    name: 'Fund Manager',
+    note: 'License is a perpetual license',
+    origin: 'US',
+    pricingPerYear: '$99',
+    slogan: 'Powerful portfolio management software',
+    url: 'https://www.fundmanagersoftware.com'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'gasti',
@@ -527,6 +559,15 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€48',
     slogan: 'Portfolio Tracker, Analysis & Community',
     url: 'https://www.getquin.com'
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'goodbudget',
+    name: 'Goodbudget',
+    origin: 'US',
+    slogan: 'Budget with a why',
+    url: 'https://goodbudget.com'
   },
   {
     hasFreePlan: true,
@@ -666,6 +707,16 @@ export const personalFinanceTools: Product[] = [
     url: 'https://leafs.ch'
   },
   {
+    founded: 2020,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'lunch-money',
+    name: 'Lunch Money',
+    origin: 'CA',
+    slogan: 'Delightfully simple personal finance and budgeting',
+    url: 'https://lunchmoney.app'
+  },
+  {
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -726,6 +777,16 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.merlincrypto.com'
   },
   {
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'mezzi',
+    name: 'Mezzi',
+    origin: 'US',
+    pricingPerYear: '$48',
+    slogan: 'Self-manage your wealth. Get fiduciary advice.',
+    url: 'https://www.mezzi.com'
+  },
+  {
     founded: 1991,
     hasSelfHostingAbility: true,
     isArchived: true,
@@ -775,6 +836,15 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$59.99',
     slogan: 'Have total control of your financial life',
     url: 'https://www.moneyspire.com'
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    key: 'moneywell',
+    name: 'MoneyWell',
+    origin: 'US',
+    slogan: 'Personal Budgeting Software for Mac and iOS',
+    url: 'https://moneywell.app'
   },
   {
     key: 'moneywiz',
@@ -1108,6 +1178,15 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€80',
     slogan: 'Stock Portfolio Tracker',
     url: 'https://simpleportfolio.app'
+  },
+  {
+    founded: 2020,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'simplifi',
+    name: 'Simplifi by Quicken',
+    origin: 'US',
+    url: 'https://www.quicken.com/products/simplifi'
   },
   {
     founded: 2014,
