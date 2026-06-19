@@ -199,6 +199,7 @@ export class AssetProfilesService {
         const {
           _count,
           activities,
+          comment,
           currency,
           dataSource,
           id,
@@ -233,6 +234,7 @@ export class AssetProfilesService {
         return {
           assetClass,
           assetSubClass,
+          comment,
           countriesCount,
           currency,
           dataSource,
@@ -423,7 +425,6 @@ export class AssetProfilesService {
           date: dateOfFirstActivity,
           id: undefined,
           isActive: true,
-          isin: null,
           name: symbol,
           sectorsCount: 0,
           watchedByCount: 0
