@@ -32,6 +32,8 @@ export class AdminMarketDataService {
   public deleteAssetProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ) {
+    const assetProfileCount = aAssetProfileIdentifiers.length;
+
     this.notificationService.confirm({
       confirmFn: () => {
         const deleteRequests = aAssetProfileIdentifiers.map(
@@ -44,7 +46,10 @@ export class AdminMarketDataService {
           .pipe(
             catchError(() => {
               this.notificationService.alert({
-                title: $localize`Oops! Could not delete profiles.`
+                title:
+                  assetProfileCount === 1
+                    ? $localize`Oops! Could not delete the asset profile.`
+                    : $localize`Oops! Could not delete the asset profiles.`
               });
 
               return EMPTY;
@@ -56,7 +61,10 @@ export class AdminMarketDataService {
           .subscribe();
       },
       confirmType: ConfirmationDialogType.Warn,
-      title: $localize`Do you really want to delete these profiles?`
+      title:
+        assetProfileCount === 1
+          ? $localize`Do you really want to delete this asset profile?`
+          : $localize`Do you really want to delete these ${assetProfileCount}:count: asset profiles?`
     });
   }
 }
