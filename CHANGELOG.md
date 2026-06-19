@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the selected asset profile count to the deletion confirmation dialog of the historical market data table in the admin control panel
 - Improved the sorting to be case-insensitive in the platform management of the admin control panel
 - Improved the sorting to be case-insensitive in the tag management of the admin control panel
+- Upgraded `yahoo-finance2` from version `3.14.2` to `3.15.3`
 
 ### Fixed
 
