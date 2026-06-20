@@ -181,6 +181,24 @@ export class AdminService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      const subscriptions = await this.prismaService.subscription.findMany({
+        orderBy: {
+          expiresAt: 'desc'
+        },
+        where: {
+          userId: id
+        }
+      });
+
+      user.subscriptions = subscriptions.map((subscription) => {
+        return {
+          ...subscription,
+          price: subscription.price ?? 0
+        };
+      });
+    }
+
     return user;
   }
 
@@ -210,6 +228,7 @@ export class AdminService {
       comment,
       countries,
       currency,
+      dataGatheringFrequency,
       dataSource: newDataSource,
       holdings,
       isActive,
@@ -293,6 +312,7 @@ export class AdminService {
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
         comment,
         currency,
+        dataGatheringFrequency,
         dataSource,
         isActive,
         scraperConfiguration,

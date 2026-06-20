@@ -1,6 +1,12 @@
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
-import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataGatheringFrequency,
+  DataSource,
+  Prisma
+} from '@prisma/client';
 import {
   IsArray,
   IsBoolean,
@@ -31,6 +37,10 @@ export class UpdateAssetProfileDto {
   @IsCurrencyCode()
   @IsOptional()
   currency?: string;
+
+  @IsEnum(DataGatheringFrequency)
+  @IsOptional()
+  dataGatheringFrequency?: DataGatheringFrequency;
 
   @IsEnum(DataSource)
   @IsOptional()

@@ -1,4 +1,9 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataGatheringFrequency,
+  DataSource
+} from '@prisma/client';
 
 import { Country } from './country.interface';
 import { DataProviderInfo } from './data-provider-info.interface';
@@ -15,6 +20,7 @@ export interface EnhancedSymbolProfile {
   createdAt: Date;
   currency?: string;
   cusip?: string;
+  dataGatheringFrequency?: DataGatheringFrequency;
   dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   dateOfFirstActivity?: Date;

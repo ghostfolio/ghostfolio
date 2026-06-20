@@ -2,6 +2,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -17,6 +18,7 @@ import {
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
+  getStartOfUtcDate,
   resetHours
 } from '@ghostfolio/common/helper';
 import {
@@ -26,7 +28,7 @@ import {
 
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, Prisma } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -43,6 +45,7 @@ export class DataGatheringService {
     private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
@@ -279,6 +282,46 @@ export class DataGatheringService {
     }
   }
 
+  public async gatherHourlySymbols() {
+    const assetProfileIdentifiers =
+      await this.getHourlyAssetProfileIdentifiers();
+
+    if (assetProfileIdentifiers.length <= 0) {
+      return;
+    }
+
+    const date = getStartOfUtcDate(new Date());
+
+    try {
+      const quotes = await this.dataProviderService.getQuotes({
+        items: assetProfileIdentifiers,
+        useCache: false
+      });
+
+      const data: Prisma.MarketDataUpdateInput[] = [];
+
+      for (const { dataSource, symbol } of assetProfileIdentifiers) {
+        const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
+
+        if (!quote?.marketPrice) {
+          continue;
+        }
+
+        data.push({
+          dataSource,
+          date,
+          symbol,
+          marketPrice: quote.marketPrice,
+          state: 'INTRADAY'
+        });
+      }
+
+      await this.marketDataService.updateMany({ data });
+    } catch (error) {
+      this.logger.error('Could not gather hourly market data', error);
+    }
+  }
+
   public async gatherSymbols({
     dataGatheringItems,
     force = false,
@@ -389,6 +432,36 @@ export class DataGatheringService {
     return min([aStartDate, subYears(new Date(), 10)]);
   }
 
+  private async getHourlyAssetProfileIdentifiers(): Promise<
+    AssetProfileIdentifier[]
+  > {
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
+      select: {
+        dataSource: true,
+        scraperConfiguration: true,
+        symbol: true
+      },
+      where: {
+        dataGatheringFrequency: 'HOURLY',
+        isActive: true
+      }
+    });
+
+    return symbolProfiles
+      .filter(({ dataSource, scraperConfiguration }) => {
+        const manualDataSourceWithScraperConfiguration =
+          dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
+
+        return (
+          dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration
+        );
+      })
+      .map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      });
+  }
+
   private async getSymbols7D({
     withUserSubscription = false
   }: {
@@ -469,14 +542,12 @@ export class DataGatheringService {
         }
       })
     )
-      .filter((symbolProfile) => {
+      .filter(({ dataSource, scraperConfiguration }) => {
         const manualDataSourceWithScraperConfiguration =
-          symbolProfile.dataSource === 'MANUAL' &&
-          !isEmpty(symbolProfile.scraperConfiguration);
+          dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
 
         return (
-          symbolProfile.dataSource !== 'MANUAL' ||
-          manualDataSourceWithScraperConfiguration
+          dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration
         );
       })
       .map((symbolProfile) => {

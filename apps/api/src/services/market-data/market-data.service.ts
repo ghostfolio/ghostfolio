@@ -40,6 +40,19 @@ export class MarketDataService {
     });
   }
 
+  public async getLatest({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Promise<MarketData> {
+    return this.prismaService.marketData.findFirst({
+      orderBy: [{ date: 'desc' }],
+      where: {
+        dataSource,
+        symbol
+      }
+    });
+  }
+
   public async getMax({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.findFirst({
       select: {

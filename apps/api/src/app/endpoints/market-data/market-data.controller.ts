@@ -56,14 +56,16 @@ export class MarketDataController {
         dataGatheringItem: {
           dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
           symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
-        }
+        },
+        useIntradayData: true
       }),
       this.symbolService.get({
         includeHistoricalData,
         dataGatheringItem: {
           dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
           symbol: ghostfolioFearAndGreedIndexSymbolStocks
-        }
+        },
+        useIntradayData: true
       })
     ]);
 
