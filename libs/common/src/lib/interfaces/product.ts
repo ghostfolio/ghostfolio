@@ -13,5 +13,6 @@ export interface Product {
   pricingPerYear?: string;
   regions?: string[];
   slogan?: string;
+  url?: string;
   useAnonymously?: boolean;
 }

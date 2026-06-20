@@ -1,13 +1,9 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  PortfolioPosition
-} from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -37,7 +33,7 @@ import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
-import { translate } from '../i18n';
+import { PortfolioProportionChartClickEvent } from './interfaces/interfaces';
 
 const {
   blue,
@@ -56,7 +52,7 @@ const {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-portfolio-proportion-chart',
   styleUrls: ['./portfolio-proportion-chart.component.scss'],
   templateUrl: './portfolio-proportion-chart.component.html'
@@ -83,7 +79,8 @@ export class GfPortfolioProportionChartComponent
   public chart: Chart<'doughnut'>;
   public isLoading = true;
 
-  protected readonly proportionChartClicked = output<AssetProfileIdentifier>();
+  protected readonly proportionChartClicked =
+    output<PortfolioProportionChartClickEvent>();
 
   private readonly OTHER_KEY = 'OTHER';
 
@@ -358,11 +355,11 @@ export class GfPortfolioProportionChartComponent
                 const dataIndex = activeElements[0].index;
                 const symbol = chart.data.labels?.[dataIndex] as string;
 
-                const dataSource = this.data[symbol].dataSource;
+                const dataSource = this.data[symbol]?.dataSource;
 
-                if (dataSource) {
-                  this.proportionChartClicked.emit({ dataSource, symbol });
-                }
+                this.proportionChartClicked.emit(
+                  dataSource ? { dataSource, symbol } : { accountId: symbol }
+                );
               } catch {}
             },
             onHover: (event, chartElement) => {
@@ -390,7 +387,7 @@ export class GfPortfolioProportionChartComponent
 
                       return value > 0
                         ? isUUID(symbol)
-                          ? (translate(this.data[symbol]?.name) ?? symbol)
+                          ? (this.data[symbol]?.name ?? symbol)
                           : symbol
                         : '';
                     },
@@ -453,7 +450,7 @@ export class GfPortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = translate(this.data[symbol]?.name);
+          const name = this.data[symbol]?.name;
 
           let sum = 0;
 

@@ -13,8 +13,6 @@ export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPr
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
 export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
 
-export const locale = 'en-US';
-
 export const primaryColorHex = '#36cfcc';
 export const primaryColorRgb = {
   r: 54,
@@ -85,6 +83,7 @@ export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_DATE_RANGE: DateRange = 'max';
 export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
+export const DEFAULT_LOCALE = 'en-US';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
@@ -252,6 +251,8 @@ export const PROPERTY_IS_DATA_GATHERING_ENABLED = 'IS_DATA_GATHERING_ENABLED';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
+export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
+export const PROPERTY_REFERRAL_PARTNERS = 'REFERRAL_PARTNERS';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
@@ -281,6 +282,21 @@ export const REPLACE_NAME_PARTS = [
   'Vanguard Index Funds -',
   'Xtrackers (IE) Plc -'
 ];
+
+export const SECTORS = [
+  'Basic Materials',
+  'Communication Services',
+  'Consumer Cyclical',
+  'Consumer Defensive',
+  'Energy',
+  'Financial Services',
+  'Healthcare',
+  'Industrials',
+  'Other',
+  'Real Estate',
+  'Technology',
+  'Utilities'
+] as const;
 
 export const STORYBOOK_PATH = '/development/storybook';
 

@@ -14,6 +14,7 @@ import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
+import { UpdateAssetProfileDataDto } from './update-asset-profile-data.dto';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
@@ -41,6 +42,7 @@ export {
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
+  UpdateAssetProfileDataDto,
   UpdateAssetProfileDto,
   UpdateBulkMarketDataDto,
   UpdateMarketDataDto,

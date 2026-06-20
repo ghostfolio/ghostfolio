@@ -302,6 +302,58 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 }
 ```
 
+### Update Asset Profile Data (experimental)
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization with admin role
+
+#### Request
+
+`PATCH http://localhost:3333/api/v1/asset-profiles/<INSERT_DATA_SOURCE>/<INSERT_SYMBOL>`
+
+#### Body
+
+```
+{
+  "countries": [
+    {
+      "code": "US",
+      "weight": 1
+    }
+  ],
+  "sectors": [
+    {
+      "name": "Technology",
+      "weight": 1
+    }
+  ]
+}
+```
+
+| Field       | Type               | Description                                                            |
+| ----------- | ------------------ | ---------------------------------------------------------------------- |
+| `countries` | `array` (optional) | Countries with `code` (`ISO 3166-1 alpha-2`) and `weight` (`0` to `1`) |
+| `holdings`  | `array` (optional) | Holdings with `name` and `weight` (`0` to `1`)                         |
+| `sectors`   | `array` (optional) | Sectors with `name` and `weight` (`0` to `1`)                          |
+
+#### Response
+
+##### Success
+
+`200 OK`
+
+##### Error
+
+`404 Not Found`
+
+```
+{
+  "error": "Not Found",
+  "message": "Could not find the asset profile for MSFT (YAHOO)"
+}
+```
+
 ## Community Projects
 
 Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
@@ -310,7 +362,7 @@ Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ r
 
 ## Contributing
 
-Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public, including you.
+Ghostfolio is **100% free** and **open source**. We support an active and healthy community and welcome contributions from everyone, including you.
 
 Not sure what to work on? We have [some ideas](https://github.com/ghostfolio/ghostfolio/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22%20no%3Aassignee), even for [newcomers](https://github.com/ghostfolio/ghostfolio/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%20no%3Aassignee). Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or post to [@ghostfolio\_](https://x.com/ghostfolio_) on _X_. We would love to hear from you.
 

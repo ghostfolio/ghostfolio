@@ -16,6 +16,8 @@ import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
 export class TwitterBotService implements OnModuleInit {
+  private readonly logger = new Logger(TwitterBotService.name);
+
   private twitterClient: TwitterApiReadWrite;
 
   public constructor(
@@ -71,13 +73,12 @@ export class TwitterBotService implements OnModuleInit {
         const { data: createdTweet } =
           await this.twitterClient.v2.tweet(status);
 
-        Logger.log(
-          `Fear & Greed Index has been posted: https://x.com/ghostfolio_/status/${createdTweet.id}`,
-          'TwitterBotService'
+        this.logger.log(
+          `Fear & Greed Index has been posted: https://x.com/ghostfolio_/status/${createdTweet.id}`
         );
       }
     } catch (error) {
-      Logger.error(error, 'TwitterBotService');
+      this.logger.error(error);
     }
   }
 

@@ -20,8 +20,7 @@ import { StatisticsGatheringService } from './statistics-gathering.service';
             adapter: BullAdapter,
             name: STATISTICS_GATHERING_QUEUE,
             options: {
-              displayName: 'Statistics Gathering',
-              readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
+              displayName: 'Statistics Gathering'
             }
           })
         ]

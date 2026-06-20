@@ -1,12 +1,13 @@
+import { getSectorName } from '@ghostfolio/api/helper/sector.helper';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import {
   DEFAULT_CURRENCY,
-  REPLACE_NAME_PARTS,
-  UNKNOWN_KEY
+  REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
-import { isCurrency } from '@ghostfolio/common/helper';
+import { isCurrencySymbol } from '@ghostfolio/common/helper';
+import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -23,6 +24,22 @@ import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
+  private static sectorsMapping: Record<string, SectorName> = {
+    basic_materials: 'Basic Materials',
+    communication_services: 'Communication Services',
+    consumer_cyclical: 'Consumer Cyclical',
+    consumer_defensive: 'Consumer Defensive',
+    energy: 'Energy',
+    financial_services: 'Financial Services',
+    healthcare: 'Healthcare',
+    industrials: 'Industrials',
+    realestate: 'Real Estate',
+    technology: 'Technology',
+    utilities: 'Utilities'
+  };
+
+  private readonly logger = new Logger(YahooFinanceDataEnhancerService.name);
+
   private readonly yahooFinance = new YahooFinance({
     suppressNotices: ['yahooSurvey']
   });
@@ -56,31 +73,21 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
    *                  DOGEUSD -> DOGE-USD
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
-    if (
-      aSymbol.includes(DEFAULT_CURRENCY) &&
-      aSymbol.length > DEFAULT_CURRENCY.length
+    if (isCurrencySymbol(aSymbol)) {
+      return `${aSymbol}=X`;
+    } else if (
+      this.cryptocurrencyService.isCryptocurrency(
+        aSymbol.replace(new RegExp(`-${DEFAULT_CURRENCY}$`), DEFAULT_CURRENCY)
+      )
     ) {
-      if (
-        isCurrency(
-          aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
-        ) &&
-        isCurrency(aSymbol.substring(aSymbol.length - DEFAULT_CURRENCY.length))
-      ) {
-        return `${aSymbol}=X`;
-      } else if (
-        this.cryptocurrencyService.isCryptocurrency(
-          aSymbol.replace(new RegExp(`-${DEFAULT_CURRENCY}$`), DEFAULT_CURRENCY)
-        )
-      ) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        // SOL1USD -> SOL1-USD
-        return aSymbol.replace(
-          new RegExp(`-?${DEFAULT_CURRENCY}$`),
-          `-${DEFAULT_CURRENCY}`
-        );
-      }
+      // Add a dash before the last three characters
+      // BTCUSD  -> BTC-USD
+      // DOGEUSD -> DOGE-USD
+      // SOL1USD -> SOL1-USD
+      return aSymbol.replace(
+        new RegExp(`-?${DEFAULT_CURRENCY}$`),
+        `-${DEFAULT_CURRENCY}`
+      );
     }
 
     return aSymbol;
@@ -123,7 +130,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         response.url = url;
       }
     } catch (error) {
-      Logger.error(error, 'YahooFinanceDataEnhancerService');
+      this.logger.error(error);
     }
 
     return response;
@@ -222,7 +229,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           .flatMap((sectorWeighting) => {
             return Object.entries(sectorWeighting).map(([sector, weight]) => {
               return {
-                name: this.parseSector(sector),
+                name: getSectorName({
+                  aliases: YahooFinanceDataEnhancerService.sectorsMapping,
+                  name: sector
+                }),
                 weight: weight as number
               };
             });
@@ -266,7 +276,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           `No data found, ${aSymbol} (${this.getName()}) may be delisted`
         );
       } else {
-        Logger.error(error, 'YahooFinanceService');
+        this.logger.error(error);
       }
     }
 
@@ -328,47 +338,5 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     }
 
     return { assetClass, assetSubClass };
-  }
-
-  private parseSector(aString: string) {
-    let sector = UNKNOWN_KEY;
-
-    switch (aString) {
-      case 'basic_materials':
-        sector = 'Basic Materials';
-        break;
-      case 'communication_services':
-        sector = 'Communication Services';
-        break;
-      case 'consumer_cyclical':
-        sector = 'Consumer Cyclical';
-        break;
-      case 'consumer_defensive':
-        sector = 'Consumer Staples';
-        break;
-      case 'energy':
-        sector = 'Energy';
-        break;
-      case 'financial_services':
-        sector = 'Financial Services';
-        break;
-      case 'healthcare':
-        sector = 'Healthcare';
-        break;
-      case 'industrials':
-        sector = 'Industrials';
-        break;
-      case 'realestate':
-        sector = 'Real Estate';
-        break;
-      case 'technology':
-        sector = 'Technology';
-        break;
-      case 'utilities':
-        sector = 'Utilities';
-        break;
-    }
-
-    return sector;
   }
 }

@@ -8,6 +8,8 @@ import { PortfolioChangedEvent } from './portfolio-changed.event';
 
 @Injectable()
 export class PortfolioChangedListener {
+  private readonly logger = new Logger(PortfolioChangedListener.name);
+
   private static readonly DEBOUNCE_DELAY = ms('5 seconds');
 
   private debounceTimers = new Map<string, NodeJS.Timeout>();
@@ -35,10 +37,7 @@ export class PortfolioChangedListener {
   }
 
   private async processPortfolioChanged({ userId }: { userId: string }) {
-    Logger.log(
-      `Portfolio of user '${userId}' has changed`,
-      'PortfolioChangedListener'
-    );
+    this.logger.log(`Portfolio of user '${userId}' has changed`);
 
     await this.redisCacheService.removePortfolioSnapshotsByUserId({ userId });
   }

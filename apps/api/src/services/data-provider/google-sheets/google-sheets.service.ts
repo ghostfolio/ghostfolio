@@ -24,6 +24,8 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 @Injectable()
 export class GoogleSheetsService implements DataProviderInterface {
+  private readonly logger = new Logger(GoogleSheetsService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
@@ -144,7 +146,7 @@ export class GoogleSheetsService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'GoogleSheetsService');
+      this.logger.error(error);
     }
 
     return {};

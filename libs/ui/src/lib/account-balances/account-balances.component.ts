@@ -13,6 +13,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  effect,
   inject,
   input,
   viewChild
@@ -70,6 +71,7 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
     input.required<AccountBalancesResponse['balances']>();
   public readonly accountCurrency = input.required<string>();
   public readonly accountId = input.required<string>();
+  public readonly currentBalance = input<number | null>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
   public readonly locale = input(getLocale());
   public readonly showActions = input(true);
@@ -83,12 +85,24 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
   public dataSource = new MatTableDataSource<
     AccountBalancesResponse['balances'][0]
   >();
+  public maxDate = new Date();
 
   private dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private notificationService = inject(NotificationService);
 
   public constructor() {
     addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
+
+    effect(() => {
+      const currentBalance = this.currentBalance();
+
+      if (
+        this.accountBalanceForm.controls.balance.pristine &&
+        typeof currentBalance === 'number'
+      ) {
+        this.accountBalanceForm.controls.balance.setValue(currentBalance);
+      }
+    });
   }
 
   public ngOnInit() {

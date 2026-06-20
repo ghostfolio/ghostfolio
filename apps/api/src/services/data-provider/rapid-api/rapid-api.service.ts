@@ -26,6 +26,8 @@ import { format } from 'date-fns';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
+  private readonly logger = new Logger(RapidApiService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly fetchService: FetchService
@@ -122,7 +124,7 @@ export class RapidApiService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error, 'RapidApiService');
+      this.logger.error(error);
     }
 
     return {};
@@ -167,7 +169,7 @@ export class RapidApiService implements DataProviderInterface {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'RapidApiService');
+      this.logger.error(message);
 
       return undefined;
     }

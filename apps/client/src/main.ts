@@ -1,5 +1,6 @@
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
+import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
 
@@ -57,6 +58,8 @@ import { environment } from './environments/environment';
   if (environment.production) {
     enableProdMode();
   }
+
+  registerChartConfiguration();
 
   await bootstrapApplication(GfAppComponent, {
     providers: [
