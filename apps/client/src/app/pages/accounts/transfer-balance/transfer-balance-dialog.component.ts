@@ -42,12 +42,12 @@ import {
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class GfTransferBalanceDialogComponent {
-  public accounts: Account[] = [];
-  public currency: string;
-  public transferBalanceForm: TransferBalanceForm;
+  protected accounts: Account[] = [];
+  protected currency: string;
+  protected transferBalanceForm: TransferBalanceForm;
 
-  public readonly data = inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA);
-  public readonly dialogRef =
+  private readonly data = inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA);
+  private readonly dialogRef =
     inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
 
   public ngOnInit() {
@@ -80,11 +80,11 @@ export class GfTransferBalanceDialogComponent {
     );
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  protected onSubmit() {
     const account: TransferBalanceDto = {
       accountIdFrom: this.transferBalanceForm.controls.fromAccount.value ?? '',
       accountIdTo: this.transferBalanceForm.controls.toAccount.value ?? '',
