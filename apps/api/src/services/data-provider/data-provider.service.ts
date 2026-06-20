@@ -727,11 +727,11 @@ export class DataProviderService implements OnModuleInit {
             try {
               await this.marketDataService.updateMany({
                 data: Object.values(response)
-                  .filter((dataProviderResponse) => {
+                  .filter(({ marketPrice, marketState }) => {
                     return (
-                      isNumber(dataProviderResponse.marketPrice) &&
-                      dataProviderResponse.marketPrice > 0 &&
-                      dataProviderResponse.marketState === 'open'
+                      isNumber(marketPrice) &&
+                      marketPrice > 0 &&
+                      marketState === 'open'
                     );
                   })
                   .map((dataProviderResponse) => {
