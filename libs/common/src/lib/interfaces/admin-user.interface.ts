@@ -12,4 +12,5 @@ export interface AdminUser {
   provider: Provider;
   role: Role;
   subscription?: Subscription;
+  subscriptions?: Subscription[];
 }

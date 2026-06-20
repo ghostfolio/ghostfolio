@@ -124,6 +124,102 @@
           >
         </div>
       </div>
+
+      @if (subscriptionsDataSource.data.length > 0) {
+        <div class="row">
+          <div class="col">
+            <h2 class="h6" i18n>Subscriptions</h2>
+            <div class="overflow-x-auto">
+              <table
+                class="gf-table w-100"
+                mat-table
+                [dataSource]="subscriptionsDataSource"
+              >
+                <ng-container matColumnDef="createdAt">
+                  <th *matHeaderCellDef class="px-1" mat-header-cell>
+                    <ng-container i18n>Created</ng-container>
+                  </th>
+                  <td *matCellDef="let element" class="px-1" mat-cell>
+                    <gf-value
+                      [isDate]="true"
+                      [locale]="data.locale"
+                      [value]="element.createdAt"
+                    />
+                  </td>
+                  <td *matFooterCellDef class="px-1" i18n mat-footer-cell>
+                    Total
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                  <th *matHeaderCellDef class="px-1" mat-header-cell>
+                    <ng-container i18n>Type</ng-container>
+                  </th>
+                  <td *matCellDef="let element" class="px-1" mat-cell>
+                    {{ getType(element) }}
+                  </td>
+                  <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+                </ng-container>
+
+                <ng-container matColumnDef="price">
+                  <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+                    <ng-container i18n>Price</ng-container>
+                  </th>
+                  <td
+                    *matCellDef="let element"
+                    class="px-1 text-right"
+                    mat-cell
+                  >
+                    <gf-value
+                      class="d-inline-block justify-content-end"
+                      [isCurrency]="true"
+                      [locale]="data.locale"
+                      [unit]="baseCurrency"
+                      [value]="element.price"
+                    />
+                  </td>
+                  <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
+                    <gf-value
+                      class="d-inline-block justify-content-end"
+                      [isCurrency]="true"
+                      [locale]="data.locale"
+                      [unit]="baseCurrency"
+                      [value]="getSum()"
+                    />
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expiresAt">
+                  <th *matHeaderCellDef class="px-1" mat-header-cell>
+                    <ng-container i18n>Expires</ng-container>
+                  </th>
+                  <td *matCellDef="let element" class="px-1" mat-cell>
+                    <gf-value
+                      [isDate]="true"
+                      [locale]="data.locale"
+                      [value]="element.expiresAt"
+                    />
+                  </td>
+                  <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+                </ng-container>
+
+                <tr
+                  *matHeaderRowDef="subscriptionsDisplayedColumns"
+                  mat-header-row
+                ></tr>
+                <tr
+                  *matRowDef="let row; columns: subscriptionsDisplayedColumns"
+                  mat-row
+                ></tr>
+                <tr
+                  *matFooterRowDef="subscriptionsDisplayedColumns"
+                  mat-footer-row
+                ></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
     }
   </div>
 </div>
