@@ -1,6 +1,8 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UpdateAssetProfileDataDto } from '@ghostfolio/common/dtos';
@@ -14,6 +16,7 @@ import {
   AssetProfileItem,
   AssetProfileIdentifier,
   AssetProfilesResponse,
+  AdminMarketDataDetails,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
@@ -29,10 +32,66 @@ export class AssetProfilesService {
     private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly dataProviderService: DataProviderService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
+  public async getMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
+    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+    let currency: EnhancedSymbolProfile['currency'] = '-';
+    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+
+    const isCurrencyAssetProfile = isCurrency(getCurrencyFromSymbol(symbol));
+
+    if (isCurrencyAssetProfile) {
+      currency = getCurrencyFromSymbol(symbol);
+      ({ activitiesCount, dateOfFirstActivity } =
+        await this.activitiesService.getStatisticsByCurrency(currency));
+    }
+
+    const [[assetProfile], marketData] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource,
+          symbol
+        }
+      ]),
+      this.marketDataService.marketDataItems({
+        orderBy: {
+          date: 'asc'
+        },
+        where: {
+          dataSource,
+          symbol
+        }
+      })
+    ]);
+
+    if (assetProfile) {
+      assetProfile.dataProviderInfo = this.dataProviderService
+        .getDataProvider(assetProfile.dataSource)
+        .getDataProviderInfo();
+    }
+
+    return {
+      marketData,
+      assetProfile: assetProfile ?? {
+        activitiesCount,
+        currency,
+        dataSource,
+        dateOfFirstActivity,
+        symbol,
+        assetClass: isCurrencyAssetProfile ? AssetClass.LIQUIDITY : undefined,
+        assetSubClass: isCurrencyAssetProfile ? AssetSubClass.CASH : undefined,
+        isActive: true
+      }
+    };
+  }
   public async getAssetProfiles({
     filters = [],
     presetId,

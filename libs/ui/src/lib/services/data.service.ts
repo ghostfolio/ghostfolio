@@ -546,7 +546,7 @@ export class DataService {
     symbol: string;
   }): Observable<MarketDataDetailsResponse> {
     return this.http
-      .get<any>(`/api/v1/market-data/${dataSource}/${symbol}`)
+      .get<any>(`/api/v1/asset-profiles/${dataSource}/${symbol}`)
       .pipe(
         map((data) => {
           for (const item of data.marketData) {
