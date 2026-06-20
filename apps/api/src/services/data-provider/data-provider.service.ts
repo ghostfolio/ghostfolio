@@ -287,7 +287,7 @@ export class DataProviderService implements OnModuleInit {
                 symbol
               }
             ])
-          )?.[symbol];
+          )?.[assetProfileIdentifier];
         } catch {}
 
         if (!assetProfile?.name) {
