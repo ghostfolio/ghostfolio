@@ -26,7 +26,7 @@ export class GfFaqPageComponent implements OnInit {
 
   public constructor(
     private dataService: DataService,
-    private deviceService: DeviceDetectorService
+    private deviceDetectorService: DeviceDetectorService
   ) {
     const { globalPermissions } = this.dataService.fetchInfo();
 
@@ -58,6 +58,6 @@ export class GfFaqPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 }

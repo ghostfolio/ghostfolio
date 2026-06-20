@@ -19,12 +19,14 @@
             [type]="isAccessTokenHidden ? 'password' : 'text'"
           />
           <button
-            mat-button
+            class="mx-2"
+            mat-icon-button
             matSuffix
             type="button"
             (click)="isAccessTokenHidden = !isAccessTokenHidden"
           >
             <ion-icon
+              class="mat-icon"
               [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
             />
           </button>

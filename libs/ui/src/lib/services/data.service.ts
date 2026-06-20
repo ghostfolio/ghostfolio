@@ -610,13 +610,11 @@ export class DataService {
         map((response) => {
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
-              response.holdings[symbol].assetClassLabel = translate(
-                response.holdings[symbol].assetClass
-              );
+              response.holdings[symbol].assetProfile.assetClassLabel =
+                translate(response.holdings[symbol].assetProfile.assetClass);
 
-              response.holdings[symbol].assetSubClassLabel = translate(
-                response.holdings[symbol].assetSubClass
-              );
+              response.holdings[symbol].assetProfile.assetSubClassLabel =
+                translate(response.holdings[symbol].assetProfile.assetSubClass);
 
               response.holdings[symbol].dateOfFirstActivity = response.holdings[
                 symbol
@@ -699,6 +697,12 @@ export class DataService {
         map((response) => {
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetProfile.assetClassLabel =
+                translate(response.holdings[symbol].assetProfile.assetClass);
+
+              response.holdings[symbol].assetProfile.assetSubClassLabel =
+                translate(response.holdings[symbol].assetProfile.assetSubClass);
+
               response.holdings[symbol].valueInBaseCurrency = isNumber(
                 response.holdings[symbol].valueInBaseCurrency
               )

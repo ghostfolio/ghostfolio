@@ -98,7 +98,7 @@ export class GfAdminUsersComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private notificationService: NotificationService,
@@ -106,7 +106,7 @@ export class GfAdminUsersComponent implements OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(

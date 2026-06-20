@@ -28,6 +28,7 @@ import {
   RouterOutlet
 } from '@angular/router';
 import { DataSource } from '@prisma/client';
+import { Chart } from 'chart.js';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -67,7 +68,7 @@ export class GfAppComponent implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
   private readonly document = inject(DOCUMENT);
   private readonly impersonationStorageService = inject(
@@ -104,7 +105,7 @@ export class GfAppComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
 
     this.impersonationStorageService
@@ -254,6 +255,9 @@ export class GfAppComponent implements OnInit {
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     this.toggleTheme(isDarkTheme);
+
+    // Default chart styles
+    Chart.defaults.font.family = getCssVariable('--font-family-sans-serif');
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.colorScheme) {

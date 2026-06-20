@@ -157,7 +157,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public isLoading = false;
+  public isLoading = true;
   public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
@@ -171,7 +171,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
@@ -272,7 +272,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     const { benchmarks } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.selection = new SelectionModel(true);
   }

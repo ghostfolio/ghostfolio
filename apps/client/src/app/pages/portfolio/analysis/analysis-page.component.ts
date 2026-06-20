@@ -106,7 +106,7 @@ export class GfAnalysisPageComponent implements OnInit {
     private clipboard: Clipboard,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private snackBar: MatSnackBar,
     private userService: UserService
@@ -129,7 +129,7 @@ export class GfAnalysisPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

@@ -26,7 +26,7 @@
         <div class="text-truncate">
           {{ element.name }}
           @if (element.name === element.symbol) {
-            <span>({{ element.assetSubClassLabel }})</span>
+            <span>({{ element.assetProfile.assetSubClassLabel }})</span>
           }
         </div>
         <div>
@@ -193,7 +193,7 @@
   </table>
 </div>
 
-<mat-paginator class="d-none" [pageSize]="pageSize()" />
+<mat-paginator class="d-none" [hidePageSize]="true" [pageSize]="pageSize()" />
 
 @if (isLoading()) {
   <ngx-skeleton-loader

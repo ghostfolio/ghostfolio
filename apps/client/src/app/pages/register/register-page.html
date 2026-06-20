@@ -20,7 +20,7 @@
         <div class="py-5 text-center">
           @if (hasPermissionForAuthToken) {
             <button
-              class="d-inline-block"
+              class="py-3"
               color="primary"
               mat-flat-button
               (click)="openShowAccessTokenDialog()"
@@ -33,7 +33,7 @@
           }
           @if (hasPermissionForAuthGoogle) {
             <a
-              class="px-4 rounded-pill w-100"
+              class="px-4 py-3 rounded-pill w-100"
               href="../api/v1/auth/google"
               mat-stroked-button
               ><img

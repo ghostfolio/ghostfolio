@@ -26,7 +26,7 @@ export class AdminPageComponent implements OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
 
-  public constructor(private deviceService: DeviceDetectorService) {
+  public constructor(private deviceDetectorService: DeviceDetectorService) {
     addIcons({
       flashOutline,
       peopleOutline,
@@ -37,7 +37,7 @@ export class AdminPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.tabs = [
       {
