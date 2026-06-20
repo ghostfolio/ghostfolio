@@ -240,6 +240,24 @@ export class AdminService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      const subscriptions = await this.prismaService.subscription.findMany({
+        orderBy: {
+          expiresAt: 'desc'
+        },
+        where: {
+          userId: id
+        }
+      });
+
+      user.subscriptions = subscriptions.map((subscription) => {
+        return {
+          ...subscription,
+          price: subscription.price ?? 0
+        };
+      });
+    }
+
     return user;
   }
 
