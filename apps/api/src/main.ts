@@ -18,11 +18,15 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
+import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
+  // Respect HTTP_PROXY / HTTPS_PROXY / NO_PROXY for outbound HTTP requests
+  setGlobalDispatcher(new EnvHttpProxyAgent());
+
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
   let customLogLevels: LogLevel[];

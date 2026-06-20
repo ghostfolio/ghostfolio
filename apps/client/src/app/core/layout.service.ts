@@ -16,12 +16,12 @@ export class LayoutService {
   private shouldReloadSubject = new Subject<void>();
 
   public constructor(
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private notificationService: NotificationService
   ) {
     this.shouldReloadContent$ = this.shouldReloadSubject.asObservable();
 
-    const deviceType = this.deviceService.getDeviceInfo().deviceType;
+    const deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.notificationService.setDialogWidth(
       deviceType === 'mobile'

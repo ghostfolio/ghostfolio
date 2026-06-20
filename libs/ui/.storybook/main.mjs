@@ -5,7 +5,10 @@ const require = createRequire(import.meta.url);
 
 /** @type {import('@storybook/angular').StorybookConfig} */
 const config = {
-  addons: [getAbsolutePath('@storybook/addon-docs')],
+  addons: [
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-themes')
+  ],
   framework: {
     name: getAbsolutePath('@storybook/angular'),
     options: {}

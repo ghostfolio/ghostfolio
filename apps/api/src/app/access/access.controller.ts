@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -83,7 +84,7 @@ export class AccessController {
   ): Promise<AccessModel> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
+      this.request.user.subscription.type === SubscriptionType.Basic
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -122,7 +123,7 @@ export class AccessController {
   ): Promise<AccessModel> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
+      this.request.user.subscription.type === SubscriptionType.Basic
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

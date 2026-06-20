@@ -2,6 +2,8 @@ import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
+import { ColorScheme, DateRange } from './types';
+
 export const ghostfolioPrefix = 'GF';
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
 export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
@@ -77,8 +79,10 @@ export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
 
 export const STATISTICS_GATHERING_QUEUE = 'STATISTICS_GATHERING_QUEUE';
 
+export const DEFAULT_COLOR_SCHEME: ColorScheme = 'LIGHT';
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
+export const DEFAULT_DATE_RANGE: DateRange = 'max';
 export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
@@ -252,6 +256,7 @@ export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
 export const PROPERTY_UPTIME = 'UPTIME';
+export const PROPERTY_WEB_FETCH_ROUTES = 'WEB_FETCH_ROUTES';
 
 export const QUEUE_JOB_STATUS_LIST = [
   'active',

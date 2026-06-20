@@ -17,7 +17,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { Subscription } from '@prisma/client';
+import { Prisma, Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
 import ms, { StringValue } from 'ms';
 import Stripe from 'stripe';
@@ -35,7 +35,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2026-02-25.clover'
+          apiVersion: '2026-03-25.dahlia'
         }
       );
     }
@@ -108,11 +108,13 @@ export class SubscriptionService {
     duration = '1 year',
     durationExtension,
     price,
+    stripeCheckoutSessionId,
     userId
   }: {
     duration?: StringValue;
     durationExtension?: StringValue;
     price: number;
+    stripeCheckoutSessionId?: string;
     userId: string;
   }) {
     let expiresAt = addMilliseconds(new Date(), ms(duration));
@@ -125,6 +127,7 @@ export class SubscriptionService {
       data: {
         expiresAt,
         price,
+        stripeCheckoutSessionId,
         user: {
           connect: {
             id: userId
@@ -136,24 +139,41 @@ export class SubscriptionService {
 
   public async createSubscriptionViaStripe(aCheckoutSessionId: string) {
     try {
-      let durationExtension: StringValue;
-
       const session =
         await this.stripe.checkout.sessions.retrieve(aCheckoutSessionId);
+
+      if (session.payment_status !== 'paid' || session.status !== 'complete') {
+        throw new Error(
+          `Stripe Checkout Session '${aCheckoutSessionId}' has not been paid (status=${session.status}, payment_status=${session.payment_status})`
+        );
+      }
 
       const subscriptionOffer: SubscriptionOffer = JSON.parse(
         session.metadata.subscriptionOffer ?? '{}'
       );
 
-      if (subscriptionOffer) {
-        durationExtension = subscriptionOffer.durationExtension;
-      }
+      const durationExtension = subscriptionOffer?.durationExtension;
 
-      await this.createSubscription({
-        durationExtension,
-        price: session.amount_total / 100,
-        userId: session.client_reference_id
-      });
+      try {
+        await this.createSubscription({
+          durationExtension,
+          price: session.amount_total / 100,
+          stripeCheckoutSessionId: session.id,
+          userId: session.client_reference_id
+        });
+      } catch (error) {
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2002'
+        ) {
+          Logger.log(
+            `Stripe Checkout Session '${session.id}' has already been redeemed`,
+            'SubscriptionService'
+          );
+        } else {
+          throw error;
+        }
+      }
 
       return session.client_reference_id;
     } catch (error) {

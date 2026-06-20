@@ -19,12 +19,14 @@
             [type]="isAccessTokenHidden ? 'password' : 'text'"
           />
           <button
-            mat-button
+            class="mx-2"
+            mat-icon-button
             matSuffix
             type="button"
             (click)="isAccessTokenHidden = !isAccessTokenHidden"
           >
             <ion-icon
+              class="mat-icon"
               [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
             />
           </button>
@@ -67,16 +69,6 @@
     (accessToUpdate)="onUpdateAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {
-    <div class="fab-container">
-      <a
-        class="align-items-center d-flex justify-content-center"
-        color="primary"
-        mat-fab
-        [queryParams]="{ createDialog: true }"
-        [routerLink]="[]"
-      >
-        <ion-icon name="add-outline" size="large" />
-      </a>
-    </div>
+    <gf-fab [queryParams]="{ createDialog: true }" />
   }
 </div>

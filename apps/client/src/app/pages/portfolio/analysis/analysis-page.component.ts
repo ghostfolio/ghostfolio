@@ -2,7 +2,10 @@ import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/be
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_DATE_RANGE,
+  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+} from '@ghostfolio/common/config';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -24,9 +27,12 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
+  inject,
   OnInit,
-  ViewChild
+  signal,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -64,53 +70,57 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './analysis-page.html'
 })
 export class GfAnalysisPageComponent implements OnInit {
-  @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
-
-  public benchmark: Partial<SymbolProfile>;
-  public benchmarkDataItems: HistoricalDataItem[] = [];
-  public benchmarks: Partial<SymbolProfile>[];
-  public bottom3: PortfolioPosition[];
-  public deviceType: string;
-  public dividendsByGroup: InvestmentItem[];
-  public dividendTimelineDataLabel = $localize`Dividend`;
-  public firstOrderDate: Date;
-  public hasImpersonationId: boolean;
-  public hasPermissionToReadAiPrompt: boolean;
-  public investments: InvestmentItem[];
-  public investmentTimelineDataLabel = $localize`Investment`;
-  public investmentsByGroup: InvestmentItem[];
-  public isLoadingAnalysisPrompt: boolean;
-  public isLoadingBenchmarkComparator: boolean;
-  public isLoadingDividendTimelineChart: boolean;
-  public isLoadingInvestmentChart: boolean;
-  public isLoadingInvestmentTimelineChart: boolean;
-  public isLoadingPortfolioPrompt: boolean;
-  public mode: GroupBy = 'month';
-  public modeOptions: ToggleOption[] = [
+  protected benchmark?: Partial<SymbolProfile>;
+  protected benchmarkDataItems: HistoricalDataItem[] = [];
+  protected readonly benchmarks: Partial<SymbolProfile>[];
+  protected bottom3: PortfolioPosition[];
+  protected dividendsByGroup: InvestmentItem[];
+  protected readonly dividendTimelineDataLabel = $localize`Dividend`;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToReadAiPrompt: boolean;
+  protected investments: InvestmentItem[];
+  protected readonly investmentTimelineDataLabel = $localize`Investment`;
+  protected investmentsByGroup: InvestmentItem[];
+  protected isLoadingAnalysisPrompt: boolean;
+  protected isLoadingBenchmarkComparator: boolean;
+  protected isLoadingDividendTimelineChart: boolean;
+  protected isLoadingInvestmentChart: boolean;
+  protected isLoadingInvestmentTimelineChart: boolean;
+  protected isLoadingPortfolioPrompt: boolean;
+  protected readonly mode = signal<GroupBy>('month');
+  protected readonly modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
   ];
-  public performance: PortfolioPerformance;
-  public performanceDataItems: HistoricalDataItem[];
-  public performanceDataItemsInPercentage: HistoricalDataItem[];
-  public portfolioEvolutionDataLabel = $localize`Investment`;
-  public precision = 2;
-  public streaks: PortfolioInvestmentsResponse['streaks'];
-  public top3: PortfolioPosition[];
-  public unitCurrentStreak: string;
-  public unitLongestStreak: string;
-  public user: User;
+  protected performance: PortfolioPerformance;
+  protected performanceDataItems: HistoricalDataItem[];
+  protected performanceDataItemsInPercentage: HistoricalDataItem[];
+  protected readonly portfolioEvolutionDataLabel = $localize`Investment`;
+  protected precision = 2;
+  protected streaks: PortfolioInvestmentsResponse['streaks'];
+  protected top3: PortfolioPosition[];
+  protected unitCurrentStreak: string;
+  protected unitLongestStreak: string;
+  protected user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private clipboard: Clipboard,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private snackBar: MatSnackBar,
-    private userService: UserService
-  ) {
+  private readonly actionsMenuButton = viewChild.required(MatMenuTrigger);
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  private firstOrderDate: Date;
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly clipboard = inject(Clipboard);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
 
@@ -123,14 +133,16 @@ export class GfAnalysisPageComponent implements OnInit {
         ? undefined
         : this.user?.settings?.savingsRate;
 
-    return this.mode === 'year'
+    if (savingsRatePerMonth === undefined) {
+      return undefined;
+    }
+
+    return this.mode() === 'year'
       ? savingsRatePerMonth * 12
       : savingsRatePerMonth;
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -158,7 +170,7 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
-  public onChangeBenchmark(symbolProfileId: string) {
+  protected onChangeBenchmark(symbolProfileId: string) {
     this.dataService
       .putUserSetting({ benchmark: symbolProfileId })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -174,12 +186,12 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
-  public onChangeGroupBy(aMode: GroupBy) {
-    this.mode = aMode;
+  protected onChangeGroupBy(aMode: GroupBy) {
+    this.mode.set(aMode);
     this.fetchDividendsAndInvestments();
   }
 
-  public onCopyPromptToClipboard(mode: AiPromptMode) {
+  protected onCopyPromptToClipboard(mode: AiPromptMode) {
     if (mode === 'analysis') {
       this.isLoadingAnalysisPrompt = true;
     } else if (mode === 'portfolio') {
@@ -210,7 +222,7 @@ export class GfAnalysisPageComponent implements OnInit {
             window.open('https://duck.ai', '_blank');
           });
 
-        this.actionsMenuButton.closeMenu();
+        this.actionsMenuButton().closeMenu();
 
         if (mode === 'analysis') {
           this.isLoadingAnalysisPrompt = false;
@@ -227,8 +239,8 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchDividends({
         filters: this.userService.getFilters(),
-        groupBy: this.mode,
-        range: this.user?.settings?.dateRange
+        groupBy: this.mode(),
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ dividends }) => {
@@ -242,15 +254,15 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchInvestments({
         filters: this.userService.getFilters(),
-        groupBy: this.mode,
-        range: this.user?.settings?.dateRange
+        groupBy: this.mode(),
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ investments, streaks }) => {
         this.investmentsByGroup = investments;
         this.streaks = streaks;
         this.unitCurrentStreak =
-          this.mode === 'year'
+          this.mode() === 'year'
             ? this.streaks?.currentStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
@@ -258,7 +270,7 @@ export class GfAnalysisPageComponent implements OnInit {
               ? translate('MONTH')
               : translate('MONTHS');
         this.unitLongestStreak =
-          this.mode === 'year'
+          this.mode() === 'year'
             ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
@@ -278,7 +290,7 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         filters: this.userService.getFilters(),
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, firstOrderDate, performance }) => {
@@ -298,13 +310,16 @@ export class GfAnalysisPageComponent implements OnInit {
             valueInPercentage,
             valueWithCurrencyEffect
           }
-        ] of chart.entries()) {
+        ] of (chart ?? []).entries()) {
+          // Ignore first item where value is 0
           if (index > 0 || this.user?.settings?.dateRange === 'max') {
-            // Ignore first item where value is 0
-            this.investments.push({
-              date,
-              investment: totalInvestmentValueWithCurrencyEffect
-            });
+            if (totalInvestmentValueWithCurrencyEffect !== undefined) {
+              this.investments.push({
+                date,
+                investment: totalInvestmentValueWithCurrencyEffect
+              });
+            }
+
             this.performanceDataItems.push({
               date,
               value: isNumber(valueWithCurrencyEffect)
@@ -320,7 +335,7 @@ export class GfAnalysisPageComponent implements OnInit {
         }
 
         if (
-          this.deviceType === 'mobile' &&
+          this.deviceType() === 'mobile' &&
           this.performance.currentValueInBaseCurrency >=
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
@@ -387,7 +402,7 @@ export class GfAnalysisPageComponent implements OnInit {
             dataSource,
             symbol,
             filters: this.userService.getFilters(),
-            range: this.user?.settings?.dateRange,
+            range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE,
             startDate: this.firstOrderDate
           })
           .pipe(takeUntilDestroyed(this.destroyRef))

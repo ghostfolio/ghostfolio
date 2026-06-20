@@ -2,6 +2,7 @@ import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.comp
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   PortfolioReportResponse,
   PortfolioReportRule
@@ -11,7 +12,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -28,7 +28,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     GfPremiumIndicatorComponent,
     GfRulesComponent,
     IonIcon,
-    NgClass,
     NgxSkeletonLoaderModule
   ],
   selector: 'gf-x-ray-page',
@@ -73,7 +72,7 @@ export class GfXRayPageComponent {
           this.user = state.user;
 
           this.hasPermissionToUpdateUserSettings =
-            this.user.subscription?.type === 'Basic'
+            this.user.subscription?.type === SubscriptionType.Basic
               ? false
               : hasPermission(
                   this.user.permissions,
@@ -108,7 +107,10 @@ export class GfXRayPageComponent {
       .fetchPortfolioReport()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ xRay: { categories, statistics } }) => {
-        this.categories = categories;
+        this.categories = categories.filter(({ rules }) => {
+          return rules?.length > 0;
+        });
+
         this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
 

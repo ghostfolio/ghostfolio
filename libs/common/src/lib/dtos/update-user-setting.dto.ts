@@ -58,23 +58,23 @@ export class UpdateUserSettingDto {
 
   @IsArray()
   @IsOptional()
-  'filters.accounts'?: string[];
+  'filters.accounts'?: string[] | null;
 
   @IsArray()
   @IsOptional()
-  'filters.assetClasses'?: string[];
+  'filters.assetClasses'?: string[] | null;
 
   @IsString()
   @IsOptional()
-  'filters.dataSource'?: string;
+  'filters.dataSource'?: string | null;
 
   @IsString()
   @IsOptional()
-  'filters.symbol'?: string;
+  'filters.symbol'?: string | null;
 
   @IsArray()
   @IsOptional()
-  'filters.tags'?: string[];
+  'filters.tags'?: string[] | null;
 
   @IsIn(['CHART', 'TABLE'] as HoldingsViewMode[])
   @IsOptional()
@@ -96,13 +96,21 @@ export class UpdateUserSettingDto {
   @IsOptional()
   locale?: string;
 
+  /**
+   * The target financial amount the user aims to reach before retiring.
+   * Can be explicitly set to null to clear the value and calculate it dynamically.
+   */
   @IsNumber()
   @IsOptional()
-  projectedTotalAmount?: number;
+  projectedTotalAmount?: number | null;
 
+  /**
+   * The target date when the user plans to retire.
+   * Can be explicitly set to null to clear the value and calculate it dynamically.
+   */
   @IsISO8601()
   @IsOptional()
-  retirementDate?: string;
+  retirementDate?: string | null;
 
   @IsNumber()
   @IsOptional()

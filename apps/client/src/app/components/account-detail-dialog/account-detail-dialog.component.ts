@@ -1,6 +1,10 @@
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_DATE_RANGE,
+  DEFAULT_PAGE_SIZE,
+  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+} from '@ghostfolio/common/config';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
@@ -20,7 +24,6 @@ import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -34,6 +37,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -57,7 +61,6 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    CommonModule,
     GfAccountBalancesComponent,
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
@@ -95,6 +98,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected isLoadingActivities: boolean;
   protected isLoadingChart: boolean;
   protected name: string | null;
+  protected pageIndex = 0;
+  protected pageSize = DEFAULT_PAGE_SIZE;
   protected platformName: string;
   protected sortColumn = 'date';
   protected sortDirection: SortDirection = 'desc';
@@ -135,6 +140,21 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.initialize();
   }
 
+  protected onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
+    this.dataService
+      .postAccountBalance(accountBalance)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initialize();
+      });
+  }
+
+  protected onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.fetchActivities();
+  }
+
   protected onCloneActivity(aActivity: Activity) {
     this.router.navigate(
       internalRoutes.portfolio.subRoutes.activities.routerLink,
@@ -148,15 +168,6 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
   protected onClose() {
     this.dialogRef.close();
-  }
-
-  protected onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
-    this.dataService
-      .postAccountBalance(accountBalance)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.initialize();
-      });
   }
 
   protected onDeleteAccountBalance(aId: string) {
@@ -289,8 +300,10 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.dataService
       .fetchActivities({
         filters: [{ id: this.data.accountId, type: 'ACCOUNT' }],
+        skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
-        sortDirection: this.sortDirection
+        sortDirection: this.sortDirection,
+        take: this.pageSize
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ activities, count }) => {
@@ -318,7 +331,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
               type: 'ACCOUNT'
             }
           ],
-          range: 'max',
+          range: DEFAULT_DATE_RANGE,
           withExcludedAccounts: true,
           withItems: true
         })

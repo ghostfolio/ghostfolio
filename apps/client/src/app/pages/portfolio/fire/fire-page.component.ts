@@ -1,5 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   FireCalculationCompleteEvent,
   FireWealth,
@@ -15,7 +16,9 @@ import { CommonModule, NgStyle } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -41,33 +44,40 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './fire-page.html'
 })
 export class GfFirePageComponent implements OnInit {
-  public deviceType: string;
-  public fireWealth: FireWealth;
-  public hasImpersonationId: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public isLoading = false;
-  public projectedTotalAmount: number;
-  public retirementDate: Date;
-  public safeWithdrawalRateControl = new FormControl<number>(undefined);
-  public safeWithdrawalRateOptions = [0.025, 0.03, 0.035, 0.04, 0.045];
-  public user: User;
-  public withdrawalRatePerMonth: Big;
-  public withdrawalRatePerMonthProjected: Big;
-  public withdrawalRatePerYear: Big;
-  public withdrawalRatePerYearProjected: Big;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private userService: UserService
-  ) {}
+  protected fireWealth: FireWealth;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
+  protected isLoading = false;
+  protected retirementDate: Date;
+  protected readonly safeWithdrawalRateControl = new FormControl<
+    number | undefined
+  >(undefined);
+  protected readonly safeWithdrawalRateOptions = [
+    0.025, 0.03, 0.035, 0.04, 0.045
+  ] as const;
+  protected user: User;
+  protected withdrawalRatePerMonth: Big;
+  protected withdrawalRatePerMonthProjected: Big;
+  protected withdrawalRatePerYear: Big;
+  protected withdrawalRatePerYearProjected: Big;
+
+  private projectedTotalAmount: number;
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly userService = inject(UserService);
 
   public ngOnInit() {
     this.isLoading = true;
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.dataService
       .fetchPortfolioDetails()
@@ -75,12 +85,12 @@ export class GfFirePageComponent implements OnInit {
       .subscribe(({ summary }) => {
         this.fireWealth = {
           today: {
-            valueInBaseCurrency: summary.fireWealth
+            valueInBaseCurrency: summary?.fireWealth
               ? summary.fireWealth.today.valueInBaseCurrency
               : 0
           }
         };
-        if (this.user.subscription?.type === 'Basic') {
+        if (this.user.subscription?.type === SubscriptionType.Basic) {
           this.fireWealth = {
             today: {
               valueInBaseCurrency: 10000
@@ -103,7 +113,7 @@ export class GfFirePageComponent implements OnInit {
     this.safeWithdrawalRateControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value) => {
-        this.onSafeWithdrawalRateChange(Number(value));
+        this.updateSafeWithdrawalRate(Number(value));
       });
 
     this.userService.stateChanged
@@ -113,7 +123,7 @@ export class GfFirePageComponent implements OnInit {
           this.user = state.user;
 
           this.hasPermissionToUpdateUserSettings =
-            this.user.subscription?.type === 'Basic'
+            this.user.subscription?.type === SubscriptionType.Basic
               ? false
               : hasPermission(
                   this.user.permissions,
@@ -132,7 +142,7 @@ export class GfFirePageComponent implements OnInit {
       });
   }
 
-  public onAnnualInterestRateChange(annualInterestRate: number) {
+  protected onAnnualInterestRateChange(annualInterestRate: number) {
     this.dataService
       .putUserSetting({ annualInterestRate })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -148,7 +158,7 @@ export class GfFirePageComponent implements OnInit {
       });
   }
 
-  public onCalculationComplete({
+  protected onCalculationComplete({
     projectedTotalAmount,
     retirementDate
   }: FireCalculationCompleteEvent) {
@@ -160,66 +170,47 @@ export class GfFirePageComponent implements OnInit {
     this.isLoading = false;
   }
 
-  public onRetirementDateChange(retirementDate: Date) {
-    this.dataService
-      .putUserSetting({
-        retirementDate: retirementDate.toISOString(),
-        projectedTotalAmount: null
-      })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
-  public onSafeWithdrawalRateChange(safeWithdrawalRate: number) {
-    this.dataService
-      .putUserSetting({ safeWithdrawalRate })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.calculateWithdrawalRates();
-            this.calculateWithdrawalRatesProjected();
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
-  public onSavingsRateChange(savingsRate: number) {
-    this.dataService
-      .putUserSetting({ savingsRate })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
-  public onProjectedTotalAmountChange(projectedTotalAmount: number) {
+  protected onProjectedTotalAmountChange(projectedTotalAmount: number) {
     this.dataService
       .putUserSetting({
         projectedTotalAmount,
         retirementDate: null
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  protected onRetirementDateChange(retirementDate: Date) {
+    this.dataService
+      .putUserSetting({
+        projectedTotalAmount: null,
+        retirementDate: retirementDate.toISOString()
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  protected onSavingsRateChange(savingsRate: number) {
+    this.dataService
+      .putUserSetting({ savingsRate })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
@@ -256,5 +247,24 @@ export class GfFirePageComponent implements OnInit {
       this.withdrawalRatePerMonthProjected =
         this.withdrawalRatePerYearProjected.div(12);
     }
+  }
+
+  private updateSafeWithdrawalRate(safeWithdrawalRate: number) {
+    this.dataService
+      .putUserSetting({ safeWithdrawalRate })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.calculateWithdrawalRates();
+            this.calculateWithdrawalRatesProjected();
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 }

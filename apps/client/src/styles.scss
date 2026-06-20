@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 @import './styles/bootstrap';
 @import './styles/table';
 @import './styles/variables';
@@ -256,64 +258,10 @@ body {
       }
     }
 
-    .mat-mdc-card {
-      --mat-card-elevated-container-color: var(--dark-background);
-      --mat-card-outlined-container-color: var(--dark-background);
-    }
-
-    .mat-mdc-fab {
-      &.mat-primary {
-        --mat-fab-icon-color: rgba(var(--dark-primary-text));
-        --mat-mdc-fab-color: rgba(var(--dark-primary-text));
-      }
-    }
-
-    .mat-mdc-paginator {
-      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
-    }
-
-    .mat-mdc-slide-toggle {
-      .mdc-switch__track {
-        --mat-slide-toggle-selected-focus-track-color: rgba(
-          255,
-          255,
-          255,
-          0.12
-        );
-        --mat-slide-toggle-selected-hover-track-color: rgba(
-          255,
-          255,
-          255,
-          0.12
-        );
-        --mat-slide-toggle-selected-pressed-track-color: rgba(
-          255,
-          255,
-          255,
-          0.12
-        );
-        --mat-slide-toggle-selected-track-color: rgba(255, 255, 255, 0.12);
-      }
-    }
-
     .mdc-button {
       &.mat-accent,
       &.mat-primary {
         --mat-button-filled-label-text-color: rgba(var(--dark-primary-text));
-      }
-    }
-
-    .page {
-      &.has-tabs {
-        .mat-mdc-tab-nav-bar {
-          --mat-tab-inactive-label-text-color: rgba(var(--light-primary-text));
-        }
-
-        @media (min-width: 576px) {
-          .mat-mdc-tab-header {
-            background-color: rgba(var(--palette-foreground-base-dark), 0.02);
-          }
-        }
       }
     }
 
@@ -412,12 +360,9 @@ ngx-skeleton-loader {
   text-wrap: balance;
 }
 
-.has-fab {
-  padding-bottom: 3rem !important;
-}
-
 .has-info-message {
-  .page.has-tabs {
+  // Restrict viewport height of tabbed views when the Live Demo or system announcements banner are displayed
+  .page:has(gf-page-tabs) {
     height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
   }
 }
@@ -443,8 +388,6 @@ ngx-skeleton-loader {
 
 .mat-mdc-card {
   .mat-mdc-card-title {
-    --mat-card-title-text-line-height: 1.2;
-
     margin-bottom: 0.5rem;
   }
 }
@@ -465,15 +408,6 @@ ngx-skeleton-loader {
 .mat-mdc-unelevated-button {
   &.mat-primary {
     color: rgba(var(--light-primary-text)) !important;
-  }
-}
-
-.mat-mdc-fab {
-  color: var(--mat-mdc-fab-color, inherit) !important;
-
-  &.mat-primary {
-    --mat-fab-icon-color: rgba(var(--light-primary-text));
-    --mat-mdc-fab-color: rgba(var(--light-primary-text));
   }
 }
 
@@ -505,24 +439,6 @@ ngx-skeleton-loader {
       align-items: center;
       display: flex;
     }
-  }
-}
-
-.mat-mdc-paginator {
-  background-color: rgba(var(--palette-foreground-base-light), 0.02);
-
-  .mat-mdc-paginator-page-size,
-  .mat-mdc-paginator-page-size {
-    display: none;
-  }
-}
-
-.mat-mdc-slide-toggle {
-  .mdc-switch__track {
-    --mat-slide-toggle-selected-focus-track-color: rgba(0, 0, 0, 0.12);
-    --mat-slide-toggle-selected-hover-track-color: rgba(0, 0, 0, 0.12);
-    --mat-slide-toggle-selected-pressed-track-color: rgba(0, 0, 0, 0.12);
-    --mat-slide-toggle-selected-track-color: rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -560,68 +476,19 @@ ngx-skeleton-loader {
 
 .page {
   display: flex;
-  flex-direction: column;
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom);
   padding-bottom: constant(safe-area-inset-bottom);
 
-  .fab-container {
-    bottom: 2rem;
-    position: fixed;
-    right: 2rem;
-    z-index: 999;
-  }
-
-  &:not(.has-tabs) {
-    @media (min-width: 576px) {
-      padding: 2rem 0;
-    }
-  }
-
-  &.has-tabs {
+  // Restrict viewport height and layout boundaries only when the page hosts tab navigation
+  &:has(gf-page-tabs) {
     height: calc(100svh - var(--mat-toolbar-standard-height));
+  }
 
-    .fab-container {
-      @media (max-width: 575.98px) {
-        bottom: 5rem;
-      }
-    }
-
-    .mat-mdc-tab-nav-bar {
-      --mat-tab-active-focus-indicator-color: transparent;
-      --mat-tab-active-hover-indicator-color: transparent;
-      --mat-tab-inactive-label-text-color: rgba(var(--dark-primary-text));
-      --mat-tab-active-indicator-color: transparent;
-    }
-
-    .mat-mdc-tab-nav-panel {
-      padding: 2rem 0;
-    }
-
-    @media (max-width: 575.98px) {
-      .mat-mdc-tab-link {
-        --mat-tab-container-height: 3rem;
-      }
-    }
-
+  // Apply vertical padding only to standalone or nested content views (tabs handle their own padding)
+  &:not(:has(gf-page-tabs)) {
     @media (min-width: 576px) {
-      flex-direction: row-reverse;
-
-      .mat-mdc-tab-header {
-        background-color: rgba(var(--palette-foreground-base), 0.02);
-        padding: 2rem 0;
-        width: 14rem;
-        --mat-tab-label-text-tracking: normal;
-        --mat-tab-container-height: 2rem;
-
-        .mat-mdc-tab-links {
-          flex-direction: column;
-
-          .mat-mdc-tab-link {
-            justify-content: flex-start;
-          }
-        }
-      }
+      padding: 2rem 0;
     }
   }
 }

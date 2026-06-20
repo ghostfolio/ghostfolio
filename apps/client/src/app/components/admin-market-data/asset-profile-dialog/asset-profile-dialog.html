@@ -1,7 +1,7 @@
 <div class="d-flex flex-column h-100">
   <div class="d-flex mb-3">
     <h1 class="flex-grow-1 m-0" mat-dialog-title>
-      {{ assetProfile?.name ?? data.symbol }}
+      <span>{{ assetProfile?.name ?? data.symbol }}</span>
     </h1>
     <button
       class="mx-1 no-min-width px-2"
@@ -70,7 +70,7 @@
         mat-menu-item
         type="button"
         [disabled]="
-          !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+          !canDeleteAssetProfile({
             activitiesCount: assetProfile?.activitiesCount,
             isBenchmark: isBenchmark,
             symbol: data.symbol,
@@ -421,7 +421,7 @@
                 <input formControlName="url" matInput type="text" />
                 @if (assetProfileForm.controls.url.value) {
                   <gf-entity-logo
-                    class="mr-3"
+                    class="mat-icon"
                     matSuffix
                     [url]="assetProfileForm.controls.url.value"
                   />

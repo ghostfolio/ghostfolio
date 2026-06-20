@@ -1,4 +1,7 @@
-import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
+import {
+  LoginWithAccessTokenDialogParams,
+  LoginWithAccessTokenDialogResult
+} from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
 import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -19,18 +22,17 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  EventEmitter,
   HostListener,
-  Input,
+  inject,
+  input,
   OnChanges,
-  Output,
-  ViewChild
+  output,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -56,7 +58,6 @@ import { catchError } from 'rxjs/operators';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfAssistantComponent,
     GfLogoComponent,
     GfPremiumIndicatorComponent,
@@ -73,78 +74,67 @@ import { catchError } from 'rxjs/operators';
   styleUrls: ['./header.component.scss']
 })
 export class GfHeaderComponent implements OnChanges {
-  @HostListener('window:keydown', ['$event'])
-  openAssistantWithHotKey(event: KeyboardEvent) {
-    if (
-      event.key === '/' &&
-      event.target instanceof Element &&
-      event.target?.nodeName?.toLowerCase() !== 'input' &&
-      event.target?.nodeName?.toLowerCase() !== 'textarea' &&
-      this.hasPermissionToAccessAssistant
-    ) {
-      this.assistantElement.setIsOpen(true);
-      this.assistentMenuTriggerElement.openMenu();
+  public readonly currentRoute = input.required<string>();
+  public readonly deviceType = input.required<string>();
+  public readonly hasPermissionToChangeDateRange = input.required<boolean>();
+  public readonly hasPermissionToChangeFilters = input.required<boolean>();
+  public readonly hasPromotion = input.required<boolean>();
+  public readonly hasTabs = input.required<boolean>();
+  public readonly info = input.required<InfoItem | undefined>();
+  public readonly pageTitle = input.required<string>();
+  public readonly user = input.required<User | undefined>();
 
-      event.preventDefault();
-    }
-  }
+  public readonly signOut = output<void>();
 
-  @Input() currentRoute: string;
-  @Input() deviceType: string;
-  @Input() hasPermissionToChangeDateRange: boolean;
-  @Input() hasPermissionToChangeFilters: boolean;
-  @Input() hasPromotion: boolean;
-  @Input() hasTabs: boolean;
-  @Input() info: InfoItem;
-  @Input() pageTitle: string;
-  @Input() user: User;
+  protected readonly assistantElement =
+    viewChild.required<GfAssistantComponent>('assistant');
+  protected readonly assistentMenuTriggerElement =
+    viewChild.required<MatMenuTrigger>('assistantTrigger');
 
-  @Output() signOut = new EventEmitter<void>();
+  protected hasFilters: boolean;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionForAuthGoogle: boolean;
+  protected hasPermissionForAuthOidc: boolean;
+  protected hasPermissionForAuthToken: boolean;
+  protected hasPermissionForSubscription: boolean;
+  protected hasPermissionToAccessAdminControl: boolean;
+  protected hasPermissionToAccessAssistant: boolean;
+  protected hasPermissionToAccessFearAndGreedIndex: boolean;
+  protected hasPermissionToCreateUser: boolean;
+  protected impersonationId: string;
+  protected readonly internalRoutes = internalRoutes;
+  protected isMenuOpen: boolean;
+  protected readonly routeAbout = publicRoutes.about.path;
+  protected readonly routeFeatures = publicRoutes.features.path;
+  protected readonly routeMarkets = publicRoutes.markets.path;
+  protected readonly routePricing = publicRoutes.pricing.path;
+  protected readonly routeResources = publicRoutes.resources.path;
+  protected readonly routerLinkAbout = publicRoutes.about.routerLink;
+  protected readonly routerLinkAccount = internalRoutes.account.routerLink;
+  protected readonly routerLinkAccounts = internalRoutes.accounts.routerLink;
+  protected readonly routerLinkAdminControl =
+    internalRoutes.adminControl.routerLink;
+  protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+  protected readonly routerLinkMarkets = publicRoutes.markets.routerLink;
+  protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  protected readonly routerLinkPricing = publicRoutes.pricing.routerLink;
+  protected readonly routerLinkRegister = publicRoutes.register.routerLink;
+  protected readonly routerLinkResources = publicRoutes.resources.routerLink;
 
-  @ViewChild('assistant') assistantElement: GfAssistantComponent;
-  @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly layoutService = inject(LayoutService);
+  private readonly notificationService = inject(NotificationService);
+  private readonly router = inject(Router);
+  private readonly settingsStorageService = inject(SettingsStorageService);
+  private readonly tokenStorageService = inject(TokenStorageService);
+  private readonly userService = inject(UserService);
 
-  public hasFilters: boolean;
-  public hasImpersonationId: boolean;
-  public hasPermissionForAuthGoogle: boolean;
-  public hasPermissionForAuthOidc: boolean;
-  public hasPermissionForAuthToken: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToAccessAdminControl: boolean;
-  public hasPermissionToAccessAssistant: boolean;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public hasPermissionToCreateUser: boolean;
-  public impersonationId: string;
-  public internalRoutes = internalRoutes;
-  public isMenuOpen: boolean;
-  public routeAbout = publicRoutes.about.path;
-  public routeFeatures = publicRoutes.features.path;
-  public routeMarkets = publicRoutes.markets.path;
-  public routePricing = publicRoutes.pricing.path;
-  public routeResources = publicRoutes.resources.path;
-  public routerLinkAbout = publicRoutes.about.routerLink;
-  public routerLinkAccount = internalRoutes.account.routerLink;
-  public routerLinkAccounts = internalRoutes.accounts.routerLink;
-  public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = publicRoutes.markets.routerLink;
-  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
-  public routerLinkRegister = publicRoutes.register.routerLink;
-  public routerLinkResources = publicRoutes.resources.routerLink;
-
-  public constructor(
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private dialog: MatDialog,
-    private impersonationStorageService: ImpersonationStorageService,
-    private layoutService: LayoutService,
-    private notificationService: NotificationService,
-    private router: Router,
-    private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService,
-    private userService: UserService
-  ) {
+  public constructor() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -164,55 +154,71 @@ export class GfHeaderComponent implements OnChanges {
     });
   }
 
+  @HostListener('window:keydown', ['$event'])
+  protected openAssistantWithHotKey(event: KeyboardEvent) {
+    if (
+      event.key === '/' &&
+      event.target instanceof Element &&
+      event.target?.nodeName?.toLowerCase() !== 'input' &&
+      event.target?.nodeName?.toLowerCase() !== 'textarea' &&
+      this.hasPermissionToAccessAssistant
+    ) {
+      this.assistantElement().setIsOpen(true);
+      this.assistentMenuTriggerElement().openMenu();
+
+      event.preventDefault();
+    }
+  }
+
   public ngOnChanges() {
     this.hasFilters = this.userService.hasFilters();
 
     this.hasPermissionForAuthGoogle = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableAuthGoogle
     );
 
     this.hasPermissionForAuthOidc = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableAuthOidc
     );
 
     this.hasPermissionForAuthToken = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableAuthToken
     );
 
     this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableSubscription
     );
 
     this.hasPermissionToAccessAdminControl = hasPermission(
-      this.user?.permissions,
+      this.user()?.permissions,
       permissions.accessAdminControl
     );
 
     this.hasPermissionToAccessAssistant = hasPermission(
-      this.user?.permissions,
+      this.user()?.permissions,
       permissions.accessAssistant
     );
 
     this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableFearAndGreedIndex
     );
 
     this.hasPermissionToCreateUser = hasPermission(
-      this.info?.globalPermissions,
+      this.info()?.globalPermissions,
       permissions.createUserAccount
     );
   }
 
-  public closeAssistant() {
-    this.assistentMenuTriggerElement?.closeMenu();
+  protected closeAssistant() {
+    this.assistentMenuTriggerElement().closeMenu();
   }
 
-  public impersonateAccount(aId: string) {
+  protected impersonateAccount(aId: string) {
     if (aId) {
       this.impersonationStorageService.setId(aId);
     } else {
@@ -222,7 +228,7 @@ export class GfHeaderComponent implements OnChanges {
     window.location.reload();
   }
 
-  public onDateRangeChange(dateRange: DateRange) {
+  protected onDateRangeChange(dateRange: DateRange) {
     this.dataService
       .putUserSetting({ dateRange })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -234,7 +240,7 @@ export class GfHeaderComponent implements OnChanges {
       });
   }
 
-  public onFiltersChanged(filters: Filter[]) {
+  protected onFiltersChanged(filters: Filter[]) {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
@@ -262,32 +268,33 @@ export class GfHeaderComponent implements OnChanges {
       });
   }
 
-  public onLogoClick() {
-    if (['home', 'zen'].includes(this.currentRoute)) {
+  protected onLogoClick() {
+    if (['home', 'zen'].includes(this.currentRoute())) {
       this.layoutService.getShouldReloadSubject().next();
     }
   }
 
-  public onMenuClosed() {
+  protected onMenuClosed() {
     this.isMenuOpen = false;
   }
 
-  public onMenuOpened() {
+  protected onMenuOpened() {
     this.isMenuOpen = true;
   }
 
-  public onOpenAssistant() {
-    this.assistantElement.initialize();
+  protected onOpenAssistant() {
+    this.assistantElement().initialize();
   }
 
-  public onSignOut() {
-    this.signOut.next();
+  protected onSignOut() {
+    this.signOut.emit();
   }
 
-  public openLoginDialog() {
+  protected openLoginDialog() {
     const dialogRef = this.dialog.open<
       GfLoginWithAccessTokenDialogComponent,
-      LoginWithAccessTokenDialogParams
+      LoginWithAccessTokenDialogParams,
+      LoginWithAccessTokenDialogResult
     >(GfLoginWithAccessTokenDialogComponent, {
       autoFocus: false,
       data: {
@@ -324,7 +331,7 @@ export class GfHeaderComponent implements OnChanges {
       });
   }
 
-  public setToken(aToken: string) {
+  private setToken(aToken: string) {
     this.tokenStorageService.saveToken(
       aToken,
       this.settingsStorageService.getSetting(KEY_STAY_SIGNED_IN) === 'true'

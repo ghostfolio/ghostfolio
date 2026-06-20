@@ -1,3 +1,4 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import {
   AssetProfileIdentifier,
@@ -12,7 +13,6 @@ import {
   PortfolioFilterFormValue
 } from '@ghostfolio/ui/portfolio-filter-form';
 import { DataService } from '@ghostfolio/ui/services';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 
 import type { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -41,6 +41,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -64,14 +65,15 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
-  public accessForm: FormGroup;
-  public mode: 'create' | 'update';
   public showFilterPanel = false;
 
   public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
   public holdings: PortfolioPosition[] = [];
   public tags: Filter[] = [];
+
+  protected accessForm: FormGroup;
+  protected readonly mode: 'create' | 'update';
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly data =
@@ -85,28 +87,27 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
-    this.mode = this.data.access?.id ? 'update' : 'create';
+    this.mode = this.data.access ? 'update' : 'create';
   }
 
   public ngOnInit() {
-    const isPublic = this.data.access.type === 'PUBLIC';
+    const access = this.data?.access;
+    const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
-      alias: [this.data.access.alias],
+      alias: [access?.alias ?? ''],
       filters: [null],
       granteeUserId: [
-        this.data.access.grantee,
-        isPublic
-          ? null
-          : [(control: AbstractControl) => Validators.required(control)]
+        access?.grantee ?? null,
+        isPublic ? null : Validators.required
       ],
       permissions: [
-        this.data.access.permissions[0],
-        [(control: AbstractControl) => Validators.required(control)]
+        access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
+        Validators.required
       ],
       type: [
-        { disabled: this.mode === 'update', value: this.data.access.type },
-        [(control: AbstractControl) => Validators.required(control)]
+        { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
+        Validators.required
       ]
     });
 
@@ -126,7 +127,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(this.data.access.permissions[0]);
+          permissionsControl?.setValue(
+            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
+          );
           this.showFilterPanel = true;
           this.loadFilterData();
         }
@@ -142,11 +145,11 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     if (this.mode === 'create') {
       await this.createAccess();
     } else {
@@ -193,8 +196,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     if (filterValue.holding) {
       filter.holdings = [
         {
-          dataSource: filterValue.holding.dataSource,
-          symbol: filterValue.holding.symbol
+          dataSource: filterValue.holding.assetProfile.dataSource,
+          symbol: filterValue.holding.assetProfile.symbol
         }
       ];
     }
@@ -207,7 +210,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private loadFilterData() {
-    const existingFilter = this.data.access.settings?.filter;
+    const existingFilter = this.data.access?.settings?.filter;
 
     this.userService
       .get()
@@ -233,8 +236,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
           const assetClassesSet = new Set<string>();
           Object.values(response.holdings).forEach((holding) => {
-            if (holding.assetClass) {
-              assetClassesSet.add(holding.assetClass);
+            if (holding.assetProfile.assetClass) {
+              assetClassesSet.add(holding.assetProfile.assetClass);
             }
           });
           this.assetClasses = Array.from(assetClassesSet).map((ac) => ({
@@ -277,8 +280,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       const holdingData = existingFilter.holdings[0];
       const holding = this.holdings.find(
         (h) =>
-          h.dataSource === holdingData.dataSource &&
-          h.symbol === holdingData.symbol
+          h.assetProfile.dataSource === holdingData.dataSource &&
+          h.assetProfile.symbol === holdingData.symbol
       );
       if (holding) {
         filterValue.holding = holding;
@@ -335,13 +338,19 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private async updateAccess() {
+    const accessId = this.data.access?.id;
+
+    if (!accessId) {
+      return;
+    }
+
     const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
 
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
       filter,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      id: this.data.access.id,
+      id: accessId,
       permissions: [this.accessForm.get('permissions')?.value]
     };
 

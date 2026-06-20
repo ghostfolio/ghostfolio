@@ -6,6 +6,7 @@ import {
 } from '@ghostfolio/common/config';
 import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import {
+  canDeleteAssetProfile,
   DATE_FORMAT,
   getCurrencyFromSymbol,
   isCurrency
@@ -188,6 +189,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   );
 
+  protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected canEditAssetProfile = true;
 
   protected countries: {
@@ -575,13 +577,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
       assetClass: this.assetProfileForm.controls.assetClass.value ?? undefined,
       assetSubClass:
         this.assetProfileForm.controls.assetSubClass.value ?? undefined,
-      comment: this.assetProfileForm.controls.comment.value ?? undefined,
+      comment: this.assetProfileForm.controls.comment.value || undefined,
       currency: this.assetProfileForm.controls.currency.value ?? undefined,
       isActive: isBoolean(this.assetProfileForm.controls.isActive.value)
         ? this.assetProfileForm.controls.isActive.value
         : undefined,
-      name: this.assetProfileForm.controls.name.value ?? undefined,
-      url: this.assetProfileForm.controls.url.value ?? undefined
+      name: this.assetProfileForm.controls.name.value || undefined,
+      url: this.assetProfileForm.controls.url.value || undefined
     };
 
     try {

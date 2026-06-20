@@ -117,13 +117,12 @@
               <gf-value
                 i18n
                 size="medium"
+                [class.text-danger]="
+                  marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
+                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                "
                 [isCurrency]="true"
                 [locale]="data.locale"
-                [ngClass]="{
-                  'text-danger':
-                    marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
-                    marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
-                }"
                 [precision]="marketPriceMinPrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPriceMin"
@@ -134,13 +133,12 @@
               <gf-value
                 i18n
                 size="medium"
+                [class.text-success]="
+                  marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
+                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                "
                 [isCurrency]="true"
                 [locale]="data.locale"
-                [ngClass]="{
-                  'text-success':
-                    marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
-                    marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
-                }"
                 [precision]="marketPriceMaxPrecision"
                 [unit]="SymbolProfile?.currency"
                 [value]="marketPriceMax"
@@ -310,9 +308,7 @@
               <gf-value
                 i18n
                 size="medium"
-                [enableCopyToClipboardButton]="
-                  user?.settings?.isExperimentalFeatures
-                "
+                [enableCopyToClipboardButton]="true"
                 [hidden]="!SymbolProfile?.symbol"
                 [value]="SymbolProfile?.symbol"
                 >Symbol</gf-value
@@ -321,9 +317,7 @@
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"
-                [enableCopyToClipboardButton]="
-                  user?.settings?.isExperimentalFeatures
-                "
+                [enableCopyToClipboardButton]="true"
                 [hidden]="!SymbolProfile?.isin"
                 [value]="SymbolProfile?.isin"
                 >ISIN</gf-value
@@ -359,6 +353,8 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
           [showActions]="
             !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
@@ -373,6 +369,7 @@
           (activityToClone)="onCloneActivity($event)"
           (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
+          (pageChanged)="onChangePage($event)"
         />
       </mat-tab>
       <mat-tab>
@@ -440,11 +437,10 @@
                 mat-stroked-button
                 (click)="onCloseHolding()"
               >
-                <ion-icon
-                  class="mr-1"
-                  name="arrow-down-circle-outline"
-                ></ion-icon
-                ><span i18n>Close Holding</span>
+                <ion-icon class="mr-1" name="arrow-down-circle-outline" /><span
+                  i18n
+                  >Close Holding</span
+                >
               </button>
             }
             @if (

@@ -1,5 +1,6 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { DEFAULT_DATE_RANGE } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
@@ -22,11 +23,11 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators
@@ -52,7 +53,6 @@ import { addIcons } from 'ionicons';
 import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash';
 import ms from 'ms';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { ImportStep } from './enums/import-step';
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
@@ -82,51 +82,48 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class GfImportActivitiesDialogComponent {
-  public accounts: CreateAccountWithBalancesDto[] = [];
-  public activities: Activity[] = [];
-  public assetProfileForm: FormGroup;
-  public assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
-  public dataSource: MatTableDataSource<Activity>;
-  public details: any[] = [];
-  public deviceType: string;
-  public dialogTitle = $localize`Import Activities`;
-  public errorMessages: string[] = [];
-  public holdings: PortfolioPosition[] = [];
-  public importStep: ImportStep = ImportStep.UPLOAD_FILE;
-  public isLoading = false;
-  public mode: 'DIVIDEND';
-  public pageIndex = 0;
-  public pageSize = 8;
-  public selectedActivities: Activity[] = [];
-  public sortColumn = 'date';
-  public sortDirection: SortDirection = 'desc';
-  public stepperOrientation: StepperOrientation;
-  public tags: CreateTagDto[] = [];
-  public totalItems: number;
+  protected readonly assetProfileForm = new FormGroup({
+    assetProfileIdentifier: new FormControl<PortfolioPosition | null>(null, {
+      validators: [Validators.required]
+    })
+  });
+  protected readonly data =
+    inject<ImportActivitiesDialogParams>(MAT_DIALOG_DATA);
+  protected dataSource: MatTableDataSource<Activity>;
+  protected details: any[] = [];
+  protected dialogTitle = $localize`Import Activities`;
+  protected errorMessages: string[] = [];
+  protected holdings: PortfolioPosition[] = [];
+  protected importStep: ImportStep = ImportStep.UPLOAD_FILE;
+  protected isLoading = false;
+  protected mode: 'DIVIDEND';
+  protected pageIndex = 0;
+  protected readonly pageSize = 8;
+  protected selectedActivities: Activity[] = [];
+  protected readonly sortColumn = 'date';
+  protected readonly sortDirection: SortDirection = 'desc';
+  protected readonly stepperOrientation: StepperOrientation =
+    this.data.deviceType === 'mobile' ? 'vertical' : 'horizontal';
+  protected totalItems: number;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
-    private importActivitiesService: ImportActivitiesService,
-    private snackBar: MatSnackBar
-  ) {
+  private accounts: CreateAccountWithBalancesDto[] = [];
+  private activities: Activity[] = [];
+  private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+  private tags: CreateTagDto[] = [];
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfImportActivitiesDialogComponent>>(MatDialogRef);
+  private readonly importActivitiesService = inject(ImportActivitiesService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  public constructor() {
     addIcons({ cloudUploadOutline, warningOutline });
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-    this.stepperOrientation =
-      this.deviceType === 'mobile' ? 'vertical' : 'horizontal';
-
-    this.assetProfileForm = this.formBuilder.group({
-      assetProfileIdentifier: [undefined, Validators.required]
-    });
-
     if (
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
@@ -135,7 +132,7 @@ export class GfImportActivitiesDialogComponent {
 
       this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
-      this.assetProfileForm.get('assetProfileIdentifier').disable();
+      this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
       this.dataService
         .fetchPortfolioHoldings({
@@ -149,14 +146,15 @@ export class GfImportActivitiesDialogComponent {
               type: 'ASSET_CLASS'
             }
           ],
-          range: 'max'
+          range: DEFAULT_DATE_RANGE
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
-          this.holdings = sortBy(holdings, ({ name }) => {
-            return name.toLowerCase();
+          this.holdings = sortBy(holdings, ({ assetProfile }) => {
+            return assetProfile.name.toLowerCase();
           });
-          this.assetProfileForm.get('assetProfileIdentifier').enable();
+
+          this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
           this.isLoading = false;
 
@@ -165,11 +163,11 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onImportActivities() {
+  protected async onImportActivities() {
     try {
       this.snackBar.open('⏳ ' + $localize`Importing data...`);
 
@@ -202,7 +200,7 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  public onFilesDropped({
+  protected onFilesDropped({
     files,
     stepper
   }: {
@@ -216,7 +214,7 @@ export class GfImportActivitiesDialogComponent {
     this.handleFile({ stepper, file: files[0] });
   }
 
-  public onImportStepChange(event: StepperSelectionEvent) {
+  protected onImportStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
       this.importStep = ImportStep.UPLOAD_FILE;
     } else if (event.selectedIndex === ImportStep.SELECT_ACTIVITIES) {
@@ -224,12 +222,16 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  public onLoadDividends(aStepper: MatStepper) {
-    this.assetProfileForm.get('assetProfileIdentifier').disable();
+  protected onLoadDividends(aStepper: MatStepper) {
+    this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
-    const { dataSource, symbol } = this.assetProfileForm.get(
-      'assetProfileIdentifier'
-    ).value;
+    const { dataSource, symbol } =
+      this.assetProfileForm.controls.assetProfileIdentifier.value
+        ?.assetProfile ?? {};
+
+    if (!dataSource || !symbol) {
+      return;
+    }
 
     this.dataService
       .fetchDividendsImport({
@@ -249,47 +251,45 @@ export class GfImportActivitiesDialogComponent {
       });
   }
 
-  public onPageChanged({ pageIndex }: PageEvent) {
+  protected onPageChanged({ pageIndex }: PageEvent) {
     this.pageIndex = pageIndex;
   }
 
-  public onReset(aStepper: MatStepper) {
+  protected onReset(aStepper: MatStepper) {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
     this.pageIndex = 0;
-    this.assetProfileForm.get('assetProfileIdentifier').enable();
+    this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
     aStepper.reset();
   }
 
-  public onSelectFile(stepper: MatStepper) {
+  protected onSelectFile(stepper: MatStepper) {
     const input = document.createElement('input');
+
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
 
     input.onchange = (event) => {
       // Getting the file reference
-      const file = (event.target as HTMLInputElement).files[0];
-      this.handleFile({ file, stepper });
+      const file = (event.target as HTMLInputElement).files?.[0];
+
+      if (file) {
+        this.handleFile({ file, stepper });
+      }
     };
 
     input.click();
   }
 
-  public updateSelection(activities: Activity[]) {
+  protected updateSelection(activities: Activity[]) {
     this.selectedActivities = activities.filter(({ error }) => {
       return !error;
     });
   }
 
-  private async handleFile({
-    file,
-    stepper
-  }: {
-    file: File;
-    stepper: MatStepper;
-  }): Promise<void> {
+  private handleFile({ file, stepper }: { file: File; stepper: MatStepper }) {
     this.snackBar.open('⏳ ' + $localize`Validating data...`);
 
     // Setting up the reader
@@ -297,7 +297,7 @@ export class GfImportActivitiesDialogComponent {
     reader.readAsText(file, 'UTF-8');
 
     reader.onload = async (readerEvent) => {
-      const fileContent = readerEvent.target.result as string;
+      const fileContent = readerEvent.target?.result as string;
       const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
       try {

@@ -5,3 +5,8 @@ export interface UserDetailDialogParams {
   locale: string;
   userId: string;
 }
+
+export interface UserDetailDialogResult {
+  action: 'delete';
+  userId: string;
+}

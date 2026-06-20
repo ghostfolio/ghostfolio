@@ -109,7 +109,8 @@ export class GfPortfolioFilterFormComponent
     }
 
     return (
-      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
+      getAssetProfileIdentifier(option.assetProfile) ===
+      getAssetProfileIdentifier(value.assetProfile)
     );
   }
 

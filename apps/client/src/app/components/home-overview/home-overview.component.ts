@@ -2,7 +2,11 @@ import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/p
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_DATE_RANGE,
+  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+} from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   LineChartItem,
@@ -14,13 +18,14 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
+  computed,
   DestroyRef,
-  OnInit
+  inject,
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,80 +33,80 @@ import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,
     MatButtonModule,
     RouterModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-overview',
   styleUrls: ['./home-overview.scss'],
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnInit {
-  public deviceType: string;
-  public errors: AssetProfileIdentifier[];
-  public hasError: boolean;
-  public hasImpersonationId: boolean;
-  public hasPermissionToCreateActivity: boolean;
-  public historicalDataItems: LineChartItem[];
-  public isAllTimeHigh: boolean;
-  public isAllTimeLow: boolean;
-  public isLoadingPerformance = true;
-  public performance: PortfolioPerformance;
-  public performanceLabel = $localize`Performance`;
-  public precision = 2;
-  public routerLinkAccounts = internalRoutes.accounts.routerLink;
-  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
-  public routerLinkPortfolioActivities =
-    internalRoutes.portfolio.subRoutes.activities.routerLink;
-  public showDetails = false;
-  public unit: string;
-  public user: User;
+  protected readonly errors = signal<AssetProfileIdentifier[]>([]);
+  protected readonly hasImpersonationId = signal(false);
+  protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
+  protected readonly isLoadingPerformance = signal(true);
+  protected readonly performance = signal<PortfolioPerformance | null>(null);
+  protected readonly performanceLabel = $localize`Performance`;
+  protected readonly precision = signal(2);
+  protected readonly user = signal<User | null>(null);
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private layoutService: LayoutService,
-    private userService: UserService
-  ) {
+  protected readonly routerLinkAccounts = internalRoutes.accounts.routerLink;
+  protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  protected readonly routerLinkPortfolioActivities =
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
+
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
+  protected readonly hasPermissionToCreateActivity = computed(() => {
+    return hasPermission(this.user()?.permissions, permissions.createActivity);
+  });
+
+  protected readonly showDetails = computed(() => {
+    const user = this.user();
+
+    return user
+      ? !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN'
+      : false;
+  });
+
+  protected readonly unit = computed(() => {
+    return this.showDetails()
+      ? (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY)
+      : '%';
+  });
+
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly layoutService = inject(LayoutService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
-
-          this.hasPermissionToCreateActivity = hasPermission(
-            this.user.permissions,
-            permissions.createActivity
-          );
-
+          this.user.set(state.user);
           this.update();
         }
       });
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
-    this.showDetails =
-      !this.user.settings.isRestrictedView &&
-      this.user.settings.viewMode !== 'ZEN';
-
-    this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-
-        this.changeDetectorRef.markForCheck();
+        this.hasImpersonationId.set(!!impersonationId);
       });
 
     this.layoutService.shouldReloadContent$
@@ -112,40 +117,40 @@ export class GfHomeOverviewComponent implements OnInit {
   }
 
   private update() {
-    this.historicalDataItems = null;
-    this.isLoadingPerformance = true;
+    this.historicalDataItems.set(null);
+    this.isLoadingPerformance.set(true);
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: this.user?.settings?.dateRange
+        range: this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
-        this.errors = errors;
-        this.performance = performance;
+        this.errors.set(errors ?? []);
+        this.performance.set(performance);
 
-        this.historicalDataItems = chart.map(
-          ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
-            return {
-              date,
-              value: netPerformanceInPercentageWithCurrencyEffect * 100
-            };
-          }
+        this.historicalDataItems.set(
+          chart?.map(
+            ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
+              return {
+                date,
+                value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
+              };
+            }
+          ) ?? null
         );
 
+        this.precision.set(2);
+
         if (
-          this.deviceType === 'mobile' &&
-          this.performance.currentValueInBaseCurrency >=
+          this.deviceType() === 'mobile' &&
+          performance.currentValueInBaseCurrency >=
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
-          this.precision = 0;
+          this.precision.set(0);
         }
 
-        this.isLoadingPerformance = false;
-
-        this.changeDetectorRef.markForCheck();
+        this.isLoadingPerformance.set(false);
       });
-
-    this.changeDetectorRef.markForCheck();
   }
 }

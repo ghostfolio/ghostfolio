@@ -1,27 +1,27 @@
 import { GfPortfolioSummaryComponent } from '@ghostfolio/client/components/portfolio-summary/portfolio-summary.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  InfoItem,
-  PortfolioSummary,
-  User
-} from '@ghostfolio/common/interfaces';
+import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
-  ChangeDetectorRef,
+  ChangeDetectionStrategy,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  OnInit
+  inject,
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
-import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { switchMap } from 'rxjs';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [GfPortfolioSummaryComponent, MatCardModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-summary',
@@ -29,87 +29,75 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-summary.html'
 })
 export class GfHomeSummaryComponent implements OnInit {
-  public deviceType: string;
-  public hasImpersonationId: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public info: InfoItem;
-  public isLoading = true;
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
-  public summary: PortfolioSummary;
-  public user: User;
+  protected readonly hasImpersonationId = signal<boolean>(false);
+  protected readonly isLoading = signal(true);
+  protected readonly summary = signal<PortfolioSummary | undefined>(undefined);
+  protected readonly user = signal<User | undefined>(undefined);
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private userService: UserService
-  ) {
-    this.info = this.dataService.fetchInfo();
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
+  protected readonly hasPermissionToUpdateUserSettings = computed(() => {
+    const user = this.user();
 
+    return user
+      ? hasPermission(user.permissions, permissions.updateUserSettings)
+      : false;
+  });
+
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
-
-          this.hasPermissionToUpdateUserSettings = hasPermission(
-            this.user.permissions,
-            permissions.updateUserSettings
-          );
-
+          this.user.set(state.user);
           this.update();
         }
       });
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.hasImpersonationId.set(!!impersonationId);
       });
   }
 
-  public onChangeEmergencyFund(emergencyFund: number) {
+  protected onChangeEmergencyFund(emergencyFund: number) {
     this.dataService
       .putUserSetting({ emergencyFund })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
+      .pipe(
+        switchMap(() => this.userService.get(true)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((user) => {
+        this.user.set(user);
       });
   }
 
   private update() {
-    this.isLoading = true;
+    this.isLoading.set(true);
 
     this.dataService
       .fetchPortfolioDetails()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ summary }) => {
-        this.summary = summary;
-        this.isLoading = false;
+        if (summary) {
+          this.summary.set(summary);
+        }
 
-        this.changeDetectorRef.markForCheck();
+        this.isLoading.set(false);
       });
-
-    this.changeDetectorRef.markForCheck();
   }
 }

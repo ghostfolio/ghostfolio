@@ -4,7 +4,7 @@
   (keyup.enter)="tagForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  @if (data.tag.id) {
+  @if (data.tag?.id) {
     <h1 i18n mat-dialog-title>Update tag</h1>
   } @else {
     <h1 i18n mat-dialog-title>Add tag</h1>

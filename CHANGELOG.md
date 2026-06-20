@@ -5,7 +5,181 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.255.0 - 2026-03-20
+## 3.7.0 - 2026-06-02
+
+### Added
+
+- Added support for routing selected requests through the _OpenRouter_ `web_fetch` tool in the `FetchService`
+
+### Changed
+
+- Extended the countries mapping in the data enhancer for asset profile data via _Trackinsight_
+- Removed the deprecated attributes (`assetClass`, `assetClassLabel`, `assetSubClass`, `assetSubClassLabel`, `countries`, `currency`, `dataSource`, `holdings`, `name`, `sectors`, `symbol` and `url`) from the holdings of the portfolio details endpoint response
+- Upgraded `Nx` from version `22.7.2` to `22.7.5`
+
+### Fixed
+
+- Resolved an issue in the impersonation mode where the values did not match the owner’s currency
+- Fixed the environment variable expansion in the `.env` file when debugging via _Visual Studio Code_
+
+## 3.6.0 - 2026-05-28
+
+### Added
+
+- Added `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variable support to outbound HTTP requests
+- Added the `FetchService` to centralize outbound HTTP requests
+
+### Changed
+
+- Extracted the floating action buttons (FAB) to a reusable component
+- Upgraded `nestjs` from version `11.1.19` to `11.1.21`
+- Upgraded `yahoo-finance2` from version `3.14.0` to `3.14.2`
+
+## 3.5.0 - 2026-05-24
+
+### Added
+
+- Configured the `min-release-age` in `.npmrc`
+
+### Changed
+
+- Removed the deprecated attributes (`assetClass`, `countries`, `currency`, `dataSource`, `name`, `sectors`, `symbol` and `url`) from the holdings of the public portfolio endpoint response
+- Removed the deprecated `api/v1/order` endpoints
+- Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
+
+### Fixed
+
+- Fixed a layout regression that caused a double scrollbar on pages without tabs
+- Resolved an issue with missing cash positions caused by an incorrect data source
+
+## 3.4.0 - 2026-05-21
+
+### Added
+
+- Added the icon column to the benchmark component
+- Added support for the `DIRECT_URL` environment variable to enable direct database connections
+
+### Changed
+
+- Improved the pagination in the activities table of the account detail dialog
+- Improved the pagination in the activities table of the holding detail dialog
+- Randomized the placeholder in the assistant
+- Filtered out sectors with zero weight for ETF and mutual fund assets in the _Yahoo Finance_ data enhancer
+- Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
+- Improved the verification of the _Stripe_ checkout session when creating a subscription
+- Relaxed the URL validation in the asset profile DTOs to accept both `HTTP` and `HTTPS` protocols
+- Relaxed the URL validation in the platform DTOs to accept both `HTTP` and `HTTPS` protocols
+- Extracted the page tabs to a reusable component
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `bull-board` from version `7.0.0` to `7.1.5`
+- Upgraded `Nx` from version `22.7.1` to `22.7.2`
+
+### Fixed
+
+- Resolved an issue with the cash balance calculation of an account for `SELL` activities to ensure fees are correctly subtracted
+- Resolved an exception in the portfolio details endpoint when an asset profile is unmatched
+
+## 3.3.0 - 2026-05-14
+
+### Added
+
+- Added `nestjs-best-practices` skills
+
+### Changed
+
+- Deactivated asset profiles automatically on delisting in the _Financial Modeling Prep_ service
+- Migrated various components from `NgClass` to class bindings
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Spanish (`es`)
+- Cleaned up the _Webpack Bundle Analyzer_ setup
+- Upgraded `@internationalized/number` from version `3.6.5` to `3.6.6`
+- Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
+- Upgraded `@openrouter/ai-sdk-provider` from version `0.7.2` to `2.9.0`
+- Upgraded `ai` from version `4.3.16` to `6.0.174`
+- Upgraded `bull-board` from version `6.20.3` to `7.0.0`
+- Upgraded `countries-and-timezones` from version `3.8.0` to `3.9.0`
+- Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
+- Upgraded `Nx` from version `22.6.5` to `22.7.1`
+- Upgraded `papaparse` from version `5.3.1` to `5.5.3`
+- Upgraded `prisma` from version `7.7.0` to `7.8.0`
+
+### Fixed
+
+- Synchronized the native browser elements with the theme to improve the dark mode
+- Fixed a visual regression in the bottom navigation bar on mobile
+
+## 3.2.0 - 2026-05-03
+
+### Added
+
+- Added `angular-developer` skills
+
+### Changed
+
+- Harmonized the unit styling in the value component
+- Upgraded `stripe` from version `20.4.1` to `21.0.1`
+
+### Fixed
+
+- Resolved a validation error with an empty URL in the asset profile details dialog of the admin control panel
+- Resolved an issue where charts and components defaulted to _Roboto_ instead of the preconfigured _Inter_ font family
+
+## 3.1.0 - 2026-04-29
+
+### Added
+
+- Added the _EuroAlternative_ logo to the logo carousel on the landing page
+- Integrated a theme switcher into _Storybook_ to support toggling between the light and dark mode
+
+### Changed
+
+- Modernized the layout of the overview tab in the admin control panel
+- Improved the styling of the paginator across various table components
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Optimized the spacing of the logo in the header
+- Fixed the _Storybook_ setup by resolving missing `@angular/material` styles
+
+## 3.0.1 - 2026-04-26
+
+### Changed
+
+- Moved the copy-to-clipboard button for the ISIN number in the holding detail dialog from experimental to general availability
+- Moved the copy-to-clipboard button for the symbol in the holding detail dialog from experimental to general availability
+- Improved the styling of buttons and input fields across various components
+- Upgraded `prettier` from version `3.8.2` to `3.8.3`
+
+### Fixed
+
+- Fixed the cash label in the holdings table of the portfolio holdings page
+- Fixed the cash label in the holdings table of the public page
+
+## 3.0.0 - 2026-04-23
+
+### Added
+
+- Added a blog post: _Announcing Ghostfolio 3.0_
+
+### Changed
+
+- Migrated from _Material Design_ 2 to _Material Design_ 3
+- Moved the total amount, change and performance with currency effects on the analysis page from experimental to general availability
+- Refreshed the cryptocurrencies list
+- Upgraded `countup.js` from version `2.9.0` to `2.10.0`
+- Upgraded `jsonpath` from version `1.2.1` to `1.3.0`
+- Upgraded `nestjs` from version `11.1.14` to `11.1.19`
+- Upgraded `ngx-markdown` from version `21.1.0` to `21.2.0`
+- Upgraded `Nx` from version `22.6.4` to `22.6.5`
+- Upgraded `prisma` from version `6.19.0` to `7.7.0`
+
+### Todo
+
+- **Breaking Change**: The `sslmode=prefer` parameter in `DATABASE_URL` is no longer supported. Please update your environment variables (see `.env`) to use `sslmode=require` if _SSL_ is enabled or remove the `sslmode` parameter entirely if _SSL_ is not used.
+
+## 2.255.0 - 2026-04-20
 
 ### Changed
 
@@ -22,7 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the missing value column of the accounts table component on mobile
 
-## 2.254.0 - 2026-03-10
+## 2.254.0 - 2026-04-10
 
 ### Added
 
@@ -40,7 +214,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the activity type component
 
-## 2.253.0 - 2026-03-06
+## 2.253.0 - 2026-04-06
 
 ### Added
 
@@ -60,7 +234,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the allocations by ETF provider chart on the allocations page in the _Presenter View_
 - Fixed the allocations by platform chart on the allocations page in the _Presenter View_
 
-## 2.252.0 - 2026-03-02
+## 2.252.0 - 2026-04-02
 
 ### Added
 

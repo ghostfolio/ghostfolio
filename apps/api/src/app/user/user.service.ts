@@ -26,12 +26,14 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_DATE_RANGE,
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   locale as defaultLocale
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   User as IUser,
   SystemMessage,
@@ -47,7 +49,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { without } from 'lodash';
 import { createHmac } from 'node:crypto';
@@ -107,7 +109,14 @@ export class UserService {
   }): Promise<IUser> {
     const { id, permissions, settings, subscription } = user;
 
-    const userData = await Promise.all([
+    const [
+      access,
+      accounts,
+      activitiesCount,
+      firstActivity,
+      impersonationUserSettings,
+      tagsForUser
+    ] = await Promise.all([
       this.prismaService.access.findMany({
         include: {
           user: true
@@ -132,16 +141,17 @@ export class UserService {
         },
         where: { userId: impersonationUserId || user.id }
       }),
+      impersonationUserId
+        ? this.prismaService.settings.findUnique({
+            where: { userId: impersonationUserId }
+          })
+        : Promise.resolve<Settings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const access = userData[0];
-    const accounts = userData[1];
-    const activitiesCount = userData[2];
-    const firstActivity = userData[3];
-    let tags = userData[4].filter((tag) => {
-      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
-    });
+    const baseCurrency =
+      (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
+      (settings.settings as UserSettings)?.baseCurrency;
 
     let systemMessage: SystemMessage;
 
@@ -154,9 +164,13 @@ export class UserService {
       systemMessage = systemMessageProperty;
     }
 
+    let tags = tagsForUser.filter((tag) => {
+      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    });
+
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      subscription.type === 'Basic'
+      subscription.type === SubscriptionType.Basic
     ) {
       tags = [];
     }
@@ -181,6 +195,7 @@ export class UserService {
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
+        baseCurrency,
         locale: (settings.settings as UserSettings)?.locale ?? locale
       }
     };
@@ -280,7 +295,8 @@ export class UserService {
     (user.settings.settings as UserSettings).dateRange =
       (user.settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : ((user.settings.settings as UserSettings)?.dateRange ?? 'max');
+        : ((user.settings.settings as UserSettings)?.dateRange ??
+          DEFAULT_DATE_RANGE);
 
     // Set default value for performance calculation type
     if (!(user.settings.settings as UserSettings)?.performanceCalculationType) {
@@ -443,7 +459,7 @@ export class UserService {
         createdAt: user.createdAt
       });
 
-      if (user.subscription?.type === 'Basic') {
+      if (user.subscription?.type === SubscriptionType.Basic) {
         const daysSinceRegistration = differenceInDays(
           new Date(),
           user.createdAt
@@ -485,7 +501,7 @@ export class UserService {
 
         // Reset holdings view mode
         user.settings.settings.holdingsViewMode = undefined;
-      } else if (user.subscription?.type === 'Premium') {
+      } else if (user.subscription?.type === SubscriptionType.Premium) {
         if (!hasRole(user, Role.DEMO)) {
           currentPermissions.push(permissions.createApiKey);
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
@@ -531,7 +547,7 @@ export class UserService {
     }
 
     if (hasRole(user, Role.ADMIN)) {
-      if (this.configurationService.get('ENABLE_FEATURE_BULL_BOARD')) {
+      if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
         currentPermissions.push(permissions.accessAdminControlBullBoard);
       }
 

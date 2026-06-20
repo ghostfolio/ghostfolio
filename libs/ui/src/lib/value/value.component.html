@@ -27,7 +27,7 @@
   @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
-      [ngClass]="position === 'end' ? 'justify-content-end' : ''"
+      [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
         @if (colorizeSign && !useAbsoluteValue) {
@@ -38,54 +38,30 @@
             <div class="mr-1 text-danger">-</div>
           }
         }
-        @if (isPercent) {
-          <div
-            class="mb-0 value"
-            [ngClass]="{
-              'font-weight-bold h2': size === 'large',
-              h4: size === 'medium'
-            }"
-          >
-            @if (value === null) {
-              <span class="text-monospace text-muted">*****</span>%
-            } @else {
-              {{ formattedValue }}%
-            }
-          </div>
-        } @else {
-          <div
-            class="mb-0 value"
-            [ngClass]="{
-              'font-weight-bold h2': size === 'large',
-              h4: size === 'medium'
-            }"
-          >
-            @if (value === null) {
-              <span class="text-monospace text-muted">*****</span>
-            } @else {
-              {{ formattedValue }}
-            }
-          </div>
-        }
-        @if (unit) {
-          @if (size === 'medium') {
-            <small class="ml-1">
-              {{ unit }}
-            </small>
+        <div
+          class="mb-0 value"
+          [class.font-weight-bold]="size === 'large'"
+          [class.h2]="size === 'large'"
+          [class.h4]="size === 'medium'"
+        >
+          @if (value === null) {
+            <span class="text-monospace text-muted">*****</span>
           } @else {
-            <div class="ml-1">
-              {{ unit }}
-            </div>
+            {{ formattedValue }}
           }
+        </div>
+        @if (isPercent || unit) {
+          <div class="ml-1">
+            {{ isPercent ? '%' : unit }}
+          </div>
         }
       }
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
-          [ngClass]="{
-            'font-weight-bold h2': size === 'large',
-            h4: size === 'medium'
-          }"
+          [class.font-weight-bold]="size === 'large'"
+          [class.h2]="size === 'large'"
+          [class.h4]="size === 'medium'"
         >
           {{ formattedValue }}
         </div>

@@ -100,10 +100,12 @@ export class SubscriptionController {
       request.query.checkoutSessionId as string
     );
 
-    Logger.log(
-      `Subscription for user '${userId}' has been created via Stripe`,
-      'SubscriptionController'
-    );
+    if (userId) {
+      Logger.log(
+        `Subscription for user '${userId}' has been created via Stripe`,
+        'SubscriptionController'
+      );
+    }
 
     response.redirect(
       `${this.configurationService.get(

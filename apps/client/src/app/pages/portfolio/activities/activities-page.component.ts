@@ -12,6 +12,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -21,17 +22,13 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 import { format, parseISO } from 'date-fns';
-import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 
@@ -41,11 +38,9 @@ import { GfImportActivitiesDialogComponent } from './import-activities-dialog/im
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
-  host: { class: 'has-fab' },
   imports: [
     GfActivitiesTableComponent,
-    IonIcon,
-    MatButtonModule,
+    GfFabComponent,
     MatSnackBarModule,
     RouterModule
   ],
@@ -72,7 +67,7 @@ export class GfActivitiesPageComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog,
     private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
@@ -107,12 +102,10 @@ export class GfActivitiesPageComponent implements OnInit {
           }
         }
       });
-
-    addIcons({ addOutline });
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

@@ -5,7 +5,6 @@ import {
   XRayRulesSettings
 } from '@ghostfolio/common/interfaces';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -37,13 +36,7 @@ import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-setti
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    IonIcon,
-    MatButtonModule,
-    MatMenuModule,
-    NgxSkeletonLoaderModule
-  ],
+  imports: [IonIcon, MatButtonModule, MatMenuModule, NgxSkeletonLoaderModule],
   selector: 'gf-rule',
   styleUrls: ['./rule.component.scss'],
   templateUrl: './rule.component.html'
@@ -61,7 +54,7 @@ export class GfRuleComponent implements OnInit {
   private deviceType: string;
   public constructor(
     private destroyRef: DestroyRef,
-    private deviceService: DeviceDetectorService,
+    private deviceDetectorService: DeviceDetectorService,
     private dialog: MatDialog
   ) {
     addIcons({
@@ -75,7 +68,7 @@ export class GfRuleComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 
   public onCustomizeRule(rule: PortfolioReportRule) {

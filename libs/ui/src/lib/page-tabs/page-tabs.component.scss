@@ -1,0 +1,68 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  @include mat.tabs-overrides(
+    (
+      active-indicator-height: 0,
+      divider-height: 0,
+      label-text-tracking: normal
+    )
+  );
+
+  ::ng-deep {
+    .mat-mdc-tab-nav-panel {
+      padding: 2rem 0;
+
+      @media (max-width: 575.98px) {
+        padding: 1rem 0;
+      }
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    @include mat.tabs-overrides(
+      (
+        container-height: 3rem
+      )
+    );
+  }
+
+  @media (min-width: 576px) {
+    flex-direction: row-reverse;
+
+    @include mat.tabs-overrides(
+      (
+        container-height: 2rem
+      )
+    );
+
+    ::ng-deep {
+      .mat-mdc-tab-header {
+        background-color: rgba(var(--palette-foreground-base), 0.02);
+        padding: 2rem 0;
+        width: 14rem;
+
+        .mat-mdc-tab-links {
+          flex-direction: column;
+
+          .mat-mdc-tab-link {
+            justify-content: flex-start;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  @media (min-width: 576px) {
+    .mat-mdc-tab-header {
+      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+    }
+  }
+}

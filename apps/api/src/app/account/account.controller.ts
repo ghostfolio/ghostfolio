@@ -1,5 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
@@ -50,7 +51,8 @@ export class AccountController {
     private readonly apiService: ApiService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Delete(':id')
@@ -137,11 +139,14 @@ export class AccountController {
   ): Promise<AccountBalancesResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
+    const userId = impersonationUserId || this.request.user.id;
+
+    const { settings } = await this.userService.user({ id: userId });
 
     return this.accountBalanceService.getAccountBalances({
+      userId,
       filters: [{ id, type: 'ACCOUNT' }],
-      userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: impersonationUserId || this.request.user.id
+      userCurrency: settings.settings.baseCurrency
     });
   }
 

@@ -1,4 +1,5 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -14,9 +15,11 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
+  DEFAULT_DATE_RANGE,
   HEADER_KEY_IMPERSONATION,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   PortfolioDetails,
   PortfolioDividendsResponse,
@@ -68,7 +71,8 @@ export class PortfolioController {
     private readonly configurationService: ConfigurationService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Get('details')
@@ -81,7 +85,7 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('withMarkets') withMarketsParam = 'false'
@@ -92,7 +96,8 @@ export class PortfolioController {
     let hasError = false;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      hasDetails = this.request.user.subscription.type === 'Premium';
+      hasDetails =
+        this.request.user.subscription.type === SubscriptionType.Premium;
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -141,10 +146,10 @@ export class PortfolioController {
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .filter(({ assetClass, assetSubClass }) => {
+        .filter(({ assetProfile }) => {
           return (
-            assetClass !== AssetClass.LIQUIDITY &&
-            assetSubClass !== AssetSubClass.CASH
+            assetProfile.assetClass !== AssetClass.LIQUIDITY &&
+            assetProfile.assetSubClass !== AssetSubClass.CASH
           );
         })
         .map(({ valueInBaseCurrency }) => {
@@ -214,22 +219,41 @@ export class PortfolioController {
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       holdings[symbol] = {
         ...portfolioPosition,
-        assetClass:
-          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
-            ? portfolioPosition.assetClass
-            : undefined,
-        assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
-            ? portfolioPosition.assetSubClass
-            : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        holdings: hasDetails ? portfolioPosition.holdings : [],
+        assetProfile: {
+          ...portfolioPosition.assetProfile,
+          assetClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClass
+              : undefined,
+          assetClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClassLabel
+              : undefined,
+          assetSubClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClass
+              : undefined,
+          assetSubClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClassLabel
+              : undefined,
+          ...(hasDetails
+            ? {}
+            : {
+                countries: [],
+                currency: undefined,
+                holdings: [],
+                sectors: []
+              })
+        },
         markets: hasDetails ? portfolioPosition.markets : undefined,
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
-          : undefined,
-        sectors: hasDetails ? portfolioPosition.sectors : []
+          : undefined
       };
     }
 
@@ -304,7 +328,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('groupBy') groupBy?: GroupBy,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividendsResponse> {
@@ -318,7 +342,10 @@ export class PortfolioController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
+    const userId = impersonationUserId || this.request.user.id;
+
+    const { settings } = await this.userService.user({ id: userId });
+    const userCurrency = settings.settings.baseCurrency;
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
@@ -327,7 +354,7 @@ export class PortfolioController {
       filters,
       startDate,
       userCurrency,
-      userId: impersonationUserId || this.request.user.id,
+      userId,
       types: ['DIVIDEND']
     });
 
@@ -356,7 +383,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
+      this.request.user.subscription.type === SubscriptionType.Basic
     ) {
       dividends = dividends.map((item) => {
         return nullifyValuesInObject(item, ['investment']);
@@ -405,7 +432,7 @@ export class PortfolioController {
     @Query('dataSource') filterByDataSource?: string,
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
@@ -438,7 +465,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('groupBy') groupBy?: GroupBy,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestmentsResponse> {
@@ -484,7 +511,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
+      this.request.user.subscription.type === SubscriptionType.Basic
     ) {
       investments = investments.map((item) => {
         return nullifyValuesInObject(item, ['investment']);
@@ -510,7 +537,7 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
@@ -596,7 +623,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
+      this.request.user.subscription.type === SubscriptionType.Basic
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         (item) => {
@@ -624,7 +651,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
+      this.request.user.subscription.type === SubscriptionType.Basic
     ) {
       for (const category of report.xRay.categories) {
         category.rules = null;
