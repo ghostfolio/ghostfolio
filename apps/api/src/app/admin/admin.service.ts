@@ -625,23 +625,23 @@ export class AdminService {
       const symbolProfileOverrides = {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,
+        countries: countries as Prisma.JsonArray,
         name: name as string,
+        sectors: sectors as Prisma.JsonArray,
         url: url as string
       };
 
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
         comment,
-        countries,
         currency,
         dataSource,
         holdings,
         isActive,
         scraperConfiguration,
-        sectors,
         symbol,
         symbolMapping,
         ...(dataSource === 'MANUAL'
-          ? { assetClass, assetSubClass, name, url }
+          ? { assetClass, assetSubClass, countries, name, sectors, url }
           : {
               SymbolProfileOverrides: {
                 upsert: {

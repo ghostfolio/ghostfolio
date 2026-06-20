@@ -21,9 +21,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
-  OnDestroy
+  DestroyRef,
+  Inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -52,7 +53,6 @@ import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, takeUntil } from 'rxjs';
 
 import { ImportStep } from './enums/import-step';
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
@@ -81,7 +81,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   styleUrls: ['./import-activities-dialog.scss'],
   templateUrl: 'import-activities-dialog.html'
 })
-export class GfImportActivitiesDialogComponent implements OnDestroy {
+export class GfImportActivitiesDialogComponent {
   public accounts: CreateAccountWithBalancesDto[] = [];
   public activities: Activity[] = [];
   public assetProfileForm: FormGroup;
@@ -104,12 +104,11 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
   public tags: CreateTagDto[] = [];
   public totalItems: number;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<GfImportActivitiesDialogComponent>,
@@ -152,7 +151,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
           ],
           range: 'max'
         })
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
           this.holdings = sortBy(holdings, ({ name }) => {
             return name.toLowerCase();
@@ -237,7 +236,7 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
         dataSource,
         symbol
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ activities }) => {
         this.activities = activities;
         this.dataSource = new MatTableDataSource(activities.reverse());
@@ -282,11 +281,6 @@ export class GfImportActivitiesDialogComponent implements OnDestroy {
     this.selectedActivities = activities.filter(({ error }) => {
       return !error;
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private async handleFile({

@@ -7,26 +7,24 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
-  HEADER_KEY_TOKEN,
-  PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
+  PROPERTY_DOCKER_HUB_PULLS,
+  PROPERTY_GITHUB_CONTRIBUTORS,
+  PROPERTY_GITHUB_STARGAZERS,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
+  PROPERTY_UPTIME,
   ghostfolioFearAndGreedIndexDataSourceStocks
 } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  encodeDataSource,
-  extractNumberFromString
-} from '@ghostfolio/common/helper';
+import { encodeDataSource } from '@ghostfolio/common/helper';
 import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as cheerio from 'cheerio';
-import { format, subDays } from 'date-fns';
+import { subDays } from 'date-fns';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class InfoService {
@@ -149,68 +147,6 @@ export class InfoService {
     });
   }
 
-  private async countDockerHubPulls(): Promise<number> {
-    try {
-      const { pull_count } = (await fetch(
-        'https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio',
-        {
-          headers: { 'User-Agent': 'request' },
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
-        }
-      ).then((res) => res.json())) as { pull_count: number };
-
-      return pull_count;
-    } catch (error) {
-      Logger.error(error, 'InfoService - DockerHub');
-
-      return undefined;
-    }
-  }
-
-  private async countGitHubContributors(): Promise<number> {
-    try {
-      const body = await fetch('https://github.com/ghostfolio/ghostfolio', {
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
-      }).then((res) => res.text());
-
-      const $ = cheerio.load(body);
-
-      return extractNumberFromString({
-        value: $(
-          'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
-        ).text()
-      });
-    } catch (error) {
-      Logger.error(error, 'InfoService - GitHub');
-
-      return undefined;
-    }
-  }
-
-  private async countGitHubStargazers(): Promise<number> {
-    try {
-      const { stargazers_count } = (await fetch(
-        'https://api.github.com/repos/ghostfolio/ghostfolio',
-        {
-          headers: { 'User-Agent': 'request' },
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
-        }
-      ).then((res) => res.json())) as { stargazers_count: number };
-
-      return stargazers_count;
-    } catch (error) {
-      Logger.error(error, 'InfoService - GitHub');
-
-      return undefined;
-    }
-  }
-
   private async countNewUsers(aDays: number) {
     return this.userService.count({
       where: {
@@ -228,12 +164,6 @@ export class InfoService {
         ]
       }
     });
-  }
-
-  private async countSlackCommunityUsers() {
-    return await this.propertyService.getByKey<string>(
-      PROPERTY_SLACK_COMMUNITY_USERS
-    );
   }
 
   private async getDemoAuthToken() {
@@ -267,65 +197,56 @@ export class InfoService {
       }
     } catch {}
 
-    const activeUsers1d = await this.countActiveUsers(1);
-    const activeUsers30d = await this.countActiveUsers(30);
-    const newUsers30d = await this.countNewUsers(30);
-
-    const dockerHubPulls = await this.countDockerHubPulls();
-    const gitHubContributors = await this.countGitHubContributors();
-    const gitHubStargazers = await this.countGitHubStargazers();
-    const slackCommunityUsers = await this.countSlackCommunityUsers();
-    const uptime = await this.getUptime();
+    const [
+      activeUsers1d,
+      activeUsers30d,
+      newUsers30d,
+      dockerHubPulls,
+      gitHubContributors,
+      gitHubStargazers,
+      slackCommunityUsers,
+      uptime
+    ] = await Promise.all([
+      this.countActiveUsers(1),
+      this.countActiveUsers(30),
+      this.countNewUsers(30),
+      this.propertyService.getByKey<string>(PROPERTY_DOCKER_HUB_PULLS),
+      this.propertyService.getByKey<string>(PROPERTY_GITHUB_CONTRIBUTORS),
+      this.propertyService.getByKey<string>(PROPERTY_GITHUB_STARGAZERS),
+      this.propertyService.getByKey<string>(PROPERTY_SLACK_COMMUNITY_USERS),
+      this.propertyService.getByKey<string>(PROPERTY_UPTIME)
+    ]);
 
     statistics = {
       activeUsers1d,
       activeUsers30d,
-      dockerHubPulls,
-      gitHubContributors,
-      gitHubStargazers,
       newUsers30d,
-      slackCommunityUsers,
-      uptime
+      dockerHubPulls: dockerHubPulls
+        ? Number.parseInt(dockerHubPulls, 10)
+        : undefined,
+      gitHubContributors: gitHubContributors
+        ? Number.parseInt(gitHubContributors, 10)
+        : undefined,
+      gitHubStargazers: gitHubStargazers
+        ? Number.parseInt(gitHubStargazers, 10)
+        : undefined,
+      slackCommunityUsers: slackCommunityUsers
+        ? Number.parseInt(slackCommunityUsers, 10)
+        : undefined,
+      uptime: uptime ? Number.parseFloat(uptime) : undefined
     };
 
-    await this.redisCacheService.set(
-      InfoService.CACHE_KEY_STATISTICS,
-      JSON.stringify(statistics)
-    );
+    if (
+      Object.values(statistics).every((value) => {
+        return !isNil(value);
+      })
+    ) {
+      await this.redisCacheService.set(
+        InfoService.CACHE_KEY_STATISTICS,
+        JSON.stringify(statistics)
+      );
+    }
 
     return statistics;
-  }
-
-  private async getUptime(): Promise<number> {
-    {
-      try {
-        const monitorId = await this.propertyService.getByKey<string>(
-          PROPERTY_BETTER_UPTIME_MONITOR_ID
-        );
-
-        const { data } = await fetch(
-          `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
-            subDays(new Date(), 90),
-            DATE_FORMAT
-          )}&to${format(new Date(), DATE_FORMAT)}`,
-          {
-            headers: {
-              [HEADER_KEY_TOKEN]: `Bearer ${this.configurationService.get(
-                'API_KEY_BETTER_UPTIME'
-              )}`
-            },
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        ).then((res) => res.json());
-
-        return data.attributes.availability / 100;
-      } catch (error) {
-        Logger.error(error, 'InfoService - Better Stack');
-
-        return undefined;
-      }
-    }
   }
 }

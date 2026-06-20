@@ -11,6 +11,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
   Input,
@@ -22,6 +23,7 @@ import {
   ViewChildren,
   output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -40,7 +42,7 @@ import {
 } from 'ionicons/icons';
 import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
+import { EMPTY, Observable, merge, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -48,7 +50,6 @@ import {
   map,
   scan,
   switchMap,
-  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -146,12 +147,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
   private preselectionTimeout: ReturnType<typeof setTimeout>;
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private destroyRef: DestroyRef
   ) {
     addIcons({ closeCircleOutline, closeOutline, searchOutline });
   }
@@ -188,13 +189,17 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
-      return {
-        id: assetClass,
-        label: translate(assetClass),
-        type: 'ASSET_CLASS'
-      };
-    });
+    this.assetClasses = Object.keys(AssetClass)
+      .map((assetClass) => {
+        return {
+          id: assetClass,
+          label: translate(assetClass),
+          type: 'ASSET_CLASS'
+        } satisfies Filter;
+      })
+      .sort((a, b) => {
+        return a.label.localeCompare(b.label);
+      });
 
     this.searchFormControl.valueChanges
       .pipe(
@@ -333,7 +338,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             )
           );
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (searchResults) => {
@@ -434,12 +439,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         ?.filter(({ isUsed }) => {
           return isUsed;
         })
-        .map(({ id, name }) => {
+        ?.map(({ id, name }) => {
           return {
             id,
             label: translate(name),
             type: 'TAG'
-          };
+          } satisfies Filter;
+        })
+        ?.sort((a, b) => {
+          return a.label.localeCompare(b.label);
         }) ?? [];
   }
 
@@ -477,7 +485,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioHoldings()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = holdings
           .filter(({ assetSubClass }) => {
@@ -556,9 +564,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     if (this.preselectionTimeout) {
       clearTimeout(this.preselectionTimeout);
     }
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private getCurrentAssistantListItem() {
@@ -643,7 +648,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             };
           });
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -678,7 +683,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             }
           );
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -710,14 +715,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             }
           );
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
   private searchQuickLinks(aSearchTerm: string): SearchResultItem[] {
     const searchTerm = aSearchTerm.toLowerCase();
 
-    const allRoutes = Object.values(internalRoutes)
+    const allRoutes = Object.values<InternalRoute>(internalRoutes)
       .filter(({ excludeFromAssistant }) => {
         if (isFunction(excludeFromAssistant)) {
           return excludeFromAssistant(this.user);
@@ -725,13 +730,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
         return !excludeFromAssistant;
       })
-      .reduce((acc, route) => {
+      .reduce<InternalRoute[]>((acc, route) => {
         acc.push(route);
         if (route.subRoutes) {
           acc.push(...Object.values(route.subRoutes));
         }
         return acc;
-      }, [] as InternalRoute[]);
+      }, []);
 
     const fuse = new Fuse(allRoutes, {
       keys: ['title'],

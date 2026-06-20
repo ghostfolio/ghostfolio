@@ -209,6 +209,7 @@ export class DataService {
   }
 
   public fetchActivities({
+    activityTypes,
     filters,
     range,
     skip,
@@ -216,6 +217,7 @@ export class DataService {
     sortDirection,
     take
   }: {
+    activityTypes?: string[];
     filters?: Filter[];
     range?: DateRange;
     skip?: number;
@@ -224,6 +226,10 @@ export class DataService {
     take?: number;
   }): Observable<ActivitiesResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
+    }
 
     if (range) {
       params = params.append('range', range);
@@ -411,15 +417,21 @@ export class DataService {
 
   public fetchExport({
     activityIds,
+    activityTypes,
     filters
   }: {
     activityIds?: string[];
+    activityTypes?: string[];
     filters?: Filter[];
   } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     if (activityIds) {
       params = params.append('activityIds', activityIds.join(','));
+    }
+
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
     }
 
     return this.http.get<ExportResponse>('/api/v1/export', {

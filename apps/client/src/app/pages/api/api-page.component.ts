@@ -14,9 +14,10 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { format, startOfYear } from 'date-fns';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -35,9 +36,11 @@ export class GfApiPageComponent implements OnInit {
   public status$: Observable<DataProviderGhostfolioStatusResponse>;
 
   private apiKey: string;
-  private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private http: HttpClient) {}
+  public constructor(
+    private destroyRef: DestroyRef,
+    private http: HttpClient
+  ) {}
 
   public ngOnInit() {
     this.apiKey = prompt($localize`Please enter your Ghostfolio API key:`);
@@ -51,18 +54,13 @@ export class GfApiPageComponent implements OnInit {
     this.status$ = this.fetchStatus();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private fetchAssetProfile({ symbol }: { symbol: string }) {
     return this.http
       .get<DataProviderGhostfolioAssetProfileResponse>(
         `/api/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         { headers: this.getHeaders() }
       )
-      .pipe(takeUntil(this.unsubscribeSubject));
+      .pipe(takeUntilDestroyed(this.destroyRef));
   }
 
   private fetchDividends({ symbol }: { symbol: string }) {
@@ -82,7 +80,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ dividends }) => {
           return dividends;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -103,7 +101,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ historicalData }) => {
           return historicalData;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -129,7 +127,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ items }) => {
           return items;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -145,7 +143,7 @@ export class GfApiPageComponent implements OnInit {
         map(({ quotes }) => {
           return quotes;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -155,7 +153,7 @@ export class GfApiPageComponent implements OnInit {
         '/api/v2/data-providers/ghostfolio/status',
         { headers: this.getHeaders() }
       )
-      .pipe(takeUntil(this.unsubscribeSubject));
+      .pipe(takeUntilDestroyed(this.destroyRef));
   }
 
   private getHeaders() {

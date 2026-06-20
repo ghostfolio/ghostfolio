@@ -19,12 +19,11 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +38,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./markets.scss'],
   templateUrl: './markets.html'
 })
-export class GfMarketsComponent implements OnDestroy, OnInit {
+export class GfMarketsComponent implements OnInit {
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;
@@ -55,18 +54,17 @@ export class GfMarketsComponent implements OnDestroy, OnInit {
   public readonly numberOfDays = 365;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -79,7 +77,7 @@ export class GfMarketsComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.dataService
       .fetchMarketDataOfMarkets({ includeHistoricalData: this.numberOfDays })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ fearAndGreedIndex }) => {
         this.fearAndGreedIndexData = fearAndGreedIndex;
 
@@ -90,7 +88,7 @@ export class GfMarketsComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchBenchmarks()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ benchmarks }) => {
         this.benchmarks = benchmarks;
 
@@ -118,10 +116,5 @@ export class GfMarketsComponent implements OnDestroy, OnInit {
     this.fearAndGreedIndexMode = aFearAndGreedIndexMode;
 
     this.initialize();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

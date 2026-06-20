@@ -57,13 +57,6 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
     };
   }
 
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.accountClusterRisk.category',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
   public getConfiguration() {
     return undefined;
   }

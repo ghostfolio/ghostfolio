@@ -1,3 +1,4 @@
+import '@angular/localize/init';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -16,6 +17,9 @@ export default {
     deviceType: {
       control: 'select',
       options: ['desktop', 'mobile']
+    },
+    enableCopyToClipboardButton: {
+      control: 'boolean'
     },
     size: {
       control: 'select',
@@ -58,7 +62,7 @@ export const Label: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<gf-value [locale]="locale" [size]="size" [value]="value">Label</gf-value>`
+    template: `<gf-value [enableCopyToClipboardButton]="enableCopyToClipboardButton" [locale]="locale" [size]="size" [value]="value">Label</gf-value>`
   })
 };
 

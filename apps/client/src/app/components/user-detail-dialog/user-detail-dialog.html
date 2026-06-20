@@ -27,7 +27,13 @@
   <div class="container p-0">
     <div class="mb-3 row">
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="user?.id">User ID</gf-value>
+        <gf-value
+          i18n
+          size="medium"
+          [enableCopyToClipboardButton]="true"
+          [value]="user?.id"
+          >User ID</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value i18n size="medium" [value]="user?.role">Role</gf-value>

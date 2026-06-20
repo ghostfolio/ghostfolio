@@ -44,7 +44,7 @@ export const Default: Story = {
       })
     ),
     format: `{0} ${DEFAULT_CURRENCY}`,
-    isInPercent: false
+    isInPercentage: false
   }
 };
 
@@ -52,6 +52,6 @@ export const InPercentage: Story = {
   args: {
     countries: VWRL_COUNTRY_ALLOCATION,
     format: '{0}%',
-    isInPercent: true
+    isInPercentage: true
   }
 };

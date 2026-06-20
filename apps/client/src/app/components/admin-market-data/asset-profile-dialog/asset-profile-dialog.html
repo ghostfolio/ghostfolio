@@ -280,7 +280,7 @@
                   <gf-portfolio-proportion-chart
                     [colorScheme]="data.colorScheme"
                     [data]="sectors"
-                    [isInPercent]="true"
+                    [isInPercentage]="true"
                     [keys]="['name']"
                     [maxItems]="10"
                   />
@@ -290,7 +290,7 @@
                   <gf-portfolio-proportion-chart
                     [colorScheme]="data.colorScheme"
                     [data]="countries"
-                    [isInPercent]="true"
+                    [isInPercentage]="true"
                     [keys]="['name']"
                     [maxItems]="10"
                   />
@@ -393,39 +393,37 @@
                 ></textarea>
               </mat-form-field>
             </div>
-            @if (assetProfile?.dataSource === 'MANUAL') {
-              <div>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label i18n>Sectors</mat-label>
-                  <textarea
-                    cdkTextareaAutosize
-                    formControlName="sectors"
-                    matInput
-                    type="text"
-                  ></textarea>
-                </mat-form-field>
-              </div>
-              <div>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label i18n>Countries</mat-label>
-                  <textarea
-                    cdkTextareaAutosize
-                    formControlName="countries"
-                    matInput
-                    type="text"
-                  ></textarea>
-                </mat-form-field>
-              </div>
-            }
+            <div>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label i18n>Sectors</mat-label>
+                <textarea
+                  cdkTextareaAutosize
+                  formControlName="sectors"
+                  matInput
+                  type="text"
+                ></textarea>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label i18n>Countries</mat-label>
+                <textarea
+                  cdkTextareaAutosize
+                  formControlName="countries"
+                  matInput
+                  type="text"
+                ></textarea>
+              </mat-form-field>
+            </div>
             <div>
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-label i18n>Url</mat-label>
                 <input formControlName="url" matInput type="text" />
-                @if (assetProfileForm.get('url').value) {
+                @if (assetProfileForm.controls.url.value) {
                   <gf-entity-logo
                     class="mr-3"
                     matSuffix
-                    [url]="assetProfileForm.get('url').value"
+                    [url]="assetProfileForm.controls.url.value"
                   />
                 }
               </mat-form-field>

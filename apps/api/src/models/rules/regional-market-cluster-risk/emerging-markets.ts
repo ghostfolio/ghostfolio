@@ -72,10 +72,6 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     };
   }
 
-  public getCategoryName() {
-    return 'Regional Market Cluster Risk'; // TODO: Replace hardcoded text with i18n translation
-  }
-
   public getConfiguration() {
     return {
       threshold: {

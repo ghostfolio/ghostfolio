@@ -17,7 +17,7 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
@@ -27,13 +27,15 @@ import {
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
 
 @Injectable()
-export class CoinGeckoService implements DataProviderInterface {
-  private readonly apiUrl: string;
-  private readonly headers: HeadersInit = {};
+export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
+  private apiUrl: string;
+  private headers: HeadersInit = {};
 
   public constructor(
     private readonly configurationService: ConfigurationService
-  ) {
+  ) {}
+
+  public onModuleInit() {
     const apiKeyDemo = this.configurationService.get('API_KEY_COINGECKO_DEMO');
     const apiKeyPro = this.configurationService.get('API_KEY_COINGECKO_PRO');
 

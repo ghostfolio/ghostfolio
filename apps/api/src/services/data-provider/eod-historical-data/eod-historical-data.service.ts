@@ -22,7 +22,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
@@ -33,14 +33,18 @@ import { addDays, format, isSameDay, isToday } from 'date-fns';
 import { isNumber } from 'lodash';
 
 @Injectable()
-export class EodHistoricalDataService implements DataProviderInterface {
+export class EodHistoricalDataService
+  implements DataProviderInterface, OnModuleInit
+{
   private apiKey: string;
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly symbolProfileService: SymbolProfileService
-  ) {
+  ) {}
+
+  public onModuleInit() {
     this.apiKey = this.configurationService.get('API_KEY_EOD_HISTORICAL_DATA');
   }
 

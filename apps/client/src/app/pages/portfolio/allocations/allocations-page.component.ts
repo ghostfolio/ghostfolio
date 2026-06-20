@@ -159,10 +159,9 @@ export class GfAllocationsPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.worldMapChartFormat =
-            this.hasImpersonationId || this.user.settings.isRestrictedView
-              ? `{0}%`
-              : `{0} ${this.user?.settings?.baseCurrency}`;
+          this.worldMapChartFormat = this.showValuesInPercentage()
+            ? `{0}%`
+            : `{0} ${this.user?.settings?.baseCurrency}`;
 
           this.isLoading = true;
 
@@ -310,7 +309,7 @@ export class GfAllocationsPageComponent implements OnInit {
     ] of Object.entries(this.portfolioDetails.accounts)) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.showValuesInPercentage()) {
         value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
@@ -328,7 +327,7 @@ export class GfAllocationsPageComponent implements OnInit {
     )) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.showValuesInPercentage()) {
         value = position.allocationInPercentage;
       } else {
         value = position.valueInBaseCurrency;
@@ -405,17 +404,22 @@ export class GfAllocationsPageComponent implements OnInit {
         }
 
         if (position.holdings.length > 0) {
-          for (const holding of position.holdings) {
-            const { allocationInPercentage, name, valueInBaseCurrency } =
-              holding;
+          for (const {
+            allocationInPercentage,
+            name,
+            valueInBaseCurrency
+          } of position.holdings) {
+            const normalizedAssetName = this.normalizeAssetName(name);
 
-            if (this.topHoldingsMap[name]?.value) {
-              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+            if (this.topHoldingsMap[normalizedAssetName]?.value) {
+              this.topHoldingsMap[normalizedAssetName].value += isNumber(
+                valueInBaseCurrency
+              )
                 ? valueInBaseCurrency
                 : allocationInPercentage *
                   this.portfolioDetails.holdings[symbol].valueInPercentage;
             } else {
-              this.topHoldingsMap[name] = {
+              this.topHoldingsMap[normalizedAssetName] = {
                 name,
                 value: isNumber(valueInBaseCurrency)
                   ? valueInBaseCurrency
@@ -486,7 +490,7 @@ export class GfAllocationsPageComponent implements OnInit {
     ] of Object.entries(this.portfolioDetails.platforms)) {
       let value = 0;
 
-      if (this.hasImpersonationId) {
+      if (this.showValuesInPercentage()) {
         value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
@@ -501,7 +505,7 @@ export class GfAllocationsPageComponent implements OnInit {
 
     this.topHoldings = Object.values(this.topHoldingsMap)
       .map(({ name, value }) => {
-        if (this.hasImpersonationId || this.user.settings.isRestrictedView) {
+        if (this.showValuesInPercentage()) {
           return {
             name,
             allocationInPercentage: value,
@@ -518,7 +522,10 @@ export class GfAllocationsPageComponent implements OnInit {
               if (holding.holdings.length > 0) {
                 const currentParentHolding = holding.holdings.find(
                   (parentHolding) => {
-                    return parentHolding.name === name;
+                    return (
+                      this.normalizeAssetName(parentHolding.name) ===
+                      this.normalizeAssetName(name)
+                    );
                   }
                 );
 
@@ -555,6 +562,14 @@ export class GfAllocationsPageComponent implements OnInit {
     }
   }
 
+  private normalizeAssetName(name: string) {
+    if (!name) {
+      return '';
+    }
+
+    return name.trim().toLowerCase();
+  }
+
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open<
       GfAccountDetailDialogComponent,
@@ -580,5 +595,9 @@ export class GfAllocationsPageComponent implements OnInit {
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });
+  }
+
+  public showValuesInPercentage() {
+    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
   }
 }

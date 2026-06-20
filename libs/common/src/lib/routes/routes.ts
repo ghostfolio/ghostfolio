@@ -15,7 +15,7 @@ if (typeof window !== 'undefined') {
   };
 }
 
-export const internalRoutes: Record<string, InternalRoute> = {
+export const internalRoutes = {
   account: {
     path: 'account',
     routerLink: ['/account'],
@@ -169,9 +169,9 @@ export const internalRoutes: Record<string, InternalRoute> = {
     },
     title: $localize`Overview`
   }
-};
+} satisfies Record<string, InternalRoute>;
 
-export const publicRoutes: Record<string, PublicRoute> = {
+export const publicRoutes = {
   about: {
     path: $localize`:kebab-case@@routes.about:about`,
     routerLink: ['/' + $localize`:kebab-case@@routes.about:about`],
@@ -336,4 +336,4 @@ export const publicRoutes: Record<string, PublicRoute> = {
     path: $localize`:kebab-case@@routes.start:start`,
     routerLink: ['/' + $localize`:kebab-case@@routes.start:start`]
   }
-};
+} satisfies Record<string, PublicRoute>;

@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
+import { isNil } from 'lodash';
 
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 
@@ -90,7 +91,9 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
   }
 
   public onUpdate() {
-    if (this.marketPrice() === undefined) {
+    const marketPrice = this.marketPrice();
+
+    if (isNil(marketPrice)) {
       return;
     }
 
@@ -100,8 +103,8 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
         marketData: {
           marketData: [
             {
-              date: this.data.dateString,
-              marketPrice: this.marketPrice()
+              marketPrice,
+              date: this.data.dateString
             }
           ]
         },

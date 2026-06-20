@@ -20,15 +20,14 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { capitalize } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
 
 import { GfValueComponent } from '../value/value.component';
 
@@ -58,7 +57,7 @@ import { GfValueComponent } from '../value/value.component';
   styleUrls: ['./top-holdings.component.scss'],
   templateUrl: './top-holdings.component.html'
 })
-export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
+export class GfTopHoldingsComponent implements OnChanges {
   @Input() baseCurrency: string;
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
@@ -75,8 +74,6 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
     'allocationInPercentage'
   ];
   public isLoading = true;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public ngOnChanges() {
     this.isLoading = true;
@@ -101,8 +98,23 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+  public prettifyAssetName(name: string) {
+    if (!name) {
+      return '';
+    }
+
+    return name
+      .split(' ')
+      .filter((token) => {
+        return !token.startsWith('(') && !token.endsWith(')');
+      })
+      .map((token) => {
+        if (token.length <= 2) {
+          return token.toUpperCase();
+        }
+
+        return capitalize(token);
+      })
+      .join(' ');
   }
 }

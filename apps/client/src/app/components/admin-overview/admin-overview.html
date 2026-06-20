@@ -6,7 +6,10 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>Version</div>
             <div class="w-50">
-              <gf-value [value]="version" />
+              <gf-value
+                [enableCopyToClipboardButton]="true"
+                [value]="version"
+              />
             </div>
           </div>
           <div class="d-flex my-3">
@@ -104,7 +107,13 @@
                 <table>
                   @for (coupon of coupons; track coupon) {
                     <tr>
-                      <td class="text-monospace">{{ coupon.code }}</td>
+                      <td>
+                        <gf-value
+                          class="text-monospace"
+                          [enableCopyToClipboardButton]="true"
+                          [value]="coupon.code"
+                        />
+                      </td>
                       <td class="pl-2 text-right">
                         {{ formatStringValue(coupon.duration) }}
                       </td>

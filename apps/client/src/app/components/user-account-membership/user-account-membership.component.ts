@@ -14,15 +14,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy
+  DestroyRef
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import ms, { StringValue } from 'ms';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +39,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   styleUrls: ['./user-account-membership.scss'],
   templateUrl: './user-account-membership.html'
 })
-export class GfUserAccountMembershipComponent implements OnDestroy {
+export class GfUserAccountMembershipComponent {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
@@ -54,11 +55,10 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
     'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private userService: UserService
@@ -73,7 +73,7 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
     );
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -118,7 +118,7 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
           return EMPTY;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(({ sessionUrl }) => {
         window.location.href = sessionUrl;
@@ -142,7 +142,7 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
               return EMPTY;
             }),
-            takeUntil(this.unsubscribeSubject)
+            takeUntilDestroyed(this.destroyRef)
           )
           .subscribe(({ apiKey }) => {
             this.notificationService.alert({
@@ -180,7 +180,7 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
                 return EMPTY;
               }),
-              takeUntil(this.unsubscribeSubject)
+              takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
               const snackBarRef = this.snackBar.open(
@@ -193,14 +193,14 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
 
               snackBarRef
                 .afterDismissed()
-                .pipe(takeUntil(this.unsubscribeSubject))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
                   window.location.reload();
                 });
 
               snackBarRef
                 .onAction()
-                .pipe(takeUntil(this.unsubscribeSubject))
+                .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
                   window.location.reload();
                 });
@@ -209,10 +209,5 @@ export class GfUserAccountMembershipComponent implements OnDestroy {
       },
       title: $localize`Please enter your coupon code.`
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

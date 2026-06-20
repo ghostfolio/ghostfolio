@@ -5,7 +5,7 @@ import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -51,17 +51,17 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-account-dialog.html'
 })
 export class GfCreateOrUpdateAccountDialogComponent {
-  public accountForm: FormGroup;
-  public currencies: string[] = [];
-  public filteredPlatforms: Observable<Platform[]>;
-  public platforms: Platform[] = [];
+  protected accountForm: FormGroup;
+  protected currencies: string[] = [];
+  protected filteredPlatforms: Observable<Platform[]> | undefined;
+  protected platforms: Platform[] = [];
 
-  public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
-    private dataService: DataService,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccountDialogComponent>,
-    private formBuilder: FormBuilder
-  ) {}
+  protected readonly data =
+    inject<CreateOrUpdateAccountDialogParams>(MAT_DIALOG_DATA);
+  private readonly dataService = inject(DataService);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateAccountDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
 
   public ngOnInit() {
     const { currencies } = this.dataService.fetchInfo();
@@ -93,18 +93,18 @@ export class GfCreateOrUpdateAccountDialogComponent {
 
       this.filteredPlatforms = this.accountForm
         .get('platformId')
-        .valueChanges.pipe(
+        ?.valueChanges.pipe(
           startWith(''),
-          map((value) => {
+          map((value: Platform | string) => {
             const name = typeof value === 'string' ? value : value?.name;
-            return name ? this.filter(name as string) : this.platforms.slice();
+            return name ? this.filter(name) : this.platforms.slice();
           })
         );
     });
   }
 
-  public autoCompleteCheck() {
-    const inputValue = this.accountForm.get('platformId').value;
+  protected autoCompleteCheck() {
+    const inputValue = this.accountForm.get('platformId')?.value;
 
     if (typeof inputValue === 'string') {
       const matchingEntry = this.platforms.find(({ name }) => {
@@ -112,28 +112,28 @@ export class GfCreateOrUpdateAccountDialogComponent {
       });
 
       if (matchingEntry) {
-        this.accountForm.get('platformId').setValue(matchingEntry);
+        this.accountForm.get('platformId')?.setValue(matchingEntry);
       }
     }
   }
 
-  public displayFn(platform: Platform) {
+  protected displayFn(platform: Platform) {
     return platform?.name ?? '';
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
-      balance: this.accountForm.get('balance').value,
-      comment: this.accountForm.get('comment').value || null,
-      currency: this.accountForm.get('currency').value,
-      id: this.accountForm.get('accountId').value,
-      isExcluded: this.accountForm.get('isExcluded').value,
-      name: this.accountForm.get('name').value,
-      platformId: this.accountForm.get('platformId').value?.id || null
+      balance: this.accountForm.get('balance')?.value,
+      comment: this.accountForm.get('comment')?.value || null,
+      currency: this.accountForm.get('currency')?.value,
+      id: this.accountForm.get('accountId')?.value,
+      isExcluded: this.accountForm.get('isExcluded')?.value,
+      name: this.accountForm.get('name')?.value,
+      platformId: this.accountForm.get('platformId')?.value?.id || null
     };
 
     try {
@@ -177,7 +177,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
     const filterValue = value.toLowerCase();
 
     return this.platforms.filter(({ name }) => {
-      return name.toLowerCase().startsWith(filterValue);
+      return name?.toLowerCase().startsWith(filterValue);
     });
   }
 }

@@ -7,11 +7,11 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy
+  DestroyRef
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -21,7 +21,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./saas-page.scss'],
   templateUrl: './saas-page.html'
 })
-export class GfSaasPageComponent implements OnDestroy {
+export class GfSaasPageComponent {
   public pricingUrl = `https://ghostfol.io/${document.documentElement.lang}/${publicRoutes.pricing.path}`;
   public routerLinkAccount = internalRoutes.account.routerLink;
   public routerLinkAccountMembership =
@@ -30,16 +30,15 @@ export class GfSaasPageComponent implements OnDestroy {
   public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private destroyRef: DestroyRef,
     private userService: UserService
   ) {}
 
   public ngOnInit() {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -47,10 +46,5 @@ export class GfSaasPageComponent implements OnDestroy {
           this.changeDetectorRef.markForCheck();
         }
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

@@ -417,7 +417,9 @@
           [benchmarkDataLabel]="portfolioEvolutionDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [historicalDataItems]="performanceDataItems"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [isInPercentage]="
+            hasImpersonationId || user.settings.isRestrictedView
+          "
           [isLoading]="isLoadingInvestmentChart"
           [locale]="user?.settings?.locale"
         />
@@ -473,7 +475,9 @@
           [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [groupBy]="mode"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [isInPercentage]="
+            hasImpersonationId || user.settings.isRestrictedView
+          "
           [isLoading]="isLoadingInvestmentTimelineChart"
           [locale]="user?.settings?.locale"
           [savingsRate]="savingsRate"
@@ -508,7 +512,9 @@
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [groupBy]="mode"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [isInPercentage]="
+            hasImpersonationId || user.settings.isRestrictedView
+          "
           [isLoading]="isLoadingDividendTimelineChart"
           [locale]="user?.settings?.locale"
         />

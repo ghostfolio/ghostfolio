@@ -1,6 +1,17 @@
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { isJSON, validate } from 'class-validator';
+
+export function jsonValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!isJSON(control.value)) {
+      return { invalidJson: true };
+    }
+
+    return null;
+  };
+}
 
 export async function validateObjectForForm<T>({
   classDto,

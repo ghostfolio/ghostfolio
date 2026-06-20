@@ -12,9 +12,10 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -27,8 +28,8 @@ import {
   informationCircleOutline
 } from 'ionicons/icons';
 import { StringValue } from 'ms';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -46,7 +47,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   styleUrls: ['./pricing-page.scss'],
   templateUrl: './pricing-page.html'
 })
-export class GfPricingPageComponent implements OnDestroy, OnInit {
+export class GfPricingPageComponent implements OnInit {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
@@ -92,11 +93,10 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
   public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private notificationService: NotificationService,
     private userService: UserService
   ) {
@@ -124,7 +124,7 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
     this.price = subscriptionOffer?.price;
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -161,15 +161,10 @@ export class GfPricingPageComponent implements OnDestroy, OnInit {
 
           return EMPTY;
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(({ sessionUrl }) => {
         window.location.href = sessionUrl;
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

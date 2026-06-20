@@ -629,7 +629,7 @@ export class ActivitiesService {
       orderBy = [{ [sortColumn]: sortDirection }];
     }
 
-    if (types) {
+    if (types?.length > 0) {
       where.type = { in: types };
     }
 

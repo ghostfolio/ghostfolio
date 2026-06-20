@@ -4,7 +4,6 @@ import {
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
 
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -30,7 +29,6 @@ import { GfValueComponent } from '../value/value.component';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfEntityLogoComponent,
     GfValueComponent,
     MatButtonModule,

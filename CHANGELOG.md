@@ -5,6 +5,96 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.255.0 - 2026-03-20
+
+### Changed
+
+- Sorted the activity types alphabetically on the activities page (experimental)
+- Sorted the asset classes of the assistant alphabetically
+- Sorted the tags of the assistant alphabetically
+- Upgraded `angular` from version `21.1.1` to `21.2.7`
+- Upgraded `Nx` from version `22.5.3` to `22.6.4`
+- Upgraded `prettier` from version `3.8.1` to `3.8.2`
+- Upgraded `svgmap` from version `2.19.2` to `2.19.3`
+- Upgraded `yahoo-finance2` from version `3.13.2` to `3.14.0`
+
+### Fixed
+
+- Fixed the missing value column of the accounts table component on mobile
+
+## 2.254.0 - 2026-03-10
+
+### Added
+
+- Added loan as an asset sub class
+
+### Changed
+
+- Extended the asset profile details dialog in the admin control panel to support editing countries for all asset types
+- Extended the asset profile details dialog in the admin control panel to support editing sectors for all asset types
+- Migrated the data collection for the _Open Startup_ (`/open`) page to the queue design pattern
+- Improved the language localization for German (`de`)
+- Upgraded `lodash` from version `4.17.23` to `4.18.1`
+
+### Fixed
+
+- Improved the style of the activity type component
+
+## 2.253.0 - 2026-03-06
+
+### Added
+
+- Added support for filtering by activity type on the activities page (experimental)
+- Extended the admin control panel by adding a copy-to-clipboard button for the application version
+
+### Changed
+
+- Extended the terms of service for the _Ghostfolio_ SaaS (cloud) to include _Paid Plans_ and _Refund Policy_
+- Upgraded `prisma` from version `6.19.0` to `6.19.3`
+
+### Fixed
+
+- Fixed the allocations by account chart on the allocations page in the _Presenter View_
+- Fixed the allocations by asset class chart on the allocations page in the _Presenter View_
+- Fixed the allocations by currency chart on the allocations page in the _Presenter View_
+- Fixed the allocations by ETF provider chart on the allocations page in the _Presenter View_
+- Fixed the allocations by platform chart on the allocations page in the _Presenter View_
+
+## 2.252.0 - 2026-03-02
+
+### Added
+
+- Added support for a copy-to-clipboard functionality in the value component
+- Extended the holding detail dialog by adding a copy-to-clipboard button for the ISIN number (experimental)
+- Extended the holding detail dialog by adding a copy-to-clipboard button for the symbol (experimental)
+- Extended the user detail dialog of the admin control panel’s users section by adding a copy-to-clipboard button for the user id
+
+### Changed
+
+- Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `countries-list` from version `3.2.2` to `3.3.0`
+- Upgraded `ng-extract-i18n-merge` from `3.2.1` to `3.3.0`
+- Upgraded `stripe` from version `20.3.0` to `20.4.1`
+
+## 2.251.0 - 2026-03-24
+
+### Added
+
+- Added the quantity column to the holdings table of the portfolio holdings page
+
+### Changed
+
+- Hardened the endpoint `DELETE /api/v1/auth-device/:id` by improving the user validation
+- Improved the allocations by ETF holding on the allocations page by refining the grouping of the same assets with diverging names (experimental)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.2` to `6.0.2`
+
+### Fixed
+
+- Fixed an issue by adding a missing guard in the public access for portfolio sharing
+
 ## 2.250.0 - 2026-03-17
 
 ### Added
@@ -5964,10 +6054,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the alias from the user interface as a preparation to remove it from the `User` database schema
 - Removed the activities import limit for users with a subscription
-
-### Todo
-
-- Rename the environment variable from `MAX_ORDERS_TO_IMPORT` to `MAX_ACTIVITIES_TO_IMPORT`
 
 ## 1.169.0 - 14.07.2022
 

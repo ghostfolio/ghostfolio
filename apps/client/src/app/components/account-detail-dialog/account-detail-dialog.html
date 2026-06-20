@@ -24,9 +24,7 @@
         class="h-100"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
-        [isInPercent]="
-          data.hasImpersonationId || user.settings.isRestrictedView
-        "
+        [isInPercentage]="showValuesInPercentage()"
         [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
       />
@@ -118,9 +116,7 @@
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToDeleteActivity]="false"
-          [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user.settings.isRestrictedView
-          "
+          [hasPermissionToExportActivities]="!showValuesInPercentage()"
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"

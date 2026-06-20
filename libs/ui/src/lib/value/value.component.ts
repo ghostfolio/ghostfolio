@@ -1,30 +1,41 @@
 import { getLocale } from '@ghostfolio/common/helper';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  input,
   Input,
   OnChanges,
-  computed,
-  input
+  ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { copyOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
+import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonIcon, NgxSkeletonLoaderModule],
+  imports: [CommonModule, IonIcon, MatButtonModule, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
   styleUrls: ['./value.component.scss'],
   templateUrl: './value.component.html'
 })
-export class GfValueComponent implements OnChanges {
+export class GfValueComponent implements AfterViewInit, OnChanges {
   @Input() colorizeSign = false;
   @Input() deviceType: string;
+  @Input() enableCopyToClipboardButton = false;
   @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
@@ -37,11 +48,25 @@ export class GfValueComponent implements OnChanges {
   @Input() unit = '';
   @Input() value: number | string = '';
 
+  @ViewChild('labelContent', { static: false })
+  labelContent!: ElementRef<HTMLSpanElement>;
+
   public absoluteValue = 0;
   public formattedValue = '';
+  public hasLabel = false;
   public isNumber = false;
   public isString = false;
   public useAbsoluteValue = false;
+
+  public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private clipboard: Clipboard,
+    private snackBar: MatSnackBar
+  ) {
+    addIcons({
+      copyOutline
+    });
+  }
 
   public readonly precision = input<number>();
 
@@ -57,6 +82,17 @@ export class GfValueComponent implements OnChanges {
   private get hasPrecision() {
     const precision = this.precision();
     return precision !== undefined && precision >= 0;
+  }
+
+  public ngAfterViewInit() {
+    if (this.labelContent) {
+      const element = this.labelContent.nativeElement;
+
+      this.hasLabel =
+        element.children.length > 0 || element.textContent.trim().length > 0;
+
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   public ngOnChanges() {
@@ -135,6 +171,18 @@ export class GfValueComponent implements OnChanges {
     if (this.formattedValue === '0.00') {
       this.useAbsoluteValue = true;
     }
+  }
+
+  public onCopyValueToClipboard() {
+    this.clipboard.copy(String(this.value));
+
+    this.snackBar.open(
+      '✅ ' + $localize`${this.value} has been copied to the clipboard`,
+      undefined,
+      {
+        duration: ms('3 seconds')
+      }
+    );
   }
 
   private initializeVariables() {
