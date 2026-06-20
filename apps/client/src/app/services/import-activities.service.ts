@@ -198,7 +198,9 @@ export class ImportActivitiesService {
     aObject: Record<string, unknown>
   ): Record<string, unknown> {
     return Object.fromEntries(
-      Object.entries(aObject).map(([key, val]) => [key.toLowerCase(), val])
+      Object.entries(aObject).map(([key, val]) => {
+        return [key.toLowerCase(), val];
+      })
     );
   }
 
@@ -212,12 +214,12 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.ACCOUNT_KEYS) {
-      const val = item[key];
-      if (isString(val) || isNumber(val)) {
-        return userAccounts.find((account) => {
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
+        return userAccounts.find(({ id, name }) => {
           return (
-            account.id === val ||
-            account.name?.toLowerCase() === String(val).toLowerCase()
+            id === value || name?.toLowerCase() === String(value).toLowerCase()
           );
         })?.id;
       }
@@ -230,9 +232,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.COMMENT_KEYS) {
-      const val = item[key];
-      if (isString(val) || isNumber(val)) {
-        return String(val);
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
+        return String(value);
       }
     }
 
@@ -251,9 +254,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.CURRENCY_KEYS) {
-      const val = item[key];
-      if (isString(val)) {
-        return val;
+      const value = item[key];
+
+      if (isString(value)) {
+        return value;
       }
     }
 
@@ -267,9 +271,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.DATA_SOURCE_KEYS) {
-      const val = item[key];
-      if (isString(val)) {
-        return DataSource[val.toUpperCase() as keyof typeof DataSource];
+      const value = item[key];
+
+      if (isString(value)) {
+        return DataSource[value.toUpperCase() as keyof typeof DataSource];
       }
     }
 
@@ -288,10 +293,12 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.DATE_KEYS) {
-      const val = item[key];
-      if (isString(val) || isNumber(val)) {
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
         try {
-          const parsedDate = parseDateHelper(String(val));
+          const parsedDate = parseDateHelper(String(value));
+
           if (parsedDate) {
             return parsedDate.toISOString();
           }
@@ -317,9 +324,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.FEE_KEYS) {
-      const val = item[key];
-      if (isNumber(val) && isFinite(val)) {
-        return Math.abs(val);
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
       }
     }
 
@@ -341,9 +349,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.QUANTITY_KEYS) {
-      const val = item[key];
-      if (isNumber(val) && isFinite(val)) {
-        return Math.abs(val);
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
       }
     }
 
@@ -365,9 +374,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.SYMBOL_KEYS) {
-      const val = item[key];
-      if (isString(val) || isNumber(val)) {
-        return String(val);
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
+        return String(value);
       }
     }
 
@@ -389,9 +399,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.TYPE_KEYS) {
-      const val = item[key];
-      if (isString(val)) {
-        switch (val.toLowerCase()) {
+      const value = item[key];
+
+      if (isString(value)) {
+        switch (value.toLowerCase()) {
           case 'buy':
             return 'BUY';
           case 'dividend':
@@ -428,9 +439,10 @@ export class ImportActivitiesService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.UNIT_PRICE_KEYS) {
-      const val = item[key];
-      if (isNumber(val) && isFinite(val)) {
-        return Math.abs(val);
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
       }
     }
 
