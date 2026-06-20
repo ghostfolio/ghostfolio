@@ -8,7 +8,7 @@ import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
@@ -35,7 +35,7 @@ export class ImportActivitiesService {
     'value'
   ];
 
-  public constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   public async importCsv({
     fileContent,
