@@ -24,15 +24,30 @@ export class SymbolService {
 
   public async get({
     dataGatheringItem,
-    includeHistoricalData
+    includeHistoricalData,
+    useIntradayData = false
   }: {
     dataGatheringItem: DataGatheringItem;
     includeHistoricalData?: number;
+    useIntradayData?: boolean;
   }): Promise<SymbolItem> {
-    const quotes = await this.dataProviderService.getQuotes({
-      items: [dataGatheringItem]
-    });
-    const { currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {};
+    let currency: string;
+    let marketPrice: number;
+
+    if (useIntradayData) {
+      const latestMarketData = await this.marketDataService.getLatest({
+        dataSource: dataGatheringItem.dataSource,
+        symbol: dataGatheringItem.symbol
+      });
+
+      marketPrice = latestMarketData?.marketPrice;
+    } else {
+      const quotes = await this.dataProviderService.getQuotes({
+        items: [dataGatheringItem]
+      });
+
+      ({ currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {});
+    }
 
     if (dataGatheringItem.dataSource && marketPrice >= 0) {
       let historicalData: HistoricalDataItem[] = [];
