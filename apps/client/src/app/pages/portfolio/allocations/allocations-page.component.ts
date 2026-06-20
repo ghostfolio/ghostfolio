@@ -60,21 +60,21 @@ import { AllocationsPageParams } from './interfaces/interfaces';
   templateUrl: './allocations-page.html'
 })
 export class GfAllocationsPageComponent implements OnInit {
-  public accounts: {
+  protected accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
       value: number;
     };
   };
-  public continents: {
+  protected continents: {
     [code: string]: { name: string; value: number };
   };
-  public countries: {
+  protected countries: {
     [code: string]: { name: string; value: number };
   };
-  public deviceType: string;
-  public hasImpersonationId: boolean;
-  public holdings: {
+  protected deviceType: string;
+  protected hasImpersonationId: boolean;
+  protected holdings: {
     [symbol: string]: Pick<
       PortfolioPosition['assetProfile'],
       | 'assetClass'
@@ -85,26 +85,26 @@ export class GfAllocationsPageComponent implements OnInit {
       | 'name'
     > & { etfProvider: string; exchange?: string; value: number };
   };
-  public isLoading = false;
-  public markets: PortfolioDetails['markets'];
-  public marketsAdvanced: {
+  protected isLoading = false;
+  protected markets: PortfolioDetails['markets'];
+  protected marketsAdvanced: {
     [key in MarketAdvanced]: {
       id: MarketAdvanced;
       name: string;
       value: number;
     };
   };
-  public platforms: {
+  protected platforms: {
     [id: string]: Pick<Platform, 'name'> & {
       id: string;
       value: number;
     };
   };
-  public portfolioDetails: PortfolioDetails;
-  public sectors: {
+  protected portfolioDetails: PortfolioDetails;
+  protected sectors: {
     [name: string]: { name: string; value: number };
   };
-  public symbols: {
+  protected symbols: {
     [name: string]: {
       dataSource?: DataSource;
       name: string;
@@ -112,14 +112,15 @@ export class GfAllocationsPageComponent implements OnInit {
       value: number;
     };
   };
-  public topHoldings: HoldingWithParents[];
-  public topHoldingsMap: {
+  protected topHoldings: HoldingWithParents[];
+  protected UNKNOWN_KEY = UNKNOWN_KEY;
+  protected user: User;
+  protected worldMapChartFormat: string;
+
+  private topHoldingsMap: {
     [name: string]: { name: string; value: number };
   };
-  public totalValueInEtf = 0;
-  public UNKNOWN_KEY = UNKNOWN_KEY;
-  public user: User;
-  public worldMapChartFormat: string;
+  private totalValueInEtf = 0;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -188,7 +189,7 @@ export class GfAllocationsPageComponent implements OnInit {
     this.initialize();
   }
 
-  public onAccountChartClicked({ accountId }: { accountId: string }) {
+  protected onAccountChartClicked({ accountId }: { accountId: string }) {
     if (accountId && accountId !== UNKNOWN_KEY) {
       void this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
@@ -196,12 +197,19 @@ export class GfAllocationsPageComponent implements OnInit {
     }
   }
 
-  public onSymbolChartClicked({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onSymbolChartClicked({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       void this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
+  }
+
+  protected showValuesInPercentage() {
+    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
   }
 
   private extractCurrency({
@@ -608,9 +616,5 @@ export class GfAllocationsPageComponent implements OnInit {
       .subscribe(() => {
         void this.router.navigate(['.'], { relativeTo: this.route });
       });
-  }
-
-  public showValuesInPercentage() {
-    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
   }
 }
