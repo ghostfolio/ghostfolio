@@ -42,6 +42,8 @@ import {
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
+import { AllocationsPageParams } from './interfaces/interfaces';
+
 @Component({
   imports: [
     GfPortfolioProportionChartComponent,
@@ -131,9 +133,9 @@ export class GfAllocationsPageComponent implements OnInit {
   ) {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        if (params['accountId'] && params['accountDetailDialog']) {
-          this.openAccountDetailDialog(params['accountId']);
+      .subscribe((params: AllocationsPageParams) => {
+        if (params.accountId && params.accountDetailDialog) {
+          this.openAccountDetailDialog(params.accountId);
         }
       });
   }
