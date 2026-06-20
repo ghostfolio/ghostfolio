@@ -64,11 +64,17 @@ export class GfTransferBalanceDialogComponent {
       }
     );
 
-    this.transferBalanceForm.get('fromAccount').valueChanges.subscribe((id) => {
-      this.currency = this.accounts.find((account) => {
-        return account.id === id;
-      }).currency;
-    });
+    this.transferBalanceForm
+      .get('fromAccount')
+      ?.valueChanges.subscribe((id) => {
+        const currency = this.accounts.find((account) => {
+          return account.id === id;
+        })?.currency;
+
+        if (currency) {
+          this.currency = currency;
+        }
+      });
   }
 
   public onCancel() {
@@ -77,20 +83,22 @@ export class GfTransferBalanceDialogComponent {
 
   public onSubmit() {
     const account: TransferBalanceDto = {
-      accountIdFrom: this.transferBalanceForm.get('fromAccount').value,
-      accountIdTo: this.transferBalanceForm.get('toAccount').value,
-      balance: this.transferBalanceForm.get('balance').value
+      accountIdFrom: this.transferBalanceForm.get('fromAccount')?.value,
+      accountIdTo: this.transferBalanceForm.get('toAccount')?.value,
+      balance: this.transferBalanceForm.get('balance')?.value
     };
 
     this.dialogRef.close({ account });
   }
 
-  private compareAccounts(control: AbstractControl): ValidationErrors {
+  private compareAccounts(control: AbstractControl): ValidationErrors | null {
     const accountFrom = control.get('fromAccount');
     const accountTo = control.get('toAccount');
 
-    if (accountFrom.value === accountTo.value) {
+    if (accountFrom?.value === accountTo?.value) {
       return { invalid: true };
     }
+
+    return null;
   }
 }
