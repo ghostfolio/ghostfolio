@@ -1,4 +1,4 @@
-import { AdminService } from '@ghostfolio/api/app/admin/admin.service';
+import { AssetProfilesService } from '@ghostfolio/api/app/endpoints/asset-profiles/asset-profiles.service';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import type { AssetResponse } from '@ghostfolio/common/interfaces';
@@ -9,7 +9,9 @@ import { pick } from 'lodash';
 
 @Controller('asset')
 export class AssetController {
-  public constructor(private readonly adminService: AdminService) {}
+  public constructor(
+    private readonly assetProfilesService: AssetProfilesService
+  ) {}
 
   @Get(':dataSource/:symbol')
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
@@ -19,7 +21,10 @@ export class AssetController {
     @Param('symbol') symbol: string
   ): Promise<AssetResponse> {
     const { assetProfile, marketData } =
-      await this.adminService.getMarketDataBySymbol({ dataSource, symbol });
+      await this.assetProfilesService.getAssetProfile({
+        dataSource,
+        symbol
+      });
 
     return {
       marketData,
