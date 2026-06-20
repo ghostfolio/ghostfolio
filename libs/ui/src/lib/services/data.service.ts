@@ -479,10 +479,7 @@ export class DataService {
   public fetchHoldingDetail({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): Observable<
+  }: AssetProfileIdentifier): Observable<
     Omit<PortfolioHoldingResponse, 'dateOfFirstActivity'> & {
       dateOfFirstActivity: Date | undefined;
     }
@@ -541,10 +538,7 @@ export class DataService {
   public fetchMarketDataBySymbol({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): Observable<MarketDataDetailsResponse> {
+  }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
     return this.http
       .get<any>(`/api/v1/market-data/${dataSource}/${symbol}`)
       .pipe(
