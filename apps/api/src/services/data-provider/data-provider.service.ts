@@ -77,7 +77,9 @@ export class DataProviderService implements OnModuleInit {
       useCache: false
     });
 
-    if (quotes[symbol]?.marketPrice > 0) {
+    if (
+      quotes[getAssetProfileIdentifier({ dataSource, symbol })]?.marketPrice > 0
+    ) {
       return true;
     }
 
@@ -514,7 +516,6 @@ export class DataProviderService implements OnModuleInit {
     return result;
   }
 
-  // TODO: Change symbol in response to assetProfileIdentifier
   public async getQuotes({
     items,
     requestTimeout,
@@ -526,10 +527,14 @@ export class DataProviderService implements OnModuleInit {
     useCache?: boolean;
     user?: UserWithSettings;
   }): Promise<{
-    [symbol: string]: DataProviderResponse;
+    [assetProfileIdentifier: string]: DataProviderResponse;
   }> {
+    // Keyed by asset profile identifier; each entry carries its symbol so the
+    // market data can be persisted without parsing the key
     const response: {
-      [symbol: string]: DataProviderResponse;
+      [assetProfileIdentifier: string]: DataProviderResponse & {
+        symbol: string;
+      };
     } = {};
     const startTimeTotal = performance.now();
 
@@ -538,11 +543,17 @@ export class DataProviderService implements OnModuleInit {
         return symbol === `${DEFAULT_CURRENCY}USX`;
       })
     ) {
-      response[`${DEFAULT_CURRENCY}USX`] = {
+      response[
+        getAssetProfileIdentifier({
+          dataSource: this.getDataSourceForExchangeRates(),
+          symbol: `${DEFAULT_CURRENCY}USX`
+        })
+      ] = {
         currency: 'USX',
         dataSource: this.getDataSourceForExchangeRates(),
         marketPrice: 100,
-        marketState: 'open'
+        marketState: 'open',
+        symbol: `${DEFAULT_CURRENCY}USX`
       };
     }
 
@@ -557,8 +568,13 @@ export class DataProviderService implements OnModuleInit {
 
         if (quoteString) {
           try {
-            const cachedDataProviderResponse = JSON.parse(quoteString);
-            response[symbol] = cachedDataProviderResponse;
+            const cachedDataProviderResponse = JSON.parse(
+              quoteString
+            ) as DataProviderResponse;
+            response[getAssetProfileIdentifier({ dataSource, symbol })] = {
+              ...cachedDataProviderResponse,
+              symbol
+            };
             continue;
           } catch {}
         }
@@ -646,14 +662,19 @@ export class DataProviderService implements OnModuleInit {
                 continue;
               }
 
-              response[symbol] = dataProviderResponse;
+              response[
+                getAssetProfileIdentifier({
+                  symbol,
+                  dataSource: DataSource[dataSource]
+                })
+              ] = { ...dataProviderResponse, symbol };
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
                   symbol,
                   dataSource: DataSource[dataSource]
                 }),
-                JSON.stringify(response[symbol]),
+                JSON.stringify(dataProviderResponse),
                 this.configurationService.get('CACHE_QUOTES_TTL')
               );
 
@@ -663,7 +684,7 @@ export class DataProviderService implements OnModuleInit {
                 rootCurrency
               } of DERIVED_CURRENCIES) {
                 if (symbol === `${DEFAULT_CURRENCY}${rootCurrency}`) {
-                  response[`${DEFAULT_CURRENCY}${currency}`] = {
+                  const derivedDataProviderResponse: DataProviderResponse = {
                     ...dataProviderResponse,
                     currency,
                     marketPrice: new Big(
@@ -674,12 +695,22 @@ export class DataProviderService implements OnModuleInit {
                     marketState: 'open'
                   };
 
+                  response[
+                    getAssetProfileIdentifier({
+                      dataSource: DataSource[dataSource],
+                      symbol: `${DEFAULT_CURRENCY}${currency}`
+                    })
+                  ] = {
+                    ...derivedDataProviderResponse,
+                    symbol: `${DEFAULT_CURRENCY}${currency}`
+                  };
+
                   this.redisCacheService.set(
                     this.redisCacheService.getQuoteKey({
                       dataSource: DataSource[dataSource],
                       symbol: `${DEFAULT_CURRENCY}${currency}`
                     }),
-                    JSON.stringify(response[`${DEFAULT_CURRENCY}${currency}`]),
+                    JSON.stringify(derivedDataProviderResponse),
                     this.configurationService.get('CACHE_QUOTES_TTL')
                   );
                 }
@@ -697,21 +728,21 @@ export class DataProviderService implements OnModuleInit {
 
             try {
               await this.marketDataService.updateMany({
-                data: Object.keys(response)
-                  .filter((symbol) => {
+                data: Object.values(response)
+                  .filter((dataProviderResponse) => {
                     return (
-                      isNumber(response[symbol].marketPrice) &&
-                      response[symbol].marketPrice > 0 &&
-                      response[symbol].marketState === 'open'
+                      isNumber(dataProviderResponse.marketPrice) &&
+                      dataProviderResponse.marketPrice > 0 &&
+                      dataProviderResponse.marketState === 'open'
                     );
                   })
-                  .map((symbol) => {
+                  .map((dataProviderResponse) => {
                     return {
-                      symbol,
-                      dataSource: response[symbol].dataSource,
+                      dataSource: dataProviderResponse.dataSource,
                       date: getStartOfUtcDate(new Date()),
-                      marketPrice: response[symbol].marketPrice,
-                      state: 'INTRADAY'
+                      marketPrice: dataProviderResponse.marketPrice,
+                      state: 'INTRADAY',
+                      symbol: dataProviderResponse.symbol
                     };
                   })
               });

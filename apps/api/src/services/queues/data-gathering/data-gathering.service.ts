@@ -301,9 +301,9 @@ export class DataGatheringService {
       const data: Prisma.MarketDataUpdateInput[] = [];
 
       for (const { dataSource, symbol } of assetProfileIdentifiers) {
-        const quote = quotes[symbol];
+        const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
 
-        if (quote?.dataSource !== dataSource || !quote.marketPrice) {
+        if (!quote?.marketPrice) {
           continue;
         }
 
