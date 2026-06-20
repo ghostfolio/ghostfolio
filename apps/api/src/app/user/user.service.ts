@@ -105,8 +105,14 @@ export class UserService {
     locale?: string;
     user: UserWithSettings;
   }): Promise<IUser> {
-    const { id, permissions, provider, settings, subscription, thirdPartyId } =
-      user;
+    const {
+      id,
+      permissions: userPermissions,
+      provider,
+      settings,
+      subscription,
+      thirdPartyId
+    } = user;
 
     const userData = await Promise.all([
       this.prismaService.access.findMany({
@@ -165,7 +171,7 @@ export class UserService {
     return {
       activitiesCount,
       id,
-      permissions,
+      permissions: userPermissions,
       provider,
       subscription,
       systemMessage,

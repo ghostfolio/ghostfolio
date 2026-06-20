@@ -181,7 +181,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
 
     // Handle query params for link results
     this.activatedRoute.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['linkSuccess'] === 'true') {
           this.snackBar.open(
