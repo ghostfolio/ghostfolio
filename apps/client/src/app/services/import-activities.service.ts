@@ -8,12 +8,11 @@ import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Account, DataSource, Type as ActivityType } from '@prisma/client';
-import { isFinite } from 'lodash';
+import { isFinite, isNumber, isString } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +34,7 @@ export class ImportActivitiesService {
     'value'
   ];
 
-  public constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   public async importCsv({
     fileContent,
@@ -49,7 +48,7 @@ export class ImportActivitiesService {
     activities: Activity[];
     assetProfiles: CreateAssetProfileWithMarketDataDto[];
   }> {
-    const content = csvToJson(fileContent, {
+    const content = csvToJson<Record<string, unknown>>(fileContent, {
       dynamicTyping: true,
       header: true,
       skipEmptyLines: true
@@ -83,22 +82,22 @@ export class ImportActivitiesService {
         assetProfiles.push({
           currency,
           symbol,
-          assetClass: null,
-          assetSubClass: null,
-          comment: null,
+          assetClass: undefined,
+          assetSubClass: undefined,
+          comment: undefined,
           countries: [],
-          cusip: null,
+          cusip: undefined,
           dataSource: DataSource.MANUAL,
-          figi: null,
-          figiComposite: null,
-          figiShareClass: null,
+          figi: undefined,
+          figiComposite: undefined,
+          figiShareClass: undefined,
           holdings: [],
           isActive: true,
-          isin: null,
+          isin: undefined,
           marketData: [],
           name: symbol,
           sectors: [],
-          url: null
+          url: undefined
         });
       }
     }
@@ -126,7 +125,7 @@ export class ImportActivitiesService {
   }): Promise<{
     activities: Activity[];
   }> {
-    return new Promise((resolve, reject) => {
+    return firstValueFrom(
       this.postImport(
         {
           accounts,
@@ -136,18 +135,7 @@ export class ImportActivitiesService {
         },
         isDryRun
       )
-        .pipe(
-          catchError((error) => {
-            reject(error);
-            return EMPTY;
-          })
-        )
-        .subscribe({
-          next: (data) => {
-            resolve(data);
-          }
-        });
-    });
+    );
   }
 
   public importSelectedActivities({
@@ -163,11 +151,9 @@ export class ImportActivitiesService {
   }): Promise<{
     activities: Activity[];
   }> {
-    const importData: CreateOrderDto[] = [];
-
-    for (const activity of activities) {
-      importData.push(this.convertToCreateOrderDto(activity));
-    }
+    const importData = activities.map((activity) =>
+      this.convertToCreateOrderDto(activity)
+    );
 
     return this.importJson({
       accounts,
@@ -191,14 +177,14 @@ export class ImportActivitiesService {
     updateAccountBalance
   }: Activity): CreateOrderDto {
     return {
-      accountId,
-      comment,
       fee,
       quantity,
       type,
       unitPrice,
       updateAccountBalance,
-      currency: currency ?? SymbolProfile.currency,
+      accountId: accountId ?? undefined,
+      comment: comment ?? undefined,
+      currency: currency ?? SymbolProfile.currency ?? '',
       dataSource: SymbolProfile.dataSource,
       date: date.toString(),
       symbol: SymbolProfile.symbol,
@@ -208,28 +194,32 @@ export class ImportActivitiesService {
     };
   }
 
-  private lowercaseKeys(aObject: any) {
-    return Object.keys(aObject).reduce((acc, key) => {
-      acc[key.toLowerCase()] = aObject[key];
-      return acc;
-    }, {});
+  private lowercaseKeys(
+    aObject: Record<string, unknown>
+  ): Record<string, unknown> {
+    return Object.fromEntries(
+      Object.entries(aObject).map(([key, val]) => {
+        return [key.toLowerCase(), val];
+      })
+    );
   }
 
   private parseAccount({
     item,
     userAccounts
   }: {
-    item: any;
+    item: Record<string, unknown>;
     userAccounts: Account[];
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.ACCOUNT_KEYS) {
-      if (item[key]) {
-        return userAccounts.find((account) => {
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
+        return userAccounts.find(({ id, name }) => {
           return (
-            account.id === item[key] ||
-            account.name.toLowerCase() === item[key].toLowerCase()
+            id === value || name?.toLowerCase() === String(value).toLowerCase()
           );
         })?.id;
       }
@@ -238,12 +228,14 @@ export class ImportActivitiesService {
     return undefined;
   }
 
-  private parseComment({ item }: { item: any }) {
+  private parseComment({ item }: { item: Record<string, unknown> }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.COMMENT_KEYS) {
-      if (item[key]) {
-        return item[key];
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
+        return String(value);
       }
     }
 
@@ -255,15 +247,17 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.CURRENCY_KEYS) {
-      if (item[key]) {
-        return item[key];
+      const value = item[key];
+
+      if (isString(value)) {
+        return value;
       }
     }
 
@@ -273,12 +267,14 @@ export class ImportActivitiesService {
     };
   }
 
-  private parseDataSource({ item }: { item: any }) {
+  private parseDataSource({ item }: { item: Record<string, unknown> }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.DATA_SOURCE_KEYS) {
-      if (item[key]) {
-        return DataSource[item[key].toUpperCase()];
+      const value = item[key];
+
+      if (isString(value)) {
+        return DataSource[value.toUpperCase() as keyof typeof DataSource];
       }
     }
 
@@ -290,16 +286,22 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.DATE_KEYS) {
-      if (item[key]) {
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
         try {
-          return parseDateHelper(item[key].toString()).toISOString();
+          const parsedDate = parseDateHelper(String(value));
+
+          if (parsedDate) {
+            return parsedDate.toISOString();
+          }
         } catch {}
       }
     }
@@ -315,15 +317,17 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.FEE_KEYS) {
-      if (isFinite(item[key])) {
-        return Math.abs(item[key]);
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
       }
     }
 
@@ -338,15 +342,17 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.QUANTITY_KEYS) {
-      if (isFinite(item[key])) {
-        return Math.abs(item[key]);
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
       }
     }
 
@@ -361,15 +367,17 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.SYMBOL_KEYS) {
-      if (item[key]) {
-        return item[key];
+      const value = item[key];
+
+      if (isNumber(value) || isString(value)) {
+        return String(value);
       }
     }
 
@@ -384,15 +392,17 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }): ActivityType {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.TYPE_KEYS) {
-      if (item[key]) {
-        switch (item[key].toLowerCase()) {
+      const value = item[key];
+
+      if (isString(value)) {
+        switch (value.toLowerCase()) {
           case 'buy':
             return 'BUY';
           case 'dividend':
@@ -422,15 +432,17 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
+    content: Record<string, unknown>[];
     index: number;
-    item: any;
+    item: Record<string, unknown>;
   }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.UNIT_PRICE_KEYS) {
-      if (isFinite(item[key])) {
-        return Math.abs(item[key]);
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
       }
     }
 
