@@ -1,6 +1,10 @@
 import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
 
-import { query, redactPaths } from './object.helper';
+import {
+  hasNotDefinedValuesInObject,
+  query,
+  redactPaths
+} from './object.helper';
 
 describe('query', () => {
   it('should get market price from stock API response', () => {
@@ -19,6 +23,111 @@ describe('query', () => {
     })[0];
 
     expect(result).toBe(271.86);
+  });
+});
+
+describe('hasNotDefinedValuesInObject', () => {
+  it('should return false when all values are defined', () => {
+    const object = {
+      currency: 'USD',
+      market: {
+        previousClose: 273.04,
+        price: 271.86
+      },
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(false);
+  });
+
+  it('should return true when a top-level value is null', () => {
+    const object = {
+      currency: 'USD',
+      marketPrice: null,
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(true);
+  });
+
+  it('should return true when a top-level value is undefined', () => {
+    const object = {
+      currency: 'USD',
+      marketPrice: undefined,
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(true);
+  });
+
+  it('should return true when a value nested in an object is null', () => {
+    const object = {
+      currency: 'USD',
+      market: {
+        previousClose: 273.04,
+        price: null
+      },
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(true);
+  });
+
+  it('should return true when the first nested object is fully defined but a later sibling key is null', () => {
+    const object = {
+      market: {
+        previousClose: 273.04,
+        price: 271.86
+      },
+      marketPrice: null,
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(true);
+  });
+
+  it('should return true when the first nested object is fully defined but a later sibling key is undefined', () => {
+    const object = {
+      market: {
+        previousClose: 273.04,
+        price: 271.86
+      },
+      marketPrice: undefined,
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(true);
+  });
+
+  it('should return true when the first nested object is fully defined but a later nested object holds null', () => {
+    const object = {
+      developedMarkets: {
+        UNKNOWN: 0,
+        weight: 1
+      },
+      emergingMarkets: {
+        UNKNOWN: null,
+        weight: 0
+      }
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(true);
+  });
+
+  it('should return false when a deeply nested object is fully defined and is followed by a defined sibling', () => {
+    const object = {
+      holding: {
+        market: {
+          region: {
+            UNKNOWN: 0,
+            developedMarkets: 1
+          }
+        }
+      },
+      symbol: 'AAPL'
+    };
+
+    expect(hasNotDefinedValuesInObject(object)).toBe(false);
   });
 });
 
