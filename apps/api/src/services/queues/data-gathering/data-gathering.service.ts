@@ -28,7 +28,7 @@ import {
 
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DataSource, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -122,11 +122,7 @@ export class DataGatheringService {
     dataSource,
     date,
     symbol
-  }: {
-    dataSource: DataSource;
-    date: Date;
-    symbol: string;
-  }) {
+  }: { date: Date } & AssetProfileIdentifier) {
     try {
       const historicalData = await this.dataProviderService.getHistoricalRaw({
         assetProfileIdentifiers: [{ dataSource, symbol }],

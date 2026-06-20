@@ -11,6 +11,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation/imp
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Account, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
@@ -198,7 +199,7 @@ describe('PortfolioService', () => {
         portfolioService as unknown as {
           getCashSymbolProfiles: (
             aCashDetails: CashDetails
-          ) => { dataSource: DataSource; symbol: string }[];
+          ) => AssetProfileIdentifier[];
         }
       ).getCashSymbolProfiles(cashDetails);
 
