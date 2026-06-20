@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the _Fear & Greed Index_ (market mood) in the markets overview to use the stored market data instead of a live quote
 - Moved the endpoint to get the asset profiles from `GET api/v1/admin/market-data` to `GET api/v1/asset-profiles`
 - Added the selected asset profile count to the delete menu item of the historical market data table in the admin control panel
 - Added the selected asset profile count to the deletion confirmation dialog of the historical market data table in the admin control panel
