@@ -28,6 +28,7 @@ import {
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
+  AssetProfileResponse,
   AssetProfilesResponse,
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
@@ -40,7 +41,6 @@ import {
   ImportResponse,
   InfoItem,
   LookupResponse,
-  AssetProfileResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
   PlatformsResponse,
@@ -552,6 +552,7 @@ export class DataService {
           for (const item of data.marketData) {
             item.date = parseISO(item.date);
           }
+
           return data;
         })
       );

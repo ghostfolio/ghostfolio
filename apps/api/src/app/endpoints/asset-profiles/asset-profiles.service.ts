@@ -13,10 +13,10 @@ import {
   isCurrency
 } from '@ghostfolio/common/helper';
 import {
-  AssetProfileItem,
-  AssetProfileIdentifier,
-  AssetProfilesResponse,
   AdminMarketDataDetails,
+  AssetProfileIdentifier,
+  AssetProfileItem,
+  AssetProfilesResponse,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
