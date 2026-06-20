@@ -115,7 +115,7 @@
             [isInPercentage]="showValuesInPercentage()"
             [keys]="['symbol']"
             [locale]="user?.settings?.locale"
-            [showLabels]="deviceType !== 'mobile'"
+            [showLabels]="deviceType() !== 'mobile'"
             (proportionChartClicked)="onSymbolChartClicked($event)"
           />
         </mat-card-content>

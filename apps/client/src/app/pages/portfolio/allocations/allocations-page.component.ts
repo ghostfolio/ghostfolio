@@ -24,6 +24,7 @@ import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit
@@ -72,7 +73,9 @@ export class GfAllocationsPageComponent implements OnInit {
   protected countries: {
     [code: string]: { name: string; value: number };
   };
-  protected deviceType: string;
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
   protected hasImpersonationId: boolean;
   protected holdings: {
     [symbol: string]: Pick<
@@ -145,8 +148,6 @@ export class GfAllocationsPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -599,15 +600,15 @@ export class GfAllocationsPageComponent implements OnInit {
       autoFocus: false,
       data: {
         accountId: aAccountId,
-        deviceType: this.deviceType,
+        deviceType: this.deviceType(),
         hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
