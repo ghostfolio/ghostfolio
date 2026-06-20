@@ -6,7 +6,7 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UpdateAssetProfileDataDto } from '@ghostfolio/common/dtos';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
-import { MarketDataDetailsResponse } from '@ghostfolio/common/interfaces';
+import { AssetProfileResponse } from '@ghostfolio/common/interfaces';
 import {
   AssetProfilesResponse,
   EnhancedSymbolProfile
@@ -39,8 +39,8 @@ export class AssetProfilesController {
   public constructor(
     private readonly apiService: ApiService,
     private readonly assetProfilesService: AssetProfilesService,
-    private readonly symbolProfileService: SymbolProfileService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Get()
@@ -76,10 +76,10 @@ export class AssetProfilesController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getAssetProfileMarketData(
+  public async getAssetProfile(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<MarketDataDetailsResponse> {
+  ): Promise<AssetProfileResponse> {
     const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
       { dataSource, symbol }
     ]);
@@ -112,7 +112,7 @@ export class AssetProfilesController {
       );
     }
 
-    return this.assetProfilesService.getMarketDataBySymbol({
+    return this.assetProfilesService.getAssetProfile({
       dataSource,
       symbol
     });

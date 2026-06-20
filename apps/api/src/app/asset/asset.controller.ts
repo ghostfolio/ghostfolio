@@ -21,7 +21,7 @@ export class AssetController {
     @Param('symbol') symbol: string
   ): Promise<AssetResponse> {
     const { assetProfile, marketData } =
-      await this.assetProfilesService.getMarketDataBySymbol({
+      await this.assetProfilesService.getAssetProfile({
         dataSource,
         symbol
       });

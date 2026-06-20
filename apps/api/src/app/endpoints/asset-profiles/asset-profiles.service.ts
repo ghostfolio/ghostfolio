@@ -31,14 +31,14 @@ export class AssetProfilesService {
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public async getMarketDataBySymbol({
+  public async getAssetProfile({
     dataSource,
     symbol
   }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {

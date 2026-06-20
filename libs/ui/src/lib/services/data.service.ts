@@ -40,7 +40,7 @@ import {
   ImportResponse,
   InfoItem,
   LookupResponse,
-  MarketDataDetailsResponse,
+  AssetProfileResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
   PlatformsResponse,
@@ -544,7 +544,7 @@ export class DataService {
   }: {
     dataSource: DataSource;
     symbol: string;
-  }): Observable<MarketDataDetailsResponse> {
+  }): Observable<AssetProfileResponse> {
     return this.http
       .get<any>(`/api/v1/asset-profiles/${dataSource}/${symbol}`)
       .pipe(

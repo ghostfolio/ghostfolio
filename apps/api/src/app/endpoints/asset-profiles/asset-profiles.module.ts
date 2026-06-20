@@ -16,6 +16,7 @@ import { AssetProfilesService } from './asset-profiles.service';
 
 @Module({
   controllers: [AssetProfilesController],
+  exports: [AssetProfilesService],
   imports: [
     ActivitiesModule,
     ApiModule,
@@ -28,7 +29,6 @@ import { AssetProfilesService } from './asset-profiles.service';
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],
-  providers: [AssetProfilesService],
-  exports: [AssetProfilesService]
+  providers: [AssetProfilesService]
 })
 export class AssetProfilesModule {}
