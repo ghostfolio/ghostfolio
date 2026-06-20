@@ -191,12 +191,7 @@ export class AdminService {
         }
       });
 
-      user.subscriptions = subscriptions.map((subscription) => {
-        return {
-          ...subscription,
-          price: subscription.price ?? 0
-        };
-      });
+      user.subscriptions = subscriptions;
     }
 
     return user;
