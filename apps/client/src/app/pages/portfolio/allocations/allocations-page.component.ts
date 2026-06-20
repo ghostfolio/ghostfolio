@@ -43,6 +43,7 @@ import {
 } from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { filter, switchMap, tap } from 'rxjs';
 
 import { AllocationsPageParams } from './interfaces/interfaces';
 
@@ -161,31 +162,30 @@ export class GfAllocationsPageComponent implements OnInit {
       });
 
     this.userService.stateChanged
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((state) => {
-        if (state?.user) {
+      .pipe(
+        filter((state) => !!state?.user),
+        tap((state) => {
           this.user = state.user;
 
           this.isLoading = true;
 
           this.initialize();
 
-          this.fetchPortfolioDetails()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((portfolioDetails) => {
-              this.initialize();
-
-              this.portfolioDetails = portfolioDetails;
-
-              this.initializeAllocationsData();
-
-              this.isLoading = false;
-
-              this.changeDetectorRef.markForCheck();
-            });
-
           this.changeDetectorRef.markForCheck();
-        }
+        }),
+        switchMap(() => this.fetchPortfolioDetails()),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((portfolioDetails) => {
+        this.initialize();
+
+        this.portfolioDetails = portfolioDetails;
+
+        this.initializeAllocationsData();
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.initialize();
