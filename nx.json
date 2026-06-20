@@ -125,5 +125,6 @@
     ]
   },
   "parallel": 1,
-  "defaultBase": "origin/main"
+  "defaultBase": "origin/main",
+  "analytics": false
 }

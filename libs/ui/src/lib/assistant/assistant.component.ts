@@ -1,11 +1,9 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
@@ -13,18 +11,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
-  EventEmitter,
   HostListener,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   QueryList,
   ViewChild,
-  ViewChildren
+  ViewChildren,
+  output
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,7 +42,7 @@ import {
 } from 'ionicons/icons';
 import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
+import { EMPTY, Observable, merge, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -51,7 +50,6 @@ import {
   map,
   scan,
   switchMap,
-  takeUntil,
   tap
 } from 'rxjs/operators';
 
@@ -88,9 +86,79 @@ import {
   templateUrl: './assistant.html'
 })
 export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
-  @HostListener('document:keydown', ['$event']) onKeydown(
-    event: KeyboardEvent
+  public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
+
+  @Input() deviceType: string;
+  @Input() hasPermissionToAccessAdminControl: boolean;
+  @Input() hasPermissionToChangeDateRange: boolean;
+  @Input() hasPermissionToChangeFilters: boolean;
+  @Input() user: User;
+
+  @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
+  @ViewChild('search', { static: true })
+  searchElement: ElementRef<HTMLInputElement>;
+
+  @ViewChildren(GfAssistantListItemComponent)
+  assistantListItems: QueryList<GfAssistantListItemComponent>;
+
+  public accounts: AccountWithPlatform[] = [];
+  public assetClasses: Filter[] = [];
+  public dateRangeFormControl = new FormControl<string | null>(null);
+  public dateRangeOptions: DateRangeOption[] = [];
+  public holdings: PortfolioPosition[] = [];
+  public isLoading = {
+    accounts: false,
+    assetProfiles: false,
+    holdings: false,
+    quickLinks: false
+  };
+  public isOpen = false;
+  public placeholder = $localize`Find account, holding or page...`;
+  public portfolioFilterFormControl = new FormControl<PortfolioFilterFormValue>(
+    {
+      account: null,
+      assetClass: null,
+      holding: null,
+      tag: null
+    }
+  );
+  public searchFormControl = new FormControl('');
+  public searchResults: SearchResults = {
+    accounts: [],
+    assetProfiles: [],
+    holdings: [],
+    quickLinks: []
+  };
+  public tags: Filter[] = [];
+
+  protected readonly closed = output<void>();
+  protected readonly dateRangeChanged = output<DateRange>();
+  protected readonly filtersChanged = output<Filter[]>();
+
+  private readonly PRESELECTION_DELAY = 100;
+
+  private filterTypes: Filter['type'][] = [
+    'ACCOUNT',
+    'ASSET_CLASS',
+    'DATA_SOURCE',
+    'SYMBOL',
+    'TAG'
+  ];
+
+  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
+  private preselectionTimeout: ReturnType<typeof setTimeout>;
+
+  public constructor(
+    private adminService: AdminService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
+    private destroyRef: DestroyRef
   ) {
+    addIcons({ closeCircleOutline, closeOutline, searchOutline });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeydown(event: KeyboardEvent) {
     if (!this.isOpen) {
       return;
     }
@@ -120,84 +188,18 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  @Input() deviceType: string;
-  @Input() hasPermissionToAccessAdminControl: boolean;
-  @Input() hasPermissionToChangeDateRange: boolean;
-  @Input() hasPermissionToChangeFilters: boolean;
-  @Input() user: User;
-
-  @Output() closed = new EventEmitter<void>();
-  @Output() dateRangeChanged = new EventEmitter<DateRange>();
-  @Output() filtersChanged = new EventEmitter<Filter[]>();
-
-  @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
-  @ViewChild('search', { static: true }) searchElement: ElementRef;
-
-  @ViewChildren(GfAssistantListItemComponent)
-  assistantListItems: QueryList<GfAssistantListItemComponent>;
-
-  public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
-
-  public accounts: AccountWithPlatform[] = [];
-  public assetClasses: Filter[] = [];
-  public dateRangeFormControl = new FormControl<string>(undefined);
-  public dateRangeOptions: DateRangeOption[] = [];
-  public holdings: PortfolioPosition[] = [];
-  public isLoading = {
-    accounts: false,
-    assetProfiles: false,
-    holdings: false,
-    quickLinks: false
-  };
-  public isOpen = false;
-  public placeholder = $localize`Find account, holding or page...`;
-  public portfolioFilterFormControl = new FormControl<PortfolioFilterFormValue>(
-    {
-      account: null,
-      assetClass: null,
-      holding: null,
-      tag: null
-    }
-  );
-  public searchFormControl = new FormControl('');
-  public searchResults: SearchResults = {
-    accounts: [],
-    assetProfiles: [],
-    holdings: [],
-    quickLinks: []
-  };
-  public tags: Filter[] = [];
-
-  private readonly PRESELECTION_DELAY = 100;
-
-  private filterTypes: Filter['type'][] = [
-    'ACCOUNT',
-    'ASSET_CLASS',
-    'DATA_SOURCE',
-    'SYMBOL',
-    'TAG'
-  ];
-
-  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
-  private preselectionTimeout: ReturnType<typeof setTimeout>;
-  private unsubscribeSubject = new Subject<void>();
-
-  public constructor(
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
-  ) {
-    addIcons({ closeCircleOutline, closeOutline, searchOutline });
-  }
-
   public ngOnInit() {
-    this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
-      return {
-        id: assetClass,
-        label: translate(assetClass),
-        type: 'ASSET_CLASS'
-      };
-    });
+    this.assetClasses = Object.keys(AssetClass)
+      .map((assetClass) => {
+        return {
+          id: assetClass,
+          label: translate(assetClass),
+          type: 'ASSET_CLASS'
+        } satisfies Filter;
+      })
+      .sort((a, b) => {
+        return a.label.localeCompare(b.label);
+      });
 
     this.searchFormControl.valueChanges
       .pipe(
@@ -336,7 +338,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             )
           );
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (searchResults) => {
@@ -437,12 +439,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         ?.filter(({ isUsed }) => {
           return isUsed;
         })
-        .map(({ id, name }) => {
+        ?.map(({ id, name }) => {
           return {
             id,
             label: translate(name),
             type: 'TAG'
-          };
+          } satisfies Filter;
+        })
+        ?.sort((a, b) => {
+          return a.label.localeCompare(b.label);
         }) ?? [];
   }
 
@@ -480,11 +485,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioHoldings()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = holdings
           .filter(({ assetSubClass }) => {
-            return !['CASH'].includes(assetSubClass);
+            return assetSubClass && !['CASH'].includes(assetSubClass);
           })
           .sort((a, b) => {
             return a.name?.localeCompare(b.name);
@@ -501,23 +506,23 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.filtersChanged.emit([
       {
-        id: filterValue?.account,
+        id: filterValue?.account ?? '',
         type: 'ACCOUNT'
       },
       {
-        id: filterValue?.assetClass,
+        id: filterValue?.assetClass ?? '',
         type: 'ASSET_CLASS'
       },
       {
-        id: filterValue?.holding?.dataSource,
+        id: filterValue?.holding?.dataSource ?? '',
         type: 'DATA_SOURCE'
       },
       {
-        id: filterValue?.holding?.symbol,
+        id: filterValue?.holding?.symbol ?? '',
         type: 'SYMBOL'
       },
       {
-        id: filterValue?.tag,
+        id: filterValue?.tag ?? '',
         type: 'TAG'
       }
     ]);
@@ -543,7 +548,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.filterTypes.map((type) => {
         return {
           type,
-          id: null
+          id: ''
         };
       })
     );
@@ -559,9 +564,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     if (this.preselectionTimeout) {
       clearTimeout(this.preselectionTimeout);
     }
-
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private getCurrentAssistantListItem() {
@@ -646,7 +648,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             };
           });
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -675,13 +677,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass),
+                assetSubClassString: translate(assetSubClass ?? ''),
                 mode: SearchMode.ASSET_PROFILE as const
               };
             }
           );
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
@@ -707,20 +709,20 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass),
+                assetSubClassString: translate(assetSubClass ?? ''),
                 mode: SearchMode.HOLDING as const
               };
             }
           );
         }),
-        takeUntil(this.unsubscribeSubject)
+        takeUntilDestroyed(this.destroyRef)
       );
   }
 
   private searchQuickLinks(aSearchTerm: string): SearchResultItem[] {
     const searchTerm = aSearchTerm.toLowerCase();
 
-    const allRoutes = Object.values(internalRoutes)
+    const allRoutes = Object.values<InternalRoute>(internalRoutes)
       .filter(({ excludeFromAssistant }) => {
         if (isFunction(excludeFromAssistant)) {
           return excludeFromAssistant(this.user);
@@ -728,13 +730,13 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
         return !excludeFromAssistant;
       })
-      .reduce((acc, route) => {
+      .reduce<InternalRoute[]>((acc, route) => {
         acc.push(route);
         if (route.subRoutes) {
           acc.push(...Object.values(route.subRoutes));
         }
         return acc;
-      }, [] as InternalRoute[]);
+      }, []);
 
     const fuse = new Fuse(allRoutes, {
       keys: ['title'],
@@ -757,6 +759,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const symbol = this.user?.settings?.['filters.symbol'];
     const selectedHolding = this.holdings.find((holding) => {
       return (
+        !!(dataSource && symbol) &&
         getAssetProfileIdentifier({
           dataSource: holding.dataSource,
           symbol: holding.symbol

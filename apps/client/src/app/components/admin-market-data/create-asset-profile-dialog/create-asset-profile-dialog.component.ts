@@ -1,24 +1,25 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   DEFAULT_CURRENCY,
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
   FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   ValidationErrors,
@@ -32,9 +33,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DataSource } from '@prisma/client';
 import { isISO4217CurrencyCode } from 'class-validator';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { switchMap } from 'rxjs';
 
-import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
+import type {
+  CreateAssetProfileDialogMode,
+  CreateAssetProfileForm
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,33 +57,45 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
   templateUrl: 'create-asset-profile-dialog.html'
 })
-export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
-  public createAssetProfileForm: FormGroup;
-  public ghostfolioPrefix = `${ghostfolioPrefix}_`;
-  public mode: CreateAssetProfileDialogMode;
+export class GfCreateAssetProfileDialogComponent implements OnInit {
+  protected createAssetProfileForm: CreateAssetProfileForm;
+  protected readonly ghostfolioPrefix = `${ghostfolioPrefix}_`;
+  protected mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
   private dataSourceForExchangeRates: DataSource;
-  private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    public readonly adminService: AdminService,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
-    public readonly formBuilder: FormBuilder
-  ) {}
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateAssetProfileDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
+
+  protected get showCurrencyErrorMessage() {
+    const addCurrencyFormControl =
+      this.createAssetProfileForm.controls.addCurrency;
+
+    if (addCurrencyFormControl.hasError('invalidCurrency')) {
+      return true;
+    }
+
+    return false;
+  }
 
   public ngOnInit() {
     this.initialize();
 
     this.createAssetProfileForm = this.formBuilder.group(
       {
-        addCurrency: new FormControl(null, [
+        addCurrency: new FormControl<string | null>(null, [
           this.iso4217CurrencyCodeValidator()
         ]),
-        addSymbol: new FormControl(null, [Validators.required]),
-        searchSymbol: new FormControl(null, [Validators.required])
+        addSymbol: new FormControl<string | null>(null, [Validators.required]),
+        searchSymbol: new FormControl<AssetProfileIdentifier | null>(null, [
+          Validators.required
+        ])
       },
       {
         validators: this.atLeastOneValid
@@ -102,13 +118,13 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onSubmit() {
     if (this.mode === 'auto') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource:
-          this.createAssetProfileForm.get('searchSymbol').value.dataSource,
-        symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
+          this.createAssetProfileForm.controls.searchSymbol.value?.dataSource,
+        symbol: this.createAssetProfileForm.controls.searchSymbol.value?.symbol
       });
     } else if (this.mode === 'currency') {
-      const currency = this.createAssetProfileForm.get('addCurrency')
-        .value as string;
+      const currency = this.createAssetProfileForm.controls.addCurrency.value;
 
       const currencies = Array.from(
         new Set([...this.customCurrencies, currency])
@@ -125,39 +141,28 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
               symbol: `${DEFAULT_CURRENCY}${currency}`
             });
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
-          this.dialogRef.close();
+          this.dialogRef.close({
+            addAssetProfile: false,
+            dataSource: this.dataSourceForExchangeRates,
+            symbol: `${DEFAULT_CURRENCY}${currency}`
+          });
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource: 'MANUAL',
-        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`
+        symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.controls.addSymbol.value}`
       });
     }
   }
 
-  public get showCurrencyErrorMessage() {
-    const addCurrencyFormControl =
-      this.createAssetProfileForm.get('addCurrency');
-
-    if (addCurrencyFormControl.hasError('invalidCurrency')) {
-      return true;
-    }
-
-    return false;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  private atLeastOneValid(control: AbstractControl): ValidationErrors {
-    const addCurrencyControl = control.get('addCurrency');
-    const addSymbolControl = control.get('addSymbol');
-    const searchSymbolControl = control.get('searchSymbol');
+  private atLeastOneValid(control: CreateAssetProfileForm): ValidationErrors {
+    const addCurrencyControl = control.controls.addCurrency;
+    const addSymbolControl = control.controls.addSymbol;
+    const searchSymbolControl = control.controls.searchSymbol;
 
     if (
       addCurrencyControl.valid &&
@@ -169,11 +174,8 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
 
     if (
       addCurrencyControl.valid ||
-      !addCurrencyControl ||
       addSymbolControl.valid ||
-      !addSymbolControl ||
-      searchSymbolControl.valid ||
-      !searchSymbolControl
+      searchSymbolControl.valid
     ) {
       return { atLeastOneValid: false };
     }
@@ -184,15 +186,18 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   private initialize() {
     this.adminService
       .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ dataProviders, settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
 
-        const { dataSource } = dataProviders.find(({ useForExchangeRates }) => {
-          return useForExchangeRates;
-        });
+        const { dataSource } =
+          dataProviders.find(({ useForExchangeRates }) => {
+            return useForExchangeRates;
+          }) ?? {};
 
-        this.dataSourceForExchangeRates = dataSource;
+        if (dataSource) {
+          this.dataSourceForExchangeRates = dataSource;
+        }
 
         this.changeDetectorRef.markForCheck();
       });

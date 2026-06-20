@@ -1,15 +1,15 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfCarouselComponent } from '@ghostfolio/ui/carousel';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { GfLogoCarouselComponent } from '@ghostfolio/ui/logo-carousel';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
@@ -21,7 +21,6 @@ import {
   starOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -40,7 +39,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./landing-page.scss'],
   templateUrl: './landing-page.html'
 })
-export class GfLandingPageComponent implements OnDestroy, OnInit {
+export class GfLandingPageComponent implements OnInit {
   public countriesOfSubscribersMap: {
     [code: string]: { value: number };
   } = {};
@@ -107,8 +106,6 @@ export class GfLandingPageComponent implements OnDestroy, OnInit {
     }
   ];
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private dataService: DataService,
     private deviceService: DeviceDetectorService
@@ -154,10 +151,5 @@ export class GfLandingPageComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

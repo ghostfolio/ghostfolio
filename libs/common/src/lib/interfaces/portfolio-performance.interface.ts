@@ -7,4 +7,5 @@ export interface PortfolioPerformance {
   netPerformancePercentageWithCurrencyEffect: number;
   netPerformanceWithCurrencyEffect: number;
   totalInvestment: number;
+  totalInvestmentValueWithCurrencyEffect: number;
 }

@@ -29,7 +29,7 @@ describe('YahooFinanceDataEnhancerService', () => {
   let yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService;
 
   beforeAll(async () => {
-    cryptocurrencyService = new CryptocurrencyService();
+    cryptocurrencyService = new CryptocurrencyService(null);
 
     yahooFinanceDataEnhancerService = new YahooFinanceDataEnhancerService(
       cryptocurrencyService

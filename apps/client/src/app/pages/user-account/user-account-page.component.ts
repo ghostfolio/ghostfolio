@@ -6,16 +6,16 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page has-tabs' },
@@ -25,20 +25,19 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./user-account-page.scss'],
   templateUrl: './user-account-page.html'
 })
-export class GfUserAccountPageComponent implements OnDestroy, OnInit {
+export class GfUserAccountPageComponent implements OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -72,10 +71,5 @@ export class GfUserAccountPageComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

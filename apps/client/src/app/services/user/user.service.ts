@@ -1,15 +1,17 @@
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { throwError } from 'rxjs';
-import { catchError, map, takeUntil } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { SubscriptionInterstitialDialogParams } from '../../components/subscription-interstitial-dialog/interfaces/interfaces';
 import { GfSubscriptionInterstitialDialogComponent } from '../../components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
@@ -21,12 +23,13 @@ import { UserStoreState } from './user-store.state';
 })
 export class UserService extends ObservableStore<UserStoreState> {
   private deviceType: string;
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
-    private http: HttpClient
+    private http: HttpClient,
+    private webAuthnService: WebAuthnService
   ) {
     super({ trackStateHistory: true });
 
@@ -93,8 +96,38 @@ export class UserService extends ObservableStore<UserStoreState> {
     return this.getFilters().length > 0;
   }
 
-  public remove() {
+  public reset() {
     this.setState({ user: null }, UserStoreActions.RemoveUser);
+  }
+
+  public signOut() {
+    const utmSource = window.localStorage.getItem('utm_source');
+
+    if (this.webAuthnService.isEnabled()) {
+      this.webAuthnService.deregister().subscribe();
+    }
+
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+
+    void this.clearAllCookies();
+
+    this.reset();
+
+    if (utmSource) {
+      window.localStorage.setItem('utm_source', utmSource);
+    }
+  }
+
+  private async clearAllCookies() {
+    if (!('cookieStore' in window)) {
+      console.warn('Cookie Store API not available in this browser');
+      return;
+    }
+
+    const cookies = await cookieStore.getAll();
+
+    await Promise.all(cookies.map(({ name }) => cookieStore.delete(name)));
   }
 
   private fetchUser(): Observable<User> {
@@ -131,7 +164,7 @@ export class UserService extends ObservableStore<UserStoreState> {
 
           dialogRef
             .afterClosed()
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
         }
 

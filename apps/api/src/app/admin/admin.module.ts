@@ -1,4 +1,4 @@
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
@@ -9,7 +9,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
@@ -20,15 +20,15 @@ import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
+    ActivitiesModule,
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     DemoModule,
     ExchangeRateDataModule,
     MarketDataModule,
-    OrderModule,
     PrismaModule,
     PropertyModule,
     QueueModule,

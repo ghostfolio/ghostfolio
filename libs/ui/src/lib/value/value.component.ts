@@ -1,28 +1,41 @@
 import { getLocale } from '@ghostfolio/common/helper';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  computed,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  input,
   Input,
-  OnChanges
+  OnChanges,
+  ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { copyOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
+import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonIcon, NgxSkeletonLoaderModule],
+  imports: [CommonModule, IonIcon, MatButtonModule, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
   styleUrls: ['./value.component.scss'],
   templateUrl: './value.component.html'
 })
-export class GfValueComponent implements OnChanges {
+export class GfValueComponent implements AfterViewInit, OnChanges {
   @Input() colorizeSign = false;
   @Input() deviceType: string;
+  @Input() enableCopyToClipboardButton = false;
   @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
@@ -30,17 +43,57 @@ export class GfValueComponent implements OnChanges {
   @Input() isPercent = false;
   @Input() locale: string;
   @Input() position = '';
-  @Input() precision: number;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
   @Input() unit = '';
   @Input() value: number | string = '';
 
+  @ViewChild('labelContent', { static: false })
+  labelContent!: ElementRef<HTMLSpanElement>;
+
   public absoluteValue = 0;
   public formattedValue = '';
+  public hasLabel = false;
   public isNumber = false;
   public isString = false;
   public useAbsoluteValue = false;
+
+  public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private clipboard: Clipboard,
+    private snackBar: MatSnackBar
+  ) {
+    addIcons({
+      copyOutline
+    });
+  }
+
+  public readonly precision = input<number>();
+
+  private readonly formatOptions = computed<Intl.NumberFormatOptions>(() => {
+    const digits = this.hasPrecision ? this.precision() : 2;
+
+    return {
+      maximumFractionDigits: digits,
+      minimumFractionDigits: digits
+    };
+  });
+
+  private get hasPrecision() {
+    const precision = this.precision();
+    return precision !== undefined && precision >= 0;
+  }
+
+  public ngAfterViewInit() {
+    if (this.labelContent) {
+      const element = this.labelContent.nativeElement;
+
+      this.hasLabel =
+        element.children.length > 0 || element.textContent.trim().length > 0;
+
+      this.changeDetectorRef.markForCheck();
+    }
+  }
 
   public ngOnChanges() {
     this.initializeVariables();
@@ -56,50 +109,37 @@ export class GfValueComponent implements OnChanges {
             try {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
-                {
-                  maximumFractionDigits:
-                    this.precision >= 0 ? this.precision : 2,
-                  minimumFractionDigits:
-                    this.precision >= 0 ? this.precision : 2
-                }
+                this.formatOptions()
               );
             } catch {}
           } else if (this.isPercent) {
             try {
               this.formattedValue = (this.absoluteValue * 100).toLocaleString(
                 this.locale,
-                {
-                  maximumFractionDigits:
-                    this.precision >= 0 ? this.precision : 2,
-                  minimumFractionDigits:
-                    this.precision >= 0 ? this.precision : 2
-                }
+                this.formatOptions()
               );
             } catch {}
           }
         } else if (this.isCurrency) {
           try {
-            this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: this.precision >= 0 ? this.precision : 2,
-              minimumFractionDigits: this.precision >= 0 ? this.precision : 2
-            });
+            this.formattedValue = this.value?.toLocaleString(
+              this.locale,
+              this.formatOptions()
+            );
           } catch {}
         } else if (this.isPercent) {
           try {
             this.formattedValue = (this.value * 100).toLocaleString(
               this.locale,
-              {
-                maximumFractionDigits: this.precision >= 0 ? this.precision : 2,
-                minimumFractionDigits: this.precision >= 0 ? this.precision : 2
-              }
+              this.formatOptions()
             );
           } catch {}
-        } else if (this.precision >= 0) {
+        } else if (this.hasPrecision) {
           try {
-            this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: this.precision,
-              minimumFractionDigits: this.precision
-            });
+            this.formattedValue = this.value?.toLocaleString(
+              this.locale,
+              this.formatOptions()
+            );
           } catch {}
         } else {
           this.formattedValue = this.value?.toLocaleString(this.locale);
@@ -133,13 +173,24 @@ export class GfValueComponent implements OnChanges {
     }
   }
 
+  public onCopyValueToClipboard() {
+    this.clipboard.copy(String(this.value));
+
+    this.snackBar.open(
+      '✅ ' + $localize`${this.value} has been copied to the clipboard`,
+      undefined,
+      {
+        duration: ms('3 seconds')
+      }
+    );
+  }
+
   private initializeVariables() {
     this.absoluteValue = 0;
     this.formattedValue = '';
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
-    this.precision = this.precision >= 0 ? this.precision : undefined;
     this.useAbsoluteValue = false;
   }
 }

@@ -5,7 +5,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
@@ -17,7 +17,7 @@ import { WatchlistService } from './watchlist.service';
   controllers: [WatchlistController],
   imports: [
     BenchmarkModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     ImpersonationModule,
     MarketDataModule,

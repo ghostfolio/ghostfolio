@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+
+import { PromptDialogParams } from './interfaces/interfaces';
 
 @Component({
   imports: [
@@ -18,26 +20,27 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class GfPromptDialogComponent {
   public confirmLabel: string;
-  public defaultValue: string;
+  public defaultValue?: string;
   public discardLabel: string;
   public formControl = new FormControl('');
   public title: string;
-  public valueLabel: string;
+  public valueLabel?: string;
 
-  public constructor(public dialogRef: MatDialogRef<GfPromptDialogComponent>) {}
+  protected readonly dialogRef =
+    inject<MatDialogRef<GfPromptDialogComponent>>(MatDialogRef);
 
-  public initialize(aParams: {
-    confirmLabel?: string;
-    defaultValue?: string;
-    discardLabel?: string;
-    title: string;
-    valueLabel?: string;
-  }) {
-    this.confirmLabel = aParams.confirmLabel;
-    this.defaultValue = aParams.defaultValue;
-    this.discardLabel = aParams.discardLabel;
-    this.formControl.setValue(aParams.defaultValue);
-    this.title = aParams.title;
-    this.valueLabel = aParams.valueLabel;
+  public initialize({
+    confirmLabel,
+    defaultValue,
+    discardLabel,
+    title,
+    valueLabel
+  }: PromptDialogParams) {
+    this.confirmLabel = confirmLabel;
+    this.defaultValue = defaultValue;
+    this.discardLabel = discardLabel;
+    this.formControl.setValue(defaultValue ?? null);
+    this.title = title;
+    this.valueLabel = valueLabel;
   }
 }

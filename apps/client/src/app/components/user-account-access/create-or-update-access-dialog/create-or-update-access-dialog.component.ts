@@ -1,5 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import {
   AssetProfileIdentifier,
@@ -13,15 +11,19 @@ import {
   GfPortfolioFilterFormComponent,
   PortfolioFilterFormValue
 } from '@ghostfolio/ui/portfolio-filter-form';
+import { DataService } from '@ghostfolio/ui/services';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 
+import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
-  OnDestroy,
+  DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -39,9 +41,8 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
-import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
+import { EMPTY, catchError } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
@@ -62,9 +63,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-access-dialog.scss'],
   templateUrl: 'create-or-update-access-dialog.html'
 })
-export class GfCreateOrUpdateAccessDialogComponent
-  implements OnDestroy, OnInit
-{
+export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public accessForm: FormGroup;
   public mode: 'create' | 'update';
   public showFilterPanel = false;
@@ -74,17 +73,18 @@ export class GfCreateOrUpdateAccessDialogComponent
   public holdings: PortfolioPosition[] = [];
   public tags: Filter[] = [];
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly data =
+    inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateAccessDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly notificationService = inject(NotificationService);
+  private readonly userService = inject(UserService);
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
-    private dataService: DataService,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateAccessDialogComponent>,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService,
-    private userService: UserService
-  ) {
+  public constructor() {
     this.mode = this.data.access?.id ? 'update' : 'create';
   }
 
@@ -110,28 +110,31 @@ export class GfCreateOrUpdateAccessDialogComponent
       ]
     });
 
-    this.accessForm.get('type').valueChanges.subscribe((accessType) => {
-      const granteeUserIdControl = this.accessForm.get('granteeUserId');
-      const permissionsControl = this.accessForm.get('permissions');
+    this.accessForm
+      .get('type')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((accessType) => {
+        const granteeUserIdControl = this.accessForm.get('granteeUserId');
+        const permissionsControl = this.accessForm.get('permissions');
 
-      if (accessType === 'PRIVATE') {
-        granteeUserIdControl.setValidators([
-          (control: AbstractControl) => Validators.required(control)
-        ]);
-        this.showFilterPanel = false;
-        this.accessForm.get('filters')?.setValue(null);
-      } else {
-        granteeUserIdControl.clearValidators();
-        granteeUserIdControl.setValue(null);
-        permissionsControl.setValue(this.data.access.permissions[0]);
-        this.showFilterPanel = true;
-        this.loadFilterData();
-      }
+        if (accessType === 'PRIVATE') {
+          granteeUserIdControl?.setValidators([
+            (control: AbstractControl) => Validators.required(control)
+          ]);
+          this.showFilterPanel = false;
+          this.accessForm.get('filters')?.setValue(null);
+        } else {
+          granteeUserIdControl?.clearValidators();
+          granteeUserIdControl?.setValue(null);
+          permissionsControl?.setValue(this.data.access.permissions[0]);
+          this.showFilterPanel = true;
+          this.loadFilterData();
+        }
 
-      granteeUserIdControl.updateValueAndValidity();
+        granteeUserIdControl?.updateValueAndValidity();
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
 
     if (isPublic) {
       this.showFilterPanel = true;
@@ -149,11 +152,6 @@ export class GfCreateOrUpdateAccessDialogComponent
     } else {
       await this.updateAccess();
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private buildFilterObject():
@@ -213,7 +211,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
     this.userService
       .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         this.accounts = user.accounts;
         this.tags = user.tags
@@ -228,7 +226,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
     this.dataService
       .fetchPortfolioDetails({})
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((response) => {
         if (response.holdings) {
           this.holdings = Object.values(response.holdings);
@@ -301,12 +299,10 @@ export class GfCreateOrUpdateAccessDialogComponent
     const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
 
     const access: CreateAccessDto = {
+      alias: this.accessForm.get('alias')?.value,
       filter,
-      alias: this.accessForm.get('alias')?.value as string,
-      granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
-      permissions: [
-        this.accessForm.get('permissions')?.value as AccessPermission
-      ]
+      granteeUserId: this.accessForm.get('granteeUserId')?.value,
+      permissions: [this.accessForm.get('permissions')?.value]
     };
 
     try {
@@ -319,8 +315,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .postAccess(access)
         .pipe(
-          catchError((error: { status?: number }) => {
-            if (error.status === (StatusCodes.BAD_REQUEST as number)) {
+          catchError((error: HttpErrorResponse) => {
+            if (error.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not grant access.`
               });
@@ -328,7 +324,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
             return EMPTY;
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
           this.dialogRef.close(access);
@@ -342,13 +338,11 @@ export class GfCreateOrUpdateAccessDialogComponent
     const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
 
     const access: UpdateAccessDto = {
-      alias: this.accessForm.get('alias')?.value as string,
+      alias: this.accessForm.get('alias')?.value,
       filter,
-      granteeUserId: this.accessForm.get('granteeUserId')?.value as string,
+      granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: this.data.access.id,
-      permissions: [
-        this.accessForm.get('permissions')?.value as AccessPermission
-      ]
+      permissions: [this.accessForm.get('permissions')?.value]
     };
 
     try {
@@ -361,8 +355,8 @@ export class GfCreateOrUpdateAccessDialogComponent
       this.dataService
         .putAccess(access)
         .pipe(
-          catchError((error: { status?: number }) => {
-            if (error.status === (StatusCodes.BAD_REQUEST as number)) {
+          catchError(({ status }: HttpErrorResponse) => {
+            if (status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
                 title: $localize`Oops! Could not update access.`
               });
@@ -370,7 +364,7 @@ export class GfCreateOrUpdateAccessDialogComponent
 
             return EMPTY;
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
           this.dialogRef.close(access);

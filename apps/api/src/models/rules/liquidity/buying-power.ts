@@ -63,13 +63,6 @@ export class BuyingPower extends Rule<Settings> {
     };
   }
 
-  public getCategoryName() {
-    return this.i18nService.getTranslation({
-      id: 'rule.liquidity.category',
-      languageCode: this.getLanguageCode()
-    });
-  }
-
   public getConfiguration() {
     return {
       threshold: {

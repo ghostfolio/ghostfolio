@@ -51,8 +51,18 @@ This Agreement constitutes the entire agreement between the User and LICENSEE re
 
 LICENSEE reserves the right to modify this Agreement at any time. Users are encouraged to review this Agreement periodically for updates. Continued use of the Service after changes to this Agreement constitutes acceptance of the modified terms.
 
+## Paid Plans
+
+LICENSEE offers paid plans (such as [Ghostfolio Premium](https://ghostfol.io/en/pricing)) for a fixed term as specified at the time of purchase. Paid plans do not renew automatically.
+
+LICENSEE may change the features or pricing of paid plans. For any existing paid plan, if a material feature is removed, LICENSEE may, acting in good faith, offer a pro-rata refund for the unused portion of the term upon the User’s request.
+
+## Refund Policy
+
+LICENSEE may offer a free trial of paid plans. Users are encouraged to use any available free trial to evaluate the Service before purchasing. While all purchases are final, a refund may be requested within fourteen (14) days of the purchase date by contacting LICENSEE. Requests after this period will not be honored.
+
 By accessing or using the Service, or downloading data provided by the Service, the User acknowledges that they have read, understood, and agreed to be bound by this Terms of Service Agreement.
 
 For any questions or concerns regarding this Agreement, please contact us [here](https://ghostfol.io/en/about).
 
-Date of Last Revision: March 29, 2025
+Date of Last Revision: April 6, 2026

@@ -1,7 +1,7 @@
 import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { PerformanceLoggingModule } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.module';
@@ -17,7 +17,7 @@ import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
@@ -34,16 +34,16 @@ import { RulesService } from './rules.service';
   exports: [PortfolioService],
   imports: [
     AccessModule,
+    ActivitiesModule,
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     ExchangeRateDataModule,
     I18nModule,
     ImpersonationModule,
     MarketDataModule,
-    OrderModule,
     PerformanceLoggingModule,
     PortfolioSnapshotQueueModule,
     PrismaModule,

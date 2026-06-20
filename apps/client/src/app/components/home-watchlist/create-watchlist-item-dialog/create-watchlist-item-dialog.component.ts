@@ -1,14 +1,8 @@
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -19,7 +13,8 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Subject } from 'rxjs';
+
+import { CreateWatchlistItemForm } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,51 +31,41 @@ import { Subject } from 'rxjs';
   styleUrls: ['./create-watchlist-item-dialog.component.scss'],
   templateUrl: 'create-watchlist-item-dialog.html'
 })
-export class GfCreateWatchlistItemDialogComponent implements OnDestroy, OnInit {
-  public createWatchlistItemForm: FormGroup;
-
-  private unsubscribeSubject = new Subject<void>();
-
-  public constructor(
-    public readonly dialogRef: MatDialogRef<GfCreateWatchlistItemDialogComponent>,
-    public readonly formBuilder: FormBuilder
-  ) {}
-
-  public ngOnInit() {
-    this.createWatchlistItemForm = this.formBuilder.group(
+export class GfCreateWatchlistItemDialogComponent {
+  protected readonly createWatchlistItemForm: CreateWatchlistItemForm =
+    new FormGroup(
       {
-        searchSymbol: new FormControl(null, [Validators.required])
+        searchSymbol: new FormControl<AssetProfileIdentifier | null>(null, [
+          Validators.required
+        ])
       },
       {
         validators: this.validator
       }
     );
-  }
 
-  public onCancel() {
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateWatchlistItemDialogComponent>>(MatDialogRef);
+
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  protected onSubmit() {
     this.dialogRef.close({
       dataSource:
-        this.createWatchlistItemForm.get('searchSymbol').value.dataSource,
-      symbol: this.createWatchlistItemForm.get('searchSymbol').value.symbol
+        this.createWatchlistItemForm.controls.searchSymbol.value?.dataSource,
+      symbol: this.createWatchlistItemForm.controls.searchSymbol.value?.symbol
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  private validator(control: AbstractControl): ValidationErrors {
-    const searchSymbolControl = control.get('searchSymbol');
+  private validator(control: CreateWatchlistItemForm): ValidationErrors {
+    const searchSymbolControl = control.controls.searchSymbol;
 
     if (
       searchSymbolControl.valid &&
-      searchSymbolControl.value.dataSource &&
-      searchSymbolControl.value.symbol
+      searchSymbolControl.value?.dataSource &&
+      searchSymbolControl.value?.symbol
     ) {
       return { incomplete: false };
     }

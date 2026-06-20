@@ -10,21 +10,21 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
 
-import { OrderController } from './order.controller';
-import { OrderService } from './order.service';
+import { ActivitiesController } from './activities.controller';
+import { ActivitiesService } from './activities.service';
 
 @Module({
-  controllers: [OrderController],
-  exports: [OrderService],
+  controllers: [ActivitiesController],
+  exports: [ActivitiesService],
   imports: [
     ApiModule,
     CacheModule,
-    DataGatheringModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     ExchangeRateDataModule,
     ImpersonationModule,
@@ -35,6 +35,6 @@ import { OrderService } from './order.service';
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],
-  providers: [AccountBalanceService, AccountService, OrderService]
+  providers: [AccountBalanceService, AccountService, ActivitiesService]
 })
-export class OrderModule {}
+export class ActivitiesModule {}

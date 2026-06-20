@@ -1,84 +1,108 @@
-@if (hasPermissionToCreateActivity) {
-  <div class="d-flex justify-content-end">
-    <button
-      class="align-items-center d-flex"
-      mat-stroked-button
-      (click)="onImport()"
-    >
-      <ion-icon class="mr-2" name="cloud-upload-outline" />
-      <span><ng-container i18n>Import Activities</ng-container>...</span>
-    </button>
-    @if (hasPermissionToExportActivities) {
-      <button
-        class="mx-1 no-min-width px-2"
-        mat-stroked-button
-        [matMenuTriggerFor]="activitiesMenu"
-        (click)="$event.stopPropagation()"
-      >
-        <ion-icon name="ellipsis-vertical" />
-      </button>
+<div class="d-flex justify-content-end justify-content-lg-between">
+  <div class="d-none d-lg-flex">
+    @if (hasPermissionToFilterByType) {
+      <mat-form-field appearance="outline" class="without-hint">
+        <mat-label i18n>Type</mat-label>
+        <mat-select multiple [formControl]="typesFilter">
+          @for (
+            activityType of activityTypesTranslationMap | keyvalue: sortByValue;
+            track activityType.key
+          ) {
+            <mat-option [value]="activityType.key">
+              {{ activityType.value }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     }
-    <mat-menu #activitiesMenu="matMenu" class="no-max-width" xPosition="before">
-      <button
-        mat-menu-item
-        [disabled]="dataSource?.data.length === 0"
-        (click)="onImportDividends()"
-      >
-        <span class="align-items-center d-flex">
-          <ion-icon class="mr-2" name="color-wand-outline" />
-          <span><ng-container i18n>Import Dividends</ng-container>...</span>
-        </span>
-      </button>
-      @if (hasPermissionToExportActivities) {
-        <button
-          class="align-items-center d-flex"
-          mat-menu-item
-          [disabled]="dataSource?.data.length === 0"
-          (click)="onExport()"
-        >
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="cloud-download-outline" />
-            <span i18n>Export Activities</span>
-          </span>
-        </button>
-      }
-      @if (hasPermissionToExportActivities) {
-        <button
-          class="align-items-center d-flex"
-          mat-menu-item
-          [disabled]="!hasDrafts"
-          (click)="onExportDrafts()"
-        >
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="calendar-clear-outline" />
-            <span i18n>Export Drafts as ICS</span>
-          </span>
-        </button>
-      }
-      <hr class="m-0" />
+  </div>
+
+  @if (hasPermissionToCreateActivity) {
+    <div class="d-flex">
       <button
         class="align-items-center d-flex"
-        mat-menu-item
-        [disabled]="
-          dataSource?.data.length === 0 || !hasPermissionToDeleteActivity
-        "
-        (click)="onDeleteActivities()"
+        mat-stroked-button
+        (click)="onImport()"
       >
-        <span class="align-items-center d-flex">
-          <ion-icon class="mr-2" name="trash-outline" />
-          <span i18n>Delete Activities</span>
-        </span>
+        <ion-icon class="mr-2" name="cloud-upload-outline" />
+        <span><ng-container i18n>Import Activities</ng-container>...</span>
       </button>
-    </mat-menu>
-  </div>
-}
+      @if (hasPermissionToExportActivities) {
+        <button
+          class="mx-1 no-min-width px-2"
+          mat-stroked-button
+          [matMenuTriggerFor]="activitiesMenu"
+          (click)="$event.stopPropagation()"
+        >
+          <ion-icon name="ellipsis-vertical" />
+        </button>
+      }
+      <mat-menu
+        #activitiesMenu="matMenu"
+        class="no-max-width"
+        xPosition="before"
+      >
+        <button
+          mat-menu-item
+          [disabled]="dataSource()?.data.length === 0"
+          (click)="onImportDividends()"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="color-wand-outline" />
+            <span><ng-container i18n>Import Dividends</ng-container>...</span>
+          </span>
+        </button>
+        @if (hasPermissionToExportActivities) {
+          <button
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="dataSource()?.data.length === 0"
+            (click)="onExport()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="cloud-download-outline" />
+              <span i18n>Export Activities</span>
+            </span>
+          </button>
+        }
+        @if (hasPermissionToExportActivities) {
+          <button
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="!hasDrafts"
+            (click)="onExportDrafts()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="calendar-clear-outline" />
+              <span i18n>Export Drafts as ICS</span>
+            </span>
+          </button>
+        }
+        <hr class="m-0" />
+        <button
+          class="align-items-center d-flex"
+          mat-menu-item
+          [disabled]="
+            dataSource()?.data.length === 0 || !hasPermissionToDeleteActivity
+          "
+          (click)="onDeleteActivities()"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="trash-outline" />
+            <span i18n>Delete Activities</span>
+          </span>
+        </button>
+      </mat-menu>
+    </div>
+  }
+</div>
 
 <div class="overflow-x-auto">
   <table
     class="gf-table w-100"
     mat-table
     matSort
-    [dataSource]="dataSource"
+    [dataSource]="dataSource()"
     [matSortActive]="sortColumn"
     [matSortDirection]="sortDirection"
     [matSortDisabled]="sortDisabled"
@@ -177,7 +201,7 @@
             [deviceType]="deviceType"
             [isDate]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.date"
+            [value]="isLoading() ? undefined : element.date"
           />
         </div>
       </td>
@@ -201,7 +225,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.quantity"
+            [value]="isLoading() ? undefined : element.quantity"
           />
         </div>
       </td>
@@ -225,7 +249,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.unitPrice"
+            [value]="isLoading() ? undefined : element.unitPrice"
           />
         </div>
       </td>
@@ -249,7 +273,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.fee"
+            [value]="isLoading() ? undefined : element.fee"
           />
         </div>
       </td>
@@ -272,7 +296,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.value"
+            [value]="isLoading() ? undefined : element.value"
           />
         </div>
       </td>
@@ -304,7 +328,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.valueInBaseCurrency"
+            [value]="isLoading() ? undefined : element.valueInBaseCurrency"
           />
         </div>
       </td>
@@ -388,7 +412,7 @@
           @if (hasPermissionToCreateActivity) {
             <button
               mat-menu-item
-              [disabled]="dataSource?.data.length === 0"
+              [disabled]="dataSource()?.data.length === 0"
               (click)="onImportDividends()"
             >
               <span class="align-items-center d-flex">
@@ -403,7 +427,7 @@
             <button
               class="align-items-center d-flex"
               mat-menu-item
-              [disabled]="dataSource?.data.length === 0"
+              [disabled]="dataSource()?.data.length === 0"
               (click)="onExport()"
             >
               <span class="align-items-center d-flex">
@@ -488,9 +512,9 @@
       </td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns()"
       mat-row
       [ngClass]="{
         'cursor-pointer': canClickActivity(row)
@@ -500,7 +524,7 @@
   </table>
 </div>
 
-@if (isLoading) {
+@if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
     class="px-4 py-3"
@@ -514,7 +538,7 @@
 <mat-paginator
   [length]="totalItems"
   [ngClass]="{
-    'd-none': (isLoading && !totalItems) || totalItems <= pageSize
+    'd-none': (isLoading() && !totalItems) || totalItems <= pageSize
   }"
   [pageIndex]="pageIndex"
   [pageSize]="pageSize"
@@ -524,9 +548,9 @@
 
 @if (
   !hasActivities &&
-  dataSource?.data.length === 0 &&
+  dataSource()?.data.length === 0 &&
   hasPermissionToCreateActivity &&
-  !isLoading
+  !isLoading()
 ) {
   <div class="p-3 text-center">
     <gf-no-transactions-info-indicator [hasBorder]="false" />

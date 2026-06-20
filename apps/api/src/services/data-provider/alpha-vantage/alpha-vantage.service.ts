@@ -16,7 +16,7 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import Alphavantage from 'alphavantage';
 import { format, isAfter, isBefore, parse } from 'date-fns';
@@ -24,12 +24,16 @@ import { format, isAfter, isBefore, parse } from 'date-fns';
 import { AlphaVantageHistoricalResponse } from './interfaces/interfaces';
 
 @Injectable()
-export class AlphaVantageService implements DataProviderInterface {
+export class AlphaVantageService
+  implements DataProviderInterface, OnModuleInit
+{
   public alphaVantage;
 
   public constructor(
     private readonly configurationService: ConfigurationService
-  ) {
+  ) {}
+
+  public onModuleInit() {
     this.alphaVantage = Alphavantage({
       key: this.configurationService.get('API_KEY_ALPHA_VANTAGE')
     });

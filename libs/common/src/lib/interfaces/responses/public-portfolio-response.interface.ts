@@ -14,16 +14,31 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
     [symbol: string]: Pick<
       PortfolioPosition,
       | 'allocationInPercentage'
+
+      /** @deprecated */
       | 'assetClass'
+      | 'assetProfile'
+
+      /** @deprecated */
       | 'countries'
       | 'currency'
+
+      /** @deprecated */
       | 'dataSource'
       | 'dateOfFirstActivity'
       | 'markets'
+
+      /** @deprecated */
       | 'name'
       | 'netPerformancePercentWithCurrencyEffect'
+
+      /** @deprecated */
       | 'sectors'
+
+      /** @deprecated */
       | 'symbol'
+
+      /** @deprecated */
       | 'url'
       | 'valueInBaseCurrency'
       | 'valueInPercentage'
@@ -39,7 +54,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   })[];
   markets: {
     [key in Market]: Pick<
-      PortfolioDetails['markets'][key],
+      NonNullable<PortfolioDetails['markets']>[key],
       'id' | 'valueInPercentage'
     >;
   };

@@ -10,6 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -19,22 +20,28 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   Input,
-  OnChanges,
-  OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  computed,
+  inject,
+  input
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   MatPaginator,
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import {
   MatSort,
   MatSortModule,
@@ -44,8 +51,8 @@ import {
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
+import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
-import { endOfToday, isAfter } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   alertCircleOutline,
@@ -62,7 +69,6 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, Subscription, takeUntil } from 'rxjs';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -81,36 +87,34 @@ import { GfValueComponent } from '../value/value.component';
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
+    MatFormFieldModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatSelectModule,
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class GfActivitiesTableComponent
-  implements AfterViewInit, OnChanges, OnDestroy, OnInit
-{
+export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Input() baseCurrency: string;
-  @Input() dataSource: MatTableDataSource<Activity>;
   @Input() deviceType: string;
   @Input() hasActivities: boolean;
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
+  @Input() hasPermissionToFilterByType: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
-  @Input() showAccountColumn = true;
   @Input() showActions = true;
-  @Input() showCheckbox = false;
-  @Input() showNameColumn = true;
   @Input() sortColumn: string;
   @Input() sortDirection: SortDirection;
   @Input() sortDisabled = false;
@@ -128,62 +132,27 @@ export class GfActivitiesTableComponent
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
+  @Output() typesFilterChanged = new EventEmitter<string[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns = [];
-  public endOfToday = endOfToday();
+  public activityTypesTranslationMap = new Map<ActivityType, string>();
   public hasDrafts = false;
   public hasErrors = false;
-  public isAfter = isAfter;
-  public isLoading = true;
   public isUUID = isUUID;
-  public routeQueryParams: Subscription;
   public selectedRows = new SelectionModel<Activity>(true, []);
+  public typesFilter = new FormControl<string[]>([]);
 
-  private unsubscribeSubject = new Subject<void>();
+  public readonly dataSource = input.required<
+    MatTableDataSource<Activity> | undefined
+  >();
+  public readonly showAccountColumn = input(true);
+  public readonly showCheckbox = input(false);
+  public readonly showNameColumn = input(true);
 
-  public constructor(private notificationService: NotificationService) {
-    addIcons({
-      alertCircleOutline,
-      calendarClearOutline,
-      cloudDownloadOutline,
-      cloudUploadOutline,
-      colorWandOutline,
-      copyOutline,
-      createOutline,
-      documentTextOutline,
-      ellipsisHorizontal,
-      ellipsisVertical,
-      tabletLandscapeOutline,
-      trashOutline
-    });
-  }
-
-  public ngOnInit() {
-    if (this.showCheckbox) {
-      this.toggleAllRows();
-      this.selectedRows.changed
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe((selectedRows) => {
-          this.selectedActivities.emit(selectedRows.source.selected);
-        });
-    }
-  }
-
-  public ngAfterViewInit() {
-    if (this.dataSource) {
-      this.dataSource.paginator = this.paginator;
-    }
-
-    this.sort.sortChange.subscribe((value: Sort) => {
-      this.sortChanged.emit(value);
-    });
-  }
-
-  public ngOnChanges() {
-    this.displayedColumns = [
+  protected readonly displayedColumns = computed(() => {
+    let columns = [
       'select',
       'importStatus',
       'icon',
@@ -201,32 +170,89 @@ export class GfActivitiesTableComponent
       'actions'
     ];
 
-    if (!this.showAccountColumn) {
-      this.displayedColumns = this.displayedColumns.filter((column) => {
+    if (!this.showAccountColumn()) {
+      columns = columns.filter((column) => {
         return column !== 'account';
       });
     }
 
-    if (!this.showCheckbox) {
-      this.displayedColumns = this.displayedColumns.filter((column) => {
+    if (!this.showCheckbox()) {
+      columns = columns.filter((column) => {
         return column !== 'importStatus' && column !== 'select';
       });
     }
 
-    if (!this.showNameColumn) {
-      this.displayedColumns = this.displayedColumns.filter((column) => {
+    if (!this.showNameColumn()) {
+      columns = columns.filter((column) => {
         return column !== 'nameWithSymbol';
       });
     }
 
-    if (this.dataSource) {
-      this.isLoading = false;
+    return columns;
+  });
+
+  protected readonly isLoading = computed(() => {
+    return !this.dataSource();
+  });
+
+  private readonly notificationService = inject(NotificationService);
+
+  public constructor(private destroyRef: DestroyRef) {
+    for (const type of Object.keys(ActivityType) as ActivityType[]) {
+      this.activityTypesTranslationMap.set(
+        ActivityType[type],
+        translate(ActivityType[type])
+      );
     }
+
+    addIcons({
+      alertCircleOutline,
+      calendarClearOutline,
+      cloudDownloadOutline,
+      cloudUploadOutline,
+      colorWandOutline,
+      copyOutline,
+      createOutline,
+      documentTextOutline,
+      ellipsisHorizontal,
+      ellipsisVertical,
+      tabletLandscapeOutline,
+      trashOutline
+    });
+  }
+
+  public ngOnInit() {
+    if (this.showCheckbox()) {
+      this.toggleAllRows();
+      this.selectedRows.changed
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((selectedRows) => {
+          this.selectedActivities.emit(selectedRows.source.selected);
+        });
+    }
+
+    this.typesFilter.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((types) => {
+        this.typesFilterChanged.emit(types ?? []);
+      });
+  }
+
+  public ngAfterViewInit() {
+    const dataSource = this.dataSource();
+
+    if (dataSource) {
+      dataSource.paginator = this.paginator;
+    }
+
+    this.sort.sortChange.subscribe((value: Sort) => {
+      this.sortChanged.emit(value);
+    });
   }
 
   public areAllRowsSelected() {
     const numSelectedRows = this.selectedRows.selected.length;
-    const numTotalRows = this.dataSource.data.length;
+    const numTotalRows = this.dataSource()?.data.length;
     return numSelectedRows === numTotalRows;
   }
 
@@ -241,7 +267,7 @@ export class GfActivitiesTableComponent
 
   public isExcludedFromAnalysis(activity: Activity) {
     return (
-      activity.account?.isExcluded ||
+      activity.account?.isExcluded ??
       activity.tags?.some(({ id }) => {
         return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
       })
@@ -253,7 +279,7 @@ export class GfActivitiesTableComponent
   }
 
   public onClickActivity(activity: Activity) {
-    if (this.showCheckbox) {
+    if (this.showCheckbox()) {
       if (!activity.error) {
         this.selectedRows.toggle(activity);
       }
@@ -299,8 +325,8 @@ export class GfActivitiesTableComponent
 
   public onExportDrafts() {
     this.exportDrafts.emit(
-      this.dataSource.filteredData
-        .filter((activity) => {
+      this.dataSource()
+        ?.filteredData.filter((activity) => {
           return activity.isDraft;
         })
         .map((activity) => {
@@ -327,20 +353,22 @@ export class GfActivitiesTableComponent
     this.activityToUpdate.emit(aActivity);
   }
 
+  public sortByValue(
+    a: { key: ActivityType; value: string },
+    b: { key: ActivityType; value: string }
+  ) {
+    return a.value.localeCompare(b.value);
+  }
+
   public toggleAllRows() {
     if (this.areAllRowsSelected()) {
       this.selectedRows.clear();
     } else {
-      this.dataSource.data.forEach((row) => {
+      this.dataSource()?.data.forEach((row) => {
         this.selectedRows.select(row);
       });
     }
 
     this.selectedActivities.emit(this.selectedRows.selected);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

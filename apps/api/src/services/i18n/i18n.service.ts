@@ -1,16 +1,16 @@
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 @Injectable()
-export class I18nService {
+export class I18nService implements OnModuleInit {
   private localesPath = join(__dirname, 'assets', 'locales');
   private translations: { [locale: string]: cheerio.CheerioAPI } = {};
 
-  public constructor() {
+  public onModuleInit() {
     this.loadFiles();
   }
 

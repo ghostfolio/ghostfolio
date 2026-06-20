@@ -1,5 +1,4 @@
 import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
@@ -10,9 +9,11 @@ import {
 import { User } from '@ghostfolio/common/interfaces/user.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -21,7 +22,6 @@ import {
   warningOutline
 } from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   imports: [
@@ -48,11 +48,10 @@ export class GfXRayPageComponent {
   public statistics: PortfolioReportResponse['xRay']['statistics'];
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
@@ -62,13 +61,13 @@ export class GfXRayPageComponent {
   public ngOnInit() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -91,20 +90,15 @@ export class GfXRayPageComponent {
   public onRulesUpdated(event: UpdateUserSettingDto) {
     this.dataService
       .putUserSetting(event)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
 
         this.initializePortfolioReport();
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private initializePortfolioReport() {
@@ -112,7 +106,7 @@ export class GfXRayPageComponent {
 
     this.dataService
       .fetchPortfolioReport()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ xRay: { categories, statistics } }) => {
         this.categories = categories;
         this.inactiveRules = this.mergeInactiveRules(categories);

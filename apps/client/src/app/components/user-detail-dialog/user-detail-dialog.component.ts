@@ -1,7 +1,5 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
-import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
-import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
+import { AdminService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
@@ -9,15 +7,20 @@ import {
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   Inject,
-  OnDestroy,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { MatMenuModule } from '@angular/material/menu';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { ellipsisVertical } from 'ionicons/icons';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { UserDetailDialogParams } from './interfaces/interfaces';
 
@@ -25,34 +28,37 @@ import { UserDetailDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    GfDialogFooterComponent,
-    GfDialogHeaderComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-user-detail-dialog',
   styleUrls: ['./user-detail-dialog.component.scss'],
   templateUrl: './user-detail-dialog.html'
 })
-export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
+export class GfUserDetailDialogComponent implements OnInit {
   public user: AdminUserResponse;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
+    private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfUserDetailDialogComponent>
-  ) {}
+  ) {
+    addIcons({
+      ellipsisVertical
+    });
+  }
 
   public ngOnInit() {
     this.adminService
       .fetchUserById(this.data.userId)
       .pipe(
-        takeUntil(this.unsubscribeSubject),
+        takeUntilDestroyed(this.destroyRef),
         catchError(() => {
           this.dialogRef.close();
 
@@ -66,12 +72,14 @@ export class GfUserDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onClose() {
-    this.dialogRef.close();
+  public deleteUser() {
+    this.dialogRef.close({
+      action: 'delete',
+      userId: this.data.userId
+    });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+  public onClose() {
+    this.dialogRef.close();
   }
 }

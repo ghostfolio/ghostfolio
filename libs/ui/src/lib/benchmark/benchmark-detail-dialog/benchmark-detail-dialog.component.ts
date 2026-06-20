@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -7,24 +5,24 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   Inject,
-  OnDestroy,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
 import { format } from 'date-fns';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { GfLineChartComponent } from '../../line-chart/line-chart.component';
 import { GfValueComponent } from '../../value/value.component';
@@ -45,16 +43,15 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./benchmark-detail-dialog.component.scss'],
   templateUrl: 'benchmark-detail-dialog.html'
 })
-export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
+export class GfBenchmarkDetailDialogComponent implements OnInit {
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public historicalDataItems: LineChartItem[];
   public value: number;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfBenchmarkDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BenchmarkDetailDialogParams
   ) {}
@@ -65,7 +62,7 @@ export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
@@ -88,10 +85,5 @@ export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
 
   public onClose() {
     this.dialogRef.close();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
