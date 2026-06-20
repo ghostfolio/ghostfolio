@@ -12,8 +12,7 @@ import { inject, Injectable } from '@angular/core';
 import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite, isNumber, isString } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -126,7 +125,7 @@ export class ImportActivitiesService {
   }): Promise<{
     activities: Activity[];
   }> {
-    return new Promise((resolve, reject) => {
+    return firstValueFrom(
       this.postImport(
         {
           accounts,
@@ -136,18 +135,7 @@ export class ImportActivitiesService {
         },
         isDryRun
       )
-        .pipe(
-          catchError((error) => {
-            reject(error);
-            return EMPTY;
-          })
-        )
-        .subscribe({
-          next: (data) => {
-            resolve(data);
-          }
-        });
-    });
+    );
   }
 
   public importSelectedActivities({
@@ -163,11 +151,9 @@ export class ImportActivitiesService {
   }): Promise<{
     activities: Activity[];
   }> {
-    const importData: CreateOrderDto[] = [];
-
-    for (const activity of activities) {
-      importData.push(this.convertToCreateOrderDto(activity));
-    }
+    const importData = activities.map((activity) =>
+      this.convertToCreateOrderDto(activity)
+    );
 
     return this.importJson({
       accounts,
@@ -208,11 +194,12 @@ export class ImportActivitiesService {
     };
   }
 
-  private lowercaseKeys(aObject: Record<string, unknown>) {
-    return Object.keys(aObject).reduce<Record<string, unknown>>((acc, key) => {
-      acc[key.toLowerCase()] = aObject[key];
-      return acc;
-    }, {});
+  private lowercaseKeys(
+    aObject: Record<string, unknown>
+  ): Record<string, unknown> {
+    return Object.fromEntries(
+      Object.entries(aObject).map(([key, val]) => [key.toLowerCase(), val])
+    );
   }
 
   private parseAccount({
