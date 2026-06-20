@@ -29,8 +29,7 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
       adapter: BullAdapter,
       name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
       options: {
-        displayName: 'Portfolio Snapshot Computation',
-        readOnlyMode: process.env.BULL_BOARD_IS_READ_ONLY !== 'false'
+        displayName: 'Portfolio Snapshot Computation'
       }
     }),
     BullModule.registerQueue({

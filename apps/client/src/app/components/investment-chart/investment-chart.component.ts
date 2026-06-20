@@ -16,7 +16,6 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -41,15 +40,13 @@ import {
   type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import annotationPlugin, {
-  type AnnotationOptions
-} from 'chartjs-plugin-annotation';
+import { type AnnotationOptions } from 'chartjs-plugin-annotation';
 import { isAfter } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-investment-chart',
   styleUrls: ['./investment-chart.component.scss'],
   templateUrl: './investment-chart.component.html'
@@ -75,7 +72,6 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
 
   public constructor() {
     Chart.register(
-      annotationPlugin,
       BarController,
       BarElement,
       LinearScale,

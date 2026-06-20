@@ -3,6 +3,7 @@ import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 import { Access, Provider, Tag } from '@prisma/client';
 
+import { ReferralPartner } from './referral-partner.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
 import { SystemMessage } from './system-message.interface';
 import { UserSettings } from './user-settings.interface';
@@ -16,6 +17,7 @@ export interface User {
   id: string;
   permissions: string[];
   provider: Provider;
+  referralPartners?: ReferralPartner[];
   settings: UserSettings;
   systemMessage?: SystemMessage;
   subscription: {

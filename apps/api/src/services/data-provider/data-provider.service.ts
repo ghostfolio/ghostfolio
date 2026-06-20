@@ -41,6 +41,8 @@ import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
 
 @Injectable()
 export class DataProviderService implements OnModuleInit {
+  private readonly logger = new Logger(DataProviderService.name);
+
   private dataProviderMapping: { [dataProviderName: string]: string };
 
   public constructor(
@@ -129,7 +131,7 @@ export class DataProviderService implements OnModuleInit {
         );
       }
     } catch (error) {
-      Logger.error(error, 'DataProviderService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -383,15 +385,16 @@ export class DataProviderService implements OnModuleInit {
       response = marketDataByGranularity.reduce((r, marketData) => {
         const { date, marketPrice, symbol } = marketData;
 
-        r[symbol] = {
-          ...(r[symbol] || {}),
-          [format(new Date(date), DATE_FORMAT)]: { marketPrice }
-        };
+        if (!r[symbol]) {
+          r[symbol] = {};
+        }
+
+        r[symbol][format(new Date(date), DATE_FORMAT)] = { marketPrice };
 
         return r;
       }, {});
     } catch (error) {
-      Logger.error(error, 'DataProviderService');
+      this.logger.error(error);
     } finally {
       return response;
     }
@@ -503,7 +506,7 @@ export class DataProviderService implements OnModuleInit {
         result[symbol] = data;
       }
     } catch (error) {
-      Logger.error(error, 'DataProviderService');
+      this.logger.error(error);
 
       throw error;
     }
@@ -567,13 +570,12 @@ export class DataProviderService implements OnModuleInit {
     const numberOfItemsInCache = Object.keys(response)?.length;
 
     if (numberOfItemsInCache) {
-      Logger.debug(
+      this.logger.debug(
         `Fetched ${numberOfItemsInCache} quote${
           numberOfItemsInCache > 1 ? 's' : ''
         } from cache in ${((performance.now() - startTimeTotal) / 1000).toFixed(
           3
-        )} seconds`,
-        'DataProviderService'
+        )} seconds`
       );
     }
 
@@ -684,14 +686,13 @@ export class DataProviderService implements OnModuleInit {
               }
             }
 
-            Logger.debug(
+            this.logger.debug(
               `Fetched ${symbolsChunk.length} quote${
                 symbolsChunk.length > 1 ? 's' : ''
               } from ${dataSource} in ${(
                 (performance.now() - startTimeDataSource) /
                 1000
-              ).toFixed(3)} seconds`,
-              'DataProviderService'
+              ).toFixed(3)} seconds`
             );
 
             try {
@@ -722,15 +723,18 @@ export class DataProviderService implements OnModuleInit {
 
     await Promise.all(promises);
 
-    Logger.debug('--------------------------------------------------------');
-    Logger.debug(
+    this.logger.debug(
+      '--------------------------------------------------------'
+    );
+    this.logger.debug(
       `Fetched ${items.length} quote${items.length > 1 ? 's' : ''} in ${(
         (performance.now() - startTimeTotal) /
         1000
-      ).toFixed(3)} seconds`,
-      'DataProviderService'
+      ).toFixed(3)} seconds`
     );
-    Logger.debug('========================================================');
+    this.logger.debug(
+      '========================================================'
+    );
 
     return response;
   }

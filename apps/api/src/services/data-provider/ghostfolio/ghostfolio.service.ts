@@ -33,6 +33,8 @@ import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class GhostfolioService implements DataProviderInterface {
+  private readonly logger = new Logger(GhostfolioService.name);
+
   private readonly URL = environment.production
     ? 'https://ghostfol.io/api'
     : `${this.configurationService.get('ROOT_URL')}/api`;
@@ -89,7 +91,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return assetProfile;
@@ -154,7 +156,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return dividends;
@@ -211,7 +213,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(error.message, 'GhostfolioService');
+      this.logger.error(error.message);
 
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
@@ -283,7 +285,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return quotes;
@@ -338,7 +340,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return searchResult;

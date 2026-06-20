@@ -1,5 +1,5 @@
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
 import {
   InfoItem,
   PortfolioPosition,
@@ -9,6 +9,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table/activities-table.component';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table/holdings-table.component';
+import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.component';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -185,14 +186,14 @@ export class GfPublicPageComponent implements OnInit {
 
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {
-            const { code, continent, name, weight } = country;
+            const { code, continent, weight } = country;
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.continents[continent] = {
-                name: continent,
+                name: translate(continent),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]
@@ -205,7 +206,7 @@ export class GfPublicPageComponent implements OnInit {
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.countries[code] = {
-                name,
+                name: getCountryName({ code }),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]
@@ -232,7 +233,7 @@ export class GfPublicPageComponent implements OnInit {
                 weight * (position.valueInBaseCurrency ?? 0);
             } else {
               this.sectors[name] = {
-                name,
+                name: translate(name),
                 value:
                   weight *
                   (this.publicPortfolioDetails.holdings[symbol]

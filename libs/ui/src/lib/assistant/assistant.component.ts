@@ -3,7 +3,7 @@ import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
-import { AdminService, DataService } from '@ghostfolio/ui/services';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
@@ -155,7 +155,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private preselectionTimeout: ReturnType<typeof setTimeout>;
 
   public constructor(
-    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef
@@ -397,19 +396,17 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       });
     }
 
-    if (this.user?.settings?.isExperimentalFeatures) {
-      this.dateRangeOptions = this.dateRangeOptions.concat(
-        eachYearOfInterval({
-          end: new Date(),
-          start: this.user?.dateOfFirstActivity ?? new Date()
+    this.dateRangeOptions = this.dateRangeOptions.concat(
+      eachYearOfInterval({
+        end: new Date(),
+        start: this.user?.dateOfFirstActivity ?? new Date()
+      })
+        .map((date) => {
+          return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
         })
-          .map((date) => {
-            return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
-          })
-          .slice(0, -1)
-          .reverse()
-      );
-    }
+        .slice(0, -1)
+        .reverse()
+    );
 
     if (
       this.user?.dateOfFirstActivity &&
@@ -676,8 +673,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private searchAssetProfiles(
     aSearchTerm: string
   ): Observable<SearchResultItem[]> {
-    return this.adminService
-      .fetchAdminMarketData({
+    return this.dataService
+      .fetchAssetProfiles({
         filters: [
           {
             id: aSearchTerm,
@@ -690,8 +687,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         catchError(() => {
           return EMPTY;
         }),
-        map(({ marketData }) => {
-          return marketData.map(
+        map(({ assetProfiles }) => {
+          return assetProfiles.map(
             ({ assetSubClass, currency, dataSource, name, symbol }) => {
               return {
                 currency,

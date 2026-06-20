@@ -13,7 +13,7 @@ import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, isCurrencySymbol } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
@@ -37,6 +37,8 @@ import { isNumber } from 'lodash';
 export class EodHistoricalDataService
   implements DataProviderInterface, OnModuleInit
 {
+  private readonly logger = new Logger(EodHistoricalDataService.name);
+
   private apiKey: string;
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
@@ -127,12 +129,11 @@ export class EodHistoricalDataService
 
       return response;
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
-        'EodHistoricalDataService'
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
 
       return {};
@@ -172,9 +173,8 @@ export class EodHistoricalDataService
               marketPrice: adjusted_close
             };
           } else {
-            Logger.error(
-              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`,
-              'EodHistoricalDataService'
+            this.logger.error(
+              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`
             );
           }
 
@@ -292,9 +292,8 @@ export class EodHistoricalDataService
             dataSource: this.getName()
           };
         } else {
-          Logger.error(
-            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
-            'EodHistoricalDataService'
+          this.logger.error(
+            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`
           );
         }
       }
@@ -311,7 +310,7 @@ export class EodHistoricalDataService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'EodHistoricalDataService');
+      this.logger.error(message);
     }
 
     return {};
@@ -383,20 +382,11 @@ export class EodHistoricalDataService
    * Currency:  USDCHF  -> USDCHF.FOREX
    */
   private convertToEodSymbol(aSymbol: string) {
-    if (
-      aSymbol.startsWith(DEFAULT_CURRENCY) &&
-      aSymbol.length > DEFAULT_CURRENCY.length
-    ) {
-      if (
-        isCurrency(
-          aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
-        )
-      ) {
-        let symbol = aSymbol;
-        symbol = symbol.replace('GBp', 'GBX');
+    if (isCurrencySymbol(aSymbol)) {
+      let symbol = aSymbol;
+      symbol = symbol.replace('GBp', 'GBX');
 
-        return `${symbol}.FOREX`;
-      }
+      return `${symbol}.FOREX`;
     }
 
     return aSymbol;
@@ -465,7 +455,7 @@ export class EodHistoricalDataService
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'EodHistoricalDataService');
+      this.logger.error(message);
     }
 
     return searchResult;

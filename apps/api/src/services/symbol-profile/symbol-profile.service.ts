@@ -1,5 +1,6 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
@@ -10,7 +11,12 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
+import {
+  DataSource,
+  Prisma,
+  SymbolProfile,
+  SymbolProfileOverrides
+} from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 @Injectable()
@@ -68,6 +74,26 @@ export class SymbolProfileService {
         isActive: true
       }
     });
+  }
+
+  public getAssetProfileUpdateInput(
+    { dataSource }: AssetProfileIdentifier,
+    data: Prisma.SymbolProfileUpdateInput
+  ): Prisma.SymbolProfileUpdateInput {
+    if (dataSource === DataSource.MANUAL) {
+      return data;
+    }
+
+    return {
+      SymbolProfileOverrides: {
+        upsert: {
+          create:
+            data as Prisma.SymbolProfileOverridesCreateWithoutSymbolProfileInput,
+          update:
+            data as Prisma.SymbolProfileOverridesUpdateWithoutSymbolProfileInput
+        }
+      }
+    };
   }
 
   public async getSymbolProfiles(
@@ -192,21 +218,28 @@ export class SymbolProfileService {
     })[]
   ): EnhancedSymbolProfile[] {
     return symbolProfiles.map((symbolProfile) => {
+      const symbolProfileWithOverrides = applyAssetProfileOverrides(
+        symbolProfile,
+        symbolProfile.SymbolProfileOverrides
+      );
+
       const item = {
-        ...symbolProfile,
+        ...symbolProfileWithOverrides,
         activitiesCount: 0,
         countries: this.getCountries(
-          symbolProfile?.countries as unknown as Prisma.JsonArray
+          symbolProfileWithOverrides?.countries as unknown as Prisma.JsonArray
         ),
         dateOfFirstActivity: undefined as Date,
         holdings: this.getHoldings(
-          symbolProfile?.holdings as unknown as Prisma.JsonArray
+          symbolProfileWithOverrides?.holdings as unknown as Prisma.JsonArray
         ),
-        scraperConfiguration: this.getScraperConfiguration(symbolProfile),
+        scraperConfiguration: this.getScraperConfiguration(
+          symbolProfileWithOverrides
+        ),
         sectors: this.getSectors(
-          symbolProfile?.sectors as unknown as Prisma.JsonArray
+          symbolProfileWithOverrides?.sectors as unknown as Prisma.JsonArray
         ),
-        symbolMapping: this.getSymbolMapping(symbolProfile),
+        symbolMapping: this.getSymbolMapping(symbolProfileWithOverrides),
         watchedByCount: 0
       };
 
@@ -217,45 +250,7 @@ export class SymbolProfileService {
       item.dateOfFirstActivity = symbolProfile.activities?.[0]?.date;
       delete item.activities;
 
-      if (item.SymbolProfileOverrides) {
-        item.assetClass =
-          item.SymbolProfileOverrides.assetClass ?? item.assetClass;
-        item.assetSubClass =
-          item.SymbolProfileOverrides.assetSubClass ?? item.assetSubClass;
-
-        if (
-          (item.SymbolProfileOverrides.countries as unknown as Prisma.JsonArray)
-            ?.length > 0
-        ) {
-          item.countries = this.getCountries(
-            item.SymbolProfileOverrides.countries as unknown as Prisma.JsonArray
-          );
-        }
-
-        if (
-          (item.SymbolProfileOverrides.holdings as unknown as Holding[])
-            ?.length > 0
-        ) {
-          item.holdings = this.getHoldings(
-            item.SymbolProfileOverrides.holdings as unknown as Prisma.JsonArray
-          );
-        }
-
-        item.name = item.SymbolProfileOverrides.name ?? item.name;
-
-        if (
-          (item.SymbolProfileOverrides.sectors as unknown as Sector[])?.length >
-          0
-        ) {
-          item.sectors = this.getSectors(
-            item.SymbolProfileOverrides.sectors as unknown as Prisma.JsonArray
-          );
-        }
-
-        item.url = item.SymbolProfileOverrides.url ?? item.url;
-
-        delete item.SymbolProfileOverrides;
-      }
+      delete item.SymbolProfileOverrides;
 
       return item;
     });

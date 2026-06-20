@@ -12,7 +12,7 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { CommonModule, NgStyle } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -35,7 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
-    NgStyle,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule
   ],

@@ -108,6 +108,8 @@ const europeMarkets = require('../../assets/countries/europe-markets.json');
 
 @Injectable()
 export class PortfolioService {
+  private readonly logger = new Logger(PortfolioService.name);
+
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
@@ -619,9 +621,8 @@ export class PortfolioService {
         symbolProfileMap[getAssetProfileIdentifier({ dataSource, symbol })];
 
       if (!assetProfile) {
-        Logger.warn(
-          `Asset profile not found for ${symbol} (${dataSource})`,
-          'PortfolioService'
+        this.logger.warn(
+          `Asset profile not found for ${symbol} (${dataSource})`
         );
 
         continue;
@@ -956,6 +957,18 @@ export class PortfolioService {
       marketPriceMin,
       SymbolProfile,
       tags,
+      assetProfile: {
+        assetClass: SymbolProfile.assetClass,
+        assetSubClass: SymbolProfile.assetSubClass,
+        countries: SymbolProfile.countries,
+        currency: SymbolProfile.currency,
+        dataSource: SymbolProfile.dataSource,
+        isin: SymbolProfile.isin,
+        name: SymbolProfile.name,
+        sectors: SymbolProfile.sectors,
+        symbol: SymbolProfile.symbol,
+        userId: SymbolProfile.userId
+      },
       averagePrice: averagePrice.toNumber(),
       dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
@@ -1452,31 +1465,29 @@ export class PortfolioService {
     for (const [, position] of Object.entries(holdings)) {
       const value = position.valueInBaseCurrency;
 
-      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
-        if (position.assetProfile.countries.length > 0) {
-          markets.developedMarkets.valueInBaseCurrency +=
-            position.markets.developedMarkets * value;
-          markets.emergingMarkets.valueInBaseCurrency +=
-            position.markets.emergingMarkets * value;
-          markets.otherMarkets.valueInBaseCurrency +=
-            position.markets.otherMarkets * value;
+      if (position.assetProfile.countries.length > 0) {
+        markets.developedMarkets.valueInBaseCurrency +=
+          position.markets.developedMarkets * value;
+        markets.emergingMarkets.valueInBaseCurrency +=
+          position.markets.emergingMarkets * value;
+        markets.otherMarkets.valueInBaseCurrency +=
+          position.markets.otherMarkets * value;
 
-          marketsAdvanced.asiaPacific.valueInBaseCurrency +=
-            position.marketsAdvanced.asiaPacific * value;
-          marketsAdvanced.emergingMarkets.valueInBaseCurrency +=
-            position.marketsAdvanced.emergingMarkets * value;
-          marketsAdvanced.europe.valueInBaseCurrency +=
-            position.marketsAdvanced.europe * value;
-          marketsAdvanced.japan.valueInBaseCurrency +=
-            position.marketsAdvanced.japan * value;
-          marketsAdvanced.northAmerica.valueInBaseCurrency +=
-            position.marketsAdvanced.northAmerica * value;
-          marketsAdvanced.otherMarkets.valueInBaseCurrency +=
-            position.marketsAdvanced.otherMarkets * value;
-        } else {
-          markets[UNKNOWN_KEY].valueInBaseCurrency += value;
-          marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency += value;
-        }
+        marketsAdvanced.asiaPacific.valueInBaseCurrency +=
+          position.marketsAdvanced.asiaPacific * value;
+        marketsAdvanced.emergingMarkets.valueInBaseCurrency +=
+          position.marketsAdvanced.emergingMarkets * value;
+        marketsAdvanced.europe.valueInBaseCurrency +=
+          position.marketsAdvanced.europe * value;
+        marketsAdvanced.japan.valueInBaseCurrency +=
+          position.marketsAdvanced.japan * value;
+        marketsAdvanced.northAmerica.valueInBaseCurrency +=
+          position.marketsAdvanced.northAmerica * value;
+        marketsAdvanced.otherMarkets.valueInBaseCurrency +=
+          position.marketsAdvanced.otherMarkets * value;
+      } else {
+        markets[UNKNOWN_KEY].valueInBaseCurrency += value;
+        marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency += value;
       }
     }
 
@@ -2162,40 +2173,44 @@ export class PortfolioService {
       return withExcludedAccounts || account.isExcluded === false;
     });
 
-    for (const account of currentAccounts) {
+    // Iterate over the accounts plus a null entry to group activities without
+    // an account into the unknown bucket
+    for (const account of [...currentAccounts, null]) {
       const ordersByAccount = activities.filter(({ accountId }) => {
-        return accountId === account.id;
+        return account ? accountId === account.id : !accountId;
       });
 
-      accounts[account.id] = {
-        balance: account.balance,
-        currency: account.currency,
-        name: account.name,
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          account.balance,
-          account.currency,
-          userCurrency
-        )
-      };
-
-      if (platforms[account.platformId || UNKNOWN_KEY]?.valueInBaseCurrency) {
-        platforms[account.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
-          this.exchangeRateDataService.toCurrency(
-            account.balance,
-            account.currency,
-            userCurrency
-          );
-      } else {
-        platforms[account.platformId || UNKNOWN_KEY] = {
+      if (account) {
+        accounts[account.id] = {
           balance: account.balance,
           currency: account.currency,
-          name: account.platform?.name,
+          name: account.name,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
             account.balance,
             account.currency,
             userCurrency
           )
         };
+
+        if (platforms[account.platformId || UNKNOWN_KEY]?.valueInBaseCurrency) {
+          platforms[account.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
+            this.exchangeRateDataService.toCurrency(
+              account.balance,
+              account.currency,
+              userCurrency
+            );
+        } else {
+          platforms[account.platformId || UNKNOWN_KEY] = {
+            balance: account.balance,
+            currency: account.currency,
+            name: account.platform?.name,
+            valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+              account.balance,
+              account.currency,
+              userCurrency
+            )
+          };
+        }
       }
 
       for (const {

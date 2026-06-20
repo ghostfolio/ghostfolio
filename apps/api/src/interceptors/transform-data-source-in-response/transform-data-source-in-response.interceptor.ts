@@ -64,6 +64,7 @@ export class TransformDataSourceInResponseInterceptor<
             paths: [
               'activities[*].dataSource',
               'activities[*].SymbolProfile.dataSource',
+              'assetProfile.dataSource',
               'benchmarks[*].dataSource',
               'errors[*].dataSource',
               'fearAndGreedIndex.CRYPTOCURRENCIES.dataSource',

@@ -9,6 +9,19 @@ import { Tag } from '@prisma/client';
 
 export interface PortfolioHoldingResponse {
   activitiesCount: number;
+  assetProfile: Pick<
+    EnhancedSymbolProfile,
+    | 'assetClass'
+    | 'assetSubClass'
+    | 'countries'
+    | 'currency'
+    | 'dataSource'
+    | 'isin'
+    | 'name'
+    | 'sectors'
+    | 'symbol'
+    | 'userId'
+  >;
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dateOfFirstActivity: string;
@@ -31,7 +44,10 @@ export interface PortfolioHoldingResponse {
   netPerformanceWithCurrencyEffect: number;
   performances: Benchmark['performances'];
   quantity: number;
+
+  /* @deprecated */
   SymbolProfile: EnhancedSymbolProfile;
+
   tags: Tag[];
   value: number;
 }

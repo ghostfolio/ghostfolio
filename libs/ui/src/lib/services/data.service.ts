@@ -28,6 +28,7 @@ import {
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
+  AssetProfilesResponse,
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
@@ -378,6 +379,42 @@ export class DataService {
     );
   }
 
+  public fetchAssetProfiles({
+    filters,
+    skip,
+    sortColumn,
+    sortDirection,
+    take
+  }: {
+    filters?: Filter[];
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: SortDirection;
+    take: number;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (skip) {
+      params = params.append('skip', skip);
+    }
+
+    if (sortColumn) {
+      params = params.append('sortColumn', sortColumn);
+    }
+
+    if (sortDirection) {
+      params = params.append('sortDirection', sortDirection);
+    }
+
+    if (take) {
+      params = params.append('take', take);
+    }
+
+    return this.http.get<AssetProfilesResponse>('/api/v1/asset-profiles', {
+      params
+    });
+  }
+
   public fetchBenchmarkForUser({
     dataSource,
     filters,
@@ -445,10 +482,27 @@ export class DataService {
   }: {
     dataSource: DataSource;
     symbol: string;
-  }) {
-    return this.http.get<PortfolioHoldingResponse>(
-      `/api/v1/portfolio/holding/${dataSource}/${symbol}`
-    );
+  }): Observable<
+    Omit<PortfolioHoldingResponse, 'dateOfFirstActivity'> & {
+      dateOfFirstActivity: Date | undefined;
+    }
+  > {
+    return this.http
+      .get<PortfolioHoldingResponse>(
+        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((response) => {
+          const dateOfFirstActivity = response.dateOfFirstActivity
+            ? parseISO(response.dateOfFirstActivity)
+            : undefined;
+
+          return {
+            ...response,
+            dateOfFirstActivity
+          };
+        })
+      );
   }
 
   public fetchInfo(): InfoItem {

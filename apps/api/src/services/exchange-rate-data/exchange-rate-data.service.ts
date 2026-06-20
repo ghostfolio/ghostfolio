@@ -30,6 +30,8 @@ import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interfa
 
 @Injectable()
 export class ExchangeRateDataService {
+  private readonly logger = new Logger(ExchangeRateDataService.name);
+
   private currencies: string[] = [];
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
@@ -110,9 +112,8 @@ export class ExchangeRateDataService {
             previousExchangeRate;
 
           if (currency === DEFAULT_CURRENCY && isBefore(date, new Date())) {
-            Logger.error(
-              `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`,
-              'ExchangeRateDataService'
+            this.logger.error(
+              `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`
             );
           }
         } else {
@@ -253,9 +254,8 @@ export class ExchangeRateDataService {
     }
 
     // Fallback with error, if currencies are not available
-    Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
-      'ExchangeRateDataService'
+    this.logger.error(
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
     );
 
     return aValue;
@@ -341,12 +341,11 @@ export class ExchangeRateDataService {
       return factor * aValue;
     }
 
-    Logger.error(
+    this.logger.error(
       `No exchange rate has been found for ${aFromCurrency}${aToCurrency} at ${format(
         aDate,
         DATE_FORMAT
-      )}`,
-      'ExchangeRateDataService'
+      )}`
     );
 
     return undefined;
@@ -483,7 +482,7 @@ export class ExchangeRateDataService {
             errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
           }
 
-          Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
+          this.logger.error(`${errorMessage}.`);
         }
       }
     }

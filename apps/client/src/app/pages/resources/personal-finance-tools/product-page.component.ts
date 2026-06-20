@@ -1,3 +1,4 @@
+import { getCountryName } from '@ghostfolio/common/helper';
 import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -55,18 +56,20 @@ export class GfProductPageComponent implements OnInit {
         'Türkçe'
       ],
       name: 'Ghostfolio',
-      origin: $localize`Switzerland`,
+      origin: getCountryName({ code: 'CH' }),
       regions: [$localize`Global`],
       slogan: 'Open Source Wealth Management',
       useAnonymously: true
     };
 
-    this.product2 = personalFinanceTools.find(({ key }) => {
-      return key === this.route.snapshot.data['key'];
-    });
+    this.product2 = {
+      ...personalFinanceTools.find(({ key }) => {
+        return key === this.route.snapshot.data['key'];
+      })
+    };
 
     if (this.product2.origin) {
-      this.product2.origin = translate(this.product2.origin);
+      this.product2.origin = getCountryName({ code: this.product2.origin });
     }
 
     if (this.product2.regions) {

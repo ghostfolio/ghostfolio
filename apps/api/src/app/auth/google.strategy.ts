@@ -10,6 +10,8 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+  private readonly logger = new Logger(GoogleStrategy.name);
+
   public constructor(
     private readonly authService: AuthService,
     configurationService: ConfigurationService
@@ -40,7 +42,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
       done(null, { jwt });
     } catch (error) {
-      Logger.error(error, 'GoogleStrategy');
+      this.logger.error(error);
       done(error, false);
     }
   }
