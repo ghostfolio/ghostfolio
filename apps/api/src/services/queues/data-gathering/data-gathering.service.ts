@@ -156,46 +156,6 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherHourlySymbols() {
-    const assetProfileIdentifiers =
-      await this.getHourlyAssetProfileIdentifiers();
-
-    if (assetProfileIdentifiers.length <= 0) {
-      return;
-    }
-
-    const date = getStartOfUtcDate(new Date());
-
-    try {
-      const quotes = await this.dataProviderService.getQuotes({
-        items: assetProfileIdentifiers,
-        useCache: false
-      });
-
-      const data: Prisma.MarketDataUpdateInput[] = [];
-
-      for (const { dataSource, symbol } of assetProfileIdentifiers) {
-        const quote = quotes[symbol];
-
-        if (quote?.dataSource !== dataSource || !quote.marketPrice) {
-          continue;
-        }
-
-        data.push({
-          dataSource,
-          date,
-          symbol,
-          marketPrice: quote.marketPrice,
-          state: 'INTRADAY'
-        });
-      }
-
-      await this.marketDataService.updateMany({ data });
-    } catch (error) {
-      this.logger.error('Could not gather hourly market data', error);
-    }
-  }
-
   public async gatherAssetProfiles(
     aAssetProfileIdentifiers?: AssetProfileIdentifier[]
   ) {
