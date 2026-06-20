@@ -1,7 +1,10 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   HistoricalDataItem,
@@ -46,7 +49,8 @@ export class SymbolService {
         items: [dataGatheringItem]
       });
 
-      ({ currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {});
+      ({ currency, marketPrice } =
+        quotes[getAssetProfileIdentifier(dataGatheringItem)] ?? {});
     }
 
     if (dataGatheringItem.dataSource && marketPrice >= 0) {

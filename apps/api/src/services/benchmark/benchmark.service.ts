@@ -8,7 +8,10 @@ import {
   CACHE_TTL_INFINITE,
   PROPERTY_BENCHMARKS
 } from '@ghostfolio/common/config';
-import { calculateBenchmarkTrend } from '@ghostfolio/common/helper';
+import {
+  calculateBenchmarkTrend,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Benchmark,
@@ -266,8 +269,9 @@ export class BenchmarkService {
     let storeInCache = true;
 
     const benchmarks = allTimeHighs.map((allTimeHigh, index) => {
+      const { dataSource, symbol } = benchmarkAssetProfiles[index];
       const { marketPrice } =
-        quotes[benchmarkAssetProfiles[index].symbol] ?? {};
+        quotes[getAssetProfileIdentifier({ dataSource, symbol })] ?? {};
 
       let performancePercentFromAllTimeHigh = 0;
 

@@ -11,6 +11,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
+  getAssetProfileIdentifier,
   getYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
@@ -176,11 +177,13 @@ export class ExchangeRateDataService {
       requestTimeout: ms('30 seconds')
     });
 
-    for (const symbol of Object.keys(quotes)) {
-      if (isNumber(quotes[symbol].marketPrice)) {
+    for (const { dataSource, symbol } of this.currencyPairs) {
+      const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (isNumber(quote?.marketPrice)) {
         result[symbol] = {
           [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: quotes[symbol].marketPrice
+            marketPrice: quote.marketPrice
           }
         };
       }

@@ -4,6 +4,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -127,7 +128,8 @@ export class WatchlistService {
         const performancePercent =
           this.benchmarkService.calculateChangeInPercentage(
             allTimeHigh?.marketPrice,
-            quotes[symbol]?.marketPrice
+            quotes[getAssetProfileIdentifier({ dataSource, symbol })]
+              ?.marketPrice
           );
 
         return {
