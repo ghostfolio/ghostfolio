@@ -112,10 +112,14 @@ export class GfUserDetailDialogComponent implements OnInit {
     ).toNumber();
   }
 
-  public getType({ createdAt, expiresAt }: Subscription) {
+  public getType({ createdAt, expiresAt, price }: Subscription) {
+    if (price) {
+      return $localize`Paid`;
+    }
+
     return differenceInDays(expiresAt, createdAt) <= 90
       ? $localize`Trial`
-      : $localize`Yearly subscription`;
+      : $localize`Coupon`;
   }
 
   public onClose() {
