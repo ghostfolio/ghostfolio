@@ -83,22 +83,22 @@ export class ImportActivitiesService {
         assetProfiles.push({
           currency,
           symbol,
-          assetClass: null,
-          assetSubClass: null,
-          comment: null,
+          assetClass: undefined,
+          assetSubClass: undefined,
+          comment: undefined,
           countries: [],
-          cusip: null,
+          cusip: undefined,
           dataSource: DataSource.MANUAL,
-          figi: null,
-          figiComposite: null,
-          figiShareClass: null,
+          figi: undefined,
+          figiComposite: undefined,
+          figiShareClass: undefined,
           holdings: [],
           isActive: true,
-          isin: null,
+          isin: undefined,
           marketData: [],
           name: symbol,
           sectors: [],
-          url: null
+          url: undefined
         });
       }
     }
@@ -191,14 +191,14 @@ export class ImportActivitiesService {
     updateAccountBalance
   }: Activity): CreateOrderDto {
     return {
-      accountId,
-      comment,
       fee,
       quantity,
       type,
       unitPrice,
       updateAccountBalance,
-      currency: currency ?? SymbolProfile.currency,
+      accountId: accountId ?? undefined,
+      comment: comment ?? undefined,
+      currency: currency ?? SymbolProfile.currency ?? '',
       dataSource: SymbolProfile.dataSource,
       date: date.toString(),
       symbol: SymbolProfile.symbol,
@@ -229,7 +229,7 @@ export class ImportActivitiesService {
         return userAccounts.find((account) => {
           return (
             account.id === item[key] ||
-            account.name.toLowerCase() === item[key].toLowerCase()
+            account.name?.toLowerCase() === item[key]?.toString().toLowerCase()
           );
         })?.id;
       }
@@ -299,7 +299,10 @@ export class ImportActivitiesService {
     for (const key of ImportActivitiesService.DATE_KEYS) {
       if (item[key]) {
         try {
-          return parseDateHelper(item[key].toString()).toISOString();
+          const parsedDate = parseDateHelper(item[key].toString());
+          if (parsedDate) {
+            return parsedDate.toISOString();
+          }
         } catch {}
       }
     }
