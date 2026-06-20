@@ -25,6 +25,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -120,17 +121,19 @@ export class GfAllocationsPageComponent implements OnInit {
   public user: User;
   public worldMapChartFormat: string;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private impersonationStorageService: ImpersonationStorageService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params: AllocationsPageParams) => {
