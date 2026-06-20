@@ -113,7 +113,7 @@ export class GfAllocationsPageComponent implements OnInit {
     };
   };
   protected topHoldings: HoldingWithParents[];
-  protected UNKNOWN_KEY = UNKNOWN_KEY;
+  protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
   protected user: User;
   protected worldMapChartFormat: string;
 
