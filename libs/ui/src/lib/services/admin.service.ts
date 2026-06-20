@@ -23,7 +23,7 @@ import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { DataSource, MarketData, Platform } from '@prisma/client';
+import { MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { isNumber } from 'lodash';
 
@@ -171,11 +171,7 @@ export class AdminService {
     dataSource,
     dateString,
     symbol
-  }: {
-    dataSource: DataSource;
-    dateString: string;
-    symbol: string;
-  }) {
+  }: { dateString: string } & AssetProfileIdentifier) {
     const url = `/api/v1/symbol/${dataSource}/${symbol}/${dateString}`;
 
     return this.http.get<DataProviderHistoricalResponse>(url);

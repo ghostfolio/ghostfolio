@@ -855,11 +855,7 @@ export class DataService {
     dataSource,
     marketData,
     symbol
-  }: {
-    dataSource: DataSource;
-    marketData: UpdateBulkMarketDataDto;
-    symbol: string;
-  }) {
+  }: { marketData: UpdateBulkMarketDataDto } & AssetProfileIdentifier) {
     const url = `/api/v1/market-data/${dataSource}/${symbol}`;
 
     return this.http.post<MarketData>(url, marketData);
