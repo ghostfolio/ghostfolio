@@ -42,31 +42,26 @@ import {
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class GfTransferBalanceDialogComponent {
-  protected accounts: Account[] = [];
-  protected currency: string;
-  protected transferBalanceForm: TransferBalanceForm;
+  protected readonly accounts: Account[] =
+    inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA).accounts;
 
-  private readonly data = inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA);
+  protected currency: string;
+
+  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup(
+    {
+      balance: new FormControl<number | string | null>('', Validators.required),
+      fromAccount: new FormControl<string | null>('', Validators.required),
+      toAccount: new FormControl<string | null>('', Validators.required)
+    },
+    {
+      validators: this.compareAccounts
+    }
+  );
+
   private readonly dialogRef =
     inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
 
   public ngOnInit() {
-    this.accounts = this.data.accounts;
-
-    this.transferBalanceForm = new FormGroup(
-      {
-        balance: new FormControl<number | string | null>(
-          '',
-          Validators.required
-        ),
-        fromAccount: new FormControl<string | null>('', Validators.required),
-        toAccount: new FormControl<string | null>('', Validators.required)
-      },
-      {
-        validators: this.compareAccounts
-      }
-    );
-
     this.transferBalanceForm.controls.fromAccount.valueChanges.subscribe(
       (id) => {
         const currency = this.accounts.find((account) => {
