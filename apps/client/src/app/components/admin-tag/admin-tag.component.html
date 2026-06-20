@@ -45,7 +45,11 @@
       <ng-container i18n>Activities</ng-container>
     </th>
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-      {{ element.activityCount }}
+      <gf-value
+        class="d-inline-block justify-content-end"
+        [locale]="locale"
+        [value]="element.activityCount"
+      />
     </td>
   </ng-container>
 

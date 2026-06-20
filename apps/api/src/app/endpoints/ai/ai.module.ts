@@ -1,6 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -29,6 +29,7 @@ import { AiService } from './ai.service';
 @Module({
   controllers: [AiController],
   imports: [
+    ActivitiesModule,
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
@@ -37,7 +38,6 @@ import { AiService } from './ai.service';
     I18nModule,
     ImpersonationModule,
     MarketDataModule,
-    OrderModule,
     PortfolioSnapshotQueueModule,
     PrismaModule,
     PropertyModule,

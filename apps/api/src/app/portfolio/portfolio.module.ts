@@ -1,7 +1,7 @@
 import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { PerformanceLoggingModule } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.module';
@@ -34,6 +34,7 @@ import { RulesService } from './rules.service';
   exports: [PortfolioService],
   imports: [
     AccessModule,
+    ActivitiesModule,
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
@@ -43,7 +44,6 @@ import { RulesService } from './rules.service';
     I18nModule,
     ImpersonationModule,
     MarketDataModule,
-    OrderModule,
     PerformanceLoggingModule,
     PortfolioSnapshotQueueModule,
     PrismaModule,

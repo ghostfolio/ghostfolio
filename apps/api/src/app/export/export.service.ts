@@ -1,5 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
@@ -17,8 +17,8 @@ import { groupBy, uniqBy } from 'lodash';
 export class ExportService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly activitiesService: ActivitiesService,
     private readonly marketDataService: MarketDataService,
-    private readonly orderService: OrderService,
     private readonly tagService: TagService
   ) {}
 
@@ -38,7 +38,7 @@ export class ExportService {
     });
     const platformsMap: { [platformId: string]: Platform } = {};
 
-    let { activities } = await this.orderService.getOrders({
+    let { activities } = await this.activitiesService.getActivities({
       filters,
       userId,
       includeDrafts: true,
@@ -182,10 +182,8 @@ export class ExportService {
           isActive,
           isin,
           name,
-          scraperConfiguration,
           sectors,
           symbol,
-          symbolMapping,
           url
         }) => {
           return {
@@ -204,11 +202,8 @@ export class ExportService {
             isin,
             marketData: marketDataByAssetProfile[id],
             name,
-            scraperConfiguration:
-              scraperConfiguration as unknown as Prisma.JsonArray,
             sectors: sectors as unknown as Prisma.JsonArray,
             symbol,
-            symbolMapping,
             url
           };
         }

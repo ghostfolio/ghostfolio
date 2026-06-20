@@ -1,5 +1,9 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  getLowercase,
+  resolveMarketCondition
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Benchmark,
@@ -12,13 +16,15 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  ViewChild
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
@@ -28,9 +34,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
-import { get, isNumber } from 'lodash';
+import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject, takeUntil } from 'rxjs';
 
 import { translate } from '../i18n';
 import { GfTrendIndicatorComponent } from '../trend-indicator/trend-indicator.component';
@@ -57,41 +62,58 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent implements OnChanges, OnDestroy {
-  @Input() benchmarks: Benchmark[];
-  @Input() deviceType: string;
-  @Input() hasPermissionToDeleteItem: boolean;
-  @Input() locale = getLocale();
-  @Input() showSymbol = true;
-  @Input() user: User;
+export class GfBenchmarkComponent {
+  public readonly benchmarks = input.required<Benchmark[]>();
+  public readonly deviceType = input.required<string>();
+  public readonly hasPermissionToDeleteItem = input<boolean>();
+  public readonly locale = input(getLocale());
+  public readonly showSymbol = input(true);
+  public readonly user = input<User>();
 
-  @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
+  public readonly itemDeleted = output<AssetProfileIdentifier>();
 
-  @ViewChild(MatSort) sort: MatSort;
+  protected readonly sort = viewChild(MatSort);
 
-  public dataSource = new MatTableDataSource<Benchmark>([]);
-  public displayedColumns = [
-    'name',
-    'date',
-    'change',
-    'marketCondition',
-    'actions'
-  ];
-  public isLoading = true;
-  public isNumber = isNumber;
-  public resolveMarketCondition = resolveMarketCondition;
-  public translate = translate;
+  protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
+  protected readonly displayedColumns = computed(() => {
+    return [
+      'name',
+      ...(this.user()?.settings?.isExperimentalFeatures
+        ? ['trend50d', 'trend200d']
+        : []),
+      'date',
+      'change',
+      'marketCondition',
+      'actions'
+    ];
+  });
+  protected isLoading = true;
+  protected readonly isNumber = isNumber;
+  protected readonly resolveMarketCondition = resolveMarketCondition;
+  protected readonly translate = translate;
 
-  private unsubscribeSubject = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
-  public constructor(
-    private dialog: MatDialog,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
+  public constructor() {
+    effect(() => {
+      const benchmarks = this.benchmarks();
+
+      if (benchmarks) {
+        this.dataSource.data = benchmarks;
+        this.dataSource.sortingDataAccessor = getLowercase;
+
+        this.dataSource.sort = this.sort() ?? null;
+
+        this.isLoading = false;
+      }
+    });
+
     this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (
           params['benchmarkDetailDialog'] &&
@@ -108,29 +130,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     addIcons({ ellipsisHorizontal, trashOutline });
   }
 
-  public ngOnChanges() {
-    if (this.benchmarks) {
-      this.dataSource.data = this.benchmarks;
-      this.dataSource.sort = this.sort;
-      this.dataSource.sortingDataAccessor = get;
-
-      this.isLoading = false;
-    }
-
-    if (this.user?.settings?.isExperimentalFeatures) {
-      this.displayedColumns = [
-        'name',
-        'trend50d',
-        'trend200d',
-        'date',
-        'change',
-        'marketCondition',
-        'actions'
-      ];
-    }
-  }
-
-  public onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.itemDeleted.emit({ dataSource, symbol });
@@ -140,15 +140,13 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     });
   }
 
-  public onOpenBenchmarkDialog({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onOpenBenchmarkDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private openBenchmarkDetailDialog({
@@ -162,17 +160,17 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
       data: {
         dataSource,
         symbol,
-        colorScheme: this.user?.settings?.colorScheme,
-        deviceType: this.deviceType,
-        locale: this.locale
+        colorScheme: this.user()?.settings?.colorScheme,
+        deviceType: this.deviceType(),
+        locale: this.locale()
       },
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });

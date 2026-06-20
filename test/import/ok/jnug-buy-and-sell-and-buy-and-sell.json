@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "date": "2026-02-07T02:09:15.272Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2025-12-11T05:00:00.000Z",
+      "fee": 1,
+      "id": "cea33621-9f4b-4cea-9eb7-be38264888aa",
+      "quantity": 9,
+      "symbol": "JNUG",
+      "type": "BUY",
+      "unitPrice": 209.45
+    },
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2025-12-18T05:00:00.000Z",
+      "fee": 1,
+      "id": "53be2e35-a0af-476c-9e63-9b1a437114a4",
+      "quantity": 9,
+      "symbol": "JNUG",
+      "type": "SELL",
+      "unitPrice": 210
+    },
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2025-12-18T05:00:00.000Z",
+      "fee": 1,
+      "id": "6648eeeb-8ea5-46b6-9a30-f278a9ed477b",
+      "quantity": 10,
+      "symbol": "JNUG",
+      "type": "BUY",
+      "unitPrice": 204.11
+    },
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2025-12-28T05:00:00.000Z",
+      "fee": 1,
+      "id": "861e736d-0086-496c-8f85-31328479cf63",
+      "quantity": 10,
+      "symbol": "JNUG",
+      "type": "SELL",
+      "unitPrice": 208.01
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

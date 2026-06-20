@@ -10,19 +10,21 @@ import {
   resolveMarketCondition
 } from '@ghostfolio/common/helper';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
-export class TwitterBotService {
+export class TwitterBotService implements OnModuleInit {
   private twitterClient: TwitterApiReadWrite;
 
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly symbolService: SymbolService
-  ) {
+  ) {}
+
+  public onModuleInit() {
     this.twitterClient = new TwitterApi({
       accessSecret: this.configurationService.get(
         'TWITTER_ACCESS_TOKEN_SECRET'

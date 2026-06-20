@@ -186,7 +186,7 @@
     <div class="p-3">
       <gf-portfolio-filter-form
         #portfolioFilterForm
-        [accounts]="user?.accounts"
+        [accounts]="user?.accounts ?? []"
         [assetClasses]="assetClasses"
         [formControl]="portfolioFilterFormControl"
         [holdings]="holdings"
@@ -197,7 +197,7 @@
           mat-button
           type="button"
           [disabled]="
-            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled
+            !portfolioFilterForm.hasFilters() || portfolioFilterForm.disabled()
           "
           (click)="onResetFilters()"
         >
@@ -210,7 +210,7 @@
           type="button"
           [disabled]="
             !portfolioFilterForm.filterForm.dirty ||
-            portfolioFilterForm.disabled
+            portfolioFilterForm.disabled()
           "
           (click)="onApplyFilters()"
         >

@@ -1,7 +1,6 @@
 import { LoginWithAccessTokenDialogParams } from '@ghostfolio/client/components/login-with-access-token-dialog/interfaces/interfaces';
 import { GfLoginWithAccessTokenDialogComponent } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   KEY_STAY_SIGNED_IN,
@@ -18,12 +17,14 @@ import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.compone
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
   EventEmitter,
   HostListener,
   Input,
@@ -31,6 +32,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -48,8 +50,8 @@ import {
   radioButtonOffOutline,
   radioButtonOnOutline
 } from 'ionicons/icons';
-import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -131,10 +133,9 @@ export class GfHeaderComponent implements OnChanges {
   public routerLinkRegister = publicRoutes.register.routerLink;
   public routerLinkResources = publicRoutes.resources.routerLink;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
@@ -146,7 +147,7 @@ export class GfHeaderComponent implements OnChanges {
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
@@ -224,11 +225,11 @@ export class GfHeaderComponent implements OnChanges {
   public onDateRangeChange(dateRange: DateRange) {
     this.dataService
       .putUserSetting({ dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
       });
   }
@@ -252,11 +253,11 @@ export class GfHeaderComponent implements OnChanges {
 
     this.dataService
       .putUserSetting(userSetting)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
       });
   }
@@ -301,7 +302,7 @@ export class GfHeaderComponent implements OnChanges {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         if (data?.accessToken) {
           this.dataService
@@ -314,7 +315,7 @@ export class GfHeaderComponent implements OnChanges {
 
                 return EMPTY;
               }),
-              takeUntil(this.unsubscribeSubject)
+              takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(({ authToken }) => {
               this.setToken(authToken);
@@ -331,7 +332,7 @@ export class GfHeaderComponent implements OnChanges {
 
     this.userService
       .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         const userLanguage = user?.settings?.language;
 
@@ -341,10 +342,5 @@ export class GfHeaderComponent implements OnChanges {
           this.router.navigate(['/']);
         }
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

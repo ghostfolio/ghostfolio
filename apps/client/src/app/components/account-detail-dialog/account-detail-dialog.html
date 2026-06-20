@@ -82,7 +82,7 @@
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="transactionCount"
+        <gf-value i18n size="medium" [value]="activitiesCount"
           >Activities</gf-value
         >
       </div>
@@ -102,8 +102,6 @@
           <div class="d-none d-sm-block ml-2" i18n>Holdings</div>
         </ng-template>
         <gf-holdings-table
-          [baseCurrency]="user?.settings?.baseCurrency"
-          [deviceType]="data.deviceType"
           [hasPermissionToOpenDetails]="false"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"

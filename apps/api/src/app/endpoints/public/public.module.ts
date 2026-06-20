@@ -1,7 +1,7 @@
 import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -27,13 +27,13 @@ import { PublicController } from './public.controller';
   controllers: [PublicController],
   imports: [
     AccessModule,
+    ActivitiesModule,
     BenchmarkModule,
     DataProviderModule,
     ExchangeRateDataModule,
     I18nModule,
     ImpersonationModule,
     MarketDataModule,
-    OrderModule,
     PortfolioSnapshotQueueModule,
     PrismaModule,
     RedisCacheModule,

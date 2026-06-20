@@ -1,6 +1,5 @@
 import {
   getTooltipOptions,
-  getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
@@ -15,12 +14,14 @@ import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  type ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -42,7 +43,7 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
-  TooltipPosition
+  type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -78,7 +79,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @Output() benchmarkChanged = new EventEmitter<string>();
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart<'line'>;
   public hasPermissionToAccessAdminControl: boolean;
@@ -96,8 +97,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
-      getTooltipPositionerMapTop(this.chart, position);
+    registerChartConfiguration();
 
     addIcons({ arrowForwardOutline });
   }
@@ -157,8 +157,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
+          this.getTooltipPluginConfiguration();
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -196,7 +198,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            } as unknown,
+            },
             responsive: true,
             scales: {
               x: {
@@ -253,7 +255,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
@@ -261,7 +263,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
         unit: '%'
       }),
       mode: 'index',
-      position: 'top' as unknown,
+      position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'
     };

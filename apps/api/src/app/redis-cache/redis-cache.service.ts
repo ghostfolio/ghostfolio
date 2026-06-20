@@ -6,7 +6,7 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import Keyv from 'keyv';
 import ms from 'ms';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 @Injectable()
 export class RedisCacheService {
@@ -75,13 +75,16 @@ export class RedisCacheService {
   }
 
   public async isHealthy() {
-    const testKey = '__health_check__';
+    const HEALTH_CHECK_TIMEOUT = ms('5 seconds');
+
+    const testKey = `__health_check__${randomUUID().replace(/-/g, '')}`;
     const testValue = Date.now().toString();
 
     try {
       await Promise.race([
         (async () => {
-          await this.set(testKey, testValue, ms('1 second'));
+          await this.set(testKey, testValue, HEALTH_CHECK_TIMEOUT);
+
           const result = await this.get(testKey);
 
           if (result !== testValue) {
@@ -91,7 +94,7 @@ export class RedisCacheService {
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error('Redis health check failed: timeout')),
-            ms('2 seconds')
+            HEALTH_CHECK_TIMEOUT
           )
         )
       ]);

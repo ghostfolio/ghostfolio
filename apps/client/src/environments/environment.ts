@@ -1,11 +1,12 @@
+import type { GfEnvironment } from '@ghostfolio/ui/environment';
+
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+export const environment: GfEnvironment = {
   lastPublish: null,
-  production: false,
-  stripePublicKey: ''
+  production: false
 };
 
 /*

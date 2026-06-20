@@ -20,11 +20,11 @@
             <div class="w-50">
               <gf-value
                 [locale]="user?.settings?.locale"
-                [value]="transactionCount"
+                [value]="activitiesCount"
               />
-              @if (transactionCount && userCount) {
+              @if (activitiesCount && userCount) {
                 <div>
-                  {{ transactionCount / userCount | number: '1.2-2' }}
+                  {{ activitiesCount / userCount | number: '1.2-2' }}
                   <span i18n>per User</span>
                 </div>
               }

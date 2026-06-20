@@ -15,7 +15,9 @@ export class PlatformsController {
   @HasPermission(permissions.readPlatforms)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPlatforms(): Promise<PlatformsResponse> {
-    const platforms = await this.platformService.getPlatforms();
+    const platforms = await this.platformService.getPlatforms({
+      orderBy: { name: 'asc' }
+    });
 
     return { platforms };
   }

@@ -1,8 +1,8 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
+import { DataService } from '@ghostfolio/ui/services';
 
 import {
   HTTP_INTERCEPTORS,
@@ -32,8 +32,8 @@ export class HttpResponseInterceptor implements HttpInterceptor {
   public constructor(
     private dataService: DataService,
     private router: Router,
-    private tokenStorageService: TokenStorageService,
     private snackBar: MatSnackBar,
+    private userService: UserService,
     private webAuthnService: WebAuthnService
   ) {
     this.info = this.dataService.fetchInfo();
@@ -115,7 +115,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             if (this.webAuthnService.isEnabled()) {
               this.router.navigate(internalRoutes.webauthn.routerLink);
             } else {
-              this.tokenStorageService.signOut();
+              this.userService.signOut();
             }
           }
         }

@@ -1,6 +1,6 @@
-import { Big } from 'big.js';
+import fastRedact from 'fast-redact';
 import jsonpath from 'jsonpath';
-import { cloneDeep, isArray, isObject } from 'lodash';
+import { cloneDeep, isObject } from 'lodash';
 
 export function hasNotDefinedValuesInObject(aObject: Object): boolean {
   for (const key in aObject) {
@@ -42,60 +42,29 @@ export function query({
   return jsonpath.query(object, pathExpression);
 }
 
-export function redactAttributes({
-  isFirstRun = true,
+export function redactPaths({
   object,
-  options
+  paths,
+  valueMap
 }: {
-  isFirstRun?: boolean;
   object: any;
-  options: { attribute: string; valueMap: { [key: string]: any } }[];
+  paths: fastRedact.RedactOptions['paths'];
+  valueMap?: { [key: string]: any };
 }): any {
-  if (!object || !options?.length) {
-    return object;
-  }
-
-  // Create deep clone
-  const redactedObject = isFirstRun
-    ? JSON.parse(JSON.stringify(object))
-    : object;
-
-  for (const option of options) {
-    if (redactedObject.hasOwnProperty(option.attribute)) {
-      if (option.valueMap['*'] || option.valueMap['*'] === null) {
-        redactedObject[option.attribute] = option.valueMap['*'];
-      } else if (option.valueMap[redactedObject[option.attribute]]) {
-        redactedObject[option.attribute] =
-          option.valueMap[redactedObject[option.attribute]];
-      }
-    } else {
-      // If the attribute is not present on the current object,
-      // check if it exists on any nested objects
-      for (const property in redactedObject) {
-        if (isArray(redactedObject[property])) {
-          redactedObject[property] = redactedObject[property].map(
-            (currentObject) => {
-              return redactAttributes({
-                options,
-                isFirstRun: false,
-                object: currentObject
-              });
-            }
-          );
-        } else if (
-          isObject(redactedObject[property]) &&
-          !(redactedObject[property] instanceof Big)
-        ) {
-          // Recursively call the function on the nested object
-          redactedObject[property] = redactAttributes({
-            options,
-            isFirstRun: false,
-            object: redactedObject[property]
-          });
+  const redact = fastRedact({
+    paths,
+    censor: (value) => {
+      if (valueMap) {
+        if (valueMap[value]) {
+          return valueMap[value];
+        } else {
+          return value;
         }
+      } else {
+        return null;
       }
     }
-  }
+  });
 
-  return redactedObject;
+  return JSON.parse(redact(object));
 }

@@ -1,19 +1,19 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   DEFAULT_CURRENCY,
   ghostfolioPrefix,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
+import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -32,7 +32,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { DataSource } from '@prisma/client';
 import { isISO4217CurrencyCode } from 'class-validator';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { switchMap } from 'rxjs';
 
 import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 
@@ -53,19 +53,19 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
   templateUrl: 'create-asset-profile-dialog.html'
 })
-export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
+export class GfCreateAssetProfileDialogComponent implements OnInit {
   public createAssetProfileForm: FormGroup;
   public ghostfolioPrefix = `${ghostfolioPrefix}_`;
   public mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
   private dataSourceForExchangeRates: DataSource;
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     public readonly adminService: AdminService,
     private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
     public readonly dialogRef: MatDialogRef<GfCreateAssetProfileDialogComponent>,
     public readonly formBuilder: FormBuilder
   ) {}
@@ -102,6 +102,7 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   public onSubmit() {
     if (this.mode === 'auto') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource:
           this.createAssetProfileForm.get('searchSymbol').value.dataSource,
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
@@ -125,13 +126,18 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
               symbol: `${DEFAULT_CURRENCY}${currency}`
             });
           }),
-          takeUntil(this.unsubscribeSubject)
+          takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
-          this.dialogRef.close();
+          this.dialogRef.close({
+            addAssetProfile: false,
+            dataSource: this.dataSourceForExchangeRates,
+            symbol: `${DEFAULT_CURRENCY}${currency}`
+          });
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
+        addAssetProfile: true,
         dataSource: 'MANUAL',
         symbol: `${this.ghostfolioPrefix}${this.createAssetProfileForm.get('addSymbol').value}`
       });
@@ -147,11 +153,6 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
     }
 
     return false;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private atLeastOneValid(control: AbstractControl): ValidationErrors {
@@ -184,7 +185,7 @@ export class GfCreateAssetProfileDialogComponent implements OnDestroy, OnInit {
   private initialize() {
     this.adminService
       .fetchAdminData()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ dataProviders, settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
 

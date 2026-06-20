@@ -1,8 +1,8 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -16,6 +16,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -23,10 +24,11 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectorRef,
   Component,
-  OnDestroy,
+  DestroyRef,
   OnInit,
   ViewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -41,8 +43,6 @@ import { isNumber, sortBy } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   imports: [
@@ -63,7 +63,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./analysis-page.scss'],
   templateUrl: './analysis-page.html'
 })
-export class GfAnalysisPageComponent implements OnDestroy, OnInit {
+export class GfAnalysisPageComponent implements OnInit {
   @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
 
   public benchmark: Partial<SymbolProfile>;
@@ -94,18 +94,18 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public portfolioEvolutionDataLabel = $localize`Investment`;
+  public precision = 2;
   public streaks: PortfolioInvestmentsResponse['streaks'];
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
   public user: User;
 
-  private unsubscribeSubject = new Subject<void>();
-
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private clipboard: Clipboard,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private snackBar: MatSnackBar,
@@ -133,13 +133,13 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
@@ -161,11 +161,11 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
   public onChangeBenchmark(symbolProfileId: string) {
     this.dataService
       .putUserSetting({ benchmark: symbolProfileId })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
           .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((user) => {
             this.user = user;
 
@@ -191,7 +191,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         mode,
         filters: this.userService.getFilters()
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ prompt }) => {
         this.clipboard.copy(prompt);
 
@@ -205,7 +205,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
 
         snackBarRef
           .onAction()
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
             window.open('https://duck.ai', '_blank');
           });
@@ -220,11 +220,6 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private fetchDividendsAndInvestments() {
     this.isLoadingDividendTimelineChart = true;
     this.isLoadingInvestmentTimelineChart = true;
@@ -235,7 +230,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ dividends }) => {
         this.dividendsByGroup = dividends;
 
@@ -250,7 +245,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ investments, streaks }) => {
         this.investmentsByGroup = investments;
         this.streaks = streaks;
@@ -285,7 +280,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         filters: this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, firstOrderDate, performance }) => {
         this.firstOrderDate = firstOrderDate ?? new Date();
 
@@ -317,10 +312,19 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
                 : valueInPercentage
             });
           }
+
           this.performanceDataItemsInPercentage.push({
             date,
             value: netPerformanceInPercentageWithCurrencyEffect
           });
+        }
+
+        if (
+          this.deviceType === 'mobile' &&
+          this.performance.currentValueInBaseCurrency >=
+            NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+        ) {
+          this.precision = 0;
         }
 
         this.isLoadingInvestmentChart = false;
@@ -335,7 +339,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
         filters: this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         const holdingsSorted = sortBy(
           holdings.filter(({ netPerformancePercentWithCurrencyEffect }) => {
@@ -386,7 +390,7 @@ export class GfAnalysisPageComponent implements OnDestroy, OnInit {
             range: this.user?.settings?.dateRange,
             startDate: this.firstOrderDate
           })
-          .pipe(takeUntil(this.unsubscribeSubject))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(({ marketData }) => {
             this.benchmarkDataItems = marketData.map(({ date, value }) => {
               return {

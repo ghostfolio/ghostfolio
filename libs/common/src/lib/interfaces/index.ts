@@ -34,7 +34,6 @@ import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
-import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
@@ -172,7 +171,6 @@ export {
   PortfolioReportResponse,
   PortfolioReportRule,
   PortfolioSummary,
-  Position,
   Product,
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,

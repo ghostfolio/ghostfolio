@@ -1,6 +1,5 @@
 import {
   getTooltipOptions,
-  getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
@@ -19,12 +18,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  type ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   ViewChild
 } from '@angular/core';
 import {
+  type AnimationsSpec,
   Chart,
   Filler,
   LinearScale,
@@ -33,10 +34,12 @@ import {
   PointElement,
   TimeScale,
   Tooltip,
-  TooltipPosition
+  type TooltipOptions
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { registerChartConfiguration } from '../chart';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,7 +70,7 @@ export class GfLineChartComponent
   @Input() yMin: number;
   @Input() yMinLabel: string;
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart<'line'>;
   public isLoading = true;
@@ -85,8 +88,7 @@ export class GfLineChartComponent
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
-      getTooltipPositionerMapTop(this.chart, position);
+    registerChartConfiguration();
   }
 
   public ngAfterViewInit() {
@@ -117,9 +119,9 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices = [];
+    const benchmarkPrices: number[] = [];
     const labels: string[] = [];
-    const marketPrices = [];
+    const marketPrices: number[] = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
       benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
@@ -129,11 +131,14 @@ export class GfLineChartComponent
 
     const gradient = this.chartCanvas?.nativeElement
       ?.getContext('2d')
-      .createLinearGradient(
+      ?.createLinearGradient(
         0,
         0,
         0,
-        (this.chartCanvas.nativeElement.parentNode.offsetHeight * 4) / 5
+        ((this.chartCanvas.nativeElement.parentNode as HTMLElement)
+          .offsetHeight *
+          4) /
+          5
       );
 
     if (gradient && this.showGradient) {
@@ -169,27 +174,26 @@ export class GfLineChartComponent
     };
 
     if (this.chartCanvas) {
+      const animations = {
+        x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
+        y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
+      };
+
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
-        this.chart.options.animation =
-          this.isAnimated &&
-          ({
-            x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
-            y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
-          } as unknown);
+          this.getTooltipPluginConfiguration();
+        this.chart.options.animations = this.isAnimated
+          ? animations
+          : undefined;
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            animation:
-              this.isAnimated &&
-              ({
-                x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
-                y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
-              } as unknown),
+            animations: this.isAnimated ? animations : undefined,
             aspectRatio: 16 / 9,
             elements: {
               point: {
@@ -208,7 +212,7 @@ export class GfLineChartComponent
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            } as unknown,
+            },
             scales: {
               x: {
                 border: {
@@ -298,7 +302,7 @@ export class GfLineChartComponent
   }: {
     axis: 'x' | 'y';
     labels: string[];
-  }) {
+  }): Partial<AnimationsSpec<'line'>[string]> {
     const delayBetweenPoints = this.ANIMATION_DURATION / labels.length;
 
     return {
@@ -308,7 +312,7 @@ export class GfLineChartComponent
         }
 
         context[`${axis}Started`] = true;
-        return context.index * delayBetweenPoints;
+        return context.dataIndex * delayBetweenPoints;
       },
       duration: delayBetweenPoints,
       easing: 'linear',
@@ -317,7 +321,7 @@ export class GfLineChartComponent
     };
   }
 
-  private getTooltipPluginConfiguration() {
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
     return {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
@@ -326,7 +330,7 @@ export class GfLineChartComponent
         unit: this.unit
       }),
       mode: 'index',
-      position: 'top' as unknown,
+      position: 'top',
       xAlign: 'center',
       yAlign: 'bottom'
     };
