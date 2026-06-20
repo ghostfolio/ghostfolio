@@ -536,6 +536,8 @@ export class ImportService {
             url,
             comment: assetProfile.comment,
             currency: assetProfile.currency,
+            dataGatheringFrequency:
+              assetProfile.dataGatheringFrequency ?? 'DAILY',
             userId: dataSource === 'MANUAL' ? user.id : undefined
           },
           symbolProfileId: undefined,

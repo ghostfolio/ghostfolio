@@ -28,6 +28,7 @@ export interface ExportResponse {
   assetProfiles: (Omit<
     SymbolProfile,
     | 'createdAt'
+    | 'dataGatheringFrequency'
     | 'id'
     | 'scraperConfiguration'
     | 'symbolMapping'

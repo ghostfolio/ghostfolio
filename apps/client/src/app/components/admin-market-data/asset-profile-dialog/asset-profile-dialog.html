@@ -113,7 +113,7 @@
           <ion-icon name="reader-outline" />
           <div class="d-none d-sm-block ml-2" i18n>Overview</div>
         </ng-template>
-        <div class="container mt-3 p-0">
+        <div class="container px-0 py-3">
           <div class="row w-100">
             @if (isEditAssetProfileIdentifierMode) {
               <div class="col-12 mb-4">
@@ -442,6 +442,21 @@
                   matInput
                   (keyup.enter)="$event.stopPropagation()"
                 ></textarea>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="outline" class="w-100 without-hint">
+                <mat-label i18n>Data Gathering Frequency</mat-label>
+                <mat-select formControlName="dataGatheringFrequency">
+                  @for (
+                    dataGatheringFrequencyValue of dataGatheringFrequencyValues;
+                    track dataGatheringFrequencyValue.value
+                  ) {
+                    <mat-option [value]="dataGatheringFrequencyValue.value">{{
+                      dataGatheringFrequencyValue.viewValue
+                    }}</mat-option>
+                  }
+                </mat-select>
               </mat-form-field>
             </div>
           </form>

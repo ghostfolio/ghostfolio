@@ -287,6 +287,7 @@ export class AdminService {
       comment,
       countries,
       currency,
+      dataGatheringFrequency,
       dataSource: newDataSource,
       holdings,
       isActive,
@@ -370,6 +371,7 @@ export class AdminService {
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
         comment,
         currency,
+        dataGatheringFrequency,
         dataSource,
         isActive,
         scraperConfiguration,
