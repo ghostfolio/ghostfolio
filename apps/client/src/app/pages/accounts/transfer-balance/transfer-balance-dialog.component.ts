@@ -1,7 +1,7 @@
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -46,10 +46,9 @@ export class GfTransferBalanceDialogComponent {
   public currency: string;
   public transferBalanceForm: TransferBalanceForm;
 
-  public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TransferBalanceDialogParams,
-    public dialogRef: MatDialogRef<GfTransferBalanceDialogComponent>
-  ) {}
+  public readonly data = inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA);
+  public readonly dialogRef =
+    inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
 
   public ngOnInit() {
     this.accounts = this.data.accounts;
