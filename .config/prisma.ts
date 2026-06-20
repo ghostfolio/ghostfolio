@@ -7,7 +7,7 @@ expand(config({ quiet: true }));
 
 export default defineConfig({
   datasource: {
-    url: process.env.DATABASE_URL ?? ''
+    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL
   },
   migrations: {
     path: join(__dirname, '..', 'prisma', 'migrations'),

@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import {
   DataProviderInterface,
   GetAssetProfileParams,
@@ -122,7 +123,9 @@ export class FinancialModelingPrepService
         ).then((res) => res.json());
 
         if (!assetProfile) {
-          throw new Error(`${symbol} not found`);
+          throw new AssetProfileDelistedError(
+            `No data found, ${symbol} (${this.getName()}) may be delisted`
+          );
         }
 
         const { assetClass, assetSubClass } =

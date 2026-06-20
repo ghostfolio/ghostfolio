@@ -218,16 +218,18 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
               };
             }) ?? [];
 
-        response.sectors = (
-          assetProfile.topHoldings?.sectorWeightings ?? []
-        ).flatMap((sectorWeighting) => {
-          return Object.entries(sectorWeighting).map(([sector, weight]) => {
-            return {
-              name: this.parseSector(sector),
-              weight: weight as number
-            };
+        response.sectors = (assetProfile.topHoldings?.sectorWeightings ?? [])
+          .flatMap((sectorWeighting) => {
+            return Object.entries(sectorWeighting).map(([sector, weight]) => {
+              return {
+                name: this.parseSector(sector),
+                weight: weight as number
+              };
+            });
+          })
+          .filter(({ weight }) => {
+            return weight > 0;
           });
-        });
       } else if (
         assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country

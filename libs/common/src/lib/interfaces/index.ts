@@ -44,6 +44,7 @@ import type { ActivityResponse } from './responses/activity-response.interface';
 import type { AdminUserResponse } from './responses/admin-user-response.interface';
 import type { AdminUsersResponse } from './responses/admin-users-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
+import type { AiServiceHealthResponse } from './responses/ai-service-health-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
@@ -90,7 +91,6 @@ import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolItem } from './symbol-item.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
-import type { TabConfiguration } from './tab-configuration.interface';
 import type { ToggleOption } from './toggle-option.interface';
 import type { UserItem } from './user-item.interface';
 import type { UserSettings } from './user-settings.interface';
@@ -117,6 +117,7 @@ export {
   AdminUserResponse,
   AdminUsersResponse,
   AiPromptResponse,
+  AiServiceHealthResponse,
   ApiKeyResponse,
   AssertionCredentialJSON,
   AssetClassSelectorOption,
@@ -184,7 +185,6 @@ export {
   SymbolItem,
   SymbolMetrics,
   SystemMessage,
-  TabConfiguration,
   ToggleOption,
   User,
   UserItem,

@@ -1,8 +1,11 @@
-import { UserDetailDialogParams } from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
+import {
+  UserDetailDialogParams,
+  UserDetailDialogResult
+} from '@ghostfolio/client/components/user-detail-dialog/interfaces/interfaces';
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { DEFAULT_PAGE_SIZE, locale } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   getDateFnsLocale,
@@ -25,9 +28,11 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
+  inject,
   OnInit,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -76,37 +81,42 @@ import { switchMap, tap } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class GfAdminUsersComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  public dataSource = new MatTableDataSource<AdminUsersResponse['users'][0]>();
-  public defaultDateFormat: string;
-  public deviceType: string;
-  public displayedColumns: string[] = [];
-  public getEmojiFlag = getEmojiFlag;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToImpersonateAllUsers: boolean;
-  public info: InfoItem;
-  public isLoading = false;
-  public pageSize = DEFAULT_PAGE_SIZE;
-  public routerLinkAdminControlUsers =
+  protected dataSource = new MatTableDataSource<
+    AdminUsersResponse['users'][0]
+  >();
+  protected defaultDateFormat: string;
+  protected displayedColumns: string[] = [];
+  protected readonly getEmojiFlag = getEmojiFlag;
+  protected hasPermissionForSubscription: boolean;
+  protected hasPermissionToImpersonateAllUsers: boolean;
+  protected info: InfoItem;
+  protected isLoading = false;
+  protected readonly pageSize = DEFAULT_PAGE_SIZE;
+  protected readonly routerLinkAdminControlUsers =
     internalRoutes.adminControl.subRoutes.users.routerLink;
-  public totalItems = 0;
-  public user: User;
+  protected totalItems = 0;
+  protected user: User;
 
-  public constructor(
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private impersonationStorageService: ImpersonationStorageService,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  private readonly paginator = viewChild.required(MatPaginator);
+
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
@@ -176,7 +186,7 @@ export class GfAdminUsersComponent implements OnInit {
     this.fetchUsers();
   }
 
-  public formatDistanceToNow(aDateString: string) {
+  protected formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
         addSuffix: true,
@@ -192,13 +202,13 @@ export class GfAdminUsersComponent implements OnInit {
     return '';
   }
 
-  public onChangePage(page: PageEvent) {
+  protected onChangePage(page: PageEvent) {
     this.fetchUsers({
       pageIndex: page.pageIndex
     });
   }
 
-  public onDeleteUser(aId: string) {
+  protected onDeleteUser(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -216,7 +226,7 @@ export class GfAdminUsersComponent implements OnInit {
     });
   }
 
-  public onGenerateAccessToken(aUserId: string) {
+  protected onGenerateAccessToken(aUserId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -241,7 +251,7 @@ export class GfAdminUsersComponent implements OnInit {
     });
   }
 
-  public onImpersonateUser(aId: string) {
+  protected onImpersonateUser(aId: string) {
     if (aId) {
       this.impersonationStorageService.setId(aId);
     } else {
@@ -251,7 +261,7 @@ export class GfAdminUsersComponent implements OnInit {
     window.location.reload();
   }
 
-  public onOpenUserDetailDialog(userId: string) {
+  protected onOpenUserDetailDialog(userId: string) {
     this.router.navigate(
       internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
     );
@@ -260,8 +270,8 @@ export class GfAdminUsersComponent implements OnInit {
   private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
     this.isLoading = true;
 
-    if (pageIndex === 0 && this.paginator) {
-      this.paginator.pageIndex = 0;
+    if (pageIndex === 0 && this.paginator()) {
+      this.paginator().pageIndex = 0;
     }
 
     this.adminService
@@ -283,18 +293,19 @@ export class GfAdminUsersComponent implements OnInit {
   private openUserDetailDialog(aUserId: string) {
     const dialogRef = this.dialog.open<
       GfUserDetailDialogComponent,
-      UserDetailDialogParams
+      UserDetailDialogParams,
+      UserDetailDialogResult
     >(GfUserDetailDialogComponent, {
       autoFocus: false,
       data: {
         currentUserId: this.user?.id,
-        deviceType: this.deviceType,
+        deviceType: this.deviceType(),
         hasPermissionForSubscription: this.hasPermissionForSubscription,
-        locale: this.user?.settings?.locale,
+        locale: this.user?.settings?.locale ?? locale,
         userId: aUserId
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : '60vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      } satisfies UserDetailDialogParams,
+      height: this.deviceType() === 'mobile' ? '98vh' : '60vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef

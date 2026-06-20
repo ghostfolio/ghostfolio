@@ -32,11 +32,17 @@ import {
 } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_DATE_RANGE,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier,
+  getSum,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   AccountsResponse,
   Activity,
@@ -64,7 +70,7 @@ import {
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
   Account,
@@ -465,7 +471,7 @@ export class PortfolioService {
   }
 
   public async getDetails({
-    dateRange = 'max',
+    dateRange = DEFAULT_DATE_RANGE,
     filters,
     impersonationId,
     userId,
@@ -558,9 +564,17 @@ export class PortfolioService {
     const cashSymbolProfiles = this.getCashSymbolProfiles(cashDetails);
     symbolProfiles.push(...cashSymbolProfiles);
 
-    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
+    const symbolProfileMap: {
+      [assetProfileIdentifier: string]: EnhancedSymbolProfile;
+    } = {};
+
     for (const symbolProfile of symbolProfiles) {
-      symbolProfileMap[symbolProfile.symbol] = symbolProfile;
+      symbolProfileMap[
+        getAssetProfileIdentifier({
+          dataSource: symbolProfile.dataSource,
+          symbol: symbolProfile.symbol
+        })
+      ] = symbolProfile;
     }
 
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
@@ -571,6 +585,7 @@ export class PortfolioService {
     for (const {
       activitiesCount,
       currency,
+      dataSource,
       dateOfFirstActivity,
       dividend,
       grossPerformance,
@@ -600,7 +615,17 @@ export class PortfolioService {
         }
       }
 
-      const assetProfile = symbolProfileMap[symbol];
+      const assetProfile =
+        symbolProfileMap[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (!assetProfile) {
+        Logger.warn(
+          `Asset profile not found for ${symbol} (${dataSource})`,
+          'PortfolioService'
+        );
+
+        continue;
+      }
 
       let markets: PortfolioPosition['markets'];
       let marketsAdvanced: PortfolioPosition['marketsAdvanced'];
@@ -989,7 +1014,7 @@ export class PortfolioService {
   }
 
   public async getPerformance({
-    dateRange = 'max',
+    dateRange = DEFAULT_DATE_RANGE,
     filters,
     impersonationId,
     userId
@@ -1587,7 +1612,7 @@ export class PortfolioService {
         assetSubClass: AssetSubClass.CASH,
         countries: [],
         createdAt: account.createdAt,
-        dataSource: DataSource.MANUAL,
+        dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
         holdings: [],
         id: currency,
         isActive: true,

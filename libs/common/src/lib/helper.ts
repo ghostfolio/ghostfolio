@@ -187,7 +187,7 @@ export function getCurrencyFromSymbol(aSymbol = '') {
   return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
-export function getDateFnsLocale(aLanguageCode: string) {
+export function getDateFnsLocale(aLanguageCode?: string) {
   if (aLanguageCode === 'ca') {
     return ca;
   } else if (aLanguageCode === 'de') {
@@ -340,20 +340,6 @@ export function getYesterday() {
   const day = getDate(new Date());
 
   return subDays(new Date(Date.UTC(year, month, day)), 1);
-}
-
-export function groupBy<T, K extends keyof T>(
-  key: K,
-  arr: T[]
-): Map<T[K], T[]> {
-  const map = new Map<T[K], T[]>();
-  arr.forEach((t) => {
-    if (!map.has(t[key])) {
-      map.set(t[key], []);
-    }
-    map.get(t[key])!.push(t);
-  });
-  return map;
 }
 
 export function interpolate(template: string, context: any) {

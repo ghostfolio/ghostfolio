@@ -5,6 +5,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.5.0 - 2026-05-24
+
+### Added
+
+- Configured the `min-release-age` in `.npmrc`
+
+### Changed
+
+- Removed the deprecated attributes (`assetClass`, `countries`, `currency`, `dataSource`, `name`, `sectors`, `symbol` and `url`) from the holdings of the public portfolio endpoint response
+- Removed the deprecated `api/v1/order` endpoints
+- Upgraded `@keyv/redis` from version `4.4.0` to `5.1.6`
+
+### Fixed
+
+- Fixed a layout regression that caused a double scrollbar on pages without tabs
+- Resolved an issue with missing cash positions caused by an incorrect data source
+
+## 3.4.0 - 2026-05-21
+
+### Added
+
+- Added the icon column to the benchmark component
+- Added support for the `DIRECT_URL` environment variable to enable direct database connections
+
+### Changed
+
+- Improved the pagination in the activities table of the account detail dialog
+- Improved the pagination in the activities table of the holding detail dialog
+- Randomized the placeholder in the assistant
+- Filtered out sectors with zero weight for ETF and mutual fund assets in the _Yahoo Finance_ data enhancer
+- Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
+- Improved the verification of the _Stripe_ checkout session when creating a subscription
+- Relaxed the URL validation in the asset profile DTOs to accept both `HTTP` and `HTTPS` protocols
+- Relaxed the URL validation in the platform DTOs to accept both `HTTP` and `HTTPS` protocols
+- Extracted the page tabs to a reusable component
+- Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `bull-board` from version `7.0.0` to `7.1.5`
+- Upgraded `Nx` from version `22.7.1` to `22.7.2`
+
+### Fixed
+
+- Resolved an issue with the cash balance calculation of an account for `SELL` activities to ensure fees are correctly subtracted
+- Resolved an exception in the portfolio details endpoint when an asset profile is unmatched
+
+## 3.3.0 - 2026-05-14
+
+### Added
+
+- Added `nestjs-best-practices` skills
+
+### Changed
+
+- Deactivated asset profiles automatically on delisting in the _Financial Modeling Prep_ service
+- Migrated various components from `NgClass` to class bindings
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Spanish (`es`)
+- Cleaned up the _Webpack Bundle Analyzer_ setup
+- Upgraded `@internationalized/number` from version `3.6.5` to `3.6.6`
+- Upgraded `@ionic/angular` from version `8.8.1` to `8.8.5`
+- Upgraded `@openrouter/ai-sdk-provider` from version `0.7.2` to `2.9.0`
+- Upgraded `ai` from version `4.3.16` to `6.0.174`
+- Upgraded `bull-board` from version `6.20.3` to `7.0.0`
+- Upgraded `countries-and-timezones` from version `3.8.0` to `3.9.0`
+- Upgraded `fuse.js` from version `7.1.0` to `7.3.0`
+- Upgraded `Nx` from version `22.6.5` to `22.7.1`
+- Upgraded `papaparse` from version `5.3.1` to `5.5.3`
+- Upgraded `prisma` from version `7.7.0` to `7.8.0`
+
+### Fixed
+
+- Synchronized the native browser elements with the theme to improve the dark mode
+- Fixed a visual regression in the bottom navigation bar on mobile
+
 ## 3.2.0 - 2026-05-03
 
 ### Added

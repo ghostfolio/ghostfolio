@@ -91,8 +91,8 @@
 
     <mat-tab-group
       animationDuration="0ms"
+      [class.d-none]="isLoadingActivities"
       [mat-stretch-tabs]="false"
-      [ngClass]="{ 'd-none': isLoadingActivities }"
     >
       <mat-tab>
         <ng-template mat-tab-label>
@@ -120,6 +120,8 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
           [showAccountColumn]="false"
           [showActions]="
             !data.hasImpersonationId &&
@@ -133,6 +135,7 @@
           (activityToClone)="onCloneActivity($event)"
           (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
+          (pageChanged)="onChangePage($event)"
           (sortChanged)="onSortChanged($event)"
         />
       </mat-tab>

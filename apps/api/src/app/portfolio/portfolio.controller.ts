@@ -14,6 +14,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
+  DEFAULT_DATE_RANGE,
   HEADER_KEY_IMPERSONATION,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
@@ -82,7 +83,7 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('withMarkets') withMarketsParam = 'false'
@@ -220,6 +221,21 @@ export class PortfolioController {
           hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
             ? portfolioPosition.assetClass
             : undefined,
+        assetProfile: {
+          ...portfolioPosition.assetProfile,
+          ...(hasDetails
+            ? {}
+            : {
+                assetClass: undefined,
+                assetClassLabel: undefined,
+                assetSubClass: undefined,
+                assetSubClassLabel: undefined,
+                countries: [],
+                currency: undefined,
+                holdings: [],
+                sectors: []
+              })
+        },
         assetSubClass:
           hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
             ? portfolioPosition.assetSubClass
@@ -306,7 +322,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('groupBy') groupBy?: GroupBy,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividendsResponse> {
@@ -407,7 +423,7 @@ export class PortfolioController {
     @Query('dataSource') filterByDataSource?: string,
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
@@ -440,7 +456,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('groupBy') groupBy?: GroupBy,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestmentsResponse> {
@@ -512,7 +528,7 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'

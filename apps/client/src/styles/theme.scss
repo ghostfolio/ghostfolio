@@ -150,7 +150,9 @@ $gf-typography: (
 );
 
 .theme-light {
-  $gf-theme-default: mat.define-theme(
+  color-scheme: light;
+
+  @include mat.theme(
     (
       color: (
         primary: $_primary,
@@ -163,8 +165,6 @@ $gf-typography: (
       typography: $gf-typography
     )
   );
-
-  @include mat.all-component-themes($gf-theme-default);
 
   @include mat.autocomplete-overrides(
     (
@@ -233,7 +233,9 @@ $gf-typography: (
 }
 
 .theme-dark {
-  $gf-theme-dark: mat.define-theme(
+  color-scheme: dark;
+
+  @include mat.theme(
     (
       color: (
         primary: $_primary,
@@ -246,8 +248,6 @@ $gf-typography: (
       typography: $gf-typography
     )
   );
-
-  @include mat.all-component-themes($gf-theme-dark);
 
   @include mat.button-overrides(
     (
@@ -293,24 +293,6 @@ $gf-typography: (
         container-shape: 4px
       )
     );
-
-    .page.has-tabs {
-      @include mat.tabs-overrides(
-        (
-          container-height: 3rem
-        )
-      );
-    }
-  }
-
-  @media (min-width: 576px) {
-    .page.has-tabs {
-      @include mat.tabs-overrides(
-        (
-          container-height: 2rem
-        )
-      );
-    }
   }
 
   @include mat.badge-overrides(
@@ -433,15 +415,6 @@ $gf-typography: (
         filled-container-color: #f44336,
         filled-label-text-color: white,
         outlined-label-text-color: #f44336
-      )
-    );
-  }
-
-  .page.has-tabs {
-    @include mat.tabs-overrides(
-      (
-        active-indicator-height: 0,
-        label-text-tracking: normal
       )
     );
   }

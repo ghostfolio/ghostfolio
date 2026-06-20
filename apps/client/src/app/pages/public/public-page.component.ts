@@ -14,7 +14,6 @@ import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
-import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectorRef,
@@ -40,7 +39,6 @@ import { catchError } from 'rxjs/operators';
 @Component({
   host: { class: 'page' },
   imports: [
-    CommonModule,
     GfActivitiesTableComponent,
     GfHoldingsTableComponent,
     GfPortfolioProportionChartComponent,
@@ -174,16 +172,16 @@ export class GfPublicPageComponent implements OnInit {
       this.holdings.push(position);
 
       this.positions[symbol] = {
-        currency: position.currency,
-        name: position.name,
+        currency: position.assetProfile.currency,
+        name: position.assetProfile.name,
         value: position.allocationInPercentage
       };
 
-      if (position.assetClass !== AssetClass.LIQUIDITY) {
+      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
-        if (position.countries.length > 0) {
-          for (const country of position.countries) {
+        if (position.assetProfile.countries.length > 0) {
+          for (const country of position.assetProfile.countries) {
             const { code, continent, name, weight } = country;
 
             if (this.continents[continent]?.value) {
@@ -222,8 +220,8 @@ export class GfPublicPageComponent implements OnInit {
             0;
         }
 
-        if (position.sectors.length > 0) {
-          for (const sector of position.sectors) {
+        if (position.assetProfile.sectors.length > 0) {
+          for (const sector of position.assetProfile.sectors) {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
@@ -247,7 +245,7 @@ export class GfPublicPageComponent implements OnInit {
       }
 
       this.symbols[prettifySymbol(symbol)] = {
-        name: position.name,
+        name: position.assetProfile.name,
         symbol: prettifySymbol(symbol),
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency

@@ -120,8 +120,13 @@
               <tr
                 *matRowDef="let row; columns: displayedColumns"
                 mat-row
-                [ngClass]="{ 'cursor-pointer': row.position }"
-                (click)="onClickHolding(row.position)"
+                [class.cursor-pointer]="row.position"
+                (click)="
+                  onClickHolding({
+                    dataSource: row.position.assetProfile.dataSource,
+                    symbol: row.position.assetProfile.symbol
+                  })
+                "
               ></tr>
               <tr
                 *matFooterRowDef="displayedColumns"
@@ -138,7 +143,7 @@
     <tr
       *matRowDef="let element; columns: displayedColumns"
       mat-row
-      [ngClass]="{
+      [class]="{
         'cursor-pointer': element.parents?.length > 0,
         expanded: element.expand ?? false
       }"
@@ -150,7 +155,7 @@
       *matRowDef="let row; columns: ['expandedDetail']"
       class="holding-detail"
       mat-row
-      [ngClass]="{ 'd-none': !row.parents?.length }"
+      [class.d-none]="!row.parents?.length"
     ></tr>
   </table>
 </div>

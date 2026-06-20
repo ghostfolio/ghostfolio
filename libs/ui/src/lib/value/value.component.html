@@ -27,7 +27,7 @@
   @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
-      [ngClass]="position === 'end' ? 'justify-content-end' : ''"
+      [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
         @if (colorizeSign && !useAbsoluteValue) {
@@ -40,10 +40,9 @@
         }
         <div
           class="mb-0 value"
-          [ngClass]="{
-            'font-weight-bold h2': size === 'large',
-            h4: size === 'medium'
-          }"
+          [class.font-weight-bold]="size === 'large'"
+          [class.h2]="size === 'large'"
+          [class.h4]="size === 'medium'"
         >
           @if (value === null) {
             <span class="text-monospace text-muted">*****</span>
@@ -60,10 +59,9 @@
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
-          [ngClass]="{
-            'font-weight-bold h2': size === 'large',
-            h4: size === 'medium'
-          }"
+          [class.font-weight-bold]="size === 'large'"
+          [class.h2]="size === 'large'"
+          [class.h4]="size === 'medium'"
         >
           {{ formattedValue }}
         </div>

@@ -18,8 +18,12 @@
       border-color 0.5s ease,
       box-shadow 0.5s ease;
 
-    &:hover,
     &.active {
+      border-color: currentColor;
+      box-shadow: 0 0 0 1px currentColor;
+    }
+
+    &:hover {
       border-color: rgba(var(--palette-primary-500), 1);
       box-shadow: 0 0 0 1px rgba(var(--palette-primary-500), 1);
     }

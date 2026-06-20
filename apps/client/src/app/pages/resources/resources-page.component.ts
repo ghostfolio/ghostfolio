@@ -1,10 +1,10 @@
-import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import {
+  GfPageTabsComponent,
+  TabConfiguration
+} from '@ghostfolio/ui/page-tabs';
 
-import { Component, OnInit } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
+import { Component } from '@angular/core';
 import { addIcons } from 'ionicons';
 import {
   bookOutline,
@@ -12,17 +12,15 @@ import {
   newspaperOutline,
   readerOutline
 } from 'ionicons/icons';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
-  host: { class: 'page has-tabs' },
-  imports: [IonIcon, MatTabsModule, RouterModule],
+  host: { class: 'page' },
+  imports: [GfPageTabsComponent],
   selector: 'gf-resources-page',
   styleUrls: ['./resources-page.scss'],
   templateUrl: './resources-page.html'
 })
-export class ResourcesPageComponent implements OnInit {
-  public deviceType: string;
+export class ResourcesPageComponent {
   public tabs: TabConfiguration[] = [
     {
       iconName: 'reader-outline',
@@ -46,11 +44,7 @@ export class ResourcesPageComponent implements OnInit {
     }
   ];
 
-  public constructor(private deviceDetectorService: DeviceDetectorService) {
+  public constructor() {
     addIcons({ bookOutline, libraryOutline, newspaperOutline, readerOutline });
-  }
-
-  public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 }

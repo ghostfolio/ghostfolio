@@ -202,7 +202,7 @@
       </div>
     </div>
   }
-  <div class="row" [ngClass]="{ 'd-none': hasPermissionForSubscription }">
+  <div class="row" [class.d-none]="hasPermissionForSubscription">
     <div class="col-md-12">
       <mat-card appearance="outlined">
         <mat-card-header class="overflow-hidden w-100">

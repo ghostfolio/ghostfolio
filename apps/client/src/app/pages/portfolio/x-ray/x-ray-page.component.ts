@@ -12,7 +12,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -29,7 +28,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     GfPremiumIndicatorComponent,
     GfRulesComponent,
     IonIcon,
-    NgClass,
     NgxSkeletonLoaderModule
   ],
   selector: 'gf-x-ray-page',
@@ -109,7 +107,10 @@ export class GfXRayPageComponent {
       .fetchPortfolioReport()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ xRay: { categories, statistics } }) => {
-        this.categories = categories;
+        this.categories = categories.filter(({ rules }) => {
+          return rules?.length > 0;
+        });
+
         this.inactiveRules = this.mergeInactiveRules(categories);
         this.statistics = statistics;
 

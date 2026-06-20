@@ -16,9 +16,12 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  OnInit
+  inject,
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -35,25 +38,27 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-market.html'
 })
 export class GfHomeMarketComponent implements OnInit {
-  public benchmarks: Benchmark[];
-  public deviceType: string;
-  public fearAndGreedIndex: number;
-  public fearLabel = $localize`Fear`;
-  public greedLabel = $localize`Greed`;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public historicalDataItems: HistoricalDataItem[];
-  public info: InfoItem;
-  public readonly numberOfDays = 365;
-  public user: User;
+  protected readonly benchmarks = signal<Benchmark[]>([]);
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+  protected readonly fearAndGreedIndex = signal<number | undefined>(undefined);
+  protected readonly fearLabel = $localize`Fear`;
+  protected readonly greedLabel = $localize`Greed`;
+  protected hasPermissionToAccessFearAndGreedIndex: boolean;
+  protected readonly historicalDataItems = signal<HistoricalDataItem[]>([]);
+  protected readonly numberOfDays = 365;
+  protected user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private userService: UserService
-  ) {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
+  private readonly info: InfoItem;
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
@@ -73,7 +78,10 @@ export class GfHomeMarketComponent implements OnInit {
       permissions.enableFearAndGreedIndex
     );
 
-    if (this.hasPermissionToAccessFearAndGreedIndex) {
+    if (
+      this.hasPermissionToAccessFearAndGreedIndex &&
+      this.info.fearAndGreedDataSource
+    ) {
       this.dataService
         .fetchSymbolItem({
           dataSource: this.info.fearAndGreedDataSource,
@@ -82,16 +90,14 @@ export class GfHomeMarketComponent implements OnInit {
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ historicalData, marketPrice }) => {
-          this.fearAndGreedIndex = marketPrice;
-          this.historicalDataItems = [
+          this.fearAndGreedIndex.set(marketPrice);
+          this.historicalDataItems.set([
             ...historicalData,
             {
               date: resetHours(new Date()).toISOString(),
               value: marketPrice
             }
-          ];
-
-          this.changeDetectorRef.markForCheck();
+          ]);
         });
     }
 
@@ -99,9 +105,7 @@ export class GfHomeMarketComponent implements OnInit {
       .fetchBenchmarks()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ benchmarks }) => {
-        this.benchmarks = benchmarks;
-
-        this.changeDetectorRef.markForCheck();
+        this.benchmarks.set(benchmarks);
       });
   }
 }

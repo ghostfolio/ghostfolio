@@ -265,16 +265,6 @@ body {
       }
     }
 
-    .page {
-      &.has-tabs {
-        @media (min-width: 576px) {
-          .mat-mdc-tab-header {
-            background-color: rgba(var(--palette-foreground-base-dark), 0.02);
-          }
-        }
-      }
-    }
-
     .svgMap-tooltip {
       background: var(--dark-background);
 
@@ -375,7 +365,8 @@ ngx-skeleton-loader {
 }
 
 .has-info-message {
-  .page.has-tabs {
+  // Restrict viewport height of tabbed views when the Live Demo or system announcements banner are displayed
+  .page:has(gf-page-tabs) {
     height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
   }
 }
@@ -489,7 +480,6 @@ ngx-skeleton-loader {
 
 .page {
   display: flex;
-  flex-direction: column;
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom);
   padding-bottom: constant(safe-area-inset-bottom);
@@ -501,47 +491,15 @@ ngx-skeleton-loader {
     z-index: 999;
   }
 
-  &:not(.has-tabs) {
-    @media (min-width: 576px) {
-      padding: 2rem 0;
-    }
+  // Restrict viewport height and layout boundaries only when the page hosts tab navigation
+  &:has(gf-page-tabs) {
+    height: calc(100svh - var(--mat-toolbar-standard-height));
   }
 
-  &.has-tabs {
-    height: calc(100svh - var(--mat-toolbar-standard-height));
-
-    .fab-container {
-      @media (max-width: 575.98px) {
-        bottom: 5rem;
-      }
-    }
-
-    .mat-mdc-tab-nav-panel {
-      padding: 2rem 0;
-    }
-
+  // Apply vertical padding only to standalone or nested content views (tabs handle their own padding)
+  &:not(:has(gf-page-tabs)) {
     @media (min-width: 576px) {
-      flex-direction: row-reverse;
-
-      @include mat.tabs-overrides(
-        (
-          divider-height: 0
-        )
-      );
-
-      .mat-mdc-tab-header {
-        background-color: rgba(var(--palette-foreground-base), 0.02);
-        padding: 2rem 0;
-        width: 14rem;
-
-        .mat-mdc-tab-links {
-          flex-direction: column;
-
-          .mat-mdc-tab-link {
-            justify-content: flex-start;
-          }
-        }
-      }
+      padding: 2rem 0;
     }
   }
 }

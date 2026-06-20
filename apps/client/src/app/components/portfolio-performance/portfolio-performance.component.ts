@@ -10,7 +10,6 @@ import {
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,7 +27,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfValueComponent, IonIcon, NgxSkeletonLoaderModule],
+  imports: [GfValueComponent, IonIcon, NgxSkeletonLoaderModule],
   selector: 'gf-portfolio-performance',
   styleUrls: ['./portfolio-performance.component.scss'],
   templateUrl: './portfolio-performance.component.html'
@@ -36,8 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() deviceType: string;
   @Input() errors: ResponseError['errors'];
-  @Input() isAllTimeHigh: boolean;
-  @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;

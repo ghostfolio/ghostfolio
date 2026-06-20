@@ -5,7 +5,10 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  DEFAULT_DATE_RANGE,
+  HEADER_KEY_IMPERSONATION
+} from '@ghostfolio/common/config';
 import type {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetailsResponse,
@@ -118,7 +121,7 @@ export class BenchmarksController {
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,

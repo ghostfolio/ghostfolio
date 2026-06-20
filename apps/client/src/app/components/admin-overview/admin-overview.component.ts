@@ -30,6 +30,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -84,33 +85,33 @@ import ms, { StringValue } from 'ms';
   templateUrl: './admin-overview.html'
 })
 export class GfAdminOverviewComponent implements OnInit {
-  public activitiesCount: number;
-  public couponDuration: StringValue = '14 days';
-  public couponsDataSource = new MatTableDataSource<Coupon>();
-  public couponsDisplayedColumns = ['code', 'duration', 'actions'];
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionForSystemMessage: boolean;
-  public hasPermissionToSyncDemoUserAccount: boolean;
-  public hasPermissionToToggleReadOnlyMode: boolean;
-  public info: InfoItem;
-  public isDataGatheringEnabled: boolean;
-  public permissions = permissions;
-  public systemMessage: SystemMessage;
-  public userCount: number;
-  public user: User;
-  public version: string;
+  protected activitiesCount: number;
+  protected couponDuration: StringValue = '14 days';
+  protected readonly couponsDataSource = new MatTableDataSource<Coupon>();
+  protected readonly couponsDisplayedColumns = ['code', 'duration', 'actions'];
+  protected hasPermissionForSubscription: boolean;
+  protected hasPermissionForSystemMessage: boolean;
+  protected hasPermissionToSyncDemoUserAccount: boolean;
+  protected hasPermissionToToggleReadOnlyMode: boolean;
+  protected readonly info: InfoItem;
+  protected isDataGatheringEnabled: boolean;
+  protected readonly permissions = permissions;
+  protected systemMessage: SystemMessage;
+  protected userCount: number;
+  protected user: User;
+  protected version: string;
 
-  public constructor(
-    private adminService: AdminService,
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private clipboard: Clipboard,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar,
-    private userService: UserService
-  ) {
+  private readonly adminService = inject(AdminService);
+  private readonly cacheService = inject(CacheService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly clipboard = inject(Clipboard);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationService = inject(NotificationService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
@@ -150,7 +151,7 @@ export class GfAdminOverviewComponent implements OnInit {
     });
   }
 
-  public get activitiesCountPerUser() {
+  protected get activitiesCountPerUser() {
     if (!this.activitiesCount || !this.userCount) {
       return undefined;
     }
@@ -169,7 +170,7 @@ export class GfAdminOverviewComponent implements OnInit {
     this.fetchAdminData();
   }
 
-  public formatDistanceToNow(aDateString: string) {
+  protected formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
         addSuffix: true
@@ -184,7 +185,7 @@ export class GfAdminOverviewComponent implements OnInit {
     return '';
   }
 
-  public formatStringValue(aStringValue: StringValue) {
+  protected formatStringValue(aStringValue: StringValue) {
     return formatDistanceToNowStrict(
       addMilliseconds(new Date(), ms(aStringValue)),
       {
@@ -193,7 +194,7 @@ export class GfAdminOverviewComponent implements OnInit {
     );
   }
 
-  public onAddCoupon() {
+  protected onAddCoupon() {
     const newCoupon: Coupon = {
       code: `${ghostfolioPrefix}${this.generateCouponCode(14)}`,
       duration: this.couponDuration
@@ -204,11 +205,11 @@ export class GfAdminOverviewComponent implements OnInit {
     this.saveCoupons({ coupons, codeToCopy: newCoupon.code });
   }
 
-  public onChangeCouponDuration(aCouponDuration: StringValue) {
+  protected onChangeCouponDuration(aCouponDuration: StringValue) {
     this.couponDuration = aCouponDuration;
   }
 
-  public onDeleteCoupon(aCouponCode: string) {
+  protected onDeleteCoupon(aCouponCode: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         const coupons = this.couponsDataSource.data.filter(({ code }) => {
@@ -222,7 +223,7 @@ export class GfAdminOverviewComponent implements OnInit {
     });
   }
 
-  public onDeleteSystemMessage() {
+  protected onDeleteSystemMessage() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.putAdminSetting({
@@ -235,14 +236,14 @@ export class GfAdminOverviewComponent implements OnInit {
     });
   }
 
-  public onEnableDataGatheringChange(aEvent: MatSlideToggleChange) {
+  protected onEnableDataGatheringChange(aEvent: MatSlideToggleChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_DATA_GATHERING_ENABLED,
       value: aEvent.checked ? undefined : false
     });
   }
 
-  public onFlushCache() {
+  protected onFlushCache() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.cacheService
@@ -259,21 +260,21 @@ export class GfAdminOverviewComponent implements OnInit {
     });
   }
 
-  public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
+  protected onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_USER_SIGNUP_ENABLED,
       value: aEvent.checked ? undefined : false
     });
   }
 
-  public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
+  protected onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_READ_ONLY_MODE,
       value: aEvent.checked ? true : undefined
     });
   }
 
-  public onSetSystemMessage() {
+  protected onSetSystemMessage() {
     const systemMessage = prompt(
       $localize`Please set your system message:`,
       JSON.stringify(
@@ -293,7 +294,7 @@ export class GfAdminOverviewComponent implements OnInit {
     }
   }
 
-  public onSyncDemoUserAccount() {
+  protected onSyncDemoUserAccount() {
     this.adminService
       .syncDemoUserAccount()
       .pipe(takeUntilDestroyed(this.destroyRef))
