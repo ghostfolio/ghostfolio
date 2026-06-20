@@ -42,6 +42,7 @@ export class CronService {
   public async runEveryHourAtRandomMinute() {
     if (await this.isDataGatheringEnabled()) {
       await this.dataGatheringService.gather7Days();
+      await this.dataGatheringService.gatherHourlySymbols();
     }
   }
 

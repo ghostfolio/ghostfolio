@@ -191,6 +191,7 @@ model SymbolProfile {
   createdAt              DateTime                @default(now())
   currency               String
   cusip                  String?
+  dataGatheringFrequency DataGatheringFrequency  @default(DAILY)
   dataSource             DataSource
   figi                   String?
   figiComposite          String?
@@ -215,6 +216,7 @@ model SymbolProfile {
   @@index([assetClass])
   @@index([currency])
   @@index([cusip])
+  @@index([dataGatheringFrequency])
   @@index([dataSource])
   @@index([isActive])
   @@index([isin])
@@ -314,6 +316,11 @@ enum AssetSubClass {
   PRECIOUS_METAL
   PRIVATE_EQUITY
   STOCK
+}
+
+enum DataGatheringFrequency {
+  DAILY
+  HOURLY
 }
 
 enum DataSource {
