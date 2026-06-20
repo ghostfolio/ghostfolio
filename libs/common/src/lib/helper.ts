@@ -30,10 +30,17 @@ import { get, isNil, isString } from 'lodash';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
+  ghostfolioFearAndGreedIndexSymbol,
+  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolStocks,
   ghostfolioScraperApiSymbolPrefix,
   locale
 } from './config';
-import { AssetProfileIdentifier, Benchmark } from './interfaces';
+import {
+  AdminMarketDataItem,
+  AssetProfileIdentifier,
+  Benchmark
+} from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
@@ -91,6 +98,27 @@ export function calculateMovingAverage({
     }, new Big(0))
     .div(days)
     .toNumber();
+}
+
+export function canDeleteAssetProfile({
+  activitiesCount,
+  isBenchmark,
+  symbol,
+  watchedByCount
+}: Pick<
+  AdminMarketDataItem,
+  'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
+>): boolean {
+  return (
+    activitiesCount === 0 &&
+    !isBenchmark &&
+    !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
+    !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
+    symbol !== ghostfolioFearAndGreedIndexSymbol &&
+    symbol !== ghostfolioFearAndGreedIndexSymbolCryptocurrencies &&
+    symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
+    watchedByCount === 0
+  );
 }
 
 export function capitalize(aString: string) {

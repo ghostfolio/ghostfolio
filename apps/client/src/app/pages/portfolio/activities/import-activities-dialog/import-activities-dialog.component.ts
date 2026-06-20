@@ -226,7 +226,8 @@ export class GfImportActivitiesDialogComponent {
     this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
     const { dataSource, symbol } =
-      this.assetProfileForm.controls.assetProfileIdentifier.value ?? {};
+      this.assetProfileForm.controls.assetProfileIdentifier.value
+        ?.assetProfile ?? {};
 
     if (!dataSource || !symbol) {
       return;

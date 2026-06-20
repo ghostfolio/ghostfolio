@@ -8,6 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -32,6 +33,7 @@ import { addDays, format, isBefore } from 'date-fns';
 export class ManualService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -292,7 +294,7 @@ export class ManualService implements DataProviderInterface {
   }): Promise<number> {
     let locale = scraperConfiguration.locale;
 
-    const response = await fetch(scraperConfiguration.url, {
+    const response = await this.fetchService.fetch(scraperConfiguration.url, {
       headers: scraperConfiguration.headers as HeadersInit,
       signal: AbortSignal.timeout(
         this.configurationService.get('REQUEST_TIMEOUT')

@@ -1,4 +1,5 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -70,7 +71,8 @@ export class PortfolioController {
     private readonly configurationService: ConfigurationService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Get('details')
@@ -144,10 +146,10 @@ export class PortfolioController {
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .filter(({ assetClass, assetSubClass }) => {
+        .filter(({ assetProfile }) => {
           return (
-            assetClass !== AssetClass.LIQUIDITY &&
-            assetSubClass !== AssetSubClass.CASH
+            assetProfile.assetClass !== AssetClass.LIQUIDITY &&
+            assetProfile.assetSubClass !== AssetSubClass.CASH
           );
         })
         .map(({ valueInBaseCurrency }) => {
@@ -217,37 +219,41 @@ export class PortfolioController {
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       holdings[symbol] = {
         ...portfolioPosition,
-        assetClass:
-          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
-            ? portfolioPosition.assetClass
-            : undefined,
         assetProfile: {
           ...portfolioPosition.assetProfile,
+          assetClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClass
+              : undefined,
+          assetClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClassLabel
+              : undefined,
+          assetSubClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClass
+              : undefined,
+          assetSubClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClassLabel
+              : undefined,
           ...(hasDetails
             ? {}
             : {
-                assetClass: undefined,
-                assetClassLabel: undefined,
-                assetSubClass: undefined,
-                assetSubClassLabel: undefined,
                 countries: [],
                 currency: undefined,
                 holdings: [],
                 sectors: []
               })
         },
-        assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
-            ? portfolioPosition.assetSubClass
-            : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        holdings: hasDetails ? portfolioPosition.holdings : [],
         markets: hasDetails ? portfolioPosition.markets : undefined,
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
-          : undefined,
-        sectors: hasDetails ? portfolioPosition.sectors : []
+          : undefined
       };
     }
 
@@ -336,7 +342,10 @@ export class PortfolioController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
+    const userId = impersonationUserId || this.request.user.id;
+
+    const { settings } = await this.userService.user({ id: userId });
+    const userCurrency = settings.settings.baseCurrency;
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
@@ -345,7 +354,7 @@ export class PortfolioController {
       filters,
       startDate,
       userCurrency,
-      userId: impersonationUserId || this.request.user.id,
+      userId,
       types: ['DIVIDEND']
     });
 

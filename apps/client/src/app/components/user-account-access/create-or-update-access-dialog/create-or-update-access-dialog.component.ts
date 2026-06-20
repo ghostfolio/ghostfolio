@@ -29,6 +29,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -52,7 +53,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   protected accessForm: FormGroup;
-  protected mode: 'create' | 'update';
+  protected readonly mode: 'create' | 'update';
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -69,21 +70,25 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   private readonly notificationService = inject(NotificationService);
 
   public constructor() {
-    this.mode = this.data.access?.id ? 'update' : 'create';
+    this.mode = this.data.access ? 'update' : 'create';
   }
 
   public ngOnInit() {
-    const isPublic = this.data.access.type === 'PUBLIC';
+    const access = this.data?.access;
+    const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
-      alias: [this.data.access.alias],
+      alias: [access?.alias ?? ''],
       granteeUserId: [
-        this.data.access.grantee,
+        access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      permissions: [this.data.access.permissions[0], Validators.required],
+      permissions: [
+        access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
+        Validators.required
+      ],
       type: [
-        { disabled: this.mode === 'update', value: this.data.access.type },
+        { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
       ]
     });
@@ -100,7 +105,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(this.data.access.permissions[0]);
+          permissionsControl?.setValue(
+            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
+          );
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -109,11 +116,11 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       });
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     if (this.mode === 'create') {
       await this.createAccess();
     } else {
@@ -158,10 +165,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private async updateAccess() {
+    const accessId = this.data.access?.id;
+
+    if (!accessId) {
+      return;
+    }
+
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      id: this.data.access.id,
+      id: accessId,
       permissions: [this.accessForm.get('permissions')?.value]
     };
 

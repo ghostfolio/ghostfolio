@@ -3,7 +3,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   Router,
@@ -14,12 +14,10 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
-  public constructor(
-    private dataService: DataService,
-    private router: Router,
-    private settingsStorageService: SettingsStorageService,
-    private userService: UserService
-  ) {}
+  private readonly dataService = inject(DataService);
+  private readonly router = inject(Router);
+  private readonly settingsStorageService = inject(SettingsStorageService);
+  private readonly userService = inject(UserService);
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const utmSource = route.queryParams?.utm_source;

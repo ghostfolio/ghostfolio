@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.7.0 - 2026-06-02
+
+### Added
+
+- Added support for routing selected requests through the _OpenRouter_ `web_fetch` tool in the `FetchService`
+
+### Changed
+
+- Extended the countries mapping in the data enhancer for asset profile data via _Trackinsight_
+- Removed the deprecated attributes (`assetClass`, `assetClassLabel`, `assetSubClass`, `assetSubClassLabel`, `countries`, `currency`, `dataSource`, `holdings`, `name`, `sectors`, `symbol` and `url`) from the holdings of the portfolio details endpoint response
+- Upgraded `Nx` from version `22.7.2` to `22.7.5`
+
+### Fixed
+
+- Resolved an issue in the impersonation mode where the values did not match the owner’s currency
+- Fixed the environment variable expansion in the `.env` file when debugging via _Visual Studio Code_
+
+## 3.6.0 - 2026-05-28
+
+### Added
+
+- Added `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variable support to outbound HTTP requests
+- Added the `FetchService` to centralize outbound HTTP requests
+
+### Changed
+
+- Extracted the floating action buttons (FAB) to a reusable component
+- Upgraded `nestjs` from version `11.1.19` to `11.1.21`
+- Upgraded `yahoo-finance2` from version `3.14.0` to `3.14.2`
+
 ## 3.5.0 - 2026-05-24
 
 ### Added

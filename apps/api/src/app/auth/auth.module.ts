@@ -5,6 +5,8 @@ import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { FetchModule } from '@ghostfolio/api/services/fetch/fetch.module';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 
@@ -24,6 +26,7 @@ import { OidcStrategy } from './oidc.strategy';
   controllers: [AuthController],
   imports: [
     ConfigurationModule,
+    FetchModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '180 days' }
@@ -42,13 +45,20 @@ import { OidcStrategy } from './oidc.strategy';
     JwtStrategy,
     OidcStateStore,
     {
-      inject: [AuthService, JwtService, OidcStateStore, ConfigurationService],
+      inject: [
+        AuthService,
+        ConfigurationService,
+        FetchService,
+        JwtService,
+        OidcStateStore
+      ],
       provide: OidcStrategy,
       useFactory: async (
         authService: AuthService,
+        configurationService: ConfigurationService,
+        fetchService: FetchService,
         jwtService: JwtService,
-        stateStore: OidcStateStore,
-        configurationService: ConfigurationService
+        stateStore: OidcStateStore
       ) => {
         const isOidcEnabled = configurationService.get(
           'ENABLE_FEATURE_AUTH_OIDC'
@@ -83,7 +93,7 @@ import { OidcStrategy } from './oidc.strategy';
           userInfoURL = manualUserInfoUrl;
         } else {
           try {
-            const response = await fetch(
+            const response = await fetchService.fetch(
               `${issuer}/.well-known/openid-configuration`
             );
 

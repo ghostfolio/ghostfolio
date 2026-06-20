@@ -1,14 +1,5 @@
-import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import {
-  getCurrencyFromSymbol,
-  isDerivedCurrency,
-  isRootCurrency
-} from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  AdminMarketDataItem
-} from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService } from '@ghostfolio/ui/services';
 
@@ -67,24 +58,5 @@ export class AdminMarketDataService {
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete these profiles?`
     });
-  }
-
-  public hasPermissionToDeleteAssetProfile({
-    activitiesCount,
-    isBenchmark,
-    symbol,
-    watchedByCount
-  }: Pick<
-    AdminMarketDataItem,
-    'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
-  >) {
-    return (
-      activitiesCount === 0 &&
-      !isBenchmark &&
-      !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
-      !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
-      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix) &&
-      watchedByCount === 0
-    );
   }
 }

@@ -4,7 +4,10 @@ import {
   DEFAULT_PAGE_SIZE,
   locale
 } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import {
+  canDeleteAssetProfile,
+  getDateFormatString
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Filter,
@@ -15,6 +18,7 @@ import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
+import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -77,10 +81,10 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'has-fab' },
   imports: [
     CommonModule,
     GfActivitiesFilterComponent,
+    GfFabComponent,
     GfPremiumIndicatorComponent,
     GfSymbolPipe,
     GfValueComponent,
@@ -101,6 +105,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 })
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly adminMarketDataService = inject(AdminMarketDataService);
+
   protected readonly allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
@@ -146,6 +151,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       type: 'PRESET_ID' as Filter['type']
     }
   ];
+  protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
   protected defaultDateFormat: string;
   protected readonly displayedColumns: string[] = [];

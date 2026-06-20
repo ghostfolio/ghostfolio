@@ -10,6 +10,7 @@ import {
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
+import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -20,12 +21,9 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
-import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -36,8 +34,8 @@ import { TransferBalanceDialogParams } from './transfer-balance/interfaces/inter
 import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
-  host: { class: 'has-fab page' },
-  imports: [GfAccountsTableComponent, MatButtonModule, RouterModule],
+  host: { class: 'page' },
+  imports: [GfAccountsTableComponent, GfFabComponent, RouterModule],
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
@@ -90,8 +88,6 @@ export class GfAccountsPageComponent implements OnInit {
           this.openTransferBalanceDialog();
         }
       });
-
-    addIcons({ addOutline });
   }
 
   public ngOnInit() {

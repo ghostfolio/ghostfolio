@@ -74,7 +74,10 @@ export class GfPublicPageComponent implements OnInit {
   };
   protected readonly pageSize = Number.MAX_SAFE_INTEGER;
   protected positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
+    [symbol: string]: Pick<
+      PortfolioPosition['assetProfile'],
+      'currency' | 'name'
+    > & {
       value: number;
     };
   };
