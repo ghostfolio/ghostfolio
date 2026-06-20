@@ -1,12 +1,19 @@
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { StatisticsGatheringQueueModule } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.module';
+import { StatisticsGatheringService } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.service';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
+import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 
 import { CronService } from './cron.service';
 
@@ -20,6 +27,44 @@ import { CronService } from './cron.service';
     TwitterBotModule,
     UserModule
   ],
-  providers: [CronService]
+  providers: [
+    {
+      inject: [
+        ConfigurationService,
+        DataGatheringService,
+        ExchangeRateDataService,
+        PropertyService,
+        StatisticsGatheringService,
+        TwitterBotService,
+        UserService
+      ],
+      provide: CronService,
+      useFactory: (
+        configurationService: ConfigurationService,
+        dataGatheringService: DataGatheringService,
+        exchangeRateDataService: ExchangeRateDataService,
+        propertyService: PropertyService,
+        statisticsGatheringService: StatisticsGatheringService,
+        twitterBotService: TwitterBotService,
+        userService: UserService
+      ) => {
+        if (!configurationService.get('ENABLE_FEATURE_CRON')) {
+          Logger.log('Scheduled cron jobs are disabled', 'CronService');
+
+          return null;
+        }
+
+        return new CronService(
+          configurationService,
+          dataGatheringService,
+          exchangeRateDataService,
+          propertyService,
+          statisticsGatheringService,
+          twitterBotService,
+          userService
+        );
+      }
+    }
+  ]
 })
 export class CronModule {}
