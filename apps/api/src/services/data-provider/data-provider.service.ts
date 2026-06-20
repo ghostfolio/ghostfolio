@@ -529,8 +529,6 @@ export class DataProviderService implements OnModuleInit {
   }): Promise<{
     [assetProfileIdentifier: string]: DataProviderResponse;
   }> {
-    // Keyed by asset profile identifier; each entry carries its symbol so the
-    // market data can be persisted without parsing the key
     const response: {
       [assetProfileIdentifier: string]: DataProviderResponse & {
         symbol: string;
