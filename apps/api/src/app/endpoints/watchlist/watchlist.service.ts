@@ -41,14 +41,17 @@ export class WatchlistService {
         { dataSource, symbol }
       ]);
 
-      if (!assetProfiles[symbol]?.currency) {
+      const assetProfile =
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (!assetProfile?.currency) {
         throw new BadRequestException(
           `Asset profile not found for ${symbol} (${dataSource})`
         );
       }
 
       await this.symbolProfileService.add(
-        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
+        assetProfile as Prisma.SymbolProfileCreateInput
       );
     }
 

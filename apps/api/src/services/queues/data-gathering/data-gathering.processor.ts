@@ -10,7 +10,11 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier,
+  getStartOfUtcDate
+} from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Process, Processor } from '@nestjs/bull';
@@ -114,6 +118,11 @@ export class DataGatheringProcessor {
         to: new Date()
       });
 
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource,
+        symbol
+      });
+
       const data: Prisma.MarketDataUpdateInput[] = [];
       let lastMarketPrice: number;
 
@@ -131,12 +140,14 @@ export class DataGatheringProcessor {
         )
       ) {
         if (
-          historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-            ?.marketPrice
+          historicalData[assetProfileIdentifier]?.[
+            format(currentDate, DATE_FORMAT)
+          ]?.marketPrice
         ) {
           lastMarketPrice =
-            historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-              ?.marketPrice;
+            historicalData[assetProfileIdentifier]?.[
+              format(currentDate, DATE_FORMAT)
+            ]?.marketPrice;
         }
 
         if (lastMarketPrice) {

@@ -890,10 +890,13 @@ export class PortfolioService {
       marketPrice
     );
 
-    if (historicalData[symbol]) {
+    const historicalDataItems =
+      historicalData[getAssetProfileIdentifier({ dataSource, symbol })];
+
+    if (historicalDataItems) {
       let j = -1;
       for (const [date, { marketPrice }] of Object.entries(
-        historicalData[symbol]
+        historicalDataItems
       )) {
         while (
           j + 1 < transactionPoints.length &&

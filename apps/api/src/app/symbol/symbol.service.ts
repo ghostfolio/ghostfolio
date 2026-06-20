@@ -94,12 +94,17 @@ export class SymbolService {
     date = new Date(),
     symbol
   }: DataGatheringItem): Promise<DataProviderHistoricalResponse> {
+    const assetProfileIdentifier = getAssetProfileIdentifier({
+      dataSource,
+      symbol
+    });
+
     let historicalData: {
-      [symbol: string]: {
+      [assetProfileIdentifier: string]: {
         [date: string]: DataProviderHistoricalResponse;
       };
     } = {
-      [symbol]: {}
+      [assetProfileIdentifier]: {}
     };
 
     try {
@@ -112,7 +117,8 @@ export class SymbolService {
 
     return {
       marketPrice:
-        historicalData?.[symbol]?.[format(date, DATE_FORMAT)]?.marketPrice
+        historicalData?.[assetProfileIdentifier]?.[format(date, DATE_FORMAT)]
+          ?.marketPrice
     };
   }
 
