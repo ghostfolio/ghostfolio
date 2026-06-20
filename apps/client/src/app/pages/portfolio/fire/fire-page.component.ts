@@ -1,5 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   FireCalculationCompleteEvent,
   FireWealth,
@@ -80,7 +81,7 @@ export class GfFirePageComponent implements OnInit {
               : 0
           }
         };
-        if (this.user.subscription?.type === 'Basic') {
+        if (this.user.subscription?.type === SubscriptionType.Basic) {
           this.fireWealth = {
             today: {
               valueInBaseCurrency: 10000
@@ -113,7 +114,7 @@ export class GfFirePageComponent implements OnInit {
           this.user = state.user;
 
           this.hasPermissionToUpdateUserSettings =
-            this.user.subscription?.type === 'Basic'
+            this.user.subscription?.type === SubscriptionType.Basic
               ? false
               : hasPermission(
                   this.user.permissions,

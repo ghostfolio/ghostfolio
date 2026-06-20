@@ -6,6 +6,7 @@ import {
   OnModuleInit
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { Prisma, PrismaClient } from '@prisma/client';
 
 @Injectable()
@@ -14,6 +15,10 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   public constructor(configService: ConfigService) {
+    const adapter = new PrismaPg({
+      connectionString: configService.get<string>('DATABASE_URL')
+    });
+
     let customLogLevels: LogLevel[];
 
     try {
@@ -28,6 +33,7 @@ export class PrismaService
         : [];
 
     super({
+      adapter,
       log,
       errorFormat: 'colorless'
     });

@@ -2,6 +2,7 @@ import { GfRulesComponent } from '@ghostfolio/client/components/rules/rules.comp
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UpdateUserSettingDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   PortfolioReportResponse,
   PortfolioReportRule
@@ -73,7 +74,7 @@ export class GfXRayPageComponent {
           this.user = state.user;
 
           this.hasPermissionToUpdateUserSettings =
-            this.user.subscription?.type === 'Basic'
+            this.user.subscription?.type === SubscriptionType.Basic
               ? false
               : hasPermission(
                   this.user.permissions,

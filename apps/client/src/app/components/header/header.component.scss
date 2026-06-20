@@ -24,23 +24,12 @@
     }
 
     .mdc-button {
-      height: 100%;
+      color: var(--mdc-text-button-label-text-color);
 
       &:not(.mat-primary) {
         background-color: transparent;
         text-decoration-color: rgba(var(--palette-primary-500), 1) !important;
         text-underline-offset: 0.25rem;
-      }
-
-      &.mat-badge {
-        ::ng-deep {
-          .mat-badge-content {
-            --mat-badge-small-size-container-overlap-offset: -0.9rem;
-            --mat-badge-small-size-text-size: 0;
-
-            transform: scale(0.45);
-          }
-        }
       }
 
       ion-icon {
