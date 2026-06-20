@@ -118,7 +118,6 @@ export class GfAllocationsPageComponent implements OnInit {
   protected topHoldings: HoldingWithParents[];
   protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
   protected user: User;
-  protected worldMapChartFormat: string;
 
   private topHoldingsMap: {
     [name: string]: { name: string; value: number };
@@ -147,6 +146,12 @@ export class GfAllocationsPageComponent implements OnInit {
       });
   }
 
+  protected get worldMapChartFormat(): string {
+    return this.showValuesInPercentage()
+      ? '{0}%'
+      : `{0} ${this.user?.settings?.baseCurrency}`;
+  }
+
   public ngOnInit() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -160,10 +165,6 @@ export class GfAllocationsPageComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.worldMapChartFormat = this.showValuesInPercentage()
-            ? `{0}%`
-            : `{0} ${this.user?.settings?.baseCurrency}`;
 
           this.isLoading = true;
 
