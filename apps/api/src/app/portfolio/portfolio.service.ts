@@ -46,6 +46,7 @@ import {
 import {
   AccountsResponse,
   Activity,
+  AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
@@ -776,11 +777,9 @@ export class PortfolioService {
     symbol,
     userId
   }: {
-    dataSource: DataSource;
     impersonationId: string;
-    symbol: string;
     userId: string;
-  }): Promise<PortfolioHoldingResponse> {
+  } & AssetProfileIdentifier): Promise<PortfolioHoldingResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -1384,12 +1383,10 @@ export class PortfolioService {
     tags,
     userId
   }: {
-    dataSource: DataSource;
     impersonationId: string;
-    symbol: string;
     tags: Tag[];
     userId: string;
-  }) {
+  } & AssetProfileIdentifier) {
     userId = await this.getUserId(impersonationId, userId);
 
     await this.activitiesService.assignTags({
