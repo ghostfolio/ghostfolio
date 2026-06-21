@@ -1,11 +1,17 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UpdateAssetProfileDataDto } from '@ghostfolio/common/dtos';
+import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
+import { AssetProfileResponse } from '@ghostfolio/common/interfaces';
 import {
   AssetProfilesResponse,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
+import { hasPermission } from '@ghostfolio/common/permissions';
 import { permissions } from '@ghostfolio/common/permissions';
 import { MarketDataPreset, RequestWithUser } from '@ghostfolio/common/types';
 
@@ -18,7 +24,8 @@ import {
   Param,
   Patch,
   Query,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -32,7 +39,8 @@ export class AssetProfilesController {
   public constructor(
     private readonly apiService: ApiService,
     private readonly assetProfilesService: AssetProfilesService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Get()
@@ -61,6 +69,52 @@ export class AssetProfilesController {
       sortDirection,
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take
+    });
+  }
+
+  @Get(':dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async getAssetProfile(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<AssetProfileResponse> {
+    const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
+      { dataSource, symbol }
+    ]);
+
+    if (!assetProfile && !isCurrency(getCurrencyFromSymbol(symbol))) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const canReadAllAssetProfiles = hasPermission(
+      this.request.user.permissions,
+      permissions.readMarketData
+    );
+
+    const canReadOwnAssetProfile =
+      assetProfile?.userId === this.request.user.id &&
+      hasPermission(
+        this.request.user.permissions,
+        permissions.readMarketDataOfOwnAssetProfile
+      );
+
+    if (!canReadAllAssetProfiles && !canReadOwnAssetProfile) {
+      throw new HttpException(
+        assetProfile?.userId
+          ? getReasonPhrase(StatusCodes.NOT_FOUND)
+          : getReasonPhrase(StatusCodes.FORBIDDEN),
+        assetProfile?.userId ? StatusCodes.NOT_FOUND : StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.assetProfilesService.getAssetProfile({
+      dataSource,
+      symbol
     });
   }
 

@@ -1,4 +1,3 @@
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -19,7 +18,6 @@ import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
-    ActivitiesModule,
     BenchmarkModule,
     ConfigurationModule,
     DataGatheringQueueModule,

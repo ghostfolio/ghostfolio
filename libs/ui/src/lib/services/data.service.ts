@@ -28,6 +28,7 @@ import {
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
+  AssetProfileResponse,
   AssetProfilesResponse,
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
@@ -40,7 +41,6 @@ import {
   ImportResponse,
   InfoItem,
   LookupResponse,
-  MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
   PlatformsResponse,
@@ -540,12 +540,13 @@ export class DataService {
     symbol
   }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
     return this.http
-      .get<any>(`/api/v1/market-data/${dataSource}/${symbol}`)
+      .get<any>(`/api/v1/asset-profiles/${dataSource}/${symbol}`)
       .pipe(
         map((data) => {
           for (const item of data.marketData) {
             item.date = parseISO(item.date);
           }
+
           return data;
         })
       );

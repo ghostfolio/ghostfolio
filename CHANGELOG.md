@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.13.0 - 2026-06-20
 
 ### Added
 
@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the _Fear & Greed Index_ (market mood) in the markets overview to use the stored market data instead of a live quote
 - Moved the endpoint to get the asset profiles from `GET api/v1/admin/market-data` to `GET api/v1/asset-profiles`
+- Moved the endpoint to get the asset profile details from `GET api/v1/market-data/:dataSource/:symbol` to `GET api/v1/asset-profiles/:dataSource/:symbol`
 - Added the selected asset profile count to the delete menu item of the historical market data table in the admin control panel
 - Added the selected asset profile count to the deletion confirmation dialog of the historical market data table in the admin control panel
 - Improved the sorting to be case-insensitive in the platform management of the admin control panel
