@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Upgraded `undici` from version `7.24.4` to `8.5.0`
 
 ### Fixed
 
