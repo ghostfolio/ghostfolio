@@ -47,7 +47,30 @@ export class GfProductPageComponent implements OnInit {
     useAnonymously: true
   }));
 
-  protected product2: Product;
+  protected readonly product2 = computed<Product>(() => {
+    const product = personalFinanceTools.find(({ key }) => {
+      return key === this.route.snapshot.data['key'];
+    });
+
+    const mappedProduct = {
+      key: product?.key ?? '',
+      name: product?.name ?? '',
+      ...product
+    };
+
+    if (mappedProduct.origin) {
+      mappedProduct.origin = getCountryName({ code: mappedProduct.origin });
+    }
+
+    if (mappedProduct.regions) {
+      mappedProduct.regions = mappedProduct.regions.map((region) => {
+        return translate(region);
+      });
+    }
+
+    return mappedProduct;
+  });
+
   protected readonly routerLinkAbout = publicRoutes.about.routerLink;
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
   protected readonly routerLinkResourcesPersonalFinanceTools =
@@ -58,31 +81,11 @@ export class GfProductPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   public ngOnInit() {
-    const product = personalFinanceTools.find(({ key }) => {
-      return key === this.route.snapshot.data['key'];
-    });
-
-    this.product2 = {
-      key: product?.key ?? '',
-      name: product?.name ?? '',
-      ...product
-    };
-
-    if (this.product2.origin) {
-      this.product2.origin = getCountryName({ code: this.product2.origin });
-    }
-
-    if (this.product2.regions) {
-      this.product2.regions = this.product2.regions.map((region) => {
-        return translate(region);
-      });
-    }
-
     this.tags = [
       this.product1().name,
       this.product1().origin,
-      this.product2.name,
-      this.product2.origin,
+      this.product2().name,
+      this.product2().origin,
       $localize`Alternative`,
       $localize`App`,
       $localize`Budgeting`,
