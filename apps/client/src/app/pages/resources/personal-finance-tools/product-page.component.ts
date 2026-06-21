@@ -22,7 +22,31 @@ export class GfProductPageComponent implements OnInit {
     return subscriptionOffer?.price;
   });
 
-  protected product1: Product;
+  protected readonly product1 = computed<Product>(() => ({
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    isOpenSource: true,
+    key: 'ghostfolio',
+    languages: [
+      'Chinese (简体中文)',
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Korean (한국어)',
+      'Nederlands',
+      'Português',
+      'Türkçe'
+    ],
+    name: 'Ghostfolio',
+    origin: getCountryName({ code: 'CH' }),
+    regions: [$localize`Global`],
+    slogan: 'Open Source Wealth Management',
+    useAnonymously: true
+  }));
+
   protected product2: Product;
   protected readonly routerLinkAbout = publicRoutes.about.routerLink;
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
@@ -34,31 +58,6 @@ export class GfProductPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   public ngOnInit() {
-    this.product1 = {
-      founded: 2021,
-      hasFreePlan: true,
-      hasSelfHostingAbility: true,
-      isOpenSource: true,
-      key: 'ghostfolio',
-      languages: [
-        'Chinese (简体中文)',
-        'Deutsch',
-        'English',
-        'Español',
-        'Français',
-        'Italiano',
-        'Korean (한국어)',
-        'Nederlands',
-        'Português',
-        'Türkçe'
-      ],
-      name: 'Ghostfolio',
-      origin: getCountryName({ code: 'CH' }),
-      regions: [$localize`Global`],
-      slogan: 'Open Source Wealth Management',
-      useAnonymously: true
-    };
-
     const product = personalFinanceTools.find(({ key }) => {
       return key === this.route.snapshot.data['key'];
     });
@@ -80,8 +79,8 @@ export class GfProductPageComponent implements OnInit {
     }
 
     this.tags = [
-      this.product1.name,
-      this.product1.origin,
+      this.product1().name,
+      this.product1().origin,
       this.product2.name,
       this.product2.origin,
       $localize`Alternative`,

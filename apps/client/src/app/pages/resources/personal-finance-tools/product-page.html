@@ -70,24 +70,24 @@
             <tbody>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right"></td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.slogan }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1().slogan }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.slogan }}</td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Founded</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.founded }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1().founded }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.founded }}</td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Origin</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.origin }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1().origin }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.origin }}</td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Region</td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @for (
-                    region of product1.regions;
+                    region of product1().regions;
                     track region;
                     let isLast = $last
                   ) {
@@ -110,7 +110,7 @@
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @for (
-                    language of product1.languages;
+                    language of product1().languages;
                     track language;
                     let isLast = $last
                   ) {
@@ -132,18 +132,18 @@
                   Open Source Software
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  @if (product1.isOpenSource) {
+                  @if (product1().isOpenSource) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} is Open Source Software"
+                      title="{{ product1().name }} is Open Source Software"
                       >✅ Yes</span
                     >
                   } @else {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} is not Open Source Software"
+                      title="{{ product1().name }} is not Open Source Software"
                       >❌ No</span
                     >
                   }
@@ -171,18 +171,18 @@
                   Self-Hosting
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  @if (product1.hasSelfHostingAbility === true) {
+                  @if (product1().hasSelfHostingAbility === true) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} can be self-hosted"
+                      title="{{ product1().name }} can be self-hosted"
                       >✅ Yes</span
                     >
-                  } @else if (product1.hasSelfHostingAbility === false) {
+                  } @else if (product1().hasSelfHostingAbility === false) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} cannot be self-hosted"
+                      title="{{ product1().name }} cannot be self-hosted"
                       >❌ No</span
                     >
                   }
@@ -210,18 +210,18 @@
                   Use anonymously
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  @if (product1.useAnonymously === true) {
+                  @if (product1().useAnonymously === true) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} can be used anonymously"
+                      title="{{ product1().name }} can be used anonymously"
                       >✅ Yes</span
                     >
-                  } @else if (product1.useAnonymously === false) {
+                  } @else if (product1().useAnonymously === false) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} cannot be used anonymously"
+                      title="{{ product1().name }} cannot be used anonymously"
                       >❌ No</span
                     >
                   }
@@ -249,18 +249,18 @@
                   Free Plan
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  @if (product1.hasFreePlan === true) {
+                  @if (product1().hasFreePlan === true) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} offers a free plan"
+                      title="{{ product1().name }} offers a free plan"
                       >✅ Yes</span
                     >
-                  } @else if (product1.hasFreePlan === false) {
+                  } @else if (product1().hasFreePlan === false) {
                     <span
                       i18n
                       i18n-title
-                      title="{{ product1.name }} does not offer a free plan"
+                      title="{{ product1().name }} does not offer a free plan"
                       >❌ No</span
                     >
                   }
@@ -297,10 +297,10 @@
                   }
                 </td>
               </tr>
-              @if (product1.note || product2.note) {
+              @if (product1().note || product2.note) {
                 <tr class="mat-mdc-row">
                   <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Notes</td>
-                  <td class="mat-mdc-cell px-1 py-2">{{ product1.note }}</td>
+                  <td class="mat-mdc-cell px-1 py-2">{{ product1().note }}</td>
                   <td class="mat-mdc-cell px-1 py-2">{{ product2.note }}</td>
                 </tr>
               }
