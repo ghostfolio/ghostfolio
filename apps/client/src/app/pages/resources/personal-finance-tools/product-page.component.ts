@@ -5,7 +5,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
@@ -17,7 +17,11 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   templateUrl: './product-page.html'
 })
 export class GfProductPageComponent implements OnInit {
-  protected price: number | undefined;
+  protected readonly price = computed(() => {
+    const { subscriptionOffer } = this.dataService.fetchInfo();
+    return subscriptionOffer?.price;
+  });
+
   protected product1: Product;
   protected product2: Product;
   protected readonly routerLinkAbout = publicRoutes.about.routerLink;
@@ -30,10 +34,6 @@ export class GfProductPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   public ngOnInit() {
-    const { subscriptionOffer } = this.dataService.fetchInfo();
-
-    this.price = subscriptionOffer?.price;
-
     this.product1 = {
       founded: 2021,
       hasFreePlan: true,
