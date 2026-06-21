@@ -90,9 +90,8 @@ export class GfTransferBalanceDialogComponent {
   }
 
   private compareAccounts(
-    control: TransferBalanceForm
+    formGroup: TransferBalanceForm
   ): ValidationErrors | null {
-    const formGroup = control;
     const accountFrom = formGroup.controls.fromAccount;
     const accountTo = formGroup.controls.toAccount;
 
