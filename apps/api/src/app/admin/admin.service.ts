@@ -182,7 +182,7 @@ export class AdminService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      const subscriptions = await this.prismaService.subscription.findMany({
+      user.subscriptions = await this.prismaService.subscription.findMany({
         orderBy: {
           expiresAt: 'desc'
         },
@@ -190,8 +190,6 @@ export class AdminService {
           userId: id
         }
       });
-
-      user.subscriptions = subscriptions;
     }
 
     return user;
