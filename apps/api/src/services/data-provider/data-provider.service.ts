@@ -320,12 +320,10 @@ export class DataProviderService implements OnModuleInit {
     symbol,
     to
   }: {
-    dataSource: DataSource;
     from: Date;
     granularity: Granularity;
-    symbol: string;
     to: Date;
-  }) {
+  } & AssetProfileIdentifier) {
     return this.getDataProvider(DataSource[dataSource]).getDividends({
       from,
       granularity,

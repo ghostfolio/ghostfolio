@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exposed the `ENABLE_FEATURE_CRON` environment variable to control scheduled cron job execution
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 3.13.0 - 2026-06-20
 
 ### Added

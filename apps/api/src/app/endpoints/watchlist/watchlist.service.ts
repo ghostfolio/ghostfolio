@@ -5,10 +5,13 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { WatchlistResponse } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  WatchlistResponse
+} from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { DataSource, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WatchlistService {
@@ -25,11 +28,7 @@ export class WatchlistService {
     dataSource,
     symbol,
     userId
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-    userId: string;
-  }): Promise<void> {
+  }: { userId: string } & AssetProfileIdentifier): Promise<void> {
     const symbolProfile = await this.prismaService.symbolProfile.findUnique({
       where: {
         dataSource_symbol: { dataSource, symbol }
@@ -73,11 +72,7 @@ export class WatchlistService {
     dataSource,
     symbol,
     userId
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-    userId: string;
-  }) {
+  }: { userId: string } & AssetProfileIdentifier) {
     await this.prismaService.user.update({
       data: {
         watchlist: {
