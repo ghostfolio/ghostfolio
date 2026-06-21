@@ -140,11 +140,13 @@ export class GfAllocationsPageComponent implements OnInit {
   public constructor() {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params: AllocationsPageParams) => {
-        if (params.accountId && params.accountDetailDialog) {
-          this.openAccountDetailDialog(params.accountId);
+      .subscribe(
+        ({ accountId, accountDetailDialog }: AllocationsPageParams) => {
+          if (accountId && accountDetailDialog) {
+            this.openAccountDetailDialog(accountId);
+          }
         }
-      });
+      );
   }
 
   protected get worldMapChartFormat(): string {
@@ -355,16 +357,7 @@ export class GfAllocationsPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
-      let value = 0;
-
-      if (this.showValuesInPercentage()) {
-        value = position.allocationInPercentage;
-      } else {
-        value = position.valueInBaseCurrency ?? 0;
-      }
-
       this.holdings[symbol] = {
-        value,
         assetClass:
           position.assetProfile.assetClass || (UNKNOWN_KEY as AssetClass),
         assetClassLabel: position.assetProfile.assetClassLabel ?? UNKNOWN_KEY,
@@ -378,7 +371,10 @@ export class GfAllocationsPageComponent implements OnInit {
           name: position.assetProfile.name
         }),
         exchange: position.exchange,
-        name: position.assetProfile.name
+        name: position.assetProfile.name,
+        value: this.showValuesInPercentage()
+          ? position.allocationInPercentage
+          : (position.valueInBaseCurrency ?? 0)
       };
 
       // Prepare analysis data by continents, countries, holdings and sectors
@@ -386,44 +382,49 @@ export class GfAllocationsPageComponent implements OnInit {
       if (position.assetProfile.countries.length > 0) {
         for (const country of position.assetProfile.countries) {
           const { code, continent, weight } = country;
-          const val =
+          const value =
             (isNumber(position.valueInBaseCurrency)
               ? position.valueInBaseCurrency
               : position.valueInPercentage) ?? 0;
 
           const continentData = this.continents[continent];
+
           if (continentData) {
-            continentData.value += weight * val;
+            continentData.value += weight * value;
           } else {
             this.continents[continent] = {
               name: translate(continent),
-              value: weight * val
+              value: weight * value
             };
           }
 
           const countryData = this.countries[code];
+
           if (countryData) {
-            countryData.value += weight * val;
+            countryData.value += weight * value;
           } else {
             this.countries[code] = {
               name: getCountryName({ code }),
-              value: weight * val
+              value: weight * value
             };
           }
         }
       } else {
-        const val =
+        const value =
           (isNumber(position.valueInBaseCurrency)
             ? position.valueInBaseCurrency
             : position.valueInPercentage) ?? 0;
 
         const continentData = this.continents[UNKNOWN_KEY];
+
         if (continentData) {
-          continentData.value += val;
+          continentData.value += value;
         }
+
         const countryData = this.countries[UNKNOWN_KEY];
+
         if (countryData) {
-          countryData.value += val;
+          countryData.value += value;
         }
       }
 
@@ -434,17 +435,18 @@ export class GfAllocationsPageComponent implements OnInit {
           valueInBaseCurrency
         } of position.assetProfile.holdings) {
           const normalizedAssetName = this.normalizeAssetName(name);
-          const val = isNumber(valueInBaseCurrency)
+          const value = isNumber(valueInBaseCurrency)
             ? valueInBaseCurrency
             : allocationInPercentage * (position.valueInPercentage ?? 0);
 
           const holdingData = this.topHoldingsMap[normalizedAssetName];
+
           if (holdingData) {
-            holdingData.value += val;
+            holdingData.value += value;
           } else {
             this.topHoldingsMap[normalizedAssetName] = {
               name,
-              value: val
+              value
             };
           }
         }
@@ -453,30 +455,32 @@ export class GfAllocationsPageComponent implements OnInit {
       if (position.assetProfile.sectors.length > 0) {
         for (const sector of position.assetProfile.sectors) {
           const { name, weight } = sector;
-          const val =
+          const value =
             (isNumber(position.valueInBaseCurrency)
               ? position.valueInBaseCurrency
               : position.valueInPercentage) ?? 0;
 
           const sectorData = this.sectors[name];
+
           if (sectorData) {
-            sectorData.value += weight * val;
+            sectorData.value += weight * value;
           } else {
             this.sectors[name] = {
               name: translate(name),
-              value: weight * val
+              value: weight * value
             };
           }
         }
       } else {
-        const val =
+        const value =
           (isNumber(position.valueInBaseCurrency)
             ? position.valueInBaseCurrency
             : position.valueInPercentage) ?? 0;
 
         const sectorData = this.sectors[UNKNOWN_KEY];
+
         if (sectorData) {
-          sectorData.value += val;
+          sectorData.value += value;
         }
       }
 
