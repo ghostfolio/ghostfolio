@@ -408,10 +408,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   private openAssetProfileDialog({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  }: AssetProfileIdentifier) {
     this.userService
       .get()
       .pipe(takeUntilDestroyed(this.destroyRef))
