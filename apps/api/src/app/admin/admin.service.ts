@@ -1,4 +1,3 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -12,14 +11,12 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
-import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
+import { getCurrencyFromSymbol } from '@ghostfolio/common/helper';
 import {
   AdminData,
-  AdminMarketDataDetails,
   AdminUserResponse,
   AdminUsersResponse,
-  AssetProfileIdentifier,
-  EnhancedSymbolProfile
+  AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 
 import {
@@ -42,7 +39,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 @Injectable()
 export class AdminService {
   public constructor(
-    private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -176,61 +172,6 @@ export class AdminService {
     };
   }
 
-  public async getMarketDataBySymbol({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
-    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-    let currency: EnhancedSymbolProfile['currency'] = '-';
-    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
-
-    const isCurrencyAssetProfile = isCurrency(getCurrencyFromSymbol(symbol));
-
-    if (isCurrencyAssetProfile) {
-      currency = getCurrencyFromSymbol(symbol);
-      ({ activitiesCount, dateOfFirstActivity } =
-        await this.activitiesService.getStatisticsByCurrency(currency));
-    }
-
-    const [[assetProfile], marketData] = await Promise.all([
-      this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource,
-          symbol
-        }
-      ]),
-      this.marketDataService.marketDataItems({
-        orderBy: {
-          date: 'asc'
-        },
-        where: {
-          dataSource,
-          symbol
-        }
-      })
-    ]);
-
-    if (assetProfile) {
-      assetProfile.dataProviderInfo = this.dataProviderService
-        .getDataProvider(assetProfile.dataSource)
-        .getDataProviderInfo();
-    }
-
-    return {
-      marketData,
-      assetProfile: assetProfile ?? {
-        activitiesCount,
-        currency,
-        dataSource,
-        dateOfFirstActivity,
-        symbol,
-        assetClass: isCurrencyAssetProfile ? AssetClass.LIQUIDITY : undefined,
-        assetSubClass: isCurrencyAssetProfile ? AssetSubClass.CASH : undefined,
-        isActive: true
-      }
-    };
-  }
-
   public async getUser(id: string): Promise<AdminUserResponse> {
     const [user] = await this.getUsersWithAnalytics({
       where: { id }
@@ -241,20 +182,13 @@ export class AdminService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      const subscriptions = await this.prismaService.subscription.findMany({
+      user.subscriptions = await this.prismaService.subscription.findMany({
         orderBy: {
           expiresAt: 'desc'
         },
         where: {
           userId: id
         }
-      });
-
-      user.subscriptions = subscriptions.map((subscription) => {
-        return {
-          ...subscription,
-          price: subscription.price ?? 0
-        };
       });
     }
 
@@ -287,6 +221,7 @@ export class AdminService {
       comment,
       countries,
       currency,
+      dataGatheringFrequency,
       dataSource: newDataSource,
       holdings,
       isActive,
@@ -370,6 +305,7 @@ export class AdminService {
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
         comment,
         currency,
+        dataGatheringFrequency,
         dataSource,
         isActive,
         scraperConfiguration,

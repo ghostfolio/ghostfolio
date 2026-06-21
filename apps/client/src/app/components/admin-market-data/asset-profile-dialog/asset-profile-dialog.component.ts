@@ -74,6 +74,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
   AssetSubClass,
+  DataGatheringFrequency,
   MarketData,
   Prisma,
   SymbolProfile
@@ -155,6 +156,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     comment: '',
     countries: ['', jsonValidator()],
     currency: '',
+    dataGatheringFrequency: new FormControl<DataGatheringFrequency>('DAILY'),
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
@@ -198,6 +200,20 @@ export class GfAssetProfileDialogComponent implements OnInit {
   };
 
   protected currencies: string[] = [];
+
+  protected readonly dataGatheringFrequencyValues: {
+    value: DataGatheringFrequency;
+    viewValue: string;
+  }[] = [
+    {
+      value: 'DAILY',
+      viewValue: $localize`Daily`
+    },
+    {
+      value: 'HOURLY',
+      viewValue: $localize`Hourly`
+    }
+  ];
 
   protected readonly dateRangeOptions = [
     {
@@ -401,6 +417,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
             }) ?? []
           ),
           currency: this.assetProfile?.currency ?? null,
+          dataGatheringFrequency:
+            this.assetProfile?.dataGatheringFrequency ?? 'DAILY',
           historicalData: {
             csvString: GfAssetProfileDialogComponent.HISTORICAL_DATA_TEMPLATE
           },
@@ -583,6 +601,9 @@ export class GfAssetProfileDialogComponent implements OnInit {
         this.assetProfileForm.controls.assetSubClass.value ?? undefined,
       comment: this.assetProfileForm.controls.comment.value || undefined,
       currency: this.assetProfileForm.controls.currency.value ?? undefined,
+      dataGatheringFrequency:
+        this.assetProfileForm.controls.dataGatheringFrequency.value ??
+        undefined,
       isActive: isBoolean(this.assetProfileForm.controls.isActive.value)
         ? this.assetProfileForm.controls.isActive.value
         : undefined,

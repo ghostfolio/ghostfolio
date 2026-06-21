@@ -20,6 +20,10 @@
           <ng-container
             *ngTemplateOutlet="tabContent; context: { $implicit: tab }"
           />
+          <ion-icon
+            class="d-none d-sm-block external-link-icon ml-auto text-muted"
+            name="open-outline"
+          />
         </button>
       } @else {
         <a

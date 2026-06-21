@@ -5,10 +5,10 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { DataSource } from '@prisma/client';
 import ms from 'ms';
 
 import { AssetProfileChangedEvent } from './asset-profile-changed.event';
@@ -64,11 +64,7 @@ export class AssetProfileChangedListener {
     currency,
     dataSource,
     symbol
-  }: {
-    currency: string;
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  }: { currency: string } & AssetProfileIdentifier) {
     this.logger.log(`Asset profile of ${symbol} (${dataSource}) has changed`);
 
     if (
