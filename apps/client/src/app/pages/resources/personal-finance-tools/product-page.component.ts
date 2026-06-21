@@ -18,7 +18,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 })
 export class GfProductPageComponent implements OnInit {
   public key: string;
-  public price: number;
+  public price: number | undefined;
   public product1: Product;
   public product2: Product;
   public routerLinkAbout = publicRoutes.about.routerLink;
@@ -62,10 +62,14 @@ export class GfProductPageComponent implements OnInit {
       useAnonymously: true
     };
 
+    const product = personalFinanceTools.find(({ key }) => {
+      return key === this.route.snapshot.data['key'];
+    });
+
     this.product2 = {
-      ...personalFinanceTools.find(({ key }) => {
-        return key === this.route.snapshot.data['key'];
-      })
+      key: product?.key ?? '',
+      name: product?.name ?? '',
+      ...product
     };
 
     if (this.product2.origin) {
@@ -103,7 +107,7 @@ export class GfProductPageComponent implements OnInit {
       $localize`Wealth Management`,
       `WealthTech`
     ]
-      .filter((item) => {
+      .filter((item): item is string => {
         return !!item;
       })
       .sort((a, b) => {
