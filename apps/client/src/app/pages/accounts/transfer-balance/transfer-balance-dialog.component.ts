@@ -1,10 +1,9 @@
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  AbstractControl,
-  FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
@@ -21,7 +20,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Account } from '@prisma/client';
 
-import { TransferBalanceDialogParams } from './interfaces/interfaces';
+import {
+  TransferBalanceDialogParams,
+  TransferBalanceForm
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,57 +42,63 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class GfTransferBalanceDialogComponent {
-  public accounts: Account[] = [];
-  public currency: string;
-  public transferBalanceForm: FormGroup;
+  protected readonly accounts: Account[] =
+    inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA).accounts;
 
-  public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TransferBalanceDialogParams,
-    public dialogRef: MatDialogRef<GfTransferBalanceDialogComponent>,
-    private formBuilder: FormBuilder
-  ) {}
+  protected currency: string;
+
+  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup(
+    {
+      balance: new FormControl<number | string | null>('', Validators.required),
+      fromAccount: new FormControl<string | null>('', Validators.required),
+      toAccount: new FormControl<string | null>('', Validators.required)
+    },
+    {
+      validators: this.compareAccounts
+    }
+  );
+
+  private readonly dialogRef =
+    inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
 
   public ngOnInit() {
-    this.accounts = this.data.accounts;
+    this.transferBalanceForm.controls.fromAccount.valueChanges.subscribe(
+      (id) => {
+        const currency = this.accounts.find((account) => {
+          return account.id === id;
+        })?.currency;
 
-    this.transferBalanceForm = this.formBuilder.group(
-      {
-        balance: ['', Validators.required],
-        fromAccount: ['', Validators.required],
-        toAccount: ['', Validators.required]
-      },
-      {
-        validators: this.compareAccounts
+        if (currency) {
+          this.currency = currency;
+        }
       }
     );
-
-    this.transferBalanceForm.get('fromAccount').valueChanges.subscribe((id) => {
-      this.currency = this.accounts.find((account) => {
-        return account.id === id;
-      }).currency;
-    });
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  protected onSubmit() {
     const account: TransferBalanceDto = {
-      accountIdFrom: this.transferBalanceForm.get('fromAccount').value,
-      accountIdTo: this.transferBalanceForm.get('toAccount').value,
-      balance: this.transferBalanceForm.get('balance').value
+      accountIdFrom: this.transferBalanceForm.controls.fromAccount.value ?? '',
+      accountIdTo: this.transferBalanceForm.controls.toAccount.value ?? '',
+      balance: Number(this.transferBalanceForm.controls.balance.value)
     };
 
     this.dialogRef.close({ account });
   }
 
-  private compareAccounts(control: AbstractControl): ValidationErrors {
-    const accountFrom = control.get('fromAccount');
-    const accountTo = control.get('toAccount');
+  private compareAccounts(
+    formGroup: TransferBalanceForm
+  ): ValidationErrors | null {
+    const accountFrom = formGroup.controls.fromAccount;
+    const accountTo = formGroup.controls.toAccount;
 
     if (accountFrom.value === accountTo.value) {
       return { invalid: true };
     }
+
+    return null;
   }
 }
