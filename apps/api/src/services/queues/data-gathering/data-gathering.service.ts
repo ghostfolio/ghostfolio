@@ -131,7 +131,9 @@ export class DataGatheringService {
       });
 
       const marketPrice =
-        historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
+        historicalData[getAssetProfileIdentifier({ dataSource, symbol })][
+          format(date, DATE_FORMAT)
+        ].marketPrice;
 
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({
@@ -176,7 +178,9 @@ export class DataGatheringService {
       assetProfileIdentifiers
     );
 
-    for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
+    for (const assetProfile of Object.values(assetProfiles)) {
+      const { symbol } = assetProfile;
+
       const symbolProfile = symbolProfiles.find(
         ({ symbol: symbolProfileSymbol }) => {
           return symbolProfileSymbol === symbol;
