@@ -69,7 +69,7 @@ export class DataGatheringService {
     return this.dataGatheringQueue.addBulk(jobs);
   }
 
-  public async gather7Days() {
+  public async gatherRecentMarketData() {
     await this.gatherSymbols({
       dataGatheringItems: await this.getCurrencies7D(),
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
@@ -282,7 +282,13 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherHourlySymbols() {
+  public async gatherHourlyMarketData() {
+    try {
+      await this.exchangeRateDataService.loadCurrencies();
+    } catch (error) {
+      this.logger.error('Could not gather exchange rates', error);
+    }
+
     const assetProfileIdentifiers =
       await this.getHourlyAssetProfileIdentifiers();
 

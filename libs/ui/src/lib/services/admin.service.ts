@@ -127,10 +127,6 @@ export class AdminService {
     return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
   }
 
-  public gather7Days() {
-    return this.http.post<void>('/api/v1/admin/gather', {});
-  }
-
   public gatherMax() {
     return this.http.post<void>('/api/v1/admin/gather/max', {});
   }
@@ -147,6 +143,10 @@ export class AdminService {
       `/api/v1/admin/gather/profile-data/${dataSource}/${symbol}`,
       {}
     );
+  }
+
+  public gatherRecentMarketData() {
+    return this.http.post<void>('/api/v1/admin/gather', {});
   }
 
   public gatherSymbol({
