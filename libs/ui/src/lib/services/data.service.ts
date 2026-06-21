@@ -538,7 +538,7 @@ export class DataService {
   public fetchMarketDataBySymbol({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
+  }: AssetProfileIdentifier): Observable<AssetProfileResponse> {
     return this.http
       .get<any>(`/api/v1/asset-profiles/${dataSource}/${symbol}`)
       .pipe(
