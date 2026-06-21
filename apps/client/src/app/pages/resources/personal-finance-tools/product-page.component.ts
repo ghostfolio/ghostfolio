@@ -17,15 +17,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   templateUrl: './product-page.html'
 })
 export class GfProductPageComponent implements OnInit {
-  public key: string;
-  public price: number | undefined;
-  public product1: Product;
-  public product2: Product;
-  public routerLinkAbout = publicRoutes.about.routerLink;
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkResourcesPersonalFinanceTools =
+  protected price: number | undefined;
+  protected product1: Product;
+  protected product2: Product;
+  protected readonly routerLinkAbout = publicRoutes.about.routerLink;
+  protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+  protected readonly routerLinkResourcesPersonalFinanceTools =
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
-  public tags: string[];
+  protected tags: string[];
 
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);
