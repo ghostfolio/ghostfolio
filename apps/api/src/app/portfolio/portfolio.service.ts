@@ -205,21 +205,21 @@ export class PortfolioService {
           switch (type) {
             case ActivityType.DIVIDEND:
               dividendInBaseCurrency +=
-                await this.exchangeRateDataService.toCurrencyAtDate(
+                (await this.exchangeRateDataService.toCurrencyAtDate(
                   new Big(quantity).mul(unitPrice).toNumber(),
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
-                );
+                )) ?? 0;
               break;
             case ActivityType.INTEREST:
               interestInBaseCurrency +=
-                await this.exchangeRateDataService.toCurrencyAtDate(
+                (await this.exchangeRateDataService.toCurrencyAtDate(
                   unitPrice,
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
-                );
+                )) ?? 0;
               break;
           }
 

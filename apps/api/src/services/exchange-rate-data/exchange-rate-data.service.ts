@@ -365,7 +365,7 @@ export class ExchangeRateDataService {
       )}`
     );
 
-    return undefined;
+    return 0;
   }
 
   private async getExchangeRates({
