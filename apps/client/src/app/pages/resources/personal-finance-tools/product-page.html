@@ -337,7 +337,7 @@
         </section>
         <section class="mb-4">
           <ul class="list-inline">
-            @for (tag of tags; track tag) {
+            @for (tag of tags(); track tag) {
               <li class="list-inline-item">
                 <span class="badge badge-light">{{ tag }}</span>
               </li>

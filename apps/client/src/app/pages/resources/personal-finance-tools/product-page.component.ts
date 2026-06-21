@@ -5,7 +5,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
@@ -16,7 +16,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrls: ['./product-page.scss'],
   templateUrl: './product-page.html'
 })
-export class GfProductPageComponent implements OnInit {
+export class GfProductPageComponent {
   protected readonly price = computed(() => {
     const { subscriptionOffer } = this.dataService.fetchInfo();
     return subscriptionOffer?.price;
@@ -75,17 +75,16 @@ export class GfProductPageComponent implements OnInit {
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
   protected readonly routerLinkResourcesPersonalFinanceTools =
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
-  protected tags: string[];
 
-  private readonly dataService = inject(DataService);
-  private readonly route = inject(ActivatedRoute);
+  protected readonly tags = computed<string[]>(() => {
+    const p1 = this.product1();
+    const p2 = this.product2();
 
-  public ngOnInit() {
-    this.tags = [
-      this.product1().name,
-      this.product1().origin,
-      this.product2().name,
-      this.product2().origin,
+    return [
+      p1.name,
+      p1.origin,
+      p2.name,
+      p2.origin,
       $localize`Alternative`,
       $localize`App`,
       $localize`Budgeting`,
@@ -112,5 +111,8 @@ export class GfProductPageComponent implements OnInit {
       .sort((a, b) => {
         return a.localeCompare(b, undefined, { sensitivity: 'base' });
       });
-  }
+  });
+
+  private readonly dataService = inject(DataService);
+  private readonly route = inject(ActivatedRoute);
 }
