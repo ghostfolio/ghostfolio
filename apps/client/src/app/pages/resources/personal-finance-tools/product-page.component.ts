@@ -5,7 +5,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
@@ -27,10 +27,8 @@ export class GfProductPageComponent implements OnInit {
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
   public tags: string[];
 
-  public constructor(
-    private dataService: DataService,
-    private route: ActivatedRoute
-  ) {}
+  private readonly dataService = inject(DataService);
+  private readonly route = inject(ActivatedRoute);
 
   public ngOnInit() {
     const { subscriptionOffer } = this.dataService.fetchInfo();
