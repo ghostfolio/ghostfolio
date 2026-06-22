@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the data provider service where asset profiles and historical data could be missing for symbols that exist in multiple data sources by keying the responses by the asset profile identifier
+- Resolved an exception in the benchmarks service when the current market price is unavailable
 
 ## 3.13.0 - 2026-06-20
 
