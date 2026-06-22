@@ -38,7 +38,6 @@ import {
   DEFAULT_CURRENCY,
   DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
-  ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
   ghostfolioScraperApiSymbolPrefix
@@ -157,7 +156,6 @@ export function canDeleteAssetProfile({
     !isBenchmark &&
     !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
     !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
-    symbol !== ghostfolioFearAndGreedIndexSymbol &&
     symbol !== ghostfolioFearAndGreedIndexSymbolCryptocurrencies &&
     symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
     watchedByCount === 0
