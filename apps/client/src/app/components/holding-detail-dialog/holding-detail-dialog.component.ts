@@ -412,7 +412,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
 
@@ -427,16 +426,22 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.value = value;
 
-          if (SymbolProfile?.assetClass) {
-            this.assetClass = translate(SymbolProfile?.assetClass);
+          const reportDataGlitchSubject = `Ghostfolio Data Glitch Report${
+            this.SymbolProfile?.symbol ? ` (${this.SymbolProfile.symbol})` : ''
+          }`;
+
+          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.SymbolProfile?.symbol}%0DData Source: ${this.SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+
+          if (this.SymbolProfile?.assetClass) {
+            this.assetClass = translate(this.SymbolProfile?.assetClass);
           }
 
-          if (SymbolProfile?.assetSubClass) {
-            this.assetSubClass = translate(SymbolProfile?.assetSubClass);
+          if (this.SymbolProfile?.assetSubClass) {
+            this.assetSubClass = translate(this.SymbolProfile?.assetSubClass);
           }
 
-          if (SymbolProfile?.countries?.length > 0) {
-            for (const country of SymbolProfile.countries) {
+          if (this.SymbolProfile?.countries?.length > 0) {
+            for (const country of this.SymbolProfile.countries) {
               this.countries[country.code] = {
                 name: getCountryName({ code: country.code }),
                 value: country.weight
@@ -444,8 +449,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
-          if (SymbolProfile?.sectors?.length > 0) {
-            for (const sector of SymbolProfile.sectors) {
+          if (this.SymbolProfile?.sectors?.length > 0) {
+            for (const sector of this.SymbolProfile.sectors) {
               this.sectors[sector.name] = {
                 name: translate(sector.name),
                 value: sector.weight
