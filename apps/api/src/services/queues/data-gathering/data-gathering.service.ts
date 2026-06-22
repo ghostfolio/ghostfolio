@@ -69,91 +69,6 @@ export class DataGatheringService {
     return this.dataGatheringQueue.addBulk(jobs);
   }
 
-  public async gatherRecentMarketData() {
-    await this.gatherSymbols({
-      dataGatheringItems: await this.getCurrencies7D(),
-      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
-    });
-
-    await this.gatherSymbols({
-      dataGatheringItems: await this.getSymbols7D({
-        withUserSubscription: true
-      }),
-      priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
-    });
-
-    await this.gatherSymbols({
-      dataGatheringItems: await this.getSymbols7D({
-        withUserSubscription: false
-      }),
-      priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
-    });
-  }
-
-  public async gatherMax() {
-    const dataGatheringItems = await this.getSymbolsMax();
-    await this.gatherSymbols({
-      dataGatheringItems,
-      priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
-    });
-  }
-
-  public async gatherSymbol({ dataSource, date, symbol }: DataGatheringItem) {
-    const dataGatheringItems = (await this.getSymbolsMax())
-      .filter((dataGatheringItem) => {
-        return (
-          dataGatheringItem.dataSource === dataSource &&
-          dataGatheringItem.symbol === symbol
-        );
-      })
-      .map((item) => ({
-        ...item,
-        date: date ?? item.date
-      }));
-
-    await this.gatherSymbols({
-      dataGatheringItems,
-      force: true,
-      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
-    });
-  }
-
-  public async gatherSymbolForDate({
-    dataSource,
-    date,
-    symbol
-  }: { date: Date } & AssetProfileIdentifier) {
-    try {
-      const historicalData = await this.dataProviderService.getHistoricalRaw({
-        assetProfileIdentifiers: [{ dataSource, symbol }],
-        from: date,
-        to: date
-      });
-
-      const marketPrice =
-        historicalData[getAssetProfileIdentifier({ dataSource, symbol })][
-          format(date, DATE_FORMAT)
-        ].marketPrice;
-
-      if (marketPrice) {
-        return await this.prismaService.marketData.upsert({
-          create: {
-            dataSource,
-            date,
-            marketPrice,
-            symbol
-          },
-          update: { marketPrice },
-          where: { dataSource_date_symbol: { dataSource, date, symbol } }
-        });
-      }
-    } catch (error) {
-      this.logger.error(error);
-    } finally {
-      return undefined;
-    }
-  }
-
   public async gatherAssetProfiles(
     aAssetProfileIdentifiers?: AssetProfileIdentifier[]
   ) {
@@ -325,6 +240,91 @@ export class DataGatheringService {
       await this.marketDataService.updateMany({ data });
     } catch (error) {
       this.logger.error('Could not gather hourly market data', error);
+    }
+  }
+
+  public async gatherMax() {
+    const dataGatheringItems = await this.getSymbolsMax();
+    await this.gatherSymbols({
+      dataGatheringItems,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
+    });
+  }
+
+  public async gatherRecentMarketData() {
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getCurrencies7D(),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    });
+
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getSymbols7D({
+        withUserSubscription: true
+      }),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
+    });
+
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getSymbols7D({
+        withUserSubscription: false
+      }),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
+    });
+  }
+
+  public async gatherSymbol({ dataSource, date, symbol }: DataGatheringItem) {
+    const dataGatheringItems = (await this.getSymbolsMax())
+      .filter((dataGatheringItem) => {
+        return (
+          dataGatheringItem.dataSource === dataSource &&
+          dataGatheringItem.symbol === symbol
+        );
+      })
+      .map((item) => ({
+        ...item,
+        date: date ?? item.date
+      }));
+
+    await this.gatherSymbols({
+      dataGatheringItems,
+      force: true,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    });
+  }
+
+  public async gatherSymbolForDate({
+    dataSource,
+    date,
+    symbol
+  }: { date: Date } & AssetProfileIdentifier) {
+    try {
+      const historicalData = await this.dataProviderService.getHistoricalRaw({
+        assetProfileIdentifiers: [{ dataSource, symbol }],
+        from: date,
+        to: date
+      });
+
+      const marketPrice =
+        historicalData[getAssetProfileIdentifier({ dataSource, symbol })][
+          format(date, DATE_FORMAT)
+        ].marketPrice;
+
+      if (marketPrice) {
+        return await this.prismaService.marketData.upsert({
+          create: {
+            dataSource,
+            date,
+            marketPrice,
+            symbol
+          },
+          update: { marketPrice },
+          where: { dataSource_date_symbol: { dataSource, date, symbol } }
+        });
+      }
+    } catch (error) {
+      this.logger.error(error);
+    } finally {
+      return undefined;
     }
   }
 

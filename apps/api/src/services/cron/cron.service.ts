@@ -39,8 +39,8 @@ export class CronService {
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
   public async runEveryHourAtRandomMinute() {
     if (await this.isDataGatheringEnabled()) {
-      await this.dataGatheringService.gatherRecentMarketData();
       await this.dataGatheringService.gatherHourlyMarketData();
+      await this.dataGatheringService.gatherRecentMarketData();
     }
   }
 
