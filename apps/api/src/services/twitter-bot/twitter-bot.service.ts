@@ -3,7 +3,7 @@ import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.s
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   ghostfolioFearAndGreedIndexDataSourceStocks,
-  ghostfolioFearAndGreedIndexSymbol
+  ghostfolioFearAndGreedIndexSymbolStocks
 } from '@ghostfolio/common/config';
 import {
   resolveFearAndGreedIndex,
@@ -49,7 +49,7 @@ export class TwitterBotService implements OnModuleInit {
       const symbolItem = await this.symbolService.get({
         dataGatheringItem: {
           dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
-          symbol: ghostfolioFearAndGreedIndexSymbol
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
         }
       });
 

@@ -1,6 +1,6 @@
 import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
@@ -86,7 +86,7 @@ export class GfHomeMarketComponent implements OnInit {
         .fetchSymbolItem({
           dataSource: this.info.fearAndGreedDataSource,
           includeHistoricalData: this.numberOfDays,
-          symbol: ghostfolioFearAndGreedIndexSymbol
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ historicalData, marketPrice }) => {
