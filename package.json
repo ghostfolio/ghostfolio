@@ -84,7 +84,7 @@
     "@nestjs/platform-express": "11.1.21",
     "@nestjs/schedule": "6.1.3",
     "@nestjs/serve-static": "5.0.5",
-    "@openrouter/ai-sdk-provider": "2.9.0",
+    "@openrouter/ai-sdk-provider": "2.9.1",
     "@prisma/adapter-pg": "7.8.0",
     "@prisma/client": "7.8.0",
     "@simplewebauthn/browser": "13.2.2",
