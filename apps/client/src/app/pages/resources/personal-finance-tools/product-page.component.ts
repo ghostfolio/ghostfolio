@@ -83,14 +83,14 @@ export class GfProductPageComponent {
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
 
   protected readonly tags = computed<string[]>(() => {
-    const p1 = this.product1();
-    const p2 = this.product2();
+    const product1 = this.product1();
+    const product2 = this.product2();
 
     return [
-      p1.name,
-      p1.origin,
-      p2.name,
-      p2.origin,
+      product1.name,
+      product1.origin,
+      product2.name,
+      product2.origin,
       $localize`Alternative`,
       $localize`App`,
       $localize`Budgeting`,
