@@ -2,6 +2,7 @@ import {
   CreateAccessDto,
   CreateAccountBalanceDto,
   CreateAccountDto,
+  CreateBudgetDto,
   CreateOrderDto,
   CreateTagDto,
   CreateWatchlistItemDto,
@@ -9,6 +10,7 @@ import {
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
+  UpdateBudgetDto,
   UpdateBulkMarketDataDto,
   UpdateOrderDto,
   UpdateOwnAccessTokenDto,
@@ -33,6 +35,8 @@ import {
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
+  BudgetResponse,
+  BudgetsResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
   DataProviderHistoricalResponse,
@@ -191,6 +195,14 @@ export class DataService {
         priceId
       }
     );
+  }
+
+  public createBudget(budget: CreateBudgetDto) {
+    return this.http.post<BudgetResponse>('/api/v1/budgets', budget);
+  }
+
+  public deleteBudget(id: string) {
+    return this.http.delete<void>(`/api/v1/budgets/${id}`);
   }
 
   public fetchAccount(aAccountId: string) {
@@ -377,6 +389,16 @@ export class DataService {
         return data;
       })
     );
+  }
+
+  public fetchBudgets({ month }: { month?: string } = {}) {
+    let params = new HttpParams();
+
+    if (month) {
+      params = params.append('month', month);
+    }
+
+    return this.http.get<BudgetsResponse>('/api/v1/budgets', { params });
   }
 
   public fetchAssetProfiles({
@@ -933,6 +955,10 @@ export class DataService {
       `/api/v1/user/${aUserId}/access-token`,
       {}
     );
+  }
+
+  public updateBudget({ budget, id }: { budget: UpdateBudgetDto; id: string }) {
+    return this.http.put<BudgetResponse>(`/api/v1/budgets/${id}`, budget);
   }
 
   public updateInfo() {
