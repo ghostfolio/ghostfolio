@@ -95,7 +95,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'pt',
     'tr',
     'uk',
-    'zh'
+    'zh',
+    'zh-TW'
   ];
   public user: User;
 
