@@ -14,7 +14,8 @@ import {
   calculatorOutline,
   pieChartOutline,
   scanOutline,
-  swapVerticalOutline
+  swapVerticalOutline,
+  walletOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -50,6 +51,11 @@ export class PortfolioPageComponent {
                 internalRoutes.portfolio.subRoutes.activities.routerLink
             },
             {
+              iconName: 'wallet-outline',
+              label: internalRoutes.portfolio.subRoutes.budget.title,
+              routerLink: internalRoutes.portfolio.subRoutes.budget.routerLink
+            },
+            {
               iconName: 'pie-chart-outline',
               label: internalRoutes.portfolio.subRoutes.allocations.title,
               routerLink:
@@ -77,7 +83,8 @@ export class PortfolioPageComponent {
       calculatorOutline,
       pieChartOutline,
       scanOutline,
-      swapVerticalOutline
+      swapVerticalOutline,
+      walletOutline
     });
   }
 }
