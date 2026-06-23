@@ -26,11 +26,14 @@ import {
 import {
   type AnimationsSpec,
   Chart,
+  type ChartData,
+  Decimation,
   Filler,
   LinearScale,
   LineController,
   LineElement,
   PointElement,
+  type Point,
   TimeScale,
   Tooltip,
   type TooltipOptions
@@ -54,6 +57,8 @@ export class GfLineChartComponent
   @Input() benchmarkLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
+  @Input() dataDecimation = false;
+  @Input() dataDecimationThreshold: number;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
   @Input() label: string;
@@ -71,13 +76,14 @@ export class GfLineChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart<'line'>;
+  public chart: Chart<'line', Array<number | Point | null>, string>;
   public isLoading = true;
 
   private readonly ANIMATION_DURATION = 1200;
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {
     Chart.register(
+      Decimation,
       Filler,
       LineController,
       LineElement,
@@ -118,14 +124,27 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices: number[] = [];
+    const benchmarkPrices: Array<number | Point | null> = [];
     const labels: string[] = [];
-    const marketPrices: number[] = [];
+    const marketPrices: Array<number | Point | null> = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
-      labels.push(historicalDataItem.date);
-      marketPrices.push(historicalDataItem.value);
+      const label = historicalDataItem.date;
+      const timestamp = new Date(historicalDataItem.date).getTime();
+      const benchmarkValue = this.benchmarkDataItems?.[index]?.value;
+      const marketValue = historicalDataItem.value;
+
+      benchmarkPrices.push(
+        this.dataDecimation
+          ? { x: timestamp, y: benchmarkValue ?? null }
+          : benchmarkValue
+      );
+      labels.push(label);
+      marketPrices.push(
+        this.dataDecimation
+          ? { x: timestamp, y: marketValue ?? null }
+          : marketValue
+      );
     });
 
     const gradient = this.chartCanvas?.nativeElement
@@ -148,7 +167,7 @@ export class GfLineChartComponent
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
-    const data = {
+    const data: ChartData<'line', Array<number | Point | null>, string> = {
       labels,
       datasets: [
         {
@@ -181,6 +200,11 @@ export class GfLineChartComponent
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins ??= {};
+        this.chart.options.parsing = this.dataDecimation ? false : undefined;
+        this.chart.options.plugins.decimation = {
+          enabled: this.dataDecimation,
+          threshold: this.dataDecimationThreshold
+        };
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
         this.chart.options.animations = this.isAnimated
@@ -189,106 +213,114 @@ export class GfLineChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
-          data,
-          options: {
-            animations: this.isAnimated ? animations : undefined,
-            aspectRatio: 16 / 9,
-            elements: {
-              point: {
-                hoverBackgroundColor: getBackgroundColor(this.colorScheme),
-                hoverRadius: 2
-              }
-            },
-            interaction: { intersect: false, mode: 'index' },
-            plugins: {
-              legend: {
-                align: 'start',
-                display: this.showLegend,
-                position: 'bottom'
+        this.chart = new Chart<'line', Array<number | Point | null>, string>(
+          this.chartCanvas.nativeElement,
+          {
+            data,
+            options: {
+              animations: this.isAnimated ? animations : undefined,
+              aspectRatio: 16 / 9,
+              elements: {
+                point: {
+                  hoverBackgroundColor: getBackgroundColor(this.colorScheme),
+                  hoverRadius: 2
+                }
               },
-              tooltip: this.getTooltipPluginConfiguration(),
-              verticalHoverLine: {
-                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
-              }
-            },
-            scales: {
-              x: {
-                border: {
+              interaction: { intersect: false, mode: 'index' },
+              parsing: this.dataDecimation ? false : undefined,
+              plugins: {
+                decimation: {
+                  enabled: this.dataDecimation,
+                  threshold: this.dataDecimationThreshold
+                },
+                legend: {
+                  align: 'start',
+                  display: this.showLegend,
+                  position: 'bottom'
+                },
+                tooltip: this.getTooltipPluginConfiguration(),
+                verticalHoverLine: {
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
-                },
-                display: this.showXAxis,
-                grid: {
-                  display: false
-                },
-                time: {
-                  tooltipFormat: getDateFormatString(this.locale),
-                  unit: 'year'
-                },
-                type: 'time'
+                }
               },
-              y: {
-                border: {
-                  width: 0
+              scales: {
+                x: {
+                  border: {
+                    color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                  },
+                  display: this.showXAxis,
+                  grid: {
+                    display: false
+                  },
+                  time: {
+                    tooltipFormat: getDateFormatString(this.locale),
+                    unit: 'year'
+                  },
+                  type: 'time'
                 },
-                display: this.showYAxis,
-                grid: {
-                  color: ({ scale, tick }) => {
-                    if (
-                      tick.value === 0 ||
-                      tick.value === scale.max ||
-                      tick.value === scale.min ||
-                      tick.value === this.yMax ||
-                      tick.value === this.yMin
-                    ) {
-                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
-                    }
-
-                    return 'transparent';
-                  }
-                },
-                max: this.yMax,
-                min: this.yMin,
-                position: 'right',
-                ticks: {
-                  callback: (tickValue, index, ticks) => {
-                    if (index === 0 || index === ticks.length - 1) {
-                      // Only print last and first legend entry
-
-                      if (index === 0 && this.yMinLabel) {
-                        return this.yMinLabel;
-                      }
-
-                      if (index === ticks.length - 1 && this.yMaxLabel) {
-                        return this.yMaxLabel;
-                      }
-
-                      if (typeof tickValue === 'number') {
-                        return tickValue.toLocaleString(this.locale, {
-                          maximumFractionDigits: 2,
-                          minimumFractionDigits: 2
-                        });
-                      }
-
-                      return tickValue;
-                    }
-
-                    return '';
+                y: {
+                  border: {
+                    width: 0
                   },
                   display: this.showYAxis,
-                  mirror: true,
-                  z: 1
-                },
-                type: 'linear'
-              }
+                  grid: {
+                    color: ({ scale, tick }) => {
+                      if (
+                        tick.value === 0 ||
+                        tick.value === scale.max ||
+                        tick.value === scale.min ||
+                        tick.value === this.yMax ||
+                        tick.value === this.yMin
+                      ) {
+                        return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                      }
+
+                      return 'transparent';
+                    }
+                  },
+                  max: this.yMax,
+                  min: this.yMin,
+                  position: 'right',
+                  ticks: {
+                    callback: (tickValue, index, ticks) => {
+                      if (index === 0 || index === ticks.length - 1) {
+                        // Only print last and first legend entry
+
+                        if (index === 0 && this.yMinLabel) {
+                          return this.yMinLabel;
+                        }
+
+                        if (index === ticks.length - 1 && this.yMaxLabel) {
+                          return this.yMaxLabel;
+                        }
+
+                        if (typeof tickValue === 'number') {
+                          return tickValue.toLocaleString(this.locale, {
+                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 2
+                          });
+                        }
+
+                        return tickValue;
+                      }
+
+                      return '';
+                    },
+                    display: this.showYAxis,
+                    mirror: true,
+                    z: 1
+                  },
+                  type: 'linear'
+                }
+              },
+              spanGaps: true
             },
-            spanGaps: true
-          },
-          plugins: [
-            getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
-          ],
-          type: 'line'
-        });
+            plugins: [
+              getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
+            ],
+            type: 'line'
+          }
+        );
       }
     }
 
