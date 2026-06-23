@@ -76,7 +76,7 @@ export class GfLineChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart<'line', Array<number | Point | null>, string>;
+  public chart: Chart<'line', (number | Point | null)[], string>;
   public isLoading = true;
 
   private readonly ANIMATION_DURATION = 1200;
@@ -124,9 +124,9 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices: Array<number | Point | null> = [];
+    const benchmarkPrices: (number | Point | null)[] = [];
     const labels: string[] = [];
-    const marketPrices: Array<number | Point | null> = [];
+    const marketPrices: (number | Point | null)[] = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
       const label = historicalDataItem.date;
@@ -167,7 +167,7 @@ export class GfLineChartComponent
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
-    const data: ChartData<'line', Array<number | Point | null>, string> = {
+    const data: ChartData<'line', (number | Point | null)[], string> = {
       labels,
       datasets: [
         {
@@ -213,7 +213,7 @@ export class GfLineChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart<'line', Array<number | Point | null>, string>(
+        this.chart = new Chart<'line', (number | Point | null)[], string>(
           this.chartCanvas.nativeElement,
           {
             data,
