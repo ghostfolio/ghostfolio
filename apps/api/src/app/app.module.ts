@@ -35,6 +35,7 @@ import { AppController } from './app.controller';
 import { AssetModule } from './asset/asset.module';
 import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
+import { BudgetsModule } from './budgets/budgets.module';
 import { CacheModule } from './cache/cache.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
@@ -76,6 +77,7 @@ import { UserModule } from './user/user.module';
     AuthDeviceModule,
     AuthModule,
     BenchmarksModule,
+    BudgetsModule,
     BullBoardModule.forRoot({
       adapter: ExpressAdapter,
       boardOptions: {

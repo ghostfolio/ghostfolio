@@ -52,6 +52,10 @@ import type { AssetProfilesResponse } from './responses/asset-profiles-response.
 import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type {
+  BudgetResponse,
+  BudgetsResponse
+} from './responses/budget-response.interface';
 import type { CreateStripeCheckoutSessionResponse } from './responses/create-stripe-checkout-session-response.interface';
 import type { DataEnhancerHealthResponse } from './responses/data-enhancer-health-response.interface';
 import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
@@ -63,6 +67,11 @@ import type {
 } from './responses/data-provider-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
+import type { ExpenseCategoryResponse } from './responses/expense-category-response.interface';
+import type {
+  ExpenseResponse,
+  ExpensesResponse
+} from './responses/expenses-response.interface';
 import type { ExportResponse } from './responses/export-response.interface';
 import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -131,6 +140,8 @@ export {
   BenchmarkMarketDataDetailsResponse,
   BenchmarkProperty,
   BenchmarkResponse,
+  BudgetResponse,
+  BudgetsResponse,
   Coupon,
   CreateStripeCheckoutSessionResponse,
   DataEnhancerHealthResponse,
@@ -142,6 +153,9 @@ export {
   DataProviderResponse,
   DividendsResponse,
   EnhancedSymbolProfile,
+  ExpenseCategoryResponse,
+  ExpenseResponse,
+  ExpensesResponse,
   ExportResponse,
   Filter,
   FilterGroup,
