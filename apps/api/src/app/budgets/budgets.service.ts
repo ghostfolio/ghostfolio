@@ -1,5 +1,10 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
+import {
+  CreateBudgetDto,
+  CreateExpenseCategoryDto,
+  UpdateBudgetDto,
+  UpdateExpenseCategoryDto
+} from '@ghostfolio/common/dtos';
 import {
   BudgetResponse,
   BudgetsResponse,
@@ -15,6 +20,29 @@ import {
 @Injectable()
 export class BudgetsService {
   public constructor(private readonly prismaService: PrismaService) {}
+
+  public async createCategory({
+    data,
+    userId
+  }: {
+    data: CreateExpenseCategoryDto;
+    userId: string;
+  }): Promise<ExpenseCategoryResponse> {
+    await this.validateCategoryNameAvailable({
+      name: data.name,
+      userId
+    });
+
+    const category = await this.prismaService.expenseCategory.create({
+      data: {
+        color: data.color,
+        name: data.name,
+        user: { connect: { id: userId } }
+      }
+    });
+
+    return this.toExpenseCategoryResponse(category);
+  }
 
   public async createBudget({
     data,
@@ -64,6 +92,14 @@ export class BudgetsService {
     });
   }
 
+  public async deleteCategory({ id, userId }: { id: string; userId: string }) {
+    await this.validateCategoryOwnership({ categoryId: id, userId });
+
+    return this.prismaService.expenseCategory.delete({
+      where: { id }
+    });
+  }
+
   public async getBudget({
     id,
     userId
@@ -99,9 +135,9 @@ export class BudgetsService {
       where: { userId }
     });
 
-    return categories.map(({ color, createdAt, id, name, updatedAt }) => {
-      return { color, createdAt, id, name, updatedAt };
-    });
+    return categories.map((category) =>
+      this.toExpenseCategoryResponse(category)
+    );
   }
 
   public async getBudgets({
@@ -197,6 +233,33 @@ export class BudgetsService {
     return this.toBudgetResponse({ budget, spent: 0 });
   }
 
+  public async updateCategory({
+    data,
+    id,
+    userId
+  }: {
+    data: UpdateExpenseCategoryDto;
+    id: string;
+    userId: string;
+  }): Promise<ExpenseCategoryResponse> {
+    await this.validateCategoryOwnership({ categoryId: id, userId });
+    await this.validateCategoryNameAvailable({
+      categoryId: id,
+      name: data.name,
+      userId
+    });
+
+    const category = await this.prismaService.expenseCategory.update({
+      data: {
+        color: data.color,
+        name: data.name
+      },
+      where: { id }
+    });
+
+    return this.toExpenseCategoryResponse(category);
+  }
+
   private formatBudgetMonth(month: Date): string {
     return month.toISOString().slice(0, 7);
   }
@@ -272,6 +335,22 @@ export class BudgetsService {
     };
   }
 
+  private toExpenseCategoryResponse({
+    color,
+    createdAt,
+    id,
+    name,
+    updatedAt
+  }: {
+    color?: string;
+    createdAt: Date;
+    id: string;
+    name: string;
+    updatedAt: Date;
+  }): ExpenseCategoryResponse {
+    return { color, createdAt, id, name, updatedAt };
+  }
+
   private async validateBudgetOwnership({
     id,
     userId
@@ -304,6 +383,29 @@ export class BudgetsService {
 
     if (!category) {
       throw new ForbiddenException();
+    }
+  }
+
+  private async validateCategoryNameAvailable({
+    categoryId,
+    name,
+    userId
+  }: {
+    categoryId?: string;
+    name: string;
+    userId: string;
+  }) {
+    const existingCategory = await this.prismaService.expenseCategory.findFirst(
+      {
+        where: {
+          name,
+          userId
+        }
+      }
+    );
+
+    if (existingCategory && existingCategory.id !== categoryId) {
+      throw new ConflictException();
     }
   }
 }

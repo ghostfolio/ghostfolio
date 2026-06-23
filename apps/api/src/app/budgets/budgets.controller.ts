@@ -1,7 +1,12 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { JwtOrApiKeyAuthGuard } from '@ghostfolio/api/guards/jwt-or-api-key-auth.guard';
-import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
+import {
+  CreateBudgetDto,
+  CreateExpenseCategoryDto,
+  UpdateBudgetDto,
+  UpdateExpenseCategoryDto
+} from '@ghostfolio/common/dtos';
 import {
   BudgetResponse,
   BudgetsResponse,
@@ -45,6 +50,28 @@ export class BudgetsController {
     });
   }
 
+  @Post('categories')
+  @HasPermission(permissions.createExpenseCategory)
+  @UseGuards(JwtOrApiKeyAuthGuard, HasPermissionGuard)
+  public async createCategory(
+    @Body() data: CreateExpenseCategoryDto
+  ): Promise<ExpenseCategoryResponse> {
+    return this.budgetsService.createCategory({
+      data,
+      userId: this.request.user.id
+    });
+  }
+
+  @Delete('categories/:id')
+  @HasPermission(permissions.deleteExpenseCategory)
+  @UseGuards(JwtOrApiKeyAuthGuard, HasPermissionGuard)
+  public async deleteCategory(@Param('id') id: string) {
+    return this.budgetsService.deleteCategory({
+      id,
+      userId: this.request.user.id
+    });
+  }
+
   @Delete(':id')
   @HasPermission(permissions.deleteBudget)
   @UseGuards(JwtOrApiKeyAuthGuard, HasPermissionGuard)
@@ -81,6 +108,20 @@ export class BudgetsController {
   @UseGuards(JwtOrApiKeyAuthGuard, HasPermissionGuard)
   public async getBudget(@Param('id') id: string): Promise<BudgetResponse> {
     return this.budgetsService.getBudget({
+      id,
+      userId: this.request.user.id
+    });
+  }
+
+  @Put('categories/:id')
+  @HasPermission(permissions.updateExpenseCategory)
+  @UseGuards(JwtOrApiKeyAuthGuard, HasPermissionGuard)
+  public async updateCategory(
+    @Param('id') id: string,
+    @Body() data: UpdateExpenseCategoryDto
+  ): Promise<ExpenseCategoryResponse> {
+    return this.budgetsService.updateCategory({
+      data,
       id,
       userId: this.request.user.id
     });

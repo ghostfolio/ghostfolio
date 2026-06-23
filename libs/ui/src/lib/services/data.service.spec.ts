@@ -1,4 +1,9 @@
-import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
+import {
+  CreateBudgetDto,
+  CreateExpenseCategoryDto,
+  UpdateBudgetDto,
+  UpdateExpenseCategoryDto
+} from '@ghostfolio/common/dtos';
 
 import {
   provideHttpClient,
@@ -84,6 +89,51 @@ describe('DataService budget methods', () => {
     );
 
     expect(request.request.method).toBe('GET');
+  });
+
+  it('creates an expense category', () => {
+    const category: CreateExpenseCategoryDto = {
+      color: '#0055aa',
+      name: 'Groceries'
+    };
+
+    dataService.createExpenseCategory(category).subscribe();
+
+    const request = httpTestingController.expectOne(
+      '/api/v1/budgets/categories'
+    );
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual(category);
+  });
+
+  it('updates an expense category', () => {
+    const category: UpdateExpenseCategoryDto = {
+      color: '#aa5500',
+      id: 'category-1',
+      name: 'Food'
+    };
+
+    dataService
+      .updateExpenseCategory({ category, id: 'category-1' })
+      .subscribe();
+
+    const request = httpTestingController.expectOne(
+      '/api/v1/budgets/categories/category-1'
+    );
+
+    expect(request.request.method).toBe('PUT');
+    expect(request.request.body).toEqual(category);
+  });
+
+  it('deletes an expense category', () => {
+    dataService.deleteExpenseCategory('category-1').subscribe();
+
+    const request = httpTestingController.expectOne(
+      '/api/v1/budgets/categories/category-1'
+    );
+
+    expect(request.request.method).toBe('DELETE');
   });
 
   it('deletes a budget', () => {

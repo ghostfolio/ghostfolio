@@ -24,8 +24,11 @@ describe('BudgetsService', () => {
       groupBy: jest.Mock;
     };
     expenseCategory: {
+      create: jest.Mock;
+      delete: jest.Mock;
       findFirst: jest.Mock;
       findMany: jest.Mock;
+      update: jest.Mock;
     };
   };
 
@@ -42,8 +45,11 @@ describe('BudgetsService', () => {
         groupBy: jest.fn()
       },
       expenseCategory: {
+        create: jest.fn(),
+        delete: jest.fn(),
         findFirst: jest.fn(),
-        findMany: jest.fn()
+        findMany: jest.fn(),
+        update: jest.fn()
       }
     };
 
@@ -158,6 +164,134 @@ describe('BudgetsService', () => {
         updatedAt
       }
     ]);
+  });
+
+  it('creates an expense category for the current user', async () => {
+    prismaService.expenseCategory.findFirst.mockResolvedValue(null);
+    prismaService.expenseCategory.create.mockResolvedValue({
+      color: '#0055aa',
+      createdAt,
+      id: categoryId,
+      name: 'Groceries',
+      updatedAt,
+      userId
+    });
+
+    const response = await budgetsService.createCategory({
+      data: {
+        color: '#0055aa',
+        name: 'Groceries'
+      },
+      userId
+    });
+
+    expect(prismaService.expenseCategory.findFirst).toHaveBeenCalledWith({
+      where: {
+        name: 'Groceries',
+        userId
+      }
+    });
+    expect(prismaService.expenseCategory.create).toHaveBeenCalledWith({
+      data: {
+        color: '#0055aa',
+        name: 'Groceries',
+        user: { connect: { id: userId } }
+      }
+    });
+    expect(response).toEqual({
+      color: '#0055aa',
+      createdAt,
+      id: categoryId,
+      name: 'Groceries',
+      updatedAt
+    });
+  });
+
+  it('rejects duplicate category names for the current user', async () => {
+    prismaService.expenseCategory.findFirst.mockResolvedValue({
+      id: categoryId,
+      name: 'Groceries',
+      userId
+    });
+
+    await expect(
+      budgetsService.createCategory({
+        data: {
+          name: 'Groceries'
+        },
+        userId
+      })
+    ).rejects.toBeInstanceOf(ConflictException);
+  });
+
+  it('updates only categories owned by the current user', async () => {
+    prismaService.expenseCategory.findFirst
+      .mockResolvedValueOnce({
+        id: categoryId,
+        userId
+      })
+      .mockResolvedValueOnce(null);
+    prismaService.expenseCategory.update.mockResolvedValue({
+      color: '#aa5500',
+      createdAt,
+      id: categoryId,
+      name: 'Food',
+      updatedAt,
+      userId
+    });
+
+    const response = await budgetsService.updateCategory({
+      data: {
+        color: '#aa5500',
+        id: categoryId,
+        name: 'Food'
+      },
+      id: categoryId,
+      userId
+    });
+
+    expect(prismaService.expenseCategory.findFirst).toHaveBeenNthCalledWith(1, {
+      where: {
+        id: categoryId,
+        userId
+      }
+    });
+    expect(prismaService.expenseCategory.findFirst).toHaveBeenNthCalledWith(2, {
+      where: {
+        name: 'Food',
+        userId
+      }
+    });
+    expect(prismaService.expenseCategory.update).toHaveBeenCalledWith({
+      data: {
+        color: '#aa5500',
+        name: 'Food'
+      },
+      where: { id: categoryId }
+    });
+    expect(response).toEqual({
+      color: '#aa5500',
+      createdAt,
+      id: categoryId,
+      name: 'Food',
+      updatedAt
+    });
+  });
+
+  it('deletes only categories owned by the current user', async () => {
+    prismaService.expenseCategory.findFirst.mockResolvedValue({
+      id: categoryId,
+      userId
+    });
+    prismaService.expenseCategory.delete.mockResolvedValue({
+      id: categoryId
+    });
+
+    await budgetsService.deleteCategory({ id: categoryId, userId });
+
+    expect(prismaService.expenseCategory.delete).toHaveBeenCalledWith({
+      where: { id: categoryId }
+    });
   });
 
   it('creates a budget for a category owned by the current user', async () => {
