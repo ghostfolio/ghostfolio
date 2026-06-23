@@ -746,10 +746,10 @@ export class ActivitiesService {
         const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
         const [
-          feeInAssetProfileCurrency,
-          feeInBaseCurrency,
-          unitPriceInAssetProfileCurrency,
-          valueInBaseCurrency
+          feeInAssetProfileCurrency = 0,
+          feeInBaseCurrency = 0,
+          unitPriceInAssetProfileCurrency = 0,
+          valueInBaseCurrency = 0
         ] = await Promise.all([
           this.exchangeRateDataService.toCurrencyAtDate(
             order.fee,

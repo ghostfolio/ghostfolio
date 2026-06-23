@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue where symbols with special characters caused API request failures by URL encoding the symbol
 - Fixed the disabled state of the delete action in the asset profiles actions menu of the historical market data table in the admin control panel
 - Fixed the persistence of an empty `locale` string in the scraper configuration
+- Fixed a transaction timeout that prevented gathering historical market data for symbols with a long history
+- Fixed an exception in various portfolio endpoints when historical exchange rate data is missing
 
 ## 3.14.0 - 2026-06-22
 
