@@ -2,7 +2,11 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { JwtOrApiKeyAuthGuard } from '@ghostfolio/api/guards/jwt-or-api-key-auth.guard';
 import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
-import { BudgetResponse, BudgetsResponse } from '@ghostfolio/common/interfaces';
+import {
+  BudgetResponse,
+  BudgetsResponse,
+  ExpenseCategoryResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -59,6 +63,15 @@ export class BudgetsController {
   ): Promise<BudgetsResponse> {
     return this.budgetsService.getBudgets({
       month,
+      userId: this.request.user.id
+    });
+  }
+
+  @Get('categories')
+  @HasPermission(permissions.readExpenseCategories)
+  @UseGuards(JwtOrApiKeyAuthGuard, HasPermissionGuard)
+  public async getCategories(): Promise<ExpenseCategoryResponse[]> {
+    return this.budgetsService.getCategories({
       userId: this.request.user.id
     });
   }

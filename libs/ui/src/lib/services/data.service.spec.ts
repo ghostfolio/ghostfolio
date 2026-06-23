@@ -47,6 +47,7 @@ describe('DataService budget methods', () => {
     const budget: CreateBudgetDto = {
       amount: 500,
       categoryId: 'category-1',
+      currency: 'USD',
       month: '2026-06'
     };
 
@@ -62,6 +63,8 @@ describe('DataService budget methods', () => {
     const budget: UpdateBudgetDto = {
       amount: 650,
       categoryId: 'category-1',
+      currency: 'USD',
+      id: 'budget-1',
       month: '2026-06'
     };
 
@@ -71,6 +74,16 @@ describe('DataService budget methods', () => {
 
     expect(request.request.method).toBe('PUT');
     expect(request.request.body).toEqual(budget);
+  });
+
+  it('fetches expense categories', () => {
+    dataService.fetchExpenseCategories().subscribe();
+
+    const request = httpTestingController.expectOne(
+      '/api/v1/budgets/categories'
+    );
+
+    expect(request.request.method).toBe('GET');
   });
 
   it('deletes a budget', () => {

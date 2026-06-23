@@ -1,6 +1,10 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
-import { BudgetResponse, BudgetsResponse } from '@ghostfolio/common/interfaces';
+import {
+  BudgetResponse,
+  BudgetsResponse,
+  ExpenseCategoryResponse
+} from '@ghostfolio/common/interfaces';
 
 import {
   ConflictException,
@@ -83,6 +87,21 @@ export class BudgetsService {
     });
 
     return this.toBudgetResponse({ budget, spent });
+  }
+
+  public async getCategories({
+    userId
+  }: {
+    userId: string;
+  }): Promise<ExpenseCategoryResponse[]> {
+    const categories = await this.prismaService.expenseCategory.findMany({
+      orderBy: { name: 'asc' },
+      where: { userId }
+    });
+
+    return categories.map(({ color, createdAt, id, name, updatedAt }) => {
+      return { color, createdAt, id, name, updatedAt };
+    });
   }
 
   public async getBudgets({

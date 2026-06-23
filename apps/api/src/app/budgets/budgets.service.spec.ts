@@ -25,6 +25,7 @@ describe('BudgetsService', () => {
     };
     expenseCategory: {
       findFirst: jest.Mock;
+      findMany: jest.Mock;
     };
   };
 
@@ -41,7 +42,8 @@ describe('BudgetsService', () => {
         groupBy: jest.fn()
       },
       expenseCategory: {
-        findFirst: jest.fn()
+        findFirst: jest.fn(),
+        findMany: jest.fn()
       }
     };
 
@@ -127,6 +129,35 @@ describe('BudgetsService', () => {
       totalRemaining: 375,
       totalSpent: 125
     });
+  });
+
+  it('lists expense categories for the current user', async () => {
+    prismaService.expenseCategory.findMany.mockResolvedValue([
+      {
+        color: '#0055aa',
+        createdAt,
+        id: categoryId,
+        name: 'Groceries',
+        updatedAt,
+        userId
+      }
+    ]);
+
+    const response = await budgetsService.getCategories({ userId });
+
+    expect(prismaService.expenseCategory.findMany).toHaveBeenCalledWith({
+      orderBy: { name: 'asc' },
+      where: { userId }
+    });
+    expect(response).toEqual([
+      {
+        color: '#0055aa',
+        createdAt,
+        id: categoryId,
+        name: 'Groceries',
+        updatedAt
+      }
+    ]);
   });
 
   it('creates a budget for a category owned by the current user', async () => {

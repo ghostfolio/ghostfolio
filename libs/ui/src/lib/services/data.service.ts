@@ -40,6 +40,7 @@ import {
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
   DataProviderHistoricalResponse,
+  ExpenseCategoryResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -399,6 +400,12 @@ export class DataService {
     }
 
     return this.http.get<BudgetsResponse>('/api/v1/budgets', { params });
+  }
+
+  public fetchExpenseCategories() {
+    return this.http.get<ExpenseCategoryResponse[]>(
+      '/api/v1/budgets/categories'
+    );
   }
 
   public fetchAssetProfiles({

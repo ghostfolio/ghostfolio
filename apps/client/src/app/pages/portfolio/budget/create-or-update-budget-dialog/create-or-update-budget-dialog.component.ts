@@ -1,9 +1,13 @@
 import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
-import { BudgetResponse } from '@ghostfolio/common/interfaces';
+import {
+  BudgetResponse,
+  ExpenseCategoryResponse
+} from '@ghostfolio/common/interfaces';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, DestroyRef, Inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
@@ -18,6 +22,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 export interface CreateOrUpdateBudgetDialogData {
   budget?: BudgetResponse;
@@ -32,13 +37,14 @@ export interface CreateOrUpdateBudgetDialogData {
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-budget-dialog',
   styleUrls: ['./create-or-update-budget-dialog.scss'],
   templateUrl: './create-or-update-budget-dialog.html'
 })
-export class GfCreateOrUpdateBudgetDialogComponent {
+export class GfCreateOrUpdateBudgetDialogComponent implements OnInit {
   public budgetForm = new FormGroup({
     amount: new FormControl<number>(this.data.budget?.amount ?? 0, {
       nonNullable: true,
@@ -53,12 +59,25 @@ export class GfCreateOrUpdateBudgetDialogComponent {
       validators: [Validators.required]
     })
   });
+  public categories: ExpenseCategoryResponse[] = [];
+  public isLoadingCategories = true;
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateBudgetDialogData,
     private dataService: DataService,
+    private destroyRef: DestroyRef,
     private dialogRef: MatDialogRef<GfCreateOrUpdateBudgetDialogComponent>
   ) {}
+
+  public ngOnInit() {
+    this.dataService
+      .fetchExpenseCategories()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((categories) => {
+        this.categories = categories;
+        this.isLoadingCategories = false;
+      });
+  }
 
   public onSubmit() {
     if (this.budgetForm.invalid) {

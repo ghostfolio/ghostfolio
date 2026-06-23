@@ -14,8 +14,20 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label i18n>Category id</mat-label>
-      <input formControlName="categoryId" matInput />
+      <mat-label i18n>Category</mat-label>
+      <mat-select formControlName="categoryId">
+        @if (isLoadingCategories) {
+          <mat-option disabled i18n>Loading categories...</mat-option>
+        } @else if (categories.length === 0) {
+          <mat-option disabled i18n>No expense categories available</mat-option>
+        } @else {
+          @for (category of categories; track category.id) {
+            <mat-option [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          }
+        }
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">

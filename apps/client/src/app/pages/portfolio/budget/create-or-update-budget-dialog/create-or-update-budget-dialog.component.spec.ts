@@ -13,7 +13,10 @@ import {
 describe('GfCreateOrUpdateBudgetDialogComponent', () => {
   let component: GfCreateOrUpdateBudgetDialogComponent;
   let dataService: jest.Mocked<
-    Pick<DataService, 'createBudget' | 'updateBudget'>
+    Pick<
+      DataService,
+      'createBudget' | 'fetchExpenseCategories' | 'updateBudget'
+    >
   >;
   let dialogRef: jest.Mocked<
     Pick<MatDialogRef<GfCreateOrUpdateBudgetDialogComponent>, 'close'>
@@ -31,6 +34,17 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
           remaining: 500,
           spent: 0
         })
+      ),
+      fetchExpenseCategories: jest.fn().mockReturnValue(
+        of([
+          {
+            color: '#0055aa',
+            createdAt: new Date('2026-06-01'),
+            id: 'food',
+            name: 'Food',
+            updatedAt: new Date('2026-06-01')
+          }
+        ])
       ),
       updateBudget: jest.fn().mockReturnValue(
         of({
@@ -86,6 +100,7 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
     component.onSubmit();
     await fixture.whenStable();
 
+    expect(dataService.fetchExpenseCategories).toHaveBeenCalled();
     expect(dataService.createBudget).toHaveBeenCalledWith({
       amount: 500,
       categoryId: 'food',
