@@ -2,6 +2,7 @@ import { DataService } from '@ghostfolio/ui/services';
 
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
@@ -45,11 +46,15 @@ const {
 const { GfBudgetPageComponent } = require('./budget-page.component');
 
 describe('GfBudgetPageComponent', () => {
-  let dataService: jest.Mocked<Pick<DataService, 'fetchBudgets'>>;
+  let dataService: jest.Mocked<
+    Pick<DataService, 'deleteBudget' | 'fetchBudgets'>
+  >;
+  let dialog: jest.Mocked<Pick<MatDialog, 'open'>>;
   let fixture: ComponentFixture<GfBudgetPageComponent>;
 
   beforeEach(async () => {
     dataService = {
+      deleteBudget: jest.fn().mockReturnValue(of(undefined)),
       fetchBudgets: jest.fn().mockReturnValue(
         of({
           budgets: [
@@ -75,6 +80,11 @@ describe('GfBudgetPageComponent', () => {
         })
       )
     };
+    dialog = {
+      open: jest.fn().mockReturnValue({
+        afterClosed: () => of({ refresh: true })
+      })
+    };
 
     await TestBed.configureTestingModule({
       imports: [GfBudgetPageComponent, NoopAnimationsModule],
@@ -83,6 +93,10 @@ describe('GfBudgetPageComponent', () => {
         {
           provide: DataService,
           useValue: dataService
+        },
+        {
+          provide: MatDialog,
+          useValue: dialog
         },
         {
           provide: UserService,
@@ -113,5 +127,25 @@ describe('GfBudgetPageComponent', () => {
     });
     expect(fixture.nativeElement.textContent).toContain('Budget');
     expect(fixture.nativeElement.textContent).toContain('Food');
+  });
+
+  it('reloads budgets after creating a budget', async () => {
+    await fixture.whenStable();
+
+    fixture.componentInstance.onCreateBudget();
+    await fixture.whenStable();
+
+    expect(dialog.open).toHaveBeenCalled();
+    expect(dataService.fetchBudgets).toHaveBeenCalledTimes(2);
+  });
+
+  it('deletes a budget and reloads the month', async () => {
+    await fixture.whenStable();
+
+    fixture.componentInstance.onDeleteBudget('budget-1');
+    await fixture.whenStable();
+
+    expect(dataService.deleteBudget).toHaveBeenCalledWith('budget-1');
+    expect(dataService.fetchBudgets).toHaveBeenCalledTimes(2);
   });
 });

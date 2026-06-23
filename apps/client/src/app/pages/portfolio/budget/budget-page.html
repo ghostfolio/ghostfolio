@@ -104,6 +104,28 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef class="text-right" mat-header-cell></th>
+            <td *matCellDef="let budget" class="text-right" mat-cell>
+              <button
+                mat-icon-button
+                type="button"
+                [attr.aria-label]="'Edit budget'"
+                (click)="onUpdateBudget(budget)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                [attr.aria-label]="'Delete budget'"
+                (click)="onDeleteBudget(budget.id)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
           <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
           <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
         </table>
@@ -112,6 +134,17 @@
           No budgets have been created for this month.
         </div>
       }
+
+      <button
+        class="mt-3"
+        color="primary"
+        i18n
+        mat-flat-button
+        type="button"
+        (click)="onCreateBudget()"
+      >
+        Create budget
+      </button>
     </div>
   </div>
 </div>

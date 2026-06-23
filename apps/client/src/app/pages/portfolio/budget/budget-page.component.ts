@@ -12,15 +12,22 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { format } from 'date-fns';
+
+import { GfCreateOrUpdateBudgetDialogComponent } from './create-or-update-budget-dialog/create-or-update-budget-dialog.component';
 
 @Component({
   host: { class: 'page' },
   imports: [
     CommonModule,
     GfValueComponent,
+    MatButtonModule,
+    MatIconModule,
     MatProgressBarModule,
     MatTableModule,
     ReactiveFormsModule
@@ -36,7 +43,8 @@ export class GfBudgetPageComponent implements OnInit {
     'amount',
     'spent',
     'remaining',
-    'progress'
+    'progress',
+    'actions'
   ];
   public isLoading = true;
   public monthControl = new FormControl(format(new Date(), 'yyyy-MM'), {
@@ -51,6 +59,7 @@ export class GfBudgetPageComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private destroyRef: DestroyRef,
+    private dialog: MatDialog,
     private userService: UserService
   ) {}
 
@@ -95,5 +104,42 @@ export class GfBudgetPageComponent implements OnInit {
     }
 
     return Math.min((spent / amount) * 100, 100);
+  }
+
+  public onCreateBudget() {
+    this.openBudgetDialog({
+      month: this.monthControl.value
+    });
+  }
+
+  public onDeleteBudget(id: string) {
+    this.dataService
+      .deleteBudget(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.fetchBudgets();
+      });
+  }
+
+  public onUpdateBudget(budget: BudgetResponse) {
+    this.openBudgetDialog({
+      budget,
+      month: this.monthControl.value
+    });
+  }
+
+  private openBudgetDialog(data: { budget?: BudgetResponse; month: string }) {
+    this.dialog
+      .open(GfCreateOrUpdateBudgetDialogComponent, {
+        data,
+        width: '32rem'
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (result?.refresh) {
+          this.fetchBudgets();
+        }
+      });
   }
 }

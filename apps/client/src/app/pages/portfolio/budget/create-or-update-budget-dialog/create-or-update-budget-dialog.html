@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>
+  @if (data.budget) {
+    <ng-container i18n>Edit budget</ng-container>
+  } @else {
+    <ng-container i18n>Create budget</ng-container>
+  }
+</h2>
+
+<form [formGroup]="budgetForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="budget-dialog-content">
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Month</mat-label>
+      <input formControlName="month" matInput type="month" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Category id</mat-label>
+      <input formControlName="categoryId" matInput />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Amount</mat-label>
+      <input
+        formControlName="amount"
+        matInput
+        min="0.01"
+        step="0.01"
+        type="number"
+      />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button i18n mat-button mat-dialog-close type="button">Cancel</button>
+    <button
+      color="primary"
+      i18n
+      mat-flat-button
+      type="submit"
+      [disabled]="budgetForm.invalid"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>
