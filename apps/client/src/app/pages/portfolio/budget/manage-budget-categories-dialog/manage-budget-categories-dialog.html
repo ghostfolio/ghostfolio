@@ -1,0 +1,98 @@
+<h2 i18n mat-dialog-title>Manage categories</h2>
+
+<mat-dialog-content>
+  <form
+    class="category-form"
+    [formGroup]="categoryForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Name</mat-label>
+      <input formControlName="name" matInput />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Color</mat-label>
+      <input formControlName="color" matInput placeholder="#0055aa" />
+    </mat-form-field>
+
+    <div class="category-form-actions">
+      @if (editingCategory) {
+        <button i18n mat-button type="button" (click)="onCancelEdit()">
+          Cancel edit
+        </button>
+      }
+
+      <button
+        color="primary"
+        i18n
+        mat-flat-button
+        type="submit"
+        [disabled]="categoryForm.invalid"
+      >
+        @if (editingCategory) {
+          Update
+        } @else {
+          Create
+        }
+      </button>
+    </div>
+  </form>
+
+  @if (dataSource.data.length > 0) {
+    <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="name">
+        <th *matHeaderCellDef i18n mat-header-cell>Name</th>
+        <td *matCellDef="let category" mat-cell>{{ category.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="color">
+        <th *matHeaderCellDef i18n mat-header-cell>Color</th>
+        <td *matCellDef="let category" mat-cell>
+          @if (category.color) {
+            <span class="category-color">
+              <span
+                class="category-color-swatch"
+                [style.background-color]="category.color"
+              ></span>
+              {{ category.color }}
+            </span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef class="text-right" mat-header-cell></th>
+        <td *matCellDef="let category" class="text-right" mat-cell>
+          <button
+            mat-icon-button
+            type="button"
+            [attr.aria-label]="'Edit category'"
+            (click)="onEditCategory(category)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            type="button"
+            [attr.aria-label]="'Delete category'"
+            (click)="onDeleteCategory(category.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+    </table>
+  } @else if (!isLoading) {
+    <div class="py-4 text-center text-muted" i18n>
+      No categories have been created.
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button i18n mat-button type="button" (click)="onClose()">Close</button>
+</mat-dialog-actions>

@@ -1,0 +1,35 @@
+.category-form {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 10rem) auto;
+}
+
+.category-form-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.category-color {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.category-color-swatch {
+  border: 1px solid var(--border-color);
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .category-form {
+    grid-template-columns: 1fr;
+  }
+
+  .category-form-actions {
+    justify-content: flex-start;
+  }
+}

@@ -20,6 +20,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { format } from 'date-fns';
 
 import { GfCreateOrUpdateBudgetDialogComponent } from './create-or-update-budget-dialog/create-or-update-budget-dialog.component';
+import { GfManageBudgetCategoriesDialogComponent } from './manage-budget-categories-dialog/manage-budget-categories-dialog.component';
 
 @Component({
   host: { class: 'page' },
@@ -120,6 +121,16 @@ export class GfBudgetPageComponent implements OnInit {
       .subscribe(() => {
         this.fetchBudgets();
       });
+  }
+
+  public onManageCategories() {
+    this.dialog
+      .open(GfManageBudgetCategoriesDialogComponent, {
+        width: '36rem'
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   public onUpdateBudget(budget: BudgetResponse) {

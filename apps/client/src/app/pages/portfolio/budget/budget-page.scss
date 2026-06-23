@@ -6,6 +6,12 @@
   max-width: 11rem;
 }
 
+.budget-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .budget-summary {
   display: grid;
   gap: 1rem;

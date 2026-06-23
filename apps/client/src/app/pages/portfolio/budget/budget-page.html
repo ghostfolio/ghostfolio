@@ -135,16 +135,26 @@
         </div>
       }
 
-      <button
-        class="mt-3"
-        color="primary"
-        i18n
-        mat-flat-button
-        type="button"
-        (click)="onCreateBudget()"
-      >
-        Create budget
-      </button>
+      <div class="budget-actions mt-3">
+        <button
+          color="primary"
+          i18n
+          mat-flat-button
+          type="button"
+          (click)="onCreateBudget()"
+        >
+          Create budget
+        </button>
+
+        <button
+          i18n
+          mat-stroked-button
+          type="button"
+          (click)="onManageCategories()"
+        >
+          Manage categories
+        </button>
+      </div>
     </div>
   </div>
 </div>

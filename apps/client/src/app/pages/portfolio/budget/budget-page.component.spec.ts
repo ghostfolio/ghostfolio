@@ -155,4 +155,15 @@ describe('GfBudgetPageComponent', () => {
     expect(dataService.deleteBudget).toHaveBeenCalledWith('budget-1');
     expect(dataService.fetchBudgets).toHaveBeenCalledTimes(2);
   });
+
+  it('opens the category management dialog', async () => {
+    await fixture.whenStable();
+
+    fixture.componentInstance.onManageCategories();
+    await fixture.whenStable();
+
+    expect(dialog.open).toHaveBeenCalledWith(expect.any(Function), {
+      width: '36rem'
+    });
+  });
 });
