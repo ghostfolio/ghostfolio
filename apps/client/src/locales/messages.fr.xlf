@@ -318,7 +318,7 @@
         <target state="translated">Supprimer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">300</context>
+          <context context-type="linenumber">301</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -954,7 +954,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -3766,7 +3766,7 @@
         <target state="new">Expiration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7478722592449005806" datatype="html">
@@ -5471,24 +5471,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="5100352603258735382" datatype="html">
-        <source>Are you looking for an open source alternative to <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> is a powerful portfolio management tool that provides individuals with a comprehensive platform to track, analyze, and optimize their investments. Whether you are an experienced investor or just starting out, Ghostfolio offers an intuitive user interface and a <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>wide range of functionalities<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> to help you make informed decisions and take control of your financial future.</source>
-        <target state="translated">Cherchez-vous des alternatives open source à <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> est un outil de gestion de portefeuille puissant offrant aux particuliers une plateforme complète pour suivre, analyser et optimiser ses investissements. Que vous soyez un investisseur expérimenté ou que vous débutiez, Ghostfolio offre une interface utilisateur intuitive et une <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>large gamme de fonctionnalités<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> pour vous aider à prendre des décisions éclairées et à prendre le contrôle de votre avenir financier.</target>
+        <source>Are you looking for an open source alternative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> is a powerful portfolio management tool that provides individuals with a comprehensive platform to track, analyze, and optimize their investments. Whether you are an experienced investor or just starting out, Ghostfolio offers an intuitive user interface and a <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>wide range of functionalities<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> to help you make informed decisions and take control of your financial future.</source>
+        <target state="new">Cherchez-vous des alternatives open source à <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> est un outil de gestion de portefeuille puissant offrant aux particuliers une plateforme complète pour suivre, analyser et optimiser ses investissements. Que vous soyez un investisseur expérimenté ou que vous débutiez, Ghostfolio offre une interface utilisateur intuitive et une <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>large gamme de fonctionnalités<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> pour vous aider à prendre des décisions éclairées et à prendre le contrôle de votre avenir financier.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7314014538091101522" datatype="html">
-        <source>Ghostfolio is an open source software (OSS), providing a cost-effective alternative to <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> making it particularly suitable for individuals on a tight budget, such as those <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>pursuing Financial Independence, Retire Early (FIRE)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. By leveraging the collective efforts of a community of developers and personal finance enthusiasts, Ghostfolio continuously enhances its capabilities, security, and user experience.</source>
-        <target state="translated">Ghostfolio est un logiciel open source (OSS), offrant une alternative économique, <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> le rendant particulièrement adaptée aux personnes disposant d’un budget serré, telles que celles qui <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>cherchent à atteindre le mouvement Financial Independence, Retire Early (FIRE)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. En s’appuyant sur les efforts collectifs d’une communauté de développeurs et de passionnés de finances personnelles, Ghostfolio améliore continuellement ses fonctionnalités, sa sécurité et son expérience utilisateur.</target>
+        <source>Ghostfolio is an open source software (OSS), providing a cost-effective alternative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> making it particularly suitable for individuals on a tight budget, such as those <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>pursuing Financial Independence, Retire Early (FIRE)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. By leveraging the collective efforts of a community of developers and personal finance enthusiasts, Ghostfolio continuously enhances its capabilities, security, and user experience.</source>
+        <target state="new">Ghostfolio est un logiciel open source (OSS), offrant une alternative économique, <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> le rendant particulièrement adaptée aux personnes disposant d’un budget serré, telles que celles qui <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>cherchent à atteindre le mouvement Financial Independence, Retire Early (FIRE)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. En s’appuyant sur les efforts collectifs d’une communauté de développeurs et de passionnés de finances personnelles, Ghostfolio améliore continuellement ses fonctionnalités, sa sécurité et son expérience utilisateur.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2315631726271602419" datatype="html">
-        <source>Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
-        <target state="translated">Regardons plus en détails ce que proposent Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> via la table de comparaison ci-dessous pour comprendre comment Ghostfolio se positionne par rapport à <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>. Nous examinerons divers aspects tels que les fonctionnalités, la confidentialité des données, le prix, etc., afin de vous permettre de faire un choix éclairé en fonction de vos besoins personnels.</target>
+        <source>Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
+        <target state="new">Regardons plus en détails ce que proposent Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> via la table de comparaison ci-dessous pour comprendre comment Ghostfolio se positionne par rapport à <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>. Nous examinerons divers aspects tels que les fonctionnalités, la confidentialité des données, le prix, etc., afin de vous permettre de faire un choix éclairé en fonction de vos besoins personnels.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">44</context>
@@ -5508,8 +5508,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2192861316878557060" datatype="html">
-        <source>Please note that the information provided in the Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table is based on our independent research and analysis. This website is not affiliated with <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> or any other product mentioned in the comparison. As the landscape of personal finance tools evolves, it is essential to verify any specific details or changes directly from the respective product page. Data needs a refresh? Help us maintain accurate data on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
-        <target state="translated">Veuillez noter que les informations fournies dans le Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> via la table de comparaison se basent de nos recherches et analyses indépendantes. Ce site n’est pas affilié à <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> ou tout autre produit mentionné dans la comparaison. Le paysage des outils de finances personnelles évoluant, il est essentiel de vérifier tout détail ou changement spécifique directement sur la page du produit concerné. Certaines données doivent être mises à jour ? Aidez-nous à maintenir les données exactes sur <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <source>Please note that the information provided in the Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table is based on our independent research and analysis. This website is not affiliated with <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> or any other product mentioned in the comparison. As the landscape of personal finance tools evolves, it is essential to verify any specific details or changes directly from the respective product page. Data needs a refresh? Help us maintain accurate data on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <target state="new">Veuillez noter que les informations fournies dans le Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> via la table de comparaison se basent de nos recherches et analyses indépendantes. Ce site n’est pas affilié à <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> ou tout autre produit mentionné dans la comparaison. Le paysage des outils de finances personnelles évoluant, il est essentiel de vérifier tout détail ou changement spécifique directement sur la page du produit concerné. Certaines données doivent être mises à jour ? Aidez-nous à maintenir les données exactes sur <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">312</context>
@@ -5528,7 +5528,7 @@
         <target state="translated">Mondial</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -5832,8 +5832,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="4909535316439940790" datatype="html">
-        <source>Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table</source>
-        <target state="translated">Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> tableau comparatif</target>
+        <source>Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table</source>
+        <target state="new">Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> tableau comparatif</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">55</context>
@@ -6068,7 +6068,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="858192247408211331" datatype="html">
@@ -6537,7 +6537,7 @@
         <target state="translated">Alternative</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2818570902941667477" datatype="html">
@@ -6545,7 +6545,7 @@
         <target state="translated">App</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="647668541461749965" datatype="html">
@@ -6553,7 +6553,7 @@
         <target state="translated">Budget</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1274247756500564795" datatype="html">
@@ -6613,7 +6613,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1284643802050750978" datatype="html">
@@ -6629,7 +6629,7 @@
         <target state="translated">Family Office</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3178143531053451735" datatype="html">
@@ -6637,7 +6637,7 @@
         <target state="translated">Investisseur</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6984983607470794786" datatype="html">
@@ -6649,7 +6649,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4852914940817689575" datatype="html">
@@ -6661,7 +6661,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8440128775129354214" datatype="html">
@@ -6669,7 +6669,7 @@
         <target state="translated">Confidentialité</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5093701986340458388" datatype="html">
@@ -6677,7 +6677,7 @@
         <target state="translated">Logiciels</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">107</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2932360890997178383" datatype="html">
@@ -6685,7 +6685,7 @@
         <target state="translated">Outils</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2657610384052021428" datatype="html">
@@ -6693,7 +6693,7 @@
         <target state="translated">Expérience Utilisateur</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1099393285611854080" datatype="html">
@@ -6701,7 +6701,7 @@
         <target state="translated">Patrimoine</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3311387105238837884" datatype="html">
@@ -6709,7 +6709,7 @@
         <target state="translated">Gestion de Patrimoine</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3477953895055172777" datatype="html">
@@ -6865,7 +6865,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">233</context>
+          <context context-type="linenumber">234</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -7013,8 +7013,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2137905359212133111" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> est un logiciel open source</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is Open Source Software</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> est un logiciel open source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">139</context>
@@ -7025,8 +7025,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="1056127468546316650" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is not Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> n’est pas un logiciel open source</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is not Open Source Software</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> n’est pas un logiciel open source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">146</context>
@@ -7061,8 +7061,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be self-hosted</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> peut être auto-hébergé</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> can be self-hosted</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> peut être auto-hébergé</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">178</context>
@@ -7081,8 +7081,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="6979762073619328236" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be self-hosted</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ne peut pas être auto-hébergé</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> cannot be self-hosted</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ne peut pas être auto-hébergé</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">185</context>
@@ -7093,8 +7093,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="7900108539442184659" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> can be used anonymously</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> peut être utilisé de manière anonyme</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> can be used anonymously</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> peut être utilisé de manière anonyme</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">217</context>
@@ -7105,8 +7105,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="4605555143173907624" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> cannot be used anonymously</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ne peut pas être utilisé de manière anonyme</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> cannot be used anonymously</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ne peut pas être utilisé de manière anonyme</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">224</context>
@@ -7117,8 +7117,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="7305671611654052345" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> offers a free plan</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> propose un plan gratuit</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> offers a free plan</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> propose un plan gratuit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">256</context>
@@ -7129,8 +7129,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3528100267920632809" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> does not offer a free plan</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ne propose pas de plan gratuit</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> does not offer a free plan</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> ne propose pas de plan gratuit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">263</context>
