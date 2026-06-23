@@ -1,0 +1,117 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Budget</h1>
+
+      <div class="align-items-center d-flex flex-wrap mb-3">
+        <label class="mb-2 mr-2" for="budget-month" i18n>Month</label>
+        <input
+          class="budget-month-input form-control mb-2"
+          id="budget-month"
+          type="month"
+          [formControl]="monthControl"
+        />
+      </div>
+
+      <div class="budget-summary mb-3">
+        <div>
+          <div class="text-muted" i18n>Budgeted</div>
+          <gf-value
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="totalBudgeted"
+          />
+        </div>
+        <div>
+          <div class="text-muted" i18n>Spent</div>
+          <gf-value
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="totalSpent"
+          />
+        </div>
+        <div>
+          <div class="text-muted" i18n>Remaining</div>
+          <gf-value
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="totalRemaining"
+          />
+        </div>
+      </div>
+
+      @if (dataSource.data.length > 0) {
+        <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="category">
+            <th *matHeaderCellDef i18n mat-header-cell>Category</th>
+            <td *matCellDef="let budget" mat-cell>
+              {{ budget.category?.name ?? budget.categoryId }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+              Budget
+            </th>
+            <td *matCellDef="let budget" class="text-right" mat-cell>
+              <gf-value
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="budget.amount"
+              />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="spent">
+            <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+              Spent
+            </th>
+            <td *matCellDef="let budget" class="text-right" mat-cell>
+              <gf-value
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="budget.spent"
+              />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="remaining">
+            <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+              Remaining
+            </th>
+            <td *matCellDef="let budget" class="text-right" mat-cell>
+              <gf-value
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="budget.remaining"
+              />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="progress">
+            <th *matHeaderCellDef i18n mat-header-cell>Progress</th>
+            <td *matCellDef="let budget" mat-cell>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="getProgress(budget)"
+              />
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+        </table>
+      } @else if (!isLoading) {
+        <div class="py-5 text-center text-muted" i18n>
+          No budgets have been created for this month.
+        </div>
+      }
+    </div>
+  </div>
+</div>
