@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the disabled state of the delete action in the asset profiles actions menu of the historical market data table in the admin control panel
+- Fixed the persistence of an empty `locale` string in the scraper configuration
 
 ## 3.14.0 - 2026-06-22
 
