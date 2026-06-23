@@ -592,18 +592,19 @@ export class ImportService {
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
-      const valueInBaseCurrency = this.exchangeRateDataService.toCurrencyAtDate(
-        value,
-        currency ?? assetProfile.currency,
-        userCurrency,
-        date
-      );
+      const valueInBaseCurrency =
+        (await this.exchangeRateDataService.toCurrencyAtDate(
+          value,
+          currency ?? assetProfile.currency,
+          userCurrency,
+          date
+        )) ?? 0;
 
       activities.push({
         ...order,
         error,
         value,
-        valueInBaseCurrency: await valueInBaseCurrency,
+        valueInBaseCurrency,
         // @ts-ignore
         SymbolProfile: assetProfile
       });
