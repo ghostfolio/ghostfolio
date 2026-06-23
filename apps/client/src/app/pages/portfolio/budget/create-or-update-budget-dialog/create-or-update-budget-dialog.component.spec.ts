@@ -5,7 +5,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 
-import { GfCreateOrUpdateBudgetDialogComponent } from './create-or-update-budget-dialog.component';
+import {
+  CreateOrUpdateBudgetDialogData,
+  GfCreateOrUpdateBudgetDialogComponent
+} from './create-or-update-budget-dialog.component';
 
 describe('GfCreateOrUpdateBudgetDialogComponent', () => {
   let component: GfCreateOrUpdateBudgetDialogComponent;
@@ -17,7 +20,7 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
   >;
   let fixture: ComponentFixture<GfCreateOrUpdateBudgetDialogComponent>;
 
-  beforeEach(async () => {
+  const setup = async (dialogData: CreateOrUpdateBudgetDialogData) => {
     dataService = {
       createBudget: jest.fn().mockReturnValue(
         of({
@@ -57,10 +60,7 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: {
-            budget: undefined,
-            month: '2026-06'
-          }
+          useValue: dialogData
         }
       ]
     }).compileComponents();
@@ -68,9 +68,15 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
     fixture = TestBed.createComponent(GfCreateOrUpdateBudgetDialogComponent);
     component = fixture.componentInstance;
     fixture.autoDetectChanges();
-  });
+  };
 
   it('creates a budget and closes with refresh', async () => {
+    await setup({
+      budget: undefined,
+      currency: 'USD',
+      month: '2026-06'
+    });
+
     component.budgetForm.setValue({
       amount: 500,
       categoryId: 'food',
@@ -83,7 +89,51 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
     expect(dataService.createBudget).toHaveBeenCalledWith({
       amount: 500,
       categoryId: 'food',
+      currency: 'USD',
       month: '2026-06'
+    });
+    expect(dialogRef.close).toHaveBeenCalledWith({ refresh: true });
+  });
+
+  it('updates a budget and closes with refresh', async () => {
+    await setup({
+      budget: {
+        amount: 500,
+        category: {
+          id: 'food',
+          name: 'Food'
+        },
+        categoryId: 'food',
+        createdAt: new Date('2026-06-01'),
+        currency: 'USD',
+        id: 'budget-1',
+        month: '2026-06',
+        remaining: 500,
+        spent: 0,
+        updatedAt: new Date('2026-06-01')
+      },
+      currency: 'USD',
+      month: '2026-06'
+    });
+
+    component.budgetForm.setValue({
+      amount: 650,
+      categoryId: 'food',
+      month: '2026-06'
+    });
+
+    component.onSubmit();
+    await fixture.whenStable();
+
+    expect(dataService.updateBudget).toHaveBeenCalledWith({
+      budget: {
+        amount: 650,
+        categoryId: 'food',
+        currency: 'USD',
+        id: 'budget-1',
+        month: '2026-06'
+      },
+      id: 'budget-1'
     });
     expect(dialogRef.close).toHaveBeenCalledWith({ refresh: true });
   });

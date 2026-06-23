@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 
 export interface CreateOrUpdateBudgetDialogData {
   budget?: BudgetResponse;
+  currency: string;
   month: string;
 }
 
@@ -65,10 +66,16 @@ export class GfCreateOrUpdateBudgetDialogComponent {
       return;
     }
 
-    const budget = this.budgetForm.getRawValue();
+    const budget = {
+      ...this.budgetForm.getRawValue(),
+      currency: this.data.currency
+    };
 
     if (this.data.budget) {
-      this.updateBudget(budget);
+      this.updateBudget({
+        ...budget,
+        id: this.data.budget.id
+      });
     } else {
       this.createBudget(budget);
     }

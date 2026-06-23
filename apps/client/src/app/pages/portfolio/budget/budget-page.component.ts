@@ -108,6 +108,7 @@ export class GfBudgetPageComponent implements OnInit {
 
   public onCreateBudget() {
     this.openBudgetDialog({
+      currency: this.getCurrency(),
       month: this.monthControl.value
     });
   }
@@ -124,11 +125,20 @@ export class GfBudgetPageComponent implements OnInit {
   public onUpdateBudget(budget: BudgetResponse) {
     this.openBudgetDialog({
       budget,
+      currency: this.getCurrency(budget.currency),
       month: this.monthControl.value
     });
   }
 
-  private openBudgetDialog(data: { budget?: BudgetResponse; month: string }) {
+  private getCurrency(fallback = 'USD') {
+    return this.user?.settings?.baseCurrency ?? fallback;
+  }
+
+  private openBudgetDialog(data: {
+    budget?: BudgetResponse;
+    currency: string;
+    month: string;
+  }) {
     this.dialog
       .open(GfCreateOrUpdateBudgetDialogComponent, {
         data,

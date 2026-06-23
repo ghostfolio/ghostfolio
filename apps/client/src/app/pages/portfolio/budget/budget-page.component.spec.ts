@@ -136,6 +136,13 @@ describe('GfBudgetPageComponent', () => {
     await fixture.whenStable();
 
     expect(dialog.open).toHaveBeenCalled();
+    expect(dialog.open).toHaveBeenCalledWith(expect.any(Function), {
+      data: {
+        currency: 'USD',
+        month: fixture.componentInstance.monthControl.value
+      },
+      width: '32rem'
+    });
     expect(dataService.fetchBudgets).toHaveBeenCalledTimes(2);
   });
 
