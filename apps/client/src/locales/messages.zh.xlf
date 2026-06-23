@@ -4778,7 +4778,7 @@
       </trans-unit>
       <trans-unit id="5100352603258735382" datatype="html">
         <source>Are you looking for an open source alternative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> is a powerful portfolio management tool that provides individuals with a comprehensive platform to track, analyze, and optimize their investments. Whether you are an experienced investor or just starting out, Ghostfolio offers an intuitive user interface and a <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>wide range of functionalities<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> to help you make informed decisions and take control of your financial future.</source>
-        <target state="new">您是否正在寻找开源替代方案<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>？<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>幽灵作品集<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>是一个强大的投资组合管理工具，为个人提供一个全面的平台来跟踪、分析和优化他们的投资。无论您是经验丰富的投资者还是刚刚起步的投资者，Ghostfolio 都提供直观的用户界面和<x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>广泛的功能<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>帮助您做出明智的决定并掌控您的财务未来。</target>
+        <target state="translated">您是否正在寻找开源替代方案<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>？<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>幽灵作品集<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>是一个强大的投资组合管理工具，为个人提供一个全面的平台来跟踪、分析和优化他们的投资。无论您是经验丰富的投资者还是刚刚起步的投资者，Ghostfolio 都提供直观的用户界面和<x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>广泛的功能<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>帮助您做出明智的决定并掌控您的财务未来。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">19</context>
@@ -4786,7 +4786,7 @@
       </trans-unit>
       <trans-unit id="7314014538091101522" datatype="html">
         <source>Ghostfolio is an open source software (OSS), providing a cost-effective alternative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> making it particularly suitable for individuals on a tight budget, such as those <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>pursuing Financial Independence, Retire Early (FIRE)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. By leveraging the collective efforts of a community of developers and personal finance enthusiasts, Ghostfolio continuously enhances its capabilities, security, and user experience.</source>
-        <target state="new">Ghostfolio 是一款开源软件 (OSS)，提供了一种经济高效的替代方案<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>使其特别适合预算紧张的个人，例如<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>追求财务独立，提前退休（FIRE）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> 。通过利用开发者社区和个人理财爱好者的集体努力，Ghostfolio 不断增强其功能、安全性和用户体验。</target>
+        <target state="translated">Ghostfolio 是一款开源软件 (OSS)，提供了一种经济高效的替代方案<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>使其特别适合预算紧张的个人，例如<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2023/07/exploring-the-path-to-fire&quot; &gt;"/>追求财务独立，提前退休（FIRE）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> 。通过利用开发者社区和个人理财爱好者的集体努力，Ghostfolio 不断增强其功能、安全性和用户体验。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">33</context>
@@ -4794,7 +4794,7 @@
       </trans-unit>
       <trans-unit id="2315631726271602419" datatype="html">
         <source>Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
-        <target state="new">让我们更深入地了解 Ghostfolio 与<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>下面的比较表可帮助您全面了解 Ghostfolio 相对于其他产品的定位<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>。我们将探讨功能、数据隐私、定价等各个方面，让您根据个人需求做出明智的选择。</target>
+        <target state="translated">让我们更深入地了解 Ghostfolio 与<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>下面的比较表可帮助您全面了解 Ghostfolio 相对于其他产品的定位<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>。我们将探讨功能、数据隐私、定价等各个方面，让您根据个人需求做出明智的选择。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">44</context>
@@ -4814,7 +4814,7 @@
       </trans-unit>
       <trans-unit id="4909535316439940790" datatype="html">
         <source>Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table</source>
-        <target state="new">Ghostfolio vs<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>比较表</target>
+        <target state="translated">Ghostfolio vs<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>比较表</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">55</context>
@@ -4978,7 +4978,7 @@
       </trans-unit>
       <trans-unit id="2192861316878557060" datatype="html">
         <source>Please note that the information provided in the Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table is based on our independent research and analysis. This website is not affiliated with <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> or any other product mentioned in the comparison. As the landscape of personal finance tools evolves, it is essential to verify any specific details or changes directly from the respective product page. Data needs a refresh? Help us maintain accurate data on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
-        <target state="new">请注意，在 Ghostfolio 与<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>的比较表中提供的信息基于我们的独立研究和分析。该网站不隶属于<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>或比较中提到的任何其他产品。随着个人理财工具格局的不断发展，直接从相应的产品页面验证任何具体的细节或变化至关重要。数据需要刷新吗？帮助我们在<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 上维护准确的数据。</target>
+        <target state="translated">请注意，在 Ghostfolio 与<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>的比较表中提供的信息基于我们的独立研究和分析。该网站不隶属于<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>或比较中提到的任何其他产品。随着个人理财工具格局的不断发展，直接从相应的产品页面验证任何具体的细节或变化至关重要。数据需要刷新吗？帮助我们在<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 上维护准确的数据。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">312</context>
@@ -7015,7 +7015,7 @@
       </trans-unit>
       <trans-unit id="2137905359212133111" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is Open Source Software</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 是开源软件</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 是开源软件</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">139</context>
@@ -7027,7 +7027,7 @@
       </trans-unit>
       <trans-unit id="1056127468546316650" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is not Open Source Software</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 不是开源软件</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 不是开源软件</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">146</context>
@@ -7063,7 +7063,7 @@
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> can be self-hosted</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 可以自托管</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 可以自托管</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">178</context>
@@ -7083,7 +7083,7 @@
       </trans-unit>
       <trans-unit id="6979762073619328236" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> cannot be self-hosted</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 无法自托管</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 无法自托管</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">185</context>
@@ -7095,7 +7095,7 @@
       </trans-unit>
       <trans-unit id="7900108539442184659" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> can be used anonymously</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 可以匿名使用</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 可以匿名使用</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">217</context>
@@ -7107,7 +7107,7 @@
       </trans-unit>
       <trans-unit id="4605555143173907624" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> cannot be used anonymously</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 无法匿名使用</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 无法匿名使用</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">224</context>
@@ -7119,7 +7119,7 @@
       </trans-unit>
       <trans-unit id="7305671611654052345" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> offers a free plan</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 提供免费计划</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 提供免费计划</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">256</context>
@@ -7131,7 +7131,7 @@
       </trans-unit>
       <trans-unit id="3528100267920632809" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> does not offer a free plan</source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> 不提供免费计划</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> 不提供免费计划</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">263</context>
