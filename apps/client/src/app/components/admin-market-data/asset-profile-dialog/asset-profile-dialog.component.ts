@@ -550,7 +550,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ) as Record<string, string>,
         locale:
           this.assetProfileForm.controls.scraperConfiguration.controls.locale
-            ?.value ?? undefined,
+            ?.value || undefined,
         mode:
           this.assetProfileForm.controls.scraperConfiguration.controls.mode
             ?.value ?? undefined,
