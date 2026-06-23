@@ -6,24 +6,38 @@ import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   DataSource,
   MarketData,
   MarketDataState,
   Prisma
 } from '@prisma/client';
+import { uniqBy } from 'lodash';
+
+import { MarketDataUpdatedEvent } from '../../events/market-data-updated.event';
 
 @Injectable()
 export class MarketDataService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly eventEmitter: EventEmitter2,
+    private readonly prismaService: PrismaService
+  ) {}
 
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.prismaService.marketData.deleteMany({
+    const result = await this.prismaService.marketData.deleteMany({
       where: {
         dataSource,
         symbol
       }
     });
+
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent({ dataSource, symbol })
+    );
+
+    return result;
   }
 
   public async get({
@@ -198,13 +212,18 @@ export class MarketDataService {
         });
       }
     });
+
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent({ dataSource, symbol })
+    );
   }
 
   public async updateAssetProfileIdentifier(
     oldAssetProfileIdentifier: AssetProfileIdentifier,
     newAssetProfileIdentifier: AssetProfileIdentifier
   ) {
-    return this.prismaService.marketData.updateMany({
+    const result = await this.prismaService.marketData.updateMany({
       data: {
         dataSource: newAssetProfileIdentifier.dataSource,
         symbol: newAssetProfileIdentifier.symbol
@@ -214,6 +233,17 @@ export class MarketDataService {
         symbol: oldAssetProfileIdentifier.symbol
       }
     });
+
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent(oldAssetProfileIdentifier)
+    );
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent(newAssetProfileIdentifier)
+    );
+
+    return result;
   }
 
   public async updateMarketData(params: {
@@ -224,7 +254,7 @@ export class MarketDataService {
   }): Promise<MarketData> {
     const { data, where } = params;
 
-    return this.prismaService.marketData.upsert({
+    const result = await this.prismaService.marketData.upsert({
       where,
       create: {
         dataSource: where.dataSource_date_symbol.dataSource,
@@ -235,6 +265,16 @@ export class MarketDataService {
       },
       update: { marketPrice: data.marketPrice, state: data.state }
     });
+
+    this.eventEmitter.emit(
+      MarketDataUpdatedEvent.getName(),
+      new MarketDataUpdatedEvent({
+        dataSource: where.dataSource_date_symbol.dataSource,
+        symbol: where.dataSource_date_symbol.symbol
+      })
+    );
+
+    return result;
   }
 
   /**
@@ -271,6 +311,23 @@ export class MarketDataService {
       }
     );
 
-    return this.prismaService.$transaction(upsertPromises);
+    const result = await this.prismaService.$transaction(upsertPromises);
+
+    const uniquePairs = uniqBy(
+      data.map((d) => ({
+        dataSource: d.dataSource as DataSource,
+        symbol: d.symbol as string
+      })),
+      (d) => `${d.dataSource}:${d.symbol}`
+    );
+
+    for (const pair of uniquePairs) {
+      this.eventEmitter.emit(
+        MarketDataUpdatedEvent.getName(),
+        new MarketDataUpdatedEvent(pair)
+      );
+    }
+
+    return result;
   }
 }

@@ -30,6 +30,8 @@ import ms from 'ms';
 
 import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interface';
 
+const EPOCH_OFFSET_DAYS = 25569;
+
 @Injectable()
 export class ExchangeRateDataService {
   private readonly logger = new Logger(ExchangeRateDataService.name);
@@ -38,6 +40,7 @@ export class ExchangeRateDataService {
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
+  private exchangeRateCache = new Map<string, Promise<Float64Array>>();
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -301,56 +304,56 @@ export class ExchangeRateDataService {
     } else if (derivedCurrencyFactor) {
       factor = derivedCurrencyFactor;
     } else {
-      const dataSource =
-        this.dataProviderService.getDataSourceForExchangeRates();
-      const symbol = `${aFromCurrency}${aToCurrency}`;
+      const marketPrice = await this.getRateFromCache(
+        `${aFromCurrency}${aToCurrency}`,
+        aDate
+      );
 
-      const marketData = await this.marketDataService.get({
-        dataSource,
-        symbol,
-        date: aDate
-      });
-
-      if (marketData?.marketPrice) {
-        factor = marketData?.marketPrice;
+      if (marketPrice !== undefined) {
+        factor = marketPrice;
       } else {
-        // Calculate indirectly via base currency
-
-        let marketPriceBaseCurrencyFromCurrency: number;
-        let marketPriceBaseCurrencyToCurrency: number;
-
         try {
-          if (aFromCurrency === DEFAULT_CURRENCY) {
-            marketPriceBaseCurrencyFromCurrency = 1;
-          } else {
-            marketPriceBaseCurrencyFromCurrency = (
-              await this.marketDataService.get({
-                dataSource,
-                date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
-              })
-            )?.marketPrice;
-          }
-        } catch {}
+          let baseFromPrice: number | undefined =
+            aFromCurrency === DEFAULT_CURRENCY ? 1 : undefined;
+          let baseToPrice: number | undefined =
+            aToCurrency === DEFAULT_CURRENCY ? 1 : undefined;
 
-        try {
-          if (aToCurrency === DEFAULT_CURRENCY) {
-            marketPriceBaseCurrencyToCurrency = 1;
-          } else {
-            marketPriceBaseCurrencyToCurrency = (
-              await this.marketDataService.get({
-                dataSource,
-                date: aDate,
-                symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
-              })
-            )?.marketPrice;
-          }
-        } catch {}
+          if (aFromCurrency !== DEFAULT_CURRENCY) {
+            baseFromPrice = await this.getRateFromCache(
+              `${DEFAULT_CURRENCY}${aFromCurrency}`,
+              aDate
+            );
 
-        // Calculate the opposite direction
-        factor =
-          (1 / marketPriceBaseCurrencyFromCurrency) *
-          marketPriceBaseCurrencyToCurrency;
+            if (baseFromPrice === undefined) {
+              const crossPrice = await this.getRateFromCache(
+                `${aFromCurrency}${DEFAULT_CURRENCY}`,
+                aDate
+              );
+              if (crossPrice !== undefined) {
+                baseFromPrice = 1 / crossPrice;
+              }
+            }
+          }
+
+          if (aToCurrency !== DEFAULT_CURRENCY) {
+            baseToPrice = await this.getRateFromCache(
+              `${DEFAULT_CURRENCY}${aToCurrency}`,
+              aDate
+            );
+
+            if (baseToPrice === undefined) {
+              const crossPrice = await this.getRateFromCache(
+                `${aToCurrency}${DEFAULT_CURRENCY}`,
+                aDate
+              );
+              if (crossPrice !== undefined) {
+                baseToPrice = 1 / crossPrice;
+              }
+            }
+          }
+
+          factor = (1 / baseFromPrice) * baseToPrice;
+        } catch {}
       }
     }
 
@@ -364,6 +367,77 @@ export class ExchangeRateDataService {
         DATE_FORMAT
       )}`
     );
+
+    return undefined;
+  }
+
+  public invalidateCache(aSymbol: string) {
+    this.exchangeRateCache.delete(aSymbol);
+  }
+
+  private getDaysSinceEpoch(aDate: Date) {
+    return Math.floor(aDate.getTime() / ms('1d')) + EPOCH_OFFSET_DAYS;
+  }
+
+  private async loadCache(aSymbol: string): Promise<Float64Array> {
+    const dataSource = this.dataProviderService.getDataSourceForExchangeRates();
+    const marketData = await this.prismaService.marketData.findMany({
+      where: { dataSource, symbol: aSymbol },
+      orderBy: { date: 'asc' },
+      select: { date: true, marketPrice: true }
+    });
+
+    const todayDays = this.getDaysSinceEpoch(new Date());
+    const maxDataDays =
+      marketData.length > 0
+        ? this.getDaysSinceEpoch(marketData[marketData.length - 1].date)
+        : 0;
+
+    const array = new Float64Array(Math.max(todayDays, maxDataDays) + 1);
+
+    if (marketData.length > 0) {
+      let lastRate = marketData[0].marketPrice;
+      let currentIndex = this.getDaysSinceEpoch(marketData[0].date);
+
+      for (const data of marketData) {
+        const dataIndex = this.getDaysSinceEpoch(data.date);
+        while (currentIndex < dataIndex && currentIndex <= todayDays) {
+          array[currentIndex++] = lastRate;
+        }
+        lastRate = data.marketPrice;
+        array[dataIndex] = lastRate;
+        currentIndex = dataIndex + 1;
+      }
+
+      while (currentIndex <= todayDays) {
+        array[currentIndex++] = lastRate;
+      }
+    }
+
+    return array;
+  }
+
+  private async getRateFromCache(
+    aSymbol: string,
+    aDate: Date
+  ): Promise<number | undefined> {
+    let cachePromise = this.exchangeRateCache.get(aSymbol);
+
+    if (!cachePromise) {
+      cachePromise = this.loadCache(aSymbol).catch((error) => {
+        this.exchangeRateCache.delete(aSymbol);
+        throw error;
+      });
+      this.exchangeRateCache.set(aSymbol, cachePromise);
+    }
+
+    const cache = await cachePromise;
+    const days = Math.min(this.getDaysSinceEpoch(aDate), cache.length - 1);
+
+    if (days >= 0) {
+      const rate = cache[days];
+      return rate === 0 ? undefined : rate;
+    }
 
     return undefined;
   }
