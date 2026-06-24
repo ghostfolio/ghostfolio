@@ -26,6 +26,10 @@
         "baseHref": "/it/",
         "translation": "apps/client/src/locales/messages.it.xlf"
       },
+      "ja": {
+        "baseHref": "/ja/",
+        "translation": "apps/client/src/locales/messages.ja.xlf"
+      },
       "ko": {
         "baseHref": "/ko/",
         "translation": "apps/client/src/locales/messages.ko.xlf"

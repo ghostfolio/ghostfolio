@@ -91,6 +91,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'es',
     'fr',
     'it',
+    'ja',
     'ko',
     'nl',
     'pl',
