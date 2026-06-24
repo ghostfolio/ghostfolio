@@ -136,7 +136,8 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    symbols
+    symbols,
+    useCache = true
   }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
     const response: { [symbol: string]: DataProviderResponse } = {};
 
@@ -164,32 +165,32 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      const symbolProfilesWithScraperConfigurationAndInstantMode =
-        symbolProfiles.filter(({ scraperConfiguration }) => {
+      const symbolProfilesToScrape = symbolProfiles.filter(
+        ({ scraperConfiguration }) => {
           return (
-            scraperConfiguration?.mode === 'instant' &&
+            (scraperConfiguration?.mode === 'instant' || !useCache) &&
             scraperConfiguration?.selector &&
             scraperConfiguration?.url
           );
-        });
+        }
+      );
 
-      const scraperResultPromises =
-        symbolProfilesWithScraperConfigurationAndInstantMode.map(
-          async ({ scraperConfiguration, symbol }) => {
-            try {
-              const marketPrice = await this.scrape({
-                scraperConfiguration,
-                symbol
-              });
-              return { marketPrice, symbol };
-            } catch (error) {
-              this.logger.error(
-                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
-              );
-              return { symbol, marketPrice: undefined };
-            }
+      const scraperResultPromises = symbolProfilesToScrape.map(
+        async ({ scraperConfiguration, symbol }) => {
+          try {
+            const marketPrice = await this.scrape({
+              scraperConfiguration,
+              symbol
+            });
+            return { marketPrice, symbol };
+          } catch (error) {
+            this.logger.error(
+              `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
+            );
+            return { symbol, marketPrice: undefined };
           }
-        );
+        }
+      );
 
       // Wait for all scraping requests to complete concurrently
       const scraperResults = await Promise.all(scraperResultPromises);
