@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the throughput of the market data gathering queue by applying the rate limit per data source
 - Decreased the rate limiter duration of the market data gathering queue jobs from 4 to 3 seconds
 
+### Changed
+
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.2.2` to `13.3`
+
 ### Fixed
 
 - Fixed an issue with hourly market data updates not refreshing prices for asset profiles with `MANUAL` data source
