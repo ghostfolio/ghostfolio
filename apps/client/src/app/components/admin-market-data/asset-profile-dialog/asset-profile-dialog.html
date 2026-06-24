@@ -165,7 +165,11 @@
               </div>
             } @else {
               <div class="col-6 mb-3">
-                <gf-value i18n size="medium" [value]="assetProfile?.symbol"
+                <gf-value
+                  i18n
+                  size="medium"
+                  [enableCopyToClipboardButton]="true"
+                  [value]="assetProfile?.symbol"
                   >Symbol</gf-value
                 >
               </div>
@@ -202,6 +206,7 @@
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"
+                [enableCopyToClipboardButton]="true"
                 [hidden]="!assetProfile?.isin"
                 [value]="assetProfile?.isin"
                 >ISIN</gf-value
