@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the ISIN number
 - Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the symbol
 
+### Changed
+
+- Improved the throughput of the market data gathering queue by applying the rate limit per data source
+
 ### Fixed
 
 - Fixed an issue with hourly market data updates not refreshing prices for asset profiles with `MANUAL` data source
