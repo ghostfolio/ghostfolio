@@ -173,7 +173,7 @@
     "@storybook/addon-themes": "10.1.10",
     "@storybook/angular": "10.1.10",
     "@trivago/prettier-plugin-sort-imports": "6.0.2",
-    "@types/big.js": "6.2.2",
+    "@types/big.js": "7.0.0",
     "@types/cookie-parser": "1.4.10",
     "@types/fast-redact": "3.0.4",
     "@types/google-spreadsheet": "3.1.5",
