@@ -96,3 +96,9 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 </table>
+
+<mat-paginator
+  [class.d-none]="dataSource.data.length <= pageSize"
+  [hidePageSize]="true"
+  [pageSize]="pageSize"
+/>
