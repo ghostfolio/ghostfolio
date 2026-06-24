@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added pagination to the platform management of the admin control panel
+- Added pagination to the tag management of the admin control panel
+
 ### Fixed
 
 - Fixed an issue with hourly market data updates not refreshing prices for asset profiles with `MANUAL` data source
