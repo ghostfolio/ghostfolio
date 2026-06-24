@@ -75,6 +75,7 @@ export interface GetHistoricalParams {
 export interface GetQuotesParams {
   requestTimeout?: number;
   symbols: string[];
+  useCache?: boolean;
 }
 
 export interface GetSearchParams {

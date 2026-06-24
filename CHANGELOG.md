@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with hourly market data updates not refreshing prices for asset profiles with `MANUAL` data source
 - Fixed an issue with the log context formatting in the performance logging service
 
 ## 3.15.1 - 2026-06-23
