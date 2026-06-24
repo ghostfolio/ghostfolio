@@ -957,7 +957,6 @@ export class PortfolioService {
       marketPrice,
       marketPriceMax,
       marketPriceMin,
-      SymbolProfile,
       tags,
       assetProfile: {
         assetClass: SymbolProfile.assetClass,
