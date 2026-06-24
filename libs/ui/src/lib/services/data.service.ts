@@ -301,7 +301,7 @@ export class DataService {
 
   public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.get<ImportResponse>(
-      `/api/v1/import/dividends/${dataSource}/${symbol}`
+      `/api/v1/import/dividends/${dataSource}/${encodeURIComponent(symbol)}`
     );
   }
 
@@ -313,7 +313,7 @@ export class DataService {
     symbol: string;
   }) {
     return this.http.get<DataProviderHistoricalResponse>(
-      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT, { in: utc })}`
+      `/api/v1/exchange-rate/${encodeURIComponent(symbol)}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
 
@@ -341,7 +341,7 @@ export class DataService {
 
   public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<Partial<SymbolProfile>>(
-      `/api/v1/benchmarks/${dataSource}/${symbol}`
+      `/api/v1/benchmarks/${dataSource}/${encodeURIComponent(symbol)}`
     );
   }
 
@@ -358,7 +358,9 @@ export class DataService {
   }
 
   public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.http.delete<void>(`/api/v1/watchlist/${dataSource}/${symbol}`);
+    return this.http.delete<void>(
+      `/api/v1/watchlist/${dataSource}/${encodeURIComponent(symbol)}`
+    );
   }
 
   public fetchAccesses() {
@@ -369,14 +371,16 @@ export class DataService {
     dataSource,
     symbol
   }: AssetProfileIdentifier): Observable<AssetResponse> {
-    return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
-      map((data) => {
-        for (const item of data.marketData) {
-          item.date = parseISO(item.date);
-        }
-        return data;
-      })
-    );
+    return this.http
+      .get<any>(`/api/v1/asset/${dataSource}/${encodeURIComponent(symbol)}`)
+      .pipe(
+        map((data) => {
+          for (const item of data.marketData) {
+            item.date = parseISO(item.date);
+          }
+          return data;
+        })
+      );
   }
 
   public fetchAssetProfiles({
@@ -437,7 +441,7 @@ export class DataService {
     }
 
     return this.http.get<BenchmarkMarketDataDetailsResponse>(
-      `/api/v1/benchmarks/${dataSource}/${symbol}/${format(startDate, DATE_FORMAT, { in: utc })}`,
+      `/api/v1/benchmarks/${dataSource}/${encodeURIComponent(symbol)}/${format(startDate, DATE_FORMAT, { in: utc })}`,
       { params }
     );
   }
@@ -486,7 +490,7 @@ export class DataService {
   > {
     return this.http
       .get<PortfolioHoldingResponse>(
-        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
+        `/api/v1/portfolio/holding/${dataSource}/${encodeURIComponent(symbol)}`
       )
       .pipe(
         map((response) => {
@@ -540,7 +544,9 @@ export class DataService {
     symbol
   }: AssetProfileIdentifier): Observable<AssetProfileResponse> {
     return this.http
-      .get<any>(`/api/v1/asset-profiles/${dataSource}/${symbol}`)
+      .get<any>(
+        `/api/v1/asset-profiles/${dataSource}/${encodeURIComponent(symbol)}`
+      )
       .pipe(
         map((data) => {
           for (const item of data.marketData) {
@@ -778,9 +784,12 @@ export class DataService {
       params = params.append('includeHistoricalData', includeHistoricalData);
     }
 
-    return this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`, {
-      params
-    });
+    return this.http.get<SymbolItem>(
+      `/api/v1/symbol/${dataSource}/${encodeURIComponent(symbol)}`,
+      {
+        params
+      }
+    );
   }
 
   public fetchSymbols({
@@ -851,7 +860,7 @@ export class DataService {
     marketData,
     symbol
   }: { marketData: UpdateBulkMarketDataDto } & AssetProfileIdentifier) {
-    const url = `/api/v1/market-data/${dataSource}/${symbol}`;
+    const url = `/api/v1/market-data/${dataSource}/${encodeURIComponent(symbol)}`;
 
     return this.http.post<MarketData>(url, marketData);
   }
@@ -890,7 +899,7 @@ export class DataService {
     tags
   }: { tags: Tag[] } & AssetProfileIdentifier) {
     return this.http.put<void>(
-      `/api/v1/portfolio/holding/${dataSource}/${symbol}/tags`,
+      `/api/v1/portfolio/holding/${dataSource}/${encodeURIComponent(symbol)}/tags`,
       { tags }
     );
   }
