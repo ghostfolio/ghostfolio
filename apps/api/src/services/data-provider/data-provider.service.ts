@@ -662,7 +662,11 @@ export class DataProviderService implements OnModuleInit {
         );
 
         const promise = Promise.resolve(
-          dataProvider.getQuotes({ requestTimeout, symbols: symbolsChunk })
+          dataProvider.getQuotes({
+            requestTimeout,
+            useCache,
+            symbols: symbolsChunk
+          })
         );
 
         promises.push(
