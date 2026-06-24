@@ -11,7 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prettier` from version `3.8.3` to `3.8.4`
 
-## 3.15.0 - 2026-06-23
+## 3.16.0 - 2026-06-24
+
+### Added
+
+- Extended the user account settings with a copy-to-clipboard button for the user id
+- Added pagination to the platform management of the admin control panel
+- Added pagination to the tag management of the admin control panel
+- Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the ISIN number
+- Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the symbol
+
+### Changed
+
+- Improved the throughput of the market data gathering queue by applying the rate limit per data source
+- Decreased the rate limiter duration of the market data gathering queue jobs from 4 to 3 seconds
+- Removed the deprecated `SymbolProfile` field from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.2.2` to `13.3`
+
+### Fixed
+
+- Fixed an issue with hourly market data updates not refreshing prices for asset profiles with `MANUAL` data source
+- Fixed an issue with the log context formatting in the performance logging service
+
+## 3.15.1 - 2026-06-23
 
 ### Changed
 
@@ -24,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue where symbols with special characters caused API request failures by URL encoding the symbol
 - Fixed the disabled state of the delete action in the asset profiles actions menu of the historical market data table in the admin control panel
 - Fixed the persistence of an empty `locale` string in the scraper configuration
+- Fixed a transaction timeout that prevented gathering historical market data for symbols with a long history
+- Fixed an exception in various portfolio endpoints when historical exchange rate data is missing
 
 ## 3.14.0 - 2026-06-22
 

@@ -44,10 +44,6 @@ export interface PortfolioHoldingResponse {
   netPerformanceWithCurrencyEffect: number;
   performances: Benchmark['performances'];
   quantity: number;
-
-  /* @deprecated */
-  SymbolProfile: EnhancedSymbolProfile;
-
   tags: Tag[];
   value: number;
 }
