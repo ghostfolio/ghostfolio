@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the user account settings with a copy-to-clipboard button for the user id
 - Added pagination to the platform management of the admin control panel
 - Added pagination to the tag management of the admin control panel
 - Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the ISIN number
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the throughput of the market data gathering queue by applying the rate limit per data source
 - Decreased the rate limiter duration of the market data gathering queue jobs from 4 to 3 seconds
 
 ### Fixed
