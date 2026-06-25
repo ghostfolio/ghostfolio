@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the country mapping for data providers
+- Upgraded `bull-board` from version `7.2.1` to `8.0.1`
 - Upgraded `prettier` from version `3.8.3` to `3.8.4`
 
 ## 3.16.0 - 2026-06-24
