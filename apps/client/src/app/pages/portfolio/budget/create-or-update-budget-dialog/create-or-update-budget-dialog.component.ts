@@ -1,8 +1,12 @@
-import { CreateBudgetDto, UpdateBudgetDto } from '@ghostfolio/common/dtos';
-import {
-  BudgetResponse,
-  ExpenseCategoryResponse
-} from '@ghostfolio/common/interfaces';
+import type {
+  CreateBudgetDto,
+  ManualBudgetType
+} from '@ghostfolio/common/dtos/create-budget.dto';
+import type { UpdateBudgetDto } from '@ghostfolio/common/dtos/update-budget.dto';
+import type { AccountsResponse } from '@ghostfolio/common/interfaces/responses/accounts-response.interface';
+import type { BudgetResponse } from '@ghostfolio/common/interfaces/responses/budget-response.interface';
+import type { ExpenseCategoryResponse } from '@ghostfolio/common/interfaces/responses/expense-category-response.interface';
+import type { AccountWithValue } from '@ghostfolio/common/types';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
@@ -46,6 +50,9 @@ export interface CreateOrUpdateBudgetDialogData {
 })
 export class GfCreateOrUpdateBudgetDialogComponent implements OnInit {
   public budgetForm = new FormGroup({
+    accountId: new FormControl<string>(this.data.budget?.accountId ?? '', {
+      nonNullable: true
+    }),
     amount: new FormControl<number>(this.data.budget?.amount ?? 0, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(0.01)]
@@ -57,9 +64,27 @@ export class GfCreateOrUpdateBudgetDialogComponent implements OnInit {
     month: new FormControl<string>(this.data.budget?.month ?? this.data.month, {
       nonNullable: true,
       validators: [Validators.required]
-    })
+    }),
+    name: new FormControl<string>(this.data.budget?.name ?? '', {
+      nonNullable: true,
+      validators: [Validators.required]
+    }),
+    type: new FormControl<ManualBudgetType>(
+      (this.data.budget?.type as ManualBudgetType) ?? 'EXPENSE',
+      {
+        nonNullable: true,
+        validators: [Validators.required]
+      }
+    )
   });
+  public accounts: AccountWithValue[] = [];
+  public budgetTypes: Array<{ label: string; value: ManualBudgetType }> = [
+    { label: $localize`Expense`, value: 'EXPENSE' },
+    { label: $localize`Cash savings`, value: 'CASH_SAVINGS' },
+    { label: $localize`Investment savings`, value: 'INVESTMENT_SAVINGS' }
+  ];
   public categories: ExpenseCategoryResponse[] = [];
+  public isLoadingAccounts = true;
   public isLoadingCategories = true;
 
   public constructor(
@@ -70,6 +95,14 @@ export class GfCreateOrUpdateBudgetDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    this.dataService
+      .fetchAccounts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ accounts }: AccountsResponse) => {
+        this.accounts = accounts;
+        this.isLoadingAccounts = false;
+      });
+
     this.dataService
       .fetchExpenseCategories()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -85,8 +118,10 @@ export class GfCreateOrUpdateBudgetDialogComponent implements OnInit {
       return;
     }
 
+    const { accountId, ...formValue } = this.budgetForm.getRawValue();
     const budget = {
-      ...this.budgetForm.getRawValue(),
+      ...formValue,
+      ...(accountId ? { accountId } : {}),
       currency: this.data.currency
     };
 

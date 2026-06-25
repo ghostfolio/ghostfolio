@@ -12,23 +12,26 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
+  FormGroupDirective,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { createOutline, trashOutline } from 'ionicons/icons';
 
 @Component({
   imports: [
     CommonModule,
+    IonIcon,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatIconModule,
     MatInputModule,
     MatTableModule,
     ReactiveFormsModule
@@ -39,7 +42,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 })
 export class GfManageBudgetCategoriesDialogComponent implements OnInit {
   public categoryForm = new FormGroup({
-    color: new FormControl<string>('', {
+    color: new FormControl<string>('#0055aa', {
       nonNullable: true,
       validators: [Validators.pattern(/^#[0-9a-fA-F]{6}$/)]
     }),
@@ -58,18 +61,27 @@ export class GfManageBudgetCategoriesDialogComponent implements OnInit {
     private dataService: DataService,
     private destroyRef: DestroyRef,
     private dialogRef: MatDialogRef<GfManageBudgetCategoriesDialogComponent>
-  ) {}
+  ) {
+    addIcons({ createOutline, trashOutline });
+  }
 
   public ngOnInit() {
     this.fetchCategories();
   }
 
-  public onCancelEdit() {
+  public onCancelEdit(formDirective?: FormGroupDirective) {
     this.editingCategory = undefined;
-    this.categoryForm.reset({
-      color: '',
+
+    const formValue = {
+      color: '#0055aa',
       name: ''
-    });
+    };
+
+    if (formDirective) {
+      formDirective.resetForm(formValue);
+    } else {
+      this.categoryForm.reset(formValue);
+    }
   }
 
   public onClose() {
@@ -91,9 +103,15 @@ export class GfManageBudgetCategoriesDialogComponent implements OnInit {
       color: category.color ?? '',
       name: category.name
     });
+    this.categoryForm.markAsPristine();
+    this.categoryForm.markAsUntouched();
   }
 
-  public onSubmit() {
+  public onClearColor() {
+    this.categoryForm.controls.color.setValue('');
+  }
+
+  public onSubmit(formDirective?: FormGroupDirective) {
     if (this.categoryForm.invalid) {
       this.categoryForm.markAllAsTouched();
       return;
@@ -112,7 +130,7 @@ export class GfManageBudgetCategoriesDialogComponent implements OnInit {
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
-          this.onCancelEdit();
+          this.onCancelEdit(formDirective);
           this.fetchCategories();
         });
     } else {
@@ -120,7 +138,7 @@ export class GfManageBudgetCategoriesDialogComponent implements OnInit {
         .createExpenseCategory(category)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
-          this.onCancelEdit();
+          this.onCancelEdit(formDirective);
           this.fetchCategories();
         });
     }

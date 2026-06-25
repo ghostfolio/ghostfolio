@@ -1,5 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { BudgetResponse, User } from '@ghostfolio/common/interfaces';
+import type { BudgetResponse, User } from '@ghostfolio/common/interfaces';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -14,10 +14,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import { format } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { createOutline, trashOutline } from 'ionicons/icons';
 
 import { GfCreateOrUpdateBudgetDialogComponent } from './create-or-update-budget-dialog/create-or-update-budget-dialog.component';
 import { GfManageBudgetCategoriesDialogComponent } from './manage-budget-categories-dialog/manage-budget-categories-dialog.component';
@@ -27,8 +29,8 @@ import { GfManageBudgetCategoriesDialogComponent } from './manage-budget-categor
   imports: [
     CommonModule,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
-    MatIconModule,
     MatProgressBarModule,
     MatTableModule,
     ReactiveFormsModule
@@ -40,7 +42,10 @@ import { GfManageBudgetCategoriesDialogComponent } from './manage-budget-categor
 export class GfBudgetPageComponent implements OnInit {
   public dataSource = new MatTableDataSource<BudgetResponse>([]);
   public displayedColumns = [
+    'name',
     'category',
+    'account',
+    'type',
     'amount',
     'spent',
     'remaining',
@@ -52,6 +57,8 @@ export class GfBudgetPageComponent implements OnInit {
     nonNullable: true
   });
   public totalBudgeted = 0;
+  public totalMonthlySavings = 0;
+  public totalPlannedSpend = 0;
   public totalRemaining = 0;
   public totalSpent = 0;
   public user: User;
@@ -62,7 +69,9 @@ export class GfBudgetPageComponent implements OnInit {
     private destroyRef: DestroyRef,
     private dialog: MatDialog,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ createOutline, trashOutline });
+  }
 
   public ngOnInit() {
     this.userService.stateChanged
@@ -89,14 +98,25 @@ export class GfBudgetPageComponent implements OnInit {
     this.dataService
       .fetchBudgets({ month: this.monthControl.value })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ budgets, totalBudgeted, totalRemaining, totalSpent }) => {
-        this.dataSource = new MatTableDataSource(budgets);
-        this.totalBudgeted = totalBudgeted;
-        this.totalRemaining = totalRemaining;
-        this.totalSpent = totalSpent;
-        this.isLoading = false;
-        this.changeDetectorRef.markForCheck();
-      });
+      .subscribe(
+        ({
+          budgets,
+          totalBudgeted,
+          totalMonthlySavings,
+          totalPlannedSpend,
+          totalRemaining,
+          totalSpent
+        }) => {
+          this.dataSource = new MatTableDataSource(budgets);
+          this.totalBudgeted = totalBudgeted;
+          this.totalMonthlySavings = totalMonthlySavings;
+          this.totalPlannedSpend = totalPlannedSpend;
+          this.totalRemaining = totalRemaining;
+          this.totalSpent = totalSpent;
+          this.isLoading = false;
+          this.changeDetectorRef.markForCheck();
+        }
+      );
   }
 
   public getProgress({ amount, spent }: BudgetResponse) {
@@ -105,6 +125,21 @@ export class GfBudgetPageComponent implements OnInit {
     }
 
     return Math.min((spent / amount) * 100, 100);
+  }
+
+  public getBudgetTypeLabel(type: BudgetResponse['type']) {
+    switch (type) {
+      case 'CASH_SAVINGS':
+        return $localize`Cash savings`;
+      case 'INVESTMENT_SAVINGS':
+        return $localize`Investment savings`;
+      case 'LIABILITY_AUTOMATIC':
+        return $localize`Liability`;
+      case 'YEARLY_EXPENSE_AUTOMATIC':
+        return $localize`Yearly expense`;
+      default:
+        return $localize`Expense`;
+    }
   }
 
   public onCreateBudget() {
@@ -126,7 +161,8 @@ export class GfBudgetPageComponent implements OnInit {
   public onManageCategories() {
     this.dialog
       .open(GfManageBudgetCategoriesDialogComponent, {
-        width: '36rem'
+        maxWidth: 'calc(100vw - 2rem)',
+        width: '42rem'
       })
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))

@@ -7,6 +7,7 @@ import {
 } from '@ghostfolio/common/dtos';
 import {
   BudgetResponse,
+  type BudgetType,
   BudgetsResponse,
   ExpenseCategoryResponse
 } from '@ghostfolio/common/interfaces';
@@ -16,9 +17,15 @@ import {
   ForbiddenException,
   Injectable
 } from '@nestjs/common';
+import type { Account } from '@prisma/client';
 
 @Injectable()
 export class BudgetsService {
+  private static readonly SAVINGS_BUDGET_TYPES: BudgetType[] = [
+    'CASH_SAVINGS',
+    'INVESTMENT_SAVINGS'
+  ];
+
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async createCategory({
@@ -56,29 +63,35 @@ export class BudgetsService {
       userId
     });
 
-    const month = this.parseBudgetMonth(data.month);
-
-    const existingBudget = await this.prismaService.budget.findFirst({
-      where: {
-        categoryId: data.categoryId,
-        month,
+    if (data.accountId) {
+      await this.validateAccountOwnership({
+        accountId: data.accountId,
         userId
-      }
-    });
-
-    if (existingBudget) {
-      throw new ConflictException();
+      });
     }
+
+    const month = this.parseBudgetMonth(data.month);
 
     const budget = await this.prismaService.budget.create({
       data: {
+        ...(data.accountId
+          ? {
+              account: {
+                connect: {
+                  id_userId: { id: data.accountId, userId }
+                }
+              }
+            }
+          : {}),
         amount: data.amount,
         category: { connect: { id: data.categoryId } },
         currency: data.currency,
         month,
+        name: data.name,
+        type: data.type,
         user: { connect: { id: userId } }
       },
-      include: { category: true }
+      include: { account: true, category: true }
     });
 
     return this.toBudgetResponse({ budget, spent: 0 });
@@ -108,7 +121,7 @@ export class BudgetsService {
     userId: string;
   }): Promise<BudgetResponse> {
     const budget = await this.prismaService.budget.findFirst({
-      include: { category: true },
+      include: { account: true, category: true },
       where: { id, userId }
     });
 
@@ -151,15 +164,17 @@ export class BudgetsService {
     const nextMonth = this.getNextMonth(budgetMonth);
 
     const budgets = await this.prismaService.budget.findMany({
-      include: { category: true },
-      orderBy: { category: { name: 'asc' } },
+      include: { account: true, category: true },
+      orderBy: { name: 'asc' },
       where: {
         month: budgetMonth,
         userId
       }
     });
 
-    const categoryIds = budgets.map(({ categoryId }) => categoryId);
+    const categoryIds = Array.from(
+      new Set(budgets.map(({ categoryId }) => categoryId))
+    );
     const expenseSums = categoryIds.length
       ? await this.prismaService.expense.groupBy({
           by: ['categoryId'],
@@ -182,9 +197,13 @@ export class BudgetsService {
     );
 
     const budgetResponses = budgets.map((budget) => {
+      const isExpenseBudget = this.isPlannedSpendBudgetType(budget.type);
+
       return this.toBudgetResponse({
         budget,
-        spent: spentByCategoryId.get(budget.categoryId) ?? 0
+        spent: isExpenseBudget
+          ? (spentByCategoryId.get(budget.categoryId) ?? 0)
+          : 0
       });
     });
 
@@ -192,6 +211,14 @@ export class BudgetsService {
       budgets: budgetResponses,
       totalBudgeted: budgetResponses.reduce((sum, { amount }) => {
         return sum + amount;
+      }, 0),
+      totalMonthlySavings: budgetResponses.reduce((sum, { amount, type }) => {
+        return BudgetsService.SAVINGS_BUDGET_TYPES.includes(type)
+          ? sum + amount
+          : sum;
+      }, 0),
+      totalPlannedSpend: budgetResponses.reduce((sum, { amount, type }) => {
+        return this.isPlannedSpendBudgetType(type) ? sum + amount : sum;
       }, 0),
       totalRemaining: budgetResponses.reduce((sum, { remaining }) => {
         return sum + remaining;
@@ -217,16 +244,32 @@ export class BudgetsService {
       userId
     });
 
+    if (data.accountId) {
+      await this.validateAccountOwnership({
+        accountId: data.accountId,
+        userId
+      });
+    }
+
     const month = this.parseBudgetMonth(data.month);
 
     const budget = await this.prismaService.budget.update({
       data: {
+        account: data.accountId
+          ? {
+              connect: {
+                id_userId: { id: data.accountId, userId }
+              }
+            }
+          : { disconnect: true },
         amount: data.amount,
         category: { connect: { id: data.categoryId } },
         currency: data.currency,
-        month
+        month,
+        name: data.name,
+        type: data.type
       },
-      include: { category: true },
+      include: { account: true, category: true },
       where: { id }
     });
 
@@ -270,6 +313,14 @@ export class BudgetsService {
     );
   }
 
+  private isPlannedSpendBudgetType(type: BudgetType) {
+    return [
+      'EXPENSE',
+      'LIABILITY_AUTOMATIC',
+      'YEARLY_EXPENSE_AUTOMATIC'
+    ].includes(type);
+  }
+
   private async getSpentForBudget({
     categoryId,
     month,
@@ -305,6 +356,8 @@ export class BudgetsService {
   }: {
     budget: {
       amount: number;
+      account?: Account | null;
+      accountId?: string | null;
       category: {
         color?: string;
         createdAt: Date;
@@ -317,11 +370,15 @@ export class BudgetsService {
       currency: string;
       id: string;
       month: Date;
+      name: string;
+      type: BudgetType;
       updatedAt: Date;
     };
     spent: number;
   }): BudgetResponse {
     return {
+      account: budget.account ?? undefined,
+      accountId: budget.accountId ?? undefined,
       amount: budget.amount,
       category: budget.category,
       categoryId: budget.categoryId,
@@ -329,8 +386,10 @@ export class BudgetsService {
       currency: budget.currency,
       id: budget.id,
       month: this.formatBudgetMonth(budget.month),
+      name: budget.name || budget.category.name,
       remaining: budget.amount - spent,
       spent,
+      type: budget.type,
       updatedAt: budget.updatedAt
     };
   }
@@ -363,6 +422,25 @@ export class BudgetsService {
     });
 
     if (!budget) {
+      throw new ForbiddenException();
+    }
+  }
+
+  private async validateAccountOwnership({
+    accountId,
+    userId
+  }: {
+    accountId: string;
+    userId: string;
+  }) {
+    const account = await this.prismaService.account.findFirst({
+      where: {
+        id: accountId,
+        userId
+      }
+    });
+
+    if (!account) {
       throw new ForbiddenException();
     }
   }

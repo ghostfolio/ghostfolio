@@ -17,3 +17,26 @@
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 }
+
+.budget-table-wrapper {
+  overflow-x: auto;
+}
+
+.budget-table {
+  min-width: 56rem;
+}
+
+.budget-table .mat-column-actions {
+  white-space: nowrap;
+  width: 6rem;
+}
+
+.budget-action-button {
+  height: 2.25rem;
+  line-height: 2.25rem;
+  width: 2.25rem;
+}
+
+.budget-action-button ion-icon {
+  font-size: 1.125rem;
+}

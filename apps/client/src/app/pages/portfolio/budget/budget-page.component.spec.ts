@@ -40,6 +40,33 @@ jest.mock('@ghostfolio/ui/value', () => {
   return { GfValueComponent };
 });
 
+jest.mock('@ionic/angular/standalone', () => {
+  const { Component, Input } = require('@angular/core');
+
+  @Component({
+    selector: 'ion-icon',
+    template: ''
+  })
+  class IonIcon {
+    @Input() public name: string;
+  }
+
+  return { IonIcon };
+});
+
+jest.mock('ionicons', () => {
+  return {
+    addIcons: jest.fn()
+  };
+});
+
+jest.mock('ionicons/icons', () => {
+  return {
+    createOutline: {},
+    trashOutline: {}
+  };
+});
+
 const {
   UserService
 } = require('@ghostfolio/client/services/user/user.service');
@@ -59,6 +86,16 @@ describe('GfBudgetPageComponent', () => {
         of({
           budgets: [
             {
+              account: {
+                balance: 0,
+                createdAt: new Date('2026-06-01'),
+                id: 'checking',
+                isExcluded: false,
+                name: 'Checking',
+                updatedAt: new Date('2026-06-01'),
+                userId: 'user-1'
+              },
+              accountId: 'checking',
               amount: 500,
               category: {
                 id: 'food',
@@ -69,12 +106,16 @@ describe('GfBudgetPageComponent', () => {
               currency: 'USD',
               id: 'budget-1',
               month: '2026-06',
+              name: 'Food shop',
               remaining: 125,
               spent: 375,
+              type: 'EXPENSE',
               updatedAt: new Date('2026-06-01')
             }
           ],
           totalBudgeted: 500,
+          totalMonthlySavings: 0,
+          totalPlannedSpend: 500,
           totalRemaining: 125,
           totalSpent: 375
         })
@@ -126,7 +167,18 @@ describe('GfBudgetPageComponent', () => {
       month: expect.stringMatching(/^\d{4}-\d{2}$/)
     });
     expect(fixture.nativeElement.textContent).toContain('Budget');
+    expect(fixture.nativeElement.textContent).toContain('Food shop');
     expect(fixture.nativeElement.textContent).toContain('Food');
+    expect(fixture.nativeElement.textContent).toContain('Checking');
+    expect(
+      fixture.nativeElement.querySelector('[aria-label="Edit budget"] ion-icon')
+    ).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector(
+        '[aria-label="Delete budget"] ion-icon'
+      )
+    ).not.toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain('editdelete');
   });
 
   it('reloads budgets after creating a budget', async () => {
@@ -163,7 +215,8 @@ describe('GfBudgetPageComponent', () => {
     await fixture.whenStable();
 
     expect(dialog.open).toHaveBeenCalledWith(expect.any(Function), {
-      width: '36rem'
+      maxWidth: 'calc(100vw - 2rem)',
+      width: '42rem'
     });
   });
 });

@@ -10,12 +10,22 @@ import {
   GfCreateOrUpdateBudgetDialogComponent
 } from './create-or-update-budget-dialog.component';
 
+(global as any).$localize = (
+  messageParts: TemplateStringsArray,
+  ...expressions: any[]
+) => {
+  return String.raw({ raw: messageParts }, ...expressions);
+};
+
 describe('GfCreateOrUpdateBudgetDialogComponent', () => {
   let component: GfCreateOrUpdateBudgetDialogComponent;
   let dataService: jest.Mocked<
     Pick<
       DataService,
-      'createBudget' | 'fetchExpenseCategories' | 'updateBudget'
+      | 'createBudget'
+      | 'fetchAccounts'
+      | 'fetchExpenseCategories'
+      | 'updateBudget'
     >
   >;
   let dialogRef: jest.Mocked<
@@ -27,12 +37,30 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
     dataService = {
       createBudget: jest.fn().mockReturnValue(
         of({
+          accountId: 'checking',
           amount: 500,
           categoryId: 'food',
           id: 'budget-1',
           month: '2026-06',
+          name: 'Food shop',
           remaining: 500,
-          spent: 0
+          spent: 0,
+          type: 'EXPENSE'
+        })
+      ),
+      fetchAccounts: jest.fn().mockReturnValue(
+        of({
+          accounts: [
+            {
+              balance: 0,
+              createdAt: new Date('2026-06-01'),
+              id: 'checking',
+              isExcluded: false,
+              name: 'Checking',
+              updatedAt: new Date('2026-06-01'),
+              userId: 'user-1'
+            }
+          ]
         })
       ),
       fetchExpenseCategories: jest.fn().mockReturnValue(
@@ -48,12 +76,15 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
       ),
       updateBudget: jest.fn().mockReturnValue(
         of({
+          accountId: 'checking',
           amount: 650,
           categoryId: 'food',
           id: 'budget-1',
           month: '2026-06',
+          name: 'Food shop',
           remaining: 650,
-          spent: 0
+          spent: 0,
+          type: 'EXPENSE'
         })
       )
     };
@@ -92,20 +123,27 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
     });
 
     component.budgetForm.setValue({
+      accountId: 'checking',
       amount: 500,
       categoryId: 'food',
-      month: '2026-06'
+      month: '2026-06',
+      name: 'Food shop',
+      type: 'EXPENSE'
     });
 
     component.onSubmit();
     await fixture.whenStable();
 
     expect(dataService.fetchExpenseCategories).toHaveBeenCalled();
+    expect(dataService.fetchAccounts).toHaveBeenCalled();
     expect(dataService.createBudget).toHaveBeenCalledWith({
+      accountId: 'checking',
       amount: 500,
       categoryId: 'food',
       currency: 'USD',
-      month: '2026-06'
+      month: '2026-06',
+      name: 'Food shop',
+      type: 'EXPENSE'
     });
     expect(dialogRef.close).toHaveBeenCalledWith({ refresh: true });
   });
@@ -113,6 +151,7 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
   it('updates a budget and closes with refresh', async () => {
     await setup({
       budget: {
+        accountId: 'checking',
         amount: 500,
         category: {
           id: 'food',
@@ -123,8 +162,10 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
         currency: 'USD',
         id: 'budget-1',
         month: '2026-06',
+        name: 'Food shop',
         remaining: 500,
         spent: 0,
+        type: 'EXPENSE',
         updatedAt: new Date('2026-06-01')
       },
       currency: 'USD',
@@ -132,9 +173,12 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
     });
 
     component.budgetForm.setValue({
+      accountId: '',
       amount: 650,
       categoryId: 'food',
-      month: '2026-06'
+      month: '2026-06',
+      name: 'Food shop',
+      type: 'EXPENSE'
     });
 
     component.onSubmit();
@@ -146,7 +190,9 @@ describe('GfCreateOrUpdateBudgetDialogComponent', () => {
         categoryId: 'food',
         currency: 'USD',
         id: 'budget-1',
-        month: '2026-06'
+        month: '2026-06',
+        name: 'Food shop',
+        type: 'EXPENSE'
       },
       id: 'budget-1'
     });

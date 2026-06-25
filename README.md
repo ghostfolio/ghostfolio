@@ -270,6 +270,70 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 }
 ```
 
+### Budgets (experimental)
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) or `Authorization: Api-Key <INSERT_API_KEY>` for authorization
+
+#### List Budgets
+
+`GET http://localhost:3333/api/v1/budgets?month=2026-06`
+
+#### Create Budget
+
+`POST http://localhost:3333/api/v1/budgets`
+
+#### Body
+
+```
+{
+  "accountId": "clx...",
+  "amount": 500,
+  "categoryId": "clx...",
+  "currency": "USD",
+  "month": "2026-06",
+  "name": "Groceries",
+  "type": "EXPENSE"
+}
+```
+
+| Field        | Type                | Description                                                        |
+| ------------ | ------------------- | ------------------------------------------------------------------ |
+| `accountId`  | `string` (optional) | Id of the account                                                  |
+| `amount`     | `number`            | Budget amount                                                      |
+| `categoryId` | `string`            | Id of the expense category                                         |
+| `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                       |
+| `month`      | `string`            | Month in the format `YYYY-MM`                                      |
+| `name`       | `string`            | Name of the budget line                                            |
+| `type`       | `string`            | `EXPENSE` \| `CASH_SAVINGS` \| `INVESTMENT_SAVINGS`                |
+
+#### Additional Budget Endpoints
+
+| Method   | Endpoint                                                | Description              |
+| -------- | ------------------------------------------------------- | ------------------------ |
+| `GET`    | `/api/v1/budgets/:id`                                   | Get one budget           |
+| `PUT`    | `/api/v1/budgets/:id`                                   | Update one budget        |
+| `DELETE` | `/api/v1/budgets/:id`                                   | Delete one budget        |
+| `GET`    | `/api/v1/budgets/categories`                            | List expense categories  |
+| `POST`   | `/api/v1/budgets/categories`                            | Create expense category  |
+| `PUT`    | `/api/v1/budgets/categories/:id`                        | Update expense category  |
+| `DELETE` | `/api/v1/budgets/categories/:id`                        | Delete expense category  |
+
+#### Create Expense Category Body
+
+```
+{
+  "color": "#ff0000",
+  "name": "Food"
+}
+```
+
+| Field   | Type                | Description                  |
+| ------- | ------------------- | ---------------------------- |
+| `color` | `string` (optional) | Hex color code               |
+| `name`  | `string`            | Name of the expense category |
+
 ### Portfolio (experimental)
 
 #### Prerequisites

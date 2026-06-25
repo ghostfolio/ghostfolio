@@ -50,10 +50,13 @@ describe('DataService budget methods', () => {
 
   it('creates a budget', () => {
     const budget: CreateBudgetDto = {
+      accountId: 'account-1',
       amount: 500,
       categoryId: 'category-1',
       currency: 'USD',
-      month: '2026-06'
+      month: '2026-06',
+      name: 'Groceries',
+      type: 'EXPENSE'
     };
 
     dataService.createBudget(budget).subscribe();
@@ -70,7 +73,9 @@ describe('DataService budget methods', () => {
       categoryId: 'category-1',
       currency: 'USD',
       id: 'budget-1',
-      month: '2026-06'
+      month: '2026-06',
+      name: 'Groceries',
+      type: 'EXPENSE'
     };
 
     dataService.updateBudget({ budget, id: 'budget-1' }).subscribe();

@@ -9,8 +9,24 @@
 <form [formGroup]="budgetForm" (ngSubmit)="onSubmit()">
   <mat-dialog-content class="budget-dialog-content">
     <mat-form-field appearance="outline">
+      <mat-label i18n>Item name</mat-label>
+      <input formControlName="name" matInput />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label i18n>Month</mat-label>
       <input formControlName="month" matInput type="month" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Type</mat-label>
+      <mat-select formControlName="type">
+        @for (budgetType of budgetTypes; track budgetType.value) {
+          <mat-option [value]="budgetType.value">
+            {{ budgetType.label }}
+          </mat-option>
+        }
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -24,6 +40,22 @@
           @for (category of categories; track category.id) {
             <mat-option [value]="category.id">
               {{ category.name }}
+            </mat-option>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Account</mat-label>
+      <mat-select formControlName="accountId">
+        <mat-option i18n value="">No account</mat-option>
+        @if (isLoadingAccounts) {
+          <mat-option disabled i18n>Loading accounts...</mat-option>
+        } @else {
+          @for (account of accounts; track account.id) {
+            <mat-option [value]="account.id">
+              {{ account.name ?? account.id }}
             </mat-option>
           }
         }
