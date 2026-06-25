@@ -780,7 +780,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Maybe Finance was discontinued in 2023, relaunched in 2024, and discontinued again in 2025',
     origin: 'US',
     pricingPerYear: '$145',
-    regions: ['United States'],
+    regions: ['US'],
     slogan: 'Your financial future, in your control',
     url: 'https://github.com/maybe-finance/maybe'
   },
@@ -792,7 +792,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Merlin',
     origin: 'US',
     pricingPerYear: '$204',
-    regions: ['Canada', 'United States'],
+    regions: ['CA', 'US'],
     slogan: 'The smartest way to track your crypto',
     url: 'https://www.merlincrypto.com'
   },
@@ -967,7 +967,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Originally named as Tresor One',
     origin: 'DE',
     pricingPerYear: '€99.99',
-    regions: ['Austria', 'Germany', 'Switzerland'],
+    regions: ['AT', 'CH', 'DE'],
     slogan: 'Dein Vermögen immer im Blick',
     url: 'https://www.parqet.com'
   },
@@ -1354,7 +1354,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Tresor One',
     note: 'Renamed to Parqet',
     origin: 'DE',
-    regions: ['Austria', 'Germany', 'Switzerland'],
+    regions: ['AT', 'CH', 'DE'],
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
