@@ -70,7 +70,9 @@ export class GfProductPageComponent {
 
     if (mappedProduct.regions) {
       mappedProduct.regions = mappedProduct.regions.map((region) => {
-        return translate(region);
+        return region === 'Global'
+          ? translate(region)
+          : getCountryName({ code: region });
       });
     }
 
