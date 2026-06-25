@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prettier` from version `3.8.3` to `3.8.4`
 
+### Fixed
+
+- Improved the table headers’ alignment in the queue jobs table of the admin control panel
+
 ## 3.16.0 - 2026-06-24
 
 ### Added
