@@ -15,8 +15,11 @@ import { SymbolProfile } from '@prisma/client';
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
-    'Russian Federation': 'Russia',
-    USA: 'United States'
+    'Republic of Korea': 'KR',
+    'Russian Federation': 'RU',
+    Turkey: 'TR',
+    USA: 'US',
+    'Virgin Islands, British': 'VG'
   };
   private static holdingsWeightTreshold = 0.85;
   private static sectorsMapping: Record<string, SectorName> = {
