@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the grantee display in the access table to share the portfolio
 - Upgraded `prettier` from version `3.8.3` to `3.8.4`
 
 ## 3.16.0 - 2026-06-24
