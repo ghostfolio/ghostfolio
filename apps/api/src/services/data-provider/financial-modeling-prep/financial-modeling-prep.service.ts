@@ -54,9 +54,9 @@ export class FinancialModelingPrepService
   implements DataProviderInterface, OnModuleInit
 {
   private static countriesMapping = {
-    'Korea (the Republic of)': 'South Korea',
-    'Russian Federation': 'Russia',
-    'Taiwan (Province of China)': 'Taiwan'
+    'Korea (the Republic of)': 'KR',
+    'Russian Federation': 'RU',
+    'Taiwan (Province of China)': 'TW'
   };
 
   private readonly logger = new Logger(FinancialModelingPrepService.name);
