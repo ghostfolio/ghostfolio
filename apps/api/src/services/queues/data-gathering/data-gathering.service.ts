@@ -70,10 +70,8 @@ export class DataGatheringService {
   }
 
   public async gatherAssetProfiles(
-    aAssetProfileIdentifiers?: AssetProfileIdentifier[]
+    assetProfileIdentifiers?: AssetProfileIdentifier[]
   ) {
-    let assetProfileIdentifiers = aAssetProfileIdentifiers;
-
     if (!assetProfileIdentifiers) {
       assetProfileIdentifiers = await this.getActiveAssetProfileIdentifiers();
     }
