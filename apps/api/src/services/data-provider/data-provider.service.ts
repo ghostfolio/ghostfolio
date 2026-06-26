@@ -1,5 +1,6 @@
 import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -221,6 +222,9 @@ export class DataProviderService implements OnModuleInit {
     } = {};
 
     const dataSources = await this.getDataSources();
+    const ghostfolioDataSources = this.configurationService.get(
+      'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
+    );
 
     for (const [
       index,
@@ -228,6 +232,10 @@ export class DataProviderService implements OnModuleInit {
     ] of activitiesDto.entries()) {
       const activityPath =
         maxActivitiesToImport === 1 ? 'activity' : `activities.${index}`;
+      const maskedDataSource = getMaskedGhostfolioDataSource({
+        dataSource,
+        ghostfolioDataSources
+      });
 
       if (!dataSources.includes(dataSource)) {
         throw new Error(
@@ -243,7 +251,7 @@ export class DataProviderService implements OnModuleInit {
 
         if (dataProvider.getDataProviderInfo().isPremium) {
           throw new Error(
-            `${activityPath}.dataSource ("${dataSource}") is not valid`
+            `${activityPath}.dataSource ("${maskedDataSource}") requires Ghostfolio Premium`
           );
         }
       }
@@ -306,7 +314,7 @@ export class DataProviderService implements OnModuleInit {
 
         if (!assetProfile?.name) {
           throw new Error(
-            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
           );
         }
 

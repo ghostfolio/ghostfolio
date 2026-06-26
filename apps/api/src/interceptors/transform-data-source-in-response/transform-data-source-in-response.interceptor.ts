@@ -1,3 +1,4 @@
+import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { redactPaths } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { encodeDataSource } from '@ghostfolio/common/helper';
@@ -51,10 +52,15 @@ export class TransformDataSourceInResponseInterceptor<
           const valueMap = this.encodedDataSourceMap;
 
           if (isExportMode) {
-            for (const dataSource of this.configurationService.get(
+            const ghostfolioDataSources = this.configurationService.get(
               'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
-            )) {
-              valueMap[dataSource] = 'GHOSTFOLIO';
+            ) as DataSource[];
+
+            for (const dataSource of ghostfolioDataSources) {
+              valueMap[dataSource] = getMaskedGhostfolioDataSource({
+                dataSource,
+                ghostfolioDataSources
+              });
             }
           }
 
