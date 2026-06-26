@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the error message styling in the import activities dialog
 - Improved the grantee display in the access table to share the portfolio
 - Improved the country mapping for data providers
 - Upgraded `bull-board` from version `7.2.1` to `8.0.1`
