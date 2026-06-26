@@ -118,6 +118,10 @@
           "baseHref": "/it/",
           "localize": ["it"]
         },
+        "development-ja": {
+          "baseHref": "/ja/",
+          "localize": ["ja"]
+        },
         "development-ko": {
           "baseHref": "/ko/",
           "localize": ["ko"]
@@ -243,6 +247,9 @@
         "development-it": {
           "buildTarget": "client:build:development-it"
         },
+        "development-ja": {
+          "buildTarget": "client:build:development-ja"
+        },
         "development-ko": {
           "buildTarget": "client:build:development-ko"
         },
@@ -282,6 +289,7 @@
           "messages.es.xlf",
           "messages.fr.xlf",
           "messages.it.xlf",
+          "messages.ja.xlf",
           "messages.ko.xlf",
           "messages.nl.xlf",
           "messages.pl.xlf",
