@@ -1,7 +1,10 @@
-import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
+import {
+  encodeDataSource,
+  getMaskedGhostfolioDataSource
+} from '@ghostfolio/api/helper/data-source.helper';
 import { redactPaths } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { encodeDataSource } from '@ghostfolio/common/helper';
+import { hasRole } from '@ghostfolio/common/permissions';
 
 import {
   CallHandler,
@@ -45,11 +48,14 @@ export class TransformDataSourceInResponseInterceptor<
     next: CallHandler<T>
   ): Observable<any> {
     const isExportMode = context.getClass().name === 'ExportController';
+    const { user } = context.switchToHttp().getRequest();
 
     return next.handle().pipe(
       map((data: any) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-          const valueMap = this.encodedDataSourceMap;
+          const valueMap = hasRole(user, 'ADMIN')
+            ? {}
+            : { ...this.encodedDataSourceMap };
 
           if (isExportMode) {
             const ghostfolioDataSources = this.configurationService.get(
@@ -62,6 +68,10 @@ export class TransformDataSourceInResponseInterceptor<
                 ghostfolioDataSources
               });
             }
+          }
+
+          if (Object.keys(valueMap).length === 0) {
+            return data;
           }
 
           data = redactPaths({
