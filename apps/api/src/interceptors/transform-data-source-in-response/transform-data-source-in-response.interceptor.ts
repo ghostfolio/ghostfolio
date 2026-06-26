@@ -53,9 +53,9 @@ export class TransformDataSourceInResponseInterceptor<
     return next.handle().pipe(
       map((data: any) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-          const valueMap = {
-            ...(hasRole(user, 'ADMIN') ? {} : this.encodedDataSourceMap)
-          };
+          const valueMap = hasRole(user, 'ADMIN')
+            ? {}
+            : { ...this.encodedDataSourceMap };
 
           if (isExportMode) {
             const ghostfolioDataSources = this.configurationService.get(
@@ -68,6 +68,10 @@ export class TransformDataSourceInResponseInterceptor<
                 ghostfolioDataSources
               });
             }
+          }
+
+          if (Object.keys(valueMap).length === 0) {
+            return data;
           }
 
           data = redactPaths({
