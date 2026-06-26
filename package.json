@@ -140,6 +140,7 @@
     "twitter-api-v2": "1.29.0",
     "undici": "8.5.0",
     "yahoo-finance2": "3.15.3",
+    "zod": "4.4.3",
     "zone.js": "0.16.1"
   },
   "devDependencies": {
