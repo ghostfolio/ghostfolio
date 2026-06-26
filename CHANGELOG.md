@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the grantee display in the access table to share the portfolio
 - Improved the country mapping for data providers
 - Upgraded `bull-board` from version `7.2.1` to `8.0.1`
+- Upgraded `Nx` from version `22.7.5` to `23.0.1`
 - Upgraded `prettier` from version `3.8.3` to `3.8.4`
 
 ### Fixed
