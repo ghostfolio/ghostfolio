@@ -93,8 +93,8 @@ export class AccessController {
     }
 
     try {
-      const settings: AccessSettings = data.filter
-        ? { filter: data.filter }
+      const settings: AccessSettings = data.filters?.length
+        ? { filters: data.filters }
         : {};
 
       return this.accessService.createAccess({
@@ -144,8 +144,8 @@ export class AccessController {
     }
 
     try {
-      const settings: AccessSettings = data.filter
-        ? { filter: data.filter }
+      const settings: AccessSettings = data.filters?.length
+        ? { filters: data.filters }
         : {};
 
       return this.accessService.updateAccess({

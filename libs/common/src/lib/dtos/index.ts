@@ -1,4 +1,3 @@
-import { AssetProfileIdentifierDto } from './asset-profile-identifier.dto';
 import { AuthDeviceDto } from './auth-device.dto';
 import { CreateAccessDto } from './create-access.dto';
 import { CreateAccountBalanceDto } from './create-account-balance.dto';
@@ -26,7 +25,6 @@ import { UpdateTagDto } from './update-tag.dto';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 
 export {
-  AssetProfileIdentifierDto,
   AuthDeviceDto,
   CreateAccessDto,
   CreateAccountBalanceDto,

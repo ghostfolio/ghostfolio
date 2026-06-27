@@ -11,7 +11,6 @@ import { SubscriptionType } from '@ghostfolio/common/enums';
 import { getSum } from '@ghostfolio/common/helper';
 import {
   AccessSettings,
-  Filter,
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -70,60 +69,9 @@ export class PublicController {
       hasDetails = user.subscription.type === SubscriptionType.Premium;
     }
 
-    // Get filter configuration from access settings
-    const { filter: accessFilter } = (access.settings ?? {}) as AccessSettings;
-
-    // Convert access filter to portfolio filters
-    const portfolioFilters: Filter[] = [];
-
-    if (accessFilter) {
-      // Add account filters
-      if (accessFilter.accountIds?.length > 0) {
-        portfolioFilters.push(
-          ...accessFilter.accountIds.map((accountId) => ({
-            id: accountId,
-            type: 'ACCOUNT' as const
-          }))
-        );
-      }
-
-      // Add asset class filters
-      if (accessFilter.assetClasses?.length > 0) {
-        portfolioFilters.push(
-          ...accessFilter.assetClasses.map((assetClass) => ({
-            id: assetClass,
-            type: 'ASSET_CLASS' as const
-          }))
-        );
-      }
-
-      // Add holding filters (symbol + dataSource)
-      // Each holding needs both DATA_SOURCE and SYMBOL filters
-      if (accessFilter.holdings?.length > 0) {
-        for (const { dataSource, symbol } of accessFilter.holdings) {
-          portfolioFilters.push(
-            {
-              id: dataSource,
-              type: 'DATA_SOURCE' as const
-            },
-            {
-              id: symbol,
-              type: 'SYMBOL' as const
-            }
-          );
-        }
-      }
-
-      // Add tag filters
-      if (accessFilter.tagIds?.length > 0) {
-        portfolioFilters.push(
-          ...accessFilter.tagIds.map((tagId) => ({
-            id: tagId,
-            type: 'TAG' as const
-          }))
-        );
-      }
-    }
+    // Get the portfolio filters from the access settings
+    const { filters: portfolioFilters = [] } = (access.settings ??
+      {}) as AccessSettings;
 
     const [
       { createdAt, holdings, markets },
@@ -159,33 +107,8 @@ export class PublicController {
       })
     );
 
-    // Use filters for activities, but exclude DATA_SOURCE/SYMBOL filters
-    // if there are multiple holdings (the service can't handle multiple symbol filters)
-    const hasMultipleHoldingFilters = accessFilter?.holdings?.length > 1;
-
-    const activityFilters = portfolioFilters.filter((filter) => {
-      // Always include ACCOUNT, ASSET_CLASS, TAG filters
-      if (
-        filter.type === 'ACCOUNT' ||
-        filter.type === 'ASSET_CLASS' ||
-        filter.type === 'TAG'
-      ) {
-        return true;
-      }
-
-      // Include DATA_SOURCE and SYMBOL only if there's a single holding filter
-      if (
-        !hasMultipleHoldingFilters &&
-        (filter.type === 'DATA_SOURCE' || filter.type === 'SYMBOL')
-      ) {
-        return true;
-      }
-
-      return false;
-    });
-
     const { activities } = await this.activitiesService.getActivities({
-      filters: activityFilters.length > 0 ? activityFilters : undefined,
+      filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,

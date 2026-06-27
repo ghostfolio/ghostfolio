@@ -1,10 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
-import {
-  AssetProfileIdentifier,
-  Filter,
-  PortfolioPosition
-} from '@ghostfolio/common/interfaces';
+import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -65,7 +61,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
-  public showFilterPanel = false;
+  public hasExperimentalFeatures = false;
 
   public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
@@ -111,6 +107,26 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
+    this.userService
+      .get()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ accounts, settings, tags }) => {
+        this.accounts = accounts;
+        this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
+
+        this.tags = tags
+          .filter(({ isUsed }) => isUsed)
+          .map(({ id, name }) => ({
+            id,
+            label: name,
+            type: 'TAG' as const
+          }));
+
+        this.updateFiltersFormControl(this.data.access?.settings?.filters);
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.accessForm
       .get('type')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
@@ -122,7 +138,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           granteeUserIdControl?.setValidators([
             (control: AbstractControl) => Validators.required(control)
           ]);
-          this.showFilterPanel = false;
           this.accessForm.get('filters')?.setValue(null);
         } else {
           granteeUserIdControl?.clearValidators();
@@ -130,8 +145,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           permissionsControl?.setValue(
             access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
           );
-          this.showFilterPanel = true;
-          this.loadFilterData();
+
+          if (this.hasExperimentalFeatures) {
+            this.loadHoldings();
+          }
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -139,9 +156,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    if (isPublic) {
-      this.showFilterPanel = true;
-      this.loadFilterData();
+    if (isPublic && this.hasExperimentalFeatures) {
+      this.loadHoldings();
     }
   }
 
@@ -157,76 +173,45 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
-  private buildFilterObject():
-    | {
-        accountIds?: string[];
-        assetClasses?: string[];
-        holdings?: AssetProfileIdentifier[];
-        tagIds?: string[];
-      }
-    | undefined {
+  private buildFilters(): Filter[] {
     const filterValue = this.accessForm.get('filters')
       ?.value as PortfolioFilterFormValue | null;
 
-    if (
-      !filterValue ||
-      (!filterValue.account &&
-        !filterValue.assetClass &&
-        !filterValue.holding &&
-        !filterValue.tag)
-    ) {
-      return undefined;
+    if (!filterValue) {
+      return [];
     }
 
-    const filter: {
-      accountIds?: string[];
-      assetClasses?: string[];
-      holdings?: AssetProfileIdentifier[];
-      tagIds?: string[];
-    } = {};
+    const filters: Filter[] = [];
 
     if (filterValue.account) {
-      filter.accountIds = [filterValue.account];
+      filters.push({ id: filterValue.account, type: 'ACCOUNT' });
     }
 
     if (filterValue.assetClass) {
-      filter.assetClasses = [filterValue.assetClass];
+      filters.push({ id: filterValue.assetClass, type: 'ASSET_CLASS' });
     }
 
     if (filterValue.holding) {
-      filter.holdings = [
+      filters.push(
         {
-          dataSource: filterValue.holding.assetProfile.dataSource,
-          symbol: filterValue.holding.assetProfile.symbol
+          id: filterValue.holding.assetProfile.dataSource,
+          type: 'DATA_SOURCE'
+        },
+        {
+          id: filterValue.holding.assetProfile.symbol,
+          type: 'SYMBOL'
         }
-      ];
+      );
     }
 
     if (filterValue.tag) {
-      filter.tagIds = [filterValue.tag];
+      filters.push({ id: filterValue.tag, type: 'TAG' });
     }
 
-    return filter;
+    return filters;
   }
 
-  private loadFilterData() {
-    const existingFilter = this.data.access?.settings?.filter;
-
-    this.userService
-      .get()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((user) => {
-        this.accounts = user.accounts;
-        this.tags = user.tags
-          .filter(({ isUsed }) => isUsed)
-          .map(({ id, name }) => ({
-            id,
-            label: name,
-            type: 'TAG' as const
-          }));
-        this.updateFiltersFormControl(existingFilter);
-      });
-
+  private loadHoldings() {
     this.dataService
       .fetchPortfolioDetails({})
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -246,50 +231,56 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
             type: 'ASSET_CLASS' as const
           }));
 
-          this.updateFiltersFormControl(existingFilter);
+          this.updateFiltersFormControl(this.data.access?.settings?.filters);
         }
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  private updateFiltersFormControl(
-    existingFilter:
-      | {
-          accountIds?: string[];
-          assetClasses?: string[];
-          holdings?: AssetProfileIdentifier[];
-          tagIds?: string[];
-        }
-      | undefined
-  ) {
-    if (!existingFilter) {
+  private updateFiltersFormControl(existingFilters: Filter[] | undefined) {
+    if (!existingFilters?.length) {
       return;
     }
 
     const filterValue: Partial<PortfolioFilterFormValue> = {};
 
-    if (existingFilter.accountIds?.[0] && this.accounts.length > 0) {
-      filterValue.account = existingFilter.accountIds[0];
+    const accountFilter = existingFilters.find(({ type }) => {
+      return type === 'ACCOUNT';
+    });
+    if (accountFilter && this.accounts.length > 0) {
+      filterValue.account = accountFilter.id;
     }
 
-    if (existingFilter.assetClasses?.[0] && this.assetClasses.length > 0) {
-      filterValue.assetClass = existingFilter.assetClasses[0];
+    const assetClassFilter = existingFilters.find(({ type }) => {
+      return type === 'ASSET_CLASS';
+    });
+    if (assetClassFilter && this.assetClasses.length > 0) {
+      filterValue.assetClass = assetClassFilter.id;
     }
 
-    if (existingFilter.holdings?.[0] && this.holdings.length > 0) {
-      const holdingData = existingFilter.holdings[0];
-      const holding = this.holdings.find(
-        (h) =>
-          h.assetProfile.dataSource === holdingData.dataSource &&
-          h.assetProfile.symbol === holdingData.symbol
-      );
+    const dataSourceFilter = existingFilters.find(({ type }) => {
+      return type === 'DATA_SOURCE';
+    });
+    const symbolFilter = existingFilters.find(({ type }) => {
+      return type === 'SYMBOL';
+    });
+    if (dataSourceFilter && symbolFilter && this.holdings.length > 0) {
+      const holding = this.holdings.find(({ assetProfile }) => {
+        return (
+          assetProfile.dataSource === dataSourceFilter.id &&
+          assetProfile.symbol === symbolFilter.id
+        );
+      });
       if (holding) {
         filterValue.holding = holding;
       }
     }
 
-    if (existingFilter.tagIds?.[0] && this.tags.length > 0) {
-      filterValue.tag = existingFilter.tagIds[0];
+    const tagFilter = existingFilters.find(({ type }) => {
+      return type === 'TAG';
+    });
+    if (tagFilter && this.tags.length > 0) {
+      filterValue.tag = tagFilter.id;
     }
 
     if (Object.keys(filterValue).length > 0) {
@@ -299,11 +290,11 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private async createAccess() {
-    const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
+    const filters = this.buildFilters();
 
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
-      filter,
+      filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       permissions: [this.accessForm.get('permissions')?.value]
     };
@@ -344,11 +335,11 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       return;
     }
 
-    const filter = this.showFilterPanel ? this.buildFilterObject() : undefined;
+    const filters = this.buildFilters();
 
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
-      filter,
+      filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: accessId,
       permissions: [this.accessForm.get('permissions')?.value]
