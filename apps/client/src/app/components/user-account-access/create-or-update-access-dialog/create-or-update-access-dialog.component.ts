@@ -25,7 +25,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -143,9 +142,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         const permissionsControl = this.accessForm.get('permissions');
 
         if (accessType === 'PRIVATE') {
-          granteeUserIdControl?.setValidators([
-            (control: AbstractControl) => Validators.required(control)
-          ]);
+          granteeUserIdControl?.setValidators(Validators.required);
           this.accessForm.get('filters')?.setValue(null);
         } else {
           granteeUserIdControl?.clearValidators();
@@ -153,10 +150,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           permissionsControl?.setValue(
             access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
           );
-
-          if (this.canApplyFilters) {
-            this.loadHoldings();
-          }
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -164,9 +157,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    if (this.canApplyFilters) {
-      this.loadHoldings();
-    }
+    this.loadHoldings();
   }
 
   protected onCancel() {

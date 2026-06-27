@@ -21,7 +21,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Access as AccessModel, Prisma } from '@prisma/client';
+import { Access as AccessModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';
@@ -87,17 +87,13 @@ export class AccessController {
     }
 
     try {
-      const settings: AccessSettings = data.filters?.length
-        ? { filters: data.filters }
-        : {};
-
       return this.accessService.createAccess({
         alias: data.alias || undefined,
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
-        settings: settings as Prisma.InputJsonValue,
+        settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
       });
     } catch {
@@ -159,10 +155,6 @@ export class AccessController {
     }
 
     try {
-      const settings: AccessSettings = data.filters?.length
-        ? { filters: data.filters }
-        : {};
-
       return this.accessService.updateAccess({
         data: {
           alias: data.alias,
@@ -170,7 +162,7 @@ export class AccessController {
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
           permissions: data.permissions,
-          settings: settings as Prisma.InputJsonValue
+          settings: this.accessService.buildSettings(data.filters)
         },
         where: { id }
       });
