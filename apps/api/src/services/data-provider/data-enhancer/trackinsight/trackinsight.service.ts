@@ -13,7 +13,6 @@ import { SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
     'Republic of Korea': 'KR',
     'Russian Federation': 'RU',
@@ -37,6 +36,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     private readonly configurationService: ConfigurationService,
     private readonly fetchService: FetchService
   ) {}
+
+  private get baseUrl() {
+    return this.configurationService.get('TRACKINSIGHT_BASE_URL');
+  }
 
   public async enhance({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
@@ -74,7 +77,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const profile = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
+        `${this.baseUrl}/data-api/funds/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -98,7 +101,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const holdings = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
+        `${this.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -191,7 +194,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   }) {
     return this.fetchService
       .fetch(
-        `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+        `${this.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
