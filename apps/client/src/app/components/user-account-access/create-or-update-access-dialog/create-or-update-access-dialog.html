@@ -58,7 +58,8 @@
           />
         </mat-form-field>
       </div>
-    } @else if (hasExperimentalFeatures) {
+    }
+    @if (canApplyFilters) {
       <h2 class="h6" i18n>Filters</h2>
       <div class="flex-grow-1 py-0">
         <gf-portfolio-filter-form

@@ -67,12 +67,13 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
-  public hasExperimentalFeatures = false;
   public holdings: PortfolioPosition[] = [];
   public tags: Filter[] = [];
 
   protected accessForm: FormGroup;
   protected readonly mode: 'create' | 'update';
+
+  private hasExperimentalFeatures = false;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -91,6 +92,13 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   public constructor() {
     this.mode = this.data.access ? 'update' : 'create';
+  }
+
+  public get canApplyFilters() {
+    return (
+      this.accessForm?.get('type')?.value === 'PUBLIC' &&
+      this.hasExperimentalFeatures
+    );
   }
 
   public ngOnInit() {
@@ -146,7 +154,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
             access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
           );
 
-          if (this.hasExperimentalFeatures) {
+          if (this.canApplyFilters) {
             this.loadHoldings();
           }
         }
@@ -156,7 +164,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    if (isPublic && this.hasExperimentalFeatures) {
+    if (this.canApplyFilters) {
       this.loadHoldings();
     }
   }
