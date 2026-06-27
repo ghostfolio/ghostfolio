@@ -23,7 +23,7 @@ export function getAssetClassFilters(): Filter[] {
 export function getFiltersFromPortfolioFilterFormValue(
   value: PortfolioFilterFormValue | null,
   { includeEmpty = false }: { includeEmpty?: boolean } = {}
-): Filter[] {
+) {
   const filters: Filter[] = [
     {
       id: value?.account ?? '',
@@ -54,9 +54,7 @@ export function getFiltersFromPortfolioFilterFormValue(
       });
 }
 
-export function getHoldingsForFilter(
-  holdings: PortfolioPosition[] = []
-): PortfolioPosition[] {
+export function getHoldingsForFilter(holdings: PortfolioPosition[] = []) {
   return holdings
     .filter(({ assetProfile }) => {
       return (
