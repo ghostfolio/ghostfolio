@@ -1,14 +1,16 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
-import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import {
   GfPortfolioFilterFormComponent,
-  PortfolioFilterFormValue
+  getAssetClassFilters,
+  getFiltersFromPortfolioFilterFormValue,
+  getHoldingsForFilter,
+  getPortfolioFilterFormValue,
+  getTagFilters
 } from '@ghostfolio/ui/portfolio-filter-form';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -39,7 +41,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission, AssetClass, DataSource } from '@prisma/client';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -112,17 +114,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    this.assetClasses = Object.keys(AssetClass)
-      .map((assetClass) => {
-        return {
-          id: assetClass,
-          label: translate(assetClass),
-          type: 'ASSET_CLASS' as const
-        };
-      })
-      .sort((a, b) => {
-        return a.label.localeCompare(b.label);
-      });
+    this.assetClasses = getAssetClassFilters();
 
     this.userService
       .get()
@@ -130,22 +122,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       .subscribe(({ accounts, settings, tags }) => {
         this.accounts = accounts;
         this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
-
-        this.tags =
-          tags
-            ?.filter(({ isUsed }) => {
-              return isUsed;
-            })
-            ?.map(({ id, name }) => {
-              return {
-                id,
-                label: translate(name),
-                type: 'TAG' as const
-              };
-            })
-            ?.sort((a, b) => {
-              return a.label.localeCompare(b.label);
-            }) ?? [];
+        this.tags = getTagFilters(tags);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -197,41 +174,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private buildFilters(): Filter[] {
-    const filterValue = this.accessForm.get('filters')
-      ?.value as PortfolioFilterFormValue | null;
-
-    if (!filterValue) {
-      return [];
-    }
-
-    const filters: Filter[] = [];
-
-    if (filterValue.account) {
-      filters.push({ id: filterValue.account, type: 'ACCOUNT' });
-    }
-
-    if (filterValue.assetClass) {
-      filters.push({ id: filterValue.assetClass, type: 'ASSET_CLASS' });
-    }
-
-    if (filterValue.holding) {
-      filters.push(
-        {
-          id: filterValue.holding.assetProfile.dataSource,
-          type: 'DATA_SOURCE'
-        },
-        {
-          id: filterValue.holding.assetProfile.symbol,
-          type: 'SYMBOL'
-        }
-      );
-    }
-
-    if (filterValue.tag) {
-      filters.push({ id: filterValue.tag, type: 'TAG' });
-    }
-
-    return filters;
+    return getFiltersFromPortfolioFilterFormValue(
+      this.accessForm.get('filters')?.value
+    );
   }
 
   private loadHoldings() {
@@ -239,18 +184,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       .fetchPortfolioHoldings()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
-        this.holdings = holdings
-          .filter(({ assetProfile }) => {
-            return (
-              assetProfile.assetSubClass &&
-              !['CASH'].includes(assetProfile.assetSubClass)
-            );
-          })
-          .sort((a, b) => {
-            return (a.assetProfile.name ?? '').localeCompare(
-              b.assetProfile.name ?? ''
-            );
-          });
+        this.holdings = getHoldingsForFilter(holdings);
 
         this.updateFiltersFormControl(this.data.access?.settings?.filters);
 
@@ -348,25 +282,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       return;
     }
 
-    const getFilterId = (type: Filter['type']) => {
-      return filters.find((filter) => filter.type === type)?.id ?? null;
-    };
-
-    const dataSource = getFilterId('DATA_SOURCE') as DataSource;
-    const symbol = getFilterId('SYMBOL');
-    const holding = this.holdings.find(({ assetProfile }) => {
-      return (
-        !!(dataSource && symbol) &&
-        getAssetProfileIdentifier(assetProfile) ===
-          getAssetProfileIdentifier({ dataSource, symbol })
-      );
-    });
-
-    this.accessForm.get('filters')?.setValue({
-      account: getFilterId('ACCOUNT'),
-      assetClass: getFilterId('ASSET_CLASS'),
-      holding: holding ?? null,
-      tag: getFilterId('TAG')
-    } satisfies PortfolioFilterFormValue);
+    this.accessForm
+      .get('filters')
+      ?.setValue(getPortfolioFilterFormValue(filters, this.holdings));
   }
 }
