@@ -178,19 +178,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     );
   }
 
-  private loadHoldings() {
-    this.dataService
-      .fetchPortfolioHoldings()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ holdings }) => {
-        this.holdings = getHoldingsForFilter(holdings);
-
-        this.updateFiltersFormControl(this.data.access?.settings?.filters);
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
   private async createAccess() {
     const filters = this.buildFilters();
 
@@ -228,6 +215,19 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private loadHoldings() {
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ holdings }) => {
+        this.holdings = getHoldingsForFilter(holdings);
+
+        this.updateFiltersFormControl(this.data.access?.settings?.filters);
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private async updateAccess() {

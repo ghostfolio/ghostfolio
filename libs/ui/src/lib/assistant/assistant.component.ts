@@ -722,14 +722,26 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const settings = this.user?.settings;
 
     const filters = [
-      { id: settings?.['filters.accounts']?.[0] ?? '', type: 'ACCOUNT' },
+      {
+        id: settings?.['filters.accounts']?.[0] ?? '',
+        type: 'ACCOUNT'
+      },
       {
         id: settings?.['filters.assetClasses']?.[0] ?? '',
         type: 'ASSET_CLASS'
       },
-      { id: settings?.['filters.dataSource'] ?? '', type: 'DATA_SOURCE' },
-      { id: settings?.['filters.symbol'] ?? '', type: 'SYMBOL' },
-      { id: settings?.['filters.tags']?.[0] ?? '', type: 'TAG' }
+      {
+        id: settings?.['filters.dataSource'] ?? '',
+        type: 'DATA_SOURCE'
+      },
+      {
+        id: settings?.['filters.symbol'] ?? '',
+        type: 'SYMBOL'
+      },
+      {
+        id: settings?.['filters.tags']?.[0] ?? '',
+        type: 'TAG'
+      }
     ].filter(({ id }) => {
       return !!id;
     }) as Filter[];

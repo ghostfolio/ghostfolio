@@ -60,18 +60,16 @@
       </div>
     }
     @if (canApplyFilters) {
-      <h2 class="h6" i18n>Filters</h2>
-      <div class="flex-grow-1 py-0">
-        <gf-portfolio-filter-form
-          appearance="outline"
-          class="w-100"
-          formControlName="filters"
-          [accounts]="accounts"
-          [assetClasses]="assetClasses"
-          [holdings]="holdings"
-          [tags]="tags"
-        />
-      </div>
+      <h2 class="h6" i18n>Portfolio Filters</h2>
+      <gf-portfolio-filter-form
+        appearance="outline"
+        class="w-100"
+        formControlName="filters"
+        [accounts]="accounts"
+        [assetClasses]="assetClasses"
+        [holdings]="holdings"
+        [tags]="tags"
+      />
     }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
