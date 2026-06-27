@@ -1,5 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
@@ -38,7 +39,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission, AssetClass } from '@prisma/client';
+import { AccessPermission, AssetClass, DataSource } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -145,8 +146,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
             ?.sort((a, b) => {
               return a.label.localeCompare(b.label);
             }) ?? [];
-
-        this.updateFiltersFormControl(this.data.access?.settings?.filters);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -344,61 +343,30 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
-  private updateFiltersFormControl(existingFilters: Filter[] | undefined) {
-    if (!existingFilters?.length) {
+  private updateFiltersFormControl(filters: Filter[] | undefined) {
+    if (!filters?.length) {
       return;
     }
 
-    const filterValue: Partial<PortfolioFilterFormValue> = {};
+    const getFilterId = (type: Filter['type']) => {
+      return filters.find((filter) => filter.type === type)?.id ?? null;
+    };
 
-    const accountFilter = existingFilters.find(({ type }) => {
-      return type === 'ACCOUNT';
+    const dataSource = getFilterId('DATA_SOURCE') as DataSource;
+    const symbol = getFilterId('SYMBOL');
+    const holding = this.holdings.find(({ assetProfile }) => {
+      return (
+        !!(dataSource && symbol) &&
+        getAssetProfileIdentifier(assetProfile) ===
+          getAssetProfileIdentifier({ dataSource, symbol })
+      );
     });
 
-    if (accountFilter && this.accounts.length > 0) {
-      filterValue.account = accountFilter.id;
-    }
-
-    const assetClassFilter = existingFilters.find(({ type }) => {
-      return type === 'ASSET_CLASS';
-    });
-
-    if (assetClassFilter && this.assetClasses.length > 0) {
-      filterValue.assetClass = assetClassFilter.id;
-    }
-
-    const dataSourceFilter = existingFilters.find(({ type }) => {
-      return type === 'DATA_SOURCE';
-    });
-
-    const symbolFilter = existingFilters.find(({ type }) => {
-      return type === 'SYMBOL';
-    });
-
-    if (dataSourceFilter && symbolFilter && this.holdings.length > 0) {
-      const holding = this.holdings.find(({ assetProfile }) => {
-        return (
-          assetProfile.dataSource === dataSourceFilter.id &&
-          assetProfile.symbol === symbolFilter.id
-        );
-      });
-
-      if (holding) {
-        filterValue.holding = holding;
-      }
-    }
-
-    const tagFilter = existingFilters.find(({ type }) => {
-      return type === 'TAG';
-    });
-
-    if (tagFilter && this.tags.length > 0) {
-      filterValue.tag = tagFilter.id;
-    }
-
-    if (Object.keys(filterValue).length > 0) {
-      this.accessForm.get('filters')?.setValue(filterValue);
-      this.changeDetectorRef.markForCheck();
-    }
+    this.accessForm.get('filters')?.setValue({
+      account: getFilterId('ACCOUNT'),
+      assetClass: getFilterId('ASSET_CLASS'),
+      holding: holding ?? null,
+      tag: getFilterId('TAG')
+    } satisfies PortfolioFilterFormValue);
   }
 }
