@@ -69,7 +69,6 @@ export class PublicController {
       hasDetails = user.subscription.type === SubscriptionType.Premium;
     }
 
-    // Get the portfolio filters from the access settings
     const { filters: portfolioFilters = [] } = (access.settings ??
       {}) as AccessSettings;
 
@@ -99,7 +98,6 @@ export class PublicController {
       user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
     const filteredHoldings = Object.fromEntries(
       Object.entries(holdings).filter(([, holding]) => {
-        // Remove only cash holdings that match the base currency
         const isCash =
           holding.assetProfile.assetSubClass === AssetSubClass.CASH;
         const isBaseCurrency = holding.assetProfile.symbol === baseCurrency;

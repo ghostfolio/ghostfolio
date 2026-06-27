@@ -61,10 +61,9 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
-  public hasExperimentalFeatures = false;
-
   public accounts: AccountWithPlatform[] = [];
   public assetClasses: Filter[] = [];
+  public hasExperimentalFeatures = false;
   public holdings: PortfolioPosition[] = [];
   public tags: Filter[] = [];
 
@@ -72,12 +71,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   protected readonly mode: 'create' | 'update';
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
   private readonly data =
     inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
+
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
+
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateAccessDialogComponent>>(MatDialogRef);
+
   private readonly formBuilder = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
   private readonly userService = inject(UserService);

@@ -46,19 +46,13 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map(
-      ({
-        alias,
-        granteeUser,
-        id,
-        permissions: accessPermissions,
-        settings
-      }) => {
+      ({ alias, granteeUser, id, permissions, settings }) => {
         if (granteeUser) {
           return {
             alias,
-            grantee: granteeUser?.id,
             id,
-            permissions: accessPermissions,
+            permissions,
+            grantee: granteeUser?.id,
             settings: settings as AccessSettings,
             type: 'PRIVATE'
           };
@@ -66,9 +60,9 @@ export class AccessController {
 
         return {
           alias,
-          grantee: 'Public',
           id,
-          permissions: accessPermissions,
+          permissions,
+          grantee: 'Public',
           settings: settings as AccessSettings,
           type: 'PUBLIC'
         };
@@ -112,6 +106,27 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  @Delete(':id')
+  @HasPermission(permissions.deleteAccess)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
+    const originalAccess = await this.accessService.access({
+      id,
+      userId: this.request.user.id
+    });
+
+    if (!originalAccess) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accessService.deleteAccess({
+      id
+    });
   }
 
   @HasPermission(permissions.updateAccess)
@@ -165,26 +180,5 @@ export class AccessController {
         StatusCodes.BAD_REQUEST
       );
     }
-  }
-
-  @Delete(':id')
-  @HasPermission(permissions.deleteAccess)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
-    const originalAccess = await this.accessService.access({
-      id,
-      userId: this.request.user.id
-    });
-
-    if (!originalAccess) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return this.accessService.deleteAccess({
-      id
-    });
   }
 }
