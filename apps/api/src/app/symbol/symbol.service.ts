@@ -1,7 +1,10 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   HistoricalDataItem,
@@ -24,15 +27,31 @@ export class SymbolService {
 
   public async get({
     dataGatheringItem,
-    includeHistoricalData
+    includeHistoricalData,
+    useIntradayData = false
   }: {
     dataGatheringItem: DataGatheringItem;
     includeHistoricalData?: number;
+    useIntradayData?: boolean;
   }): Promise<SymbolItem> {
-    const quotes = await this.dataProviderService.getQuotes({
-      items: [dataGatheringItem]
-    });
-    const { currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {};
+    let currency: string;
+    let marketPrice: number;
+
+    if (useIntradayData) {
+      const latestMarketData = await this.marketDataService.getLatest({
+        dataSource: dataGatheringItem.dataSource,
+        symbol: dataGatheringItem.symbol
+      });
+
+      marketPrice = latestMarketData?.marketPrice;
+    } else {
+      const quotes = await this.dataProviderService.getQuotes({
+        items: [dataGatheringItem]
+      });
+
+      ({ currency, marketPrice } =
+        quotes[getAssetProfileIdentifier(dataGatheringItem)] ?? {});
+    }
 
     if (dataGatheringItem.dataSource && marketPrice >= 0) {
       let historicalData: HistoricalDataItem[] = [];
@@ -75,12 +94,17 @@ export class SymbolService {
     date = new Date(),
     symbol
   }: DataGatheringItem): Promise<DataProviderHistoricalResponse> {
+    const assetProfileIdentifier = getAssetProfileIdentifier({
+      dataSource,
+      symbol
+    });
+
     let historicalData: {
-      [symbol: string]: {
+      [assetProfileIdentifier: string]: {
         [date: string]: DataProviderHistoricalResponse;
       };
     } = {
-      [symbol]: {}
+      [assetProfileIdentifier]: {}
     };
 
     try {
@@ -93,7 +117,8 @@ export class SymbolService {
 
     return {
       marketPrice:
-        historicalData?.[symbol]?.[format(date, DATE_FORMAT)]?.marketPrice
+        historicalData?.[assetProfileIdentifier]?.[format(date, DATE_FORMAT)]
+          ?.marketPrice
     };
   }
 

@@ -1,7 +1,6 @@
 import { NumberParser } from '@internationalized/number';
 import {
   Type as ActivityType,
-  DataSource,
   MarketData,
   Prisma,
   SymbolProfile,
@@ -38,7 +37,6 @@ import {
   DEFAULT_CURRENCY,
   DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
-  ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
   ghostfolioScraperApiSymbolPrefix
@@ -157,7 +155,6 @@ export function canDeleteAssetProfile({
     !isBenchmark &&
     !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
     !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
-    symbol !== ghostfolioFearAndGreedIndexSymbol &&
     symbol !== ghostfolioFearAndGreedIndexSymbolCryptocurrencies &&
     symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
     watchedByCount === 0
@@ -166,14 +163,6 @@ export function canDeleteAssetProfile({
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
-}
-
-export function decodeDataSource(encodedDataSource: string) {
-  if (encodedDataSource) {
-    return Buffer.from(encodedDataSource, 'hex').toString();
-  }
-
-  return undefined;
 }
 
 export function downloadAsFile({
@@ -199,14 +188,6 @@ export function downloadAsFile({
   a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
-}
-
-export function encodeDataSource(aDataSource: DataSource) {
-  if (aDataSource) {
-    return Buffer.from(aDataSource, 'utf-8').toString('hex');
-  }
-
-  return undefined;
 }
 
 export function extractNumberFromString({

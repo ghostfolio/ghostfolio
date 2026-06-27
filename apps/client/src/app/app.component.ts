@@ -1,5 +1,9 @@
 import { getCssVariable } from '@ghostfolio/common/helper';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -27,7 +31,6 @@ import {
   RouterLink,
   RouterOutlet
 } from '@angular/router';
-import { DataSource } from '@prisma/client';
 import { Chart } from 'chart.js';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
@@ -269,10 +272,7 @@ export class GfAppComponent implements OnInit {
   private openHoldingDetailDialog({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  }: AssetProfileIdentifier) {
     this.userService
       .get()
       .pipe(takeUntilDestroyed(this.destroyRef))

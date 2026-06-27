@@ -164,12 +164,14 @@
               @for (message of errorMessages; track message; let i = $index) {
                 <mat-expansion-panel [disabled]="!details[i]">
                   <mat-expansion-panel-header class="pl-1">
-                    <mat-panel-title>
-                      <div class="d-flex">
+                    <mat-panel-title class="w-100">
+                      <div class="d-flex w-100">
                         <div class="align-items-center d-flex mr-2">
                           <ion-icon name="warning-outline" />
                         </div>
-                        <div>{{ message }}</div>
+                        <div class="text-truncate" title="{{ message }}">
+                          {{ message }}
+                        </div>
                       </div>
                     </mat-panel-title>
                   </mat-expansion-panel-header>

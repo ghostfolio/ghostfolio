@@ -4,10 +4,14 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { WatchlistResponse } from '@ghostfolio/common/interfaces';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  AssetProfileIdentifier,
+  WatchlistResponse
+} from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { DataSource, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WatchlistService {
@@ -24,11 +28,7 @@ export class WatchlistService {
     dataSource,
     symbol,
     userId
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-    userId: string;
-  }): Promise<void> {
+  }: { userId: string } & AssetProfileIdentifier): Promise<void> {
     const symbolProfile = await this.prismaService.symbolProfile.findUnique({
       where: {
         dataSource_symbol: { dataSource, symbol }
@@ -40,14 +40,17 @@ export class WatchlistService {
         { dataSource, symbol }
       ]);
 
-      if (!assetProfiles[symbol]?.currency) {
+      const assetProfile =
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (!assetProfile?.currency) {
         throw new BadRequestException(
           `Asset profile not found for ${symbol} (${dataSource})`
         );
       }
 
       await this.symbolProfileService.add(
-        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
+        assetProfile as Prisma.SymbolProfileCreateInput
       );
     }
 
@@ -72,11 +75,7 @@ export class WatchlistService {
     dataSource,
     symbol,
     userId
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-    userId: string;
-  }) {
+  }: { userId: string } & AssetProfileIdentifier) {
     await this.prismaService.user.update({
       data: {
         watchlist: {
@@ -127,7 +126,8 @@ export class WatchlistService {
         const performancePercent =
           this.benchmarkService.calculateChangeInPercentage(
             allTimeHigh?.marketPrice,
-            quotes[symbol]?.marketPrice
+            quotes[getAssetProfileIdentifier({ dataSource, symbol })]
+              ?.marketPrice
           );
 
         return {

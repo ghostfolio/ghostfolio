@@ -1,6 +1,7 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -17,7 +18,6 @@ import {
   PROPERTY_UPTIME,
   ghostfolioFearAndGreedIndexDataSourceStocks
 } from '@ghostfolio/common/config';
-import { encodeDataSource } from '@ghostfolio/common/helper';
 import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 

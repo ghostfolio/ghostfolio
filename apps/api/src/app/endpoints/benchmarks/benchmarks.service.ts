@@ -81,6 +81,14 @@ export class BenchmarksService {
       })
     ]);
 
+    if (!currentSymbolItem) {
+      this.logger.error(
+        `No current market price is available for ${symbol} (${dataSource})`
+      );
+
+      return { marketData };
+    }
+
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         startDate,

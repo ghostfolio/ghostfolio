@@ -47,6 +47,7 @@ import type { AdminUsersResponse } from './responses/admin-users-response.interf
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { AiServiceHealthResponse } from './responses/ai-service-health-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
+import type { AssetProfileResponse } from './responses/asset-profile-response.interface';
 import type { AssetProfilesResponse } from './responses/asset-profiles-response.interface';
 import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
@@ -67,7 +68,6 @@ import type { HistoricalResponse } from './responses/historical-response.interfa
 import type { ImportResponse } from './responses/import-response.interface';
 import type { InfoResponse } from './responses/info-response.interface';
 import type { LookupResponse } from './responses/lookup-response.interface';
-import type { MarketDataDetailsResponse } from './responses/market-data-details-response.interface';
 import type { MarketDataOfMarketsResponse } from './responses/market-data-of-markets-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PlatformsResponse } from './responses/platforms-response.interface';
@@ -125,6 +125,7 @@ export {
   AssetClassSelectorOption,
   AssetProfileIdentifier,
   AssetProfileItem,
+  AssetProfileResponse,
   AssetProfilesResponse,
   AssetResponse,
   AttestationCredentialJSON,
@@ -160,7 +161,6 @@ export {
   LookupItem,
   LookupResponse,
   MarketData,
-  MarketDataDetailsResponse,
   MarketDataOfMarketsResponse,
   NullableLineChartItem,
   OAuthResponse,

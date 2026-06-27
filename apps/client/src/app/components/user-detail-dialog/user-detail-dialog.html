@@ -128,7 +128,7 @@
       @if (subscriptionsDataSource.data.length > 0) {
         <div class="row">
           <div class="col">
-            <h2 class="h6" i18n>Subscriptions</h2>
+            <h2 class="h6" i18n>Subscription History</h2>
             <div class="overflow-x-auto">
               <table
                 class="gf-table w-100"
@@ -137,7 +137,7 @@
               >
                 <ng-container matColumnDef="createdAt">
                   <th *matHeaderCellDef class="px-1" mat-header-cell>
-                    <ng-container i18n>Created</ng-container>
+                    <ng-container i18n>Creation</ng-container>
                   </th>
                   <td *matCellDef="let element" class="px-1" mat-cell>
                     <gf-value
@@ -170,13 +170,18 @@
                     class="px-1 text-right"
                     mat-cell
                   >
-                    <gf-value
-                      class="d-inline-block justify-content-end"
-                      [isCurrency]="true"
-                      [locale]="data.locale"
-                      [unit]="baseCurrency"
-                      [value]="element.price"
-                    />
+                    @if (element.price === null) {
+                      <span>–</span>
+                      <span class="ml-1">{{ baseCurrency }}</span>
+                    } @else {
+                      <gf-value
+                        class="d-inline-block justify-content-end"
+                        [isCurrency]="true"
+                        [locale]="data.locale"
+                        [unit]="baseCurrency"
+                        [value]="element.price"
+                      />
+                    }
                   </td>
                   <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
                     <gf-value
@@ -191,7 +196,7 @@
 
                 <ng-container matColumnDef="expiresAt">
                   <th *matHeaderCellDef class="px-1" mat-header-cell>
-                    <ng-container i18n>Expires</ng-container>
+                    <ng-container i18n>Expiration</ng-container>
                   </th>
                   <td *matCellDef="let element" class="px-1" mat-cell>
                     <gf-value

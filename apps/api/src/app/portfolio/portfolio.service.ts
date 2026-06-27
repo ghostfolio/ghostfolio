@@ -46,6 +46,7 @@ import {
 import {
   AccountsResponse,
   Activity,
+  AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
@@ -204,21 +205,21 @@ export class PortfolioService {
           switch (type) {
             case ActivityType.DIVIDEND:
               dividendInBaseCurrency +=
-                await this.exchangeRateDataService.toCurrencyAtDate(
+                (await this.exchangeRateDataService.toCurrencyAtDate(
                   new Big(quantity).mul(unitPrice).toNumber(),
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
-                );
+                )) ?? 0;
               break;
             case ActivityType.INTEREST:
               interestInBaseCurrency +=
-                await this.exchangeRateDataService.toCurrencyAtDate(
+                (await this.exchangeRateDataService.toCurrencyAtDate(
                   unitPrice,
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
-                );
+                )) ?? 0;
               break;
           }
 
@@ -776,11 +777,9 @@ export class PortfolioService {
     symbol,
     userId
   }: {
-    dataSource: DataSource;
     impersonationId: string;
-    symbol: string;
     userId: string;
-  }): Promise<PortfolioHoldingResponse> {
+  } & AssetProfileIdentifier): Promise<PortfolioHoldingResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -890,10 +889,13 @@ export class PortfolioService {
       marketPrice
     );
 
-    if (historicalData[symbol]) {
+    const historicalDataItems =
+      historicalData[getAssetProfileIdentifier({ dataSource, symbol })];
+
+    if (historicalDataItems) {
       let j = -1;
       for (const [date, { marketPrice }] of Object.entries(
-        historicalData[symbol]
+        historicalDataItems
       )) {
         while (
           j + 1 < transactionPoints.length &&
@@ -955,7 +957,6 @@ export class PortfolioService {
       marketPrice,
       marketPriceMax,
       marketPriceMin,
-      SymbolProfile,
       tags,
       assetProfile: {
         assetClass: SymbolProfile.assetClass,
@@ -1381,12 +1382,10 @@ export class PortfolioService {
     tags,
     userId
   }: {
-    dataSource: DataSource;
     impersonationId: string;
-    symbol: string;
     tags: Tag[];
     userId: string;
-  }) {
+  } & AssetProfileIdentifier) {
     userId = await this.getUserId(impersonationId, userId);
 
     await this.activitiesService.assignTags({

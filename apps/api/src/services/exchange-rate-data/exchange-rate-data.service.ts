@@ -11,9 +11,11 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
+  getAssetProfileIdentifier,
   getYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -162,7 +164,7 @@ export class ExchangeRateDataService {
   }
 
   public async loadCurrencies() {
-    const result = await this.dataProviderService.getHistorical(
+    const historicalData = await this.dataProviderService.getHistorical(
       this.currencyPairs,
       'day',
       getYesterday(),
@@ -176,11 +178,26 @@ export class ExchangeRateDataService {
       requestTimeout: ms('30 seconds')
     });
 
-    for (const symbol of Object.keys(quotes)) {
-      if (isNumber(quotes[symbol].marketPrice)) {
+    const result: {
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    } = {};
+
+    for (const { dataSource, symbol } of this.currencyPairs) {
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource,
+        symbol
+      });
+
+      if (historicalData[assetProfileIdentifier]) {
+        result[symbol] = historicalData[assetProfileIdentifier];
+      }
+
+      const quote = quotes[assetProfileIdentifier];
+
+      if (isNumber(quote?.marketPrice)) {
         result[symbol] = {
           [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: quotes[symbol].marketPrice
+            marketPrice: quote.marketPrice
           }
         };
       }

@@ -2,6 +2,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY,
   GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME,
   GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME,
   GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME,
@@ -35,7 +36,14 @@ export class StatisticsGatheringProcessor {
     private readonly propertyService: PropertyService
   ) {}
 
-  @Process(GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME)
+  @Process({
+    concurrency: parseInt(
+      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
+        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
+      10
+    ),
+    name: GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME
+  })
   public async gatherDockerHubPullsStatistics() {
     this.logger.log('Docker Hub pulls statistics gathering has been started');
 
@@ -49,7 +57,14 @@ export class StatisticsGatheringProcessor {
     this.logger.log('Docker Hub pulls statistics gathering has been completed');
   }
 
-  @Process(GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME)
+  @Process({
+    concurrency: parseInt(
+      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
+        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
+      10
+    ),
+    name: GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME
+  })
   public async gatherGitHubContributorsStatistics() {
     this.logger.log(
       'GitHub contributors statistics gathering has been started'
@@ -67,7 +82,14 @@ export class StatisticsGatheringProcessor {
     );
   }
 
-  @Process(GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME)
+  @Process({
+    concurrency: parseInt(
+      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
+        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
+      10
+    ),
+    name: GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME
+  })
   public async gatherGitHubStargazersStatistics() {
     this.logger.log('GitHub stargazers statistics gathering has been started');
 
@@ -83,7 +105,14 @@ export class StatisticsGatheringProcessor {
     );
   }
 
-  @Process(GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME)
+  @Process({
+    concurrency: parseInt(
+      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
+        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
+      10
+    ),
+    name: GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME
+  })
   public async gatherUptimeStatistics() {
     const monitorId = await this.propertyService.getByKey<string>(
       PROPERTY_BETTER_UPTIME_MONITOR_ID
