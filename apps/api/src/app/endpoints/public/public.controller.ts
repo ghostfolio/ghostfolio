@@ -94,17 +94,6 @@ export class PublicController {
       })
     ]);
 
-    const baseCurrency =
-      user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
-    const filteredHoldings = Object.fromEntries(
-      Object.entries(holdings).filter(([, holding]) => {
-        const isCash =
-          holding.assetProfile.assetSubClass === AssetSubClass.CASH;
-        const isBaseCurrency = holding.assetProfile.symbol === baseCurrency;
-        return !(isCash && isBaseCurrency);
-      })
-    );
-
     const { activities } = await this.activitiesService.getActivities({
       filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
       sortColumn: 'date',
@@ -175,23 +164,19 @@ export class PublicController {
     };
 
     const totalValue = getSum(
-      Object.values(filteredHoldings).map(
-        ({ assetProfile, marketPrice, quantity }) => {
-          return new Big(
-            this.exchangeRateDataService.toCurrency(
-              quantity * marketPrice,
-              assetProfile.currency,
-              this.request.user?.settings?.settings.baseCurrency ??
-                DEFAULT_CURRENCY
-            )
-          );
-        }
-      )
+      Object.values(holdings).map(({ assetProfile, marketPrice, quantity }) => {
+        return new Big(
+          this.exchangeRateDataService.toCurrency(
+            quantity * marketPrice,
+            assetProfile.currency,
+            this.request.user?.settings?.settings.baseCurrency ??
+              DEFAULT_CURRENCY
+          )
+        );
+      })
     ).toNumber();
 
-    for (const [symbol, portfolioPosition] of Object.entries(
-      filteredHoldings
-    )) {
+    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       publicPortfolioResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,

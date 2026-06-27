@@ -3,6 +3,7 @@ import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import {
   GfPortfolioFilterFormComponent,
@@ -37,7 +38,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission } from '@prisma/client';
+import { AccessPermission, AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -110,6 +111,18 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
+    this.assetClasses = Object.keys(AssetClass)
+      .map((assetClass) => {
+        return {
+          id: assetClass,
+          label: translate(assetClass),
+          type: 'ASSET_CLASS' as const
+        };
+      })
+      .sort((a, b) => {
+        return a.label.localeCompare(b.label);
+      });
+
     this.userService
       .get()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -117,13 +130,21 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         this.accounts = accounts;
         this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
 
-        this.tags = tags
-          .filter(({ isUsed }) => isUsed)
-          .map(({ id, name }) => ({
-            id,
-            label: name,
-            type: 'TAG' as const
-          }));
+        this.tags =
+          tags
+            ?.filter(({ isUsed }) => {
+              return isUsed;
+            })
+            ?.map(({ id, name }) => {
+              return {
+                id,
+                label: translate(name),
+                type: 'TAG' as const
+              };
+            })
+            ?.sort((a, b) => {
+              return a.label.localeCompare(b.label);
+            }) ?? [];
 
         this.updateFiltersFormControl(this.data.access?.settings?.filters);
 
@@ -216,26 +237,24 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private loadHoldings() {
     this.dataService
-      .fetchPortfolioDetails({})
+      .fetchPortfolioHoldings()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((response) => {
-        if (response.holdings) {
-          this.holdings = Object.values(response.holdings);
-
-          const assetClassesSet = new Set<string>();
-          Object.values(response.holdings).forEach((holding) => {
-            if (holding.assetProfile.assetClass) {
-              assetClassesSet.add(holding.assetProfile.assetClass);
-            }
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings
+          .filter(({ assetProfile }) => {
+            return (
+              assetProfile.assetSubClass &&
+              !['CASH'].includes(assetProfile.assetSubClass)
+            );
+          })
+          .sort((a, b) => {
+            return (a.assetProfile.name ?? '').localeCompare(
+              b.assetProfile.name ?? ''
+            );
           });
-          this.assetClasses = Array.from(assetClassesSet).map((ac) => ({
-            id: ac,
-            label: ac,
-            type: 'ASSET_CLASS' as const
-          }));
 
-          this.updateFiltersFormControl(this.data.access?.settings?.filters);
-        }
+        this.updateFiltersFormControl(this.data.access?.settings?.filters);
+
         this.changeDetectorRef.markForCheck();
       });
   }
