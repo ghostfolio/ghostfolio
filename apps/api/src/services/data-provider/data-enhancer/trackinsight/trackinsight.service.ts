@@ -13,7 +13,8 @@ import { SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://www.trackinsight.com/data-api';
+  private static baseUrl = 'https://www.trackinsight.com';
+
   private static countriesMapping = {
     'Republic of Korea': 'KR',
     'Russian Federation': 'RU',
@@ -21,7 +22,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     USA: 'US',
     'Virgin Islands, British': 'VG'
   };
+
   private static holdingsWeightTreshold = 0.85;
+
   private static sectorsMapping: Record<string, SectorName> = {
     'Consumer Discretionary': 'Consumer Cyclical',
     'Consumer Staples': 'Consumer Defensive',
@@ -74,7 +77,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const profile = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
+        `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -98,7 +101,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const holdings = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
+        `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -191,7 +194,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   }) {
     return this.fetchService
       .fetch(
-        `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
