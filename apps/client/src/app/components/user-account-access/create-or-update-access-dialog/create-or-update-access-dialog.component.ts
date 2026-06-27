@@ -259,58 +259,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       });
   }
 
-  private updateFiltersFormControl(existingFilters: Filter[] | undefined) {
-    if (!existingFilters?.length) {
-      return;
-    }
-
-    const filterValue: Partial<PortfolioFilterFormValue> = {};
-
-    const accountFilter = existingFilters.find(({ type }) => {
-      return type === 'ACCOUNT';
-    });
-    if (accountFilter && this.accounts.length > 0) {
-      filterValue.account = accountFilter.id;
-    }
-
-    const assetClassFilter = existingFilters.find(({ type }) => {
-      return type === 'ASSET_CLASS';
-    });
-    if (assetClassFilter && this.assetClasses.length > 0) {
-      filterValue.assetClass = assetClassFilter.id;
-    }
-
-    const dataSourceFilter = existingFilters.find(({ type }) => {
-      return type === 'DATA_SOURCE';
-    });
-    const symbolFilter = existingFilters.find(({ type }) => {
-      return type === 'SYMBOL';
-    });
-    if (dataSourceFilter && symbolFilter && this.holdings.length > 0) {
-      const holding = this.holdings.find(({ assetProfile }) => {
-        return (
-          assetProfile.dataSource === dataSourceFilter.id &&
-          assetProfile.symbol === symbolFilter.id
-        );
-      });
-      if (holding) {
-        filterValue.holding = holding;
-      }
-    }
-
-    const tagFilter = existingFilters.find(({ type }) => {
-      return type === 'TAG';
-    });
-    if (tagFilter && this.tags.length > 0) {
-      filterValue.tag = tagFilter.id;
-    }
-
-    if (Object.keys(filterValue).length > 0) {
-      this.accessForm.get('filters')?.setValue(filterValue);
-      this.changeDetectorRef.markForCheck();
-    }
-  }
-
   private async createAccess() {
     const filters = this.buildFilters();
 
@@ -393,6 +341,64 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  private updateFiltersFormControl(existingFilters: Filter[] | undefined) {
+    if (!existingFilters?.length) {
+      return;
+    }
+
+    const filterValue: Partial<PortfolioFilterFormValue> = {};
+
+    const accountFilter = existingFilters.find(({ type }) => {
+      return type === 'ACCOUNT';
+    });
+
+    if (accountFilter && this.accounts.length > 0) {
+      filterValue.account = accountFilter.id;
+    }
+
+    const assetClassFilter = existingFilters.find(({ type }) => {
+      return type === 'ASSET_CLASS';
+    });
+
+    if (assetClassFilter && this.assetClasses.length > 0) {
+      filterValue.assetClass = assetClassFilter.id;
+    }
+
+    const dataSourceFilter = existingFilters.find(({ type }) => {
+      return type === 'DATA_SOURCE';
+    });
+
+    const symbolFilter = existingFilters.find(({ type }) => {
+      return type === 'SYMBOL';
+    });
+
+    if (dataSourceFilter && symbolFilter && this.holdings.length > 0) {
+      const holding = this.holdings.find(({ assetProfile }) => {
+        return (
+          assetProfile.dataSource === dataSourceFilter.id &&
+          assetProfile.symbol === symbolFilter.id
+        );
+      });
+
+      if (holding) {
+        filterValue.holding = holding;
+      }
+    }
+
+    const tagFilter = existingFilters.find(({ type }) => {
+      return type === 'TAG';
+    });
+
+    if (tagFilter && this.tags.length > 0) {
+      filterValue.tag = tagFilter.id;
+    }
+
+    if (Object.keys(filterValue).length > 0) {
+      this.accessForm.get('filters')?.setValue(filterValue);
+      this.changeDetectorRef.markForCheck();
     }
   }
 }

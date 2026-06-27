@@ -2,11 +2,7 @@ import { AccessType } from '@ghostfolio/common/types';
 
 import { AccessPermission } from '@prisma/client';
 
-import { Filter } from './filter.interface';
-
-export interface AccessSettings {
-  filters?: Filter[];
-}
+import { AccessSettings } from './access-settings.interface';
 
 export interface Access {
   alias?: string;

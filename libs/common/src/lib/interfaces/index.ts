@@ -1,4 +1,5 @@
-import type { Access, AccessSettings } from './access.interface';
+import type { AccessSettings } from './access-settings.interface';
+import type { Access } from './access.interface';
 import type { AccountBalance } from './account-balance.interface';
 import type { Activity, ActivityError } from './activities.interface';
 import type { AdminData } from './admin-data.interface';

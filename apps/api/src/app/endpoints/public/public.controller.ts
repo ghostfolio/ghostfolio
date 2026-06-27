@@ -69,8 +69,7 @@ export class PublicController {
       hasDetails = user.subscription.type === SubscriptionType.Premium;
     }
 
-    const { filters: portfolioFilters = [] } = (access.settings ??
-      {}) as AccessSettings;
+    const { filters } = (access.settings ?? {}) as AccessSettings;
 
     const [
       { createdAt, holdings, markets },
@@ -79,7 +78,7 @@ export class PublicController {
       { performance: performanceYtd }
     ] = await Promise.all([
       this.portfolioService.getDetails({
-        filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
+        filters,
         impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
@@ -87,7 +86,7 @@ export class PublicController {
       ...['1d', 'max', 'ytd'].map((dateRange) => {
         return this.portfolioService.getPerformance({
           dateRange,
-          filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
+          filters,
           impersonationId: undefined,
           userId: user.id
         });
@@ -95,7 +94,7 @@ export class PublicController {
     ]);
 
     const { activities } = await this.activitiesService.getActivities({
-      filters: portfolioFilters.length > 0 ? portfolioFilters : undefined,
+      filters,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,

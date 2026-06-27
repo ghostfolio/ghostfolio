@@ -128,7 +128,7 @@ export class GfUserAccountAccessComponent implements OnInit {
         if (params['createDialog']) {
           this.openCreateAccessDialog();
         } else if (params['editDialog'] && params['accessId']) {
-          this.openUpdateAccessDialog(params['accessId'] as string);
+          this.openUpdateAccessDialog(params['accessId']);
         }
       });
 
