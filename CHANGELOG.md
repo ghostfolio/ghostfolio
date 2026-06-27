@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for filtering in the public access for portfolio sharing (experimental)
 - Set up the language localization for Japanese (`ja`)
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ### Fixed
 
 - Fixed the time zone handling in the `api` test suite for deterministic execution in `UTC`
