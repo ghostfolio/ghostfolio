@@ -314,7 +314,7 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'es',
   'fr',
   'it',
-  'ja',
+  // 'ja',
   'ko',
   'nl',
   'pl',
