@@ -9,7 +9,10 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { getSum } from '@ghostfolio/common/helper';
-import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
+import {
+  AccessSettings,
+  PublicPortfolioResponse
+} from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -66,6 +69,8 @@ export class PublicController {
       hasDetails = user.subscription.type === SubscriptionType.Premium;
     }
 
+    const { filters } = (access.settings ?? {}) as AccessSettings;
+
     const [
       { createdAt, holdings, markets },
       { performance: performance1d },
@@ -73,6 +78,7 @@ export class PublicController {
       { performance: performanceYtd }
     ] = await Promise.all([
       this.portfolioService.getDetails({
+        filters,
         impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
@@ -80,6 +86,7 @@ export class PublicController {
       ...['1d', 'max', 'ytd'].map((dateRange) => {
         return this.portfolioService.getPerformance({
           dateRange,
+          filters,
           impersonationId: undefined,
           userId: user.id
         });
@@ -87,6 +94,7 @@ export class PublicController {
     ]);
 
     const { activities } = await this.activitiesService.getActivities({
+      filters,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,

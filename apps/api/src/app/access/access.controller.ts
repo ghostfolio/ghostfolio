@@ -3,7 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
-import { Access } from '@ghostfolio/common/interfaces';
+import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -46,13 +46,14 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map(
-      ({ alias, granteeUser, id, permissions }) => {
+      ({ alias, granteeUser, id, permissions, settings }) => {
         if (granteeUser) {
           return {
             alias,
             id,
             permissions,
             grantee: granteeUser?.id,
+            settings: settings as AccessSettings,
             type: 'PRIVATE'
           };
         }
@@ -62,6 +63,7 @@ export class AccessController {
           id,
           permissions,
           grantee: 'Public',
+          settings: settings as AccessSettings,
           type: 'PUBLIC'
         };
       }
@@ -91,6 +93,7 @@ export class AccessController {
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
+        settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
       });
     } catch {
@@ -158,7 +161,8 @@ export class AccessController {
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
-          permissions: data.permissions
+          permissions: data.permissions,
+          settings: this.accessService.buildSettings(data.filters)
         },
         where: { id }
       });
