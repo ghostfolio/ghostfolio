@@ -107,7 +107,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                                                                      |
 | `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                                                                      |
 
-#### OpenID Connect OIDC (Experimental)
+#### OpenID Connect OIDC (experimental)
 
 | Name                       | Type                  | Default Value                        | Description                                                                                          |
 | -------------------------- | --------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
