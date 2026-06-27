@@ -4,6 +4,7 @@ import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL,
   PROPERTY_OPENROUTER_MODEL_WEB_FETCH,
+  PROPERTY_PROXY_ROUTES,
   PROPERTY_WEB_FETCH_ROUTES
 } from '@ghostfolio/common/config';
 
@@ -12,6 +13,7 @@ import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText, jsonSchema, tool } from 'ai';
 import ms from 'ms';
 
+import { ProxyRoute } from './interfaces/proxy-route.interface';
 import { WebFetchRoute } from './interfaces/web-fetch-route.interface';
 
 @Injectable()
@@ -21,11 +23,17 @@ export class FetchService implements OnModuleInit {
   private static readonly REDACTED_QUERY_PARAM_NAMES = ['apikey', 'api_token'];
   private static readonly WEB_FETCH_TIMEOUT = ms('30 seconds');
 
+  private proxyRoutes: ProxyRoute[] = [];
   private webFetchRoutes: WebFetchRoute[] = [];
 
   public constructor(private readonly propertyService: PropertyService) {}
 
   public async onModuleInit() {
+    this.proxyRoutes =
+      (await this.propertyService.getByKey<ProxyRoute[]>(
+        PROPERTY_PROXY_ROUTES
+      )) ?? [];
+
     this.webFetchRoutes =
       (await this.propertyService.getByKey<WebFetchRoute[]>(
         PROPERTY_WEB_FETCH_ROUTES
@@ -33,6 +41,10 @@ export class FetchService implements OnModuleInit {
   }
 
   public async fetch(input: RequestInfo | URL, init?: RequestInit) {
+    // Apply a generic per-domain origin override (e.g. route a provider through
+    // a local proxy) before doing anything else with the request
+    input = this.applyProxyRoute(input);
+
     const method = (
       init?.method ??
       (input instanceof Request ? input.method : undefined) ??
@@ -171,16 +183,51 @@ export class FetchService implements OnModuleInit {
     }
   }
 
+  /**
+   * Rewrites the origin (protocol, host and port) of a request when its domain
+   * matches a configured {@link ProxyRoute}, preserving path and query. Returns
+   * the input unchanged when no route matches or parsing fails.
+   */
+  private applyProxyRoute(input: RequestInfo | URL): RequestInfo | URL {
+    try {
+      const url = new URL(
+        input instanceof Request ? input.url : input.toString()
+      );
+
+      const route = this.proxyRoutes.find(({ domain }) => {
+        return this.matchesDomain(url.hostname, domain);
+      });
+
+      if (!route) {
+        return input;
+      }
+
+      const target = new URL(route.url);
+      url.protocol = target.protocol;
+      url.host = target.host;
+
+      return input instanceof Request
+        ? new Request(url.toString(), input)
+        : url.toString();
+    } catch {
+      return input;
+    }
+  }
+
   private getMatchingWebFetchRoute(url: string) {
     try {
       const { hostname } = new URL(url);
 
       return this.webFetchRoutes.find(({ domain }) => {
-        return hostname === domain || hostname.endsWith(`.${domain}`);
+        return this.matchesDomain(hostname, domain);
       });
     } catch {
       return undefined;
     }
+  }
+
+  private matchesDomain(hostname: string, domain: string): boolean {
+    return hostname === domain || hostname.endsWith(`.${domain}`);
   }
 
   private redactUrl(rawUrl: string): string {
