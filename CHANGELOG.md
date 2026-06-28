@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the `@IsEnum` validation decorator to no longer use `{ each: true }` on scalar properties in the DTOs
 - Fixed a phantom `UNKNOWN` slice in the portfolio proportion chart component caused by floating-point rounding
 - Fixed the base currency for the total value calculation in the public access for portfolio sharing
 - Fixed an issue in the public access for portfolio sharing that exposed absolute values of the top holdings of ETFs
