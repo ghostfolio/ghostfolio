@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the alias display in the access table to share the portfolio
 - Improved the language localization for German (`de`)
 
 ### Fixed
