@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.18.0 - 2026-06-28
 
+## Unreleased
+
+### Changed
+
+- Improved the language localization for Japanese (`ja`)
+
 ### Added
 
 - Added support for filtering in the public access for portfolio sharing (experimental)
