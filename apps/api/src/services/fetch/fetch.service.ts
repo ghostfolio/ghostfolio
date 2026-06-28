@@ -41,10 +41,6 @@ export class FetchService implements OnModuleInit {
   }
 
   public async fetch(input: RequestInfo | URL, init?: RequestInit) {
-    // Apply a generic per-domain origin override (e.g. route a provider through
-    // a local proxy) before doing anything else with the request
-    input = this.applyProxyRoute(input);
-
     const method = (
       init?.method ??
       (input instanceof Request ? input.method : undefined) ??
@@ -71,8 +67,10 @@ export class FetchService implements OnModuleInit {
       }
     }
 
+    const proxiedInput = this.applyProxyRoute(input);
+
     try {
-      return await globalThis.fetch(input, init);
+      return await globalThis.fetch(proxiedInput, init);
     } catch (error) {
       if (error instanceof Error) {
         this.logger.error(
@@ -189,33 +187,44 @@ export class FetchService implements OnModuleInit {
    * the input unchanged when no route matches or parsing fails.
    */
   private applyProxyRoute(input: RequestInfo | URL): RequestInfo | URL {
+    let requestUrl: URL;
+
     try {
-      const requestUrl = new URL(
+      requestUrl = new URL(
         input instanceof Request ? input.url : input.toString()
       );
-
-      const route = this.proxyRoutes.find(({ domain }) => {
-        return this.hostnameMatchesDomain({
-          domain,
-          hostname: requestUrl.hostname
-        });
-      });
-
-      if (!route) {
-        return input;
-      }
-
-      const proxyUrl = new URL(route.url);
-      requestUrl.protocol = proxyUrl.protocol;
-      requestUrl.hostname = proxyUrl.hostname;
-      requestUrl.port = proxyUrl.port;
-
-      return input instanceof Request
-        ? new Request(requestUrl.toString(), input)
-        : requestUrl.toString();
     } catch {
       return input;
     }
+
+    const route = this.proxyRoutes.find(({ domain }) => {
+      return this.hostnameMatchesDomain({
+        domain,
+        hostname: requestUrl.hostname
+      });
+    });
+
+    if (!route) {
+      return input;
+    }
+
+    try {
+      const proxyUrl = new URL(route.url);
+
+      requestUrl.hostname = proxyUrl.hostname;
+      requestUrl.port = proxyUrl.port;
+      requestUrl.protocol = proxyUrl.protocol;
+    } catch {
+      this.logger.warn(
+        `Skipping proxy route for "${route.domain}": invalid url "${route.url}"`
+      );
+
+      return input;
+    }
+
+    return input instanceof Request
+      ? new Request(requestUrl.toString(), input)
+      : requestUrl.toString();
   }
 
   private getMatchingWebFetchRoute(url: string) {
