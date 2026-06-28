@@ -71,7 +71,7 @@
     "@codewithdan/observable-store": "2.2.15",
     "@date-fns/utc": "2.1.1",
     "@internationalized/number": "3.6.7",
-    "@ionic/angular": "8.8.5",
+    "@ionic/angular": "8.8.12",
     "@keyv/redis": "5.1.6",
     "@nestjs/bull": "11.0.4",
     "@nestjs/cache-manager": "3.1.2",
