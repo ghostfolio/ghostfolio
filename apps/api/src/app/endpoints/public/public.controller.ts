@@ -13,17 +13,14 @@ import {
   AccessSettings,
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
-import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Controller,
   Get,
   HttpException,
-  Inject,
   Param,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import {
   AssetClass,
   AssetSubClass,
@@ -40,7 +37,6 @@ export class PublicController {
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
 
@@ -168,8 +164,7 @@ export class PublicController {
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
             assetProfile.currency,
-            this.request.user?.settings?.settings.baseCurrency ??
-              DEFAULT_CURRENCY
+            user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
           )
         );
       })
@@ -201,6 +196,11 @@ export class PublicController {
             portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
               ? portfolioPosition.assetProfile.assetSubClassLabel
               : undefined,
+          holdings: portfolioPosition.assetProfile.holdings?.map(
+            ({ allocationInPercentage, name }) => {
+              return { allocationInPercentage, name };
+            }
+          ),
           ...(hasDetails
             ? {}
             : {
