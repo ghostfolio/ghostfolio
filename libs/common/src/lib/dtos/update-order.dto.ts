@@ -20,11 +20,11 @@ export class UpdateOrderDto {
   @IsString()
   accountId?: string;
 
-  @IsEnum(AssetClass, { each: true })
+  @IsEnum(AssetClass)
   @IsOptional()
   assetClass?: AssetClass;
 
-  @IsEnum(AssetSubClass, { each: true })
+  @IsEnum(AssetSubClass)
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
