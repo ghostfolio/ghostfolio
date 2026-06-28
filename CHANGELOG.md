@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for routing outgoing requests through a proxy per domain via the `PROXY_ROUTES` setting in the `FetchService`
+- Added support for routing outgoing requests through a per-domain proxy via the `PROXY_ROUTES` setting in the `FetchService`
 
 ## 3.18.0 - 2026-06-28
 
