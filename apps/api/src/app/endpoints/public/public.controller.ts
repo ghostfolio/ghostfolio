@@ -201,6 +201,11 @@ export class PublicController {
             portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
               ? portfolioPosition.assetProfile.assetSubClassLabel
               : undefined,
+          holdings: portfolioPosition.assetProfile.holdings?.map(
+            ({ allocationInPercentage, name }) => {
+              return { allocationInPercentage, name };
+            }
+          ),
           ...(hasDetails
             ? {}
             : {

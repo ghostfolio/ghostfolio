@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the public access for portfolio sharing that exposed absolute values of the top holdings of ETFs
 - Fixed the time zone handling in the `api` test suite for deterministic execution in `UTC`
 
 ## 3.17.0 - 2026-06-26
