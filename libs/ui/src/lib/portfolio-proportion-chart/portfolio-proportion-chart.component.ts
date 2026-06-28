@@ -204,9 +204,8 @@ export class GfPortfolioProportionChartComponent
 
       const unknownValueInPercentage = new Big(1).minus(totalValueInPercentage);
 
-      // If total is below 100%, allocate the remaining percentage to UNKNOWN_KEY,
-      // but ignore negligible remainders to avoid a phantom slice
-      if (unknownValueInPercentage.gt(0.0001)) {
+      if (unknownValueInPercentage.gt(0)) {
+        // If total is below 100%, allocate the remaining percentage to UNKNOWN_KEY
         if (chartData[UNKNOWN_KEY]) {
           chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
             unknownValueInPercentage

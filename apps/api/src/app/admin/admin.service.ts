@@ -11,10 +11,7 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
-import {
-  getAssetProfileIdentifier,
-  getCurrencyFromSymbol
-} from '@ghostfolio/common/helper';
+import { getCurrencyFromSymbol } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminUserResponse,
@@ -71,17 +68,14 @@ export class AdminService {
         { dataSource, symbol }
       ]);
 
-      const assetProfile =
-        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
-
-      if (!assetProfile?.currency) {
+      if (!assetProfiles[symbol]?.currency) {
         throw new BadRequestException(
           `Asset profile not found for ${symbol} (${dataSource})`
         );
       }
 
       return this.symbolProfileService.add(
-        assetProfile as Prisma.SymbolProfileCreateInput
+        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
       );
     } catch (error) {
       if (

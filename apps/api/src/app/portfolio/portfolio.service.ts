@@ -205,21 +205,21 @@ export class PortfolioService {
           switch (type) {
             case ActivityType.DIVIDEND:
               dividendInBaseCurrency +=
-                (await this.exchangeRateDataService.toCurrencyAtDate(
+                await this.exchangeRateDataService.toCurrencyAtDate(
                   new Big(quantity).mul(unitPrice).toNumber(),
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
-                )) ?? 0;
+                );
               break;
             case ActivityType.INTEREST:
               interestInBaseCurrency +=
-                (await this.exchangeRateDataService.toCurrencyAtDate(
+                await this.exchangeRateDataService.toCurrencyAtDate(
                   unitPrice,
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
-                )) ?? 0;
+                );
               break;
           }
 
@@ -889,13 +889,10 @@ export class PortfolioService {
       marketPrice
     );
 
-    const historicalDataItems =
-      historicalData[getAssetProfileIdentifier({ dataSource, symbol })];
-
-    if (historicalDataItems) {
+    if (historicalData[symbol]) {
       let j = -1;
       for (const [date, { marketPrice }] of Object.entries(
-        historicalDataItems
+        historicalData[symbol]
       )) {
         while (
           j + 1 < transactionPoints.length &&

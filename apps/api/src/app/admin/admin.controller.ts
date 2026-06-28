@@ -86,8 +86,8 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @Post('gather')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async gatherRecentMarketData(): Promise<void> {
-    this.dataGatheringService.gatherRecentMarketData();
+  public async gather7Days(): Promise<void> {
+    this.dataGatheringService.gather7Days();
   }
 
   @HasPermission(permissions.accessAdminControl)

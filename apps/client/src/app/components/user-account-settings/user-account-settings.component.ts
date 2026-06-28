@@ -12,7 +12,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
-import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   ChangeDetectionStrategy,
@@ -52,7 +51,6 @@ import { catchError } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
-    GfValueComponent,
     IonIcon,
     MatButtonModule,
     MatCardModule,
@@ -91,7 +89,6 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'es',
     'fr',
     'it',
-    // 'ja',
     'ko',
     'nl',
     'pl',

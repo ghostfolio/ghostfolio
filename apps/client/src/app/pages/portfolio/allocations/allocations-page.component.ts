@@ -12,7 +12,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { MarketAdvanced } from '@ghostfolio/common/types';
+import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -24,9 +24,7 @@ import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 import {
   ChangeDetectorRef,
   Component,
-  computed,
   DestroyRef,
-  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -43,9 +41,6 @@ import {
 } from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { filter, switchMap, tap } from 'rxjs';
-
-import { AllocationsPageParams } from './interfaces/interfaces';
 
 @Component({
   imports: [
@@ -62,23 +57,21 @@ import { AllocationsPageParams } from './interfaces/interfaces';
   templateUrl: './allocations-page.html'
 })
 export class GfAllocationsPageComponent implements OnInit {
-  protected accounts: {
+  public accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
       value: number;
     };
   };
-  protected continents: {
+  public continents: {
     [code: string]: { name: string; value: number };
   };
-  protected countries: {
+  public countries: {
     [code: string]: { name: string; value: number };
   };
-  protected readonly deviceType = computed(
-    () => this.deviceDetectorService.deviceInfo().deviceType
-  );
-  protected hasImpersonationId: boolean;
-  protected holdings: {
+  public deviceType: string;
+  public hasImpersonationId: boolean;
+  public holdings: {
     [symbol: string]: Pick<
       PortfolioPosition['assetProfile'],
       | 'assetClass'
@@ -89,26 +82,28 @@ export class GfAllocationsPageComponent implements OnInit {
       | 'name'
     > & { etfProvider: string; exchange?: string; value: number };
   };
-  protected isLoading = false;
-  protected markets: PortfolioDetails['markets'];
-  protected marketsAdvanced: {
+  public isLoading = false;
+  public markets: {
+    [key in Market]: { id: Market; valueInPercentage: number };
+  };
+  public marketsAdvanced: {
     [key in MarketAdvanced]: {
       id: MarketAdvanced;
       name: string;
       value: number;
     };
   };
-  protected platforms: {
+  public platforms: {
     [id: string]: Pick<Platform, 'name'> & {
       id: string;
       value: number;
     };
   };
-  protected portfolioDetails: PortfolioDetails;
-  protected sectors: {
+  public portfolioDetails: PortfolioDetails;
+  public sectors: {
     [name: string]: { name: string; value: number };
   };
-  protected symbols: {
+  public symbols: {
     [name: string]: {
       dataSource?: DataSource;
       name: string;
@@ -116,46 +111,38 @@ export class GfAllocationsPageComponent implements OnInit {
       value: number;
     };
   };
-  protected topHoldings: HoldingWithParents[];
-  protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
-  protected user: User;
-
-  private topHoldingsMap: {
+  public topHoldings: HoldingWithParents[];
+  public topHoldingsMap: {
     [name: string]: { name: string; value: number };
   };
-  private totalValueInEtf = 0;
+  public totalValueInEtf = 0;
+  public UNKNOWN_KEY = UNKNOWN_KEY;
+  public user: User;
+  public worldMapChartFormat: string;
 
-  private readonly changeDetectorRef = inject(ChangeDetectorRef);
-  private readonly dataService = inject(DataService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly dialog = inject(MatDialog);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly userService = inject(UserService);
-
-  public constructor() {
+  public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
+    private destroyRef: DestroyRef,
+    private deviceDetectorService: DeviceDetectorService,
+    private dialog: MatDialog,
+    private impersonationStorageService: ImpersonationStorageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private userService: UserService
+  ) {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(
-        ({ accountId, accountDetailDialog }: AllocationsPageParams) => {
-          if (accountId && accountDetailDialog) {
-            this.openAccountDetailDialog(accountId);
-          }
+      .subscribe((params) => {
+        if (params['accountId'] && params['accountDetailDialog']) {
+          this.openAccountDetailDialog(params['accountId']);
         }
-      );
-  }
-
-  protected get worldMapChartFormat(): string {
-    return this.showValuesInPercentage()
-      ? '{0}%'
-      : `{0} ${this.user?.settings?.baseCurrency}`;
+      });
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
+
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -164,56 +151,54 @@ export class GfAllocationsPageComponent implements OnInit {
       });
 
     this.userService.stateChanged
-      .pipe(
-        filter((state) => !!state?.user),
-        tap((state) => {
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => {
+        if (state?.user) {
           this.user = state.user;
+
+          this.worldMapChartFormat = this.showValuesInPercentage()
+            ? `{0}%`
+            : `{0} ${this.user?.settings?.baseCurrency}`;
 
           this.isLoading = true;
 
           this.initialize();
 
+          this.fetchPortfolioDetails()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((portfolioDetails) => {
+              this.initialize();
+
+              this.portfolioDetails = portfolioDetails;
+
+              this.initializeAllocationsData();
+
+              this.isLoading = false;
+
+              this.changeDetectorRef.markForCheck();
+            });
+
           this.changeDetectorRef.markForCheck();
-        }),
-        switchMap(() => this.fetchPortfolioDetails()),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((portfolioDetails) => {
-        this.initialize();
-
-        this.portfolioDetails = portfolioDetails;
-
-        this.initializeAllocationsData();
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
+        }
       });
 
     this.initialize();
   }
 
-  protected onAccountChartClicked({ accountId }: { accountId: string }) {
+  public onAccountChartClicked({ accountId }: { accountId: string }) {
     if (accountId && accountId !== UNKNOWN_KEY) {
-      void this.router.navigate([], {
+      this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
       });
     }
   }
 
-  protected onSymbolChartClicked({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
+  public onSymbolChartClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
-      void this.router.navigate([], {
+      this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
-  }
-
-  protected showValuesInPercentage() {
-    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
   }
 
   private extractCurrency({
@@ -241,9 +226,9 @@ export class GfAllocationsPageComponent implements OnInit {
     name
   }: {
     assetSubClass: PortfolioPosition['assetProfile']['assetSubClass'];
-    name?: string;
+    name: string;
   }) {
-    if (assetSubClass === 'ETF' && name) {
+    if (assetSubClass === 'ETF') {
       const [firstWord] = name.split(' ');
       return firstWord;
     }
@@ -313,7 +298,7 @@ export class GfAllocationsPageComponent implements OnInit {
     this.platforms = {};
     this.portfolioDetails = {
       accounts: {},
-      createdAt: new Date(),
+      createdAt: undefined,
       holdings: {},
       platforms: {},
       summary: undefined
@@ -342,7 +327,7 @@ export class GfAllocationsPageComponent implements OnInit {
       let value = 0;
 
       if (this.showValuesInPercentage()) {
-        value = valueInPercentage ?? 0;
+        value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
       }
@@ -357,24 +342,30 @@ export class GfAllocationsPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
+      let value = 0;
+
+      if (this.showValuesInPercentage()) {
+        value = position.allocationInPercentage;
+      } else {
+        value = position.valueInBaseCurrency;
+      }
+
       this.holdings[symbol] = {
+        value,
         assetClass:
           position.assetProfile.assetClass || (UNKNOWN_KEY as AssetClass),
-        assetClassLabel: position.assetProfile.assetClassLabel ?? UNKNOWN_KEY,
+        assetClassLabel: position.assetProfile.assetClassLabel || UNKNOWN_KEY,
         assetSubClass:
           position.assetProfile.assetSubClass || (UNKNOWN_KEY as AssetSubClass),
         assetSubClassLabel:
-          position.assetProfile.assetSubClassLabel ?? UNKNOWN_KEY,
+          position.assetProfile.assetSubClassLabel || UNKNOWN_KEY,
         currency: this.extractCurrency(position.assetProfile),
         etfProvider: this.extractEtfProvider({
           assetSubClass: position.assetProfile.assetSubClass,
           name: position.assetProfile.name
         }),
         exchange: position.exchange,
-        name: position.assetProfile.name,
-        value: this.showValuesInPercentage()
-          ? position.allocationInPercentage
-          : (position.valueInBaseCurrency ?? 0)
+        name: position.assetProfile.name
       };
 
       // Prepare analysis data by continents, countries, holdings and sectors
@@ -382,50 +373,53 @@ export class GfAllocationsPageComponent implements OnInit {
       if (position.assetProfile.countries.length > 0) {
         for (const country of position.assetProfile.countries) {
           const { code, continent, weight } = country;
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
 
-          const continentData = this.continents[continent];
-
-          if (continentData) {
-            continentData.value += weight * value;
+          if (this.continents[continent]?.value) {
+            this.continents[continent].value +=
+              weight *
+              (isNumber(position.valueInBaseCurrency)
+                ? position.valueInBaseCurrency
+                : position.valueInPercentage);
           } else {
             this.continents[continent] = {
               name: translate(continent),
-              value: weight * value
+              value:
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  : this.portfolioDetails.holdings[symbol].valueInPercentage)
             };
           }
 
-          const countryData = this.countries[code];
-
-          if (countryData) {
-            countryData.value += weight * value;
+          if (this.countries[code]?.value) {
+            this.countries[code].value +=
+              weight *
+              (isNumber(position.valueInBaseCurrency)
+                ? position.valueInBaseCurrency
+                : position.valueInPercentage);
           } else {
             this.countries[code] = {
               name: getCountryName({ code }),
-              value: weight * value
+              value:
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  : this.portfolioDetails.holdings[symbol].valueInPercentage)
             };
           }
         }
       } else {
-        const value =
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0;
+        this.continents[UNKNOWN_KEY].value += isNumber(
+          position.valueInBaseCurrency
+        )
+          ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+          : this.portfolioDetails.holdings[symbol].valueInPercentage;
 
-        const continentData = this.continents[UNKNOWN_KEY];
-
-        if (continentData) {
-          continentData.value += value;
-        }
-
-        const countryData = this.countries[UNKNOWN_KEY];
-
-        if (countryData) {
-          countryData.value += value;
-        }
+        this.countries[UNKNOWN_KEY].value += isNumber(
+          position.valueInBaseCurrency
+        )
+          ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+          : this.portfolioDetails.holdings[symbol].valueInPercentage;
       }
 
       if (position.assetProfile.holdings.length > 0) {
@@ -435,18 +429,21 @@ export class GfAllocationsPageComponent implements OnInit {
           valueInBaseCurrency
         } of position.assetProfile.holdings) {
           const normalizedAssetName = this.normalizeAssetName(name);
-          const value = isNumber(valueInBaseCurrency)
-            ? valueInBaseCurrency
-            : allocationInPercentage * (position.valueInPercentage ?? 0);
 
-          const holdingData = this.topHoldingsMap[normalizedAssetName];
-
-          if (holdingData) {
-            holdingData.value += value;
+          if (this.topHoldingsMap[normalizedAssetName]?.value) {
+            this.topHoldingsMap[normalizedAssetName].value += isNumber(
+              valueInBaseCurrency
+            )
+              ? valueInBaseCurrency
+              : allocationInPercentage *
+                this.portfolioDetails.holdings[symbol].valueInPercentage;
           } else {
             this.topHoldingsMap[normalizedAssetName] = {
               name,
-              value
+              value: isNumber(valueInBaseCurrency)
+                ? valueInBaseCurrency
+                : allocationInPercentage *
+                  this.portfolioDetails.holdings[symbol].valueInPercentage
             };
           }
         }
@@ -455,33 +452,30 @@ export class GfAllocationsPageComponent implements OnInit {
       if (position.assetProfile.sectors.length > 0) {
         for (const sector of position.assetProfile.sectors) {
           const { name, weight } = sector;
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
 
-          const sectorData = this.sectors[name];
-
-          if (sectorData) {
-            sectorData.value += weight * value;
+          if (this.sectors[name]?.value) {
+            this.sectors[name].value +=
+              weight *
+              (isNumber(position.valueInBaseCurrency)
+                ? position.valueInBaseCurrency
+                : position.valueInPercentage);
           } else {
             this.sectors[name] = {
               name: translate(name),
-              value: weight * value
+              value:
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  : this.portfolioDetails.holdings[symbol].valueInPercentage)
             };
           }
         }
       } else {
-        const value =
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0;
-
-        const sectorData = this.sectors[UNKNOWN_KEY];
-
-        if (sectorData) {
-          sectorData.value += value;
-        }
+        this.sectors[UNKNOWN_KEY].value += isNumber(
+          position.valueInBaseCurrency
+        )
+          ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+          : this.portfolioDetails.holdings[symbol].valueInPercentage;
       }
 
       if (this.holdings[symbol].assetSubClass === 'ETF') {
@@ -490,26 +484,23 @@ export class GfAllocationsPageComponent implements OnInit {
 
       this.symbols[prettifySymbol(symbol)] = {
         dataSource: position.assetProfile.dataSource,
-        name: position.assetProfile.name ?? '',
+        name: position.assetProfile.name,
         symbol: prettifySymbol(symbol),
-        value:
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0
+        value: isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
+          : position.valueInPercentage
       };
     }
 
     this.markets = this.portfolioDetails.markets;
 
-    if (this.portfolioDetails.marketsAdvanced) {
-      Object.values(this.portfolioDetails.marketsAdvanced).forEach(
-        ({ id, valueInBaseCurrency, valueInPercentage }) => {
-          this.marketsAdvanced[id].value = isNumber(valueInBaseCurrency)
-            ? valueInBaseCurrency
-            : valueInPercentage;
-        }
-      );
-    }
+    Object.values(this.portfolioDetails.marketsAdvanced).forEach(
+      ({ id, valueInBaseCurrency, valueInPercentage }) => {
+        this.marketsAdvanced[id].value = isNumber(valueInBaseCurrency)
+          ? valueInBaseCurrency
+          : valueInPercentage;
+      }
+    );
 
     for (const [
       id,
@@ -518,7 +509,7 @@ export class GfAllocationsPageComponent implements OnInit {
       let value = 0;
 
       if (this.showValuesInPercentage()) {
-        value = valueInPercentage ?? 0;
+        value = valueInPercentage;
       } else {
         value = valueInBaseCurrency;
       }
@@ -531,11 +522,12 @@ export class GfAllocationsPageComponent implements OnInit {
     }
 
     this.topHoldings = Object.values(this.topHoldingsMap)
-      .map(({ name, value }): HoldingWithParents => {
+      .map(({ name, value }) => {
         if (this.showValuesInPercentage()) {
           return {
             name,
-            allocationInPercentage: value
+            allocationInPercentage: value,
+            valueInBaseCurrency: null
           };
         }
 
@@ -555,12 +547,11 @@ export class GfAllocationsPageComponent implements OnInit {
                   }
                 );
 
-                return currentParentHolding &&
-                  isNumber(currentParentHolding.valueInBaseCurrency)
+                return currentParentHolding
                   ? {
                       allocationInPercentage:
                         currentParentHolding.valueInBaseCurrency / value,
-                      name: holding.assetProfile.name ?? '',
+                      name: holding.assetProfile.name,
                       position: holding,
                       symbol: prettifySymbol(symbol),
                       valueInBaseCurrency:
@@ -605,22 +596,26 @@ export class GfAllocationsPageComponent implements OnInit {
       autoFocus: false,
       data: {
         accountId: aAccountId,
-        deviceType: this.deviceType(),
+        deviceType: this.deviceType,
         hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView
       },
-      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        void this.router.navigate(['.'], { relativeTo: this.route });
+        this.router.navigate(['.'], { relativeTo: this.route });
       });
+  }
+
+  public showValuesInPercentage() {
+    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
   }
 }

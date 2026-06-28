@@ -2,7 +2,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
-  NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
@@ -297,11 +297,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           value
         }) => {
           this.activitiesCount = activitiesCount;
-          this.assetProfile = assetProfile;
           this.averagePrice = averagePrice;
 
           if (
-            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES &&
+            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES &&
             this.data.deviceType === 'mobile'
           ) {
             this.averagePricePrecision = 0;
@@ -320,7 +319,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.dividendInBaseCurrency >=
-              NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.dividendInBaseCurrencyPrecision = 0;
           }
@@ -358,7 +357,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.investmentInBaseCurrencyWithCurrencyEffect >=
-              NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.investmentInBaseCurrencyWithCurrencyEffectPrecision = 0;
           }
@@ -368,7 +367,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPriceMax >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+            this.marketPriceMax >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.marketPriceMaxPrecision = 0;
           }
@@ -377,14 +376,14 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPriceMin >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+            this.marketPriceMin >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.marketPriceMinPrecision = 0;
           }
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPrice >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+            this.marketPrice >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.marketPricePrecision = 0;
           }
@@ -406,7 +405,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.netPerformanceWithCurrencyEffect >=
-              NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
           ) {
             this.netPerformanceWithCurrencyEffectPrecision = 0;
           }
@@ -425,7 +424,9 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
+          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${assetProfile?.symbol}%0DData Source: ${assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
+          this.assetProfile = assetProfile;
 
           this.tags = tags.map((tag) => {
             return {
@@ -438,22 +439,16 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.value = value;
 
-          const reportDataGlitchSubject = `Ghostfolio Data Glitch Report${
-            this.assetProfile?.symbol ? ` (${this.assetProfile.symbol})` : ''
-          }`;
-
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.assetProfile?.symbol}%0DData Source: ${this.assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
-
-          if (this.assetProfile?.assetClass) {
-            this.assetClass = translate(this.assetProfile?.assetClass);
+          if (assetProfile?.assetClass) {
+            this.assetClass = translate(assetProfile?.assetClass);
           }
 
-          if (this.assetProfile?.assetSubClass) {
-            this.assetSubClass = translate(this.assetProfile?.assetSubClass);
+          if (assetProfile?.assetSubClass) {
+            this.assetSubClass = translate(assetProfile?.assetSubClass);
           }
 
-          if (this.assetProfile?.countries?.length > 0) {
-            for (const country of this.assetProfile.countries) {
+          if (assetProfile?.countries?.length > 0) {
+            for (const country of assetProfile.countries) {
               this.countries[country.code] = {
                 name: getCountryName({ code: country.code }),
                 value: country.weight
@@ -461,8 +456,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
-          if (this.assetProfile?.sectors?.length > 0) {
-            for (const sector of this.assetProfile.sectors) {
+          if (assetProfile?.sectors?.length > 0) {
+            for (const sector of assetProfile.sectors) {
               this.sectors[sector.name] = {
                 name: translate(sector.name),
                 value: sector.weight

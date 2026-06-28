@@ -103,15 +103,6 @@
                     >Italiano (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
-                  <!--
-                    @if (user?.settings?.isExperimentalFeatures) {
-                      <mat-option value="ja"
-                        >Japanese / 日本語 (<ng-container i18n
-                          >Community</ng-container
-                        >)</mat-option
-                      >
-                    }
-                  -->
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="ko"
                       >Korean / 한국어 (<ng-container i18n
@@ -269,13 +260,7 @@
         <div class="pr-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
         </div>
-        <div class="pl-1 w-50">
-          <gf-value
-            class="text-monospace"
-            [enableCopyToClipboardButton]="true"
-            [value]="user?.id"
-          />
-        </div>
+        <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
       </div>
       <div class="align-items-center d-flex py-1">
         <div class="pr-1 w-50"></div>

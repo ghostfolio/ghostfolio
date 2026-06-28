@@ -305,6 +305,17 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     );
   }
 
+  protected onGather7Days() {
+    this.adminService
+      .gather7Days()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+  }
+
   protected onGatherMax() {
     this.adminService
       .gatherMax()
@@ -321,17 +332,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .gatherProfileData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
-  }
-
-  protected onGatherRecentMarketData() {
-    this.adminService
-      .gatherRecentMarketData()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
   }
 
   protected onOpenAssetProfileDialog({

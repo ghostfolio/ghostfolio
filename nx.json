@@ -126,6 +126,5 @@
   },
   "parallel": 1,
   "defaultBase": "origin/main",
-  "analytics": false,
-  "neverConnectToCloud": true
+  "analytics": false
 }

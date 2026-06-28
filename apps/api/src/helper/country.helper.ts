@@ -7,12 +7,8 @@ export function getCountryCodeByName({
   aliases?: Record<string, string>;
   name: string;
 }): string {
-  if (aliases[name]) {
-    return aliases[name];
-  }
-
   for (const [code, country] of Object.entries(countries)) {
-    if (country.name === name) {
+    if (country.name === name || country.name === aliases[name]) {
       return code;
     }
   }

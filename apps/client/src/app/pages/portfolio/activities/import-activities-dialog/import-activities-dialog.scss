@@ -1,5 +1,3 @@
-@use '@angular/material' as mat;
-
 :host {
   display: block;
 
@@ -43,13 +41,8 @@
     }
 
     .mat-expansion-panel {
-      @include mat.expansion-overrides(
-        (
-          container-background-color: transparent,
-          container-elevation-shadow: none,
-          container-shape: 0
-        )
-      );
+      background: none;
+      box-shadow: none;
 
       .mat-expansion-panel-header {
         color: inherit;

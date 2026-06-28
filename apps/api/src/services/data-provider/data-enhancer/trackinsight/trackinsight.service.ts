@@ -13,18 +13,12 @@ import { SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://www.trackinsight.com';
-
+  private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countriesMapping = {
-    'Republic of Korea': 'KR',
-    'Russian Federation': 'RU',
-    Turkey: 'TR',
-    USA: 'US',
-    'Virgin Islands, British': 'VG'
+    'Russian Federation': 'Russia',
+    USA: 'United States'
   };
-
   private static holdingsWeightTreshold = 0.85;
-
   private static sectorsMapping: Record<string, SectorName> = {
     'Consumer Discretionary': 'Consumer Cyclical',
     'Consumer Staples': 'Consumer Defensive',
@@ -77,7 +71,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const profile = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`,
+        `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -101,7 +95,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const holdings = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`,
+        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -194,7 +188,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   }) {
     return this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+        `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }

@@ -56,7 +56,7 @@ export class QueueService {
   }
 
   public async getJobs({
-    limit = 5000,
+    limit = 1000,
     status = QUEUE_JOB_STATUS_LIST
   }: {
     limit?: number;

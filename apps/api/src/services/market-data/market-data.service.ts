@@ -1,7 +1,6 @@
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT } from '@ghostfolio/common/config';
 import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
@@ -156,52 +155,49 @@ export class MarketDataService {
     dataSource,
     symbol
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
-    await this.prismaService.$transaction(
-      async (prisma) => {
-        if (data.length > 0) {
-          let minTime = Infinity;
-          let maxTime = -Infinity;
+    await this.prismaService.$transaction(async (prisma) => {
+      if (data.length > 0) {
+        let minTime = Infinity;
+        let maxTime = -Infinity;
 
-          for (const { date } of data) {
-            const time = (date as Date).getTime();
+        for (const { date } of data) {
+          const time = (date as Date).getTime();
 
-            if (time < minTime) {
-              minTime = time;
-            }
-
-            if (time > maxTime) {
-              maxTime = time;
-            }
+          if (time < minTime) {
+            minTime = time;
           }
 
-          const minDate = new Date(minTime);
-          const maxDate = new Date(maxTime);
-
-          await prisma.marketData.deleteMany({
-            where: {
-              dataSource,
-              symbol,
-              date: {
-                gte: minDate,
-                lte: maxDate
-              }
-            }
-          });
-
-          await prisma.marketData.createMany({
-            data: data.map(({ date, marketPrice, state }) => ({
-              dataSource,
-              symbol,
-              date: date as Date,
-              marketPrice: marketPrice as number,
-              state: state as MarketDataState
-            })),
-            skipDuplicates: true
-          });
+          if (time > maxTime) {
+            maxTime = time;
+          }
         }
-      },
-      { timeout: DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT }
-    );
+
+        const minDate = new Date(minTime);
+        const maxDate = new Date(maxTime);
+
+        await prisma.marketData.deleteMany({
+          where: {
+            dataSource,
+            symbol,
+            date: {
+              gte: minDate,
+              lte: maxDate
+            }
+          }
+        });
+
+        await prisma.marketData.createMany({
+          data: data.map(({ date, marketPrice, state }) => ({
+            dataSource,
+            symbol,
+            date: date as Date,
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState
+          })),
+          skipDuplicates: true
+        });
+      }
+    });
   }
 
   public async updateAssetProfileIdentifier(

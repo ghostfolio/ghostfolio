@@ -9,18 +9,18 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { getSum } from '@ghostfolio/common/helper';
-import {
-  AccessSettings,
-  PublicPortfolioResponse
-} from '@ghostfolio/common/interfaces';
+import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Controller,
   Get,
   HttpException,
+  Inject,
   Param,
   UseInterceptors
 } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import {
   AssetClass,
   AssetSubClass,
@@ -37,6 +37,7 @@ export class PublicController {
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
+    @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
 
@@ -65,8 +66,6 @@ export class PublicController {
       hasDetails = user.subscription.type === SubscriptionType.Premium;
     }
 
-    const { filters } = (access.settings ?? {}) as AccessSettings;
-
     const [
       { createdAt, holdings, markets },
       { performance: performance1d },
@@ -74,7 +73,6 @@ export class PublicController {
       { performance: performanceYtd }
     ] = await Promise.all([
       this.portfolioService.getDetails({
-        filters,
         impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
@@ -82,7 +80,6 @@ export class PublicController {
       ...['1d', 'max', 'ytd'].map((dateRange) => {
         return this.portfolioService.getPerformance({
           dateRange,
-          filters,
           impersonationId: undefined,
           userId: user.id
         });
@@ -90,7 +87,6 @@ export class PublicController {
     ]);
 
     const { activities } = await this.activitiesService.getActivities({
-      filters,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,
@@ -164,7 +160,8 @@ export class PublicController {
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
             assetProfile.currency,
-            user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
+            this.request.user?.settings?.settings.baseCurrency ??
+              DEFAULT_CURRENCY
           )
         );
       })
@@ -196,11 +193,6 @@ export class PublicController {
             portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
               ? portfolioPosition.assetProfile.assetSubClassLabel
               : undefined,
-          holdings: portfolioPosition.assetProfile.holdings?.map(
-            ({ allocationInPercentage, name }) => {
-              return { allocationInPercentage, name };
-            }
-          ),
           ...(hasDetails
             ? {}
             : {

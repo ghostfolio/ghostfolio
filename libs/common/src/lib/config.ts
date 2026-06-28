@@ -5,13 +5,11 @@ import ms from 'ms';
 import { ColorScheme, DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
-
-/* @deprecated */
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
-
 export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
   DataSource.MANUAL;
 export const ghostfolioFearAndGreedIndexDataSourceStocks = DataSource.RAPID_API;
+export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
 export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
 
@@ -90,12 +88,8 @@ export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY = 1;
-export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT =
-  ms('1 minute');
-export const DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
-export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT =
-  ms('30 seconds');
+export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
 
 export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].balance',
@@ -234,7 +228,6 @@ export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
 export const MAX_TOP_HOLDINGS = 50;
 
 export const NUMERICAL_PRECISION_THRESHOLD_3_FIGURES = 100;
-export const NUMERICAL_PRECISION_THRESHOLD_4_FIGURES = 1000;
 export const NUMERICAL_PRECISION_THRESHOLD_5_FIGURES = 10000;
 export const NUMERICAL_PRECISION_THRESHOLD_6_FIGURES = 100000;
 
@@ -259,7 +252,6 @@ export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
 export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
-export const PROPERTY_PROXY_ROUTES = 'PROXY_ROUTES';
 export const PROPERTY_REFERRAL_PARTNERS = 'REFERRAL_PARTNERS';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
@@ -315,7 +307,6 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'es',
   'fr',
   'it',
-  // 'ja',
   'ko',
   'nl',
   'pl',

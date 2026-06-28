@@ -8,7 +8,10 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
-import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
+import {
+  ghostfolioFearAndGreedIndexSymbol,
+  ghostfolioFearAndGreedIndexSymbolStocks
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
@@ -61,7 +64,12 @@ export class RapidApiService implements DataProviderInterface {
     [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
   }> {
     try {
-      if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
+      if (
+        [
+          ghostfolioFearAndGreedIndexSymbol,
+          ghostfolioFearAndGreedIndexSymbolStocks
+        ].includes(symbol)
+      ) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {
@@ -98,7 +106,12 @@ export class RapidApiService implements DataProviderInterface {
     try {
       const symbol = symbols[0];
 
-      if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
+      if (
+        [
+          ghostfolioFearAndGreedIndexSymbol,
+          ghostfolioFearAndGreedIndexSymbolStocks
+        ].includes(symbol)
+      ) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {

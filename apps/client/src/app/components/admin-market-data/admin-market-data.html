@@ -220,7 +220,7 @@
                 class="no-max-width"
                 xPosition="before"
               >
-                <button mat-menu-item (click)="onGatherRecentMarketData()">
+                <button mat-menu-item (click)="onGather7Days()">
                   <ng-container i18n
                     >Gather Recent Historical Market Data</ng-container
                   >
@@ -285,8 +285,7 @@
                     !canDeleteAssetProfile({
                       activitiesCount: element.activitiesCount,
                       isBenchmark: element.isBenchmark,
-                      symbol: element.symbol,
-                      watchedByCount: element.watchedByCount
+                      symbol: element.symbol
                     })
                   "
                   (click)="

@@ -439,17 +439,6 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.finanzfluss.de/copilot'
   },
   {
-    founded: 2015,
-    hasFreePlan: true,
-    hasSelfHostingAbility: false,
-    key: 'finanzguru',
-    languages: ['Deutsch'],
-    name: 'Finanzguru',
-    origin: 'DE',
-    slogan: 'Finanzen. Magisch. Einfach.',
-    url: 'https://www.finanzguru.de'
-  },
-  {
     founded: 2020,
     key: 'finary',
     languages: ['Deutsch', 'English', 'Français'],
@@ -623,15 +612,6 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.honeydue.com'
   },
   {
-    founded: 2003,
-    hasSelfHostingAbility: true,
-    isArchived: true,
-    key: 'ibank',
-    name: 'iBank',
-    note: 'Renamed to Banktivity',
-    origin: 'US'
-  },
-  {
     founded: 2022,
     key: 'income-reign',
     languages: ['English'],
@@ -780,7 +760,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Maybe Finance was discontinued in 2023, relaunched in 2024, and discontinued again in 2025',
     origin: 'US',
     pricingPerYear: '$145',
-    regions: ['US'],
+    regions: ['United States'],
     slogan: 'Your financial future, in your control',
     url: 'https://github.com/maybe-finance/maybe'
   },
@@ -792,7 +772,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Merlin',
     origin: 'US',
     pricingPerYear: '$204',
-    regions: ['CA', 'US'],
+    regions: ['Canada', 'United States'],
     slogan: 'The smartest way to track your crypto',
     url: 'https://www.merlincrypto.com'
   },
@@ -836,17 +816,6 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$100',
     slogan: 'Personal Finance Manager for Mac, Windows, and Linux',
     url: 'https://moneydance.com'
-  },
-  {
-    founded: 2016,
-    hasFreePlan: true,
-    hasSelfHostingAbility: false,
-    key: 'moneypatrol',
-    name: 'MoneyPatrol',
-    origin: 'US',
-    pricingPerYear: '$29.99',
-    slogan: 'Personal Accounting Made Easy, Accurate, Comprehensive',
-    url: 'https://www.moneypatrol.com'
   },
   {
     hasFreePlan: true,
@@ -967,7 +936,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Originally named as Tresor One',
     origin: 'DE',
     pricingPerYear: '€99.99',
-    regions: ['AT', 'CH', 'DE'],
+    regions: ['Austria', 'Germany', 'Switzerland'],
     slogan: 'Dein Vermögen immer im Blick',
     url: 'https://www.parqet.com'
   },
@@ -1354,7 +1323,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Tresor One',
     note: 'Renamed to Parqet',
     origin: 'DE',
-    regions: ['AT', 'CH', 'DE'],
+    regions: ['Austria', 'Germany', 'Switzerland'],
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
@@ -1420,26 +1389,6 @@ export const personalFinanceTools: Product[] = [
     origin: 'CZ',
     pricingPerYear: '$600',
     slogan: 'Make Smarter Investments'
-  },
-  {
-    founded: 2020,
-    hasFreePlan: true,
-    hasSelfHostingAbility: false,
-    key: 'wallstreetzen',
-    name: 'WallStreetZen',
-    origin: 'HK',
-    pricingPerYear: '$234',
-    slogan: 'Stock market analysis for the serious part-time investor',
-    url: 'https://www.wallstreetzen.com'
-  },
-  {
-    founded: 2015,
-    hasSelfHostingAbility: false,
-    key: 'wealtharc',
-    name: 'WealthArc',
-    origin: 'CH',
-    slogan: 'Manage wealth data more efficiently',
-    url: 'https://www.wealtharc.com'
   },
   {
     founded: 2019,

@@ -5,107 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
-### Added
-
-- Added support for routing outgoing requests through a per-domain proxy via the `PROXY_ROUTES` setting in the `FetchService`
-
-## 3.18.0 - 2026-06-28
-
-### Added
-
-- Added support for filtering in the public access for portfolio sharing (experimental)
-- Set up the language localization for Japanese (`ja`)
-
-### Changed
-
-- Improved the alias display in the access table to share the portfolio
-- Improved the language localization for German (`de`)
-
-### Fixed
-
-- Fixed a phantom `UNKNOWN` slice in the portfolio proportion chart component caused by floating-point rounding
-- Fixed the base currency for the total value calculation in the public access for portfolio sharing
-- Fixed an issue in the public access for portfolio sharing that exposed absolute values of the top holdings of ETFs
-- Fixed the time zone handling in the `api` test suite for deterministic execution in `UTC`
-
-## 3.17.0 - 2026-06-26
-
-### Added
-
-- Added `zod` as a root dependency to resolve peer dependency warnings
-
-### Changed
-
-- Improved the error message styling in the import activities dialog
-- Improved the grantee display in the access table to share the portfolio
-- Improved the country mapping for data providers
-- Upgraded `bull-board` from version `7.2.1` to `8.0.1`
-- Upgraded `Nx` from version `22.7.5` to `23.0.1`
-- Upgraded `prettier` from version `3.8.3` to `3.8.4`
-
-### Fixed
-
-- Improved the table headers’ alignment in the queue jobs table of the admin control panel
-
-## 3.16.0 - 2026-06-24
-
-### Added
-
-- Extended the user account settings with a copy-to-clipboard button for the user id
-- Added pagination to the platform management of the admin control panel
-- Added pagination to the tag management of the admin control panel
-- Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the ISIN number
-- Extended the asset profile details dialog of the admin control panel with a copy-to-clipboard button for the symbol
-
-### Changed
-
-- Improved the throughput of the market data gathering queue by applying the rate limit per data source
-- Decreased the rate limiter duration of the market data gathering queue jobs from 4 to 3 seconds
-- Removed the deprecated `SymbolProfile` field from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
-- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.2.2` to `13.3`
-
-### Fixed
-
-- Fixed an issue with hourly market data updates not refreshing prices for asset profiles with `MANUAL` data source
-- Fixed an issue with the log context formatting in the performance logging service
-
-## 3.15.1 - 2026-06-23
-
-### Changed
-
-- Improved the dynamic numerical precision for various values in the account detail dialog on mobile
-- Improved the dynamic numerical precision for various values in the holding detail dialog on mobile
-- Upgraded `@internationalized/number` from version `3.6.6` to `3.6.7`
-
-### Fixed
-
-- Fixed an issue where symbols with special characters caused API request failures by URL encoding the symbol
-- Fixed the disabled state of the delete action in the asset profiles actions menu of the historical market data table in the admin control panel
-- Fixed the persistence of an empty `locale` string in the scraper configuration
-- Fixed a transaction timeout that prevented gathering historical market data for symbols with a long history
-- Fixed an exception in various portfolio endpoints when historical exchange rate data is missing
-
-## 3.14.0 - 2026-06-22
-
-### Added
-
-- Exposed the `ENABLE_FEATURE_CRON` environment variable to control scheduled cron job execution
-- Exposed the `PROCESSOR_GATHER_STATISTICS_CONCURRENCY` environment variable to control the concurrency of the statistics gathering queue processor
-
-### Changed
-
-- Consolidated the exchange rates to be gathered with hourly market data
-- Improved the language localization for German (`de`)
-- Upgraded `@openrouter/ai-sdk-provider` from version `2.9.0` to `2.9.1`
-- Upgraded `undici` from version `7.24.4` to `8.5.0`
-
-### Fixed
-
-- Fixed an issue in the data provider service where asset profiles and historical data could be missing for symbols that exist in multiple data sources by keying the responses by the asset profile identifier
-- Resolved an exception in the benchmarks service when the current market price is unavailable
-
 ## 3.13.0 - 2026-06-20
 
 ### Added
@@ -116,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated `SymbolProfile` field from the endpoint `GET api/v1/portfolio/holding/:dataSource/:symbol`
 - Changed the _Fear & Greed Index_ (market mood) in the markets overview to use the stored market data instead of a live quote
 - Moved the endpoint to get the asset profiles from `GET api/v1/admin/market-data` to `GET api/v1/asset-profiles`
 - Moved the endpoint to get the asset profile details from `GET api/v1/market-data/:dataSource/:symbol` to `GET api/v1/asset-profiles/:dataSource/:symbol`

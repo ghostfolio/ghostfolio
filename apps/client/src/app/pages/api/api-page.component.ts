@@ -94,7 +94,7 @@ export class GfApiPageComponent implements OnInit {
   private fetchAssetProfile({ symbol }: { symbol: string }) {
     return this.http
       .get<DataProviderGhostfolioAssetProfileResponse>(
-        `/api/v1/data-providers/ghostfolio/asset-profile/${encodeURIComponent(symbol)}`,
+        `/api/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         { headers: this.getHeaders() }
       )
       .pipe(this.catchFetchFailure(), takeUntilDestroyed(this.destroyRef));
@@ -107,7 +107,7 @@ export class GfApiPageComponent implements OnInit {
 
     return this.http
       .get<DividendsResponse>(
-        `/api/v2/data-providers/ghostfolio/dividends/${encodeURIComponent(symbol)}`,
+        `/api/v2/data-providers/ghostfolio/dividends/${symbol}`,
         {
           params,
           headers: this.getHeaders()
@@ -129,7 +129,7 @@ export class GfApiPageComponent implements OnInit {
 
     return this.http
       .get<HistoricalResponse>(
-        `/api/v2/data-providers/ghostfolio/historical/${encodeURIComponent(symbol)}`,
+        `/api/v2/data-providers/ghostfolio/historical/${symbol}`,
         {
           params,
           headers: this.getHeaders()

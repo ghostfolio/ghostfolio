@@ -1,4 +1,3 @@
-import type { AccessSettings } from './access-settings.interface';
 import type { Access } from './access.interface';
 import type { AccountBalance } from './account-balance.interface';
 import type { Activity, ActivityError } from './activities.interface';
@@ -102,7 +101,6 @@ import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
-  AccessSettings,
   AccessTokenResponse,
   AccountBalance,
   AccountBalancesResponse,
