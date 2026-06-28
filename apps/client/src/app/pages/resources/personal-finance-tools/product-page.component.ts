@@ -41,6 +41,7 @@ export class GfProductPageComponent {
       'Español',
       'Français',
       'Italiano',
+      // 'Japanese (日本語)',
       'Korean (한국어)',
       'Nederlands',
       'Português',

@@ -11,6 +11,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for routing outgoing requests through a proxy per domain via the `PROXY_ROUTES` setting in the `FetchService`
 
+## 3.18.0 - 2026-06-28
+
+### Added
+
+- Added support for filtering in the public access for portfolio sharing (experimental)
+- Set up the language localization for Japanese (`ja`)
+
+### Changed
+
+- Improved the alias display in the access table to share the portfolio
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed a phantom `UNKNOWN` slice in the portfolio proportion chart component caused by floating-point rounding
+- Fixed the base currency for the total value calculation in the public access for portfolio sharing
+- Fixed an issue in the public access for portfolio sharing that exposed absolute values of the top holdings of ETFs
+- Fixed the time zone handling in the `api` test suite for deterministic execution in `UTC`
+
 ## 3.17.0 - 2026-06-26
 
 ### Added

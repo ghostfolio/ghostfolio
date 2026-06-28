@@ -103,6 +103,15 @@
                     >Italiano (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
+                  <!--
+                    @if (user?.settings?.isExperimentalFeatures) {
+                      <mat-option value="ja"
+                        >Japanese / 日本語 (<ng-container i18n
+                          >Community</ng-container
+                        >)</mat-option
+                      >
+                    }
+                  -->
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="ko"
                       >Korean / 한국어 (<ng-container i18n

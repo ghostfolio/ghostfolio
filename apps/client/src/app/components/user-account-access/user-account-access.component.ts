@@ -229,6 +229,7 @@ export class GfUserAccountAccessComponent implements OnInit {
           grantee: access.grantee === 'Public' ? undefined : access.grantee,
           id: access.id,
           permissions: access.permissions,
+          settings: access.settings,
           type: access.type
         }
       } satisfies CreateOrUpdateAccessDialogParams,

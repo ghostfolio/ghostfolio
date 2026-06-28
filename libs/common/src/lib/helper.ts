@@ -23,6 +23,7 @@ import {
   es,
   fr,
   it,
+  ja,
   ko,
   nl,
   pl,
@@ -262,6 +263,8 @@ export function getDateFnsLocale(aLanguageCode?: string) {
     return fr;
   } else if (aLanguageCode === 'it') {
     return it;
+  } else if (aLanguageCode === 'ja') {
+    return ja;
   } else if (aLanguageCode === 'ko') {
     return ko;
   } else if (aLanguageCode === 'nl') {
