@@ -211,8 +211,7 @@ export class FetchService implements OnModuleInit {
     try {
       const proxyUrl = new URL(route.url);
 
-      requestUrl.hostname = proxyUrl.hostname;
-      requestUrl.port = proxyUrl.port;
+      requestUrl.host = proxyUrl.host;
       requestUrl.protocol = proxyUrl.protocol;
     } catch {
       this.logger.warn(
