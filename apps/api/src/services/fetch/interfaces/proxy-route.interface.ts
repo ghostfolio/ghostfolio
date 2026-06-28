@@ -9,8 +9,8 @@
  *
  * [
  *   {
- *     "domain": "www.trackinsight.com",
- *     "url": "http://trackinsight-proxy:8191"
+ *     "domain": "example.com",
+ *     "url": "http://example-proxy:8191"
  *   }
  * ]
  *

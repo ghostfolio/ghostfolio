@@ -190,25 +190,29 @@ export class FetchService implements OnModuleInit {
    */
   private applyProxyRoute(input: RequestInfo | URL): RequestInfo | URL {
     try {
-      const url = new URL(
+      const requestUrl = new URL(
         input instanceof Request ? input.url : input.toString()
       );
 
       const route = this.proxyRoutes.find(({ domain }) => {
-        return this.matchesDomain(url.hostname, domain);
+        return this.hostnameMatchesDomain({
+          domain,
+          hostname: requestUrl.hostname
+        });
       });
 
       if (!route) {
         return input;
       }
 
-      const target = new URL(route.url);
-      url.protocol = target.protocol;
-      url.host = target.host;
+      const proxyUrl = new URL(route.url);
+      requestUrl.protocol = proxyUrl.protocol;
+      requestUrl.hostname = proxyUrl.hostname;
+      requestUrl.port = proxyUrl.port;
 
       return input instanceof Request
-        ? new Request(url.toString(), input)
-        : url.toString();
+        ? new Request(requestUrl.toString(), input)
+        : requestUrl.toString();
     } catch {
       return input;
     }
@@ -219,14 +223,20 @@ export class FetchService implements OnModuleInit {
       const { hostname } = new URL(url);
 
       return this.webFetchRoutes.find(({ domain }) => {
-        return this.matchesDomain(hostname, domain);
+        return this.hostnameMatchesDomain({ domain, hostname });
       });
     } catch {
       return undefined;
     }
   }
 
-  private matchesDomain(hostname: string, domain: string): boolean {
+  private hostnameMatchesDomain({
+    domain,
+    hostname
+  }: {
+    domain: string;
+    hostname: string;
+  }): boolean {
     return hostname === domain || hostname.endsWith(`.${domain}`);
   }
 
