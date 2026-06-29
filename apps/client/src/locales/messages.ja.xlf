@@ -693,7 +693,7 @@
       </trans-unit>
       <trans-unit id="1089827441260039381" datatype="html">
         <source>Delete Jobs</source>
-        <target state="translated">ジ ョ ブを削除</target>
+        <target state="new">Delete Jobs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">193</context>
@@ -933,7 +933,7 @@
       </trans-unit>
       <trans-unit id="7194017842579795231" datatype="html">
         <source>Healthcare</source>
-        <target state="translated">健康管理</target>
+        <target state="new">Healthcare</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">92</context>
@@ -1113,7 +1113,7 @@
       </trans-unit>
       <trans-unit id="4581276194280068721" datatype="html">
         <source>Industrials</source>
-        <target state="translated">工業製</target>
+        <target state="new">Industrials</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">93</context>
@@ -1501,7 +1501,7 @@
       </trans-unit>
       <trans-unit id="735924103945447056" datatype="html">
         <source>Compare with...</source>
-        <target state="translated">～と比較す</target>
+        <target state="new">Compare with...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.html</context>
           <context context-type="linenumber">18</context>
@@ -1637,7 +1637,7 @@
       </trans-unit>
       <trans-unit id="6844699413925472826" datatype="html">
         <source>Greed</source>
-        <target state="translated">負欲</target>
+        <target state="new">Greed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.component.ts</context>
           <context context-type="linenumber">47</context>
@@ -5402,7 +5402,7 @@
       </trans-unit>
       <trans-unit id="2075160647498894947" datatype="html">
         <source>Asia-Pacific</source>
-        <target state="translated">アジア・タイヘイヨウ</target>
+        <target state="new">Asia-Pacific</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">7</context>
@@ -5822,7 +5822,7 @@
       </trans-unit>
       <trans-unit id="5734784563242233466" datatype="html">
         <source>Mutual Fund</source>
-        <target state="translated">相互基金</target>
+        <target state="new">Mutual Fund</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">61</context>
@@ -5926,7 +5926,7 @@
       </trans-unit>
       <trans-unit id="2634398159221205491" datatype="html">
         <source>Extreme Greed</source>
-        <target state="translated">極度の負欲</target>
+        <target state="new">Extreme Greed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">80</context>
@@ -6090,7 +6090,7 @@
       </trans-unit>
       <trans-unit id="1600023202562292052" datatype="html">
         <source>Close Holding</source>
-        <target state="translated">密接な保有</target>
+        <target state="new">Close Holding</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">446</context>
@@ -6202,7 +6202,7 @@
       </trans-unit>
       <trans-unit id="4602065467346820556" datatype="html">
         <source>Oops! A data provider is experiencing the hiccups.</source>
-        <target state="translated">おっと！データプロバイダーがしゃっくりを経験しています。</target>
+        <target state="new">Oops! A data provider is experiencing the hiccups.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
           <context context-type="linenumber">8</context>
@@ -6423,7 +6423,7 @@
       </trans-unit>
       <trans-unit id="8903954975609359428" datatype="html">
         <source>Buy and sell</source>
-        <target state="translated">買いと売</target>
+        <target state="new">Buy and sell</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">10</context>
