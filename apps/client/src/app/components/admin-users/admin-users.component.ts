@@ -8,6 +8,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
+  getCountryName,
   getDateFnsLocale,
   getDateFormatString,
   getEmojiFlag
@@ -88,6 +89,7 @@ export class GfAdminUsersComponent implements OnInit {
   >();
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
+  protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;
   protected hasPermissionToImpersonateAllUsers: boolean;

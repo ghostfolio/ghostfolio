@@ -1,4 +1,4 @@
-import { getSum } from '@ghostfolio/common/helper';
+import { getCountryName, getSum } from '@ghostfolio/common/helper';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -50,6 +50,7 @@ import {
 })
 export class GfUserDetailDialogComponent implements OnInit {
   public baseCurrency: string;
+  public readonly getCountryName = getCountryName;
   public subscriptionsDataSource = new MatTableDataSource<Subscription>();
   public subscriptionsDisplayedColumns = [
     'createdAt',
