@@ -57,6 +57,10 @@
       "zh": {
         "baseHref": "/zh/",
         "translation": "apps/client/src/locales/messages.zh.xlf"
+      },
+      "zh-TW": {
+        "baseHref": "/zh-TW/",
+        "translation": "apps/client/src/locales/messages.zh-TW.xlf"
       }
     },
     "sourceLocale": "en"
@@ -149,6 +153,10 @@
         "development-zh": {
           "baseHref": "/zh/",
           "localize": ["zh"]
+        },
+        "development-zh-TW": {
+          "baseHref": "/zh-TW/",
+          "localize": ["zh-TW"]
         },
         "production": {
           "budgets": [
@@ -271,6 +279,9 @@
         "development-zh": {
           "buildTarget": "client:build:development-zh"
         },
+        "development-zh-TW": {
+          "buildTarget": "client:build:development-zh-TW"
+        },
         "production": {
           "buildTarget": "client:build:production"
         }
@@ -296,7 +307,8 @@
           "messages.pt.xlf",
           "messages.tr.xlf",
           "messages.uk.xlf",
-          "messages.zh.xlf"
+          "messages.zh.xlf",
+          "messages.zh-TW.xlf"
         ],
         "trim": true
       }
