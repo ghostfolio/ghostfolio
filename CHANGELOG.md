@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for routing outgoing requests through a per-domain proxy via the `PROXY_ROUTES` setting in the `FetchService`
 
+### Changed
+
+- Improved the language localization for Japanese (`ja`)
+
 ## 3.18.0 - 2026-06-28
 
 ### Added
