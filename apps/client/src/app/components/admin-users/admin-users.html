@@ -60,9 +60,11 @@
                 class="mat-mdc-cell px-1 py-2"
                 mat-cell
               >
-                <span class="h5" [title]="element.country">{{
-                  getEmojiFlag(element.country)
-                }}</span>
+                <span
+                  class="h5"
+                  [title]="getCountryName({ code: element.country })"
+                  >{{ getEmojiFlag(element.country) }}</span
+                >
               </td>
             </ng-container>
           }
