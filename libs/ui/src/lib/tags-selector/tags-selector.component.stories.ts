@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import '@angular/localize/init';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { GfTagsSelectorComponent } from './tags-selector.component';
@@ -10,7 +10,8 @@ export default {
   component: GfTagsSelectorComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, NoopAnimationsModule]
+      imports: [CommonModule],
+      providers: [provideAnimationsAsync('noop')]
     })
   ]
 } as Meta<GfTagsSelectorComponent>;
