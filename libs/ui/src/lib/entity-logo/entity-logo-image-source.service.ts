@@ -7,6 +7,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class EntityLogoImageSourceService {
+  private failedImageSources = new Set<string>();
+
   public getLogoUrlByAssetProfileIdentifier({
     dataSource,
     symbol
@@ -16,5 +18,13 @@ export class EntityLogoImageSourceService {
 
   public getLogoUrlByUrl(url: string) {
     return `../api/v1/logo?url=${url}`;
+  }
+
+  public hasFailed(imageSource: string) {
+    return this.failedImageSources.has(imageSource);
+  }
+
+  public markAsFailed(imageSource: string) {
+    this.failedImageSources.add(imageSource);
   }
 }
