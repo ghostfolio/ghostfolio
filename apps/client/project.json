@@ -57,6 +57,10 @@
       "zh": {
         "baseHref": "/zh/",
         "translation": "apps/client/src/locales/messages.zh.xlf"
+      },
+      "zh-TW": {
+        "baseHref": "/zh-TW/",
+        "translation": "apps/client/src/locales/messages.zh-TW.xlf"
       }
     },
     "sourceLocale": "en"
@@ -296,6 +300,7 @@
           "messages.pt.xlf",
           "messages.tr.xlf",
           "messages.uk.xlf",
+          "messages.zh-TW.xlf",
           "messages.zh.xlf"
         ],
         "trim": true
