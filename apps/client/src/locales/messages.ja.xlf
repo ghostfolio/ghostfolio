@@ -4819,6 +4819,7 @@
       <trans-unit id="2315631726271602419" datatype="html">
         <source>Let's dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
         <target state="translated">以下のGhostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>の詳細比較表を読み込んで、Ghostfolioが<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>に対してどのように位置づけられているかを徹底的に理解しましょう。機能、データプライバシー、料金などの様々な角度から検討し、必要に応じた選択を行いましょう。</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
@@ -5989,7 +5990,7 @@
       </trans-unit>
       <trans-unit id="3401045354658415524" datatype="html">
         <source>If a translation is missing, kindly support us in extending it <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
-        <target state="translated">もし翻訳がない場合は、それを拡張するために<x id="START_LINK" ctype="x-a" equiv-text="<a href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf" target="_blank" >"/>ここ<x id="CLOSE_LINK" ctype="x-a" equiv-text="</a >"/>で私たちを支援してください。</target>
+        <target state="translated">もし翻訳がない場合は、それを拡張するために<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>ここ<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>で私たちを支援してください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">59</context>
