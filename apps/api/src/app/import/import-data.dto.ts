@@ -6,9 +6,36 @@ import {
 } from '@ghostfolio/common/dtos';
 
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsOptional,
+  ValidateNested,
+  IsString,
+  IsUrl
+} from 'class-validator';
+
+export class ImportPlatformDto {
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @IsString()
+  name: string;
+
+  @IsUrl({
+    protocols: ['http', 'https'],
+    require_protocol: true
+  })
+  url: string;
+}
 
 export class ImportDataDto {
+  @IsArray()
+  @IsOptional()
+  @Type(() => ImportPlatformDto)
+  @ValidateNested({ each: true })
+  platforms?: ImportPlatformDto[];
+
   @IsArray()
   @IsOptional()
   @Type(() => CreateAccountWithBalancesDto)
