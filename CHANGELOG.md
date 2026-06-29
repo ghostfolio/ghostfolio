@@ -128,6 +128,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a negative number of periods returned by the _FIRE_ calculator when the goal is already met with no interest rate
 - Fixed an issue with the localization of the country names
 - Fixed an issue in the data provider service where quotes could be missing for symbols that exist in multiple data sources by keying the quotes response by the asset profile identifier
 
