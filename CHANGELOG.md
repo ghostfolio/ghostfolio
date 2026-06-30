@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Japanese (`ja`)
 - Upgraded `nestjs` from version `11.1.21` to `11.1.27`
 
+### Fixed
+
+- Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
+
 ## 3.18.0 - 2026-06-28
 
 ### Added

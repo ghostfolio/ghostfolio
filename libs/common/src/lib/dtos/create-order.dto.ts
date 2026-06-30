@@ -21,11 +21,11 @@ export class CreateOrderDto {
   @IsString()
   accountId?: string;
 
-  @IsEnum(AssetClass, { each: true })
+  @IsEnum(AssetClass)
   @IsOptional()
   assetClass?: AssetClass;
 
-  @IsEnum(AssetSubClass, { each: true })
+  @IsEnum(AssetSubClass)
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
@@ -66,7 +66,7 @@ export class CreateOrderDto {
   @IsOptional()
   tags?: string[];
 
-  @IsEnum(Type, { each: true })
+  @IsEnum(Type)
   type: Type;
 
   @IsNumber()
