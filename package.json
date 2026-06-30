@@ -169,6 +169,7 @@
     "@nx/storybook": "23.0.1",
     "@nx/web": "23.0.1",
     "@nx/workspace": "23.0.1",
+    "@prisma/config": "7.8.0",
     "@schematics/angular": "21.2.6",
     "@storybook/addon-docs": "10.1.10",
     "@storybook/addon-themes": "10.1.10",
