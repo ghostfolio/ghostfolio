@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for routing outgoing requests through a per-domain proxy via the `PROXY_ROUTES` setting in the `FetchService`
 
+### Changed
+
+- Improved the language localization for Japanese (`ja`)
+- Upgraded `nestjs` from version `11.1.21` to `11.1.27`
+
 ### Fixed
 
 - Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
