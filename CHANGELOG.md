@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the validation of the `dataSource` field in the `CreateAssetProfileWithMarketDataDto` to use `IsIn`
 - Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
 
 ## 3.18.0 - 2026-06-28
