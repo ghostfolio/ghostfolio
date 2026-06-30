@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for routing outgoing requests through a per-domain proxy via the `PROXY_ROUTES` setting in the `FetchService`
 
+### Fixed
+
+- Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
+
 ## 3.18.0 - 2026-06-28
 
 ### Added
@@ -25,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the `@IsEnum` validation decorator to no longer use `{ each: true }` on scalar properties in the DTOs
 - Fixed a phantom `UNKNOWN` slice in the portfolio proportion chart component caused by floating-point rounding
 - Fixed the base currency for the total value calculation in the public access for portfolio sharing
 - Fixed an issue in the public access for portfolio sharing that exposed absolute values of the top holdings of ETFs
