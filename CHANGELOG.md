@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated the _Privacy Policy_
 - Updated the _Terms of Service_
+- Improved the language localization for German (`de`)
 - Improved the language localization for Japanese (`ja`)
 - Upgraded `nestjs` from version `11.1.21` to `11.1.27`
 
