@@ -20,4 +20,11 @@
       font-variant-numeric: tabular-nums;
     }
   }
+
+  @media (max-width: 575.98px) {
+    .currency-container,
+    .status-container {
+      min-width: 0;
+    }
+  }
 }
