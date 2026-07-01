@@ -31,14 +31,11 @@
                   <gf-premium-indicator
                     class="ml-1"
                     i18n-title
-                    title="{{
-                      `Expires ${formatDistanceToNow(
-                        element.subscription.expiresAt
-                      )} (${
-                        (element.subscription.expiresAt
-                        | date: defaultDateFormat)
-                      })`
-                    }}"
+                    title="Expires {{
+                      formatDistanceToNow(element.subscription.expiresAt)
+                    }} ({{
+                      element.subscription.expiresAt | date: defaultDateFormat
+                    }})"
                     [enableLink]="false"
                   />
                 }
