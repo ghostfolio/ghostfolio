@@ -97,7 +97,7 @@ export class UserService extends ObservableStore<UserStoreState> {
   }
 
   public reset() {
-    this.setState({ user: null }, UserStoreActions.RemoveUser);
+    this.setState({ user: undefined }, UserStoreActions.RemoveUser);
   }
 
   public signOut() {
@@ -127,7 +127,11 @@ export class UserService extends ObservableStore<UserStoreState> {
 
     const cookies = await cookieStore.getAll();
 
-    await Promise.all(cookies.map(({ name }) => cookieStore.delete(name)));
+    const cookieNames = cookies
+      .map(({ name }) => name)
+      .filter((name): name is string => !!name);
+
+    await Promise.all(cookieNames.map((name) => cookieStore.delete(name)));
   }
 
   private fetchUser(): Observable<User> {
