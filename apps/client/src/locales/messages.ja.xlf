@@ -260,7 +260,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
@@ -600,7 +600,7 @@
         <target state="translated">支払い済み</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3175281009707730014" datatype="html">
@@ -884,7 +884,7 @@
         <target state="translated">サブスクリプション履歴</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3720539089813177542" datatype="html">
@@ -992,7 +992,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -1000,7 +1000,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4136685477767543249" datatype="html">
@@ -1056,8 +1056,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="577204259483334667" datatype="html">
-        <source>and we share aggregated <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>key metrics<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> of the platform's performance</source>
-        <target state="translated">そして、プラットフォームのパフォーマンスに関する集計された<x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>主要指標<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>を共有しています</target>
+        <source>and we share aggregated <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>key metrics<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> of the platform’s performance</source>
+        <target state="new">そして、プラットフォームのパフォーマンスに関する集計された<x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>主要指標<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>を共有しています</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">32</context>
@@ -1068,7 +1068,7 @@
         <target state="translated">合計</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5918502349406094800" datatype="html">
@@ -1424,7 +1424,7 @@
         <target state="translated">このユーザーを削除してもよろしいですか？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">236</context>
+          <context context-type="linenumber">238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2392488717875840729" datatype="html">
@@ -1456,11 +1456,11 @@
         <target state="translated">1日あたりのエンゲージメント</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3462698906491525936" datatype="html">
@@ -1468,7 +1468,7 @@
         <target state="translated">最終依頼</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8197682624172763038" datatype="html">
@@ -1476,7 +1476,7 @@
         <target state="translated">ユーザーになりすます</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4839682406703705780" datatype="html">
@@ -1484,7 +1484,7 @@
         <target state="translated">ユーザーを削除</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">250</context>
+          <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7341990227686441824" datatype="html">
@@ -2440,7 +2440,7 @@
         <target state="translated">クーポン</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
@@ -2744,7 +2744,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
@@ -2760,7 +2760,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.html</context>
@@ -3252,7 +3252,7 @@
         <target state="translated">創造</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="803941175683258052" datatype="html">
@@ -3496,8 +3496,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="8984201769958269296" datatype="html">
-        <source>Get access to 80'000+ tickers from over 50 exchanges</source>
-        <target state="translated">50以上の取引所から80,000以上のティッカーにアクセスできます</target>
+        <source>Get access to 80’000+ tickers from over 50 exchanges</source>
+        <target state="new">50以上の取引所から80,000以上のティッカーにアクセスできます</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">84</context>
@@ -3696,8 +3696,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3824165347269033834" datatype="html">
-        <source>At Ghostfolio, transparency is at the core of our values. We publish the source code as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> and we openly share aggregated key metrics of the platform's operational status.</source>
-        <target state="translated">Ghostfolioでは、透明性が私たちの価値観の中核です。ソースコードを<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>オープンソースソフトウェア<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>（OSS）として<x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0ライセンス<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>の下で公開し、プラットフォームの運用状況の集計主要指標を公然と共有しています。</target>
+        <source>At Ghostfolio, transparency is at the core of our values. We publish the source code as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> and we openly share aggregated key metrics of the platform’s operational status.</source>
+        <target state="new">Ghostfolioでは、透明性が私たちの価値観の中核です。ソースコードを<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>オープンソースソフトウェア<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>（OSS）として<x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0ライセンス<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>の下で公開し、プラットフォームの運用状況の集計主要指標を公然と共有しています。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">7</context>
@@ -3832,7 +3832,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -3844,7 +3844,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/activities-page.html</context>
@@ -4096,7 +4096,7 @@
         <target state="translated">価格</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2666668717343771434" datatype="html">
@@ -4196,7 +4196,7 @@
         <target state="translated">トライアル</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
@@ -4616,7 +4616,7 @@
         <target state="translated">有効期限</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">204</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6463889888921382396" datatype="html">
@@ -4664,8 +4664,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="8289257900569435140" datatype="html">
-        <source>It's free.</source>
-        <target state="translated">無料です。</target>
+        <source>It’s free.</source>
+        <target state="new">無料です。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">362</context>
@@ -4708,7 +4708,7 @@
         <target state="translated">登録</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -4817,8 +4817,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2315631726271602419" datatype="html">
-        <source>Let's dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
-        <target state="translated">以下のGhostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>の詳細比較表を読み込んで、Ghostfolioが<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>に対してどのように位置づけられているかを徹底的に理解しましょう。機能、データプライバシー、料金などの様々な角度から検討し、必要に応じた選択を行いましょう。</target>
+        <source>Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
+        <target state="new">以下のGhostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>の詳細比較表を読み込んで、Ghostfolioが<x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>に対してどのように位置づけられているかを徹底的に理解しましょう。機能、データプライバシー、料金などの様々な角度から検討し、必要に応じた選択を行いましょう。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">44</context>
@@ -4854,7 +4854,7 @@
       </trans-unit>
       <trans-unit id="5272477568821950840" datatype="html">
         <source>Founded</source>
-        <target state="translated">設立 </target>
+        <target state="translated">設立</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">77</context>
@@ -5569,7 +5569,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
-          <context context-type="linenumber">448</context>
+          <context context-type="linenumber">449</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6333857424161463201" datatype="html">
@@ -5657,7 +5657,7 @@
         <target state="translated">詳細を見る</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
@@ -5977,11 +5977,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
-          <context context-type="linenumber">450</context>
+          <context context-type="linenumber">451</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
-          <context context-type="linenumber">464</context>
+          <context context-type="linenumber">465</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
@@ -6188,6 +6188,14 @@
           <context context-type="linenumber">373</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="3995811497329884593" datatype="html">
+        <source>Expires <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</source>
+        <target state="new">Expires <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="7451343426685730864" datatype="html">
         <source>WTD</source>
         <target state="translated">WTD</target>
@@ -6342,8 +6350,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2998033970178753887" datatype="html">
-        <source>Oops! It looks like you're making too many requests. Please slow down a bit.</source>
-        <target state="translated">おっと！リクエストの回数が多すぎるようです。少しペースを落としてください。</target>
+        <source>Oops! It looks like you’re making too many requests. Please slow down a bit.</source>
+        <target state="new">おっと！リクエストの回数が多すぎるようです。少しペースを落としてください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">103</context>
@@ -6439,7 +6447,7 @@
       </trans-unit>
       <trans-unit id="7641420101493176397" datatype="html">
         <source>Delete Activities</source>
-        <target state="translated"> アクティビティを削除する</target>
+        <target state="translated">アクティビティを削除する</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">92</context>
@@ -6890,7 +6898,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">239</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -7356,11 +7364,11 @@
         <target state="new">API Requests Today</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6461489707382666493" datatype="html">
@@ -7712,7 +7720,7 @@
         <target state="new">Do you really want to generate a new security token for this user?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8944214829054650479" datatype="html">
@@ -7720,7 +7728,7 @@
         <target state="new">Security token</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">258</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
@@ -7732,7 +7740,7 @@
         <target state="new">Generate Security Token</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2029980907058777630" datatype="html">
@@ -8322,14 +8330,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="187187500641108332" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/></source>
-        <target state="new"><x id="INTERPOLATION" equiv-text="{{ `Expires ${formatDistanceToNow( element.subscription.expiresAt )} (${ (element.subscription.expiresAt | date: defaultDateFormat) })` }}"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4022507644751907059" datatype="html">
