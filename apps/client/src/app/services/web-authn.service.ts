@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   startAuthentication,
   startRegistration
@@ -20,10 +20,8 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 export class WebAuthnService {
   private static readonly WEB_AUTH_N_DEVICE_ID = 'WEB_AUTH_N_DEVICE_ID';
 
-  public constructor(
-    private http: HttpClient,
-    private settingsStorageService: SettingsStorageService
-  ) {}
+  private readonly http = inject(HttpClient);
+  private readonly settingsStorageService = inject(SettingsStorageService);
 
   public isSupported() {
     return typeof PublicKeyCredential !== 'undefined';
@@ -44,8 +42,12 @@ export class WebAuthnService {
           console.warn('Could not register device', error);
           return of(null);
         }),
-        switchMap((attOps) => {
-          return startRegistration({ optionsJSON: attOps });
+        switchMap((registrationOptions) => {
+          if (!registrationOptions) {
+            throw new Error('Could not generate registration options');
+          }
+
+          return startRegistration({ optionsJSON: registrationOptions });
         }),
         switchMap((credential) => {
           return this.http.post<AuthDeviceDto>(
@@ -53,10 +55,10 @@ export class WebAuthnService {
             { credential }
           );
         }),
-        tap((authDevice) =>
+        tap(({ id }) =>
           this.settingsStorageService.setSetting(
             WebAuthnService.WEB_AUTH_N_DEVICE_ID,
-            authDevice.id
+            id
           )
         )
       );

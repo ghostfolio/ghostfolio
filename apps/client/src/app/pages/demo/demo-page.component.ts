@@ -25,7 +25,7 @@ export class GfDemoPageComponent {
   }
 
   public ngOnInit() {
-    const hasToken = this.tokenStorageService.getToken()?.length > 0;
+    const hasToken = !!this.tokenStorageService.getToken();
 
     if (hasToken) {
       this.notificationService.alert({
