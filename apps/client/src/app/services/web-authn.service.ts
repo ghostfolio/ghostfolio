@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   startAuthentication,
   startRegistration
@@ -20,10 +20,8 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 export class WebAuthnService {
   private static readonly WEB_AUTH_N_DEVICE_ID = 'WEB_AUTH_N_DEVICE_ID';
 
-  public constructor(
-    private http: HttpClient,
-    private settingsStorageService: SettingsStorageService
-  ) {}
+  private readonly http = inject(HttpClient);
+  private readonly settingsStorageService = inject(SettingsStorageService);
 
   public isSupported() {
     return typeof PublicKeyCredential !== 'undefined';
