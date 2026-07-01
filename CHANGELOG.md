@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for routing outgoing requests through a per-domain proxy via the `PROXY_ROUTES` setting in the `FetchService`
+- Added `@prisma/config` as a development dependency used by the _Prisma Configuration File_
 
 ### Changed
 
 - Updated the _Privacy Policy_
 - Improved the language localization for Japanese (`ja`)
 - Upgraded `nestjs` from version `11.1.21` to `11.1.27`
-- Added explicit devDependency import of `@prisma/config`
 
 ## 3.18.0 - 2026-06-28
 
