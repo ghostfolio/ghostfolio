@@ -3,7 +3,7 @@ import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { HttpClient } from '@angular/common/http';
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
@@ -22,7 +22,9 @@ import { UserStoreState } from './user-store.state';
   providedIn: 'root'
 })
 export class UserService extends ObservableStore<UserStoreState> {
-  private deviceType: string;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -34,8 +36,6 @@ export class UserService extends ObservableStore<UserStoreState> {
     super({ trackStateHistory: true });
 
     this.setState({ user: undefined }, UserStoreActions.Initialize);
-
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 
   public get(force = false) {
@@ -162,8 +162,8 @@ export class UserService extends ObservableStore<UserStoreState> {
               user
             },
             disableClose: true,
-            height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+            height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+            width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
           });
 
           dialogRef
