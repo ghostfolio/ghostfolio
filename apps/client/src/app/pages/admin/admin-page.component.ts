@@ -103,7 +103,7 @@ export class AdminPageComponent {
     const token = this.tokenStorageService.getToken();
 
     document.cookie = [
-      `${BULL_BOARD_COOKIE_NAME}=${encodeURIComponent(token)}`,
+      `${BULL_BOARD_COOKIE_NAME}=${encodeURIComponent(token ?? '')}`,
       'path=/',
       'SameSite=Strict'
     ].join('; ');

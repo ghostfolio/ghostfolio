@@ -6,9 +6,9 @@ import { KEY_TOKEN } from './settings-storage.service';
   providedIn: 'root'
 })
 export class TokenStorageService {
-  public getToken(): string {
+  public getToken(): string | null {
     return (
-      window.sessionStorage.getItem(KEY_TOKEN) ||
+      window.sessionStorage.getItem(KEY_TOKEN) ??
       window.localStorage.getItem(KEY_TOKEN)
     );
   }
