@@ -101,7 +101,7 @@ export class GfHeaderComponent implements OnChanges {
   protected hasPermissionToAccessAssistant: boolean;
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected hasPermissionToCreateUser: boolean;
-  protected impersonationId: string;
+  protected impersonationId: string | null;
   protected readonly internalRoutes = internalRoutes;
   protected isMenuOpen: boolean;
   protected readonly routeAbout = publicRoutes.about.path;
