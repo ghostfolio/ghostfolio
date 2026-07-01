@@ -3,7 +3,7 @@ import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { HttpClient } from '@angular/common/http';
-import { DestroyRef, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
@@ -24,13 +24,13 @@ import { UserStoreState } from './user-store.state';
 export class UserService extends ObservableStore<UserStoreState> {
   private deviceType: string;
 
-  public constructor(
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private http: HttpClient,
-    private webAuthnService: WebAuthnService
-  ) {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly http = inject(HttpClient);
+  private readonly webAuthnService = inject(WebAuthnService);
+
+  public constructor() {
     super({ trackStateHistory: true });
 
     this.setState({ user: undefined }, UserStoreActions.Initialize);
