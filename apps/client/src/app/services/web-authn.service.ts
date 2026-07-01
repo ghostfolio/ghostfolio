@@ -46,6 +46,7 @@ export class WebAuthnService {
           if (!attOps) {
             throw new Error('Could not generate registration options');
           }
+
           return startRegistration({ optionsJSON: attOps });
         }),
         switchMap((credential) => {

@@ -128,10 +128,18 @@ export class UserService extends ObservableStore<UserStoreState> {
     const cookies = await cookieStore.getAll();
 
     const cookieNames = cookies
-      .map(({ name }) => name)
-      .filter((name): name is string => !!name);
+      .map(({ name }) => {
+        return name;
+      })
+      .filter((name): name is string => {
+        return !!name;
+      });
 
-    await Promise.all(cookieNames.map((name) => cookieStore.delete(name)));
+    await Promise.all(
+      cookieNames.map((name) => {
+        return cookieStore.delete(name);
+      })
+    );
   }
 
   private fetchUser(): Observable<User> {
