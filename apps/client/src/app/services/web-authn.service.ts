@@ -42,12 +42,12 @@ export class WebAuthnService {
           console.warn('Could not register device', error);
           return of(null);
         }),
-        switchMap((attOps) => {
-          if (!attOps) {
+        switchMap((registrationOptions) => {
+          if (!registrationOptions) {
             throw new Error('Could not generate registration options');
           }
 
-          return startRegistration({ optionsJSON: attOps });
+          return startRegistration({ optionsJSON: registrationOptions });
         }),
         switchMap((credential) => {
           return this.http.post<AuthDeviceDto>(
@@ -55,10 +55,10 @@ export class WebAuthnService {
             { credential }
           );
         }),
-        tap((authDevice) =>
+        tap(({ id }) =>
           this.settingsStorageService.setSetting(
             WebAuthnService.WEB_AUTH_N_DEVICE_ID,
-            authDevice.id
+            id
           )
         )
       );
