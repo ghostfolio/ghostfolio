@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Improved the language localization for Japanese (`ja`)
 - Upgraded `nestjs` from version `11.1.21` to `11.1.27`
+- Upgraded `stripe` from version `21.0.1` to `22.2.0`
 
 ### Fixed
 
