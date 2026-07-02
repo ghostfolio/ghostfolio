@@ -34,8 +34,8 @@ export class GfRuleSettingsDialogComponent {
     private formBuilder: FormBuilder
   ) {
     this.settingsForm = this.formBuilder.group({
-      thresholdMax: [this.data.settings.thresholdMax],
-      thresholdMin: [this.data.settings.thresholdMin]
+      thresholdMax: [this.data.settings?.thresholdMax],
+      thresholdMin: [this.data.settings?.thresholdMin]
     });
   }
 
