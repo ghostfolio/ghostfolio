@@ -1,7 +1,7 @@
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 
-import { Access, Tag } from '@prisma/client';
+import { Access, Provider, Tag } from '@prisma/client';
 
 import { ReferralPartner } from './referral-partner.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
@@ -16,6 +16,7 @@ export interface User {
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
+  provider: Provider;
   referralPartners?: ReferralPartner[];
   settings: UserSettings;
   systemMessage?: SystemMessage;
@@ -25,4 +26,5 @@ export interface User {
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];
+  thirdPartyId?: string;
 }

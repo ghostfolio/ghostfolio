@@ -109,7 +109,14 @@ export class UserService {
     locale?: string;
     user: UserWithSettings;
   }): Promise<IUser> {
-    const { id, permissions, settings, subscription } = user;
+    const {
+      id,
+      permissions: userPermissions,
+      provider,
+      settings,
+      subscription,
+      thirdPartyId
+    } = user;
 
     const [
       access,
@@ -191,11 +198,13 @@ export class UserService {
     return {
       activitiesCount,
       id,
-      permissions,
+      permissions: userPermissions,
+      provider,
       referralPartners,
       subscription,
       systemMessage,
       tags,
+      thirdPartyId,
       access: access.map((accessItem) => {
         return {
           alias: accessItem.alias,

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
@@ -9,7 +10,8 @@ import {
   OidcContext,
   OidcIdToken,
   OidcParams,
-  OidcProfile
+  OidcProfile,
+  OidcValidationResult
 } from './interfaces/interfaces';
 import { OidcStateStore } from './oidc-state.store';
 
@@ -17,21 +19,21 @@ import { OidcStateStore } from './oidc-state.store';
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   private readonly logger = new Logger(OidcStrategy.name);
 
-  private static readonly stateStore = new OidcStateStore();
-
   public constructor(
     private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    stateStore: OidcStateStore,
     options: StrategyOptions
   ) {
     super({
       ...options,
       passReqToCallback: true,
-      store: OidcStrategy.stateStore
+      store: stateStore
     });
   }
 
   public async validate(
-    _request: Request,
+    request: Request,
     issuer: string,
     profile: OidcProfile,
     context: OidcContext,
@@ -48,11 +50,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         params?.sub ??
         context?.claims?.sub;
 
-      const jwt = await this.authService.validateOAuthLogin({
-        thirdPartyId,
-        provider: Provider.OIDC
-      });
-
       if (!thirdPartyId) {
         this.logger.error(
           `Missing subject identifier in OIDC response from ${issuer}`
@@ -61,10 +58,49 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         throw new Error('Missing subject identifier in OIDC response');
       }
 
-      return { jwt };
+      // Check if user is already authenticated via JWT
+      // If authenticated, this is a link operation; otherwise, normal login
+      // The linkToken is attached by OidcStateStore.verify() from the OAuth state
+      const linkToken = (request as any).oidcLinkToken as string | undefined;
+      const authenticatedUserId = this.extractAuthenticatedUserId(linkToken);
+
+      if (authenticatedUserId) {
+        // User is authenticated → Link mode
+        // Return linkState for controller to handle linking
+        return {
+          linkState: {
+            userId: authenticatedUserId
+          },
+          thirdPartyId
+        } as OidcValidationResult;
+      }
+
+      // No authenticated user → Normal OIDC login flow
+      const jwt = await this.authService.validateOAuthLogin({
+        thirdPartyId,
+        provider: Provider.OIDC
+      });
+
+      return { jwt, thirdPartyId } as OidcValidationResult;
     } catch (error) {
       this.logger.error(error);
       throw error;
+    }
+  }
+
+  /**
+   * Extract authenticated user ID from linkToken passed via OAuth state
+   */
+  private extractAuthenticatedUserId(linkToken?: string): string | null {
+    if (!linkToken) {
+      return null;
+    }
+
+    try {
+      const decoded = this.jwtService.verify<{ id: string }>(linkToken);
+      return decoded?.id || null;
+    } catch {
+      return null;
     }
   }
 }
