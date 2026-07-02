@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the _Privacy Policy_
 - Updated the _Terms of Service_
 - Improved the parsing of integer query parameters (`skip` and `take`) in the `GET api/v1/activities` endpoint
+- Improved the parsing of integer query parameters (`skip` and `take`) in the `GET api/v1/admin/user` endpoint
+- Improved the parsing of integer query parameters (`skip` and `take`) in the `GET api/v1/asset-profiles` endpoint
 - Improved the language localization for German (`de`)
 - Improved the language localization for Japanese (`ja`)
 - Upgraded `@ionic/angular` from version `8.8.5` to `8.8.12`
