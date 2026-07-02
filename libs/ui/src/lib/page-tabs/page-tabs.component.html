@@ -12,7 +12,7 @@
     @if (tab.showCondition !== false) {
       @if (tab.onClick) {
         <button
-          class="no-min-width overflow-hidden px-2"
+          class="justify-content-start no-min-width overflow-hidden px-2 text-left"
           mat-tab-link
           type="button"
           (click)="tab.onClick()"
@@ -28,7 +28,7 @@
       } @else {
         <a
           #rla="routerLinkActive"
-          class="no-min-width overflow-hidden px-2"
+          class="justify-content-start no-min-width overflow-hidden px-2 text-left"
           mat-tab-link
           routerLinkActive
           [active]="rla.isActive"
@@ -45,9 +45,15 @@
 </nav>
 
 <ng-template #tabContent let-tab>
-  <ion-icon
-    [name]="tab.iconName"
-    [size]="deviceType === 'mobile' ? 'large' : 'small'"
-  />
-  <div class="d-none d-sm-block ml-1" [innerHTML]="tab.label"></div>
+  <span class="align-items-center d-flex justify-content-start text-left w-100">
+    <ion-icon
+      class="flex-shrink-0"
+      [name]="tab.iconName"
+      [size]="deviceType === 'mobile' ? 'large' : 'small'"
+    />
+    <span
+      class="col d-none d-sm-block ml-1 overflow-hidden p-0 text-truncate"
+      [innerHTML]="tab.label"
+    ></span>
+  </span>
 </ng-template>
