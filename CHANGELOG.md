@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the validation of the `skip` and `take` query parameters in the activities controller to use `ParseIntPipe`
 - Fixed the validation of the data source field of an asset profile with market data
 - Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
 
