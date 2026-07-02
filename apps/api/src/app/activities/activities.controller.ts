@@ -145,14 +145,14 @@ export class ActivitiesController {
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
       filters,
+      skip,
       sortColumn,
       sortDirection,
       startDate,
+      take,
       types,
       userCurrency,
       includeDrafts: true,
-      skip,
-      take,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });
