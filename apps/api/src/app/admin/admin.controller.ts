@@ -40,6 +40,7 @@ import {
   Inject,
   Logger,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -319,12 +320,12 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getUsers(
-    @Query('skip') skip?: number,
-    @Query('take') take?: number
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number
   ): Promise<AdminUsersResponse> {
     return this.adminService.getUsers({
-      skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take
+      skip,
+      take
     });
   }
 
