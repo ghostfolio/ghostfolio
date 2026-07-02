@@ -21,12 +21,16 @@ import { Prisma, Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
 import ms, { StringValue } from 'ms';
 import Stripe from 'stripe';
+import type {
+  Stripe as StripeInstance,
+  Checkout as StripeCheckout
+} from 'stripe';
 
 @Injectable()
 export class SubscriptionService {
   private readonly logger = new Logger(SubscriptionService.name);
 
-  private stripe: Stripe;
+  private stripe: StripeInstance;
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -37,7 +41,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2026-03-25.dahlia'
+          apiVersion: '2026-05-27.dahlia'
         }
       );
     }
@@ -63,7 +67,7 @@ export class SubscriptionService {
       }
     );
 
-    const stripeCheckoutSessionCreateParams: Stripe.Checkout.SessionCreateParams =
+    const stripeCheckoutSessionCreateParams: StripeCheckout.SessionCreateParams =
       {
         cancel_url: `${this.configurationService.get('ROOT_URL')}/${
           user.settings.settings.language
@@ -77,7 +81,7 @@ export class SubscriptionService {
         ],
         locale:
           (user.settings?.settings
-            ?.language as Stripe.Checkout.SessionCreateParams.Locale) ??
+            ?.language as StripeCheckout.SessionCreateParams.Locale) ??
           DEFAULT_LANGUAGE_CODE,
         metadata: subscriptionOffer
           ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
