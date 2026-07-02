@@ -26,11 +26,11 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
   templateUrl: './rule-settings-dialog.html'
 })
 export class GfRuleSettingsDialogComponent {
-  public settingsForm: FormGroup;
+  protected settingsForm: FormGroup;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: RuleSettingsDialogParams,
-    public dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) protected data: RuleSettingsDialogParams,
+    protected dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>,
     private formBuilder: FormBuilder
   ) {
     this.settingsForm = this.formBuilder.group({
@@ -39,7 +39,7 @@ export class GfRuleSettingsDialogComponent {
     });
   }
 
-  public onSubmit() {
+  protected onSubmit() {
     this.dialogRef.close({
       ...this.data.settings,
       thresholdMax: this.settingsForm.get('thresholdMax')?.value,
