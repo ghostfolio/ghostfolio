@@ -16,13 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated the _Privacy Policy_
 - Updated the _Terms of Service_
+- Improved the parsing of integer query parameters (`skip` and `take`) in the `GET api/v1/activities` endpoint
 - Improved the language localization for German (`de`)
 - Improved the language localization for Japanese (`ja`)
 - Upgraded `nestjs` from version `11.1.21` to `11.1.27`
 
 ### Fixed
 
-- Fixed the validation of the `skip` and `take` query parameters in the activities controller to use `ParseIntPipe`
 - Fixed the validation of the data source field of an asset profile with market data
 - Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
 
