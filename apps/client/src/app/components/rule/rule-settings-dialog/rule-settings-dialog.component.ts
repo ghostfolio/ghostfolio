@@ -26,12 +26,12 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
   templateUrl: './rule-settings-dialog.html'
 })
 export class GfRuleSettingsDialogComponent {
-  protected settingsForm: FormGroup;
+  protected readonly settingsForm: FormGroup;
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) protected data: RuleSettingsDialogParams,
-    protected dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>,
-    private formBuilder: FormBuilder
+    @Inject(MAT_DIALOG_DATA) protected readonly data: RuleSettingsDialogParams,
+    protected readonly dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>,
+    private readonly formBuilder: FormBuilder
   ) {
     this.settingsForm = this.formBuilder.group({
       thresholdMax: [this.data.settings?.thresholdMax],
