@@ -1,6 +1,6 @@
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -28,11 +28,12 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
 export class GfRuleSettingsDialogComponent {
   protected readonly settingsForm: FormGroup;
 
-  public constructor(
-    @Inject(MAT_DIALOG_DATA) protected readonly data: RuleSettingsDialogParams,
-    protected readonly dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>,
-    private readonly formBuilder: FormBuilder
-  ) {
+  protected readonly data = inject<RuleSettingsDialogParams>(MAT_DIALOG_DATA);
+  protected readonly dialogRef =
+    inject<MatDialogRef<GfRuleSettingsDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
+
+  public constructor() {
     this.settingsForm = this.formBuilder.group({
       thresholdMax: [this.data.settings?.thresholdMax],
       thresholdMin: [this.data.settings?.thresholdMin]
