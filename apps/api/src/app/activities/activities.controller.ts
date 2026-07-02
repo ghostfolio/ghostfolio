@@ -29,6 +29,7 @@ import {
   HttpException,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -112,12 +113,12 @@ export class ActivitiesController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('range') dateRange?: DateRange,
-    @Query('skip') skip?: number,
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
-    @Query('take') take?: number
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number
   ): Promise<ActivitiesResponse> {
     let endDate: Date;
     let startDate: Date;
@@ -144,14 +145,14 @@ export class ActivitiesController {
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
       filters,
+      skip,
       sortColumn,
       sortDirection,
       startDate,
+      take,
       types,
       userCurrency,
       includeDrafts: true,
-      skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });
