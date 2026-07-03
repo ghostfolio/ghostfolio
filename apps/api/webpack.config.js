@@ -9,6 +9,7 @@ const configValues = {
       deleteOutputPath: false,
       main: './src/main.ts',
       outputPath: 'dist/apps/api',
+      outputHashing: 'none',
       sourceMap: true,
       target: 'node',
       tsConfig: './tsconfig.app.json'
