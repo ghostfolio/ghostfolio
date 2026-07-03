@@ -80,7 +80,9 @@ export class GfAccountsPageComponent implements OnInit {
               return id === params['accountId'];
             });
 
-            this.openUpdateAccountDialog(account);
+            if (account) {
+              this.openUpdateAccountDialog(account);
+            }
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -267,13 +269,13 @@ export class GfAccountsPageComponent implements OnInit {
         account: {
           balance: 0,
           comment: null,
-          currency: this.user?.settings?.baseCurrency,
+          currency: this.user?.settings?.baseCurrency ?? null,
           id: null,
           isExcluded: false,
           name: null,
           platformId: null
         }
-      },
+      } satisfies CreateOrUpdateAccountDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -353,7 +355,7 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   private reset() {
-    this.accounts = undefined;
+    this.accounts = [];
     this.activitiesCount = 0;
     this.totalBalanceInBaseCurrency = 0;
     this.totalValueInBaseCurrency = 0;
