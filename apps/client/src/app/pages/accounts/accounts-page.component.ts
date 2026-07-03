@@ -17,6 +17,7 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit
@@ -51,7 +52,9 @@ export class GfAccountsPageComponent implements OnInit {
   protected totalValueInBaseCurrency = 0;
   protected user: User;
 
-  private deviceType: string;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -96,8 +99,6 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -204,8 +205,8 @@ export class GfAccountsPageComponent implements OnInit {
           platformId
         }
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -242,15 +243,15 @@ export class GfAccountsPageComponent implements OnInit {
       autoFocus: false,
       data: {
         accountId: aAccountId,
-        deviceType: this.deviceType,
+        deviceType: this.deviceType(),
         hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -279,8 +280,8 @@ export class GfAccountsPageComponent implements OnInit {
           platformId: null
         }
       } satisfies CreateOrUpdateAccountDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -317,7 +318,7 @@ export class GfAccountsPageComponent implements OnInit {
       data: {
         accounts: this.accounts
       },
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
