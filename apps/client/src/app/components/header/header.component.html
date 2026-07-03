@@ -332,7 +332,7 @@
       </li>
     </ul>
   }
-  @if (user() === null) {
+  @if (!user()) {
     <div class="d-flex h-100 logo-container" [class.filled]="hasTabs()">
       <a
         class="align-items-center h-100 justify-content-start px-2 px-sm-3 rounded-0"
