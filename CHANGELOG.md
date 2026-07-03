@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the date picker styling across various components
 - Updated the _Privacy Policy_
 - Updated the _Terms of Service_
 - Improved the parsing of integer query parameters (`skip` and `take`) in the `GET api/v1/activities` endpoint

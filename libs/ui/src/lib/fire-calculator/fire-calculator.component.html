@@ -39,19 +39,26 @@
             class="d-none"
             formControlName="retirementDate"
             matInput
-            [matDatepicker]="datepicker"
+            [matDatepicker]="date"
             [min]="minDate"
           />
           <mat-datepicker-toggle
-            matIconSuffix
+            class="mr-2"
+            matSuffix
             [disabled]="hasPermissionToUpdateUserSettings !== true"
-            [for]="datepicker"
-          />
+            [for]="date"
+          >
+            <ion-icon
+              class="text-muted"
+              matDatepickerToggleIcon
+              name="calendar-clear-outline"
+            />
+          </mat-datepicker-toggle>
           <mat-datepicker
-            #datepicker
+            #date
             startView="multi-year"
             [disabled]="hasPermissionToUpdateUserSettings !== true"
-            (monthSelected)="setMonthAndYear($event, datepicker)"
+            (monthSelected)="setMonthAndYear($event, date)"
           />
         </mat-form-field>
 
