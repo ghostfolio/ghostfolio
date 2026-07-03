@@ -25,7 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY, Subscription } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
@@ -41,16 +41,16 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   templateUrl: './accounts-page.html'
 })
 export class GfAccountsPageComponent implements OnInit {
-  public accounts: AccountModel[];
-  public activitiesCount = 0;
-  public deviceType: string;
-  public hasImpersonationId: boolean;
-  public hasPermissionToCreateAccount: boolean;
-  public hasPermissionToUpdateAccount: boolean;
-  public routeQueryParams: Subscription;
-  public totalBalanceInBaseCurrency = 0;
-  public totalValueInBaseCurrency = 0;
-  public user: User;
+  protected accounts: AccountModel[];
+  protected activitiesCount = 0;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToCreateAccount: boolean;
+  protected hasPermissionToUpdateAccount: boolean;
+  protected totalBalanceInBaseCurrency = 0;
+  protected totalValueInBaseCurrency = 0;
+  protected user: User;
+
+  private deviceType: string;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -124,7 +124,35 @@ export class GfAccountsPageComponent implements OnInit {
     this.fetchAccounts();
   }
 
-  public fetchAccounts() {
+  protected onDeleteAccount(aId: string) {
+    this.reset();
+
+    this.dataService
+      .deleteAccount(aId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe();
+
+        this.fetchAccounts();
+      });
+  }
+
+  protected onTransferBalance() {
+    this.router.navigate([], {
+      queryParams: { transferBalanceDialog: true }
+    });
+  }
+
+  protected onUpdateAccount(aAccount: AccountModel) {
+    this.router.navigate([], {
+      queryParams: { accountId: aAccount.id, editDialog: true }
+    });
+  }
+
+  private fetchAccounts() {
     this.dataService
       .fetchAccounts()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -149,35 +177,7 @@ export class GfAccountsPageComponent implements OnInit {
       );
   }
 
-  public onDeleteAccount(aId: string) {
-    this.reset();
-
-    this.dataService
-      .deleteAccount(aId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe();
-
-        this.fetchAccounts();
-      });
-  }
-
-  public onTransferBalance() {
-    this.router.navigate([], {
-      queryParams: { transferBalanceDialog: true }
-    });
-  }
-
-  public onUpdateAccount(aAccount: AccountModel) {
-    this.router.navigate([], {
-      queryParams: { accountId: aAccount.id, editDialog: true }
-    });
-  }
-
-  public openUpdateAccountDialog({
+  private openUpdateAccountDialog({
     balance,
     comment,
     currency,
