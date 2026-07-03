@@ -34,6 +34,7 @@ import {
 } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
 import {
   BarController,
   BarElement,
@@ -56,6 +57,8 @@ import {
   startOfMonth,
   sub
 } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
@@ -67,6 +70,7 @@ import { FireCalculatorService } from './fire-calculator.service';
   imports: [
     CommonModule,
     FormsModule,
+    IonIcon,
     MatButtonModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -135,6 +139,8 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       LinearScale,
       Tooltip
     );
+
+    addIcons({ calendarClearOutline });
 
     this.calculatorForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
