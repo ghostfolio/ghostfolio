@@ -22,6 +22,7 @@ import {
   HttpException,
   Inject,
   Param,
+  ParseIntPipe,
   Patch,
   Query,
   UseGuards,
@@ -51,10 +52,10 @@ export class AssetProfilesController {
     @Query('dataSource') filterByDataSource?: string,
     @Query('presetId') presetId?: MarketDataPreset,
     @Query('query') filterBySearchQuery?: string,
-    @Query('skip') skip?: number,
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('take') take?: number
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number
   ): Promise<AssetProfilesResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetSubClasses,
@@ -65,10 +66,10 @@ export class AssetProfilesController {
     return this.assetProfilesService.getAssetProfiles({
       filters,
       presetId,
+      skip,
       sortColumn,
       sortDirection,
-      skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take
+      take
     });
   }
 
