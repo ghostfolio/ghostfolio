@@ -528,30 +528,18 @@ export class PortfolioService {
 
     const holdings: PortfolioDetails['holdings'] = {};
 
-    const totalValueInBaseCurrency = currentValueInBaseCurrency.plus(
-      cashDetails.balanceInBaseCurrency
-    );
+    const {
+      HOLDING_TYPE: [filterByHoldingType] = [],
+      TAG: [filterByTag] = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
 
-    const isFilteredByAccount =
-      filters?.some(({ type }) => {
-        return type === 'ACCOUNT';
-      }) ?? false;
+    const isFilteredByClosedHoldings = filterByHoldingType?.id === 'CLOSED';
 
-    const isFilteredByClosedHoldings =
-      filters?.some(({ id, type }) => {
-        return id === 'CLOSED' && type === 'HOLDING_TYPE';
-      }) ?? false;
+    let filteredValueInBaseCurrency = currentValueInBaseCurrency;
 
-    let filteredValueInBaseCurrency = isFilteredByAccount
-      ? totalValueInBaseCurrency
-      : currentValueInBaseCurrency;
-
-    if (
-      filters?.length === 0 ||
-      (filters?.length === 1 &&
-        filters[0].id === AssetClass.LIQUIDITY &&
-        filters[0].type === 'ASSET_CLASS')
-    ) {
+    if (!this.activitiesService.areCashActivitiesExcludedByFilters(filters)) {
       filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
         cashDetails.balanceInBaseCurrency
       );
@@ -703,11 +691,7 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    if (
-      filters?.length === 1 &&
-      filters[0].id === TAG_ID_EMERGENCY_FUND &&
-      filters[0].type === 'TAG'
-    ) {
+    if (filters?.length === 1 && filterByTag?.id === TAG_ID_EMERGENCY_FUND) {
       const emergencyFundCashPositions = this.getCashPositions({
         cashDetails,
         userCurrency,
