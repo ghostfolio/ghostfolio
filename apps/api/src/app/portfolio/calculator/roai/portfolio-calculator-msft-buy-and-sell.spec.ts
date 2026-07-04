@@ -60,7 +60,7 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
     redisCacheService = new RedisCacheService(null, null);
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
