@@ -148,15 +148,15 @@ describe('PortfolioCalculator', () => {
           balances: [
             {
               accountId,
-              id: randomUUID(),
               date: parseDate('2023-12-31'),
+              id: randomUUID(),
               value: 1000,
               valueInBaseCurrency: 850
             },
             {
               accountId,
-              id: randomUUID(),
               date: parseDate('2024-12-31'),
+              id: randomUUID(),
               value: 2000,
               valueInBaseCurrency: 1800
             }
@@ -376,10 +376,10 @@ describe('PortfolioCalculator', () => {
       // be excluded, which left the value at 0 for a cash-only portfolio).
       expect(lastDataItem.valueWithCurrencyEffect).toBeGreaterThan(0);
 
-      // The account balance is still tracked …
+      // The account balance is still tracked ...
       expect(lastDataItem.totalAccountBalance).toBeGreaterThan(0);
 
-      // … but it is no longer added on top of the cash position, so the net
+      // ... but it is no longer added on top of the cash position, so the net
       // worth equals the portfolio value and cash is not counted twice.
       expect(lastDataItem.netWorth).toBeCloseTo(
         lastDataItem.valueWithCurrencyEffect

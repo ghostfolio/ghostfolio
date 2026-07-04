@@ -392,10 +392,6 @@ export abstract class PortfolioCalculator {
       const includeInTotalAssetValue =
         item.assetSubClass !== AssetSubClass.CASH;
 
-      // Cash positions are included in the chart (value, net worth and
-      // performance) so that the home screen reflects the entire portfolio.
-      // They remain excluded from the overall performance aggregate (see
-      // includeInTotalAssetValue) which keeps the FIRE wealth asset-only.
       valuesBySymbol[item.symbol] = {
         currentValues,
         currentValuesWithCurrencyEffect,
@@ -612,9 +608,6 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        // Cash is now reflected through the cash positions in
-        // totalCurrentValueWithCurrencyEffect, so the account balance must no
-        // longer be added here to avoid counting cash twice in the net worth.
         netWorth: totalCurrentValueWithCurrencyEffect.toNumber(),
         totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
