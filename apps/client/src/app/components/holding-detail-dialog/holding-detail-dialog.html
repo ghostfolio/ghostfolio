@@ -118,8 +118,10 @@
                 i18n
                 size="medium"
                 [class.text-danger]="
-                  round(marketPriceMin, 2) === round(marketPrice, 2) &&
-                  round(marketPriceMax, 2) !== round(marketPriceMin, 2)
+                  round(marketPriceMin, marketPriceMinPrecision) ===
+                    round(marketPrice, marketPricePrecision) &&
+                  round(marketPriceMax, marketPriceMaxPrecision) !==
+                    round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
                 [locale]="data.locale"
@@ -134,8 +136,10 @@
                 i18n
                 size="medium"
                 [class.text-success]="
-                  round(marketPriceMax, 2) === round(marketPrice, 2) &&
-                  round(marketPriceMax, 2) !== round(marketPriceMin, 2)
+                  round(marketPriceMax, marketPriceMaxPrecision) ===
+                    round(marketPrice, marketPricePrecision) &&
+                  round(marketPriceMax, marketPriceMaxPrecision) !==
+                    round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
                 [locale]="data.locale"
