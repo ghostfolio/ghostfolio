@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the parsing of the integer query parameter (`includeHistoricalData`) in the `GET api/v1/symbol/:dataSource/:symbol` endpoint
 - Harmonized the filter parsing using `groupBy` across various services
 - Improved the language localization by translating various tooltips across the application
+- Improved the language localization for German (`de`)
 - Improved the language localization for Ukrainian (`uk`)
 - Upgraded `yahoo-finance2` from version `3.14.3` to `3.15.4`
 
