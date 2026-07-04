@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `envalid` from version `8.1.1` to `8.2.0`
 - Upgraded `stripe` from version `21.0.1` to `22.2.3`
 
 ### Fixed
