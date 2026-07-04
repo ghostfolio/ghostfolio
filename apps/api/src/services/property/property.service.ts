@@ -1,7 +1,8 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   PROPERTY_CURRENCIES,
-  PROPERTY_IS_USER_SIGNUP_ENABLED
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
+  PropertyKey
 } from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
@@ -12,7 +13,7 @@ import { PropertyValue } from './interfaces/interfaces';
 export class PropertyService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async delete({ key }: { key: string }) {
+  public async delete({ key }: { key: PropertyKey }) {
     return this.prismaService.property.delete({
       where: { key }
     });
@@ -40,7 +41,7 @@ export class PropertyService {
     return response;
   }
 
-  public async getByKey<TValue extends PropertyValue>(aKey: string) {
+  public async getByKey<TValue extends PropertyValue>(aKey: PropertyKey) {
     const properties = await this.get();
     return properties[aKey] as TValue;
   }
@@ -51,7 +52,7 @@ export class PropertyService {
     );
   }
 
-  public async put({ key, value }: { key: string; value: string }) {
+  public async put({ key, value }: { key: PropertyKey; value: string }) {
     return this.prismaService.property.upsert({
       create: { key, value },
       update: { value },

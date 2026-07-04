@@ -9,7 +9,8 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import {
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
-  PROPERTY_IS_USER_SIGNUP_ENABLED
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
+  PropertyKey
 } from '@ghostfolio/common/config';
 import {
   getAssetProfileIdentifier,
@@ -347,9 +348,14 @@ export class AdminService {
     let response: Property;
 
     if (value) {
-      response = await this.propertyService.put({ key, value });
+      response = await this.propertyService.put({
+        key: key as PropertyKey,
+        value
+      });
     } else {
-      response = await this.propertyService.delete({ key });
+      response = await this.propertyService.delete({
+        key: key as PropertyKey
+      });
     }
 
     if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {
