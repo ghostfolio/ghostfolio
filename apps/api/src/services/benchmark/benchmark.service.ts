@@ -24,7 +24,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { addHours, isAfter, subDays } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { round, uniqBy } from 'lodash';
 import ms from 'ms';
 
 import { BenchmarkValue } from './interfaces/benchmark-value.interface';
@@ -220,9 +220,11 @@ export class BenchmarkService {
   public getMarketCondition(
     aPerformanceInPercent: number
   ): Benchmark['marketCondition'] {
-    if (aPerformanceInPercent >= 0) {
+    const performanceInPercent = round(aPerformanceInPercent, 4);
+
+    if (performanceInPercent >= 0) {
       return 'ALL_TIME_HIGH';
-    } else if (aPerformanceInPercent <= -0.2) {
+    } else if (performanceInPercent <= -0.2) {
       return 'BEAR_MARKET';
     } else {
       return 'NEUTRAL_MARKET';
