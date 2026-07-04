@@ -207,6 +207,10 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor: (context: GfTreemapScriptableContext) => {
+            if (!context.raw) {
+              return undefined;
+            }
+
             let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
@@ -239,6 +243,10 @@ export class GfTreemapChartComponent
           labels: {
             align: 'left',
             color: (context: GfTreemapScriptableContext) => {
+              if (!context.raw) {
+                return undefined;
+              }
+
               let annualizedNetPerformancePercent =
                 getAnnualizedPerformancePercent({
                   daysInMarket: differenceInDays(
