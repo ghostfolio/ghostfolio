@@ -96,17 +96,17 @@ export class DataService {
 
     if (filters && filters.length > 0) {
       const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        ASSET_SUB_CLASS: filtersByAssetSubClass,
+        ACCOUNT: filtersByAccount = [],
+        ASSET_CLASS: filtersByAssetClass = [],
+        ASSET_SUB_CLASS: filtersByAssetSubClass = [],
         DATA_SOURCE: [filterByDataSource] = [],
-        HOLDING_TYPE: filtersByHoldingType,
-        PRESET_ID: filtersByPresetId,
-        SEARCH_QUERY: filtersBySearchQuery,
+        HOLDING_TYPE: [filterByHoldingType] = [],
+        PRESET_ID: [filterByPresetId] = [],
+        SEARCH_QUERY: [filterBySearchQuery] = [],
         SYMBOL: [filterBySymbol] = [],
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
+        TAG: filtersByTag = []
+      } = groupBy(filters, ({ type }) => {
+        return type;
       });
 
       if (filterByDataSource) {
@@ -117,7 +117,7 @@ export class DataService {
         params = params.append('symbol', filterBySymbol.id);
       }
 
-      if (filtersByAccount) {
+      if (filtersByAccount.length > 0) {
         params = params.append(
           'accounts',
           filtersByAccount
@@ -128,7 +128,7 @@ export class DataService {
         );
       }
 
-      if (filtersByAssetClass) {
+      if (filtersByAssetClass.length > 0) {
         params = params.append(
           'assetClasses',
           filtersByAssetClass
@@ -139,7 +139,7 @@ export class DataService {
         );
       }
 
-      if (filtersByAssetSubClass) {
+      if (filtersByAssetSubClass.length > 0) {
         params = params.append(
           'assetSubClasses',
           filtersByAssetSubClass
@@ -150,19 +150,19 @@ export class DataService {
         );
       }
 
-      if (filtersByHoldingType) {
-        params = params.append('holdingType', filtersByHoldingType[0].id);
+      if (filterByHoldingType) {
+        params = params.append('holdingType', filterByHoldingType.id);
       }
 
-      if (filtersByPresetId) {
-        params = params.append('presetId', filtersByPresetId[0].id);
+      if (filterByPresetId) {
+        params = params.append('presetId', filterByPresetId.id);
       }
 
-      if (filtersBySearchQuery) {
-        params = params.append('query', filtersBySearchQuery[0].id);
+      if (filterBySearchQuery) {
+        params = params.append('query', filterBySearchQuery.id);
       }
 
-      if (filtersByTag) {
+      if (filtersByTag.length > 0) {
         params = params.append(
           'tags',
           filtersByTag
