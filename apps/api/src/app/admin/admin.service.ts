@@ -11,7 +11,6 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
-import { PropertyKey } from '@ghostfolio/common/types';
 import {
   getAssetProfileIdentifier,
   getCurrencyFromSymbol
@@ -22,6 +21,7 @@ import {
   AdminUsersResponse,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
+import { PropertyKey } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
