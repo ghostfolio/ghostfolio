@@ -10,9 +10,12 @@ import {
 
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   HttpException,
+  Logger,
+  NotFoundException,
   Param,
   Post,
   Req,
@@ -26,6 +29,7 @@ import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
+import { OidcValidationResult } from './interfaces/interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -116,21 +120,29 @@ export class AuthController {
   @Get('oidc/callback')
   @UseGuards(AuthGuard('oidc'))
   @Version(VERSION_NEUTRAL)
-  public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
-    const jwt: string = (request.user as any).jwt;
+  public async oidcLoginCallback(
+    @Req() request: Request,
+    @Res() response: Response
+  ) {
+    const { linkState, thirdPartyId, jwt } =
+      request.user as OidcValidationResult;
+    const rootUrl = this.configurationService.get('ROOT_URL');
 
+    if (linkState) {
+      await this.handleOidcLinkFlow(
+        thirdPartyId,
+        linkState.userId,
+        rootUrl,
+        response
+      );
+      return;
+    }
+
+    // Normal OIDC login flow
     if (jwt) {
-      response.redirect(
-        `${this.configurationService.get(
-          'ROOT_URL'
-        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
-      );
+      response.redirect(`${rootUrl}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`);
     } else {
-      response.redirect(
-        `${this.configurationService.get(
-          'ROOT_URL'
-        )}/${DEFAULT_LANGUAGE_CODE}/auth`
-      );
+      response.redirect(`${rootUrl}/${DEFAULT_LANGUAGE_CODE}/auth`);
     }
   }
 
@@ -169,6 +181,44 @@ export class AuthController {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
+      );
+    }
+  }
+
+  private async handleOidcLinkFlow(
+    thirdPartyId: string,
+    userId: string,
+    rootUrl: string,
+    response: Response
+  ): Promise<void> {
+    try {
+      await this.authService.linkOidcToUser({
+        thirdPartyId,
+        userId
+      });
+
+      response.redirect(
+        `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkSuccess=true`
+      );
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      Logger.error(
+        `OIDC callback: Link failed - ${errorMessage}`,
+        'AuthController'
+      );
+
+      let errorCode = 'unknown';
+      if (error instanceof ConflictException) {
+        errorCode = error.message.includes('token authentication')
+          ? 'invalid-provider'
+          : 'already-linked';
+      } else if (error instanceof NotFoundException) {
+        errorCode = 'invalid-session';
+      }
+
+      response.redirect(
+        `${rootUrl}/${DEFAULT_LANGUAGE_CODE}/account?linkError=${errorCode}`
       );
     }
   }

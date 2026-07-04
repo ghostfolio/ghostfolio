@@ -1,9 +1,11 @@
+import { Injectable, Logger } from '@nestjs/common';
 import ms from 'ms';
 
 /**
  * Custom state store for OIDC authentication that doesn't rely on express-session.
  * This store manages OAuth2 state parameters in memory with automatic cleanup.
  */
+@Injectable()
 export class OidcStateStore {
   private readonly STATE_EXPIRY_MS = ms('10 minutes');
 
@@ -11,8 +13,8 @@ export class OidcStateStore {
     string,
     {
       appState?: unknown;
-      ctx: { issued?: Date; maxAge?: number; nonce?: string };
-      meta?: unknown;
+      ctx: { issued?: string; maxAge?: number; nonce?: string };
+      linkToken?: string;
       timestamp: number;
     }
   >();
@@ -22,28 +24,30 @@ export class OidcStateStore {
    * Signature matches passport-openidconnect SessionStore
    */
   public store(
-    _req: unknown,
+    req: unknown,
     _meta: unknown,
     appState: unknown,
-    ctx: { maxAge?: number; nonce?: string; issued?: Date },
+    ctx: { maxAge?: number; nonce?: string; issued?: string },
     callback: (err: Error | null, handle?: string) => void
   ) {
     try {
-      // Generate a unique handle for this state
       const handle = this.generateHandle();
+
+      const request = req as { query?: { linkToken?: string } };
+      const linkToken = request?.query?.linkToken;
 
       this.stateMap.set(handle, {
         appState,
         ctx,
-        meta: _meta,
+        linkToken,
         timestamp: Date.now()
       });
 
-      // Clean up expired states
       this.cleanup();
 
       callback(null, handle);
     } catch (error) {
+      Logger.error(`Error storing OIDC state: ${error}`, 'OidcStateStore');
       callback(error as Error);
     }
   }
@@ -53,12 +57,12 @@ export class OidcStateStore {
    * Signature matches passport-openidconnect SessionStore
    */
   public verify(
-    _req: unknown,
+    req: unknown,
     handle: string,
     callback: (
       err: Error | null,
-      appState?: unknown,
-      ctx?: { maxAge?: number; nonce?: string; issued?: Date }
+      ctx?: { maxAge?: number; nonce?: string; issued?: string },
+      state?: unknown
     ) => void
   ) {
     try {
@@ -69,16 +73,19 @@ export class OidcStateStore {
       }
 
       if (Date.now() - data.timestamp > this.STATE_EXPIRY_MS) {
-        // State has expired
         this.stateMap.delete(handle);
         return callback(null, undefined, undefined);
       }
 
-      // Remove state after verification (one-time use)
       this.stateMap.delete(handle);
+
+      if (data.linkToken) {
+        (req as any).oidcLinkToken = data.linkToken;
+      }
 
       callback(null, data.ctx, data.appState);
     } catch (error) {
+      Logger.error(`Error verifying OIDC state: ${error}`, 'OidcStateStore');
       callback(error as Error);
     }
   }
