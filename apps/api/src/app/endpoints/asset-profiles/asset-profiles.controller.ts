@@ -66,9 +66,9 @@ export class AssetProfilesController {
     return this.assetProfilesService.getAssetProfiles({
       filters,
       presetId,
+      skip,
       sortColumn,
       sortDirection,
-      skip,
       take
     });
   }
