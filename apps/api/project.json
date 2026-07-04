@@ -7,6 +7,9 @@
   "generators": {},
   "targets": {
     "build": {
+      "configurations": {
+        "production": {}
+      },
       "outputs": ["{workspaceRoot}/dist/apps/api"]
     },
     "copy-assets": {

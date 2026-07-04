@@ -7,7 +7,6 @@ const configValues = {
     default: {
       compiler: 'tsc',
       deleteOutputPath: false,
-      generatePackageJson: true,
       main: './src/main.ts',
       outputPath: 'dist/apps/api',
       outputHashing: 'none',
@@ -16,15 +15,16 @@ const configValues = {
       tsConfig: './tsconfig.app.json'
     },
     production: {
-      optimization: true,
       extractLicenses: true,
-      inspect: false,
       fileReplacements: [
         {
           replace: './src/environments/environment.ts',
           with: './src/environments/environment.prod.ts'
         }
-      ]
+      ],
+      generatePackageJson: true,
+      inspect: false,
+      optimization: true
     }
   }
 };
