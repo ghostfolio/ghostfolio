@@ -59,7 +59,8 @@ export class GfApiPageComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.apiKey = prompt($localize`Please enter your Ghostfolio API key:`);
+    this.apiKey =
+      prompt($localize`Please enter your Ghostfolio API key:`) ?? '';
 
     this.aiServiceHealth$ = this.fetchAiServiceHealth();
     this.assetProfile$ = this.fetchAssetProfile({ symbol: 'AAPL' });
