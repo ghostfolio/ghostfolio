@@ -69,8 +69,7 @@ export class ImportService {
       const holding = await this.portfolioService.getHolding({
         dataSource,
         symbol,
-        userId,
-        impersonationId: undefined
+        userId
       });
 
       if (!holding) {
