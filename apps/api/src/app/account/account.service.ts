@@ -187,11 +187,11 @@ export class AccountService {
       where.isExcluded = false;
     }
 
-    const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
+    const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
       return type;
     });
 
-    if (filtersByAccount?.length > 0) {
+    if (filtersByAccount.length > 0) {
       where.id = {
         in: filtersByAccount.map(({ id }) => {
           return id;

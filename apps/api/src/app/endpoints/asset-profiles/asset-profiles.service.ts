@@ -133,13 +133,10 @@ export class AssetProfilesService {
       };
     }
 
-    const searchQuery = filters.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-
     const {
-      ASSET_SUB_CLASS: filtersByAssetSubClass,
-      DATA_SOURCE: filtersByDataSource
+      ASSET_SUB_CLASS: [filterByAssetSubClass] = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = []
     } = groupBy(filters, ({ type }) => {
       return type;
     });
@@ -149,20 +146,20 @@ export class AssetProfilesService {
       by: ['dataSource', 'symbol']
     });
 
-    if (filtersByAssetSubClass) {
-      where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
+    if (filterByAssetSubClass) {
+      where.assetSubClass = AssetSubClass[filterByAssetSubClass.id];
     }
 
-    if (filtersByDataSource) {
-      where.dataSource = DataSource[filtersByDataSource[0].id];
+    if (filterByDataSource) {
+      where.dataSource = DataSource[filterByDataSource.id];
     }
 
-    if (searchQuery) {
+    if (filterBySearchQuery) {
       where.OR = [
-        { id: { mode: 'insensitive', startsWith: searchQuery } },
-        { isin: { mode: 'insensitive', startsWith: searchQuery } },
-        { name: { mode: 'insensitive', startsWith: searchQuery } },
-        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
       ];
     }
 
