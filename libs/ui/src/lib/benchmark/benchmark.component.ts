@@ -33,7 +33,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber, round } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -92,6 +92,7 @@ export class GfBenchmarkComponent {
   protected isLoading = true;
   protected readonly isNumber = isNumber;
   protected readonly resolveMarketCondition = resolveMarketCondition;
+  protected readonly round = round;
   protected readonly translate = translate;
 
   private readonly destroyRef = inject(DestroyRef);

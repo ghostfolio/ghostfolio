@@ -281,6 +281,7 @@
         @if (element.comment) {
           <button
             class="mx-1 no-min-width px-2"
+            i18n-title
             mat-button
             title="Note"
             (click)="onOpenComment(element.comment); $event.stopPropagation()"

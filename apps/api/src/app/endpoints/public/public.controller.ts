@@ -46,7 +46,10 @@ export class PublicController {
   public async getPublicPortfolio(
     @Param('accessId') accessId: string
   ): Promise<PublicPortfolioResponse> {
-    const access = await this.accessService.access({ id: accessId });
+    const access = await this.accessService.access({
+      granteeUserId: null,
+      id: accessId
+    });
 
     if (!access) {
       throw new HttpException(

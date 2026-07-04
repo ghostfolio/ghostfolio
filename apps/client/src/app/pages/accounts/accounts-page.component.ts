@@ -17,7 +17,9 @@ import { DataService } from '@ghostfolio/ui/services';
 import {
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -25,7 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY, Subscription } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccountDialogComponent } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
@@ -41,29 +43,33 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   templateUrl: './accounts-page.html'
 })
 export class GfAccountsPageComponent implements OnInit {
-  public accounts: AccountModel[];
-  public activitiesCount = 0;
-  public deviceType: string;
-  public hasImpersonationId: boolean;
-  public hasPermissionToCreateAccount: boolean;
-  public hasPermissionToUpdateAccount: boolean;
-  public routeQueryParams: Subscription;
-  public totalBalanceInBaseCurrency = 0;
-  public totalValueInBaseCurrency = 0;
-  public user: User;
+  protected accounts: AccountModel[];
+  protected activitiesCount = 0;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToCreateAccount: boolean;
+  protected hasPermissionToUpdateAccount: boolean;
+  protected totalBalanceInBaseCurrency = 0;
+  protected totalValueInBaseCurrency = 0;
+  protected user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private impersonationStorageService: ImpersonationStorageService,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly notificationService = inject(NotificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
@@ -80,7 +86,9 @@ export class GfAccountsPageComponent implements OnInit {
               return id === params['accountId'];
             });
 
-            this.openUpdateAccountDialog(account);
+            if (account) {
+              this.openUpdateAccountDialog(account);
+            }
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -91,8 +99,6 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -122,7 +128,35 @@ export class GfAccountsPageComponent implements OnInit {
     this.fetchAccounts();
   }
 
-  public fetchAccounts() {
+  protected onDeleteAccount(aId: string) {
+    this.reset();
+
+    this.dataService
+      .deleteAccount(aId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe();
+
+        this.fetchAccounts();
+      });
+  }
+
+  protected onTransferBalance() {
+    this.router.navigate([], {
+      queryParams: { transferBalanceDialog: true }
+    });
+  }
+
+  protected onUpdateAccount(aAccount: AccountModel) {
+    this.router.navigate([], {
+      queryParams: { accountId: aAccount.id, editDialog: true }
+    });
+  }
+
+  private fetchAccounts() {
     this.dataService
       .fetchAccounts()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -147,35 +181,7 @@ export class GfAccountsPageComponent implements OnInit {
       );
   }
 
-  public onDeleteAccount(aId: string) {
-    this.reset();
-
-    this.dataService
-      .deleteAccount(aId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe();
-
-        this.fetchAccounts();
-      });
-  }
-
-  public onTransferBalance() {
-    this.router.navigate([], {
-      queryParams: { transferBalanceDialog: true }
-    });
-  }
-
-  public onUpdateAccount(aAccount: AccountModel) {
-    this.router.navigate([], {
-      queryParams: { accountId: aAccount.id, editDialog: true }
-    });
-  }
-
-  public openUpdateAccountDialog({
+  private openUpdateAccountDialog({
     balance,
     comment,
     currency,
@@ -199,8 +205,8 @@ export class GfAccountsPageComponent implements OnInit {
           platformId
         }
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -237,15 +243,15 @@ export class GfAccountsPageComponent implements OnInit {
       autoFocus: false,
       data: {
         accountId: aAccountId,
-        deviceType: this.deviceType,
+        deviceType: this.deviceType(),
         hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView
       },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -267,15 +273,15 @@ export class GfAccountsPageComponent implements OnInit {
         account: {
           balance: 0,
           comment: null,
-          currency: this.user?.settings?.baseCurrency,
+          currency: this.user?.settings?.baseCurrency ?? null,
           id: null,
           isExcluded: false,
           name: null,
           platformId: null
         }
-      },
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      } satisfies CreateOrUpdateAccountDialogParams,
+      height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -312,7 +318,7 @@ export class GfAccountsPageComponent implements OnInit {
       data: {
         accounts: this.accounts
       },
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -353,7 +359,7 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   private reset() {
-    this.accounts = undefined;
+    this.accounts = [];
     this.activitiesCount = 0;
     this.totalBalanceInBaseCurrency = 0;
     this.totalValueInBaseCurrency = 0;
