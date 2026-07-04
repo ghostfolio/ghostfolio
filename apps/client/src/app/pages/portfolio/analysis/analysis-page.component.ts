@@ -87,7 +87,8 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingInvestmentChart: boolean;
   protected isLoadingInvestmentTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
-  protected readonly mode = signal<GroupBy>('month');
+  protected readonly dividendGroupBy = signal<GroupBy>('month');
+  protected readonly investmentGroupBy = signal<GroupBy>('month');
   protected readonly modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
@@ -137,7 +138,7 @@ export class GfAnalysisPageComponent implements OnInit {
       return undefined;
     }
 
-    return this.mode() === 'year'
+    return this.investmentGroupBy() === 'year'
       ? savingsRatePerMonth * 12
       : savingsRatePerMonth;
   }
@@ -186,9 +187,14 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
-  protected onChangeGroupBy(aMode: GroupBy) {
-    this.mode.set(aMode);
-    this.fetchDividendsAndInvestments();
+  protected onChangeDividendGroupBy(aMode: GroupBy) {
+    this.dividendGroupBy.set(aMode);
+    this.fetchDividends();
+  }
+
+  protected onChangeInvestmentGroupBy(aMode: GroupBy) {
+    this.investmentGroupBy.set(aMode);
+    this.fetchInvestments();
   }
 
   protected onCopyPromptToClipboard(mode: AiPromptMode) {
@@ -232,14 +238,13 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
-  private fetchDividendsAndInvestments() {
+  private fetchDividends() {
     this.isLoadingDividendTimelineChart = true;
-    this.isLoadingInvestmentTimelineChart = true;
 
     this.dataService
       .fetchDividends({
         filters: this.userService.getFilters(),
-        groupBy: this.mode(),
+        groupBy: this.dividendGroupBy(),
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -250,11 +255,15 @@ export class GfAnalysisPageComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private fetchInvestments() {
+    this.isLoadingInvestmentTimelineChart = true;
 
     this.dataService
       .fetchInvestments({
         filters: this.userService.getFilters(),
-        groupBy: this.mode(),
+        groupBy: this.investmentGroupBy(),
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -262,7 +271,7 @@ export class GfAnalysisPageComponent implements OnInit {
         this.investmentsByGroup = investments;
         this.streaks = streaks;
         this.unitCurrentStreak =
-          this.mode() === 'year'
+          this.investmentGroupBy() === 'year'
             ? this.streaks?.currentStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
@@ -270,7 +279,7 @@ export class GfAnalysisPageComponent implements OnInit {
               ? translate('MONTH')
               : translate('MONTHS');
         this.unitLongestStreak =
-          this.mode() === 'year'
+          this.investmentGroupBy() === 'year'
             ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
@@ -381,7 +390,8 @@ export class GfAnalysisPageComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.fetchDividendsAndInvestments();
+    this.fetchDividends();
+    this.fetchInvestments();
     this.changeDetectorRef.markForCheck();
   }
 
