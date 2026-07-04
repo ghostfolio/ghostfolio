@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded `stripe` from version `21.0.1` to `22.2.0`
+- Upgraded `stripe` from version `21.0.1` to `22.2.3`
 
 ## 3.20.0 - 2026-07-04
 
