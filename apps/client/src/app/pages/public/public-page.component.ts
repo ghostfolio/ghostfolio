@@ -249,7 +249,7 @@ export class GfPublicPageComponent implements OnInit {
       }
 
       this.symbols[prettifySymbol(symbol)] = {
-        name: position.assetProfile.name,
+        name: position.assetProfile.name ?? prettifySymbol(symbol),
         symbol: prettifySymbol(symbol),
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
