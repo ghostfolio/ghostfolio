@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the handling of cash positions in the portfolio calculations when filtering by holding or tag
 - Fixed the market condition of the benchmarks in the twitter bot service when values round to zero
 
 ## 3.19.1 - 2026-07-03
