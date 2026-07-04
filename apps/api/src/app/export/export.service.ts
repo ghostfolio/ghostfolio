@@ -35,7 +35,7 @@ export class ExportService {
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
-    const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
+    const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
       return type;
     });
     const platformsMap: { [platformId: string]: Platform } = {};
@@ -59,7 +59,7 @@ export class ExportService {
 
     const where: Prisma.AccountWhereInput = { userId };
 
-    if (filtersByAccount?.length > 0) {
+    if (filtersByAccount.length > 0) {
       where.id = {
         in: filtersByAccount.map(({ id }) => {
           return id;
