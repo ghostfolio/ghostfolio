@@ -38,18 +38,20 @@ import { FetchFailure, FetchResult } from './interfaces/interfaces';
   templateUrl: './api-page.html'
 })
 export class GfApiPageComponent implements OnInit {
-  public aiServiceHealth$: Observable<FetchResult<AiServiceHealthResponse>>;
-  public assetProfile$: Observable<
+  protected aiServiceHealth$: Observable<FetchResult<AiServiceHealthResponse>>;
+  protected assetProfile$: Observable<
     FetchResult<DataProviderGhostfolioAssetProfileResponse>
   >;
-  public dividends$: Observable<FetchResult<DividendsResponse['dividends']>>;
-  public historicalData$: Observable<
+  protected dividends$: Observable<FetchResult<DividendsResponse['dividends']>>;
+  protected historicalData$: Observable<
     FetchResult<HistoricalResponse['historicalData']>
   >;
-  public isinLookupItems$: Observable<FetchResult<LookupResponse['items']>>;
-  public lookupItems$: Observable<FetchResult<LookupResponse['items']>>;
-  public quotes$: Observable<FetchResult<QuotesResponse['quotes']>>;
-  public status$: Observable<FetchResult<DataProviderGhostfolioStatusResponse>>;
+  protected isinLookupItems$: Observable<FetchResult<LookupResponse['items']>>;
+  protected lookupItems$: Observable<FetchResult<LookupResponse['items']>>;
+  protected quotes$: Observable<FetchResult<QuotesResponse['quotes']>>;
+  protected status$: Observable<
+    FetchResult<DataProviderGhostfolioStatusResponse>
+  >;
 
   private apiKey: string;
 
@@ -70,7 +72,7 @@ export class GfApiPageComponent implements OnInit {
     this.status$ = this.fetchStatus();
   }
 
-  public isFetchFailure(value: unknown): value is FetchFailure {
+  protected isFetchFailure(value: unknown): value is FetchFailure {
     return isObject(value) && value !== null && 'fetchError' in value;
   }
 
