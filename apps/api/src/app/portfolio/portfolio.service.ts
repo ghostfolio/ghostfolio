@@ -777,7 +777,7 @@ export class PortfolioService {
     symbol,
     userId
   }: {
-    impersonationId: string;
+    impersonationId?: string;
     userId: string;
   } & AssetProfileIdentifier): Promise<PortfolioHoldingResponse> {
     userId = await this.getUserId(impersonationId, userId);
@@ -1377,17 +1377,13 @@ export class PortfolioService {
 
   public async updateTags({
     dataSource,
-    impersonationId,
     symbol,
     tags,
     userId
   }: {
-    impersonationId: string;
     tags: Tag[];
     userId: string;
   } & AssetProfileIdentifier) {
-    userId = await this.getUserId(impersonationId, userId);
-
     await this.activitiesService.assignTags({
       dataSource,
       symbol,
