@@ -77,7 +77,7 @@ import {
   swapVerticalOutline,
   walletOutline
 } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber, round } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { switchMap } from 'rxjs/operators';
 
@@ -170,6 +170,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected quantity: number;
   protected quantityPrecision = 2;
   protected reportDataGlitchMail: string;
+  protected readonly round = round;
   protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
   protected sectors: {

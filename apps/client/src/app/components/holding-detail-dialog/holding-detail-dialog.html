@@ -118,8 +118,10 @@
                 i18n
                 size="medium"
                 [class.text-danger]="
-                  marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
-                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                  round(marketPriceMin, marketPriceMinPrecision) ===
+                    round(marketPrice, marketPricePrecision) &&
+                  round(marketPriceMax, marketPriceMaxPrecision) !==
+                    round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
                 [locale]="data.locale"
@@ -134,8 +136,10 @@
                 i18n
                 size="medium"
                 [class.text-success]="
-                  marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
-                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                  round(marketPriceMax, marketPriceMaxPrecision) ===
+                    round(marketPrice, marketPricePrecision) &&
+                  round(marketPriceMax, marketPriceMaxPrecision) !==
+                    round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
                 [locale]="data.locale"
