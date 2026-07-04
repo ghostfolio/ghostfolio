@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Ukrainian (`uk`)
 - Upgraded `yahoo-finance2` from version `3.14.3` to `3.15.4`
 
+### Fixed
+
+- Fixed the market condition of the benchmarks in the twitter bot service when values round to zero
+
 ## 3.19.1 - 2026-07-03
 
 ### Added
