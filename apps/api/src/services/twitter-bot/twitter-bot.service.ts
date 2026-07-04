@@ -12,6 +12,7 @@ import {
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
+import { round } from 'lodash';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
@@ -89,16 +90,16 @@ export class TwitterBotService implements OnModuleInit {
     });
 
     return benchmarks
-      .map(({ marketCondition, name, performances }) => {
-        let changeFormAllTimeHigh = (
-          performances.allTimeHigh.performancePercent * 100
-        ).toFixed(1);
+      .map(({ name, performances }) => {
+        const performancePercent = round(
+          performances.allTimeHigh.performancePercent,
+          3
+        );
 
-        if (Math.abs(parseFloat(changeFormAllTimeHigh)) === 0) {
-          changeFormAllTimeHigh = '0.0';
-        }
+        const marketCondition =
+          this.benchmarkService.getMarketCondition(performancePercent);
 
-        return `${name} ${changeFormAllTimeHigh}%${
+        return `${name} ${(performancePercent * 100).toFixed(1)}%${
           marketCondition !== 'NEUTRAL_MARKET'
             ? ' ' + resolveMarketCondition(marketCondition).emoji
             : ''
