@@ -9,9 +9,9 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import {
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
-  PROPERTY_IS_USER_SIGNUP_ENABLED,
-  PropertyKey
+  PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
+import { PropertyKey } from '@ghostfolio/common/types';
 import {
   getAssetProfileIdentifier,
   getCurrencyFromSymbol

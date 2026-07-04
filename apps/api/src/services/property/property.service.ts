@@ -1,9 +1,9 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   PROPERTY_CURRENCIES,
-  PROPERTY_IS_USER_SIGNUP_ENABLED,
-  PropertyKey
+  PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
+import { PropertyKey } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 
