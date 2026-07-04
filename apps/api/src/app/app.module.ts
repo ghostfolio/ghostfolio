@@ -147,7 +147,9 @@ import { UserModule } from './user/user.module';
                 .split(',')[0]
                 .split('-')[0];
 
-              if (SUPPORTED_LANGUAGE_CODES.includes(code)) {
+              if (
+                (SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(code)
+              ) {
                 languageCode = code;
               }
             } catch {}
