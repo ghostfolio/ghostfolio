@@ -20,7 +20,7 @@ import {
   HttpHeaders,
   HttpParams
 } from '@angular/common/http';
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { format, startOfYear } from 'date-fns';
@@ -53,10 +53,8 @@ export class GfApiPageComponent implements OnInit {
 
   private apiKey: string;
 
-  public constructor(
-    private destroyRef: DestroyRef,
-    private http: HttpClient
-  ) {}
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly http = inject(HttpClient);
 
   public ngOnInit() {
     this.apiKey =
