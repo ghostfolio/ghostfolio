@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restricted the modification of activity tags in the impersonation mode
+- Hardened the endpoint of the public access for portfolio sharing by restricting it to public accesses
+- Improved the language localization by translating various tooltips across the application
+- Upgraded `yahoo-finance2` from version `3.14.3` to `3.15.4`
 
 ## 3.19.1 - 2026-07-03
 
