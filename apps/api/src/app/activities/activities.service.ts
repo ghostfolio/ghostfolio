@@ -393,30 +393,7 @@ export class ActivitiesService {
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
-    const {
-      ASSET_CLASS: filtersByAssetClass = [],
-      DATA_SOURCE: [filterByDataSource] = [],
-      SYMBOL: [filterBySymbol] = [],
-      TAG: filtersByTag = []
-    } = groupBy(filters, ({ type }) => {
-      return type;
-    });
-
-    const isFilteredByAssetClassOtherThanLiquidity =
-      filtersByAssetClass.length > 0 &&
-      !filtersByAssetClass.some(({ id }) => {
-        return id === AssetClass.LIQUIDITY;
-      });
-
-    const isFilteredByAssetProfile = !!(filterByDataSource && filterBySymbol);
-    const isFilteredByTag = filtersByTag.length > 0;
-
-    const hasNonMatchingFilters =
-      isFilteredByAssetClassOtherThanLiquidity ||
-      isFilteredByAssetProfile ||
-      isFilteredByTag;
-
-    if (hasNonMatchingFilters) {
+    if (this.hasNonMatchingFiltersForCashActivities(filters)) {
       return {
         activities: [],
         count: 0
@@ -832,7 +809,7 @@ export class ActivitiesService {
       withExcludedAccountsAndActivities: false // TODO
     });
 
-    if (withCash) {
+    if (withCash && !this.hasNonMatchingFiltersForCashActivities(filters)) {
       const cashDetails = await this.accountService.getCashDetails({
         filters,
         userId,
@@ -965,6 +942,43 @@ export class ActivitiesService {
     );
 
     return activity;
+  }
+
+  private hasNonMatchingFiltersForCashActivities(filters: Filter[] = []) {
+    const {
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    const isFilteredByAssetClassOtherThanLiquidity =
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.some(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      });
+
+    const isFilteredByAssetProfile = !!(filterByDataSource || filterBySymbol);
+    const isFilteredByTag = filtersByTag.length > 0;
+
+    const isFilteredByUnsupportedType = filters.some(({ type }) => {
+      return ![
+        'ACCOUNT',
+        'ASSET_CLASS',
+        'DATA_SOURCE',
+        'SYMBOL',
+        'TAG'
+      ].includes(type);
+    });
+
+    return (
+      isFilteredByAssetClassOtherThanLiquidity ||
+      isFilteredByAssetProfile ||
+      isFilteredByTag ||
+      isFilteredByUnsupportedType
+    );
   }
 
   private async orders(params: {
