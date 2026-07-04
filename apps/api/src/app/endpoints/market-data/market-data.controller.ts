@@ -22,6 +22,7 @@ import {
   HttpException,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   UseGuards
@@ -45,7 +46,8 @@ export class MarketDataController {
   @HasPermission(permissions.readMarketDataOfMarkets)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketDataOfMarkets(
-    @Query('includeHistoricalData') includeHistoricalData = 0
+    @Query('includeHistoricalData', new ParseIntPipe({ optional: true }))
+    includeHistoricalData = 0
   ): Promise<MarketDataOfMarketsResponse> {
     const [
       marketDataFearAndGreedIndexCryptocurrencies,
