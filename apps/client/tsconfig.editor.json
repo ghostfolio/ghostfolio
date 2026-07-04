@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "include": ["**/*.ts"],
   "compilerOptions": {
-    "types": ["jest", "node"]
+    "typeRoots": ["../../node_modules/@types"]
   },
   "exclude": ["jest.config.ts"]
 }
