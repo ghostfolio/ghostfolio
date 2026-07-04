@@ -1,4 +1,5 @@
 const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
+const path = require('path');
 
 // These options were migrated by @nx/webpack:convert-to-inferred from
 // the project.json file and merged with the options in this file
@@ -18,8 +19,11 @@ const configValues = {
       extractLicenses: true,
       fileReplacements: [
         {
-          replace: './src/environments/environment.ts',
-          with: './src/environments/environment.prod.ts'
+          replace: path.resolve(__dirname, './src/environments/environment.ts'),
+          with: path.resolve(
+            __dirname,
+            './src/environments/environment.prod.ts'
+          )
         }
       ],
       generatePackageJson: true,
