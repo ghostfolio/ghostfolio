@@ -110,7 +110,7 @@
     "date-fns": "4.4.0",
     "dotenv": "17.2.3",
     "dotenv-expand": "12.0.3",
-    "envalid": "8.1.1",
+    "envalid": "8.2.0",
     "fast-redact": "3.5.0",
     "fuse.js": "7.3.0",
     "google-spreadsheet": "3.2.0",
