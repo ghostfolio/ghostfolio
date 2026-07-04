@@ -95,6 +95,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
+import { groupBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
@@ -138,20 +139,16 @@ export class PortfolioService {
   }): Promise<AccountWithValue[]> {
     const where: Prisma.AccountWhereInput = { userId };
 
-    const filterByAccount = filters?.find(({ type }) => {
-      return type === 'ACCOUNT';
-    })?.id;
-
-    const filterByDataSource = filters?.find(({ type }) => {
-      return type === 'DATA_SOURCE';
-    })?.id;
-
-    const filterBySymbol = filters?.find(({ type }) => {
-      return type === 'SYMBOL';
-    })?.id;
+    const {
+      ACCOUNT: [filterByAccount] = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SYMBOL: [filterBySymbol] = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
 
     if (filterByAccount) {
-      where.id = filterByAccount;
+      where.id = filterByAccount.id;
     }
 
     if (filterByDataSource && filterBySymbol) {
@@ -159,8 +156,8 @@ export class PortfolioService {
         some: {
           SymbolProfile: {
             AND: [
-              { dataSource: filterByDataSource as DataSource },
-              { symbol: filterBySymbol }
+              { dataSource: filterByDataSource.id as DataSource },
+              { symbol: filterBySymbol.id }
             ]
           }
         }
@@ -274,17 +271,20 @@ export class PortfolioService {
 
     let activitiesCount = 0;
 
-    const searchQuery = filters.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
+    const { SEARCH_QUERY: [filterBySearchQuery] = [] } = groupBy(
+      filters,
+      ({ type }) => {
+        return type;
+      }
+    );
 
-    if (searchQuery) {
+    if (filterBySearchQuery) {
       const fuse = new Fuse(accounts, {
         keys: ['name', 'platform.name'],
         threshold: 0.3
       });
 
-      accounts = fuse.search(searchQuery).map(({ item }) => {
+      accounts = fuse.search(filterBySearchQuery.id).map(({ item }) => {
         return item;
       });
     }
@@ -376,17 +376,20 @@ export class PortfolioService {
 
     let holdings = Object.values(holdingsMap);
 
-    const searchQuery = filters.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
+    const { SEARCH_QUERY: [filterBySearchQuery] = [] } = groupBy(
+      filters,
+      ({ type }) => {
+        return type;
+      }
+    );
 
-    if (searchQuery) {
+    if (filterBySearchQuery) {
       const fuse = new Fuse(holdings, {
         keys: ['isin', 'name', 'symbol'],
         threshold: 0.3
       });
 
-      holdings = fuse.search(searchQuery).map(({ item }) => {
+      holdings = fuse.search(filterBySearchQuery.id).map(({ item }) => {
         return item;
       });
     }
@@ -525,30 +528,18 @@ export class PortfolioService {
 
     const holdings: PortfolioDetails['holdings'] = {};
 
-    const totalValueInBaseCurrency = currentValueInBaseCurrency.plus(
-      cashDetails.balanceInBaseCurrency
-    );
+    const {
+      HOLDING_TYPE: [filterByHoldingType] = [],
+      TAG: [filterByTag] = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
 
-    const isFilteredByAccount =
-      filters?.some(({ type }) => {
-        return type === 'ACCOUNT';
-      }) ?? false;
+    const isFilteredByClosedHoldings = filterByHoldingType?.id === 'CLOSED';
 
-    const isFilteredByClosedHoldings =
-      filters?.some(({ id, type }) => {
-        return id === 'CLOSED' && type === 'HOLDING_TYPE';
-      }) ?? false;
+    let filteredValueInBaseCurrency = currentValueInBaseCurrency;
 
-    let filteredValueInBaseCurrency = isFilteredByAccount
-      ? totalValueInBaseCurrency
-      : currentValueInBaseCurrency;
-
-    if (
-      filters?.length === 0 ||
-      (filters?.length === 1 &&
-        filters[0].id === AssetClass.LIQUIDITY &&
-        filters[0].type === 'ASSET_CLASS')
-    ) {
+    if (!this.activitiesService.areCashActivitiesExcludedByFilters(filters)) {
       filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
         cashDetails.balanceInBaseCurrency
       );
@@ -700,11 +691,7 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    if (
-      filters?.length === 1 &&
-      filters[0].id === TAG_ID_EMERGENCY_FUND &&
-      filters[0].type === 'TAG'
-    ) {
+    if (filters?.length === 1 && filterByTag?.id === TAG_ID_EMERGENCY_FUND) {
       const emergencyFundCashPositions = this.getCashPositions({
         cashDetails,
         userCurrency,

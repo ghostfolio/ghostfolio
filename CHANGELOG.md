@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `stripe` from version `21.0.1` to `22.2.3`
+
+## 3.20.0 - 2026-07-04
+
+### Changed
+
 - Refactored the rounding logic in the holding detail dialog
 - Refactored the rounding logic in the treemap chart component
 - Restricted the modification of activity tags in the impersonation mode
@@ -17,12 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the parsing of integer query parameters (`skip` and `take`) in the `GET api/v1/asset-profiles` endpoint
 - Improved the parsing of the integer query parameter (`includeHistoricalData`) in the `GET api/v1/market-data/markets` endpoint
 - Improved the parsing of the integer query parameter (`includeHistoricalData`) in the `GET api/v1/symbol/:dataSource/:symbol` endpoint
+- Harmonized the filter parsing using `groupBy` across various services
 - Improved the language localization by translating various tooltips across the application
+- Improved the language localization for German (`de`)
 - Improved the language localization for Ukrainian (`uk`)
 - Upgraded `yahoo-finance2` from version `3.14.3` to `3.15.4`
 
 ### Fixed
 
+- Resolved an issue in the treemap chart component when the holdings list is empty
+- Fixed the handling of cash positions in the portfolio calculations when filtering by holding or tag
+- Fixed the handling of cash positions in the portfolio details when filtering
 - Fixed the market condition of the benchmarks in the twitter bot service when values round to zero
 
 ## 3.19.1 - 2026-07-03

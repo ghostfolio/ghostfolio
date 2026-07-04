@@ -63,6 +63,43 @@ export class ActivitiesService {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
+  public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {
+    const {
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    const isFilteredByAssetClassOtherThanLiquidity =
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.some(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      });
+
+    const isFilteredByAssetProfile = !!(filterByDataSource || filterBySymbol);
+    const isFilteredByTag = filtersByTag.length > 0;
+
+    const isFilteredByUnsupportedType = filters.some(({ type }) => {
+      return ![
+        'ACCOUNT',
+        'ASSET_CLASS',
+        'DATA_SOURCE',
+        'SYMBOL',
+        'TAG'
+      ].includes(type);
+    });
+
+    return (
+      isFilteredByAssetClassOtherThanLiquidity ||
+      isFilteredByAssetProfile ||
+      isFilteredByTag ||
+      isFilteredByUnsupportedType
+    );
+  }
+
   public async assignTags({
     dataSource,
     symbol,
@@ -393,17 +430,7 @@ export class ActivitiesService {
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
-    const filtersByAssetClass = filters.filter(({ type }) => {
-      return type === 'ASSET_CLASS';
-    });
-
-    if (
-      filtersByAssetClass.length > 0 &&
-      !filtersByAssetClass.find(({ id }) => {
-        return id === AssetClass.LIQUIDITY;
-      })
-    ) {
-      // If asset class filters are present and none of them is liquidity, return an empty response
+    if (this.areCashActivitiesExcludedByFilters(filters)) {
       return {
         activities: [],
         count: 0
@@ -556,26 +583,17 @@ export class ActivitiesService {
     }
 
     const {
-      ACCOUNT: filtersByAccount,
-      ASSET_CLASS: filtersByAssetClass,
-      TAG: filtersByTag
+      ACCOUNT: filtersByAccount = [],
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
     } = groupBy(filters, ({ type }) => {
       return type;
     });
 
-    const filterByDataSource = filters?.find(({ type }) => {
-      return type === 'DATA_SOURCE';
-    })?.id;
-
-    const filterBySymbol = filters?.find(({ type }) => {
-      return type === 'SYMBOL';
-    })?.id;
-
-    const searchQuery = filters?.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-
-    if (filtersByAccount?.length > 0) {
+    if (filtersByAccount.length > 0) {
       where.accountId = {
         in: filtersByAccount.map(({ id }) => {
           return id;
@@ -587,7 +605,7 @@ export class ActivitiesService {
       where.isDraft = false;
     }
 
-    if (filtersByAssetClass?.length > 0) {
+    if (filtersByAssetClass.length > 0) {
       where.SymbolProfile = {
         OR: [
           {
@@ -623,8 +641,8 @@ export class ActivitiesService {
             where.SymbolProfile,
             {
               AND: [
-                { dataSource: filterByDataSource as DataSource },
-                { symbol: filterBySymbol }
+                { dataSource: filterByDataSource.id as DataSource },
+                { symbol: filterBySymbol.id }
               ]
             }
           ]
@@ -632,19 +650,19 @@ export class ActivitiesService {
       } else {
         where.SymbolProfile = {
           AND: [
-            { dataSource: filterByDataSource as DataSource },
-            { symbol: filterBySymbol }
+            { dataSource: filterByDataSource.id as DataSource },
+            { symbol: filterBySymbol.id }
           ]
         };
       }
     }
 
-    if (searchQuery) {
+    if (filterBySearchQuery) {
       const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
-        { id: { mode: 'insensitive', startsWith: searchQuery } },
-        { isin: { mode: 'insensitive', startsWith: searchQuery } },
-        { name: { mode: 'insensitive', startsWith: searchQuery } },
-        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
       ];
 
       if (where.SymbolProfile) {
@@ -663,7 +681,7 @@ export class ActivitiesService {
       }
     }
 
-    if (filtersByTag?.length > 0) {
+    if (filtersByTag.length > 0) {
       where.tags = {
         some: {
           OR: filtersByTag.map(({ id }) => {
@@ -819,7 +837,7 @@ export class ActivitiesService {
       withExcludedAccountsAndActivities: false // TODO
     });
 
-    if (withCash) {
+    if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {
       const cashDetails = await this.accountService.getCashDetails({
         filters,
         userId,
