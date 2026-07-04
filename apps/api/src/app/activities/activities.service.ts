@@ -393,17 +393,30 @@ export class ActivitiesService {
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
-    const filtersByAssetClass = filters.filter(({ type }) => {
-      return type === 'ASSET_CLASS';
+    const {
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
     });
 
-    if (
+    const isFilteredByAssetClassOtherThanLiquidity =
       filtersByAssetClass.length > 0 &&
-      !filtersByAssetClass.find(({ id }) => {
+      !filtersByAssetClass.some(({ id }) => {
         return id === AssetClass.LIQUIDITY;
-      })
-    ) {
-      // If asset class filters are present and none of them is liquidity, return an empty response
+      });
+
+    const isFilteredByAssetProfile = !!(filterByDataSource && filterBySymbol);
+    const isFilteredByTag = filtersByTag.length > 0;
+
+    const hasNonMatchingFilters =
+      isFilteredByAssetClassOtherThanLiquidity ||
+      isFilteredByAssetProfile ||
+      isFilteredByTag;
+
+    if (hasNonMatchingFilters) {
       return {
         activities: [],
         count: 0
