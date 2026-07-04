@@ -168,7 +168,9 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
       }
     }
 
-    if (this.formattedValue === '0.00') {
+    if (/^-?0([.,]0*)?$/.test(this.formattedValue)) {
+      // Remove algebraic sign of values rounding to zero
+      this.formattedValue = this.formattedValue.replace(/^-/, '');
       this.useAbsoluteValue = true;
     }
   }

@@ -135,9 +135,15 @@
             class="d-inline-block justify-content-end"
             [class]="{
               'text-danger':
-                element?.performances?.allTimeHigh?.performancePercent < 0,
+                round(
+                  element?.performances?.allTimeHigh?.performancePercent,
+                  4
+                ) < 0,
               'text-success':
-                element?.performances?.allTimeHigh?.performancePercent === 0
+                round(
+                  element?.performances?.allTimeHigh?.performancePercent,
+                  4
+                ) === 0
             }"
             [isPercent]="true"
             [locale]="locale()"
