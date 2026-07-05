@@ -1,5 +1,9 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  getLowercase,
+  isAccountExcluded
+} from '@ghostfolio/common/helper';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -135,6 +139,10 @@ export class GfAccountsTableComponent {
     effect(() => {
       this.dataSource.sort = this.sort();
     });
+  }
+
+  protected isExcluded(account: Account & { tags?: { id: string }[] }) {
+    return isAccountExcluded(account);
   }
 
   protected onDeleteAccount(aId: string) {

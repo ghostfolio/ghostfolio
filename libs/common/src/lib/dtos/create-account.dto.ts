@@ -2,6 +2,8 @@ import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
+  ArrayUnique,
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -28,6 +30,9 @@ export class CreateAccountDto {
   @IsString()
   id?: string;
 
+  /**
+   * @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
+   */
   @IsBoolean()
   @IsOptional()
   isExcluded?: boolean;
@@ -38,4 +43,10 @@ export class CreateAccountDto {
   @IsString()
   @ValidateIf((_object, value) => value !== null)
   platformId: string | null;
+
+  @ArrayUnique()
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  tags?: string[];
 }

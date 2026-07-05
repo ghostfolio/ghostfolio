@@ -83,7 +83,7 @@ export class TagsController {
   @HasPermission(permissions.readTags)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getTags() {
-    return this.tagService.getTagsWithActivityCount();
+    return this.tagService.getTagsWithAccountAndActivityCount();
   }
 
   @HasPermission(permissions.updateTag)

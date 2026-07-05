@@ -156,27 +156,31 @@ export class AccountController {
   public async createAccount(
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
-    if (data.platformId) {
-      const platformId = data.platformId;
-      delete data.platformId;
+    const { tags: tagIds, ...accountData } = data;
+
+    if (accountData.platformId) {
+      const platformId = accountData.platformId;
+      delete accountData.platformId;
 
       return this.accountService.createAccount(
         {
-          ...data,
+          ...accountData,
           platform: { connect: { id: platformId } },
           user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
+        this.request.user.id,
+        tagIds
       );
     } else {
-      delete data.platformId;
+      delete accountData.platformId;
 
       return this.accountService.createAccount(
         {
-          ...data,
+          ...accountData,
           user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
+        this.request.user.id,
+        tagIds
       );
     }
   }
@@ -253,14 +257,16 @@ export class AccountController {
       );
     }
 
-    if (data.platformId) {
-      const platformId = data.platformId;
-      delete data.platformId;
+    const { tags: tagIds, ...accountData } = data;
+
+    if (accountData.platformId) {
+      const platformId = accountData.platformId;
+      delete accountData.platformId;
 
       return this.accountService.updateAccount(
         {
           data: {
-            ...data,
+            ...accountData,
             platform: { connect: { id: platformId } },
             user: { connect: { id: this.request.user.id } }
           },
@@ -271,16 +277,17 @@ export class AccountController {
             }
           }
         },
-        this.request.user.id
+        this.request.user.id,
+        tagIds
       );
     } else {
       // platformId is null, remove it
-      delete data.platformId;
+      delete accountData.platformId;
 
       return this.accountService.updateAccount(
         {
           data: {
-            ...data,
+            ...accountData,
             platform: originalAccount.platformId
               ? { disconnect: true }
               : undefined,
@@ -293,7 +300,8 @@ export class AccountController {
             }
           }
         },
-        this.request.user.id
+        this.request.user.id,
+        tagIds
       );
     }
   }

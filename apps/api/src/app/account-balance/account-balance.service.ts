@@ -1,4 +1,5 @@
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -154,7 +155,7 @@ export class AccountBalanceService {
     }
 
     if (withExcludedAccounts === false) {
-      where.account = { isExcluded: false };
+      where.account = WHERE_ACCOUNT_NOT_EXCLUDED;
     }
 
     const balances = await this.prismaService.accountBalance.findMany({

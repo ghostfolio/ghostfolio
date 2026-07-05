@@ -2,10 +2,19 @@
   <div class="col">
     @if (readonly) {
       <div class="h5" i18n>Tags</div>
-      @if (tags && tags.length > 0) {
+      @if (
+        (tags && tags.length > 0) || (tagsReadOnly && tagsReadOnly.length > 0)
+      ) {
         <mat-chip-listbox>
-          @for (tag of tags; track tag) {
-            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+          @if (tagsReadOnly) {
+            @for (tag of tagsReadOnly; track tag) {
+              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+            }
+          }
+          @if (tags) {
+            @for (tag of tags; track tag) {
+              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+            }
           }
         </mat-chip-listbox>
       } @else {
@@ -15,6 +24,13 @@
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
+          @if (tagsReadOnly) {
+            @for (tag of tagsReadOnly; track tag.id) {
+              <mat-chip-row disabled [removable]="false">
+                {{ tag.name }}
+              </mat-chip-row>
+            }
+          }
           @for (tag of tagsSelected(); track tag.id) {
             <mat-chip-row
               matChipRemove

@@ -25,7 +25,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Account as AccountModel } from '@prisma/client';
+import { Account as AccountModel, Tag } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -188,8 +188,9 @@ export class GfAccountsPageComponent implements OnInit {
     id,
     isExcluded,
     name,
-    platformId
-  }: AccountModel) {
+    platformId,
+    tags
+  }: AccountModel & { tags?: Tag[] }) {
     const dialogRef = this.dialog.open<
       GfCreateOrUpdateAccountDialogComponent,
       CreateOrUpdateAccountDialogParams
@@ -202,8 +203,10 @@ export class GfAccountsPageComponent implements OnInit {
           id,
           isExcluded,
           name,
-          platformId
-        }
+          platformId,
+          tags
+        },
+        user: this.user
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
@@ -277,8 +280,10 @@ export class GfAccountsPageComponent implements OnInit {
           id: null,
           isExcluded: false,
           name: null,
-          platformId: null
-        }
+          platformId: null,
+          tags: []
+        },
+        user: this.user
       } satisfies CreateOrUpdateAccountDialogParams,
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'

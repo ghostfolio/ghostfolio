@@ -9,6 +9,7 @@ import {
   OnChanges,
   OnInit,
   signal,
+  SimpleChanges,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -27,7 +28,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Tag } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { addCircleOutline, closeOutline } from 'ionicons/icons';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -65,6 +65,7 @@ export class GfTagsSelectorComponent
   @Input() readonly = false;
   @Input() tags: SelectedTag[];
   @Input() tagsAvailable: SelectedTag[];
+  @Input() tagsReadOnly: SelectedTag[];
 
   public readonly filteredOptions: Subject<SelectedTag[]> = new BehaviorSubject(
     []
@@ -87,12 +88,15 @@ export class GfTagsSelectorComponent
   }
 
   public ngOnInit() {
-    this.tagsSelected.set(this.tags);
+    this.tagsSelected.set(this.tags ?? []);
     this.updateFilters();
   }
 
-  public ngOnChanges() {
-    this.tagsSelected.set(this.tags);
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.tags) {
+      this.tagsSelected.set(this.tags ?? []);
+    }
+
     this.updateFilters();
   }
 
@@ -123,7 +127,7 @@ export class GfTagsSelectorComponent
     this.tagInputControl.setValue(null);
   }
 
-  public onRemoveTag(tag: Tag) {
+  public onRemoveTag(tag: SelectedTag) {
     this.tagsSelected.update((tags) => {
       return tags.filter(({ id }) => {
         return id !== tag.id;
@@ -159,15 +163,20 @@ export class GfTagsSelectorComponent
 
   private filterTags(query: string = ''): SelectedTag[] {
     const tags = this.tagsSelected() ?? [];
-    const tagIds = tags.map(({ id }) => {
+    const tagIds = [...tags, ...(this.tagsReadOnly ?? [])].map(({ id }) => {
       return id;
     });
 
-    return this.tagsAvailable.filter(({ id, name }) => {
-      return (
-        !tagIds.includes(id) && name.toLowerCase().includes(query.toLowerCase())
-      );
-    });
+    return this.tagsAvailable
+      .filter(({ id, name }) => {
+        return (
+          !tagIds.includes(id) &&
+          name.toLowerCase().includes(query.toLowerCase())
+        );
+      })
+      .sort((a, b) => {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
