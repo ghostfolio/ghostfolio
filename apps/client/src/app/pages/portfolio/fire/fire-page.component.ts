@@ -91,6 +91,7 @@ export class GfFirePageComponent implements OnInit {
               : 0
           }
         };
+
         if (this.user.subscription?.type === SubscriptionType.Basic) {
           this.fireWealth = {
             today: {
@@ -139,9 +140,9 @@ export class GfFirePageComponent implements OnInit {
           );
 
           this.calculateWithdrawalRates();
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
