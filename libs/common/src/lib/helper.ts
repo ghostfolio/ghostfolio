@@ -420,12 +420,8 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isAccountExcluded(account: {
-  isExcluded: boolean;
-  tags?: { id: string }[];
-}) {
+export function isAccountExcluded(account: { tags?: { id: string }[] }) {
   return (
-    account.isExcluded ||
     account.tags?.some(({ id }) => {
       return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
     }) === true

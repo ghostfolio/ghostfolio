@@ -186,7 +186,6 @@ export class GfAccountsPageComponent implements OnInit {
     comment,
     currency,
     id,
-    isExcluded,
     name,
     platformId,
     tags
@@ -201,7 +200,6 @@ export class GfAccountsPageComponent implements OnInit {
           comment,
           currency,
           id,
-          isExcluded,
           name,
           platformId,
           tags
@@ -278,7 +276,6 @@ export class GfAccountsPageComponent implements OnInit {
           comment: null,
           currency: this.user?.settings?.baseCurrency ?? null,
           id: null,
-          isExcluded: false,
           name: null,
           platformId: null,
           tags: []
