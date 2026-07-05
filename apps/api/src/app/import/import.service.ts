@@ -9,7 +9,10 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
+import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '@ghostfolio/common/config';
 import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
@@ -272,7 +275,11 @@ export class ImportService {
 
         // If there is no account or if the account belongs to a different user then create a new account
         if (!accountWithSameId || accountWithSameId.userId !== user.id) {
-          const account = omit(accountWithBalances, ['balances', 'tags']);
+          const account = omit(accountWithBalances, [
+            'balances',
+            'isExcluded',
+            'tags'
+          ]);
 
           let oldAccountId: string;
           const platformId = account.platformId;
@@ -291,6 +298,15 @@ export class ImportService {
             .filter((tagId) => {
               return existingTagIds.has(tagId);
             });
+
+          // Map the legacy isExcluded attribute of old export files to
+          // the "Exclude from Analysis" tag
+          if (
+            accountWithBalances.isExcluded &&
+            !tagIds.includes(TAG_ID_EXCLUDE_FROM_ANALYSIS)
+          ) {
+            tagIds.push(TAG_ID_EXCLUDE_FROM_ANALYSIS);
+          }
 
           let accountObject: Prisma.AccountCreateInput = {
             ...account,

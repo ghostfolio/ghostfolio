@@ -33,8 +33,6 @@ model Account {
   createdAt  DateTime         @default(now())
   currency   String?
   id         String           @default(uuid())
-  /// @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
-  isExcluded Boolean          @default(false)
   name       String?
   platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
@@ -46,7 +44,6 @@ model Account {
   @@id([id, userId])
   @@index([currency])
   @@index([id])
-  @@index([isExcluded])
   @@index([name])
   @@index([userId])
 }
