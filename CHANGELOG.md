@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Harmonized the data format of the export functionality
+- Removed the deprecated `isExcluded` attribute of the account in favor of the _Exclude from Analysis_ tag including a data migration
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `7.8.0` to `7.9.1`
 
