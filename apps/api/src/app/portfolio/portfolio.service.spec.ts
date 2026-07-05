@@ -4,6 +4,7 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -60,6 +61,7 @@ describe('PortfolioService', () => {
     activitiesService = new ActivitiesService(
       null,
       accountService,
+      new AssetProfileSplitService(null),
       null,
       null,
       dataProviderService,

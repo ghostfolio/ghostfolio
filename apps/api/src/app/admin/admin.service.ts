@@ -1,4 +1,5 @@
 import { environment } from '@ghostfolio/api/environments/environment';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -43,6 +44,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -102,6 +104,7 @@ export class AdminService {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
+    await this.assetProfileSplitService.deleteMany({ dataSource, symbol });
     await this.marketDataService.deleteMany({ dataSource, symbol });
 
     const currency = getCurrencyFromSymbol(symbol);
@@ -272,6 +275,16 @@ export class AdminService {
             }
           ),
           this.marketDataService.updateAssetProfileIdentifier(
+            {
+              dataSource,
+              symbol
+            },
+            {
+              dataSource: DataSource[newDataSource.toString()],
+              symbol: newSymbol as string
+            }
+          ),
+          this.assetProfileSplitService.updateAssetProfileIdentifier(
             {
               dataSource,
               symbol

@@ -95,6 +95,16 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'NVDA':
+      // Split-adjusted market prices (10:1 split on 2024-06-10)
+      if (isSameDay(parseDate('2024-06-03'), date)) {
+        return { marketPrice: 120 };
+      } else if (isSameDay(parseDate('2024-06-14'), date)) {
+        return { marketPrice: 125 };
+      }
+
+      return { marketPrice: 0 };
+
     default:
       return { marketPrice: 0 };
   }

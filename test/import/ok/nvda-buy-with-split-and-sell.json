@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "date": "2024-06-14T21:28:05.857Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "fee": 0,
+      "quantity": 10,
+      "type": "SELL",
+      "unitPrice": 125,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2024-06-14T00:00:00.000Z",
+      "symbol": "NVDA"
+    },
+    {
+      "fee": 0,
+      "quantity": 1,
+      "type": "BUY",
+      "unitPrice": 1200,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2024-06-03T00:00:00.000Z",
+      "symbol": "NVDA"
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

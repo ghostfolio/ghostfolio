@@ -1,4 +1,6 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -30,13 +32,49 @@ import { groupBy } from 'lodash';
 export class AssetProfilesService {
   public constructor(
     private readonly activitiesService: ActivitiesService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
+    private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async createSplit({
+    dataSource,
+    date,
+    factor,
+    symbol
+  }: AssetProfileIdentifier & { date: Date; factor: number }) {
+    const split = await this.assetProfileSplitService.upsert({
+      dataSource,
+      date,
+      factor,
+      symbol
+    });
+
+    await this.invalidatePortfolioSnapshotsOfUsersWithActivities({
+      dataSource,
+      symbol
+    });
+
+    return split;
+  }
+
+  public async deleteSplit({
+    dataSource,
+    id,
+    symbol
+  }: AssetProfileIdentifier & { id: string }) {
+    await this.assetProfileSplitService.deleteById({ dataSource, id, symbol });
+
+    await this.invalidatePortfolioSnapshotsOfUsersWithActivities({
+      dataSource,
+      symbol
+    });
+  }
 
   public async getAssetProfile({
     dataSource,
@@ -54,7 +92,7 @@ export class AssetProfilesService {
         await this.activitiesService.getStatisticsByCurrency(currency));
     }
 
-    const [[assetProfile], marketData] = await Promise.all([
+    const [[assetProfile], marketData, splits] = await Promise.all([
       this.symbolProfileService.getSymbolProfiles([
         {
           dataSource,
@@ -69,6 +107,9 @@ export class AssetProfilesService {
           dataSource,
           symbol
         }
+      }),
+      this.assetProfileSplitService.getSplits({
+        assetProfileIdentifiers: [{ dataSource, symbol }]
       })
     ]);
 
@@ -80,6 +121,7 @@ export class AssetProfilesService {
 
     return {
       marketData,
+      splits,
       assetProfile: assetProfile ?? {
         activitiesCount,
         currency,
@@ -534,5 +576,28 @@ export class AssetProfilesService {
     });
 
     return this.prismaService.$extends(symbolProfileExtension);
+  }
+
+  private async invalidatePortfolioSnapshotsOfUsersWithActivities({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    const usersWithActivities = await this.prismaService.order.groupBy({
+      by: ['userId'],
+      where: {
+        SymbolProfile: {
+          dataSource,
+          symbol
+        }
+      }
+    });
+
+    await Promise.all(
+      usersWithActivities.map(({ userId }) => {
+        return this.redisCacheService.removePortfolioSnapshotsByUserId({
+          userId
+        });
+      })
+    );
   }
 }
