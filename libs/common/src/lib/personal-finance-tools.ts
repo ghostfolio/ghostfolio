@@ -253,25 +253,30 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Toma el control total de tus finanzas.'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2011,
     key: 'cobalt',
     name: 'Cobalt',
     origin: 'US',
+    platforms: ['WEB'],
     slogan: 'Next-Level Portfolio Monitoring',
     url: 'https://www.cobalt.pe'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'coinstats',
     name: 'CoinStats',
     origin: 'AM',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$168',
     slogan: 'Manage All Your Wallets & Exchanges From One Place',
     url: 'https://coinstats.app'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'TAX_REPORTING'],
     founded: 2013,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -279,40 +284,48 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English'],
     name: 'CoinTracking',
     origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '$120',
     slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator',
     url: 'https://cointracking.info'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2019,
     key: 'compound-planning',
     name: 'Compound Planning',
     origin: 'US',
+    platforms: ['IOS', 'WEB'],
     slogan: 'Modern Wealth & Investment Management',
     url: 'https://compoundplanning.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'copilot-money',
     name: 'Copilot Money',
     origin: 'US',
+    platforms: ['IOS', 'MACOS', 'WEB'],
     pricingPerYear: '$95',
     slogan: 'Do money better with Copilot',
     url: 'https://www.copilot.money'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2014,
     hasFreePlan: false,
     key: 'countabout',
     name: 'CountAbout',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$9.99',
     slogan: 'Customizable and Secure Personal Finance App',
     url: 'https://countabout.com'
   },
   {
+    categories: ['FAMILY_OFFICE'],
     founded: 2023,
     hasFreePlan: false,
     key: 'danti',
@@ -322,6 +335,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://danti.io'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2020,
     key: 'de.fi',
     languages: ['English'],
@@ -330,6 +344,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://de.fi'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2016,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -337,11 +352,13 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'DeFi Portfolio Tracker by Zerion',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$99',
     slogan: 'DeFi Portfolio Tracker for All Chains',
     url: 'https://zerion.io/defi-portfolio-tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -349,11 +366,13 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'DEGIRO Portfolio Tracker by Capitalyse',
     origin: 'NL',
+    platforms: ['WEB'],
     pricingPerYear: '€24',
     slogan: 'Democratizing Data Analytics',
     url: 'https://capitalyse.app/app/degiro'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -361,21 +380,25 @@ export const personalFinanceTools: Product[] = [
     name: 'Delta Investment Tracker',
     note: 'Acquired by eToro',
     origin: 'BE',
+    platforms: ['ANDROID', 'IOS', 'MACOS', 'WEB', 'WINDOWS'],
     pricingPerYear: '$150',
     slogan: 'The app to track all your investments. Make smart moves only.',
     url: 'https://delta.app'
   },
   {
+    categories: ['DIVIDEND_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'digrin',
     languages: ['English'],
     name: 'Digrin',
+    platforms: ['WEB'],
     pricingPerYear: '$49.90',
     slogan: 'Dividend Portfolio Tracker',
     url: 'https://www.digrin.com'
   },
   {
+    categories: ['DIVIDEND_TRACKING'],
     founded: 2019,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -383,60 +406,72 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English'],
     name: 'DivvyDiary',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€65',
     slogan: 'Your personal Dividend Calendar',
     url: 'https://divvydiary.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2009,
     hasSelfHostingAbility: false,
     key: 'empower',
     name: 'Empower',
     note: 'Originally named as Personal Capital',
     origin: 'US',
+    platforms: ['WEB'],
     slogan: 'Get answers to your money questions',
     url: 'https://www.empower.com'
   },
   {
     alias: '8figures',
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2022,
     key: 'eightfigures',
     name: '8FIGURES',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Portfolio Tracker Designed by Professional Investors',
     url: 'https://8figures.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2010,
     hasFreePlan: false,
     key: 'etops',
     name: 'etops',
     origin: 'CH',
+    platforms: ['WEB'],
     slogan: 'Your financial superpower',
     url: 'https://www.etops.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2015,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'everydollar',
     name: 'EveryDollar',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Plan, track, find more margin',
     url: 'https://www.ramseysolutions.com/money/everydollar'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'exirio',
     name: 'Exirio',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$100',
     slogan: 'All your wealth, in one place.',
     url: 'https://www.exirio.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'expersoft',
