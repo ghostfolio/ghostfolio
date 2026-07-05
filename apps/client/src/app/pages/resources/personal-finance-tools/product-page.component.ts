@@ -2,6 +2,7 @@ import { getCountryName } from '@ghostfolio/common/helper';
 import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { ProductCategory, ProductPlatform } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -91,38 +92,51 @@ export class GfProductPageComponent {
     const product1 = this.product1();
     const product2 = this.product2();
 
-    return [
-      product1.name,
-      product1.origin,
-      product2.name,
-      product2.origin,
-      $localize`Alternative`,
-      $localize`App`,
-      $localize`Budgeting`,
-      $localize`Community`,
-      $localize`Family Office`,
-      `Fintech`,
-      $localize`Investment`,
-      $localize`Investor`,
-      $localize`Open Source`,
-      `OSS`,
-      $localize`Personal Finance`,
-      $localize`Privacy`,
-      $localize`Portfolio`,
-      $localize`Software`,
-      $localize`Tool`,
-      $localize`User Experience`,
-      $localize`Wealth`,
-      $localize`Wealth Management`,
-      `WealthTech`
-    ]
-      .filter((item): item is string => {
-        return !!item;
-      })
-      .sort((a, b) => {
-        return a.localeCompare(b, undefined, { sensitivity: 'base' });
-      });
+    return Array.from(
+      new Set(
+        [
+          ...(product1.categories ?? []).map((category: ProductCategory) => {
+            return translate(category);
+          }),
+          product1.name,
+          product1.origin,
+          ...(product1.platforms ?? []).map((platform: ProductPlatform) => {
+            return translate(platform);
+          }),
+          ...(product2.categories ?? []).map((category: ProductCategory) => {
+            return translate(category);
+          }),
+          product2.name,
+          product2.origin,
+          ...(product2.platforms ?? []).map((platform: ProductPlatform) => {
+            return translate(platform);
+          }),
+          $localize`Alternative`,
+          $localize`App`,
+          $localize`Community`,
+          `Fintech`,
+          $localize`Investment`,
+          $localize`Investor`,
+          $localize`Open Source`,
+          `OSS`,
+          $localize`Personal Finance`,
+          $localize`Portfolio`,
+          $localize`Privacy`,
+          $localize`Software`,
+          $localize`Tool`,
+          $localize`User Experience`,
+          $localize`Wealth`,
+          `WealthTech`
+        ].filter((item): item is string => {
+          return !!item;
+        })
+      )
+    ).sort((a, b) => {
+      return a.localeCompare(b, undefined, { sensitivity: 'base' });
+    });
   });
+
+  protected readonly translate = translate;
 
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);

@@ -74,6 +74,27 @@
                 <td class="mat-mdc-cell px-1 py-2">{{ product2().slogan }}</td>
               </tr>
               <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Category</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @for (
+                    category of product1().categories;
+                    track category;
+                    let isLast = $last
+                  ) {
+                    {{ translate(category) }}{{ isLast ? '' : ', ' }}
+                  }
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @for (
+                    category of product2().categories;
+                    track category;
+                    let isLast = $last
+                  ) {
+                    {{ translate(category) }}{{ isLast ? '' : ', ' }}
+                  }
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Founded</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1().founded }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2().founded }}</td>
@@ -101,6 +122,29 @@
                     let isLast = $last
                   ) {
                     {{ region }}{{ isLast ? '' : ', ' }}
+                  }
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                  Available on
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @for (
+                    platform of product1().platforms;
+                    track platform;
+                    let isLast = $last
+                  ) {
+                    {{ translate(platform) }}{{ isLast ? '' : ', ' }}
+                  }
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @for (
+                    platform of product2().platforms;
+                    track platform;
+                    let isLast = $last
+                  ) {
+                    {{ translate(platform) }}{{ isLast ? '' : ', ' }}
                   }
                 </td>
               </tr>
