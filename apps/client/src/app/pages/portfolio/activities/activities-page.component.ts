@@ -16,6 +16,7 @@ import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -44,6 +45,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
     MatSnackBarModule,
     RouterModule
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
@@ -112,6 +114,7 @@ export class GfActivitiesPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
@@ -131,6 +134,8 @@ export class GfActivitiesPageComponent implements OnInit {
     // Reset dataSource and totalItems to show loading state
     this.dataSource = undefined;
     this.totalItems = undefined;
+
+    this.changeDetectorRef.markForCheck();
 
     const dateRange = this.user?.settings?.dateRange;
     const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
@@ -448,5 +453,7 @@ export class GfActivitiesPageComponent implements OnInit {
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
       hasPermission(this.user.permissions, permissions.deleteActivity);
+
+    this.changeDetectorRef.markForCheck();
   }
 }
