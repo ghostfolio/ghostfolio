@@ -762,15 +762,18 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Managing money, made simple'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'investify',
     name: 'Investify',
     origin: 'PK',
+    platforms: ['ANDROID', 'IOS'],
     slogan: 'Advanced portfolio tracking and stock market information',
     url: 'https://www.investify.pk'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
@@ -778,23 +781,27 @@ export const personalFinanceTools: Product[] = [
     name: 'InvMon',
     note: 'Originally named as A2PB',
     origin: 'CH',
+    platforms: ['MACOS'],
     pricingPerYear: '$156',
     slogan: 'Track all your assets, investments and portfolios in one place',
     url: 'https://invmon.com',
     useAnonymously: true
   },
   {
+    categories: ['ETF_TRACKING'],
     founded: 2011,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'justetf',
     name: 'justETF',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€119',
     slogan: 'ETF portfolios made simple',
     url: 'https://www.justetf.com'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'TAX_REPORTING'],
     founded: 2018,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -805,28 +812,33 @@ export const personalFinanceTools: Product[] = [
     url: 'https://koinly.io'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2016,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'koyfin',
     name: 'Koyfin',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$468',
     slogan: 'Comprehensive financial data analysis',
     url: 'https://www.koyfin.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'kubera',
     name: 'Kubera®',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$249',
     slogan: 'The Time Machine for your Net Worth',
     url: 'https://www.kubera.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2021,
     hasFreePlan: false,
     key: 'leafs',
@@ -837,6 +849,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://leafs.ch'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2020,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -847,17 +860,20 @@ export const personalFinanceTools: Product[] = [
     url: 'https://lunchmoney.app'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'magnifi',
     name: 'Magnifi',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$132',
     slogan: 'AI Investing Assistant',
     url: 'https://magnifi.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -865,12 +881,14 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'markets.sh',
     origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '€168',
     regions: ['Global'],
-    slogan: 'Track your investments',
+    slogan: 'Financial Intelligence Platform',
     url: 'https://markets.sh'
   },
   {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2010,
     key: 'masttro',
     name: 'Masttro',
@@ -895,23 +913,27 @@ export const personalFinanceTools: Product[] = [
     url: 'https://github.com/maybe-finance/maybe'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'merlincrypto',
     languages: ['English'],
     name: 'Merlin',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$204',
     regions: ['CA', 'US'],
     slogan: 'The smartest way to track your crypto',
     url: 'https://www.merlincrypto.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'mezzi',
     name: 'Mezzi',
     origin: 'US',
+    platforms: ['IOS', 'WEB'],
     pricingPerYear: '$48',
     slogan: 'Self-manage your wealth. Get fiduciary advice.',
     url: 'https://www.mezzi.com'
@@ -926,23 +948,27 @@ export const personalFinanceTools: Product[] = [
     origin: 'US'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'monarch-money',
     name: 'Monarch Money',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$99.99',
     slogan: 'The modern way to manage your money',
     url: 'https://www.monarch.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 1999,
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'moneydance',
     name: 'Moneydance',
     origin: 'GB',
+    platforms: ['ANDROID', 'IOS', 'LINUX', 'MACOS', 'WINDOWS'],
     pricingPerYear: '$100',
     slogan: 'Personal Finance Manager for Mac, Windows, and Linux',
     url: 'https://moneydance.com'
