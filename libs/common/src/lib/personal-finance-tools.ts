@@ -974,6 +974,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://moneydance.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2016,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -985,52 +986,64 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.moneypatrol.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'moneypeak',
     name: 'Money Peak',
     note: 'Originally named as goSPATZ',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Dein smarter Finance Assistant',
     url: 'https://moneypeak.ai'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2007,
     key: 'moneyspire',
     name: 'Moneyspire',
     note: 'License is a perpetual license',
     origin: 'US',
+    platforms: ['LINUX', 'MACOS', 'WINDOWS'],
     pricingPerYear: '$59.99',
     slogan: 'Have total control of your financial life',
     url: 'https://www.moneyspire.com'
   },
   {
+    categories: ['BUDGETING'],
     hasFreePlan: true,
     hasSelfHostingAbility: true,
     key: 'moneywell',
     name: 'MoneyWell',
     origin: 'US',
+    platforms: ['IOS', 'MACOS'],
     slogan: 'Personal Budgeting Software for Mac and iOS',
     url: 'https://moneywell.app'
   },
   {
+    categories: ['BUDGETING'],
     key: 'moneywiz',
     name: 'MoneyWiz',
     origin: 'US',
+    platforms: ['IOS', 'MACOS'],
     pricingPerYear: '$29.99',
     slogan: 'Get money management superpowers',
     url: 'https://www.wiz.money'
   },
   {
+    categories: ['BUDGETING'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'monse',
     name: 'Monse',
+    note: 'Renamed to Nexafin',
     pricingPerYear: '$60',
     slogan: 'Gain financial control and keep your data private.',
     url: 'https://monse.app'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2025,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1038,63 +1051,83 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Monsy',
     origin: 'ID',
+    platforms: ['WEB'],
     pricingPerYear: '$20',
     slogan: 'Smart, simple, stress-free money tracking.',
     url: 'https://www.monsy.app'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'morningstar-portfolio-manager',
     languages: ['English'],
     name: 'Morningstar® Portfolio Manager',
     origin: 'US',
+    platforms: ['WEB'],
     slogan:
       'Track your equity, fund, investment trust, ETF and pension investments in one place.',
     url: 'https://www.morningstar.com/mm'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'myfinancetools',
     languages: ['Deutsch', 'English', 'Español', 'Français', 'Português'],
     name: 'MyFinanceTools',
+    platforms: ['WEB'],
     pricingPerYear: '$36',
     slogan: 'Your Personal Finance Command Center',
     url: 'https://myfinancetools.io'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'nansen',
     name: 'Crypto Portfolio Tracker by Nansen',
     origin: 'SG',
+    platforms: ['WEB'],
     pricingPerYear: '$1188',
     slogan: 'Your Complete Crypto Portfolio, Reimagined',
     url: 'https://www.nansen.ai/crypto-portfolio-tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2017,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'navexa',
     name: 'Navexa',
     origin: 'AU',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$90',
     slogan: 'The Intelligent Portfolio Tracker',
     url: 'https://www.navexa.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'networthy',
     name: 'Networthy',
+    platforms: ['WEB'],
     pricingPerYear: '€49.99',
     slogan: 'Your Personal Financial Analyst, powered by AI.',
     url: 'https://networthy.pro'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
+    key: 'nexafin',
+    name: 'Nexafin',
+    platforms: ['WEB'],
+    slogan: 'Your Finances. Finally Clear.',
+    url: 'https://nexafin.com'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasSelfHostingAbility: false,
     hasFreePlan: true,
@@ -1102,12 +1135,14 @@ export const personalFinanceTools: Product[] = [
     name: 'Parqet',
     note: 'Originally named as Tresor One',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€99.99',
     regions: ['AT', 'CH', 'DE'],
     slogan: 'Dein Vermögen immer im Blick',
     url: 'https://www.parqet.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'patrice',
@@ -1120,38 +1155,46 @@ export const personalFinanceTools: Product[] = [
       'Português'
     ],
     name: 'Patrice',
+    platforms: ['WEB'],
     pricingPerYear: '€49',
     slogan: 'Votre patrimoine, enfin clair',
     url: 'https://mypatrice.com'
   },
   {
+    categories: ['BUDGETING'],
     hasSelfHostingAbility: false,
     key: 'peek',
     name: 'Peek',
     origin: 'SG',
+    platforms: ['IOS'],
     slogan: 'Feel in control of your money without spreadsheets or shame',
     url: 'https://peek.money'
   },
   {
+    categories: ['BUDGETING'],
     key: 'pennies',
     name: 'Pennies',
     origin: 'US',
+    platforms: ['IOS'],
     pricingPerYear: '$39.99',
     slogan: 'Your money. Made simple.',
     url: 'https://www.getpennies.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'pinklion',
     name: 'PinkLion',
     origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '€50',
     slogan: 'Invest smarter, not harder',
     url: 'https://pinklion.xyz'
   },
   {
+    categories: ['DIVIDEND_TRACKING'],
     founded: 2023,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1164,21 +1207,25 @@ export const personalFinanceTools: Product[] = [
     url: 'https://plainzer.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2023,
     hasSelfHostingAbility: false,
     key: 'plannix',
     name: 'Plannix',
     origin: 'IT',
+    platforms: ['WEB'],
     slogan: 'Your Personal Finance Hub',
     url: 'https://www.plannix.co'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2015,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'pocketguard',
     name: 'PocketGuard',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$74.99',
     slogan: 'Budgeting App & Finance Planner',
     url: 'https://pocketguard.com'
