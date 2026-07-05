@@ -166,9 +166,6 @@
           @if (element.isDraft) {
             <span class="badge badge-secondary ml-1" i18n>Draft</span>
           }
-          @for (tag of getTags(element); track tag.id) {
-            <span class="badge badge-light ml-1">{{ tag.name }}</span>
-          }
         </div>
         @if (
           element.SymbolProfile?.dataSource !== 'MANUAL' &&

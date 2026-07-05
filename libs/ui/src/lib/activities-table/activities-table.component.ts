@@ -68,7 +68,6 @@ import {
   tabletLandscapeOutline,
   trashOutline
 } from 'ionicons/icons';
-import { uniqBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
@@ -264,19 +263,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
       activity.isDraft === false &&
       ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     );
-  }
-
-  public getTags({ account, tags = [] }: Activity) {
-    return uniqBy([...tags, ...(account?.tags ?? [])], 'id')
-      .filter(({ id }) => {
-        return id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
-      })
-      .map((tag) => {
-        return {
-          ...tag,
-          name: translate(tag.name)
-        };
-      });
   }
 
   public isExcludedFromAnalysis(activity: Activity) {
