@@ -1231,6 +1231,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://pocketguard.com'
   },
   {
+    categories: ['BUDGETING', 'FINANCIAL_PLANNING'],
     founded: 2008,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1238,23 +1239,27 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'PocketSmith',
     origin: 'NZ',
+    platforms: ['WEB'],
     pricingPerYear: '$120',
     regions: ['Global'],
     slogan: 'Know where your money is going',
     url: 'https://www.pocketsmith.com'
   },
   {
+    categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'portfolio-dividend-tracker',
     languages: ['English', 'Nederlands'],
     name: 'Portfolio Dividend Tracker',
     origin: 'NL',
+    platforms: ['WEB'],
     pricingPerYear: '€60',
     slogan: 'Manage all your portfolios',
     url: 'https://portfoliodividendtracker.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'portfolio-visualizer',
@@ -1265,6 +1270,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.portfoliovisualizer.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     isArchived: true,
     key: 'portfoloo',
@@ -1274,6 +1280,7 @@ export const personalFinanceTools: Product[] = [
       'Free Stock Portfolio Tracker with unlimited portfolio and stocks for DIY investors'
   },
   {
+    categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1286,55 +1293,66 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.portseido.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
     key: 'projectionlab',
     name: 'ProjectionLab',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$108',
     slogan: 'Build Financial Plans You Love.',
     url: 'https://projectionlab.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2022,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'prostocktracker',
     name: 'Pro Stock Tracker',
     origin: 'GB',
+    platforms: ['WEB'],
     pricingPerYear: '$60',
     slogan: 'The stock portfolio tracker built for long-term investors',
     url: 'https://prostocktracker.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasSelfHostingAbility: false,
     key: 'quantive',
     name: 'Quantive',
+    platforms: ['WEB'],
     slogan: 'See your financial life clearly',
     url: 'https://usequantive.app'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'rallies',
     languages: ['English'],
     name: 'Rallies',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$99.99',
     slogan:
       'Your entire financial life in one app, monitored continuously by agents',
     url: 'https://rallies.ai'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2015,
     hasSelfHostingAbility: false,
     key: 'rocket-money',
     name: 'Rocket Money',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Track your net worth',
     url: 'https://www.rocketmoney.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2019,
     hasSelfHostingAbility: false,
     isArchived: true,
@@ -1345,37 +1363,44 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Unified platform for financial research and portfolio tracking'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2004,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'seeking-alpha',
     name: 'Seeking Alpha',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$239',
     slogan: 'Stock Market Analysis & Tools for Investors',
     url: 'https://seekingalpha.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2022,
     key: 'segmio',
     name: 'Segmio',
     origin: 'RO',
-    slogan: 'Wealth Management and Net Worth Tracking',
+    platforms: ['WEB'],
+    slogan: 'Track your net worth. Project every possible future.',
     url: 'https://www.segmio.com'
   },
   {
+    categories: ['STOCK_TRACKING', 'TAX_REPORTING'],
     founded: 2007,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'sharesight',
     name: 'Sharesight',
     origin: 'NZ',
+    platforms: ['WEB'],
     pricingPerYear: '$135',
     regions: ['Global'],
     slogan: 'Stock Portfolio Tracker',
     url: 'https://www.sharesight.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     isArchived: true,
     key: 'sharesmaster',
@@ -1384,42 +1409,50 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Free Stock Portfolio Tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'simple-portfolio',
     name: 'Simple Portfolio',
     origin: 'CZ',
+    platforms: ['WEB'],
     pricingPerYear: '€80',
     slogan: 'Stock Portfolio Tracker',
     url: 'https://simpleportfolio.app'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2020,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'simplifi',
     name: 'Simplifi by Quicken',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     url: 'https://www.quicken.com/products/simplifi'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2014,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'simply-wallstreet',
     name: 'Stock Portfolio Tracker & Visualizer by Simply Wall St',
     origin: 'AU',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$120',
     slogan: 'Smart portfolio tracker for informed investors',
     url: 'https://simplywall.st'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'snowball-analytics',
     name: 'Snowball Analytics',
     origin: 'FR',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker',
     url: 'https://snowball-analytics.com'
