@@ -3,6 +3,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -568,18 +569,15 @@ export class ActivitiesService {
       { date: 'asc' }
     ];
 
-    const where: Prisma.OrderWhereInput = { userId };
+    const andConditions: Prisma.OrderWhereInput[] = [];
+    const where: Prisma.OrderWhereInput = { AND: andConditions, userId };
 
-    if (endDate || startDate) {
-      where.AND = [];
+    if (endDate) {
+      andConditions.push({ date: { lte: endDate } });
+    }
 
-      if (endDate) {
-        where.AND.push({ date: { lte: endDate } });
-      }
-
-      if (startDate) {
-        where.AND.push({ date: { gt: startDate } });
-      }
+    if (startDate) {
+      andConditions.push({ date: { gt: startDate } });
     }
 
     const {
@@ -682,13 +680,30 @@ export class ActivitiesService {
     }
 
     if (filtersByTag.length > 0) {
-      where.tags = {
-        some: {
-          OR: filtersByTag.map(({ id }) => {
-            return { id };
-          })
-        }
-      };
+      andConditions.push({
+        OR: [
+          {
+            tags: {
+              some: {
+                OR: filtersByTag.map(({ id }) => {
+                  return { id };
+                })
+              }
+            }
+          },
+          {
+            account: {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return { tagId: id };
+                  })
+                }
+              }
+            }
+          }
+        ]
+      });
     }
 
     if (sortColumn) {
@@ -700,13 +715,9 @@ export class ActivitiesService {
     }
 
     if (withExcludedAccountsAndActivities === false) {
-      where.OR = [
-        { account: null },
-        { account: { NOT: { isExcluded: true } } }
-      ];
+      where.OR = [{ account: null }, { account: WHERE_ACCOUNT_NOT_EXCLUDED }];
 
       where.tags = {
-        ...where.tags,
         none: {
           id: TAG_ID_EXCLUDE_FROM_ANALYSIS
         }
@@ -721,7 +732,12 @@ export class ActivitiesService {
         include: {
           account: {
             include: {
-              platform: true
+              platform: true,
+              tags: {
+                include: {
+                  tag: true
+                }
+              }
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -732,6 +748,16 @@ export class ActivitiesService {
       }),
       this.prismaService.order.count({ where })
     ]);
+
+    for (const order of orders) {
+      if (order.account) {
+        order.account.tags = (
+          order.account.tags as unknown as { tag: Tag }[]
+        ).map(({ tag }) => {
+          return tag;
+        });
+      }
+    }
 
     const assetProfileIdentifiers = uniqBy(
       orders.map(({ SymbolProfile }) => {

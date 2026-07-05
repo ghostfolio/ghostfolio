@@ -2,6 +2,7 @@ import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -38,4 +39,8 @@ export class CreateAccountDto {
   @IsString()
   @ValidateIf((_object, value) => value !== null)
   platformId: string | null;
+
+  @IsArray()
+  @IsOptional()
+  tags?: string[];
 }

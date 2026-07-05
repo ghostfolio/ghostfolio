@@ -8,6 +8,7 @@ import { UserSettings } from '../user-settings.interface';
 export interface ExportResponse {
   accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
     balances: AccountBalance[];
+    tags?: string[];
   })[];
   activities: (Omit<
     Order,

@@ -96,7 +96,8 @@ export class ExportService {
           isExcluded,
           name,
           platform,
-          platformId
+          platformId,
+          tags
         }) => {
           if (platformId) {
             platformsMap[platformId] = platform;
@@ -112,7 +113,10 @@ export class ExportService {
             id,
             isExcluded,
             name,
-            platformId
+            platformId,
+            tags: tags.map(({ id: tagId }) => {
+              return tagId;
+            })
           };
         }
       );
@@ -151,11 +155,14 @@ export class ExportService {
       .filter(({ id, isUsed }) => {
         return (
           isUsed &&
-          activities.some((activity) => {
-            return activity.tags.some(({ id: tagId }) => {
-              return tagId === id;
-            });
-          })
+          (accounts.some(({ tags: tagIds }) => {
+            return tagIds.includes(id);
+          }) ||
+            activities.some((activity) => {
+              return activity.tags.some(({ id: tagId }) => {
+                return tagId === id;
+              });
+            }))
         );
       })
       .map(({ id, name }) => {

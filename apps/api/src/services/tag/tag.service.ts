@@ -52,6 +52,11 @@ export class TagService {
       include: {
         _count: {
           select: {
+            accounts: {
+              where: {
+                userId
+              }
+            },
             activities: {
               where: {
                 userId
@@ -80,7 +85,7 @@ export class TagService {
         id,
         name,
         userId,
-        isUsed: _count.activities > 0
+        isUsed: _count.accounts > 0 || _count.activities > 0
       }))
       .sort((a, b) => {
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());

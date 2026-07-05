@@ -1,5 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
@@ -13,7 +14,8 @@ import {
   Order,
   Platform,
   Prisma,
-  SymbolProfile
+  SymbolProfile,
+  Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
@@ -66,6 +68,7 @@ export class AccountService {
       activities?: (Order & { SymbolProfile?: SymbolProfile })[];
       balances?: AccountBalance[];
       platform?: Platform;
+      tags?: Tag[];
     })[]
   > {
     const { include = {}, skip, take, cursor, where, orderBy } = params;
@@ -75,6 +78,12 @@ export class AccountService {
     include.balances = {
       orderBy: { date: 'desc' },
       ...(isBalancesIncluded ? {} : { take: 1 })
+    };
+
+    include.tags = {
+      include: {
+        tag: true
+      }
     };
 
     const accounts = await this.prismaService.account.findMany({
@@ -87,22 +96,42 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      account = { ...account, balance: account.balances[0]?.value ?? 0 };
+      const result = {
+        ...account,
+        balance: account.balances[0]?.value ?? 0,
+        tags: (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
+          return tag;
+        })
+      };
 
       if (!isBalancesIncluded) {
-        delete account.balances;
+        delete result.balances;
       }
 
-      return account;
+      return result;
     });
   }
 
   public async createAccount(
-    data: Prisma.AccountCreateInput,
+    data: Prisma.AccountCreateInput & { tags?: { id: string }[] },
     aUserId: string
   ): Promise<Account> {
+    const tags = data.tags;
+    delete data.tags;
+
     const account = await this.prismaService.account.create({
-      data
+      data: {
+        ...data,
+        tags: tags
+          ? {
+              create: tags.map(({ id: tagId }) => {
+                return {
+                  tag: { connect: { id: tagId } }
+                };
+              })
+            }
+          : undefined
+      }
     });
 
     await this.accountBalanceService.createOrUpdateAccountBalance({
@@ -184,7 +213,7 @@ export class AccountService {
     };
 
     if (withExcludedAccounts === false) {
-      where.isExcluded = false;
+      where.AND = [WHERE_ACCOUNT_NOT_EXCLUDED];
     }
 
     const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
@@ -220,11 +249,14 @@ export class AccountService {
   public async updateAccount(
     params: {
       where: Prisma.AccountWhereUniqueInput;
-      data: Prisma.AccountUpdateInput;
+      data: Prisma.AccountUpdateInput & { tags?: { id: string }[] };
     },
     aUserId: string
   ): Promise<Account> {
     const { data, where } = params;
+
+    const tags = data.tags;
+    delete data.tags;
 
     await this.accountBalanceService.createOrUpdateAccountBalance({
       accountId: data.id as string,
@@ -234,7 +266,19 @@ export class AccountService {
     });
 
     const account = await this.prismaService.account.update({
-      data,
+      data: {
+        ...data,
+        tags: tags
+          ? {
+              create: tags.map(({ id: tagId }) => {
+                return {
+                  tag: { connect: { id: tagId } }
+                };
+              }),
+              deleteMany: {}
+            }
+          : undefined
+      },
       where
     });
 

@@ -164,6 +164,9 @@ export class AccountController {
         {
           ...data,
           platform: { connect: { id: platformId } },
+          tags: data.tags?.map((id) => {
+            return { id };
+          }),
           user: { connect: { id: this.request.user.id } }
         },
         this.request.user.id
@@ -174,6 +177,9 @@ export class AccountController {
       return this.accountService.createAccount(
         {
           ...data,
+          tags: data.tags?.map((id) => {
+            return { id };
+          }),
           user: { connect: { id: this.request.user.id } }
         },
         this.request.user.id
@@ -262,6 +268,9 @@ export class AccountController {
           data: {
             ...data,
             platform: { connect: { id: platformId } },
+            tags: data.tags?.map((id) => {
+              return { id };
+            }),
             user: { connect: { id: this.request.user.id } }
           },
           where: {
@@ -284,6 +293,9 @@ export class AccountController {
             platform: originalAccount.platformId
               ? { disconnect: true }
               : undefined,
+            tags: data.tags?.map((id) => {
+              return { id };
+            }),
             user: { connect: { id: this.request.user.id } }
           },
           where: {

@@ -194,19 +194,65 @@ export class ImportService {
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
 
-    if (!isDryRun && accountsWithBalancesDto?.length) {
-      const [existingAccounts, existingPlatforms] = await Promise.all([
-        this.accountService.accounts({
-          where: {
-            id: {
-              in: accountsWithBalancesDto.map(({ id }) => {
-                return id;
-              })
+    if (tagsDto?.length) {
+      const existingTagsOfUser = await this.tagService.getTagsForUser(user.id);
+
+      const canCreateOwnTag = hasPermission(
+        user.permissions,
+        permissions.createOwnTag
+      );
+
+      for (const tag of tagsDto) {
+        const existingTagOfUser = existingTagsOfUser.find(({ id }) => {
+          return id === tag.id;
+        });
+
+        if (!existingTagOfUser || existingTagOfUser.userId !== null) {
+          if (!canCreateOwnTag) {
+            throw new Error(
+              `Insufficient permissions to create custom tag ("${tag.name}")`
+            );
+          }
+
+          if (!isDryRun) {
+            const existingTag = await this.tagService.getTag({ id: tag.id });
+            let oldTagId: string;
+
+            if (existingTag) {
+              oldTagId = tag.id;
+              delete tag.id;
+            }
+
+            const tagObject: Prisma.TagCreateInput = {
+              ...tag,
+              user: { connect: { id: user.id } }
+            };
+
+            const newTag = await this.tagService.createTag(tagObject);
+
+            if (existingTag && oldTagId) {
+              tagIdMapping[oldTagId] = newTag.id;
             }
           }
-        }),
-        this.platformService.getPlatforms()
-      ]);
+        }
+      }
+    }
+
+    if (!isDryRun && accountsWithBalancesDto?.length) {
+      const [existingAccounts, existingPlatforms, existingTags] =
+        await Promise.all([
+          this.accountService.accounts({
+            where: {
+              id: {
+                in: accountsWithBalancesDto.map(({ id }) => {
+                  return id;
+                })
+              }
+            }
+          }),
+          this.platformService.getPlatforms(),
+          this.tagService.getTagsForUser(user.id)
+        ]);
 
       for (const accountWithBalances of accountsWithBalancesDto) {
         // Check if there is any existing account with the same ID
@@ -231,11 +277,26 @@ export class ImportService {
             delete account.id;
           }
 
-          let accountObject: Prisma.AccountCreateInput = {
+          const tagIds = (account.tags ?? [])
+            .map((tagId) => {
+              return tagIdMapping[tagId] ?? tagId;
+            })
+            .filter((tagId) => {
+              return existingTags.some(({ id }) => {
+                return id === tagId;
+              });
+            });
+
+          let accountObject: Prisma.AccountCreateInput & {
+            tags?: { id: string }[];
+          } = {
             ...account,
             balances: {
               create: accountWithBalances.balances ?? []
             },
+            tags: tagIds.map((id) => {
+              return { id };
+            }),
             user: { connect: { id: user.id } }
           };
 
@@ -317,50 +378,6 @@ export class ImportService {
         );
 
         await this.marketDataService.updateMany({ data: marketDataObjects });
-      }
-    }
-
-    if (tagsDto?.length) {
-      const existingTagsOfUser = await this.tagService.getTagsForUser(user.id);
-
-      const canCreateOwnTag = hasPermission(
-        user.permissions,
-        permissions.createOwnTag
-      );
-
-      for (const tag of tagsDto) {
-        const existingTagOfUser = existingTagsOfUser.find(({ id }) => {
-          return id === tag.id;
-        });
-
-        if (!existingTagOfUser || existingTagOfUser.userId !== null) {
-          if (!canCreateOwnTag) {
-            throw new Error(
-              `Insufficient permissions to create custom tag ("${tag.name}")`
-            );
-          }
-
-          if (!isDryRun) {
-            const existingTag = await this.tagService.getTag({ id: tag.id });
-            let oldTagId: string;
-
-            if (existingTag) {
-              oldTagId = tag.id;
-              delete tag.id;
-            }
-
-            const tagObject: Prisma.TagCreateInput = {
-              ...tag,
-              user: { connect: { id: user.id } }
-            };
-
-            const newTag = await this.tagService.createTag(tagObject);
-
-            if (existingTag && oldTagId) {
-              tagIdMapping[oldTagId] = newTag.id;
-            }
-          }
-        }
       }
     }
 
