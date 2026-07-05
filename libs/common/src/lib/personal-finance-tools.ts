@@ -1464,22 +1464,27 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Manage your money anytime, anywhere.'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2019,
     hasSelfHostingAbility: false,
     key: 'stock-events',
     name: 'Stock Events',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Track all your Investments',
     url: 'https://stockevents.app'
   },
   {
+    categories: ['STOCK_TRACKING'],
     key: 'stockle',
     name: 'Stockle',
     origin: 'FI',
+    platforms: ['WEB'],
     slogan: 'Supercharge your investments tracking experience',
     url: 'https://stockle.app'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2008,
     isArchived: true,
     key: 'stockmarketeye',
@@ -1489,43 +1494,51 @@ export const personalFinanceTools: Product[] = [
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2011,
     hasFreePlan: true,
     key: 'stock-rover',
     languages: ['English'],
     name: 'Stock Rover',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$79.99',
     slogan: 'Investment Research and Portfolio Management',
     url: 'https://www.stockrover.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'stonksfolio',
     languages: ['English'],
     name: 'Stonksfolio',
     origin: 'BG',
+    platforms: ['WEB'],
     pricingPerYear: '€49.90',
     slogan: 'Visualize all of your portfolios',
     url: 'https://stonksfolio.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'sumio',
     name: 'Sumio',
     origin: 'CZ',
+    platforms: ['ANDROID', 'IOS'],
     pricingPerYear: '$20',
-    slogan: 'Sum up and build your wealth.',
+    slogan: 'AI-Powered Portfolio & Net Worth Tracker',
     url: 'https://www.sumio.app'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2016,
     hasFreePlan: false,
     key: 'tiller',
     name: 'Tiller',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$79',
     slogan:
       'Your financial life in a spreadsheet, automatically updated each day',
@@ -1538,11 +1551,13 @@ export const personalFinanceTools: Product[] = [
     key: 'tradervue',
     name: 'Tradervue',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$360',
     slogan: 'The Trading Journal to Improve Your Trading Performance',
     url: 'https://www.tradervue.com'
   },
   {
+    categories: ['STOCK_TRACKING', 'TAX_REPORTING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'trefolio',
@@ -1557,11 +1572,13 @@ export const personalFinanceTools: Product[] = [
       'Português'
     ],
     name: 'trefolio',
+    platforms: ['WEB'],
     pricingPerYear: '€60',
     slogan: 'The Extra Leaf for Your Portfolio',
     url: 'https://trefolio.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasSelfHostingAbility: false,
     hasFreePlan: true,
@@ -1574,54 +1591,64 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2025,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'turbobulls',
     name: 'Turbobulls',
     origin: 'RO',
+    platforms: ['WEB'],
     pricingPerYear: '€39.99',
     slogan: 'Your complete financial dashboard. Actually private.',
     url: 'https://www.turbobulls.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'utluna',
     languages: ['Deutsch', 'English', 'Français'],
     name: 'Utluna',
     origin: 'CH',
+    platforms: ['WEB'],
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     url: 'https://www.utluna.com',
     useAnonymously: true
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'valuedge',
     name: 'ValuEdge',
+    platforms: ['WEB'],
     pricingPerYear: '€78',
     slogan: 'Track your real portfolio. Not a watchlist.',
     url: 'https://valuedge.app'
   },
   {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2020,
     hasFreePlan: true,
     key: 'vyzer',
     name: 'Vyzer',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$348',
     slogan: 'Virtual Family Office for Smart Wealth Management',
     url: 'https://vyzer.co'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2020,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'walletguide',
     name: 'Walletguide',
     origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '€90',
     slogan: 'Personal finance reimagined with AI',
     url: 'https://walletguide.com'
@@ -1638,36 +1665,43 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Make Smarter Investments'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'wallstreetzen',
     name: 'WallStreetZen',
     origin: 'HK',
+    platforms: ['WEB'],
     pricingPerYear: '$234',
     slogan: 'Stock market analysis for the serious part-time investor',
     url: 'https://www.wallstreetzen.com'
   },
   {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2015,
     hasSelfHostingAbility: false,
     key: 'wealtharc',
     name: 'WealthArc',
     origin: 'CH',
+    platforms: ['WEB'],
     slogan: 'Manage wealth data more efficiently',
     url: 'https://www.wealtharc.com'
   },
   {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2019,
     hasFreePlan: false,
     key: 'wealthbrain',
     languages: ['English'],
     name: 'Wealthbrain',
     origin: 'AE',
+    platforms: ['WEB'],
     slogan: 'Portfolio Management System',
     url: 'https://wealthbrain.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2024,
     hasSelfHostingAbility: true,
     isArchived: true,
@@ -1676,7 +1710,8 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Wealthfolio',
     origin: 'CA',
-    slogan: 'Desktop Investment Tracker',
+    platforms: ['IOS', 'LINUX', 'MACOS', 'WEB', 'WINDOWS'],
+    slogan: 'Open-Source, Offline & Private Portfolio Tracker',
     url: 'https://wealthfolio.app'
   },
   {
