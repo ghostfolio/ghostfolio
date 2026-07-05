@@ -74,6 +74,7 @@ export class PortfolioPageComponent {
           ];
           this.user = state.user;
         }
+
         this.changeDetectorRef.markForCheck();
       });
 
