@@ -27,6 +27,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -82,7 +83,8 @@ import ms, { StringValue } from 'ms';
   ],
   selector: 'gf-admin-overview',
   styleUrls: ['./admin-overview.scss'],
-  templateUrl: './admin-overview.html'
+  templateUrl: './admin-overview.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GfAdminOverviewComponent implements OnInit {
   protected activitiesCount: number;
@@ -140,6 +142,8 @@ export class GfAdminOverviewComponent implements OnInit {
             permissions.toggleReadOnlyMode
           );
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({
