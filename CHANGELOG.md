@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.21.0 - 2026-07-05
 
 ### Added
 
+- Added support for tags in the account (experimental)
 - Exposed the `PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_REMOVE_ON_FAIL` environment variable to control the removal of failed jobs in the portfolio snapshot computation queue
 
 ### Changed
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the prompt dialog component
 - Set the change detection strategy to `OnPush` in the overview of the admin control panel
 - Set the change detection strategy to `OnPush` in the portfolio page
+- Deprecated the `isExcluded` attribute of the account in favor of the _Exclude from Analysis_ tag
 - Improved the language localization in the users table of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `envalid` from version `8.1.1` to `8.2.0`
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the custom tags of the user in the import functionality
 - Fixed the creation of the _Stripe_ checkout session for languages not supported by _Stripe_ (`ca` and `uk`)
 - Fixed the error handling in the endpoint to create a _Stripe_ checkout session
 

@@ -40,7 +40,8 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix
+  ghostfolioScraperApiSymbolPrefix,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
 import {
   AssetProfileIdentifier,
@@ -417,6 +418,18 @@ export function interpolate(template: string, context: any) {
       context
     );
   });
+}
+
+export function isAccountExcluded(account: {
+  isExcluded: boolean;
+  tags?: { id: string }[];
+}) {
+  return (
+    account.isExcluded ||
+    account.tags?.some(({ id }) => {
+      return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    }) === true
+  );
 }
 
 export function isCurrency(aCurrency: string) {

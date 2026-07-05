@@ -33,10 +33,12 @@ model Account {
   createdAt  DateTime         @default(now())
   currency   String?
   id         String           @default(uuid())
+  /// @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
   isExcluded Boolean          @default(false)
   name       String?
   platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
+  tags       TagsOnAccounts[]
   updatedAt  DateTime         @updatedAt
   user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String
@@ -251,14 +253,28 @@ model Subscription {
 }
 
 model Tag {
+  accounts   TagsOnAccounts[]
   activities Order[]
-  id         String  @id @default(uuid())
+  id         String           @id @default(uuid())
   name       String
-  user       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  user       User?            @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String?
 
   @@unique([name, userId])
   @@index([name])
+}
+
+model TagsOnAccounts {
+  account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+  accountId String
+  createdAt DateTime @default(now())
+  tag       Tag      @relation(fields: [tagId], onDelete: Cascade, references: [id])
+  tagId     String
+  updatedAt DateTime @updatedAt
+  userId    String
+
+  @@id([accountId, tagId, userId])
+  @@index([tagId])
 }
 
 model User {
