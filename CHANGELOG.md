@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for stock splits
+- Added support for stock splits (experimental)
 
 ## 3.21.0 - 2026-07-05
 
