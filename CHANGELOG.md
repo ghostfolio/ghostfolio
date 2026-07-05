@@ -13,9 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+<<<<<<< HEAD
 - Set the change detection strategy to OnPush in the X-ray page
 - Retained the existing `markForCheck()` calls for user and portfolio report subscriptions
 - Reduced unnecessary change detection cycles in the X-ray portfolio view
+=======
+- Set the change detection strategy to `OnPush` in the alert dialog component
+- Set the change detection strategy to `OnPush` in the confirmation dialog component
+- Set the change detection strategy to `OnPush` in the prompt dialog component
+>>>>>>> 3ea21707b0bcbae604d9260858b5e1b7ccbf10ef
 - Upgraded `stripe` from version `21.0.1` to `22.2.3`
 
 ### Fixed
