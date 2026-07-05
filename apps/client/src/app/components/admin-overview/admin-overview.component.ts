@@ -65,6 +65,7 @@ import {
 import ms, { StringValue } from 'ms';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClipboardModule,
     CommonModule,
@@ -84,7 +85,6 @@ import ms, { StringValue } from 'ms';
   selector: 'gf-admin-overview',
   styleUrls: ['./admin-overview.scss'],
   templateUrl: './admin-overview.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GfAdminOverviewComponent implements OnInit {
   protected activitiesCount: number;
