@@ -206,9 +206,15 @@ export class GfCreateOrUpdateAccountDialogComponent {
       isExcluded: this.accountForm.get('isExcluded')?.value,
       name: this.accountForm.get('name')?.value,
       platformId: this.accountForm.get('platformId')?.value?.id || null,
-      tags: this.accountForm.get('tags')?.value?.map(({ id }: Tag) => {
-        return id;
-      })
+      tags: this.accountForm
+        .get('tags')
+        ?.value?.filter(({ id }: Tag) => {
+          // Skip tags which have not been created yet
+          return !!id;
+        })
+        .map(({ id }: Tag) => {
+          return id;
+        })
     };
 
     try {

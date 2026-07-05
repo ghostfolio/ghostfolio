@@ -570,7 +570,7 @@ export class ActivitiesService {
     ];
 
     const andConditions: Prisma.OrderWhereInput[] = [];
-    const where: Prisma.OrderWhereInput = { AND: andConditions, userId };
+    const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
 
     if (endDate) {
       andConditions.push({ date: { lte: endDate } });

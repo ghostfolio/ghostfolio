@@ -3,7 +3,6 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { isAccountExcluded } from '@ghostfolio/api/helper/account.helper';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -42,6 +41,7 @@ import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
   getSum,
+  isAccountExcluded,
   parseDate
 } from '@ghostfolio/common/helper';
 import {
@@ -170,7 +170,8 @@ export class PortfolioService {
         where,
         include: {
           activities: { include: { SymbolProfile: true } },
-          platform: true
+          platform: true,
+          tags: true
         },
         orderBy: { name: 'asc' }
       }),
@@ -2131,7 +2132,7 @@ export class PortfolioService {
       currentAccounts = await this.accountService.getAccounts(userId);
     } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
       currentAccounts = await this.accountService.accounts({
-        include: { platform: true },
+        include: { platform: true, tags: true },
         where: { id: filters[0].id }
       });
     } else {
@@ -2148,7 +2149,7 @@ export class PortfolioService {
       );
 
       currentAccounts = await this.accountService.accounts({
-        include: { platform: true },
+        include: { platform: true, tags: true },
         where: { id: { in: accountIds } }
       });
     }

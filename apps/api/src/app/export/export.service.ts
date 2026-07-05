@@ -72,7 +72,8 @@ export class ExportService {
         where,
         include: {
           balances: true,
-          platform: true
+          platform: true,
+          tags: true
         },
         orderBy: {
           name: 'asc'

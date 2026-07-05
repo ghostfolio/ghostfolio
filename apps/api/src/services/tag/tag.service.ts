@@ -92,20 +92,21 @@ export class TagService {
       });
   }
 
-  public async getTagsWithActivityCount() {
-    const tagsWithOrderCount = await this.prismaService.tag.findMany({
+  public async getTagsWithAccountAndActivityCount() {
+    const tagsWithAccountAndOrderCount = await this.prismaService.tag.findMany({
       include: {
         _count: {
-          select: { activities: true }
+          select: { accounts: true, activities: true }
         }
       }
     });
 
-    return tagsWithOrderCount.map(({ _count, id, name, userId }) => {
+    return tagsWithAccountAndOrderCount.map(({ _count, id, name, userId }) => {
       return {
         id,
         name,
         userId,
+        accountCount: _count.accounts,
         activityCount: _count.activities
       };
     });

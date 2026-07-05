@@ -62,6 +62,7 @@ export class GfAdminTagComponent implements OnInit {
   protected readonly displayedColumns = [
     'name',
     'userId',
+    'accounts',
     'activities',
     'actions'
   ];

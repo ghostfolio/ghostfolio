@@ -10,11 +10,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
-import {
-  CreateAssetProfileDto,
-  CreateAccountDto,
-  CreateOrderDto
-} from '@ghostfolio/common/dtos';
+import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
   parseDate
@@ -194,9 +190,12 @@ export class ImportService {
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
 
-    if (tagsDto?.length) {
-      const existingTagsOfUser = await this.tagService.getTagsForUser(user.id);
+    const existingTagsOfUser =
+      tagsDto?.length || (!isDryRun && accountsWithBalancesDto?.length)
+        ? await this.tagService.getTagsForUser(user.id)
+        : [];
 
+    if (tagsDto?.length) {
       const canCreateOwnTag = hasPermission(
         user.permissions,
         permissions.createOwnTag
@@ -207,7 +206,7 @@ export class ImportService {
           return id === tag.id;
         });
 
-        if (!existingTagOfUser || existingTagOfUser.userId !== null) {
+        if (!existingTagOfUser) {
           if (!canCreateOwnTag) {
             throw new Error(
               `Insufficient permissions to create custom tag ("${tag.name}")`
@@ -233,26 +232,37 @@ export class ImportService {
             if (existingTag && oldTagId) {
               tagIdMapping[oldTagId] = newTag.id;
             }
+
+            existingTagsOfUser.push({
+              id: newTag.id,
+              isUsed: false,
+              name: newTag.name,
+              userId: newTag.userId
+            });
           }
         }
       }
     }
 
     if (!isDryRun && accountsWithBalancesDto?.length) {
-      const [existingAccounts, existingPlatforms, existingTags] =
-        await Promise.all([
-          this.accountService.accounts({
-            where: {
-              id: {
-                in: accountsWithBalancesDto.map(({ id }) => {
-                  return id;
-                })
-              }
+      const [existingAccounts, existingPlatforms] = await Promise.all([
+        this.accountService.accounts({
+          where: {
+            id: {
+              in: accountsWithBalancesDto.map(({ id }) => {
+                return id;
+              })
             }
-          }),
-          this.platformService.getPlatforms(),
-          this.tagService.getTagsForUser(user.id)
-        ]);
+          }
+        }),
+        this.platformService.getPlatforms()
+      ]);
+
+      const existingTagIds = new Set(
+        existingTagsOfUser.map(({ id }) => {
+          return id;
+        })
+      );
 
       for (const accountWithBalances of accountsWithBalancesDto) {
         // Check if there is any existing account with the same ID
@@ -262,10 +272,7 @@ export class ImportService {
 
         // If there is no account or if the account belongs to a different user then create a new account
         if (!accountWithSameId || accountWithSameId.userId !== user.id) {
-          const account: CreateAccountDto = omit(
-            accountWithBalances,
-            'balances'
-          );
+          const account = omit(accountWithBalances, ['balances', 'tags']);
 
           let oldAccountId: string;
           const platformId = account.platformId;
@@ -277,26 +284,19 @@ export class ImportService {
             delete account.id;
           }
 
-          const tagIds = (account.tags ?? [])
+          const tagIds = (accountWithBalances.tags ?? [])
             .map((tagId) => {
               return tagIdMapping[tagId] ?? tagId;
             })
             .filter((tagId) => {
-              return existingTags.some(({ id }) => {
-                return id === tagId;
-              });
+              return existingTagIds.has(tagId);
             });
 
-          let accountObject: Prisma.AccountCreateInput & {
-            tags?: { id: string }[];
-          } = {
+          let accountObject: Prisma.AccountCreateInput = {
             ...account,
             balances: {
               create: accountWithBalances.balances ?? []
             },
-            tags: tagIds.map((id) => {
-              return { id };
-            }),
             user: { connect: { id: user.id } }
           };
 
@@ -313,7 +313,8 @@ export class ImportService {
 
           const newAccount = await this.accountService.createAccount(
             accountObject,
-            user.id
+            user.id,
+            tagIds
           );
 
           // Store the new to old account ID mappings for updating activities
