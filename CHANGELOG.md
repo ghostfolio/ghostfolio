@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the change detection strategy to `OnPush` in the activities page
 - Set the change detection strategy to `OnPush` in the alert dialog component
 - Set the change detection strategy to `OnPush` in the confirmation dialog component
 - Set the change detection strategy to `OnPush` in the prompt dialog component
