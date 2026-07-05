@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## Unreleased - 2026-07-05
 
 ### Added
 
@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the change detection strategy to OnPush in the X-ray page
+- Retained the existing `markForCheck()` calls for user and portfolio report subscriptions
+- Reduced unnecessary change detection cycles in the X-ray portfolio view
 - Upgraded `stripe` from version `21.0.1` to `22.2.3`
 
 ### Fixed
