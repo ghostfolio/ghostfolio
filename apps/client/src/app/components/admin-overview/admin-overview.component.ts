@@ -84,7 +84,7 @@ import ms, { StringValue } from 'ms';
   ],
   selector: 'gf-admin-overview',
   styleUrls: ['./admin-overview.scss'],
-  templateUrl: './admin-overview.html',
+  templateUrl: './admin-overview.html'
 })
 export class GfAdminOverviewComponent implements OnInit {
   protected activitiesCount: number;
