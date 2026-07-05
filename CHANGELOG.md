@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the prompt dialog component
 - Set the change detection strategy to `OnPush` in the overview of the admin control panel
 - Set the change detection strategy to `OnPush` in the portfolio page
+- Deprecated the `isExcluded` attribute of the account in favor of the _Exclude from Analysis_ tag
 - Improved the language localization in the users table of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `envalid` from version `8.1.1` to `8.2.0`
