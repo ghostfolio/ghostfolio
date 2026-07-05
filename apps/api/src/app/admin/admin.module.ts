@@ -1,4 +1,5 @@
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
+import { AssetProfileSplitModule } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -18,6 +19,7 @@ import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
+    AssetProfileSplitModule,
     BenchmarkModule,
     ConfigurationModule,
     DataGatheringQueueModule,

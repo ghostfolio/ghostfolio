@@ -553,6 +553,10 @@ export class DataService {
             item.date = parseISO(item.date);
           }
 
+          for (const item of data.splits ?? []) {
+            item.date = parseISO(item.date);
+          }
+
           return data;
         })
       );

@@ -4,7 +4,9 @@ import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
+import { applySplitAdjustments } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -54,6 +56,7 @@ export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
@@ -861,6 +864,25 @@ export class ActivitiesService {
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
+    });
+
+    const splits = await this.assetProfileSplitService.getSplits({
+      assetProfileIdentifiers: uniqBy(
+        activities.activities.map(({ SymbolProfile }) => {
+          return {
+            dataSource: SymbolProfile.dataSource,
+            symbol: SymbolProfile.symbol
+          };
+        }),
+        ({ dataSource, symbol }) => {
+          return getAssetProfileIdentifier({ dataSource, symbol });
+        }
+      )
+    });
+
+    activities.activities = applySplitAdjustments({
+      splits,
+      activities: activities.activities
     });
 
     if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {

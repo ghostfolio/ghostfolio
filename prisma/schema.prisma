@@ -104,6 +104,20 @@ model AssetProfileResolution {
   @@unique([dataSourceOrigin, symbolOrigin])
 }
 
+model AssetProfileSplit {
+  createdAt  DateTime   @default(now())
+  dataSource DataSource
+  date       DateTime
+  factor     Float
+  id         String     @id @default(uuid())
+  symbol     String
+  updatedAt  DateTime   @updatedAt
+
+  @@unique([dataSource, date, symbol])
+  @@index([dataSource, symbol])
+  @@index([date])
+}
+
 model AuthDevice {
   createdAt           DateTime @default(now())
   credentialId        Bytes

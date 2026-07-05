@@ -489,6 +489,115 @@
           </div>
         </div>
       </mat-tab>
+      @if (user?.settings?.isExperimentalFeatures) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <ion-icon name="git-compare-outline" />
+            <div class="d-none d-sm-block ml-2" i18n>Splits</div>
+          </ng-template>
+          <div class="container mt-3 p-0">
+            <div class="no-gutters row w-100">
+              <div class="col-12">
+                <p class="text-muted" i18n>
+                  Activities dated before a split are adjusted at calculation
+                  time. After adding a split, gather the historical market data
+                  of this asset profile again.
+                </p>
+                @if (splits.length > 0) {
+                  <table class="gf-table mb-3 w-100">
+                    <thead>
+                      <tr class="mat-mdc-header-row">
+                        <th class="mat-mdc-header-cell px-1 py-2" i18n>Date</th>
+                        <th
+                          class="mat-mdc-header-cell px-1 py-2 text-right"
+                          i18n
+                        >
+                          Split Factor
+                        </th>
+                        <th class="mat-mdc-header-cell px-1 py-2"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (split of splits; track split.id) {
+                        <tr class="mat-mdc-row">
+                          <td class="mat-mdc-cell px-1 py-2">
+                            {{ split.date | date: defaultDateFormat }}
+                          </td>
+                          <td class="mat-mdc-cell px-1 py-2 text-right">
+                            {{ split.factor }}
+                          </td>
+                          <td class="mat-mdc-cell px-1 py-2 text-right">
+                            <button
+                              mat-icon-button
+                              type="button"
+                              [disabled]="!canEditAssetProfile"
+                              (click)="onDeleteSplit(split.id)"
+                            >
+                              <ion-icon name="trash-outline" />
+                            </button>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                }
+                <form
+                  class="align-items-center d-flex"
+                  [formGroup]="assetProfileSplitForm"
+                  (ngSubmit)="onAddSplit()"
+                >
+                  <mat-form-field
+                    appearance="outline"
+                    class="mr-3 without-hint"
+                  >
+                    <mat-label i18n>Date</mat-label>
+                    <input
+                      formControlName="date"
+                      matInput
+                      [matDatepicker]="dateOfSplit"
+                    />
+                    <mat-datepicker-toggle
+                      class="mr-2"
+                      matSuffix
+                      [for]="dateOfSplit"
+                    >
+                      <ion-icon
+                        class="text-muted"
+                        matDatepickerToggleIcon
+                        name="calendar-clear-outline"
+                      />
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #dateOfSplit />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mr-3">
+                    <mat-label i18n>Split Factor</mat-label>
+                    <input
+                      formControlName="factor"
+                      matInput
+                      step="any"
+                      type="number"
+                    />
+                    <mat-hint i18n
+                      >Shares after per 1 share before, e.g. 4 for a 4:1 split
+                      or 0.1 for a 1:10 reverse split</mat-hint
+                    >
+                  </mat-form-field>
+                  <button
+                    color="primary"
+                    mat-flat-button
+                    type="submit"
+                    [disabled]="
+                      !assetProfileSplitForm.valid || !canEditAssetProfile
+                    "
+                  >
+                    <ng-container i18n>Add</ng-container>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      }
       @if (assetProfile?.dataSource === 'MANUAL') {
         <mat-tab>
           <ng-template mat-tab-label>
