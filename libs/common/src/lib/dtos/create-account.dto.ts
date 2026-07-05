@@ -30,6 +30,9 @@ export class CreateAccountDto {
   @IsString()
   id?: string;
 
+  /**
+   * @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
+   */
   @IsBoolean()
   @IsOptional()
   isExcluded?: boolean;
