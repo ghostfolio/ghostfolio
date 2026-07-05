@@ -1575,7 +1575,7 @@
       </trans-unit>
       <trans-unit id="8643034887919513109" datatype="html">
         <source>Financial Planning</source>
-        <target state="new">Financial Planning</target>
+        <target state="translated">Finanzplanung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">108</context>
@@ -4703,7 +4703,7 @@
       </trans-unit>
       <trans-unit id="9167786874272926575" datatype="html">
         <source>Web</source>
-        <target state="new">Web</target>
+        <target state="translated">Web</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">120</context>
@@ -4775,7 +4775,7 @@
       </trans-unit>
       <trans-unit id="1806667489382256324" datatype="html">
         <source>Category</source>
-        <target state="new">Category</target>
+        <target state="translated">Kategorie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">77</context>
@@ -5637,7 +5637,7 @@
       </trans-unit>
       <trans-unit id="2191562378582791940" datatype="html">
         <source>Stock Tracking</source>
-        <target state="new">Stock Tracking</target>
+        <target state="translated">Aktien-Tracking</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">111</context>
@@ -5717,7 +5717,7 @@
       </trans-unit>
       <trans-unit id="6075566839446502414" datatype="html">
         <source>Available on</source>
-        <target state="new">Available on</target>
+        <target state="translated">Verfügbar für</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">130</context>
@@ -7090,7 +7090,7 @@
       </trans-unit>
       <trans-unit id="6586833258036069278" datatype="html">
         <source>Tax Reporting</source>
-        <target state="new">Tax Reporting</target>
+        <target state="translated">Steuerreporting</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">112</context>
@@ -7338,7 +7338,7 @@
       </trans-unit>
       <trans-unit id="3527222903865200876" datatype="html">
         <source>Dividend Tracking</source>
-        <target state="new">Dividend Tracking</target>
+        <target state="translated">Dividenden-Tracking</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">105</context>
@@ -7398,7 +7398,7 @@
       </trans-unit>
       <trans-unit id="1550367033316836764" datatype="html">
         <source>Investment Research</source>
-        <target state="new">Investment Research</target>
+        <target state="translated">Investment Research</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">109</context>
@@ -7680,7 +7680,7 @@
       </trans-unit>
       <trans-unit id="4060547242431613838" datatype="html">
         <source>Net Worth Tracking</source>
-        <target state="new">Net Worth Tracking</target>
+        <target state="translated">Vermögens-Tracking</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">110</context>
@@ -8110,7 +8110,7 @@
       </trans-unit>
       <trans-unit id="3910789128199500333" datatype="html">
         <source>ETF Tracking</source>
-        <target state="new">ETF Tracking</target>
+        <target state="translated">ETF-Tracking</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">106</context>
