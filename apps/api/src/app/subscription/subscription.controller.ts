@@ -116,11 +116,11 @@ export class SubscriptionController {
 
   @Post('stripe/checkout-session')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public createStripeCheckoutSession(
+  public async createStripeCheckoutSession(
     @Body() { couponId, priceId }: { couponId?: string; priceId: string }
   ): Promise<CreateStripeCheckoutSessionResponse> {
     try {
-      return this.subscriptionService.createStripeCheckoutSession({
+      return await this.subscriptionService.createStripeCheckoutSession({
         couponId,
         priceId,
         user: this.request.user

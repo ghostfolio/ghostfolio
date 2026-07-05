@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Exposed the `PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_REMOVE_ON_FAIL` environment variable to control the removal of failed jobs in the portfolio snapshot computation queue
+
+### Changed
+
+- Set the change detection strategy to `OnPush` in the alert dialog component
+- Set the change detection strategy to `OnPush` in the confirmation dialog component
+- Set the change detection strategy to `OnPush` in the prompt dialog component
+- Set the change detection strategy to `OnPush` in the overview of the admin control panel
+- Upgraded `stripe` from version `21.0.1` to `22.2.3`
+
+### Fixed
+
+- Fixed the creation of the _Stripe_ checkout session for languages not supported by _Stripe_ (`ca` and `uk`)
+- Fixed the error handling in the endpoint to create a _Stripe_ checkout session
+
+## 3.20.0 - 2026-07-04
+
 ### Changed
 
 - Refactored the rounding logic in the holding detail dialog
@@ -19,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the parsing of the integer query parameter (`includeHistoricalData`) in the `GET api/v1/symbol/:dataSource/:symbol` endpoint
 - Harmonized the filter parsing using `groupBy` across various services
 - Improved the language localization by translating various tooltips across the application
+- Improved the language localization for German (`de`)
 - Improved the language localization for Ukrainian (`uk`)
 - Upgraded `yahoo-finance2` from version `3.14.3` to `3.15.4`
 

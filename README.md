@@ -378,10 +378,6 @@ If you like to support this project, get [**Ghostfolio Premium**](https://ghostf
   </a>
 </div>
 
-## Analytics
-
-![Alt](https://repobeats.axiom.co/api/embed/281a80b2d0c4af1162866c24c803f1f18e5ed60e.svg 'Repobeats analytics image')
-
 ## License
 
 © 2021 - 2026 [Ghostfolio](https://ghostfol.io)

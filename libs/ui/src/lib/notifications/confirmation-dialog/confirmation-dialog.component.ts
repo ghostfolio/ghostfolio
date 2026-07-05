@@ -1,12 +1,18 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
-import { Component, HostListener, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { ConfirmDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButtonModule, MatDialogModule],
   selector: 'gf-confirmation-dialog',
   styleUrls: ['./confirmation-dialog.scss'],
