@@ -8,10 +8,14 @@ export class PropertyKeyPipe implements PipeTransform<string, PropertyKey> {
   private readonly allowedKeys: Set<string>;
 
   public constructor() {
-    this.allowedKeys = new Set(
+    this.allowedKeys = new Set<string>(
       Object.entries(config)
-        .filter(([key]) => key.startsWith('PROPERTY_'))
-        .map(([, value]) => value as string)
+        .filter(([key]) => {
+          return key.startsWith('PROPERTY_');
+        })
+        .map(([, value]) => {
+          return value as string;
+        })
     );
   }
 

@@ -349,8 +349,8 @@ export class AdminService {
 
     if (value) {
       response = await this.propertyService.put({
-        value,
-        key
+        key,
+        value
       });
     } else {
       response = await this.propertyService.delete({
