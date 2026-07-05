@@ -27,6 +27,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -64,6 +65,7 @@ import {
 import ms, { StringValue } from 'ms';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClipboardModule,
     CommonModule,
@@ -140,6 +142,8 @@ export class GfAdminOverviewComponent implements OnInit {
             permissions.toggleReadOnlyMode
           );
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({
