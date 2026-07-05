@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the change detection strategy to `OnPush` in the alert dialog component
 - Set the change detection strategy to `OnPush` in the confirmation dialog component
+- Set the change detection strategy to `OnPush` in the FIRE page component
 - Set the change detection strategy to `OnPush` in the prompt dialog component
 - Set the change detection strategy to `OnPush` in the overview of the admin control panel
 - Set the change detection strategy to `OnPush` in the portfolio page
