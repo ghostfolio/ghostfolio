@@ -1715,6 +1715,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://wealthfolio.app'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2015,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1722,36 +1723,43 @@ export const personalFinanceTools: Product[] = [
     languages: ['English', 'Français'],
     name: 'Wealthica',
     origin: 'CA',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$50',
     slogan: 'See all your investments in one place',
     url: 'https://wealthica.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2018,
     hasFreePlan: true,
     key: 'wealthposition',
     name: 'WealthPosition',
+    platforms: ['WEB'],
     pricingPerYear: '$60',
     slogan: 'Personal Finance & Budgeting App',
     url: 'https://www.wealthposition.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2018,
     hasSelfHostingAbility: false,
     key: 'wealthy-tracker',
     languages: ['English'],
     name: 'Wealthy Tracker',
     origin: 'IN',
+    platforms: ['WEB'],
     slogan: 'One app to manage all your investments',
     url: 'https://www.wealthy.in/tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     key: 'whal',
     name: 'Whal',
     origin: 'US',
     slogan: 'Manage your investments in one place'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1765,23 +1773,27 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Connect. Share. Invest.'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2004,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'ynab',
     name: 'YNAB (You Need a Budget)',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$109',
     slogan: 'Change Your Relationship With Money',
     url: 'https://www.ynab.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'ziggma',
     name: 'Ziggma',
     origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$84',
     slogan: 'Your solution for investing success',
     url: 'https://ziggma.com'
