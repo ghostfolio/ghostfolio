@@ -481,6 +481,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.expersoft.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -506,17 +507,20 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.fina.money'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2023,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'finanzfluss-copilot',
     name: 'Finanzfluss Copilot',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€69.99',
     slogan: 'Portfolio Tracker für dein Vermögen',
     url: 'https://www.finanzfluss.de/copilot'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2015,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -524,19 +528,23 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch'],
     name: 'Finanzguru',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'MACOS'],
     slogan: 'Finanzen. Magisch. Einfach.',
     url: 'https://www.finanzguru.de'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2020,
     key: 'finary',
     languages: ['Deutsch', 'English', 'Français'],
     name: 'Finary',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker',
     url: 'https://finary.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -544,11 +552,13 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'FINATEKA',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS'],
     slogan:
       'The most convenient mobile application for personal finance accounting',
     url: 'https://finateka.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2022,
     key: 'fincake',
     name: 'Fincake',
@@ -557,34 +567,41 @@ export const personalFinanceTools: Product[] = [
     url: 'https://fincake.io'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2015,
     hasFreePlan: false,
     key: 'fincite',
     name: 'Fincite',
     origin: 'DE',
+    platforms: ['WEB'],
     slogan: 'Wealth Management Software',
     url: 'https://fincite.de'
   },
   {
+    categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasSelfHostingAbility: false,
     key: 'finvest',
     name: 'Finvest',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Grow your wealth in a stress-free way',
     url: 'https://www.getfinvest.com'
   },
   {
+    categories: ['BUDGETING', 'FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2023,
     hasFreePlan: true,
     key: 'finwise',
     name: 'FinWise',
     origin: 'ZA',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€69.99',
     slogan: 'Personal finances, simplified',
     url: 'https://finwiseapp.io'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -597,6 +614,7 @@ export const personalFinanceTools: Product[] = [
     url: 'https://firekit.space'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'folishare',
@@ -608,17 +626,20 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.folishare.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 1993,
     hasSelfHostingAbility: true,
     key: 'fund-manager',
     name: 'Fund Manager',
     note: 'License is a perpetual license',
     origin: 'US',
+    platforms: ['WINDOWS'],
     pricingPerYear: '$99',
     slogan: 'Powerful portfolio management software',
     url: 'https://www.fundmanagersoftware.com'
   },
   {
+    categories: ['BUDGETING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'gasti',
@@ -632,12 +653,14 @@ export const personalFinanceTools: Product[] = [
     ],
     name: 'Gasti',
     origin: 'AR',
+    platforms: ['WEB'],
     pricingPerYear: '$60',
     regions: ['Global'],
     slogan: 'Take control of your finances from WhatsApp',
     url: 'https://gasti.pro'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -645,16 +668,19 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English'],
     name: 'getquin',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€48',
     slogan: 'Portfolio Tracker, Analysis & Community',
     url: 'https://www.getquin.com'
   },
   {
+    categories: ['BUDGETING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'goodbudget',
     name: 'Goodbudget',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Budget with a why',
     url: 'https://goodbudget.com'
   },
@@ -669,6 +695,7 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2024,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -676,27 +703,32 @@ export const personalFinanceTools: Product[] = [
     languages: ['Français'],
     name: 'Gustav',
     origin: 'FR',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€59.99',
     slogan: 'Prenez enfin le contrôle de votre argent',
     url: 'https://get-gustav.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'holistic-capital',
     languages: ['Deutsch'],
     name: 'Holistic',
     origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Die All-in-One Lösung für dein Vermögen.',
     url: 'https://holistic.capital',
     useAnonymously: true
   },
   {
+    categories: ['BUDGETING'],
     founded: 2017,
     hasSelfHostingAbility: false,
     key: 'honeydue',
     name: 'Honeydue',
     origin: 'US',
+    platforms: ['ANDROID', 'IOS'],
     slogan: 'Finance App for Couples',
     url: 'https://www.honeydue.com'
   },
