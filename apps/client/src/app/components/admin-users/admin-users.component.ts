@@ -208,7 +208,7 @@ export class GfAdminUsersComponent implements OnInit {
 
       return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
         60
-        ? 'just now'
+        ? $localize`just now`
         : distanceString;
     }
 
