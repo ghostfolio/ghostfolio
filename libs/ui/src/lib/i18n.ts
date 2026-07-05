@@ -113,12 +113,12 @@ const locales = {
   WEALTH_MANAGEMENT: $localize`Wealth Management`,
 
   // Product platforms
-  ANDROID: $localize`Android`,
-  IOS: $localize`iOS`,
-  LINUX: $localize`Linux`,
-  MACOS: $localize`macOS`,
+  ANDROID: 'Android',
+  IOS: 'iOS',
+  LINUX: 'Linux',
+  MACOS: 'macOS',
   WEB: $localize`Web`,
-  WINDOWS: $localize`Windows`
+  WINDOWS: 'Windows'
 } satisfies Record<ProductCategory, string> &
   Record<ProductPlatform, string> &
   Record<SectorName, string> &
