@@ -29,6 +29,7 @@ export class GfProductPageComponent {
   });
 
   protected readonly product1 = computed<Product>(() => ({
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
@@ -49,6 +50,7 @@ export class GfProductPageComponent {
     ],
     name: 'Ghostfolio',
     origin: getCountryName({ code: 'CH' }),
+    platforms: ['ANDROID', 'WEB'],
     regions: [$localize`Global`],
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
