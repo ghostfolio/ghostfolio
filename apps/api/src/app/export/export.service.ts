@@ -94,7 +94,6 @@ export class ExportService {
           comment,
           currency,
           id,
-          isExcluded,
           name,
           platform,
           platformId,
@@ -112,7 +111,6 @@ export class ExportService {
             comment,
             currency,
             id,
-            isExcluded,
             name,
             platformId,
             tags: tags.map(({ id: tagId }) => {
