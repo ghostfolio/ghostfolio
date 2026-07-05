@@ -21,6 +21,7 @@ import {
   AdminUsersResponse,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
+import { PropertyKey } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
@@ -347,9 +348,14 @@ export class AdminService {
     let response: Property;
 
     if (value) {
-      response = await this.propertyService.put({ key, value });
+      response = await this.propertyService.put({
+        value,
+        key: key as PropertyKey
+      });
     } else {
-      response = await this.propertyService.delete({ key });
+      response = await this.propertyService.delete({
+        key: key as PropertyKey
+      });
     }
 
     if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {

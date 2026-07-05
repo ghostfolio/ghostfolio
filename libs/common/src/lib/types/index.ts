@@ -18,6 +18,7 @@ import type { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
 import type { ProductCategory } from './product-category.type';
 import type { ProductPlatform } from './product-platform.type';
+import type { PropertyKey } from './property-key.type';
 import type { RequestWithUser } from './request-with-user.type';
 import type { SectorName } from './sector-name.type';
 import type { SubscriptionOfferKey } from './subscription-offer-key.type';
@@ -45,6 +46,7 @@ export type {
   OrderWithAccount,
   ProductCategory,
   ProductPlatform,
+  PropertyKey,
   RequestWithUser,
   SectorName,
   SubscriptionOfferKey,
