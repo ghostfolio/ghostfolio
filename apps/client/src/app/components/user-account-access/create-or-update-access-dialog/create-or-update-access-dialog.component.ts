@@ -76,6 +76,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   protected readonly minExpiresAtDate = new Date();
   protected readonly mode: 'create' | 'update';
 
+  private hasLoadedFilters = false;
+
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   private readonly data =
@@ -250,6 +252,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
         this.updateFiltersFormControl(this.data.access?.settings?.filters);
 
+        this.hasLoadedFilters = true;
+
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -265,7 +269,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
-      filters: filters.length > 0 ? filters : undefined,
+      filters: this.hasLoadedFilters ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: accessId,
       permissions: [this.accessForm.get('permissions')?.value]

@@ -2,6 +2,7 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { createSha512HmacHash } from '@ghostfolio/api/helper/hash.helper';
 import { getRandomString } from '@ghostfolio/api/helper/string.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -54,7 +55,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { without } from 'lodash';
-import { createHmac } from 'node:crypto';
 
 @Injectable()
 export class UserService {
@@ -80,10 +80,7 @@ export class UserService {
     password: string;
     salt: string;
   }): string {
-    const hash = createHmac('sha512', salt);
-    hash.update(password);
-
-    return hash.digest('hex');
+    return createSha512HmacHash(password, salt);
   }
 
   public generateAccessToken({ userId }: { userId: string }) {

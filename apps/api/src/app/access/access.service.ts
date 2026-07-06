@@ -1,3 +1,4 @@
+import { createSha512HmacHash } from '@ghostfolio/api/helper/hash.helper';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -6,7 +7,6 @@ import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { Access, Prisma } from '@prisma/client';
-import { createHmac } from 'node:crypto';
 
 @Injectable()
 export class AccessService {
@@ -101,12 +101,10 @@ export class AccessService {
   }
 
   private hashApiToken(apiToken: string) {
-    const hash = createHmac(
-      'sha512',
+    // Rotating ACCESS_TOKEN_SALT invalidates all stored api tokens
+    return createSha512HmacHash(
+      apiToken,
       this.configurationService.get('ACCESS_TOKEN_SALT')
     );
-    hash.update(apiToken);
-
-    return hash.digest('hex');
   }
 }

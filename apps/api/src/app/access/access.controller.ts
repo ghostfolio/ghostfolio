@@ -30,6 +30,7 @@ import {
   AccessType,
   Access as AccessModel
 } from '@prisma/client';
+import { endOfDay, isBefore, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { omit } from 'lodash';
 
@@ -106,9 +107,21 @@ export class AccessController {
       );
     }
 
-    const isApiAccess = data.type === AccessType.API;
+    const type =
+      data.type ??
+      (data.granteeUserId ? AccessType.PRIVATE : AccessType.PUBLIC);
+    const isApiAccess = type === AccessType.API;
 
-    if (isApiAccess && data.granteeUserId) {
+    const expiresAt = data.expiresAt
+      ? endOfDay(parseISO(data.expiresAt))
+      : undefined;
+
+    if (
+      (type === AccessType.PRIVATE && !data.granteeUserId) ||
+      (type !== AccessType.PRIVATE && data.granteeUserId) ||
+      (!isApiAccess && expiresAt) ||
+      (expiresAt && isBefore(expiresAt, new Date()))
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
@@ -121,17 +134,15 @@ export class AccessController {
         : { apiToken: undefined, hashedApiToken: undefined };
 
       const access = await this.accessService.createAccess({
+        expiresAt,
         hashedApiToken,
+        type,
         alias: data.alias || undefined,
-        expiresAt: isApiAccess ? data.expiresAt : undefined,
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: isApiAccess ? [AccessPermission.READ] : data.permissions,
         settings: this.accessService.buildSettings(data.filters),
-        type:
-          data.type ??
-          (data.granteeUserId ? AccessType.PRIVATE : AccessType.PUBLIC),
         user: { connect: { id: this.request.user.id } }
       });
 
@@ -203,7 +214,10 @@ export class AccessController {
 
     const isApiAccess = originalAccess.type === AccessType.API;
 
-    if (isApiAccess && data.granteeUserId) {
+    if (
+      (originalAccess.type === AccessType.PRIVATE && !data.granteeUserId) ||
+      (originalAccess.type !== AccessType.PRIVATE && data.granteeUserId)
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
@@ -216,11 +230,11 @@ export class AccessController {
           alias: data.alias,
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
-            : isApiAccess
-              ? undefined
-              : { disconnect: true },
+            : undefined,
           permissions: isApiAccess ? undefined : data.permissions,
-          settings: this.accessService.buildSettings(data.filters)
+          settings: data.filters
+            ? this.accessService.buildSettings(data.filters)
+            : undefined
         },
         where: { id }
       });
