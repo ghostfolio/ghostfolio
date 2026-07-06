@@ -2,6 +2,8 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import ms from 'ms';
 
 import { AlertDialogParams } from './interfaces/interfaces';
 
@@ -22,6 +24,7 @@ export class GfAlertDialogComponent {
     inject<MatDialogRef<GfAlertDialogComponent>>(MatDialogRef);
 
   private readonly clipboard = inject(Clipboard);
+  private readonly snackBar = inject(MatSnackBar);
 
   public initialize({
     copyValue,
@@ -38,8 +41,14 @@ export class GfAlertDialogComponent {
   public onCopyToClipboard() {
     if (this.copyValue) {
       this.clipboard.copy(this.copyValue);
-    }
 
-    this.dialogRef.close('copy');
+      this.snackBar.open(
+        '✅ ' + $localize`The value has been copied to the clipboard`,
+        undefined,
+        {
+          duration: ms('3 seconds')
+        }
+      );
+    }
   }
 }

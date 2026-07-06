@@ -37,10 +37,8 @@ export class NotificationService {
       title: aParams.title
     });
 
-    return dialog.afterClosed().subscribe((result) => {
-      if (result === 'copy' && isFunction(aParams.copyFn)) {
-        aParams.copyFn();
-      } else if (isFunction(aParams.discardFn)) {
+    return dialog.afterClosed().subscribe(() => {
+      if (isFunction(aParams.discardFn)) {
         aParams.discardFn();
       }
     });
