@@ -3,7 +3,11 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
-import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
+import {
+  Access,
+  AccessSettings,
+  CreateAccessResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -21,8 +25,13 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Access as AccessModel } from '@prisma/client';
+import {
+  AccessPermission,
+  AccessType,
+  Access as AccessModel
+} from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { omit } from 'lodash';
 
 import { AccessService } from './access.service';
 
@@ -46,15 +55,26 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map(
-      ({ alias, granteeUser, id, permissions, settings }) => {
+      ({ alias, expiresAt, granteeUser, id, permissions, settings, type }) => {
+        if (type === AccessType.API) {
+          return {
+            alias,
+            id,
+            permissions,
+            type,
+            expiresAt: expiresAt ?? undefined,
+            settings: settings as AccessSettings
+          };
+        }
+
         if (granteeUser) {
           return {
             alias,
             id,
             permissions,
+            type,
             grantee: granteeUser?.id,
-            settings: settings as AccessSettings,
-            type: 'PRIVATE'
+            settings: settings as AccessSettings
           };
         }
 
@@ -62,9 +82,9 @@ export class AccessController {
           alias,
           id,
           permissions,
+          type,
           grantee: 'Public',
-          settings: settings as AccessSettings,
-          type: 'PUBLIC'
+          settings: settings as AccessSettings
         };
       }
     );
@@ -75,7 +95,7 @@ export class AccessController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createAccess(
     @Body() data: CreateAccessDto
-  ): Promise<AccessModel> {
+  ): Promise<CreateAccessResponse> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === SubscriptionType.Basic
@@ -86,16 +106,39 @@ export class AccessController {
       );
     }
 
+    const isApiAccess = data.type === AccessType.API;
+
+    if (isApiAccess && data.granteeUserId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
     try {
-      return this.accessService.createAccess({
+      const { apiToken, hashedApiToken } = isApiAccess
+        ? this.accessService.createApiToken()
+        : { apiToken: undefined, hashedApiToken: undefined };
+
+      const access = await this.accessService.createAccess({
+        hashedApiToken,
         alias: data.alias || undefined,
+        expiresAt: isApiAccess ? data.expiresAt : undefined,
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
-        permissions: data.permissions,
+        permissions: isApiAccess ? [AccessPermission.READ] : data.permissions,
         settings: this.accessService.buildSettings(data.filters),
+        type:
+          data.type ??
+          (data.granteeUserId ? AccessType.PRIVATE : AccessType.PUBLIC),
         user: { connect: { id: this.request.user.id } }
       });
+
+      return {
+        ...omit(access, 'hashedApiToken'),
+        apiToken
+      };
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
@@ -107,7 +150,9 @@ export class AccessController {
   @Delete(':id')
   @HasPermission(permissions.deleteAccess)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
+  public async deleteAccess(
+    @Param('id') id: string
+  ): Promise<Omit<AccessModel, 'hashedApiToken'>> {
     const originalAccess = await this.accessService.access({
       id,
       userId: this.request.user.id
@@ -120,9 +165,11 @@ export class AccessController {
       );
     }
 
-    return this.accessService.deleteAccess({
+    const access = await this.accessService.deleteAccess({
       id
     });
+
+    return omit(access, 'hashedApiToken');
   }
 
   @HasPermission(permissions.updateAccess)
@@ -131,7 +178,7 @@ export class AccessController {
   public async updateAccess(
     @Body() data: UpdateAccessDto,
     @Param('id') id: string
-  ): Promise<AccessModel> {
+  ): Promise<Omit<AccessModel, 'hashedApiToken'>> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === SubscriptionType.Basic
@@ -154,18 +201,31 @@ export class AccessController {
       );
     }
 
+    const isApiAccess = originalAccess.type === AccessType.API;
+
+    if (isApiAccess && data.granteeUserId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
     try {
-      return this.accessService.updateAccess({
+      const access = await this.accessService.updateAccess({
         data: {
           alias: data.alias,
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
-            : { disconnect: true },
-          permissions: data.permissions,
+            : isApiAccess
+              ? undefined
+              : { disconnect: true },
+          permissions: isApiAccess ? undefined : data.permissions,
           settings: this.accessService.buildSettings(data.filters)
         },
         where: { id }
       });
+
+      return omit(access, 'hashedApiToken');
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),

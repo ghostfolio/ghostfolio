@@ -4,6 +4,7 @@ import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
+import { AccessType } from '@prisma/client';
 
 @Injectable()
 export class ImpersonationService {
@@ -36,6 +37,7 @@ export class ImpersonationService {
       const accessObject = await this.prismaService.access.findFirst({
         where: {
           granteeUserId: null,
+          type: AccessType.PUBLIC,
           user: { id: aId }
         }
       });

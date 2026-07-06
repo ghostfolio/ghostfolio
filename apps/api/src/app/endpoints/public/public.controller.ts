@@ -22,6 +22,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {
+  AccessType,
   AssetClass,
   AssetSubClass,
   Type as ActivityType
@@ -48,7 +49,8 @@ export class PublicController {
   ): Promise<PublicPortfolioResponse> {
     const access = await this.accessService.access({
       granteeUserId: null,
-      id: accessId
+      id: accessId,
+      type: AccessType.PUBLIC
     });
 
     if (!access) {

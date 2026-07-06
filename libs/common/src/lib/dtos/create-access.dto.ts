@@ -1,12 +1,23 @@
 import { Filter } from '@ghostfolio/common/interfaces';
 
-import { AccessPermission } from '@prisma/client';
-import { IsArray, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { AccessPermission, AccessType } from '@prisma/client';
+import {
+  IsArray,
+  IsEnum,
+  IsISO8601,
+  IsOptional,
+  IsString,
+  IsUUID
+} from 'class-validator';
 
 export class CreateAccessDto {
   @IsOptional()
   @IsString()
   alias?: string;
+
+  @IsISO8601()
+  @IsOptional()
+  expiresAt?: string;
 
   @IsArray()
   @IsOptional()
@@ -19,4 +30,8 @@ export class CreateAccessDto {
   @IsEnum(AccessPermission, { each: true })
   @IsOptional()
   permissions?: AccessPermission[];
+
+  @IsEnum(AccessType)
+  @IsOptional()
+  type?: AccessType;
 }

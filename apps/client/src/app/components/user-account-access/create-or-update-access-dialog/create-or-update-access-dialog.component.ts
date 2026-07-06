@@ -32,6 +32,7 @@ import {
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -40,7 +41,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission } from '@prisma/client';
+import { AccessPermission, AccessType } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -53,6 +54,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     FormsModule,
     GfPortfolioFilterFormComponent,
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -70,9 +72,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public tags: Filter[] = [];
 
   protected accessForm: FormGroup;
+  protected hasExperimentalFeatures = false;
+  protected readonly minExpiresAtDate = new Date();
   protected readonly mode: 'create' | 'update';
-
-  private hasExperimentalFeatures = false;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -95,21 +97,27 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   public get canApplyFilters() {
     return (
-      this.accessForm?.get('type')?.value === 'PUBLIC' &&
+      ['API', 'PUBLIC'].includes(this.accessForm?.get('type')?.value) &&
       this.hasExperimentalFeatures
     );
   }
 
   public ngOnInit() {
     const access = this.data?.access;
-    const isPublic = access?.type === 'PUBLIC';
+    const isPrivate = (access?.type ?? 'PRIVATE') === 'PRIVATE';
 
     this.accessForm = this.formBuilder.group({
       alias: [access?.alias ?? ''],
+      expiresAt: [
+        {
+          disabled: this.mode === 'update',
+          value: access?.expiresAt ?? null
+        }
+      ],
       filters: [null],
       granteeUserId: [
         access?.grantee ?? null,
-        isPublic ? null : Validators.required
+        isPrivate ? Validators.required : null
       ],
       permissions: [
         access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
@@ -138,6 +146,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       .get('type')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((accessType) => {
+        const expiresAtControl = this.accessForm.get('expiresAt');
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
         const permissionsControl = this.accessForm.get('permissions');
 
@@ -147,9 +156,18 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(
-            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
-          );
+
+          if (accessType === 'API') {
+            permissionsControl?.setValue(AccessPermission.READ);
+          } else {
+            permissionsControl?.setValue(
+              access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
+            );
+          }
+        }
+
+        if (accessType !== 'API') {
+          expiresAtControl?.setValue(null);
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -181,8 +199,14 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   private async createAccess() {
     const filters = this.buildFilters();
 
+    const expiresAt: Date | null = this.accessForm.get('expiresAt')?.value;
+    const type: AccessType = this.accessForm.get('type')?.value;
+
     const access: CreateAccessDto = {
+      type,
       alias: this.accessForm.get('alias')?.value,
+      expiresAt:
+        type === 'API' && expiresAt ? expiresAt.toISOString() : undefined,
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       permissions: [this.accessForm.get('permissions')?.value]
@@ -209,8 +233,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           }),
           takeUntilDestroyed(this.destroyRef)
         )
-        .subscribe(() => {
-          this.dialogRef.close(access);
+        .subscribe((response) => {
+          this.dialogRef.close(response);
         });
     } catch (error) {
       console.error(error);

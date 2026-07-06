@@ -1,4 +1,3 @@
-import type { AccessType } from './access-type.type';
 import type { AccessWithGranteeUser } from './access-with-grantee-user.type';
 import type { AccountWithPlatform } from './account-with-platform.type';
 import type { AccountWithValue } from './account-with-value.type';
@@ -22,11 +21,11 @@ import type { PropertyKey } from './property-key.type';
 import type { RequestWithUser } from './request-with-user.type';
 import type { SectorName } from './sector-name.type';
 import type { SubscriptionOfferKey } from './subscription-offer-key.type';
+import type { UserWithApiAccess } from './user-with-api-access.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
 
 export type {
-  AccessType,
   AccessWithGranteeUser,
   AccountWithPlatform,
   AccountWithValue,
@@ -50,6 +49,7 @@ export type {
   RequestWithUser,
   SectorName,
   SubscriptionOfferKey,
+  UserWithApiAccess,
   UserWithSettings,
   ViewMode
 };

@@ -29,6 +29,17 @@ export class ApiKeyService {
     return { apiKey };
   }
 
+  public generateApiKey(): string {
+    return getRandomString(32)
+      .split('')
+      .reduce((acc, char, index) => {
+        const chunkIndex = Math.floor(index / 4);
+        acc[chunkIndex] = (acc[chunkIndex] || '') + char;
+        return acc;
+      }, [])
+      .join('-');
+  }
+
   public async getUserByApiKey(apiKey: string) {
     const hashedKey = this.hashApiKey(apiKey);
 
@@ -48,16 +59,5 @@ export class ApiKeyService {
       this.keyLength,
       this.algorithm
     ).toString('hex');
-  }
-
-  private generateApiKey(): string {
-    return getRandomString(32)
-      .split('')
-      .reduce((acc, char, index) => {
-        const chunkIndex = Math.floor(index / 4);
-        acc[chunkIndex] = (acc[chunkIndex] || '') + char;
-        return acc;
-      }, [])
-      .join('-');
   }
 }

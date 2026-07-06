@@ -29,21 +29,45 @@
         <mat-select formControlName="type">
           <mat-option i18n value="PRIVATE">Private</mat-option>
           <mat-option i18n value="PUBLIC">Public</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Permission</mat-label>
-        <mat-select formControlName="permissions">
-          <mat-option i18n value="READ_RESTRICTED">Restricted view</mat-option>
-          @if (accessForm.get('type')?.value === 'PRIVATE') {
-            <mat-option i18n value="READ">View</mat-option>
+          @if (
+            hasExperimentalFeatures || accessForm.get('type')?.value === 'API'
+          ) {
+            <mat-option value="API">API</mat-option>
           }
         </mat-select>
       </mat-form-field>
     </div>
+
+    @if (accessForm.get('type')?.value !== 'API') {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Permission</mat-label>
+          <mat-select formControlName="permissions">
+            <mat-option i18n value="READ_RESTRICTED"
+              >Restricted view</mat-option
+            >
+            @if (accessForm.get('type')?.value === 'PRIVATE') {
+              <mat-option i18n value="READ">View</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
+    @if (accessForm.get('type')?.value === 'API') {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Valid until</mat-label>
+          <input
+            formControlName="expiresAt"
+            matInput
+            [matDatepicker]="expiresAtDatepicker"
+            [min]="minExpiresAtDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="expiresAtDatepicker" />
+          <mat-datepicker #expiresAtDatepicker />
+        </mat-form-field>
+      </div>
+    }
     @if (accessForm.get('type')?.value === 'PRIVATE') {
       <div>
         <mat-form-field appearance="outline" class="w-100">
