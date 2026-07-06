@@ -37,9 +37,11 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash';
+import ms from 'ms';
 
 import { UserService } from './user.service';
 
@@ -128,6 +130,8 @@ export class UserController {
   }
 
   @Post()
+  @Throttle({ default: { limit: 5, ttl: ms('1 hour') } })
+  @UseGuards(ThrottlerGuard)
   public async signupUser(): Promise<UserItem> {
     const isUserSignupEnabled =
       await this.propertyService.isUserSignupEnabled();

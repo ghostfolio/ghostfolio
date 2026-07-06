@@ -97,6 +97,20 @@ async function bootstrap() {
     });
   }
 
+  const TRUST_PROXY = configService.get<string>('TRUST_PROXY');
+
+  if (TRUST_PROXY) {
+    let trustProxy: boolean | number | string = TRUST_PROXY;
+
+    if (/^\d+$/.test(TRUST_PROXY)) {
+      trustProxy = Number(TRUST_PROXY);
+    } else if (TRUST_PROXY === 'true') {
+      trustProxy = true;
+    }
+
+    app.set('trust proxy', trustProxy);
+  }
+
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;
   const PORT = configService.get<number>('PORT') || DEFAULT_PORT;
 

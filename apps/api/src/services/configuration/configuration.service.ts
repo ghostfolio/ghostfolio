@@ -114,6 +114,7 @@ export class ConfigurationService {
         default: environment.rootUrl
       }),
       STRIPE_SECRET_KEY: str({ default: '' }),
+      TRUST_PROXY: str({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
       TWITTER_API_KEY: str({ default: 'dummyApiKey' }),

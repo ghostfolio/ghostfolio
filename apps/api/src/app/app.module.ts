@@ -2,6 +2,7 @@ import { EventsModule } from '@ghostfolio/api/events/events.module';
 import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
@@ -18,13 +19,16 @@ import {
 
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { StatusCodes } from 'http-status-codes';
+import ms from 'ms';
 import { join } from 'node:path';
 
 import { AccessModule } from './access/access.module';
@@ -168,6 +172,26 @@ import { UserModule } from './user/user.module';
     SubscriptionModule,
     SymbolModule,
     TagsModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigurationModule],
+      inject: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => {
+        return {
+          storage: new ThrottlerStorageRedisService({
+            db: configurationService.get('REDIS_DB'),
+            host: configurationService.get('REDIS_HOST'),
+            password: configurationService.get('REDIS_PASSWORD'),
+            port: configurationService.get('REDIS_PORT')
+          }),
+          throttlers: [
+            {
+              limit: 10,
+              ttl: ms('1 minute')
+            }
+          ]
+        };
+      }
+    }),
     UserModule,
     WatchlistModule
   ],

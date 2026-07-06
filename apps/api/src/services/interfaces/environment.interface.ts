@@ -57,6 +57,7 @@ export interface Environment extends CleanedEnvAccessors {
   REQUEST_TIMEOUT: number;
   ROOT_URL: string;
   STRIPE_SECRET_KEY: string;
+  TRUST_PROXY: string;
   TWITTER_ACCESS_TOKEN: string;
   TWITTER_ACCESS_TOKEN_SECRET: string;
   TWITTER_API_KEY: string;

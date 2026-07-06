@@ -22,6 +22,7 @@ import {
   VERSION_NEUTRAL
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
@@ -39,6 +40,7 @@ export class AuthController {
    * @deprecated
    */
   @Get('anonymous/:accessToken')
+  @UseGuards(ThrottlerGuard)
   public async accessTokenLoginGet(
     @Param('accessToken') accessToken: string
   ): Promise<OAuthResponse> {
@@ -55,6 +57,7 @@ export class AuthController {
   }
 
   @Post('anonymous')
+  @UseGuards(ThrottlerGuard)
   public async accessTokenLogin(
     @Body() body: { accessToken: string }
   ): Promise<OAuthResponse> {
@@ -156,6 +159,7 @@ export class AuthController {
   }
 
   @Post('webauthn/verify-authentication')
+  @UseGuards(ThrottlerGuard)
   public async verifyAuthentication(
     @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
   ) {
