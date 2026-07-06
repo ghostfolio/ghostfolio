@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for a copy-to-clipboard action in the alert dialog component
+- Added rate limiting to the endpoints for authentication and user sign up
+- Added support for the `TRUST_PROXY` environment variable to determine the client IP address for rate limiting when running behind a reverse proxy
 
 ### Changed
 
