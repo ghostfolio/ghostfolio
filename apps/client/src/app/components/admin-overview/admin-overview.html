@@ -180,6 +180,28 @@
                   </td>
                 </ng-container>
 
+                <ng-container matColumnDef="createdAt">
+                  <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+                    <ng-container i18n>Creation</ng-container>
+                  </th>
+                  <td
+                    *matCellDef="let element"
+                    class="px-1 text-right"
+                    mat-cell
+                  >
+                    @if (element.createdAt) {
+                      <gf-value
+                        class="d-inline-block justify-content-end"
+                        [isDate]="true"
+                        [locale]="user?.settings?.locale"
+                        [value]="element.createdAt"
+                      />
+                    } @else {
+                      <span>-</span>
+                    }
+                  </td>
+                </ng-container>
+
                 <ng-container matColumnDef="actions" stickyEnd>
                   <th
                     *matHeaderCellDef
