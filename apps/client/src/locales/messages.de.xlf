@@ -5649,7 +5649,7 @@
       </trans-unit>
       <trans-unit id="6227227888671497915" datatype="html">
         <source>Ready to take your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>investments<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>next level<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>?</source>
-        <target state="translated">Bereit, deine <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Investitionen<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> auf ein <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>neues Level<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>zu bringen?</target>
+        <target state="translated">Bereit, deine <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Investitionen<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> auf ein <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>neues Level<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> zu bringen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">369</context>
