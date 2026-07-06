@@ -39,13 +39,13 @@ import { GfImportActivitiesDialogComponent } from './import-activities-dialog/im
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfActivitiesTableComponent,
     GfFabComponent,
     MatSnackBarModule,
     RouterModule
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
@@ -114,6 +114,7 @@ export class GfActivitiesPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+
         this.changeDetectorRef.markForCheck();
       });
 
@@ -134,8 +135,6 @@ export class GfActivitiesPageComponent implements OnInit {
     // Reset dataSource and totalItems to show loading state
     this.dataSource = undefined;
     this.totalItems = undefined;
-
-    this.changeDetectorRef.markForCheck();
 
     const dateRange = this.user?.settings?.dateRange;
     const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
@@ -453,7 +452,5 @@ export class GfActivitiesPageComponent implements OnInit {
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
       hasPermission(this.user.permissions, permissions.deleteActivity);
-
-    this.changeDetectorRef.markForCheck();
   }
 }
