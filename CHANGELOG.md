@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Hardened the endpoint to update a property of the admin control panel by validating the `key` path parameter
+- Set the change detection strategy to `OnPush` in the _FIRE_ page
 
 ## 3.21.0 - 2026-07-05
 
