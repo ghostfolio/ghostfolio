@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Set the change detection strategy to `OnPush` in the _FIRE_ page
+- Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 
 ## 3.21.0 - 2026-07-05
