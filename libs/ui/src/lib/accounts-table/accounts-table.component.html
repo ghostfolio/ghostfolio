@@ -33,7 +33,7 @@
         mat-cell
       >
         <div class="d-flex justify-content-center">
-          @if (element.isExcluded) {
+          @if (isExcluded(element)) {
             <ion-icon name="eye-off-outline" />
           }
         </div>

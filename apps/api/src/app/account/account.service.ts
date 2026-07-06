@@ -1,11 +1,12 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   Account,
@@ -13,10 +14,12 @@ import {
   Order,
   Platform,
   Prisma,
-  SymbolProfile
+  SymbolProfile,
+  Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -66,16 +69,26 @@ export class AccountService {
       activities?: (Order & { SymbolProfile?: SymbolProfile })[];
       balances?: AccountBalance[];
       platform?: Platform;
+      tags?: Tag[];
     })[]
   > {
     const { include = {}, skip, take, cursor, where, orderBy } = params;
 
     const isBalancesIncluded = !!include.balances;
+    const isTagsIncluded = !!include.tags;
 
     include.balances = {
       orderBy: { date: 'desc' },
       ...(isBalancesIncluded ? {} : { take: 1 })
     };
+
+    if (isTagsIncluded) {
+      include.tags = {
+        include: {
+          tag: true
+        }
+      };
+    }
 
     const accounts = await this.prismaService.account.findMany({
       cursor,
@@ -87,22 +100,48 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      account = { ...account, balance: account.balances[0]?.value ?? 0 };
+      const result = {
+        ...account,
+        balance: account.balances[0]?.value ?? 0,
+        tags: isTagsIncluded
+          ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
+              return tag;
+            })
+          : undefined
+      };
 
       if (!isBalancesIncluded) {
-        delete account.balances;
+        delete result.balances;
       }
 
-      return account;
+      if (!isTagsIncluded) {
+        delete result.tags;
+      }
+
+      return result;
     });
   }
 
   public async createAccount(
     data: Prisma.AccountCreateInput,
-    aUserId: string
+    aUserId: string,
+    tagIds?: string[]
   ): Promise<Account> {
+    await this.validateTagIds(tagIds, aUserId);
+
     const account = await this.prismaService.account.create({
-      data
+      data: {
+        ...data,
+        tags: tagIds
+          ? {
+              create: tagIds.map((tagId) => {
+                return {
+                  tag: { connect: { id: tagId } }
+                };
+              })
+            }
+          : undefined
+      }
     });
 
     await this.accountBalanceService.createOrUpdateAccountBalance({
@@ -143,7 +182,8 @@ export class AccountService {
     const accounts = await this.accounts({
       include: {
         activities: true,
-        platform: true
+        platform: true,
+        tags: true
       },
       orderBy: { name: 'asc' },
       where: { userId: aUserId }
@@ -184,7 +224,7 @@ export class AccountService {
     };
 
     if (withExcludedAccounts === false) {
-      where.isExcluded = false;
+      where.AND = [WHERE_ACCOUNT_NOT_EXCLUDED];
     }
 
     const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
@@ -222,20 +262,35 @@ export class AccountService {
       where: Prisma.AccountWhereUniqueInput;
       data: Prisma.AccountUpdateInput;
     },
-    aUserId: string
+    aUserId: string,
+    tagIds?: string[]
   ): Promise<Account> {
     const { data, where } = params;
 
+    await this.validateTagIds(tagIds, aUserId);
+
+    const account = await this.prismaService.account.update({
+      data: {
+        ...data,
+        tags: tagIds
+          ? {
+              create: tagIds.map((tagId) => {
+                return {
+                  tag: { connect: { id: tagId } }
+                };
+              }),
+              deleteMany: {}
+            }
+          : undefined
+      },
+      where
+    });
+
     await this.accountBalanceService.createOrUpdateAccountBalance({
-      accountId: data.id as string,
+      accountId: account.id,
       balance: data.balance as number,
       date: format(new Date(), DATE_FORMAT),
       userId: aUserId
-    });
-
-    const account = await this.prismaService.account.update({
-      data,
-      where
     });
 
     this.eventEmitter.emit(
@@ -283,6 +338,28 @@ export class AccountService {
         balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber(),
         date: date.toISOString()
       });
+    }
+  }
+
+  private async validateTagIds(tagIds: string[], userId: string) {
+    if (!tagIds?.length) {
+      return;
+    }
+
+    const uniqueTagIds = Array.from(new Set(tagIds));
+
+    const tagsCount = await this.prismaService.tag.count({
+      where: {
+        id: { in: uniqueTagIds },
+        OR: [{ userId }, { userId: null }]
+      }
+    });
+
+    if (tagsCount !== uniqueTagIds.length) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
     }
   }
 }

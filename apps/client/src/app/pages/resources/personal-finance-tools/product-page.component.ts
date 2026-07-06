@@ -29,6 +29,7 @@ export class GfProductPageComponent {
   });
 
   protected readonly product1 = computed<Product>(() => ({
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
@@ -49,6 +50,7 @@ export class GfProductPageComponent {
     ],
     name: 'Ghostfolio',
     origin: getCountryName({ code: 'CH' }),
+    platforms: ['ANDROID', 'WEB'],
     regions: [$localize`Global`],
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
@@ -89,38 +91,46 @@ export class GfProductPageComponent {
     const product1 = this.product1();
     const product2 = this.product2();
 
-    return [
-      product1.name,
-      product1.origin,
-      product2.name,
-      product2.origin,
-      $localize`Alternative`,
-      $localize`App`,
-      $localize`Budgeting`,
-      $localize`Community`,
-      $localize`Family Office`,
-      `Fintech`,
-      $localize`Investment`,
-      $localize`Investor`,
-      $localize`Open Source`,
-      `OSS`,
-      $localize`Personal Finance`,
-      $localize`Privacy`,
-      $localize`Portfolio`,
-      $localize`Software`,
-      $localize`Tool`,
-      $localize`User Experience`,
-      $localize`Wealth`,
-      $localize`Wealth Management`,
-      `WealthTech`
-    ]
-      .filter((item): item is string => {
-        return !!item;
-      })
-      .sort((a, b) => {
-        return a.localeCompare(b, undefined, { sensitivity: 'base' });
-      });
+    return Array.from(
+      new Set(
+        [
+          ...[product1, product2].flatMap(
+            ({ categories, name, origin, platforms }) => {
+              return [
+                ...[...(categories ?? []), ...(platforms ?? [])].map((key) => {
+                  return translate(key);
+                }),
+                name,
+                origin
+              ];
+            }
+          ),
+          $localize`Alternative`,
+          $localize`App`,
+          $localize`Community`,
+          `Fintech`,
+          $localize`Investment`,
+          $localize`Investor`,
+          $localize`Open Source`,
+          `OSS`,
+          $localize`Personal Finance`,
+          $localize`Portfolio`,
+          $localize`Privacy`,
+          $localize`Software`,
+          $localize`Tool`,
+          $localize`User Experience`,
+          $localize`Wealth`,
+          `WealthTech`
+        ].filter((item): item is string => {
+          return !!item;
+        })
+      )
+    ).sort((a, b) => {
+      return a.localeCompare(b, undefined, { sensitivity: 'base' });
+    });
   });
+
+  protected readonly translate = translate;
 
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);

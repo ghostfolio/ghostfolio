@@ -1,4 +1,8 @@
-import type { SectorName } from '@ghostfolio/common/types';
+import type {
+  ProductCategory,
+  ProductPlatform,
+  SectorName
+} from '@ghostfolio/common/types';
 
 import '@angular/localize/init';
 
@@ -94,8 +98,31 @@ const locales = {
   Other: $localize`Other`,
   'Real Estate': $localize`Real Estate`,
   Technology: $localize`Technology`,
-  Utilities: $localize`Utilities`
-} satisfies Record<SectorName, string> & Record<string, string>;
+  Utilities: $localize`Utilities`,
+
+  // Product categories (CRYPTOCURRENCY is defined above under AssetSubClass)
+  BUDGETING: $localize`Budgeting`,
+  DIVIDEND_TRACKING: $localize`Dividend Tracking`,
+  ETF_TRACKING: $localize`ETF Tracking`,
+  FAMILY_OFFICE: $localize`Family Office`,
+  FINANCIAL_PLANNING: $localize`Financial Planning`,
+  INVESTMENT_RESEARCH: $localize`Investment Research`,
+  NET_WORTH_TRACKING: $localize`Net Worth Tracking`,
+  STOCK_TRACKING: $localize`Stock Tracking`,
+  TAX_REPORTING: $localize`Tax Reporting`,
+  WEALTH_MANAGEMENT: $localize`Wealth Management`,
+
+  // Product platforms
+  ANDROID: 'Android',
+  IOS: 'iOS',
+  LINUX: 'Linux',
+  MACOS: 'macOS',
+  WEB: $localize`Web`,
+  WINDOWS: 'Windows'
+} satisfies Record<ProductCategory, string> &
+  Record<ProductPlatform, string> &
+  Record<SectorName, string> &
+  Record<string, string>;
 
 export function translate(aKey: string): string {
   return locales[aKey] ?? aKey;

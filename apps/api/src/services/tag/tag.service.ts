@@ -52,6 +52,11 @@ export class TagService {
       include: {
         _count: {
           select: {
+            accounts: {
+              where: {
+                userId
+              }
+            },
             activities: {
               where: {
                 userId
@@ -80,27 +85,28 @@ export class TagService {
         id,
         name,
         userId,
-        isUsed: _count.activities > 0
+        isUsed: _count.accounts > 0 || _count.activities > 0
       }))
       .sort((a, b) => {
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       });
   }
 
-  public async getTagsWithActivityCount() {
-    const tagsWithOrderCount = await this.prismaService.tag.findMany({
+  public async getTagsWithAccountAndActivityCount() {
+    const tagsWithAccountAndOrderCount = await this.prismaService.tag.findMany({
       include: {
         _count: {
-          select: { activities: true }
+          select: { accounts: true, activities: true }
         }
       }
     });
 
-    return tagsWithOrderCount.map(({ _count, id, name, userId }) => {
+    return tagsWithAccountAndOrderCount.map(({ _count, id, name, userId }) => {
       return {
         id,
         name,
         userId,
+        accountCount: _count.accounts,
         activityCount: _count.activities
       };
     });

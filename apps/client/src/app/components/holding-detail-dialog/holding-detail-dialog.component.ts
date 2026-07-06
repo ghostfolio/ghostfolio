@@ -77,7 +77,7 @@ import {
   swapVerticalOutline,
   walletOutline
 } from 'ionicons/icons';
-import { isNumber, round } from 'lodash';
+import { isNumber, round, uniqBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { switchMap } from 'rxjs/operators';
 
@@ -179,6 +179,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected sortColumn = 'date';
   protected sortDirection: SortDirection = 'desc';
   protected tagsAvailable: Tag[];
+  protected tagsOfAccounts: Tag[];
   protected readonly translate = translate;
   protected user: User;
   protected value: number;
@@ -264,6 +265,18 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ accounts }) => {
         this.accounts = accounts;
+
+        this.tagsOfAccounts = uniqBy(
+          accounts.flatMap(({ tags }) => {
+            return tags ?? [];
+          }),
+          'id'
+        ).map((tag) => {
+          return {
+            ...tag,
+            name: translate(tag.name)
+          };
+        });
 
         this.changeDetectorRef.markForCheck();
       });

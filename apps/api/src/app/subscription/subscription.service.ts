@@ -3,7 +3,8 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_LANGUAGE_CODE,
-  PROPERTY_STRIPE_CONFIG
+  PROPERTY_STRIPE_CONFIG,
+  SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { parseDate } from '@ghostfolio/common/helper';
@@ -75,10 +76,7 @@ export class SubscriptionService {
             quantity: 1
           }
         ],
-        locale:
-          (user.settings?.settings
-            ?.language as Stripe.Checkout.SessionCreateParams.Locale) ??
-          DEFAULT_LANGUAGE_CODE,
+        locale: this.getStripeLocale(user.settings?.settings?.language),
         metadata: subscriptionOffer
           ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
           : {},
@@ -245,5 +243,29 @@ export class SubscriptionService {
       ...offers[key],
       isRenewal: key.startsWith('renewal')
     };
+  }
+
+  private getStripeLocale(
+    languageCode: string
+  ): Stripe.Checkout.SessionCreateParams.Locale {
+    const unsupportedLanguageCodes: Record<
+      Exclude<
+        (typeof SUPPORTED_LANGUAGE_CODES)[number],
+        Stripe.Checkout.SessionCreateParams.Locale
+      >,
+      true
+    > = {
+      ca: true,
+      uk: true
+    };
+
+    if (
+      (SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode) &&
+      !(languageCode in unsupportedLanguageCodes)
+    ) {
+      return languageCode as Stripe.Checkout.SessionCreateParams.Locale;
+    }
+
+    return DEFAULT_LANGUAGE_CODE;
   }
 }

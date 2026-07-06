@@ -117,7 +117,9 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
     const path = request.originalUrl.replace(/\/$/, '');
     let languageCode = path.substr(1, 2);
 
-    if (!SUPPORTED_LANGUAGE_CODES.includes(languageCode)) {
+    if (
+      !(SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode)
+    ) {
       languageCode = DEFAULT_LANGUAGE_CODE;
     }
 

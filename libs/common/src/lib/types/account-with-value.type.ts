@@ -1,4 +1,4 @@
-import { Account as AccountModel, Platform } from '@prisma/client';
+import { Account as AccountModel, Platform, Tag } from '@prisma/client';
 
 export type AccountWithValue = AccountModel & {
   activitiesCount: number;
@@ -7,6 +7,7 @@ export type AccountWithValue = AccountModel & {
   dividendInBaseCurrency: number;
   interestInBaseCurrency: number;
   platform?: Platform;
+  tags?: Tag[];
   value: number;
   valueInBaseCurrency: number;
 };
