@@ -146,11 +146,16 @@ export class GfUserAccountMembershipComponent {
           )
           .subscribe(({ apiKey }) => {
             this.notificationService.alert({
+              copyFn: () => {
+                this.snackBar.open(
+                  '✅ ' + $localize`${apiKey} has been copied to the clipboard`,
+                  undefined,
+                  { duration: ms('3 seconds') }
+                );
+              },
+              copyValue: apiKey,
               discardLabel: $localize`Okay`,
-              message:
-                $localize`Set this API key in your self-hosted environment:` +
-                '<br />' +
-                apiKey,
+              message: $localize`Set this API key in your self-hosted environment:`,
               title: $localize`Ghostfolio Premium Data Provider API Key`
             });
           });

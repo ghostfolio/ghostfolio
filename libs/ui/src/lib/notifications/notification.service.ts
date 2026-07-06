@@ -31,13 +31,16 @@ export class NotificationService {
     });
 
     dialog.componentInstance.initialize({
+      copyValue: aParams.copyValue,
       discardLabel: aParams.discardLabel,
       message: aParams.message,
       title: aParams.title
     });
 
-    return dialog.afterClosed().subscribe(() => {
-      if (isFunction(aParams.discardFn)) {
+    return dialog.afterClosed().subscribe((result) => {
+      if (result === 'copy' && isFunction(aParams.copyFn)) {
+        aParams.copyFn();
+      } else if (isFunction(aParams.discardFn)) {
         aParams.discardFn();
       }
     });
