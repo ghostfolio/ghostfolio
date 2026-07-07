@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the change detection strategy to `OnPush` in the _FIRE_ page
 - Set the change detection strategy to `OnPush` in the users section of the admin control panel
+- Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 
