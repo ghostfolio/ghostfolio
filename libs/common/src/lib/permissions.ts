@@ -50,6 +50,7 @@ export const permissions = {
   readTags: 'readTags',
   readWatchlist: 'readWatchlist',
   reportDataGlitch: 'reportDataGlitch',
+  requestOwnUserDeletion: 'requestOwnUserDeletion',
   syncDemoUserAccount: 'syncDemoUserAccount',
   toggleReadOnlyMode: 'toggleReadOnlyMode',
   updateAccount: 'updateAccount',
