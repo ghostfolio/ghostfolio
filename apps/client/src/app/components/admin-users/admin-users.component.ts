@@ -200,6 +200,8 @@ export class GfAdminUsersComponent implements OnInit {
           pageIndex: this.paginator().pageIndex,
           showLoading: false
         });
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
