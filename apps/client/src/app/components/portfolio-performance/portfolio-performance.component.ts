@@ -38,9 +38,9 @@ export class GfPortfolioPerformanceComponent {
   public readonly isLoading = input<boolean>();
   public readonly locale = input<string>(getLocale());
   public readonly performance = input.required<PortfolioPerformance>();
-  public readonly precision = input<number, number | undefined>(2, {
+  public readonly precision = input.required<number, number>({
     transform: (value) => {
-      return value !== undefined && value >= 0 ? value : 2;
+      return value >= 0 ? value : 2;
     }
   });
   public readonly showDetails = input<boolean>(false);
