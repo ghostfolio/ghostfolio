@@ -456,7 +456,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             this.assetProfile?.symbol ? ` (${this.assetProfile.symbol})` : ''
           }`;
 
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.assetProfile?.symbol}%0DData Source: ${this.assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.assetProfile?.symbol}%0DData Source: ${this.assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
 
           if (this.assetProfile?.assetClass) {
             this.assetClass = translate(this.assetProfile?.assetClass);
