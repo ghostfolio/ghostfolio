@@ -13,8 +13,8 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   effect,
+  ElementRef,
   inject,
   input,
   viewChild
@@ -87,6 +87,7 @@ export class GfPortfolioPerformanceComponent {
 
   protected onShowErrors() {
     const errors = this.errors();
+
     if (!errors?.length) {
       return;
     }
