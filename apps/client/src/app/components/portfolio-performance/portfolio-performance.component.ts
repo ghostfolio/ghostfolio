@@ -17,7 +17,7 @@ import {
   inject,
   Input,
   OnChanges,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { CountUp } from 'countup.js';
@@ -43,7 +43,8 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() showDetails: boolean;
   @Input() unit: string;
 
-  @ViewChild('value') private value: ElementRef;
+  private readonly value =
+    viewChild.required<ElementRef<HTMLSpanElement>>('value');
 
   private readonly notificationService = inject(NotificationService);
 
@@ -55,8 +56,8 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
     this.precision = this.precision >= 0 ? this.precision : 2;
 
     if (this.isLoading) {
-      if (this.value?.nativeElement) {
-        this.value.nativeElement.innerHTML = '';
+      if (this.value().nativeElement) {
+        this.value().nativeElement.innerHTML = '';
       }
     } else {
       if (isNumber(this.performance?.currentValueInBaseCurrency)) {
@@ -78,7 +79,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
           }
         ).start();
       } else {
-        this.value.nativeElement.innerHTML = '*****';
+        this.value().nativeElement.innerHTML = '*****';
       }
     }
   }
