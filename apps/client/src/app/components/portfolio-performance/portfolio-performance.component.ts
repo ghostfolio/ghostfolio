@@ -35,7 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-performance.component.html'
 })
 export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;
   @Input() precision: number;
   @Input() showDetails: boolean;
@@ -43,6 +42,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
 
   public readonly errors = input<ResponseError['errors']>();
   public readonly isLoading = input<boolean>();
+  public readonly locale = input<string>(getLocale());
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -63,20 +63,20 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
     } else {
       if (isNumber(this.performance?.currentValueInBaseCurrency)) {
         new CountUp('value', this.performance?.currentValueInBaseCurrency, {
-          decimal: getNumberFormatDecimal(this.locale),
+          decimal: getNumberFormatDecimal(this.locale()),
           decimalPlaces: this.precision,
           duration: 1,
-          separator: getNumberFormatGroup(this.locale)
+          separator: getNumberFormatGroup(this.locale())
         }).start();
       } else if (this.showDetails === false) {
         new CountUp(
           'value',
           this.performance?.netPerformancePercentageWithCurrencyEffect * 100,
           {
-            decimal: getNumberFormatDecimal(this.locale),
+            decimal: getNumberFormatDecimal(this.locale()),
             decimalPlaces: 2,
             duration: 1,
-            separator: getNumberFormatGroup(this.locale)
+            separator: getNumberFormatGroup(this.locale())
           }
         ).start();
       } else {

@@ -38,7 +38,7 @@
         <gf-value
           [colorizeSign]="true"
           [isCurrency]="true"
-          [locale]="locale"
+          [locale]="locale()"
           [value]="
             isLoading()
               ? undefined
@@ -50,7 +50,7 @@
         <gf-value
           [colorizeSign]="true"
           [isPercent]="true"
-          [locale]="locale"
+          [locale]="locale()"
           [value]="
             isLoading()
               ? undefined
