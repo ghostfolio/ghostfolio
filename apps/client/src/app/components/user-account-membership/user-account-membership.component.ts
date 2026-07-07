@@ -52,7 +52,7 @@ export class GfUserAccountMembershipComponent {
   public priceId: string;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
   public trySubscriptionMail =
-    'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
+    'mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;
 
   public constructor(
