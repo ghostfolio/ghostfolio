@@ -341,7 +341,10 @@
               hasPermissionToRequestOwnUserDeletion &&
               (user?.accounts?.length > 0 || user?.activitiesCount > 0)
             ) {
-              <div class="hint-text text-muted" i18n>
+              <button color="warn" i18n mat-flat-button [disabled]="true">
+                Close Account
+              </button>
+              <div class="hint-text mt-2 text-muted" i18n>
                 For security reasons, please delete all activities and accounts
                 first before your Ghostfolio account can be closed.
               </div>
