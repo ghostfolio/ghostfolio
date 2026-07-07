@@ -35,7 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-performance.component.html'
 })
 export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() precision: number;
   @Input() showDetails: boolean;
   @Input() unit: string;
 
@@ -43,6 +42,11 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   public readonly isLoading = input<boolean>();
   public readonly locale = input<string>(getLocale());
   public readonly performance = input.required<PortfolioPerformance>();
+  public readonly precision = input<number, number | undefined>(2, {
+    transform: (value) => {
+      return value !== undefined && value >= 0 ? value : 2;
+    }
+  });
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -54,8 +58,6 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   }
 
   public ngOnChanges() {
-    this.precision = this.precision >= 0 ? this.precision : 2;
-
     if (this.isLoading()) {
       if (this.value().nativeElement) {
         this.value().nativeElement.innerHTML = '';
@@ -64,7 +66,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
       if (isNumber(this.performance().currentValueInBaseCurrency)) {
         new CountUp('value', this.performance().currentValueInBaseCurrency, {
           decimal: getNumberFormatDecimal(this.locale()),
-          decimalPlaces: this.precision,
+          decimalPlaces: this.precision(),
           duration: 1,
           separator: getNumberFormatGroup(this.locale())
         }).start();
