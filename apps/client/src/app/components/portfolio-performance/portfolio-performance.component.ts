@@ -35,7 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-performance.component.html'
 })
 export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() showDetails: boolean;
   @Input() unit: string;
 
   public readonly errors = input<ResponseError['errors']>();
@@ -47,6 +46,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
       return value !== undefined && value >= 0 ? value : 2;
     }
   });
+  public readonly showDetails = input<boolean>(false);
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -70,7 +70,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
           duration: 1,
           separator: getNumberFormatGroup(this.locale())
         }).start();
-      } else if (this.showDetails === false) {
+      } else if (this.showDetails() === false) {
         new CountUp(
           'value',
           this.performance().netPerformancePercentageWithCurrencyEffect * 100,
