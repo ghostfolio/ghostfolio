@@ -43,7 +43,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() showDetails: boolean;
   @Input() unit: string;
 
-  @ViewChild('value') value: ElementRef;
+  @ViewChild('value') private value: ElementRef;
 
   private readonly notificationService = inject(NotificationService);
 
@@ -83,7 +83,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
     }
   }
 
-  public onShowErrors() {
+  protected onShowErrors() {
     if (!this.errors?.length) {
       return;
     }
