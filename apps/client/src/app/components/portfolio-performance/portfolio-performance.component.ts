@@ -14,10 +14,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  effect,
   inject,
   input,
-  Input,
-  OnChanges,
   viewChild
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -34,9 +33,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   styleUrls: ['./portfolio-performance.component.scss'],
   templateUrl: './portfolio-performance.component.html'
 })
-export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() unit: string;
-
+export class GfPortfolioPerformanceComponent {
   public readonly errors = input<ResponseError['errors']>();
   public readonly isLoading = input<boolean>();
   public readonly locale = input<string>(getLocale());
@@ -47,6 +44,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
     }
   });
   public readonly showDetails = input<boolean>(false);
+  public readonly unit = input.required<string>();
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -55,36 +53,36 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
 
   public constructor() {
     addIcons({ timeOutline });
-  }
 
-  public ngOnChanges() {
-    if (this.isLoading()) {
-      if (this.value().nativeElement) {
-        this.value().nativeElement.innerHTML = '';
-      }
-    } else {
-      if (isNumber(this.performance().currentValueInBaseCurrency)) {
-        new CountUp('value', this.performance().currentValueInBaseCurrency, {
-          decimal: getNumberFormatDecimal(this.locale()),
-          decimalPlaces: this.precision(),
-          duration: 1,
-          separator: getNumberFormatGroup(this.locale())
-        }).start();
-      } else if (this.showDetails() === false) {
-        new CountUp(
-          'value',
-          this.performance().netPerformancePercentageWithCurrencyEffect * 100,
-          {
+    effect(() => {
+      if (this.isLoading()) {
+        if (this.value().nativeElement) {
+          this.value().nativeElement.innerHTML = '';
+        }
+      } else {
+        if (isNumber(this.performance().currentValueInBaseCurrency)) {
+          new CountUp('value', this.performance().currentValueInBaseCurrency, {
             decimal: getNumberFormatDecimal(this.locale()),
-            decimalPlaces: 2,
+            decimalPlaces: this.precision(),
             duration: 1,
             separator: getNumberFormatGroup(this.locale())
-          }
-        ).start();
-      } else {
-        this.value().nativeElement.innerHTML = '*****';
+          }).start();
+        } else if (this.showDetails() === false) {
+          new CountUp(
+            'value',
+            this.performance().netPerformancePercentageWithCurrencyEffect * 100,
+            {
+              decimal: getNumberFormatDecimal(this.locale()),
+              decimalPlaces: 2,
+              duration: 1,
+              separator: getNumberFormatGroup(this.locale())
+            }
+          ).start();
+        } else {
+          this.value().nativeElement.innerHTML = '*****';
+        }
       }
-    }
+    });
   }
 
   protected onShowErrors() {
