@@ -71,6 +71,7 @@ import { catchError } from 'rxjs/operators';
 export class GfUserAccountSettingsComponent implements OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
+  public closeUserAccountMail: string;
   public currencies: string[] = [];
   public deleteOwnUserForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
@@ -123,6 +124,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.closeUserAccountMail = `mailto:hi@ghostfol.io?subject=Delete Account&body=Hello%0D%0DPlease delete my Ghostfolio account.%0D%0DUser ID: ${this.user.id}%0D%0DKind regards`;
 
           this.hasPermissionToDeleteOwnUser = hasPermission(
             this.user.permissions,

@@ -280,21 +280,21 @@
       <div class="align-items-center d-flex py-1">
         <div class="pr-1 w-50"></div>
         <div class="pl-1 text-monospace w-50">
-          <button color="primary" mat-flat-button (click)="onExport()">
-            <span i18n>Export Data</span>
+          <button color="primary" i18n mat-flat-button (click)="onExport()">
+            Export Data
           </button>
         </div>
       </div>
-      @if (hasPermissionToDeleteOwnUser) {
-        <hr class="mt-5" />
-        <form
-          class="w-100"
-          [formGroup]="deleteOwnUserForm"
-          (ngSubmit)="onCloseAccount()"
-        >
-          <div class="d-flex py-1">
-            <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
-            <div class="pl-1 w-50">
+      <hr class="mt-5" />
+      <div class="d-flex py-1">
+        <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
+        <div class="pl-1 w-50">
+          @if (hasPermissionToDeleteOwnUser) {
+            <form
+              class="w-100"
+              [formGroup]="deleteOwnUserForm"
+              (ngSubmit)="onCloseAccount()"
+            >
               <mat-form-field
                 appearance="outline"
                 class="without-hint w-100"
@@ -324,18 +324,28 @@
               <button
                 class="mt-2"
                 color="warn"
+                i18n
                 mat-flat-button
                 type="submit"
                 [disabled]="
                   !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
                 "
               >
-                <span i18n>Close Account</span>
+                Close Account
               </button>
+            </form>
+          } @else if (user?.accounts?.length > 0 || user?.activitiesCount > 0) {
+            <div class="hint-text text-muted" i18n>
+              For security reasons, please delete all activities and accounts
+              first before your Ghostfolio account can be closed.
             </div>
-          </div>
-        </form>
-      }
+          } @else {
+            <a color="warn" i18n mat-flat-button [href]="closeUserAccountMail"
+              >Close Account</a
+            >
+          }
+        </div>
+      </div>
     </div>
   </div>
 </div>
