@@ -15,6 +15,7 @@ import {
   Component,
   ElementRef,
   inject,
+  input,
   Input,
   OnChanges,
   viewChild
@@ -34,13 +35,14 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-performance.component.html'
 })
 export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() errors: ResponseError['errors'];
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;
   @Input() precision: number;
   @Input() showDetails: boolean;
   @Input() unit: string;
+
+  public readonly errors = input<ResponseError['errors']>();
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -84,13 +86,14 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   }
 
   protected onShowErrors() {
-    if (!this.errors?.length) {
+    const errors = this.errors();
+    if (!errors?.length) {
       return;
     }
 
     const errorMessageParts: string[] = [];
 
-    for (const error of this.errors) {
+    for (const error of errors) {
       errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
     }
 
