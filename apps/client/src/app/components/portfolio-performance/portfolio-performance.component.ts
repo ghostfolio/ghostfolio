@@ -14,6 +14,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  inject,
   Input,
   OnChanges,
   ViewChild
@@ -44,7 +45,9 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
 
   @ViewChild('value') value: ElementRef;
 
-  public constructor(private notificationService: NotificationService) {
+  private readonly notificationService = inject(NotificationService);
+
+  public constructor() {
     addIcons({ timeOutline });
   }
 
