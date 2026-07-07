@@ -81,7 +81,11 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   }
 
   public onShowErrors() {
-    const errorMessageParts = [];
+    if (!this.errors?.length) {
+      return;
+    }
+
+    const errorMessageParts: string[] = [];
 
     for (const error of this.errors) {
       errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
