@@ -27,6 +27,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -67,6 +68,7 @@ import { interval } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     GfPremiumIndicatorComponent,
@@ -165,6 +167,8 @@ export class GfAdminUsersComponent implements OnInit {
               this.user.permissions,
               permissions.impersonateAllUsers
             );
+
+            this.changeDetectorRef.markForCheck();
           }
         }),
         switchMap(() => this.route.paramMap)
