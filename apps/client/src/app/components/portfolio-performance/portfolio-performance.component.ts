@@ -35,7 +35,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-performance.component.html'
 })
 export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;
   @Input() precision: number;
@@ -43,6 +42,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   @Input() unit: string;
 
   public readonly errors = input<ResponseError['errors']>();
+  public readonly isLoading = input<boolean>();
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -56,7 +56,7 @@ export class GfPortfolioPerformanceComponent implements OnChanges {
   public ngOnChanges() {
     this.precision = this.precision >= 0 ? this.precision : 2;
 
-    if (this.isLoading) {
+    if (this.isLoading()) {
       if (this.value().nativeElement) {
         this.value().nativeElement.innerHTML = '';
       }

@@ -1,7 +1,7 @@
 <div class="container p-0">
   <div class="no-gutters row">
     <div class="status-container text-muted text-right">
-      @if (errors()?.length > 0 && !isLoading) {
+      @if (errors()?.length > 0 && !isLoading()) {
         <ion-icon
           i18n-title
           name="time-outline"
@@ -10,7 +10,7 @@
         />
       }
     </div>
-    @if (isLoading) {
+    @if (isLoading()) {
       <div class="align-items-center d-flex">
         <ngx-skeleton-loader
           animation="pulse"
@@ -24,7 +24,7 @@
     }
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
-      [hidden]="isLoading"
+      [hidden]="isLoading()"
     >
       <span #value id="value"></span>
     </div>
@@ -40,7 +40,7 @@
           [isCurrency]="true"
           [locale]="locale"
           [value]="
-            isLoading
+            isLoading()
               ? undefined
               : performance?.netPerformanceWithCurrencyEffect
           "
@@ -52,7 +52,7 @@
           [isPercent]="true"
           [locale]="locale"
           [value]="
-            isLoading
+            isLoading()
               ? undefined
               : performance?.netPerformancePercentageWithCurrencyEffect
           "
