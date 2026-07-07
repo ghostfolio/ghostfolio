@@ -219,11 +219,11 @@ model SymbolProfile {
   isActive               Boolean                @default(true)
   isin                   String?
   name                   String?
-  updatedAt              DateTime               @updatedAt
   scraperConfiguration   Json?
   sectors                Json?
   symbol                 String
   symbolMapping          Json?
+  updatedAt              DateTime               @updatedAt
   url                    String?
   user                   User?                  @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                 String?
