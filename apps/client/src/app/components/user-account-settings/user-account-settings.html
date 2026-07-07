@@ -285,10 +285,7 @@
           </button>
         </div>
       </div>
-      @if (
-        !hasImpersonationId &&
-        (hasPermissionToDeleteOwnUser || hasPermissionForSubscription)
-      ) {
+      @if (hasPermissionToDeleteOwnUser || hasPermissionForSubscription) {
         <hr class="mt-5" />
         <div class="d-flex py-1">
           <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
