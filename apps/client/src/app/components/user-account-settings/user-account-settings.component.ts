@@ -1,3 +1,4 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   KEY_STAY_SIGNED_IN,
   KEY_TOKEN,
@@ -76,6 +77,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
   public deleteOwnUserForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
   });
+  public hasImpersonationId: boolean;
+  public hasPermissionForSubscription: boolean;
   public hasPermissionToDeleteOwnUser: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
@@ -108,16 +111,32 @@ export class GfUserAccountSettingsComponent implements OnInit {
     private dataService: DataService,
     private destroyRef: DestroyRef,
     private formBuilder: FormBuilder,
+    private impersonationStorageService: ImpersonationStorageService,
     private notificationService: NotificationService,
     private settingsStorageService: SettingsStorageService,
     private snackBar: MatSnackBar,
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
-    const { baseCurrency, currencies } = this.dataService.fetchInfo();
+    const { baseCurrency, currencies, globalPermissions } =
+      this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
     this.currencies = currencies;
+
+    this.hasPermissionForSubscription = hasPermission(
+      globalPermissions,
+      permissions.enableSubscription
+    );
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))

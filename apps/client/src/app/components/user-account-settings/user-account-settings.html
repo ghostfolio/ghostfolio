@@ -285,67 +285,75 @@
           </button>
         </div>
       </div>
-      <hr class="mt-5" />
-      <div class="d-flex py-1">
-        <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
-        <div class="pl-1 w-50">
-          @if (hasPermissionToDeleteOwnUser) {
-            <form
-              class="w-100"
-              [formGroup]="deleteOwnUserForm"
-              (ngSubmit)="onCloseAccount()"
-            >
-              <mat-form-field
-                appearance="outline"
-                class="without-hint w-100"
-                [hideRequiredMarker]="true"
+      @if (
+        !hasImpersonationId &&
+        (hasPermissionToDeleteOwnUser || hasPermissionForSubscription)
+      ) {
+        <hr class="mt-5" />
+        <div class="d-flex py-1">
+          <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
+          <div class="pl-1 w-50">
+            @if (hasPermissionToDeleteOwnUser) {
+              <form
+                class="w-100"
+                [formGroup]="deleteOwnUserForm"
+                (ngSubmit)="onCloseAccount()"
               >
-                <mat-label i18n>Security Token</mat-label>
-                <input
-                  formControlName="accessToken"
-                  matInput
-                  [type]="isAccessTokenHidden ? 'password' : 'text'"
-                />
-                <button
-                  class="mx-2"
-                  mat-icon-button
-                  matSuffix
-                  type="button"
-                  (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                <mat-form-field
+                  appearance="outline"
+                  class="without-hint w-100"
+                  [hideRequiredMarker]="true"
                 >
-                  <ion-icon
-                    class="mat-icon"
-                    [name]="
-                      isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
-                    "
+                  <mat-label i18n>Security Token</mat-label>
+                  <input
+                    formControlName="accessToken"
+                    matInput
+                    [type]="isAccessTokenHidden ? 'password' : 'text'"
                   />
+                  <button
+                    class="mx-2"
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                  >
+                    <ion-icon
+                      class="mat-icon"
+                      [name]="
+                        isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
+                      "
+                    />
+                  </button>
+                </mat-form-field>
+                <button
+                  class="mt-2"
+                  color="warn"
+                  i18n
+                  mat-flat-button
+                  type="submit"
+                  [disabled]="
+                    !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
+                  "
+                >
+                  Close Account
                 </button>
-              </mat-form-field>
-              <button
-                class="mt-2"
-                color="warn"
-                i18n
-                mat-flat-button
-                type="submit"
-                [disabled]="
-                  !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
-                "
+              </form>
+            } @else if (
+              hasPermissionForSubscription &&
+              (user?.accounts?.length > 0 || user?.activitiesCount > 0)
+            ) {
+              <div class="hint-text text-muted" i18n>
+                For security reasons, please delete all activities and accounts
+                first before your Ghostfolio account can be closed.
+              </div>
+            } @else if (hasPermissionForSubscription) {
+              <a color="warn" i18n mat-flat-button [href]="closeUserAccountMail"
+                >Close Account</a
               >
-                Close Account
-              </button>
-            </form>
-          } @else if (user?.accounts?.length > 0 || user?.activitiesCount > 0) {
-            <div class="hint-text text-muted" i18n>
-              For security reasons, please delete all activities and accounts
-              first before your Ghostfolio account can be closed.
-            </div>
-          } @else {
-            <a color="warn" i18n mat-flat-button [href]="closeUserAccountMail"
-              >Close Account</a
-            >
-          }
+            }
+          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>
