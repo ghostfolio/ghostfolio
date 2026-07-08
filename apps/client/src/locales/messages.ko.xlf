@@ -433,7 +433,7 @@
       </trans-unit>
       <trans-unit id="4323470180912194028" datatype="html">
         <source>Copy</source>
-        <target state="new">Copy</target>
+        <target state="translated">복사</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/notifications/alert-dialog/alert-dialog.html</context>
           <context context-type="linenumber">20</context>
@@ -605,7 +605,7 @@
       </trans-unit>
       <trans-unit id="8282940047848889809" datatype="html">
         <source>Paid</source>
-        <target state="new">Paid</target>
+        <target state="translated">유료</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
           <context context-type="linenumber">122</context>
@@ -769,7 +769,7 @@
       </trans-unit>
       <trans-unit id="8410000928786197012" datatype="html">
         <source>Watch the Ghostfol.io Trailer on YouTube</source>
-        <target state="new">Watch the Ghostfol.io Trailer on YouTube</target>
+        <target state="translated">YouTube에서 Ghostfol.io 트레일러 보기</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">19</context>
@@ -805,7 +805,7 @@
       </trans-unit>
       <trans-unit id="1806667489382256324" datatype="html">
         <source>Category</source>
-        <target state="new">Category</target>
+        <target state="translated">카테고리</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">77</context>
@@ -869,7 +869,7 @@
       </trans-unit>
       <trans-unit id="6418462810730461014" datatype="html">
         <source>Data Gathering Frequency</source>
-        <target state="new">Data Gathering Frequency</target>
+        <target state="translated">데이터 수집 빈도</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">454</context>
@@ -905,7 +905,7 @@
       </trans-unit>
       <trans-unit id="6131560364436366828" datatype="html">
         <source>Apply current market price</source>
-        <target state="new">Apply current market price</target>
+        <target state="translated">현재 시장가격 적용</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">238</context>
@@ -913,7 +913,7 @@
       </trans-unit>
       <trans-unit id="6135731497699355929" datatype="html">
         <source>Subscription History</source>
-        <target state="new">Subscription History</target>
+        <target state="translated">구독 내역</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">136</context>
@@ -1097,7 +1097,7 @@
       </trans-unit>
       <trans-unit id="5915287617703658226" datatype="html">
         <source>Total</source>
-        <target state="new">Total</target>
+        <target state="translated">합계</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">155</context>
@@ -2293,7 +2293,7 @@
       </trans-unit>
       <trans-unit id="8793726805339626615" datatype="html">
         <source>Ghostfolio in Numbers: Monthly Active Users (MAU)</source>
-        <target state="new">Ghostfolio in Numbers: Monthly Active Users (MAU)</target>
+        <target state="translated">Ghostfolio 통계: 월간 활성 사용자 수(MAU)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">63</context>
@@ -2333,7 +2333,7 @@
       </trans-unit>
       <trans-unit id="4037247308022519888" datatype="html">
         <source>The value has been copied to the clipboard</source>
-        <target state="new">The value has been copied to the clipboard</target>
+        <target state="translated">값이 클립보드에 복사되었습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/notifications/alert-dialog/alert-dialog.component.ts</context>
           <context context-type="linenumber">46</context>
@@ -2493,7 +2493,7 @@
       </trans-unit>
       <trans-unit id="5463045633785723738" datatype="html">
         <source>Coupon</source>
-        <target state="new">Coupon</target>
+        <target state="translated">쿠폰</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
           <context context-type="linenumber">127</context>
@@ -2529,7 +2529,7 @@
       </trans-unit>
       <trans-unit id="8664947843178872012" datatype="html">
         <source>Close Account</source>
-        <target state="new">Close Account</target>
+        <target state="translated">계정 폐쇄</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">337</context>
@@ -2549,7 +2549,7 @@
       </trans-unit>
       <trans-unit id="4102764207131986196" datatype="html">
         <source>Contributors to Ghostfolio</source>
-        <target state="new">Contributors to Ghostfolio</target>
+        <target state="translated">Ghostfolio의 기여자</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">54</context>
@@ -2885,7 +2885,7 @@
       </trans-unit>
       <trans-unit id="8643034887919513109" datatype="html">
         <source>Financial Planning</source>
-        <target state="new">Financial Planning</target>
+        <target state="translated">재무 설계</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">108</context>
@@ -3221,7 +3221,7 @@
       </trans-unit>
       <trans-unit id="4489207161748215824" datatype="html">
         <source>For security reasons, please delete all activities and accounts first before your Ghostfolio account can be closed.</source>
-        <target state="new">For security reasons, please delete all activities and accounts first before your Ghostfolio account can be closed.</target>
+        <target state="translated">보안을 위해 Ghostfolio 계정을 폐쇄하려면 먼저 모든 거래 내역과 계좌를 삭제해 주세요.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">348</context>
@@ -3349,7 +3349,7 @@
       </trans-unit>
       <trans-unit id="2047393478951255414" datatype="html">
         <source>Creation</source>
-        <target state="new">Creation</target>
+        <target state="translated">생성</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">185</context>
@@ -3389,7 +3389,7 @@
       </trans-unit>
       <trans-unit id="4733690367258997247" datatype="html">
         <source>just now</source>
-        <target state="new">just now</target>
+        <target state="translated">방금 전</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
           <context context-type="linenumber">217</context>
@@ -3713,7 +3713,7 @@
       </trans-unit>
       <trans-unit id="2756436642316668410" datatype="html">
         <source>Oops! Could not delete the asset profiles.</source>
-        <target state="new">Oops! Could not delete the asset profiles.</target>
+        <target state="translated">이런! 자산 프로필을 삭제할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">52</context>
@@ -3897,7 +3897,7 @@
       </trans-unit>
       <trans-unit id="6075566839446502414" datatype="html">
         <source>Available on</source>
-        <target state="new">Available on</target>
+        <target state="translated">이용 가능 플랫폼</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">130</context>
@@ -4205,7 +4205,7 @@
       </trans-unit>
       <trans-unit id="8894377483833272091" datatype="html">
         <source>Price</source>
-        <target state="new">Price</target>
+        <target state="translated">가격</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">171</context>
@@ -4305,7 +4305,7 @@
       </trans-unit>
       <trans-unit id="6999515396807067782" datatype="html">
         <source>Trial</source>
-        <target state="new">Trial</target>
+        <target state="translated">체험판</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
           <context context-type="linenumber">126</context>
@@ -4613,7 +4613,7 @@
       </trans-unit>
       <trans-unit id="2640607428459636406" datatype="html">
         <source>Hourly</source>
-        <target state="new">Hourly</target>
+        <target state="translated">매시간</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">214</context>
@@ -4725,7 +4725,7 @@
       </trans-unit>
       <trans-unit id="3323137014509063489" datatype="html">
         <source>Expiration</source>
-        <target state="new">Expiration</target>
+        <target state="translated">만료</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">204</context>
@@ -5034,7 +5034,7 @@
       </trans-unit>
       <trans-unit id="237127378624497814" datatype="html">
         <source>Upgrade to Ghostfolio Premium</source>
-        <target state="new">Upgrade to Ghostfolio Premium</target>
+        <target state="translated">Ghostfolio 프리미엄으로 업그레이드</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/premium-indicator/premium-indicator.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5122,7 +5122,7 @@
       </trans-unit>
       <trans-unit id="2191562378582791940" datatype="html">
         <source>Stock Tracking</source>
-        <target state="new">Stock Tracking</target>
+        <target state="translated">주식 추적</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">111</context>
@@ -5146,7 +5146,7 @@
       </trans-unit>
       <trans-unit id="9167786874272926575" datatype="html">
         <source>Web</source>
-        <target state="new">Web</target>
+        <target state="translated">웹</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">120</context>
@@ -5342,7 +5342,7 @@
       </trans-unit>
       <trans-unit id="9028573429495160158" datatype="html">
         <source>Portfolio Filters</source>
-        <target state="new">Portfolio Filters</target>
+        <target state="translated">포트폴리오 필터</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">63</context>
@@ -5406,7 +5406,7 @@
       </trans-unit>
       <trans-unit id="1541521390115871091" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Profile} other {Profiles}}</source>
-        <target state="new">{VAR_PLURAL, plural, =1 {Profile} other {Profiles}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {프로필} other {프로필}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">255</context>
@@ -5718,7 +5718,7 @@
       </trans-unit>
       <trans-unit id="6300009182465422833" datatype="html">
         <source>Ghostfolio in Numbers: Pulls on Docker Hub</source>
-        <target state="new">Ghostfolio in Numbers: Pulls on Docker Hub</target>
+        <target state="translated">Ghostfolio 통계: Docker Hub 다운로드 수</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">101</context>
@@ -6350,7 +6350,7 @@
       </trans-unit>
       <trans-unit id="3995811497329884593" datatype="html">
         <source>Expires <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</source>
-        <target state="new">Expires <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> 만료 (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">34</context>
@@ -6390,7 +6390,7 @@
       </trans-unit>
       <trans-unit id="2522011507610634749" datatype="html">
         <source>Fetch market price</source>
-        <target state="new">Fetch market price</target>
+        <target state="translated">시장가격 가져오기</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
           <context context-type="linenumber">40</context>
@@ -6511,7 +6511,7 @@
       </trans-unit>
       <trans-unit id="2988589012964101797" datatype="html">
         <source>Daily</source>
-        <target state="new">Daily</target>
+        <target state="translated">매일</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">210</context>
@@ -6811,7 +6811,7 @@
       </trans-unit>
       <trans-unit id="1284643802050750978" datatype="html">
         <source>Oops! Could not delete the asset profile.</source>
-        <target state="new">Oops! Could not delete the asset profile.</target>
+        <target state="translated">이런! 자산 프로필을 삭제할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">51</context>
@@ -6931,7 +6931,7 @@
       </trans-unit>
       <trans-unit id="1518717392874668219" datatype="html">
         <source>Do you really want to delete these <x id="count" equiv-text="assetProfileCount"/> asset profiles?</source>
-        <target state="new">Do you really want to delete these <x id="count" equiv-text="assetProfileCount"/> asset profiles?</target>
+        <target state="translated">이 <x id="count" equiv-text="assetProfileCount"/>개의 자산 프로필을 정말 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">67</context>
@@ -7175,7 +7175,7 @@
       </trans-unit>
       <trans-unit id="6586833258036069278" datatype="html">
         <source>Tax Reporting</source>
-        <target state="new">Tax Reporting</target>
+        <target state="translated">세금 보고</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">112</context>
@@ -7199,7 +7199,7 @@
       </trans-unit>
       <trans-unit id="6389025757025171607" datatype="html">
         <source>Compare Ghostfolio to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> - <x id="INTERPOLATION_1" equiv-text="{{ personalFinanceTool.slogan }}"/></source>
-        <target state="new">Compare Ghostfolio to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> - <x id="INTERPOLATION_1" equiv-text="{{ personalFinanceTool.slogan }}"/></target>
+        <target state="translated">Ghostfolio와 <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> 비교 - <x id="INTERPOLATION_1" equiv-text="{{ personalFinanceTool.slogan }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">32</context>
@@ -7239,7 +7239,7 @@
       </trans-unit>
       <trans-unit id="3527222903865200876" datatype="html">
         <source>Dividend Tracking</source>
-        <target state="new">Dividend Tracking</target>
+        <target state="translated">배당 추적</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">105</context>
@@ -7303,7 +7303,7 @@
       </trans-unit>
       <trans-unit id="7547813413369998179" datatype="html">
         <source>Delete <x id="INTERPOLATION" equiv-text="{{ selection.selected.length &gt; 1 ? selection.selected.length : &apos;&apos; }}"/> <x id="ICU" equiv-text="{selection.selected.length, plural, =1 {Profile} other {Profiles} }"/></source>
-        <target state="new">Delete <x id="INTERPOLATION" equiv-text="{{ selection.selected.length &gt; 1 ? selection.selected.length : &apos;&apos; }}"/> <x id="ICU" equiv-text="{selection.selected.length, plural, =1 {Profile} other {Profiles} }"/></target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ selection.selected.length &gt; 1 ? selection.selected.length : &apos;&apos; }}"/> <x id="ICU" equiv-text="{selection.selected.length, plural, =1 {Profile} other {Profiles} }"/> 삭제</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">250</context>
@@ -7419,7 +7419,7 @@
       </trans-unit>
       <trans-unit id="1550367033316836764" datatype="html">
         <source>Investment Research</source>
-        <target state="new">Investment Research</target>
+        <target state="translated">투자 리서치</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">109</context>
@@ -7701,7 +7701,7 @@
       </trans-unit>
       <trans-unit id="4060547242431613838" datatype="html">
         <source>Net Worth Tracking</source>
-        <target state="new">Net Worth Tracking</target>
+        <target state="translated">순자산 추적</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">110</context>
@@ -7833,7 +7833,7 @@
       </trans-unit>
       <trans-unit id="1237494164624005096" datatype="html">
         <source>Ghostfolio in Numbers: Stars on GitHub</source>
-        <target state="new">Ghostfolio in Numbers: Stars on GitHub</target>
+        <target state="translated">Ghostfolio 통계: GitHub 스타 수</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">82</context>
@@ -8139,7 +8139,7 @@
       </trans-unit>
       <trans-unit id="3910789128199500333" datatype="html">
         <source>ETF Tracking</source>
-        <target state="new">ETF Tracking</target>
+        <target state="translated">ETF 추적</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">106</context>
@@ -8305,7 +8305,7 @@
       </trans-unit>
       <trans-unit id="2813837590488774096" datatype="html">
         <source>Post to Ghostfolio on X (formerly Twitter)</source>
-        <target state="new">Post to Ghostfolio on X (formerly Twitter)</target>
+        <target state="translated">X(이전의 Twitter)에서 Ghostfolio에 게시하세요.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">85</context>
