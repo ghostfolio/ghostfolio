@@ -90,6 +90,21 @@ model ApiKey {
   @@index([userId])
 }
 
+model AssetProfileOverrides {
+  assetClass      AssetClass?
+  assetSubClass   AssetSubClass?
+  countries       Json?          @default("[]")
+  holdings        Json?          @default("[]")
+  name            String?
+  sectors         Json?          @default("[]")
+  symbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String         @id
+  updatedAt       DateTime       @updatedAt
+  url             String?
+
+  @@map("SymbolProfileOverrides")
+}
+
 model AssetProfileResolution {
   createdAt        DateTime   @default(now())
   currency         String
@@ -187,32 +202,32 @@ model Settings {
 model SymbolProfile {
   activities             Order[]
   assetClass             AssetClass?
+  assetProfileOverrides  AssetProfileOverrides?
   assetSubClass          AssetSubClass?
   comment                String?
   countries              Json?
-  createdAt              DateTime                @default(now())
+  createdAt              DateTime               @default(now())
   currency               String
   cusip                  String?
-  dataGatheringFrequency DataGatheringFrequency  @default(DAILY)
+  dataGatheringFrequency DataGatheringFrequency @default(DAILY)
   dataSource             DataSource
   figi                   String?
   figiComposite          String?
   figiShareClass         String?
-  holdings               Json?                   @default("[]")
-  id                     String                  @id @default(uuid())
-  isActive               Boolean                 @default(true)
+  holdings               Json?                  @default("[]")
+  id                     String                 @id @default(uuid())
+  isActive               Boolean                @default(true)
   isin                   String?
   name                   String?
   scraperConfiguration   Json?
   sectors                Json?
   symbol                 String
   symbolMapping          Json?
-  updatedAt              DateTime                @updatedAt
+  updatedAt              DateTime               @updatedAt
   url                    String?
-  user                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  user                   User?                  @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                 String?
-  watchedBy              User[]                  @relation("UserWatchlist")
-  SymbolProfileOverrides SymbolProfileOverrides?
+  watchedBy              User[]                 @relation("UserWatchlist")
 
   @@unique([dataSource, symbol])
   @@index([assetClass])
@@ -224,19 +239,6 @@ model SymbolProfile {
   @@index([isin])
   @@index([name])
   @@index([symbol])
-}
-
-model SymbolProfileOverrides {
-  assetClass      AssetClass?
-  assetSubClass   AssetSubClass?
-  countries       Json?          @default("[]")
-  holdings        Json?          @default("[]")
-  name            String?
-  sectors         Json?          @default("[]")
-  symbolProfileId String         @id
-  updatedAt       DateTime       @updatedAt
-  url             String?
-  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
 }
 
 model Subscription {
