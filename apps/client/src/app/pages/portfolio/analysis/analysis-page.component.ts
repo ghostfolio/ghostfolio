@@ -171,6 +171,8 @@ export class GfAnalysisPageComponent implements OnInit {
 
           this.update();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
