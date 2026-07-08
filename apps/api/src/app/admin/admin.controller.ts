@@ -29,7 +29,11 @@ import {
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  DateRange,
+  PropertyKey,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -55,6 +59,7 @@ import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { PropertyKeyPipe } from './pipes/property-key.pipe';
 
 @Controller('admin')
 export class AdminController {
@@ -310,7 +315,7 @@ export class AdminController {
   @Put('settings/:key')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateProperty(
-    @Param('key') key: string,
+    @Param('key', PropertyKeyPipe) key: PropertyKey,
     @Body() data: UpdatePropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);

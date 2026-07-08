@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the activities page
 - Set the change detection strategy to `OnPush` in the _FIRE_ page
 - Set the change detection strategy to `OnPush` in the users section of the admin control panel
+- Hardened the endpoint to update a property of the admin control panel by validating the `key` path parameter
 - Renamed the `SymbolProfileOverrides` _Prisma_ data model to `AssetProfileOverrides` while keeping the database table name
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
