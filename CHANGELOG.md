@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the user account deletion flow in the user settings of the user account page
-- Improved the date formatting of the first activity in the market data table of the admin control panel
+- Improved the date formatting of the first activity in the historical market data table of the admin control panel
 - Set the change detection strategy to `OnPush` in the allocations page
 - Set the change detection strategy to `OnPush` in the portfolio holdings page
 - Set the change detection strategy to `OnPush` in the _FIRE_ page
