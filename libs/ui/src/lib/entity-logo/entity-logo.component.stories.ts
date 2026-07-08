@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { importProvidersFrom } from '@angular/core';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 
 import { EntityLogoImageSourceServiceMock } from '../mocks/entity-logo-image-source.service.mock';
@@ -13,7 +13,7 @@ export default {
   decorators: [
     applicationConfig({
       providers: [
-        provideNoopAnimations(),
+        importProvidersFrom(NoopAnimationsModule),
         importProvidersFrom(CommonModule),
         {
           provide: EntityLogoImageSourceService,
