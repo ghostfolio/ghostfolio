@@ -25,6 +25,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -51,6 +52,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComparatorComponent,
     GfInvestmentChartComponent,
@@ -148,6 +150,8 @@ export class GfAnalysisPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
@@ -167,6 +171,8 @@ export class GfAnalysisPageComponent implements OnInit {
 
           this.update();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -229,6 +235,8 @@ export class GfAnalysisPageComponent implements OnInit {
         } else if (mode === 'portfolio') {
           this.isLoadingPortfolioPrompt = false;
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -382,6 +390,7 @@ export class GfAnalysisPageComponent implements OnInit {
       });
 
     this.fetchDividendsAndInvestments();
+
     this.changeDetectorRef.markForCheck();
   }
 
