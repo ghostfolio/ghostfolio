@@ -1100,6 +1100,98 @@ export class PortfolioService {
     };
   }
 
+  public async getPortfolioOverview({
+    filters,
+    impersonationId,
+    userCurrency,
+    userId
+  }: {
+    filters?: Filter[];
+    impersonationId: string;
+    userCurrency: string;
+    userId: string;
+  }) {
+    const [
+      { activities },
+      { createdAt, holdings, markets },
+      { performance: performance1d },
+      { performance: performanceMax },
+      { performance: performanceYtd }
+    ] = await Promise.all([
+      this.activitiesService.getActivities({
+        filters,
+        userCurrency,
+        userId,
+        sortColumn: 'date',
+        sortDirection: 'desc',
+        take: 10,
+        types: [ActivityType.BUY, ActivityType.SELL],
+        withExcludedAccountsAndActivities: false
+      }),
+      this.getDetails({
+        filters,
+        impersonationId,
+        userId,
+        withMarkets: true
+      }),
+      ...(['1d', 'max', 'ytd'] as DateRange[]).map((dateRange) => {
+        return this.getPerformance({
+          dateRange,
+          filters,
+          userId,
+          impersonationId: undefined
+        });
+      })
+    ]);
+
+    const latestActivities = activities.map(
+      ({
+        currency,
+        date,
+        fee,
+        quantity,
+        SymbolProfile,
+        type,
+        unitPrice,
+        value,
+        valueInBaseCurrency
+      }) => {
+        return {
+          currency,
+          date,
+          fee,
+          quantity,
+          SymbolProfile,
+          type,
+          unitPrice,
+          value,
+          valueInBaseCurrency
+        };
+      }
+    );
+
+    return {
+      createdAt,
+      holdings,
+      latestActivities,
+      markets,
+      performance: {
+        '1d': {
+          relativeChange:
+            performance1d.netPerformancePercentageWithCurrencyEffect
+        },
+        max: {
+          relativeChange:
+            performanceMax.netPerformancePercentageWithCurrencyEffect
+        },
+        ytd: {
+          relativeChange:
+            performanceYtd.netPerformancePercentageWithCurrencyEffect
+        }
+      }
+    };
+  }
+
   public async getReport({
     impersonationId,
     userId

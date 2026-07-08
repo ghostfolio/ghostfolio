@@ -1,3 +1,4 @@
+import { ApiKeyModule } from '@ghostfolio/api/services/api-key/api-key.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 
@@ -9,7 +10,7 @@ import { AccessService } from './access.service';
 @Module({
   controllers: [AccessController],
   exports: [AccessService],
-  imports: [ConfigurationModule, PrismaModule],
+  imports: [ApiKeyModule, ConfigurationModule, PrismaModule],
   providers: [AccessService]
 })
 export class AccessModule {}

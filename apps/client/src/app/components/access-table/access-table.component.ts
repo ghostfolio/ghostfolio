@@ -1,9 +1,11 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { DatePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,6 +38,7 @@ import ms from 'ms';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClipboardModule,
+    DatePipe,
     IonIcon,
     MatButtonModule,
     MatMenuModule,
@@ -57,6 +60,10 @@ export class GfAccessTableComponent {
 
   protected readonly baseUrl = window.location.origin;
   protected readonly dataSource = new MatTableDataSource<Access>();
+
+  protected readonly defaultDateFormat = computed(() => {
+    return getDateFormatString(this.user()?.settings?.locale);
+  });
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['alias', 'grantee', 'type', 'details'];

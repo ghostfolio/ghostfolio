@@ -1,3 +1,4 @@
+import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
@@ -14,6 +15,7 @@ import { Logger, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import type { StrategyOptions } from 'passport-openidconnect';
 
+import { ApiAccessTokenStrategy } from './api-access-token.strategy';
 import { ApiKeyStrategy } from './api-key.strategy';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -24,6 +26,7 @@ import { OidcStrategy } from './oidc.strategy';
 @Module({
   controllers: [AuthController],
   imports: [
+    AccessModule,
     ConfigurationModule,
     FetchModule,
     JwtModule.register({
@@ -36,6 +39,7 @@ import { OidcStrategy } from './oidc.strategy';
     UserModule
   ],
   providers: [
+    ApiAccessTokenStrategy,
     ApiKeyService,
     ApiKeyStrategy,
     AuthDeviceService,

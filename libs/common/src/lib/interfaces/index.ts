@@ -48,11 +48,13 @@ import type { AdminUsersResponse } from './responses/admin-users-response.interf
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { AiServiceHealthResponse } from './responses/ai-service-health-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
+import type { ApiPortfolioResponse } from './responses/api-portfolio-response.interface';
 import type { AssetProfileResponse } from './responses/asset-profile-response.interface';
 import type { AssetProfilesResponse } from './responses/asset-profiles-response.interface';
 import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { CreateAccessResponse } from './responses/create-access-response.interface';
 import type { CreateStripeCheckoutSessionResponse } from './responses/create-stripe-checkout-session-response.interface';
 import type { DataEnhancerHealthResponse } from './responses/data-enhancer-health-response.interface';
 import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
@@ -121,6 +123,7 @@ export {
   AiPromptResponse,
   AiServiceHealthResponse,
   ApiKeyResponse,
+  ApiPortfolioResponse,
   AssertionCredentialJSON,
   AssetClassSelectorOption,
   AssetProfileIdentifier,
@@ -134,6 +137,7 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  CreateAccessResponse,
   CreateStripeCheckoutSessionResponse,
   DataEnhancerHealthResponse,
   DataProviderGhostfolioAssetProfileResponse,

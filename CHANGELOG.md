@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for accesses of type `API` including a token-protected portfolio endpoint (experimental)
 - Added support for a copy-to-clipboard action in the alert dialog component
 
 ### Changed

@@ -9,16 +9,19 @@ datasource db {
 }
 
 model Access {
-  alias         String?
-  createdAt     DateTime           @default(now())
-  granteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
-  granteeUserId String?
-  id            String             @id @default(uuid())
-  permissions   AccessPermission[] @default([READ_RESTRICTED])
-  settings      Json               @default("{}")
-  updatedAt     DateTime           @updatedAt
-  userId        String
-  user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
+  alias          String?
+  createdAt      DateTime           @default(now())
+  expiresAt      DateTime?
+  granteeUser    User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
+  granteeUserId  String?
+  hashedApiToken String?            @unique
+  id             String             @id @default(uuid())
+  permissions    AccessPermission[] @default([READ_RESTRICTED])
+  settings       Json               @default("{}")
+  type           AccessType         @default(PRIVATE)
+  updatedAt      DateTime           @updatedAt
+  userId         String
+  user           User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
   @@index([granteeUserId])
@@ -311,6 +314,12 @@ model User {
 enum AccessPermission {
   READ
   READ_RESTRICTED
+}
+
+enum AccessType {
+  API
+  PRIVATE
+  PUBLIC
 }
 
 enum AssetClass {

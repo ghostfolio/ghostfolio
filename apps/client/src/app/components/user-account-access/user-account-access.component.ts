@@ -1,8 +1,11 @@
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { CreateAccessDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { Access, User } from '@ghostfolio/common/interfaces';
+import {
+  Access,
+  CreateAccessResponse,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -201,13 +204,23 @@ export class GfUserAccountAccessComponent implements OnInit {
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
-      if (access) {
-        this.update();
-      }
+    dialogRef
+      .afterClosed()
+      .subscribe((response: CreateAccessResponse | null) => {
+        if (response) {
+          if (response.apiToken) {
+            this.notificationService.alert({
+              copyValue: response.apiToken,
+              message: $localize`For security reasons, the API token is only shown once. Please copy it now and store it securely.`,
+              title: $localize`API token`
+            });
+          }
 
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+          this.update();
+        }
+
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   private openUpdateAccessDialog(accessId: string) {
@@ -226,6 +239,7 @@ export class GfUserAccountAccessComponent implements OnInit {
       data: {
         access: {
           alias: access.alias,
+          expiresAt: access.expiresAt,
           grantee: access.grantee === 'Public' ? undefined : access.grantee,
           id: access.id,
           permissions: access.permissions,

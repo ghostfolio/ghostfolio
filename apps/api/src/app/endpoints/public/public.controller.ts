@@ -1,5 +1,4 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
@@ -21,11 +20,7 @@ import {
   Param,
   UseInterceptors
 } from '@nestjs/common';
-import {
-  AssetClass,
-  AssetSubClass,
-  Type as ActivityType
-} from '@prisma/client';
+import { AccessType, AssetClass, AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -33,7 +28,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 export class PublicController {
   public constructor(
     private readonly accessService: AccessService,
-    private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
@@ -48,7 +42,8 @@ export class PublicController {
   ): Promise<PublicPortfolioResponse> {
     const access = await this.accessService.access({
       granteeUserId: null,
-      id: accessId
+      id: accessId,
+      type: AccessType.PUBLIC
     });
 
     if (!access) {
@@ -70,69 +65,13 @@ export class PublicController {
 
     const { filters } = (access.settings ?? {}) as AccessSettings;
 
-    const [
-      { createdAt, holdings, markets },
-      { performance: performance1d },
-      { performance: performanceMax },
-      { performance: performanceYtd }
-    ] = await Promise.all([
-      this.portfolioService.getDetails({
+    const { createdAt, holdings, latestActivities, markets, performance } =
+      await this.portfolioService.getPortfolioOverview({
         filters,
         impersonationId: access.userId,
-        userId: user.id,
-        withMarkets: true
-      }),
-      ...['1d', 'max', 'ytd'].map((dateRange) => {
-        return this.portfolioService.getPerformance({
-          dateRange,
-          filters,
-          impersonationId: undefined,
-          userId: user.id
-        });
-      })
-    ]);
-
-    const { activities } = await this.activitiesService.getActivities({
-      filters,
-      sortColumn: 'date',
-      sortDirection: 'desc',
-      take: 10,
-      types: [ActivityType.BUY, ActivityType.SELL],
-      userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
-      userId: user.id,
-      withExcludedAccountsAndActivities: false
-    });
-
-    // Experimental
-    const latestActivities = this.configurationService.get(
-      'ENABLE_FEATURE_SUBSCRIPTION'
-    )
-      ? []
-      : activities.map(
-          ({
-            currency,
-            date,
-            fee,
-            quantity,
-            SymbolProfile,
-            type,
-            unitPrice,
-            value,
-            valueInBaseCurrency
-          }) => {
-            return {
-              currency,
-              date,
-              fee,
-              quantity,
-              SymbolProfile,
-              type,
-              unitPrice,
-              value,
-              valueInBaseCurrency
-            };
-          }
-        );
+        userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
+        userId: user.id
+      });
 
     Object.values(markets ?? {}).forEach((market) => {
       delete market.valueInBaseCurrency;
@@ -141,24 +80,16 @@ export class PublicController {
     const publicPortfolioResponse: PublicPortfolioResponse = {
       createdAt,
       hasDetails,
-      latestActivities,
       markets,
+      performance,
       alias: access.alias,
       holdings: {},
-      performance: {
-        '1d': {
-          relativeChange:
-            performance1d.netPerformancePercentageWithCurrencyEffect
-        },
-        max: {
-          relativeChange:
-            performanceMax.netPerformancePercentageWithCurrencyEffect
-        },
-        ytd: {
-          relativeChange:
-            performanceYtd.netPerformancePercentageWithCurrencyEffect
-        }
-      }
+      // Experimental
+      latestActivities: this.configurationService.get(
+        'ENABLE_FEATURE_SUBSCRIPTION'
+      )
+        ? []
+        : latestActivities
     };
 
     const totalValue = getSum(

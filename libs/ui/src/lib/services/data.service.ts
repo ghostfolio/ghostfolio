@@ -33,6 +33,7 @@ import {
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
+  CreateAccessResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
   DataProviderHistoricalResponse,
@@ -829,7 +830,7 @@ export class DataService {
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<Access>('/api/v1/access', aAccess);
+    return this.http.post<CreateAccessResponse>('/api/v1/access', aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
