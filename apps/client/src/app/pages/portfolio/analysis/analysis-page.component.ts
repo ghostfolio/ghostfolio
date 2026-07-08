@@ -390,6 +390,7 @@ export class GfAnalysisPageComponent implements OnInit {
       });
 
     this.fetchDividendsAndInvestments();
+
     this.changeDetectorRef.markForCheck();
   }
 
