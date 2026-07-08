@@ -299,7 +299,7 @@ export class AdminService {
         );
       }
     } else {
-      const symbolProfileOverrides = {
+      const assetProfileOverrides = {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,
         countries: countries as Prisma.JsonArray,
@@ -320,7 +320,7 @@ export class AdminService {
         symbolMapping,
         ...this.symbolProfileService.getAssetProfileUpdateInput(
           { dataSource, symbol },
-          symbolProfileOverrides
+          assetProfileOverrides
         )
       };
 

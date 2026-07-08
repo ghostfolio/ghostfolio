@@ -7,10 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for a copy-to-clipboard action in the alert dialog component
+
 ### Changed
 
 - Hardened the endpoint to update a property of the admin control panel by validating the `key` path parameter
+- Improved the user account deletion flow in the user settings of the user account page
+- Set the change detection strategy to `OnPush` in the portfolio holdings page
 - Set the change detection strategy to `OnPush` in the _FIRE_ page
+- Set the change detection strategy to `OnPush` in the users section of the admin control panel
+- Renamed the `SymbolProfileOverrides` _Prisma_ data model to `AssetProfileOverrides` while keeping the database table name
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
 
 ## 3.21.0 - 2026-07-05
 

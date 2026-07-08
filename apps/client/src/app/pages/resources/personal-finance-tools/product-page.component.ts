@@ -1,5 +1,4 @@
 import { getCountryName } from '@ghostfolio/common/helper';
-import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -13,6 +12,8 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+
+import { ResolvedProduct } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +29,12 @@ export class GfProductPageComponent {
     return subscriptionOffer?.price;
   });
 
-  protected readonly product1 = computed<Product>(() => ({
-    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
+  protected readonly product1 = computed<ResolvedProduct>(() => ({
+    categories: this.getSortedTranslations([
+      'FINANCIAL_PLANNING',
+      'NET_WORTH_TRACKING',
+      'STOCK_TRACKING'
+    ]),
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
@@ -50,21 +55,23 @@ export class GfProductPageComponent {
     ],
     name: 'Ghostfolio',
     origin: getCountryName({ code: 'CH' }),
-    platforms: ['ANDROID', 'WEB'],
+    platforms: this.getSortedTranslations(['ANDROID', 'WEB']),
     regions: [$localize`Global`],
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
   }));
 
-  protected readonly product2 = computed<Product>(() => {
+  protected readonly product2 = computed<ResolvedProduct>(() => {
     const product = personalFinanceTools.find(({ key }) => {
       return key === this.route.snapshot.data['key'];
     });
 
-    const mappedProduct = {
+    const mappedProduct: ResolvedProduct = {
       key: product?.key ?? '',
       name: product?.name ?? '',
-      ...product
+      ...product,
+      categories: this.getSortedTranslations(product?.categories),
+      platforms: this.getSortedTranslations(product?.platforms)
     };
 
     if (mappedProduct.origin) {
@@ -97,9 +104,8 @@ export class GfProductPageComponent {
           ...[product1, product2].flatMap(
             ({ categories, name, origin, platforms }) => {
               return [
-                ...[...(categories ?? []), ...(platforms ?? [])].map((key) => {
-                  return translate(key);
-                }),
+                ...(categories ?? []),
+                ...(platforms ?? []),
                 name,
                 origin
               ];
@@ -130,8 +136,16 @@ export class GfProductPageComponent {
     });
   });
 
-  protected readonly translate = translate;
-
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);
+
+  private getSortedTranslations(values?: string[]) {
+    return values
+      ?.map((value) => {
+        return translate(value);
+      })
+      .sort((a, b) => {
+        return a.localeCompare(b, undefined, { sensitivity: 'base' });
+      });
+  }
 }

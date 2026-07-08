@@ -615,14 +615,14 @@ export class ActivitiesService {
               },
               {
                 OR: [
-                  { SymbolProfileOverrides: { is: null } },
-                  { SymbolProfileOverrides: { assetClass: null } }
+                  { assetProfileOverrides: { is: null } },
+                  { assetProfileOverrides: { assetClass: null } }
                 ]
               }
             ]
           },
           {
-            SymbolProfileOverrides: {
+            assetProfileOverrides: {
               OR: filtersByAssetClass.map(({ id }) => {
                 return { assetClass: AssetClass[id] };
               })
