@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the deprecated `@nx/webpack:webpack` executor to `@nx/webpack/plugin`
 - Set the change detection strategy to `OnPush` in the markets overview
+- Improved the language localization for Chinese (`zh`)
 
 ## 3.22.0 - 2026-07-08
 
