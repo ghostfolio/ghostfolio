@@ -106,15 +106,17 @@ export class GfUserDetailDialogComponent implements OnInit {
   }
 
   public getSum() {
-    return getSum(
-      this.subscriptionsDataSource.data
-        .filter(({ price }) => {
-          return price !== null;
-        })
-        .map(({ price }) => {
-          return new Big(price);
-        })
-    ).toNumber();
+    const prices = this.subscriptionsDataSource.data.reduce<Big[]>(
+      (acc, { price }) => {
+        if (price !== null) {
+          acc.push(new Big(price));
+        }
+
+        return acc;
+      },
+      []
+    );
+    return getSum(prices).toNumber();
   }
 
   public getType({ createdAt, expiresAt, price }: Subscription) {
