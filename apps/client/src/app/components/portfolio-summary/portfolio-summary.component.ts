@@ -8,11 +8,10 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   inject,
   Input,
   OnChanges,
-  Output
+  output
 } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -41,7 +40,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   @Input() summary: PortfolioSummary;
   @Input() user: User;
 
-  @Output() emergencyFundChanged = new EventEmitter<number>();
+  public emergencyFundChanged = output<number>();
 
   protected readonly buyAndSellActivitiesTooltip = translate(
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
