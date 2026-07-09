@@ -39,15 +39,15 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './user-account-membership.html'
 })
 export class GfUserAccountMembershipComponent {
-  protected baseCurrency: string;
+  protected readonly baseCurrency: string;
   protected coupon: number | undefined;
   protected defaultDateFormat: string;
   protected durationExtension: StringValue | undefined;
-  protected hasPermissionForSubscription: boolean;
+  protected readonly hasPermissionForSubscription: boolean;
   protected hasPermissionToCreateApiKey: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected price: number;
-  protected trySubscriptionMail =
+  protected readonly trySubscriptionMail =
     'mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   protected user: User;
 
@@ -55,12 +55,12 @@ export class GfUserAccountMembershipComponent {
   private priceId: string;
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar,
-    private userService: UserService
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly notificationService: NotificationService,
+    private readonly snackBar: MatSnackBar,
+    private readonly userService: UserService
   ) {
     const { baseCurrency, globalPermissions } = this.dataService.fetchInfo();
 
