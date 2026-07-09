@@ -47,7 +47,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   );
 
   public precision = 2;
-  public timeInMarket: string;
+  public timeInMarket: string | undefined;
 
   public get buyingPowerPercentage() {
     return this.summary?.totalValueInBaseCurrency
@@ -77,7 +77,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     if (this.summary) {
       if (
         this.deviceType === 'mobile' &&
-        this.summary.totalValueInBaseCurrency >=
+        (this.summary.totalValueInBaseCurrency ?? 0) >=
           NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
       ) {
         this.precision = 0;
