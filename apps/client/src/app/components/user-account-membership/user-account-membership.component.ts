@@ -13,7 +13,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DestroyRef
+  DestroyRef,
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -54,14 +55,14 @@ export class GfUserAccountMembershipComponent {
   private couponId: string | undefined;
   private priceId: string;
 
-  public constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly notificationService: NotificationService,
-    private readonly snackBar: MatSnackBar,
-    private readonly userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationService = inject(NotificationService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     const { baseCurrency, globalPermissions } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
