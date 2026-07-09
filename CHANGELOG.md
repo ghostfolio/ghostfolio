@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the _Zen Mode_
 - Improved the language localization for Chinese (`zh`)
 
+### Fixed
+
+- Fixed a corrupted translation state attribute in the Catalan (`ca`) and Turkish (`tr`) locales
+
 ## 3.22.0 - 2026-07-08
 
 ### Added
