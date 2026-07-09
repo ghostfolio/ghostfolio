@@ -98,7 +98,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   protected mode: 'create' | 'update';
   protected tagsAvailable: Tag[] = [];
   protected total = 0;
-  protected typesTranslationMap = new Map<Type, string>();
+  protected readonly typesTranslationMap = new Map<Type, string>();
   protected readonly Validators = Validators;
 
   protected readonly data =
