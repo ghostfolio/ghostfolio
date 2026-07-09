@@ -10,7 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the deprecated `@nx/webpack:webpack` executor to `@nx/webpack/plugin`
+- Set the change detection strategy to `OnPush` in the about page
+- Set the change detection strategy to `OnPush` in the admin control panel
+- Set the change detection strategy to `OnPush` in the Frequently Asked Questions (FAQ) page
+- Set the change detection strategy to `OnPush` in the home page
 - Set the change detection strategy to `OnPush` in the markets overview
+- Set the change detection strategy to `OnPush` in the resources page
+- Set the change detection strategy to `OnPush` in the user account page
+- Set the change detection strategy to `OnPush` in the _Zen Mode_
 
 ## 3.22.0 - 2026-07-08
 
