@@ -75,30 +75,31 @@ import { ActivityType } from './types/activity-type.type';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class GfCreateOrUpdateActivityDialogComponent {
-  public activityForm: FormGroup;
+  protected activityForm: FormGroup;
 
-  public assetClassOptions: AssetClassSelectorOption[] = Object.keys(AssetClass)
-    .map((id) => {
-      return { id, label: translate(id) } as AssetClassSelectorOption;
-    })
-    .sort((a, b) => {
-      return a.label.localeCompare(b.label);
-    });
+  protected readonly assetClassOptions: AssetClassSelectorOption[] =
+    Object.keys(AssetClass)
+      .map((id) => {
+        return { id, label: translate(id) } as AssetClassSelectorOption;
+      })
+      .sort((a, b) => {
+        return a.label.localeCompare(b.label);
+      });
 
-  public assetSubClassOptions: AssetClassSelectorOption[] = [];
-  public currencies: string[] = [];
-  public currencyOfAssetProfile: string | undefined;
-  public currentMarketPrice: number | null = null;
-  public defaultDateFormat: string;
-  public defaultLookupItems: LookupItem[] = [];
-  public hasPermissionToCreateOwnTag: boolean | undefined;
-  public isLoading = false;
-  public isToday = isToday;
-  public mode: 'create' | 'update';
-  public tagsAvailable: Tag[] = [];
-  public total = 0;
-  public typesTranslationMap = new Map<Type, string>();
-  public Validators = Validators;
+  protected assetSubClassOptions: AssetClassSelectorOption[] = [];
+  protected currencies: string[] = [];
+  protected currencyOfAssetProfile: string | undefined;
+  protected currentMarketPrice: number | null = null;
+  protected defaultDateFormat: string;
+  protected defaultLookupItems: LookupItem[] = [];
+  protected hasPermissionToCreateOwnTag: boolean | undefined;
+  protected isLoading = false;
+  protected readonly isToday = isToday;
+  protected mode: 'create' | 'update';
+  protected tagsAvailable: Tag[] = [];
+  protected total = 0;
+  protected typesTranslationMap = new Map<Type, string>();
+  protected readonly Validators = Validators;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -106,7 +107,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
     private dataService: DataService,
     private dateAdapter: DateAdapter<Date, string>,
     private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
+    private dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string,
     private userService: UserService
@@ -465,14 +466,14 @@ export class GfCreateOrUpdateActivityDialogComponent {
     }
   }
 
-  public applyCurrentMarketPrice() {
+  protected applyCurrentMarketPrice() {
     this.activityForm.patchValue({
       currencyOfUnitPrice: this.activityForm.get('currency')?.value,
       unitPrice: this.currentMarketPrice
     });
   }
 
-  public dateFilter(aDate: Date) {
+  protected dateFilter(aDate: Date) {
     if (!aDate) {
       return true;
     }
@@ -480,11 +481,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
     return isAfter(aDate, new Date(0));
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.get('accountId')?.value,
       assetClass: this.activityForm.get('assetClass')?.value,
