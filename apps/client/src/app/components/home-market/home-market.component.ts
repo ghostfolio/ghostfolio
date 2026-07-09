@@ -14,6 +14,7 @@ import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -27,6 +28,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfBenchmarkComponent,
     GfFearAndGreedIndexComponent,
