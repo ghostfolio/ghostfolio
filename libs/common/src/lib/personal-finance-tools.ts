@@ -15,6 +15,13 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.mechcad.net'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
+    key: 'akkuro',
+    name: 'Akkuro',
+    slogan: 'Composable Banking',
+    url: 'https://akkuro.com'
+  },
+  {
     categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
     founded: 2023,
     hasSelfHostingAbility: false,
@@ -215,7 +222,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Buxfer',
     origin: 'US',
     platforms: ['WEB'],
-    pricingPerYear: '$48',
+    pricingPerYear: '$96',
     regions: ['Global'],
     slogan: 'Take control of your financial future',
     url: 'https://www.buxfer.com'
