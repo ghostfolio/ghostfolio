@@ -3,7 +3,6 @@ import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -54,7 +53,6 @@ export class GfUserAccountMembershipComponent {
 
   private couponId: string | undefined;
   private priceId: string;
-  private routerLinkPricing = publicRoutes.pricing.routerLink;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
