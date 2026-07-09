@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.22.0 - 2026-07-08
 
 ### Added
 
@@ -13,7 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the user account deletion flow in the user settings of the user account page
+- Improved the date formatting of the first activity in the historical market data table of the admin control panel
+- Set the change detection strategy to `OnPush` in the activities page
+- Set the change detection strategy to `OnPush` in the allocations page
+- Set the change detection strategy to `OnPush` in the analysis page
+- Set the change detection strategy to `OnPush` in the portfolio holdings page
+- Set the change detection strategy to `OnPush` in the activities page
 - Set the change detection strategy to `OnPush` in the _FIRE_ page
+- Set the change detection strategy to `OnPush` in the users section of the admin control panel
+- Hardened the endpoint to update a property of the admin control panel by validating the `key` path parameter
+- Renamed the `SymbolProfileOverrides` _Prisma_ data model to `AssetProfileOverrides` while keeping the database table name
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
