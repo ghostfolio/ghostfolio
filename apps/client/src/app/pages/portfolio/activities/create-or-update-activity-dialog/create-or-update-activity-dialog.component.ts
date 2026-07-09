@@ -138,7 +138,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
             return !['CASH'].includes(assetProfile.assetSubClass);
           })
           .sort((a, b) => {
-            return a.assetProfile.name?.localeCompare(b.assetProfile.name);
+            return (a.assetProfile.name ?? '').localeCompare(
+              b.assetProfile.name ?? ''
+            );
           })
           .map(({ assetProfile }) => {
             return {
