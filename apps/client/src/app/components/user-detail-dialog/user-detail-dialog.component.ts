@@ -51,8 +51,8 @@ import {
 export class GfUserDetailDialogComponent implements OnInit {
   protected baseCurrency: string;
   protected readonly getCountryName = getCountryName;
-  protected subscriptionsDataSource = new MatTableDataSource<Subscription>();
-  protected subscriptionsDisplayedColumns = [
+  protected readonly subscriptionsDataSource = new MatTableDataSource<Subscription>();
+  protected readonly subscriptionsDisplayedColumns = [
     'createdAt',
     'type',
     'price',
