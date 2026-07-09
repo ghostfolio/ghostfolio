@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the resources page
 - Set the change detection strategy to `OnPush` in the user account page
 - Set the change detection strategy to `OnPush` in the _Zen Mode_
+- Improved the language localization for Chinese (`zh`)
 
 ## 3.22.0 - 2026-07-08
 
