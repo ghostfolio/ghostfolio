@@ -9,6 +9,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   Output
@@ -49,6 +50,12 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   protected precision = 2;
   protected timeInMarket: string | undefined;
 
+  private readonly notificationService = inject(NotificationService);
+
+  public constructor() {
+    addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });
+  }
+
   protected get buyingPowerPercentage() {
     return this.summary?.totalValueInBaseCurrency
       ? this.summary.cash / this.summary.totalValueInBaseCurrency
@@ -67,10 +74,6 @@ export class GfPortfolioSummaryComponent implements OnChanges {
       ? this.summary.excludedAccountsAndActivities /
           this.summary.totalValueInBaseCurrency
       : 0;
-  }
-
-  public constructor(private notificationService: NotificationService) {
-    addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });
   }
 
   public ngOnChanges() {
