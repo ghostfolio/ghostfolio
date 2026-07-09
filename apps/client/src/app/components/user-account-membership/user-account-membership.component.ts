@@ -40,20 +40,21 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './user-account-membership.html'
 })
 export class GfUserAccountMembershipComponent {
-  public baseCurrency: string;
-  public coupon: number | undefined;
-  public couponId: string | undefined;
-  public defaultDateFormat: string;
-  public durationExtension: StringValue | undefined;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToCreateApiKey: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public price: number;
-  public priceId: string;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
-  public trySubscriptionMail =
+  protected baseCurrency: string;
+  protected coupon: number | undefined;
+  protected defaultDateFormat: string;
+  protected durationExtension: StringValue | undefined;
+  protected hasPermissionForSubscription: boolean;
+  protected hasPermissionToCreateApiKey: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
+  protected price: number;
+  protected trySubscriptionMail =
     'mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
-  public user: User;
+  protected user: User;
+
+  private couponId: string | undefined;
+  private priceId: string;
+  private routerLinkPricing = publicRoutes.pricing.routerLink;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -104,7 +105,7 @@ export class GfUserAccountMembershipComponent {
       });
   }
 
-  public onCheckout() {
+  protected onCheckout() {
     this.dataService
       .createStripeCheckoutSession({
         couponId: this.couponId,
@@ -125,7 +126,7 @@ export class GfUserAccountMembershipComponent {
       });
   }
 
-  public onGenerateApiKey() {
+  protected onGenerateApiKey() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -158,7 +159,7 @@ export class GfUserAccountMembershipComponent {
     });
   }
 
-  public onRedeemCoupon() {
+  protected onRedeemCoupon() {
     this.notificationService.prompt({
       confirmFn: (value) => {
         const couponCode = value?.trim();
