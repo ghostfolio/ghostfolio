@@ -42,27 +42,27 @@ export class GfPortfolioSummaryComponent implements OnChanges {
 
   @Output() emergencyFundChanged = new EventEmitter<number>();
 
-  public buyAndSellActivitiesTooltip = translate(
+  protected readonly buyAndSellActivitiesTooltip = translate(
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
 
-  public precision = 2;
-  public timeInMarket: string | undefined;
+  protected precision = 2;
+  protected timeInMarket: string | undefined;
 
-  public get buyingPowerPercentage() {
+  protected get buyingPowerPercentage() {
     return this.summary?.totalValueInBaseCurrency
       ? this.summary.cash / this.summary.totalValueInBaseCurrency
       : 0;
   }
 
-  public get emergencyFundPercentage() {
+  protected get emergencyFundPercentage() {
     return this.summary?.totalValueInBaseCurrency
       ? (this.summary.emergencyFund?.total || 0) /
           this.summary.totalValueInBaseCurrency
       : 0;
   }
 
-  public get excludedFromAnalysisPercentage() {
+  protected get excludedFromAnalysisPercentage() {
     return this.summary?.totalValueInBaseCurrency
       ? this.summary.excludedAccountsAndActivities /
           this.summary.totalValueInBaseCurrency
@@ -98,7 +98,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     }
   }
 
-  public onEditEmergencyFund() {
+  protected onEditEmergencyFund() {
     this.notificationService.prompt({
       confirmFn: (value) => {
         const emergencyFund = parseFloat(value.trim()) || 0;
