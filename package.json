@@ -208,7 +208,8 @@
     "ts-jest": "29.4.0",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "webpack-cli": "7.1.0"
   },
   "engines": {
     "node": ">=22.18.0"
