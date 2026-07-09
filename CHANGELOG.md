@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.23.0 - 2026-07-10
 
+### Added
+
+- Exposed the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable to set the data source of the _Fear & Greed Index_ (market mood)
+
 ### Changed
 
 - Migrated the deprecated `@nx/webpack:webpack` executor to `@nx/webpack/plugin`
