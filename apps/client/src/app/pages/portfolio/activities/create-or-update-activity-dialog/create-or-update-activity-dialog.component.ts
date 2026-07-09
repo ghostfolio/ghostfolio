@@ -20,7 +20,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -101,17 +101,20 @@ export class GfCreateOrUpdateActivityDialogComponent {
   protected typesTranslationMap = new Map<Type, string>();
   protected readonly Validators = Validators;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
-    private dataService: DataService,
-    private dateAdapter: DateAdapter<Date, string>,
-    private destroyRef: DestroyRef,
-    private dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>,
-    private formBuilder: FormBuilder,
-    @Inject(MAT_DATE_LOCALE) private locale: string,
-    private userService: UserService
-  ) {
+  protected readonly data =
+    inject<CreateOrUpdateActivityDialogParams>(MAT_DIALOG_DATA);
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private locale = inject<string>(MAT_DATE_LOCALE);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     addIcons({ calendarClearOutline, refreshOutline });
   }
 
