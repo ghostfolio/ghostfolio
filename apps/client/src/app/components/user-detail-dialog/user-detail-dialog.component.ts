@@ -49,16 +49,16 @@ import {
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnInit {
-  public baseCurrency: string;
-  public readonly getCountryName = getCountryName;
-  public subscriptionsDataSource = new MatTableDataSource<Subscription>();
-  public subscriptionsDisplayedColumns = [
+  protected baseCurrency: string;
+  protected readonly getCountryName = getCountryName;
+  protected subscriptionsDataSource = new MatTableDataSource<Subscription>();
+  protected subscriptionsDisplayedColumns = [
     'createdAt',
     'type',
     'price',
     'expiresAt'
   ];
-  public user: AdminUserResponse;
+  protected user: AdminUserResponse;
 
   public constructor(
     private adminService: AdminService,
@@ -98,14 +98,14 @@ export class GfUserDetailDialogComponent implements OnInit {
       });
   }
 
-  public deleteUser() {
+  protected deleteUser() {
     this.dialogRef.close({
       action: 'delete',
       userId: this.data.userId
     });
   }
 
-  public getSum() {
+  protected getSum() {
     const prices = this.subscriptionsDataSource.data.reduce<Big[]>(
       (acc, { price }) => {
         if (price !== null) {
@@ -119,7 +119,7 @@ export class GfUserDetailDialogComponent implements OnInit {
     return getSum(prices).toNumber();
   }
 
-  public getType({ createdAt, expiresAt, price }: Subscription) {
+  protected getType({ createdAt, expiresAt, price }: Subscription) {
     if (price) {
       return $localize`Paid`;
     }
@@ -129,7 +129,7 @@ export class GfUserDetailDialogComponent implements OnInit {
       : $localize`Coupon`;
   }
 
-  public onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 }
