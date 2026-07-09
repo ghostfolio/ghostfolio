@@ -41,10 +41,10 @@ import { catchError } from 'rxjs/operators';
 })
 export class GfUserAccountMembershipComponent {
   public baseCurrency: string;
-  public coupon: number;
-  public couponId: string;
+  public coupon: number | undefined;
+  public couponId: string | undefined;
   public defaultDateFormat: string;
-  public durationExtension: StringValue;
+  public durationExtension: StringValue | undefined;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateApiKey: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
