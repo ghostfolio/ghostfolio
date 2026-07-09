@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the blog page components
 - Set the change detection strategy to `OnPush` in the markets overview
 - Improved the language localization for Chinese (`zh`)
+- Improved the language localization for German (`de`)
 
 ## 3.22.0 - 2026-07-08
 
