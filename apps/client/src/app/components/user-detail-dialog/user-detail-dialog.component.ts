@@ -9,7 +9,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  Inject,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -51,7 +51,8 @@ import {
 export class GfUserDetailDialogComponent implements OnInit {
   protected baseCurrency: string;
   protected readonly getCountryName = getCountryName;
-  protected readonly subscriptionsDataSource = new MatTableDataSource<Subscription>();
+  protected readonly subscriptionsDataSource =
+    new MatTableDataSource<Subscription>();
   protected readonly subscriptionsDisplayedColumns = [
     'createdAt',
     'type',
@@ -60,17 +61,18 @@ export class GfUserDetailDialogComponent implements OnInit {
   ];
   protected user: AdminUserResponse;
 
-  public constructor(
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<
-      GfUserDetailDialogComponent,
-      UserDetailDialogResult
-    >
-  ) {
+  protected readonly data = inject<UserDetailDialogParams>(MAT_DIALOG_DATA);
+
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfUserDetailDialogComponent, UserDetailDialogResult>>(
+      MatDialogRef
+    );
+
+  public constructor() {
     this.baseCurrency = this.dataService.fetchInfo().baseCurrency;
 
     addIcons({
