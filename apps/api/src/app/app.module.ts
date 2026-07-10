@@ -30,7 +30,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { StatusCodes } from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
 
 import { AccessModule } from './access/access.module';
@@ -184,6 +184,7 @@ import { UserModule } from './user/user.module';
         );
 
         return {
+          errorMessage: getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
           skipIf: () => {
             return !isRateLimitingEnabled;
           },
