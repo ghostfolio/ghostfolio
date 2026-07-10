@@ -13,6 +13,7 @@ export interface Environment extends CleanedEnvAccessors {
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
   DATA_SOURCE_EXCHANGE_RATES: string;
+  DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS: string;
   DATA_SOURCE_IMPORT: string;
   DATA_SOURCES: string[];
   DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: string[];

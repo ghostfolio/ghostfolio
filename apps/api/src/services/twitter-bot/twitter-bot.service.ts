@@ -1,10 +1,8 @@
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import {
-  ghostfolioFearAndGreedIndexDataSourceStocks,
-  ghostfolioFearAndGreedIndexSymbolStocks
-} from '@ghostfolio/common/config';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
 import {
   resolveFearAndGreedIndex,
   resolveMarketCondition
@@ -24,6 +22,7 @@ export class TwitterBotService implements OnModuleInit {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly symbolService: SymbolService
   ) {}
 
@@ -49,7 +48,8 @@ export class TwitterBotService implements OnModuleInit {
     try {
       const symbolItem = await this.symbolService.get({
         dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
           symbol: ghostfolioFearAndGreedIndexSymbolStocks
         }
       });
