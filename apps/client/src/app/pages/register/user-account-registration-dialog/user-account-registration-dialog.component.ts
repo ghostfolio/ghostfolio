@@ -9,7 +9,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  Inject,
+  inject,
   ViewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -63,12 +63,14 @@ export class GfUserAccountRegistrationDialogComponent {
   protected readonly routerLinkAboutTermsOfService =
     publicRoutes.about.subRoutes.termsOfService.routerLink;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) protected data: UserAccountRegistrationDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef
-  ) {
+  protected readonly data =
+    inject<UserAccountRegistrationDialogParams>(MAT_DIALOG_DATA);
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  public constructor() {
     addIcons({ arrowForwardOutline, checkmarkOutline, copyOutline });
   }
 
