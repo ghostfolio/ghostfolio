@@ -1739,7 +1739,7 @@
       </trans-unit>
       <trans-unit id="7407646470109951507" datatype="html">
         <source>popular</source>
-        <target state="new">popular</target>
+        <target state="translated">beliebt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">79</context>

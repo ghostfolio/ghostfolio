@@ -6,12 +6,18 @@ import {
   TabConfiguration
 } from '@ghostfolio/ui/page-tabs';
 
-import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { addIcons } from 'ionicons';
 import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-user-account-page',
@@ -52,9 +58,9 @@ export class GfUserAccountPageComponent {
               routerLink: internalRoutes.account.subRoutes.access.routerLink
             }
           ];
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({ diamondOutline, keyOutline, settingsOutline });
