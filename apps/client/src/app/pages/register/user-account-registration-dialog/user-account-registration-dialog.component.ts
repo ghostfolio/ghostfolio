@@ -53,26 +53,26 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
   templateUrl: 'user-account-registration-dialog.html'
 })
 export class GfUserAccountRegistrationDialogComponent {
-  @ViewChild(MatStepper) stepper!: MatStepper;
+  @ViewChild(MatStepper) protected stepper!: MatStepper;
 
-  public accessToken: string | undefined;
-  public authToken: string;
-  public isCreateAccountButtonDisabled = true;
-  public isDisclaimerChecked = false;
-  public role: string;
-  public routerLinkAboutTermsOfService =
+  protected accessToken: string | undefined;
+  protected authToken: string;
+  protected isCreateAccountButtonDisabled = true;
+  protected isDisclaimerChecked = false;
+  protected role: string;
+  protected readonly routerLinkAboutTermsOfService =
     publicRoutes.about.subRoutes.termsOfService.routerLink;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: UserAccountRegistrationDialogParams,
+    @Inject(MAT_DIALOG_DATA) protected data: UserAccountRegistrationDialogParams,
     private dataService: DataService,
     private destroyRef: DestroyRef
   ) {
     addIcons({ arrowForwardOutline, checkmarkOutline, copyOutline });
   }
 
-  public createAccount() {
+  protected createAccount() {
     this.dataService
       .postUser()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -87,11 +87,11 @@ export class GfUserAccountRegistrationDialogComponent {
       });
   }
 
-  public enableCreateAccountButton() {
+  protected enableCreateAccountButton() {
     this.isCreateAccountButtonDisabled = false;
   }
 
-  public onChangeDislaimerChecked() {
+  protected onChangeDislaimerChecked() {
     this.isDisclaimerChecked = !this.isDisclaimerChecked;
   }
 }
