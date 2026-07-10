@@ -55,7 +55,7 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
 export class GfUserAccountRegistrationDialogComponent {
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-  public accessToken: string;
+  public accessToken: string | undefined;
   public authToken: string;
   public isCreateAccountButtonDisabled = true;
   public isDisclaimerChecked = false;
