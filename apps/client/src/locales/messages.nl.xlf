@@ -7218,7 +7218,7 @@
       </trans-unit>
       <trans-unit id="2137905359212133111" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is Open Source Software</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1().name }}"/> is open source software</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">183</context>
