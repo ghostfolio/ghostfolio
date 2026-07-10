@@ -329,4 +329,9 @@ export const TAG_ID_EXCLUDE_FROM_ANALYSIS =
   'f2e868af-8333-459f-b161-cbc6544c24bd';
 export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 
+export const THROTTLE_DEFAULT_LIMIT = 10;
+export const THROTTLE_DEFAULT_TTL = ms('1 minute');
+export const THROTTLE_SIGNUP_LIMIT = 5;
+export const THROTTLE_SIGNUP_TTL = ms('1 hour');
+
 export const UNKNOWN_KEY = 'UNKNOWN';
