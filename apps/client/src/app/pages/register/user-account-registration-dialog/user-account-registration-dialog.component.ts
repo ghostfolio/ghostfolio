@@ -10,7 +10,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -53,7 +53,7 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
   templateUrl: 'user-account-registration-dialog.html'
 })
 export class GfUserAccountRegistrationDialogComponent {
-  @ViewChild(MatStepper) protected stepper!: MatStepper;
+  protected readonly stepper = viewChild.required(MatStepper);
 
   protected accessToken: string | undefined;
   protected authToken: string;
@@ -83,7 +83,7 @@ export class GfUserAccountRegistrationDialogComponent {
         this.authToken = authToken;
         this.role = role;
 
-        this.stepper.next();
+        this.stepper().next();
 
         this.changeDetectorRef.markForCheck();
       });
