@@ -176,13 +176,22 @@ import { UserModule } from './user/user.module';
       imports: [ConfigurationModule],
       inject: [ConfigurationService],
       useFactory: (configurationService: ConfigurationService) => {
+        const isRateLimitingEnabled = configurationService.get(
+          'ENABLE_FEATURE_RATE_LIMITING'
+        );
+
         return {
-          storage: new ThrottlerStorageRedisService({
-            db: configurationService.get('REDIS_DB'),
-            host: configurationService.get('REDIS_HOST'),
-            password: configurationService.get('REDIS_PASSWORD'),
-            port: configurationService.get('REDIS_PORT')
-          }),
+          skipIf: () => {
+            return !isRateLimitingEnabled;
+          },
+          storage: isRateLimitingEnabled
+            ? new ThrottlerStorageRedisService({
+                db: configurationService.get('REDIS_DB'),
+                host: configurationService.get('REDIS_HOST'),
+                password: configurationService.get('REDIS_PASSWORD'),
+                port: configurationService.get('REDIS_PORT')
+              })
+            : undefined,
           throttlers: [
             {
               limit: 10,

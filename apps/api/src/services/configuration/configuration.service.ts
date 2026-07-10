@@ -50,6 +50,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_CRON: bool({ default: true }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_GATHER_NEW_EXCHANGE_RATES: bool({ default: true }),
+      ENABLE_FEATURE_RATE_LIMITING: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
