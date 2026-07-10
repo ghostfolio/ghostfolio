@@ -13,8 +13,30 @@ import {
 
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { bool, cleanEnv, host, json, num, port, str, url } from 'envalid';
+import {
+  bool,
+  cleanEnv,
+  host,
+  json,
+  makeValidator,
+  num,
+  port,
+  str,
+  url
+} from 'envalid';
 import ms from 'ms';
+
+const trustProxy = makeValidator<boolean | number | string>((input) => {
+  if (/^\d+$/.test(input)) {
+    return Number(input);
+  } else if (input === 'false') {
+    return false;
+  } else if (input === 'true') {
+    return true;
+  }
+
+  return input;
+});
 
 @Injectable()
 export class ConfigurationService {
@@ -115,7 +137,7 @@ export class ConfigurationService {
         default: environment.rootUrl
       }),
       STRIPE_SECRET_KEY: str({ default: '' }),
-      TRUST_PROXY: str({ default: '' }),
+      TRUST_PROXY: trustProxy({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
       TWITTER_API_KEY: str({ default: 'dummyApiKey' }),

@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   BULL_BOARD_ROUTE,
   DEFAULT_HOST,
@@ -99,25 +100,17 @@ async function bootstrap() {
     });
   }
 
-  const TRUST_PROXY = configService.get<string>('TRUST_PROXY');
+  const configurationService = app.get(ConfigurationService);
 
-  if (TRUST_PROXY) {
-    let trustProxy: boolean | number | string = TRUST_PROXY;
+  const trustProxy = configurationService.get('TRUST_PROXY');
 
-    if (/^\d+$/.test(TRUST_PROXY)) {
-      trustProxy = Number(TRUST_PROXY);
-    } else if (TRUST_PROXY === 'false') {
-      trustProxy = false;
-    } else if (TRUST_PROXY === 'true') {
-      trustProxy = true;
-    }
-
+  if (trustProxy) {
     app.set('trust proxy', trustProxy);
   }
 
   if (
-    configService.get<string>('ENABLE_FEATURE_RATE_LIMITING') === 'true' &&
-    !TRUST_PROXY
+    configurationService.get('ENABLE_FEATURE_RATE_LIMITING') &&
+    trustProxy === ''
   ) {
     logger.warn(
       'Rate limiting is enabled, but TRUST_PROXY is not set. If the Ghostfolio application runs behind a reverse proxy, the rate limits are shared across all clients.'

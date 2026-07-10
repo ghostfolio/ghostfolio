@@ -188,9 +188,12 @@ import { UserModule } from './user/user.module';
             return !isRateLimitingEnabled;
           },
           storage: isRateLimitingEnabled
-            ? new ThrottlerStorageRedisService(
-                getRedisConnectionOptions(configurationService)
-              )
+            ? new ThrottlerStorageRedisService({
+                ...getRedisConnectionOptions(configurationService),
+                // Reject commands immediately while Redis is unavailable
+                enableOfflineQueue: false,
+                maxRetriesPerRequest: 1
+              })
             : undefined,
           throttlers: [
             {
