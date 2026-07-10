@@ -39,6 +39,8 @@ async function bootstrap() {
     ) as LogLevel[];
   } catch {}
 
+  await configApp.close();
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger:
       customLogLevels ??
@@ -104,11 +106,22 @@ async function bootstrap() {
 
     if (/^\d+$/.test(TRUST_PROXY)) {
       trustProxy = Number(TRUST_PROXY);
+    } else if (TRUST_PROXY === 'false') {
+      trustProxy = false;
     } else if (TRUST_PROXY === 'true') {
       trustProxy = true;
     }
 
     app.set('trust proxy', trustProxy);
+  }
+
+  if (
+    configService.get<string>('ENABLE_FEATURE_RATE_LIMITING') === 'true' &&
+    !TRUST_PROXY
+  ) {
+    logger.warn(
+      'Rate limiting is enabled, but TRUST_PROXY is not set. If the Ghostfolio application runs behind a reverse proxy, the rate limits are shared across all clients.'
+    );
   }
 
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;

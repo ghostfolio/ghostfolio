@@ -100,7 +100,11 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         } else if (error.status === StatusCodes.TOO_MANY_REQUESTS) {
           if (!this.snackBarRef) {
             this.snackBarRef = this.snackBar.open(
-              $localize`Oops! It looks like you’re making too many requests. Please slow down a bit.`
+              $localize`Oops! It looks like you’re making too many requests. Please slow down a bit.`,
+              undefined,
+              {
+                duration: ms('6 seconds')
+              }
             );
 
             this.snackBarRef?.afterDismissed().subscribe(() => {

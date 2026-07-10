@@ -1,4 +1,5 @@
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
@@ -22,7 +23,6 @@ import {
   VERSION_NEUTRAL
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
@@ -40,7 +40,7 @@ export class AuthController {
    * @deprecated
    */
   @Get('anonymous/:accessToken')
-  @UseGuards(ThrottlerGuard)
+  @UseGuards(CustomThrottlerGuard)
   public async accessTokenLoginGet(
     @Param('accessToken') accessToken: string
   ): Promise<OAuthResponse> {
@@ -57,7 +57,7 @@ export class AuthController {
   }
 
   @Post('anonymous')
-  @UseGuards(ThrottlerGuard)
+  @UseGuards(CustomThrottlerGuard)
   public async accessTokenLogin(
     @Body() body: { accessToken: string }
   ): Promise<OAuthResponse> {
@@ -138,6 +138,7 @@ export class AuthController {
   }
 
   @Post('webauthn/generate-authentication-options')
+  @UseGuards(CustomThrottlerGuard)
   public async generateAuthenticationOptions(
     @Body() body: { deviceId: string }
   ) {
@@ -159,7 +160,7 @@ export class AuthController {
   }
 
   @Post('webauthn/verify-authentication')
-  @UseGuards(ThrottlerGuard)
+  @UseGuards(CustomThrottlerGuard)
   public async verifyAuthentication(
     @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
   ) {

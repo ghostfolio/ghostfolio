@@ -1,11 +1,16 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  HEADER_KEY_IMPERSONATION,
+  THROTTLE_SIGNUP_LIMIT,
+  THROTTLE_SIGNUP_TTL
+} from '@ghostfolio/common/config';
 import {
   DeleteOwnUserDto,
   UpdateOwnAccessTokenDto,
@@ -37,11 +42,10 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { Throttle } from '@nestjs/throttler';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash';
-import ms from 'ms';
 
 import { UserService } from './user.service';
 
@@ -130,8 +134,13 @@ export class UserController {
   }
 
   @Post()
-  @Throttle({ default: { limit: 5, ttl: ms('1 hour') } })
-  @UseGuards(ThrottlerGuard)
+  @Throttle({
+    default: {
+      limit: THROTTLE_SIGNUP_LIMIT,
+      ttl: THROTTLE_SIGNUP_TTL
+    }
+  })
+  @UseGuards(CustomThrottlerGuard)
   public async signupUser(): Promise<UserItem> {
     const isUserSignupEnabled =
       await this.propertyService.isUserSignupEnabled();
