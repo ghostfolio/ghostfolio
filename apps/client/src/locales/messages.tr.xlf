@@ -2096,7 +2096,7 @@
       </trans-unit>
       <trans-unit id="8768104874317770689" datatype="html">
         <source>1Y</source>
-        <target state="trasnlated">1Y</target>
+        <target state="translated">1Y</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">232</context>
@@ -4273,7 +4273,7 @@
       </trans-unit>
       <trans-unit id="9040028765832531851" datatype="html">
         <source>This overview page features a curated collection of personal finance tools compared to the open source alternative <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. If you value transparency, data privacy, and community collaboration, Ghostfolio provides an excellent opportunity to take control of your financial management.</source>
-        <target state="translatedew">Bu genel bakış sayfası, diğer kişisel finans araçlarının seçilmiş bir koleksiyonunun açık kaynak alternatifi<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio ile karşılaştırmasını sunmaktadır.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Şeffaflığa, veri gizliliğine ve topluluk işbirliğine değer veriyorsanız Ghostfolio, finansal yönetiminizin kontrolünü ele almak için mükemmel Şeffaflığa, veri gizliliğine ve topluluk işbirliğine değer veriyorsanız Ghostfolio, finansal yönetiminizin kontrolünü ele almak için mükemmel bir fırsat sunuyor.</target>
+        <target state="translated">Bu genel bakış sayfası, diğer kişisel finans araçlarının seçilmiş bir koleksiyonunun açık kaynak alternatifi<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio ile karşılaştırmasını sunmaktadır.<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Şeffaflığa, veri gizliliğine ve topluluk işbirliğine değer veriyorsanız Ghostfolio, finansal yönetiminizin kontrolünü ele almak için mükemmel bir fırsat sunuyor.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">9</context>
