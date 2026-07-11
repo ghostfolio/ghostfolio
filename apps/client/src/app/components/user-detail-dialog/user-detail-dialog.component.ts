@@ -114,7 +114,7 @@ export class GfUserDetailDialogComponent implements OnInit {
           return price !== null;
         })
         .map(({ price }) => {
-          return new Big(price);
+          return new Big(price ?? 0);
         })
     ).toNumber();
   }

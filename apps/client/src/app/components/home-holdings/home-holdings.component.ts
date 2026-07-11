@@ -119,6 +119,10 @@ export class GfHomeHoldingsComponent implements OnInit {
     this.viewModeFormControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((holdingsViewMode) => {
+        if (!holdingsViewMode) {
+          return;
+        }
+
         this.dataService
           .putUserSetting({ holdingsViewMode })
           .pipe(takeUntilDestroyed(this.destroyRef))
@@ -185,7 +189,7 @@ export class GfHomeHoldingsComponent implements OnInit {
       );
     }
 
-    this.holdings = undefined;
+    this.holdings = [];
 
     this.fetchHoldings()
       .pipe(takeUntilDestroyed(this.destroyRef))
