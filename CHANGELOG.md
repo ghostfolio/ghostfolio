@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Rounded the value of the _Fear & Greed Index_ (market mood)
 - Improved the language localization for Korean (`ko`)
 
 ## 3.23.0 - 2026-07-10
