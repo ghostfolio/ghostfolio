@@ -20,11 +20,13 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators
@@ -73,9 +75,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected baseCurrency: string;
   protected closeUserAccountMail: string;
   protected currencies: string[] = [];
-  protected deleteOwnUserForm = this.formBuilder.group({
-    accessToken: ['', Validators.required]
-  });
+  protected deleteOwnUserForm: FormGroup;
   protected hasPermissionToDeleteOwnUser: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
@@ -104,17 +104,21 @@ export class GfUserAccountSettingsComponent implements OnInit {
   ];
   protected user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private formBuilder: FormBuilder,
-    private notificationService: NotificationService,
-    private settingsStorageService: SettingsStorageService,
-    private snackBar: MatSnackBar,
-    private userService: UserService,
-    private webAuthnService: WebAuthnService
-  ) {
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private dataService = inject(DataService);
+  private destroyRef = inject(DestroyRef);
+  private formBuilder = inject(FormBuilder);
+  private notificationService = inject(NotificationService);
+  private settingsStorageService = inject(SettingsStorageService);
+  private snackBar = inject(MatSnackBar);
+  private userService = inject(UserService);
+  private webAuthnService = inject(WebAuthnService);
+
+  public constructor() {
+    this.deleteOwnUserForm = this.formBuilder.group({
+      accessToken: ['', Validators.required]
+    });
+
     const { baseCurrency, currencies } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
