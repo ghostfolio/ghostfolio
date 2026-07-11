@@ -25,8 +25,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  FormBuilder,
-  FormGroup,
+  NonNullableFormBuilder,
   FormsModule,
   ReactiveFormsModule,
   Validators
@@ -75,7 +74,9 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected readonly baseCurrency: string;
   protected closeUserAccountMail: string;
   protected readonly currencies: string[] = [];
-  protected readonly deleteOwnUserForm: FormGroup;
+  protected readonly deleteOwnUserForm = inject(NonNullableFormBuilder).group({
+    accessToken: ['', Validators.required]
+  });
   protected hasPermissionToDeleteOwnUser: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
@@ -107,7 +108,6 @@ export class GfUserAccountSettingsComponent implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
   private readonly settingsStorageService = inject(SettingsStorageService);
   private readonly snackBar = inject(MatSnackBar);
@@ -115,10 +115,6 @@ export class GfUserAccountSettingsComponent implements OnInit {
   private readonly webAuthnService = inject(WebAuthnService);
 
   public constructor() {
-    this.deleteOwnUserForm = this.formBuilder.group({
-      accessToken: ['', Validators.required]
-    });
-
     const { baseCurrency, currencies } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
@@ -201,7 +197,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       confirmFn: () => {
         this.dataService
           .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.get('accessToken')?.value ?? ''
+            accessToken: this.deleteOwnUserForm.controls.accessToken.value
           })
           .pipe(
             catchError(() => {
