@@ -49,7 +49,7 @@ import {
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnInit {
-  protected baseCurrency: string;
+  protected readonly baseCurrency: string;
   protected readonly getCountryName = getCountryName;
   protected readonly subscriptionsDataSource =
     new MatTableDataSource<Subscription>();
