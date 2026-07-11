@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exposed the `ENABLE_FEATURE_RATE_LIMITING` environment variable to control rate limiting for authentication and sign-up endpoints
 - Exposed the `TRUST_PROXY` environment variable to determine the client IP address when running behind a reverse proxy
 
+### Changed
+
+- Improved the language localization for Korean (`ko`)
+
 ## 3.23.0 - 2026-07-10
 
 ### Changed
