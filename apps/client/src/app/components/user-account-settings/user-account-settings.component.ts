@@ -69,22 +69,22 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './user-account-settings.html'
 })
 export class GfUserAccountSettingsComponent implements OnInit {
-  public appearancePlaceholder = $localize`Auto`;
-  public baseCurrency: string;
-  public closeUserAccountMail: string;
-  public currencies: string[] = [];
-  public deleteOwnUserForm = this.formBuilder.group({
+  protected appearancePlaceholder = $localize`Auto`;
+  protected baseCurrency: string;
+  protected closeUserAccountMail: string;
+  protected currencies: string[] = [];
+  protected deleteOwnUserForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
   });
-  public hasPermissionToDeleteOwnUser: boolean;
-  public hasPermissionToRequestOwnUserDeletion: boolean;
-  public hasPermissionToUpdateViewMode: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public isAccessTokenHidden = true;
-  public isFingerprintSupported = this.doesBrowserSupportAuthn();
-  public isWebAuthnEnabled: boolean;
-  public language = document.documentElement.lang;
-  public locales = [
+  protected hasPermissionToDeleteOwnUser: boolean;
+  protected hasPermissionToRequestOwnUserDeletion: boolean;
+  protected hasPermissionToUpdateViewMode: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
+  protected isAccessTokenHidden = true;
+  protected isFingerprintSupported = this.doesBrowserSupportAuthn();
+  protected isWebAuthnEnabled: boolean;
+  protected language = document.documentElement.lang;
+  protected locales = [
     'ca',
     'de',
     'de-CH',
@@ -102,7 +102,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'uk',
     'zh'
   ];
-  public user: User;
+  protected user: User;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -113,7 +113,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     private settingsStorageService: SettingsStorageService,
     private snackBar: MatSnackBar,
     private userService: UserService,
-    public webAuthnService: WebAuthnService
+    private webAuthnService: WebAuthnService
   ) {
     const { baseCurrency, currencies } = this.dataService.fetchInfo();
 
@@ -164,11 +164,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
     this.update();
   }
 
-  public isCommunityLanguage() {
+  protected isCommunityLanguage() {
     return !['de', 'en'].includes(this.language);
   }
 
-  public onChangeUserSetting(aKey: string, aValue: string) {
+  protected onChangeUserSetting(aKey: string, aValue: string) {
     this.dataService
       .putUserSetting({ [aKey]: aValue })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -192,7 +192,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       });
   }
 
-  public onCloseAccount() {
+  protected onCloseAccount() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -220,7 +220,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     });
   }
 
-  public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
+  protected onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -236,7 +236,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       });
   }
 
-  public onExport() {
+  protected onExport() {
     this.dataService
       .fetchExport()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -256,7 +256,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       });
   }
 
-  public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
+  protected onRestrictedViewChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isRestrictedView: aEvent.checked })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -272,7 +272,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       });
   }
 
-  public async onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+  protected async onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
       try {
         await this.registerDevice();
@@ -295,7 +295,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     }
   }
 
-  public onViewModeChange(aEvent: MatSlideToggleChange) {
+  protected onViewModeChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
       .pipe(takeUntilDestroyed(this.destroyRef))
