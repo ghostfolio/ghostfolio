@@ -148,7 +148,9 @@ export class GfUserAccountSettingsComponent implements OnInit {
             permissions.updateViewMode
           );
 
-          this.locales.push(this.user.settings.locale);
+          if (this.user.settings.locale) {
+            this.locales.push(this.user.settings.locale);
+          }
           this.locales = Array.from(new Set(this.locales)).sort();
 
           this.changeDetectorRef.markForCheck();
@@ -195,7 +197,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       confirmFn: () => {
         this.dataService
           .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.get('accessToken').value
+            accessToken: this.deleteOwnUserForm.get('accessToken')?.value ?? ''
           })
           .pipe(
             catchError(() => {
@@ -240,7 +242,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         for (const activity of data.activities) {
-          delete activity.id;
+          delete (activity as Omit<typeof activity, 'id'> & { id?: string }).id;
         }
 
         downloadAsFile({
