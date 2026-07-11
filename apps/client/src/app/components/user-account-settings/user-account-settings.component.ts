@@ -71,19 +71,19 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './user-account-settings.html'
 })
 export class GfUserAccountSettingsComponent implements OnInit {
-  protected appearancePlaceholder = $localize`Auto`;
-  protected baseCurrency: string;
+  protected readonly appearancePlaceholder = $localize`Auto`;
+  protected readonly baseCurrency: string;
   protected closeUserAccountMail: string;
-  protected currencies: string[] = [];
-  protected deleteOwnUserForm: FormGroup;
+  protected readonly currencies: string[] = [];
+  protected readonly deleteOwnUserForm: FormGroup;
   protected hasPermissionToDeleteOwnUser: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
-  protected isFingerprintSupported = this.doesBrowserSupportAuthn();
+  protected readonly isFingerprintSupported = this.doesBrowserSupportAuthn();
   protected isWebAuthnEnabled: boolean;
-  protected language = document.documentElement.lang;
+  protected readonly language = document.documentElement.lang;
   protected locales = [
     'ca',
     'de',
@@ -104,15 +104,15 @@ export class GfUserAccountSettingsComponent implements OnInit {
   ];
   protected user: User;
 
-  private changeDetectorRef = inject(ChangeDetectorRef);
-  private dataService = inject(DataService);
-  private destroyRef = inject(DestroyRef);
-  private formBuilder = inject(FormBuilder);
-  private notificationService = inject(NotificationService);
-  private settingsStorageService = inject(SettingsStorageService);
-  private snackBar = inject(MatSnackBar);
-  private userService = inject(UserService);
-  private webAuthnService = inject(WebAuthnService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly notificationService = inject(NotificationService);
+  private readonly settingsStorageService = inject(SettingsStorageService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+  private readonly webAuthnService = inject(WebAuthnService);
 
   public constructor() {
     this.deleteOwnUserForm = this.formBuilder.group({
