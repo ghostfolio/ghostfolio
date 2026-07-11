@@ -75,7 +75,9 @@ export class GfHomeHoldingsComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly impersonationStorageService = inject(ImpersonationStorageService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
