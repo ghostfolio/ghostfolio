@@ -4,6 +4,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -15,8 +16,7 @@ import {
   PROPERTY_GITHUB_STARGAZERS,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
-  PROPERTY_UPTIME,
-  ghostfolioFearAndGreedIndexDataSourceStocks
+  PROPERTY_UPTIME
 } from '@ghostfolio/common/config';
 import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -33,6 +33,7 @@ export class InfoService {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
     private readonly propertyService: PropertyService,
@@ -60,13 +61,15 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+      const fearAndGreedIndexDataSource =
+        this.dataProviderService.getDataSourceForFearAndGreedIndexStocks();
+
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
-          ghostfolioFearAndGreedIndexDataSourceStocks
+          fearAndGreedIndexDataSource
         );
       } else {
-        info.fearAndGreedDataSource =
-          ghostfolioFearAndGreedIndexDataSourceStocks;
+        info.fearAndGreedDataSource = fearAndGreedIndexDataSource;
       }
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);
