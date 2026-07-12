@@ -1034,7 +1034,7 @@ export abstract class PortfolioCalculator {
         'id'
       );
 
-      symbols[assetProfile.symbol] = currentTransactionPointItem;
+      symbols[symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
 

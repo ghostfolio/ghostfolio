@@ -299,13 +299,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       };
     }
 
+    const assetProfile: PortfolioOrderItem['assetProfile'] = {
+      dataSource,
+      symbol,
+      assetSubClass: isCash ? 'CASH' : undefined
+    };
+
     // Add a synthetic order at the start and the end date
     orders.push({
-      assetProfile: {
-        dataSource,
-        symbol,
-        assetSubClass: isCash ? 'CASH' : undefined
-      },
+      assetProfile,
       date: startDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
@@ -316,11 +318,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     });
 
     orders.push({
-      assetProfile: {
-        dataSource,
-        symbol,
-        assetSubClass: isCash ? 'CASH' : undefined
-      },
+      assetProfile,
       date: endDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
@@ -357,11 +355,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
       } else {
         orders.push({
-          assetProfile: {
-            dataSource,
-            symbol,
-            assetSubClass: isCash ? 'CASH' : undefined
-          },
+          assetProfile,
           date: dateString,
           fee: new Big(0),
           feeInBaseCurrency: new Big(0),
