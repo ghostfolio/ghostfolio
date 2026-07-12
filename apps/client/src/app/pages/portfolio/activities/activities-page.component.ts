@@ -20,6 +20,7 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -64,19 +65,19 @@ export class GfActivitiesPageComponent implements OnInit {
 
   private activityTypesFilter: string[] = [];
 
-  public constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly dataService: DataService,
-    private readonly destroyRef: DestroyRef,
-    private readonly deviceDetectorService: DeviceDetectorService,
-    private readonly dialog: MatDialog,
-    private readonly icsService: IcsService,
-    private readonly impersonationStorageService: ImpersonationStorageService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly userService: UserService
-  ) {
-    route.queryParams
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly icsService = inject(IcsService);
+  private readonly impersonationStorageService = inject(ImpersonationStorageService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
+    this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (params['createDialog']) {
