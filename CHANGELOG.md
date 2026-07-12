@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the layout of the page tabs component by truncating long labels
 - Fixed the display of assets without a currency in the search results of the assistant
 - Fixed the display of assets without a currency in the symbol autocomplete component
 

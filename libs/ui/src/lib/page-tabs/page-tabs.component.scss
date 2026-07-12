@@ -56,6 +56,11 @@
         padding: 2rem 0;
         width: 14rem;
 
+        .mat-mdc-tab-list,
+        .mat-mdc-tab-links {
+          width: 100%;
+        }
+
         .mat-mdc-tab-links {
           flex-direction: column;
 
