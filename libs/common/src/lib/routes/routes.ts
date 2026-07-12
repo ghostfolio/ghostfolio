@@ -153,8 +153,7 @@ export const internalRoutes = {
   webauthn: {
     excludeFromAssistant: true,
     path: 'webauthn',
-    routerLink: ['/webauthn'],
-    title: $localize`Sign in`
+    routerLink: ['/webauthn']
   },
   zen: {
     excludeFromAssistant: true,

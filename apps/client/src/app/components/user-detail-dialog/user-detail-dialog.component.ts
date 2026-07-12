@@ -49,7 +49,7 @@ import {
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnInit {
-  protected baseCurrency: string;
+  protected readonly baseCurrency: string;
   protected readonly getCountryName = getCountryName;
   protected readonly subscriptionsDataSource =
     new MatTableDataSource<Subscription>();
@@ -114,7 +114,7 @@ export class GfUserDetailDialogComponent implements OnInit {
           return price !== null;
         })
         .map(({ price }) => {
-          return new Big(price);
+          return new Big(price ?? 0);
         })
     ).toNumber();
   }
