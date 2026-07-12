@@ -56,7 +56,7 @@ export class GfActivitiesPageComponent implements OnInit {
   protected hasPermissionToCreateActivity: boolean;
   protected hasPermissionToDeleteActivity: boolean;
   protected pageIndex = 0;
-  protected pageSize = DEFAULT_PAGE_SIZE;
+  protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected sortColumn = 'date';
   protected sortDirection: SortDirection = 'desc';
   protected totalItems: number | undefined;
@@ -65,16 +65,16 @@ export class GfActivitiesPageComponent implements OnInit {
   private activityTypesFilter: string[] = [];
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private icsService: IcsService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private userService: UserService
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
+    private readonly destroyRef: DestroyRef,
+    private readonly deviceDetectorService: DeviceDetectorService,
+    private readonly dialog: MatDialog,
+    private readonly icsService: IcsService,
+    private readonly impersonationStorageService: ImpersonationStorageService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly userService: UserService
   ) {
     route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
