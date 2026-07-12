@@ -32,11 +32,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { GfCreateOrUpdateActivityDialogComponent } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { CreateOrUpdateActivityDialogParams } from './create-or-update-activity-dialog/interfaces/interfaces';
 import { GfImportActivitiesDialogComponent } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
+import { ActivitiesPageParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,34 +74,33 @@ export class GfActivitiesPageComponent implements OnInit {
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
   private readonly icsService = inject(IcsService);
-  private readonly impersonationStorageService = inject(ImpersonationStorageService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
     this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        if (params['createDialog']) {
-          if (params['activityId']) {
-            this.dataService
-              .fetchActivity(params['activityId'])
-              .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe((activity) => {
-                this.openCreateActivityDialog(activity);
-              });
-          } else {
-            this.openCreateActivityDialog();
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap((params: ActivitiesPageParams) => {
+          if (params.activityId && (params.createDialog || params.editDialog)) {
+            return this.dataService
+              .fetchActivity(params.activityId)
+              .pipe(map((activity) => ({ activity, params })));
           }
-        } else if (params['editDialog']) {
-          if (params['activityId']) {
-            this.dataService
-              .fetchActivity(params['activityId'])
-              .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe((activity) => {
-                this.openUpdateActivityDialog(activity);
-              });
+
+          return of({ activity: undefined, params });
+        })
+      )
+      .subscribe(({ activity, params }) => {
+        if (params.createDialog) {
+          this.openCreateActivityDialog(activity);
+        } else if (params.editDialog) {
+          if (activity) {
+            this.openUpdateActivityDialog(activity);
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
