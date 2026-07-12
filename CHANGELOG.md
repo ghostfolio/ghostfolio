@@ -9,11 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded `helmet` from version `7.0.0` to `8.2.0`
-
-### Changed
-
 - Changed the default value of the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable from `RAPID_API` to `MANUAL`
+- Upgraded `helmet` from version `7.0.0` to `8.2.0`
 
 ### Fixed
 
