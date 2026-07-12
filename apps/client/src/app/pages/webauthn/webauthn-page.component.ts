@@ -1,6 +1,5 @@
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import {
   ChangeDetectorRef,
@@ -15,7 +14,7 @@ import { Router } from '@angular/router';
 
 @Component({
   host: { class: 'page' },
-  imports: [GfLogoComponent, MatButtonModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, MatProgressSpinnerModule],
   selector: 'gf-webauthn-page',
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
