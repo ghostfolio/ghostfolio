@@ -52,7 +52,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 })
 export class GfActivitiesPageComponent implements OnInit {
   public activityTypesFilter: string[] = [];
-  public dataSource: MatTableDataSource<Activity>;
+  public dataSource: MatTableDataSource<Activity> | undefined;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
@@ -238,7 +238,7 @@ export class GfActivitiesPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         for (const activity of data.activities) {
-          delete activity.id;
+          delete (activity as Omit<typeof activity, 'id'> & { id?: string }).id;
         }
 
         downloadAsFile({
@@ -383,7 +383,7 @@ export class GfActivitiesPageComponent implements OnInit {
       });
   }
 
-  private isCalendarYear(dateRange: DateRange) {
+  private isCalendarYear(dateRange?: DateRange) {
     if (!dateRange) {
       return false;
     }
@@ -410,11 +410,12 @@ export class GfActivitiesPageComponent implements OnInit {
               date: new Date(),
               id: null,
               fee: 0,
+              SymbolProfile: null,
               type: aActivity?.type ?? 'BUY',
               unitPrice: null
             },
             user: this.user
-          },
+          } satisfies CreateOrUpdateActivityDialogParams,
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
