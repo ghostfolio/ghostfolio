@@ -92,7 +92,7 @@ export class GfActivitiesPageComponent implements OnInit {
               .pipe(map((activity) => ({ activity, params })));
           }
 
-          return of({ activity: undefined, params });
+          return of({ params, activity: undefined });
         })
       )
       .subscribe(({ activity, params }) => {
