@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `helmet` from version `7.0.0` to `8.2.0`
 
+### Fixed
+
+- Fixed the display of assets without a currency in the search results of the assistant
+- Fixed the display of assets without a currency in the symbol autocomplete component
+
 ## 3.24.0 - 2026-07-11
 
 ### Added
