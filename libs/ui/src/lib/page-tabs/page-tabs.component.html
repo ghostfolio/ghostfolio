@@ -12,7 +12,7 @@
     @if (tab.showCondition !== false) {
       @if (tab.onClick) {
         <button
-          class="justify-content-start no-min-width overflow-hidden px-2 text-left"
+          class="no-min-width overflow-hidden px-2"
           mat-tab-link
           type="button"
           (click)="tab.onClick()"
@@ -28,7 +28,7 @@
       } @else {
         <a
           #rla="routerLinkActive"
-          class="justify-content-start no-min-width overflow-hidden px-2 text-left"
+          class="no-min-width overflow-hidden px-2"
           mat-tab-link
           routerLinkActive
           [active]="rla.isActive"
@@ -52,7 +52,7 @@
       [size]="deviceType === 'mobile' ? 'large' : 'small'"
     />
     <span
-      class="col d-none d-sm-block ml-1 overflow-hidden p-0 text-truncate"
+      class="col d-none d-sm-block line-height-normal ml-1 overflow-hidden p-0 text-truncate"
       [innerHTML]="tab.label"
     ></span>
   </span>
