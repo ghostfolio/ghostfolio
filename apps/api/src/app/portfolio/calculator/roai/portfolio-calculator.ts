@@ -192,12 +192,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     // Clone orders to keep the original values in this.orders
     let orders: PortfolioOrderItem[] = cloneDeep(
-      this.activities.filter(({ SymbolProfile }) => {
-        return SymbolProfile.symbol === symbol;
+      this.activities.filter(({ assetProfile }) => {
+        return assetProfile.symbol === symbol;
       })
     );
 
-    const isCash = orders[0]?.SymbolProfile?.assetSubClass === 'CASH';
+    const isCash = orders[0]?.assetProfile?.assetSubClass === 'CASH';
 
     if (orders.length <= 0) {
       return {
@@ -301,30 +301,30 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     // Add a synthetic order at the start and the end date
     orders.push({
+      assetProfile: {
+        dataSource,
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
+      },
       date: startDateString,
       fee: new Big(0),
       feeInBaseCurrency: new Big(0),
       itemType: 'start',
       quantity: new Big(0),
-      SymbolProfile: {
-        dataSource,
-        symbol,
-        assetSubClass: isCash ? 'CASH' : undefined
-      },
       type: 'BUY',
       unitPrice: unitPriceAtStartDate
     });
 
     orders.push({
-      date: endDateString,
-      fee: new Big(0),
-      feeInBaseCurrency: new Big(0),
-      itemType: 'end',
-      SymbolProfile: {
+      assetProfile: {
         dataSource,
         symbol,
         assetSubClass: isCash ? 'CASH' : undefined
       },
+      date: endDateString,
+      fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
+      itemType: 'end',
       quantity: new Big(0),
       type: 'BUY',
       unitPrice: unitPriceAtEndDate
@@ -357,15 +357,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
       } else {
         orders.push({
-          date: dateString,
-          fee: new Big(0),
-          feeInBaseCurrency: new Big(0),
-          quantity: new Big(0),
-          SymbolProfile: {
+          assetProfile: {
             dataSource,
             symbol,
             assetSubClass: isCash ? 'CASH' : undefined
           },
+          date: dateString,
+          fee: new Big(0),
+          feeInBaseCurrency: new Big(0),
+          quantity: new Big(0),
           type: 'BUY',
           unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
           unitPriceFromMarketData:

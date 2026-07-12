@@ -141,9 +141,9 @@ export abstract class PortfolioCalculator {
           }
 
           return {
-            SymbolProfile,
             tags,
             type,
+            assetProfile: SymbolProfile,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
             feeInBaseCurrency: new Big(feeInBaseCurrency),
@@ -934,23 +934,23 @@ export abstract class PortfolioCalculator {
     let lastTransactionPoint: TransactionPoint = null;
 
     for (const {
+      assetProfile,
       date,
       fee,
       feeInBaseCurrency,
       quantity,
-      SymbolProfile,
       tags,
       type,
       unitPrice
     } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
 
-      const assetSubClass = SymbolProfile.assetSubClass;
-      const currency = SymbolProfile.currency;
-      const dataSource = SymbolProfile.dataSource;
+      const assetSubClass = assetProfile.assetSubClass;
+      const currency = assetProfile.currency;
+      const dataSource = assetProfile.dataSource;
       const factor = getFactor(type);
-      const skipErrors = !!SymbolProfile.userId; // Skip errors for custom asset profiles
-      const symbol = SymbolProfile.symbol;
+      const skipErrors = !!assetProfile.userId; // Skip errors for custom asset profiles
+      const symbol = assetProfile.symbol;
 
       const oldAccumulatedSymbol = symbols[symbol];
 
@@ -1034,12 +1034,12 @@ export abstract class PortfolioCalculator {
         'id'
       );
 
-      symbols[SymbolProfile.symbol] = currentTransactionPointItem;
+      symbols[assetProfile.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
 
       const newItems = items.filter(({ symbol }) => {
-        return symbol !== SymbolProfile.symbol;
+        return symbol !== assetProfile.symbol;
       });
 
       newItems.push(currentTransactionPointItem);
