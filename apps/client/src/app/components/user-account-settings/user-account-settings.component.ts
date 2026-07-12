@@ -151,6 +151,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
           if (this.user.settings.locale) {
             this.locales.push(this.user.settings.locale);
           }
+
           this.locales = Array.from(new Set(this.locales)).sort();
 
           this.changeDetectorRef.markForCheck();
