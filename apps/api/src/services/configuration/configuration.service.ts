@@ -57,7 +57,7 @@ export class ConfigurationService {
       CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS: str({
-        default: DataSource.RAPID_API
+        default: DataSource.MANUAL
       }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({

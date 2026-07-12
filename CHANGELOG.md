@@ -9,12 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the default value of the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable from `RAPID_API` to `MANUAL`
 - Upgraded `helmet` from version `7.0.0` to `8.2.0`
 
 ### Fixed
 
 - Fixed the display of assets without a currency in the search results of the assistant
 - Fixed the display of assets without a currency in the symbol autocomplete component
+
+### Todo
+
+- **Breaking Change**: Set the environment variable `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS=RAPID_API` to keep using _Rapid API_ as the data source of the _Fear & Greed Index_ (market mood)
 
 ## 3.24.0 - 2026-07-11
 
