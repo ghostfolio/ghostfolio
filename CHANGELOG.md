@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Rounded the value of the _Fear & Greed Index_ (market mood) in the twitter bot service
 - Set the change detection strategy to `OnPush` in the _X-ray_ page
 
 ## 3.25.0 - 2026-07-12
