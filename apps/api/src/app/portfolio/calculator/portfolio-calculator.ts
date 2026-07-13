@@ -121,11 +121,11 @@ export abstract class PortfolioCalculator {
     this.activities = activities
       .map(
         ({
+          assetProfile,
           date,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
           quantity,
-          SymbolProfile,
           tags = [],
           type,
           unitPriceInAssetProfileCurrency
@@ -141,9 +141,9 @@ export abstract class PortfolioCalculator {
           }
 
           return {
+            assetProfile,
             tags,
             type,
-            assetProfile: SymbolProfile,
             date: format(date, DATE_FORMAT),
             fee: new Big(feeInAssetProfileCurrency),
             feeInBaseCurrency: new Big(feeInBaseCurrency),

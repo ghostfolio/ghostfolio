@@ -1,4 +1,5 @@
 import { AuthDeviceDto } from './auth-device.dto';
+import { CountryDto } from './country.dto';
 import { CreateAccessDto } from './create-access.dto';
 import { CreateAccountBalanceDto } from './create-account-balance.dto';
 import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
@@ -10,6 +11,7 @@ import { CreatePlatformDto } from './create-platform.dto';
 import { CreateTagDto } from './create-tag.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
+import { SectorDto } from './sector.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
@@ -26,6 +28,7 @@ import { UpdateUserSettingDto } from './update-user-setting.dto';
 
 export {
   AuthDeviceDto,
+  CountryDto,
   CreateAccessDto,
   CreateAccountBalanceDto,
   CreateAccountDto,
@@ -37,6 +40,7 @@ export {
   CreateTagDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
+  SectorDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,

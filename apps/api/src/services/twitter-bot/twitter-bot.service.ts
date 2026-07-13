@@ -59,9 +59,9 @@ export class TwitterBotService implements OnModuleInit {
           symbolItem.marketPrice
         );
 
-        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${
+        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${round(
           symbolItem.marketPrice
-        }/100)`;
+        )}/100)`;
 
         const benchmarkListing = await this.getBenchmarkListing();
 
