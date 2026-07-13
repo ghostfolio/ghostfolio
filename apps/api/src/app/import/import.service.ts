@@ -122,11 +122,11 @@ export class ImportService {
           const isDuplicate = activities.some((activity) => {
             return (
               activity.accountId === account?.id &&
-              activity.SymbolProfile.currency === assetProfile.currency &&
-              activity.SymbolProfile.dataSource === assetProfile.dataSource &&
+              activity.assetProfile.currency === assetProfile.currency &&
+              activity.assetProfile.dataSource === assetProfile.dataSource &&
               isSameSecond(activity.date, date) &&
               activity.quantity === quantity &&
-              activity.SymbolProfile.symbol === assetProfile.symbol &&
+              activity.assetProfile.symbol === assetProfile.symbol &&
               activity.type === 'DIVIDEND' &&
               activity.unitPrice === marketPrice
             );
@@ -138,6 +138,7 @@ export class ImportService {
 
           return {
             account,
+            assetProfile,
             date,
             error,
             quantity,
@@ -463,19 +464,18 @@ export class ImportService {
       const error = activity.error;
       const fee = activity.fee;
       const quantity = activity.quantity;
-      const SymbolProfile = activity.SymbolProfile;
       const tagIds = activity.tagIds ?? [];
       const type = activity.type;
       const unitPrice = activity.unitPrice;
 
       const assetProfile = assetProfiles[
         getAssetProfileIdentifier({
-          dataSource: SymbolProfile.dataSource,
-          symbol: SymbolProfile.symbol
+          dataSource: activity.assetProfile.dataSource,
+          symbol: activity.assetProfile.symbol
         })
       ] ?? {
-        dataSource: SymbolProfile.dataSource,
-        symbol: SymbolProfile.symbol
+        dataSource: activity.assetProfile.dataSource,
+        symbol: activity.assetProfile.symbol
       };
       const {
         assetClass,
@@ -619,6 +619,8 @@ export class ImportService {
 
       activities.push({
         ...order,
+        // @ts-ignore
+        assetProfile,
         error,
         value,
         valueInBaseCurrency,
@@ -633,19 +635,19 @@ export class ImportService {
 
     if (!isDryRun) {
       // Gather symbol data in the background, if not dry run
-      const uniqueActivities = uniqBy(activities, ({ SymbolProfile }) => {
+      const uniqueActivities = uniqBy(activities, ({ assetProfile }) => {
         return getAssetProfileIdentifier({
-          dataSource: SymbolProfile.dataSource,
-          symbol: SymbolProfile.symbol
+          dataSource: assetProfile.dataSource,
+          symbol: assetProfile.symbol
         });
       });
 
       this.dataGatheringService.gatherSymbols({
-        dataGatheringItems: uniqueActivities.map(({ date, SymbolProfile }) => {
+        dataGatheringItems: uniqueActivities.map(({ assetProfile, date }) => {
           return {
             date,
-            dataSource: SymbolProfile.dataSource,
-            symbol: SymbolProfile.symbol
+            dataSource: assetProfile.dataSource,
+            symbol: assetProfile.symbol
           };
         }),
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
@@ -692,12 +694,12 @@ export class ImportService {
             activity.accountId === accountId &&
             activity.comment === comment &&
             (activity.currency === currency ||
-              activity.SymbolProfile.currency === currency) &&
-            activity.SymbolProfile.dataSource === dataSource &&
+              activity.assetProfile.currency === currency) &&
+            activity.assetProfile.dataSource === dataSource &&
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
-            activity.SymbolProfile.symbol === symbol &&
+            activity.assetProfile.symbol === symbol &&
             activity.type === type &&
             activity.unitPrice === unitPrice
           );
@@ -717,7 +719,7 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
-          SymbolProfile: {
+          assetProfile: {
             dataSource,
             symbol,
             activitiesCount: undefined,
