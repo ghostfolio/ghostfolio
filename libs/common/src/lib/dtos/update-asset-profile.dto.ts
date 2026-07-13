@@ -20,6 +20,7 @@ import {
 } from 'class-validator';
 
 import { CountryDto } from './country.dto';
+import { ScraperConfigurationDto } from './scraper-configuration.dto';
 import { SectorDto } from './sector.dto';
 
 export class UpdateAssetProfileDto {
@@ -67,6 +68,8 @@ export class UpdateAssetProfileDto {
 
   @IsObject()
   @IsOptional()
+  @Type(() => ScraperConfigurationDto)
+  @ValidateNested()
   scraperConfiguration?: Prisma.InputJsonObject;
 
   @IsArray()
