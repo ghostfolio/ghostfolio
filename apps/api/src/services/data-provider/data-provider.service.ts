@@ -177,6 +177,12 @@ export class DataProviderService implements OnModuleInit {
     ];
   }
 
+  public getDataSourceForFearAndGreedIndexStocks(): DataSource {
+    return DataSource[
+      this.configurationService.get('DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS')
+    ];
+  }
+
   public getDataSourceForImport(): DataSource {
     return DataSource[this.configurationService.get('DATA_SOURCE_IMPORT')];
   }

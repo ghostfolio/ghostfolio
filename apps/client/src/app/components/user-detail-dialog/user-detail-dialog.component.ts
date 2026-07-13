@@ -9,7 +9,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  Inject,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -49,28 +49,30 @@ import {
   templateUrl: './user-detail-dialog.html'
 })
 export class GfUserDetailDialogComponent implements OnInit {
-  public baseCurrency: string;
-  public readonly getCountryName = getCountryName;
-  public subscriptionsDataSource = new MatTableDataSource<Subscription>();
-  public subscriptionsDisplayedColumns = [
+  protected readonly baseCurrency: string;
+  protected readonly getCountryName = getCountryName;
+  protected readonly subscriptionsDataSource =
+    new MatTableDataSource<Subscription>();
+  protected readonly subscriptionsDisplayedColumns = [
     'createdAt',
     'type',
     'price',
     'expiresAt'
   ];
-  public user: AdminUserResponse;
+  protected user: AdminUserResponse;
 
-  public constructor(
-    private adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: UserDetailDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<
-      GfUserDetailDialogComponent,
-      UserDetailDialogResult
-    >
-  ) {
+  protected readonly data = inject<UserDetailDialogParams>(MAT_DIALOG_DATA);
+
+  private readonly adminService = inject(AdminService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef =
+    inject<MatDialogRef<GfUserDetailDialogComponent, UserDetailDialogResult>>(
+      MatDialogRef
+    );
+
+  public constructor() {
     this.baseCurrency = this.dataService.fetchInfo().baseCurrency;
 
     addIcons({
@@ -98,26 +100,26 @@ export class GfUserDetailDialogComponent implements OnInit {
       });
   }
 
-  public deleteUser() {
+  protected deleteUser() {
     this.dialogRef.close({
       action: 'delete',
       userId: this.data.userId
     });
   }
 
-  public getSum() {
+  protected getSum() {
     return getSum(
       this.subscriptionsDataSource.data
         .filter(({ price }) => {
           return price !== null;
         })
         .map(({ price }) => {
-          return new Big(price);
+          return new Big(price ?? 0);
         })
     ).toNumber();
   }
 
-  public getType({ createdAt, expiresAt, price }: Subscription) {
+  protected getType({ createdAt, expiresAt, price }: Subscription) {
     if (price) {
       return $localize`Paid`;
     }
@@ -127,7 +129,7 @@ export class GfUserDetailDialogComponent implements OnInit {
       : $localize`Coupon`;
   }
 
-  public onClose() {
+  protected onClose() {
     this.dialogRef.close();
   }
 }

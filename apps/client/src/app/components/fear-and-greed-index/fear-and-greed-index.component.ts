@@ -1,6 +1,7 @@
 import { resolveFearAndGreedIndex } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +12,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgxSkeletonLoaderModule],
+  imports: [DecimalPipe, NgxSkeletonLoaderModule],
   selector: 'gf-fear-and-greed-index',
   styleUrls: ['./fear-and-greed-index.component.scss'],
   templateUrl: './fear-and-greed-index.component.html'

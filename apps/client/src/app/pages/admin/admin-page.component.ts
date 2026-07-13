@@ -12,7 +12,12 @@ import {
   TabConfiguration
 } from '@ghostfolio/ui/page-tabs';
 
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { addIcons } from 'ionicons';
 import {
@@ -24,6 +29,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-admin-page',
@@ -35,6 +41,7 @@ export class AdminPageComponent {
 
   private user: User;
 
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly tokenStorageService = inject(TokenStorageService);
   private readonly userService = inject(UserService);
 
@@ -45,6 +52,8 @@ export class AdminPageComponent {
         this.user = state?.user;
 
         this.initializeTabs();
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({

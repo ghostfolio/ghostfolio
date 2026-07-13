@@ -9,6 +9,7 @@ import {
 } from '@ghostfolio/ui/page-tabs';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -25,6 +26,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-home-page',
@@ -85,9 +87,9 @@ export class GfHomePageComponent implements OnInit {
                 : internalRoutes.home.subRoutes.markets.routerLink
             }
           ];
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({

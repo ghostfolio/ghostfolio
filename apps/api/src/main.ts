@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   BULL_BOARD_ROUTE,
   DEFAULT_HOST,
@@ -38,6 +39,8 @@ async function bootstrap() {
       configService.get<string>('LOG_LEVELS')
     ) as LogLevel[];
   } catch {}
+
+  await configApp.close();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger:
@@ -95,6 +98,23 @@ async function bootstrap() {
         })(req, res, next);
       }
     });
+  }
+
+  const configurationService = app.get(ConfigurationService);
+
+  const trustProxy = configurationService.get('TRUST_PROXY');
+
+  if (trustProxy) {
+    app.set('trust proxy', trustProxy);
+  }
+
+  if (
+    configurationService.get('ENABLE_FEATURE_RATE_LIMITING') &&
+    trustProxy === ''
+  ) {
+    logger.warn(
+      'Rate limiting is enabled, but TRUST_PROXY is not set. If the Ghostfolio application runs behind a reverse proxy, the rate limits are shared across all clients.'
+    );
   }
 
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;
