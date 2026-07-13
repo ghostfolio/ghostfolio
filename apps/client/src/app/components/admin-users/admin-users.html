@@ -241,7 +241,12 @@
                 <hr class="m-0" />
                 <button
                   mat-menu-item
-                  [disabled]="element.id === user?.id"
+                  [disabled]="
+                    !canDeleteUser({
+                      currentUserId: user?.id,
+                      userId: element.id
+                    })
+                  "
                   (click)="onDeleteUser(element.id)"
                 >
                   <span class="align-items-center d-flex">
