@@ -106,13 +106,20 @@ export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].valueInBaseCurrency',
   'activities[*].account.balance',
   'activities[*].account.comment',
+  'activities[*].assetProfile.symbolMapping',
+  'activities[*].assetProfile.watchedByCount',
   'activities[*].comment',
   'activities[*].fee',
   'activities[*].feeInAssetProfileCurrency',
   'activities[*].feeInBaseCurrency',
   'activities[*].quantity',
+
+  /* @deprecated */
   'activities[*].SymbolProfile.symbolMapping',
+
+  /* @deprecated */
   'activities[*].SymbolProfile.watchedByCount',
+
   'activities[*].value',
   'activities[*].valueInBaseCurrency',
   'balance',
