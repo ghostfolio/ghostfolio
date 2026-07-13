@@ -150,8 +150,13 @@ export const DEFAULT_REDACTED_PATHS = [
   'platforms[*].balance',
   'platforms[*].valueInBaseCurrency',
   'quantity',
+
+  /* @deprecated */
   'SymbolProfile.symbolMapping',
+
+  /* @deprecated */
   'SymbolProfile.watchedByCount',
+
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',

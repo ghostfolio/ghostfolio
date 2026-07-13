@@ -80,7 +80,10 @@ export class TransformDataSourceInResponseInterceptor<
             paths: [
               'activities[*].assetProfile.dataSource',
               'activities[*].dataSource',
+
+              /* @deprecated */
               'activities[*].SymbolProfile.dataSource',
+
               'assetProfile.dataSource',
               'benchmarks[*].dataSource',
               'errors[*].dataSource',
@@ -89,7 +92,10 @@ export class TransformDataSourceInResponseInterceptor<
               'holdings[*].assetProfile.dataSource',
               'holdings[*].dataSource',
               'items[*].dataSource',
+
+              /* @deprecated */
               'SymbolProfile.dataSource',
+
               'watchlist[*].dataSource'
             ]
           });
