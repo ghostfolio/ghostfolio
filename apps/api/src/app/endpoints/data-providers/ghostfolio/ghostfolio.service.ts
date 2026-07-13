@@ -1,3 +1,4 @@
+import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { GhostfolioService as GhostfolioDataProviderService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
@@ -25,6 +26,7 @@ import {
   HistoricalResponse,
   LookupItem,
   LookupResponse,
+  MarketDataOfMarketsResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
@@ -42,7 +44,8 @@ export class GhostfolioService {
     private readonly dataProviderService: DataProviderService,
     private readonly fetchService: FetchService,
     private readonly prismaService: PrismaService,
-    private readonly propertyService: PropertyService
+    private readonly propertyService: PropertyService,
+    private readonly symbolService: SymbolService
   ) {}
 
   public async getAssetProfile({ symbol }: GetAssetProfileParams) {
@@ -191,6 +194,31 @@ export class GhostfolioService {
       await Promise.all(promises);
 
       return result;
+    } catch (error) {
+      this.logger.error(error);
+
+      throw error;
+    }
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData: number;
+  }): Promise<MarketDataOfMarketsResponse> {
+    try {
+      const marketDataOfMarkets =
+        await this.symbolService.getMarketDataOfMarkets({
+          includeHistoricalData
+        });
+
+      for (const symbolItem of Object.values(
+        marketDataOfMarkets.fearAndGreedIndex
+      )) {
+        symbolItem.dataSource = DataSource.GHOSTFOLIO;
+      }
+
+      return marketDataOfMarkets;
     } catch (error) {
       this.logger.error(error);
 
