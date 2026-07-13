@@ -13,6 +13,7 @@ import {
 } from 'class-validator';
 
 import { CountryDto } from './country.dto';
+import { HoldingDto } from './holding.dto';
 import { SectorDto } from './sector.dto';
 
 export class CreateAssetProfileDto {
@@ -58,6 +59,8 @@ export class CreateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => HoldingDto)
+  @ValidateNested({ each: true })
   holdings?: Prisma.InputJsonArray;
 
   @IsBoolean()
