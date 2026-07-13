@@ -107,17 +107,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = exportResponse.activities.map(
         (activity) => ({
           ...activityDummyData,
-          ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: 4.46,
-          feeInBaseCurrency: 3.94,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: activity.dataSource,
             name: 'Bitcoin',
             symbol: activity.symbol
           },
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 3.94,
           unitPriceInAssetProfileCurrency: 44558.42
         })
       );

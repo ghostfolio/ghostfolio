@@ -78,49 +78,49 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2024-03-08'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 0.3333333333333333,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-08'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.3333333333333333,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 408
         },
         {
           ...activityDummyData,
-          date: new Date('2024-03-13'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 0.6666666666666666,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-13'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.6666666666666666,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 400
         },
         {
           ...activityDummyData,
-          date: new Date('2024-03-14'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-14'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'SELL',
           unitPriceInAssetProfileCurrency: 411
         }

@@ -97,17 +97,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2023-01-03'),
-          feeInAssetProfileCurrency: 1,
-          feeInBaseCurrency: 0.9238,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Alphabet Inc.',
             symbol: 'GOOGL'
           },
+          date: new Date('2023-01-03'),
+          feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 0.9238,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 89.12
         }

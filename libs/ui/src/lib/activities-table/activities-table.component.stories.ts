@@ -56,7 +56,7 @@ const activities: Activity[] = [
         url: 'https://interactivebrokers.com'
       }
     },
-    SymbolProfile: {
+    assetProfile: {
       assetClass: 'EQUITY',
       assetSubClass: 'ETF',
       comment: undefined,
@@ -123,7 +123,7 @@ const activities: Activity[] = [
         url: 'https://interactivebrokers.com'
       }
     },
-    SymbolProfile: {
+    assetProfile: {
       assetClass: 'EQUITY',
       assetSubClass: 'ETF',
       comment: undefined,
@@ -190,7 +190,7 @@ const activities: Activity[] = [
         url: 'https://interactivebrokers.com'
       }
     },
-    SymbolProfile: {
+    assetProfile: {
       assetClass: 'LIQUIDITY',
       assetSubClass: 'CRYPTOCURRENCY',
       comment: undefined,
@@ -257,7 +257,7 @@ const activities: Activity[] = [
         url: 'https://interactivebrokers.com'
       }
     },
-    SymbolProfile: {
+    assetProfile: {
       assetClass: 'FIXED_INCOME',
       assetSubClass: 'BOND',
       comment: 'No data',
@@ -324,7 +324,7 @@ const activities: Activity[] = [
         url: 'https://interactivebrokers.com'
       }
     },
-    SymbolProfile: {
+    assetProfile: {
       assetClass: 'EQUITY',
       assetSubClass: 'ETF',
       comment: undefined,

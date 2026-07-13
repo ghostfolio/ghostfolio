@@ -85,49 +85,49 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2021-11-22'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'CHF',
             dataSource: 'YAHOO',
             name: 'Bâloise Holding AG',
             symbol: 'BALN.SW'
           },
+          date: new Date('2021-11-22'),
+          feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
+          quantity: 2,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 142.9
         },
         {
           ...activityDummyData,
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.65,
-          feeInBaseCurrency: 1.65,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'CHF',
             dataSource: 'YAHOO',
             name: 'Bâloise Holding AG',
             symbol: 'BALN.SW'
           },
+          date: new Date('2021-11-30'),
+          feeInAssetProfileCurrency: 1.65,
+          feeInBaseCurrency: 1.65,
+          quantity: 1,
           type: 'SELL',
           unitPriceInAssetProfileCurrency: 136.6
         },
         {
           ...activityDummyData,
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'CHF',
             dataSource: 'YAHOO',
             name: 'Bâloise Holding AG',
             symbol: 'BALN.SW'
           },
+          date: new Date('2021-11-30'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'SELL',
           unitPriceInAssetProfileCurrency: 136.6
         }

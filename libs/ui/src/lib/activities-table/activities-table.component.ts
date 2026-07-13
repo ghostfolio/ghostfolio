@@ -285,8 +285,8 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
       }
     } else if (this.canClickActivity(activity)) {
       this.activityClicked.emit({
-        dataSource: activity.SymbolProfile.dataSource,
-        symbol: activity.SymbolProfile.symbol
+        dataSource: activity.assetProfile.dataSource,
+        symbol: activity.assetProfile.symbol
       });
     }
   }

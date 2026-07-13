@@ -96,16 +96,16 @@ describe('PortfolioCalculator', () => {
         (activity) => ({
           ...activityDummyData,
           ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: activity.fee,
-          feeInBaseCurrency: activity.fee,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: activity.dataSource,
             name: 'Bitcoin',
             symbol: activity.symbol
           },
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          feeInBaseCurrency: activity.fee,
           unitPriceInAssetProfileCurrency: activity.unitPrice
         })
       );

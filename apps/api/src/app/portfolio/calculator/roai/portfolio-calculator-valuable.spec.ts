@@ -85,17 +85,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2022-01-01'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'MANUAL',
             name: 'Penthouse Apartment',
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
           },
+          date: new Date('2022-01-01'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 500000
         }

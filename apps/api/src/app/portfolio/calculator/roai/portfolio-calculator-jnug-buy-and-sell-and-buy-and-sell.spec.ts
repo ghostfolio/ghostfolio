@@ -99,16 +99,16 @@ describe('PortfolioCalculator', () => {
         (activity) => ({
           ...activityDummyData,
           ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: activity.fee,
-          feeInBaseCurrency: activity.fee,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: activity.currency,
             dataSource: activity.dataSource,
             name: 'Direxion Daily Junior Gold Miners Index Bull 2X Shares',
             symbol: activity.symbol
           },
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          feeInBaseCurrency: activity.fee,
           unitPriceInAssetProfileCurrency: activity.unitPrice
         })
       );

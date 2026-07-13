@@ -85,33 +85,33 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2021-09-16'),
-          feeInAssetProfileCurrency: 19,
-          feeInBaseCurrency: 19,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2021-09-16'),
+          feeInAssetProfileCurrency: 19,
+          feeInBaseCurrency: 19,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 298.58
         },
         {
           ...activityDummyData,
-          date: new Date('2021-11-16'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2021-11-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'DIVIDEND',
           unitPriceInAssetProfileCurrency: 0.62
         }

@@ -78,6 +78,7 @@ export class TransformDataSourceInResponseInterceptor<
             valueMap,
             object: data,
             paths: [
+              'activities[*].assetProfile.dataSource',
               'activities[*].dataSource',
               'activities[*].SymbolProfile.dataSource',
               'assetProfile.dataSource',

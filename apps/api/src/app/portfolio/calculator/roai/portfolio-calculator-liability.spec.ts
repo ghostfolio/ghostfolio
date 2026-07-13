@@ -85,17 +85,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2023-01-01'), // Date in future
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'MANUAL',
             name: 'Loan',
             symbol: '55196015-1365-4560-aa60-8751ae6d18f8'
           },
+          date: new Date('2023-01-01'), // Date in future
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'LIABILITY',
           unitPriceInAssetProfileCurrency: 3000
         }
