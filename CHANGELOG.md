@@ -5,13 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Set the change detection strategy to `OnPush` in the _X-ray_ page
+
 ## 3.25.0 - 2026-07-12
 
 ### Changed
 
 - Changed the default value of the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable from `RAPID_API` to `MANUAL`
 - Improved the language localization for Dutch (`nl`)
-- Set the change detection strategy to `OnPush` in the X-ray page
 - Upgraded `helmet` from version `7.0.0` to `8.2.0`
 
 ### Fixed
