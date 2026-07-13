@@ -455,6 +455,23 @@ export class ActivitiesService {
           userId,
           accountId: account.id,
           accountUserId: account.userId,
+          assetProfile: {
+            activitiesCount: 0,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countries: [],
+            createdAt: new Date(balanceItem.date),
+            currency: account.currency,
+            dataSource:
+              this.dataProviderService.getDataSourceForExchangeRates(),
+            holdings: [],
+            id: account.currency,
+            isActive: true,
+            name: account.currency,
+            sectors: [],
+            symbol: account.currency,
+            updatedAt: new Date(balanceItem.date)
+          },
           comment: account.name,
           createdAt: new Date(balanceItem.date),
           currency: account.currency,
@@ -823,6 +840,7 @@ export class ActivitiesService {
 
         return {
           ...order,
+          assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
           unitPriceInAssetProfileCurrency,

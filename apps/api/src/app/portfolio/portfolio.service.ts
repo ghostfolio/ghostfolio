@@ -829,10 +829,9 @@ export class PortfolioService {
       timeWeightedInvestmentWithCurrencyEffect
     } = holding;
 
-    const activitiesOfHolding = activities.filter(({ SymbolProfile }) => {
+    const activitiesOfHolding = activities.filter(({ assetProfile }) => {
       return (
-        SymbolProfile.dataSource === dataSource &&
-        SymbolProfile.symbol === symbol
+        assetProfile.dataSource === dataSource && assetProfile.symbol === symbol
       );
     });
 
@@ -2056,11 +2055,11 @@ export class PortfolioService {
         .filter(({ isDraft, type }) => {
           return isDraft === false && type === activityType;
         })
-        .map(({ currency, quantity, SymbolProfile, unitPrice }) => {
+        .map(({ assetProfile, currency, quantity, unitPrice }) => {
           return new Big(
             this.exchangeRateDataService.toCurrency(
               new Big(quantity).mul(unitPrice).toNumber(),
-              currency ?? SymbolProfile.currency,
+              currency ?? assetProfile.currency,
               userCurrency
             )
           );
@@ -2198,16 +2197,11 @@ export class PortfolioService {
         }
       }
 
-      for (const {
-        account,
-        quantity,
-        SymbolProfile,
-        type
-      } of ordersByAccount) {
+      for (const { account, assetProfile, quantity, type } of ordersByAccount) {
         const currentValueOfSymbolInBaseCurrency =
           getFactor(type) *
           quantity *
-          (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
+          (portfolioItemsNow[assetProfile.symbol]?.marketPriceInBaseCurrency ??
             0);
 
         if (accounts[account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {

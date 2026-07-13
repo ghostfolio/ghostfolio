@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Hardened the validation of the countries in the asset profile endpoints
+- Hardened the validation of the sectors in the asset profile endpoints
+- Rounded the value of the _Fear & Greed Index_ (market mood) in the twitter bot service
 - Set the change detection strategy to `OnPush` in the _X-ray_ page
+- Deprecated `SymbolProfile` in favor of `assetProfile` in the activity interface
 - Upgraded `Nx` from version `23.0.1` to `23.0.2`
 
 ## 3.25.0 - 2026-07-12

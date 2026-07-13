@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -98,33 +98,33 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2015-01-01'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Bitcoin USD',
             symbol: 'BTCUSD'
           },
+          date: new Date('2015-01-01'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 2,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 320.43
         },
         {
           ...activityDummyData,
-          date: new Date('2017-12-31'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Bitcoin USD',
             symbol: 'BTCUSD'
           },
+          date: new Date('2017-12-31'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'SELL',
           unitPriceInAssetProfileCurrency: 14156.4
         }

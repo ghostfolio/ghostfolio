@@ -13,6 +13,7 @@ import {
 } from 'class-validator';
 
 import { CountryDto } from './country.dto';
+import { SectorDto } from './sector.dto';
 
 export class CreateAssetProfileDto {
   @IsEnum(AssetClass)
@@ -73,6 +74,8 @@ export class CreateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => SectorDto)
+  @ValidateNested({ each: true })
   sectors?: Prisma.InputJsonArray;
 
   @IsString()
