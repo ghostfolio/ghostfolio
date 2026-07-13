@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the default value of the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable from `RAPID_API` to `MANUAL`
 - Improved the language localization for Dutch (`nl`)
+- Set the change detection strategy to `OnPush` in the X-ray page
 - Upgraded `helmet` from version `7.0.0` to `8.2.0`
 
 ### Fixed
