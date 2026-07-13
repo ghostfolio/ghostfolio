@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hardened the validation of the countries in the asset profile endpoints
 - Set the change detection strategy to `OnPush` in the _X-ray_ page
+- Upgraded `Nx` from version `23.0.1` to `23.0.2`
 
 ## 3.25.0 - 2026-07-12
 
