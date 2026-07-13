@@ -20,6 +20,7 @@ import {
 } from 'class-validator';
 
 import { CountryDto } from './country.dto';
+import { HoldingDto } from './holding.dto';
 import { ScraperConfigurationDto } from './scraper-configuration.dto';
 import { SectorDto } from './sector.dto';
 
@@ -56,6 +57,8 @@ export class UpdateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => HoldingDto)
+  @ValidateNested({ each: true })
   holdings?: Prisma.InputJsonArray;
 
   @IsBoolean()
