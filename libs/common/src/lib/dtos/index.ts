@@ -11,6 +11,7 @@ import { CreatePlatformDto } from './create-platform.dto';
 import { CreateTagDto } from './create-tag.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
+import { SectorDto } from './sector.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
 import { UpdateAccountDto } from './update-account.dto';
@@ -39,6 +40,7 @@ export {
   CreateTagDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
+  SectorDto,
   TransferBalanceDto,
   UpdateAccessDto,
   UpdateAccountDto,
