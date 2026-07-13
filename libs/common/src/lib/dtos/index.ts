@@ -12,6 +12,7 @@ import { CreateTagDto } from './create-tag.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { HoldingDto } from './holding.dto';
+import { ScraperConfigurationDto } from './scraper-configuration.dto';
 import { SectorDto } from './sector.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccessDto } from './update-access.dto';
@@ -42,6 +43,7 @@ export {
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
   HoldingDto,
+  ScraperConfigurationDto,
   SectorDto,
   TransferBalanceDto,
   UpdateAccessDto,
