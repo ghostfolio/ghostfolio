@@ -5,7 +5,7 @@ export class CountryDto {
   code: string;
 
   @IsNumber()
-  @Min(0)
   @Max(1)
+  @Min(0)
   weight: number;
 }
