@@ -536,7 +536,13 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
         this.dialogRef.close(activity);
       } else {
-        (activity as UpdateOrderDto).id = this.data.activity?.id;
+        const activityId = this.data.activity?.id;
+
+        if (!activityId) {
+          throw new Error('Activity ID is required for update');
+        }
+
+        (activity as UpdateOrderDto).id = activityId;
 
         await validateObjectForForm({
           classDto: UpdateOrderDto,
