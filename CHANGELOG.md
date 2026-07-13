@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the change detection strategy to `OnPush` in the _X-ray_ page
 - Upgraded `countries-list` from version `3.3.0` to `3.4.0`
 
 ## 3.25.0 - 2026-07-12
