@@ -181,8 +181,8 @@ export class GfHomeHoldingsComponent implements OnInit {
       this.viewModeFormControl.setValue(
         this.deviceType === 'mobile'
           ? GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
-          : this.user?.settings?.holdingsViewMode ||
-              GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+          : (this.user?.settings?.holdingsViewMode ??
+              GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE),
         { emitEvent: false }
       );
     } else if (this.holdingType === 'CLOSED') {
