@@ -34,6 +34,7 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
+import { isEmpty } from 'lodash';
 
 @Injectable()
 export class GhostfolioService {
@@ -215,7 +216,9 @@ export class GhostfolioService {
       for (const symbolItem of Object.values(
         marketDataOfMarkets.fearAndGreedIndex
       )) {
-        symbolItem.dataSource = DataSource.GHOSTFOLIO;
+        if (!isEmpty(symbolItem)) {
+          symbolItem.dataSource = DataSource.GHOSTFOLIO;
+        }
       }
 
       return marketDataOfMarkets;
