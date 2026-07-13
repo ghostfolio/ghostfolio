@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -86,7 +86,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           assetProfile: {
-            ...symbolProfileDummyData,
+            ...assetProfileDummyData,
             currency: 'CHF',
             dataSource: 'YAHOO',
             name: 'Bâloise Holding AG',
@@ -218,7 +218,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           assetProfile: {
-            ...symbolProfileDummyData,
+            ...assetProfileDummyData,
             currency: 'CHF',
             dataSource: 'YAHOO',
             name: 'Bâloise Holding AG',
@@ -258,7 +258,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           assetProfile: {
-            ...symbolProfileDummyData,
+            ...assetProfileDummyData,
             currency: 'CHF',
             dataSource: 'YAHOO',
             name: 'Bâloise Holding AG',
