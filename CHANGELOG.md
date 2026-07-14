@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the change detection strategy to `OnPush` in the registration page
 - Set the change detection strategy to `OnPush` in the resources pages
 
+### Fixed
+
+- Improved the error handling in the `HtmlTemplateMiddleware`
+
 ## 3.26.0 - 2026-07-14
 
 ### Added
