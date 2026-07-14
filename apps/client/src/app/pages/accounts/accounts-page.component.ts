@@ -15,6 +15,7 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -36,6 +37,7 @@ import { TransferBalanceDialogParams } from './transfer-balance/interfaces/inter
 import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfAccountsTableComponent, GfFabComponent, RouterModule],
   selector: 'gf-accounts-page',
@@ -120,9 +122,9 @@ export class GfAccountsPageComponent implements OnInit {
             this.user.permissions,
             permissions.updateAccount
           );
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.fetchAccounts();

@@ -1,8 +1,9 @@
 import { GfHomeMarketComponent } from '@ghostfolio/client/components/home-market/home-market.component';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfHomeMarketComponent],
   selector: 'gf-markets-page',
