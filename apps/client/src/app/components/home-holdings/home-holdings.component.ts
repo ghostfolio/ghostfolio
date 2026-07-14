@@ -58,7 +58,7 @@ export class GfHomeHoldingsComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToAccessHoldingsChart: boolean;
   protected hasPermissionToCreateActivity: boolean;
-  protected holdings: PortfolioPosition[];
+  protected holdings: PortfolioPosition[] | undefined;
   protected holdingType: HoldingType = 'ACTIVE';
   protected readonly holdingTypeOptions: ToggleOption[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
@@ -192,7 +192,7 @@ export class GfHomeHoldingsComponent implements OnInit {
       );
     }
 
-    this.holdings = [];
+    this.holdings = undefined;
 
     this.fetchHoldings()
       .pipe(takeUntilDestroyed(this.destroyRef))
