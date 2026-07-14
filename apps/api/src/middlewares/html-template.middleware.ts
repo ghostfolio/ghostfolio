@@ -127,7 +127,8 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
     let languageCode = path.substr(1, 2);
 
     if (
-      !(SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode)
+      !(SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode) ||
+      !this.indexHtmlMap[languageCode]
     ) {
       languageCode = DEFAULT_LANGUAGE_CODE;
     }
