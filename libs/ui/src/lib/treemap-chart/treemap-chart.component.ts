@@ -56,7 +56,7 @@ export class GfTreemapChartComponent
   @Input() colorScheme: ColorScheme;
   @Input() cursor: string;
   @Input() dateRange: DateRange;
-  @Input() holdings: PortfolioPosition[];
+  @Input() holdings: PortfolioPosition[] | undefined;
   @Input() locale = getLocale();
 
   @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
@@ -70,15 +70,11 @@ export class GfTreemapChartComponent
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
   public ngAfterViewInit() {
-    if (this.holdings) {
-      this.initialize();
-    }
+    this.initialize();
   }
 
   public ngOnChanges() {
-    if (this.holdings) {
-      this.initialize();
-    }
+    this.initialize();
   }
 
   public ngOnDestroy() {
@@ -159,6 +155,10 @@ export class GfTreemapChartComponent
   }
 
   private initialize() {
+    if (!this.holdings) {
+      return;
+    }
+
     this.isLoading = true;
 
     const { endDate, startDate } = getIntervalFromDateRange({
