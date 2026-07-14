@@ -25,6 +25,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import { format, subDays } from 'date-fns';
 
+import { BetterStackUptimeSlaResponse } from './interfaces/interfaces';
+
 @Injectable()
 @Processor(STATISTICS_GATHERING_QUEUE)
 export class StatisticsGatheringProcessor {
@@ -225,7 +227,7 @@ export class StatisticsGatheringProcessor {
             )
           }
         )
-        .then((res) => res.json());
+        .then<BetterStackUptimeSlaResponse>((res) => res.json());
 
       return data.attributes.availability / 100;
     } catch (error) {
