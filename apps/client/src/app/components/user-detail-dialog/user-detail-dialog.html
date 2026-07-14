@@ -16,7 +16,12 @@
     <button
       mat-menu-item
       type="button"
-      [disabled]="this.data.currentUserId === this.data.userId"
+      [disabled]="
+        !canDeleteUser({
+          currentUserId: data.currentUserId,
+          userId: data.userId
+        })
+      "
       (click)="deleteUser()"
     >
       <ng-container i18n>Delete</ng-container>
