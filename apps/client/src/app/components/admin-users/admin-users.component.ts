@@ -8,6 +8,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
+  canDeleteUser,
   getCountryName,
   getDateFnsLocale,
   getDateFormatString,
@@ -91,6 +92,7 @@ export class GfAdminUsersComponent implements OnInit {
   >();
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
+  protected readonly canDeleteUser = canDeleteUser;
   protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;

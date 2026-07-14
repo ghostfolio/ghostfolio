@@ -63,6 +63,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import ms, { StringValue } from 'ms';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,6 +80,7 @@ import ms, { StringValue } from 'ms';
     MatSnackBarModule,
     MatSlideToggleModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     ReactiveFormsModule,
     RouterModule
   ],
@@ -102,6 +104,7 @@ export class GfAdminOverviewComponent implements OnInit {
   protected hasPermissionToToggleReadOnlyMode: boolean;
   protected readonly info: InfoItem;
   protected isDataGatheringEnabled: boolean;
+  protected isLoading = false;
   protected readonly permissions = permissions;
   protected systemMessage: SystemMessage;
   protected userCount: number;
@@ -320,6 +323,8 @@ export class GfAdminOverviewComponent implements OnInit {
   }
 
   private fetchAdminData() {
+    this.isLoading = true;
+
     this.adminService
       .fetchAdminData()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -335,6 +340,8 @@ export class GfAdminOverviewComponent implements OnInit {
         this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
         this.userCount = userCount;
         this.version = version;
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

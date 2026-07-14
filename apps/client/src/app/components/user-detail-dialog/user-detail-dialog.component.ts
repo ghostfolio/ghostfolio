@@ -1,4 +1,8 @@
-import { getCountryName, getSum } from '@ghostfolio/common/helper';
+import {
+  canDeleteUser,
+  getCountryName,
+  getSum
+} from '@ghostfolio/common/helper';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -50,6 +54,7 @@ import {
 })
 export class GfUserDetailDialogComponent implements OnInit {
   protected readonly baseCurrency: string;
+  protected readonly canDeleteUser = canDeleteUser;
   protected readonly getCountryName = getCountryName;
   protected readonly subscriptionsDataSource =
     new MatTableDataSource<Subscription>();
