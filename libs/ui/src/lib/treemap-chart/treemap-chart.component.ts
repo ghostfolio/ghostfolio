@@ -15,18 +15,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output,
+  output,
   viewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import type { ChartData, TooltipOptions } from 'chart.js';
-import { LinearScale } from 'chart.js';
-import { Chart, Tooltip } from 'chart.js';
+import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
@@ -59,7 +57,7 @@ export class GfTreemapChartComponent
   @Input() holdings: PortfolioPosition[] | undefined;
   @Input() locale = getLocale();
 
-  @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
+  public readonly treemapChartClicked = output<AssetProfileIdentifier>();
 
   protected isLoading = true;
 
