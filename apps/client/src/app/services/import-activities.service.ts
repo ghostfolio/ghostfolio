@@ -165,12 +165,12 @@ export class ImportActivitiesService {
 
   private convertToCreateOrderDto({
     accountId,
+    assetProfile,
     comment,
     currency,
     date,
     fee,
     quantity,
-    SymbolProfile,
     tags,
     type,
     unitPrice,
@@ -184,10 +184,10 @@ export class ImportActivitiesService {
       updateAccountBalance,
       accountId: accountId ?? undefined,
       comment: comment ?? undefined,
-      currency: currency ?? SymbolProfile.currency ?? '',
-      dataSource: SymbolProfile.dataSource,
+      currency: currency ?? assetProfile.currency ?? '',
+      dataSource: assetProfile.dataSource,
       date: date.toString(),
-      symbol: SymbolProfile.symbol,
+      symbol: assetProfile.symbol,
       tags: tags?.map(({ id }) => {
         return id;
       })

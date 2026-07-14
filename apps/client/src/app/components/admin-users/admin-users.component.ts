@@ -8,6 +8,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
+  canDeleteUser,
   getCountryName,
   getDateFnsLocale,
   getDateFormatString,
@@ -27,6 +28,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -67,6 +69,7 @@ import { interval } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     GfPremiumIndicatorComponent,
@@ -89,6 +92,7 @@ export class GfAdminUsersComponent implements OnInit {
   >();
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
+  protected readonly canDeleteUser = canDeleteUser;
   protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;
@@ -165,6 +169,8 @@ export class GfAdminUsersComponent implements OnInit {
               this.user.permissions,
               permissions.impersonateAllUsers
             );
+
+            this.changeDetectorRef.markForCheck();
           }
         }),
         switchMap(() => this.route.paramMap)
@@ -196,6 +202,8 @@ export class GfAdminUsersComponent implements OnInit {
           pageIndex: this.paginator().pageIndex,
           showLoading: false
         });
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 

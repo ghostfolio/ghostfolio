@@ -41,7 +41,8 @@ module.exports = [
           }
         ],
         '@angular-eslint/prefer-inject': 'off',
-        '@angular-eslint/prefer-standalone': 'off'
+        '@angular-eslint/prefer-standalone': 'off',
+        '@typescript-eslint/prefer-nullish-coalescing': 'error'
       },
       languageOptions: {
         parserOptions: {

@@ -6,12 +6,18 @@ import {
   TabConfiguration
 } from '@ghostfolio/ui/page-tabs';
 
-import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { addIcons } from 'ionicons';
 import { albumsOutline, analyticsOutline } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-zen-page',
@@ -44,9 +50,9 @@ export class GfZenPageComponent {
             }
           ];
           this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({ albumsOutline, analyticsOutline });

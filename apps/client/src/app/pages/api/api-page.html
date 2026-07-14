@@ -168,6 +168,58 @@
           }
         </mat-card-content>
       </mat-card>
+      <div class="row">
+        @let marketDataOfMarkets = marketDataOfMarkets$ | async;
+        <div class="col-xs-12 col-md-6">
+          <mat-card appearance="outlined" class="mb-3">
+            <mat-card-header>
+              <mat-card-title class="mb-0">Markets</mat-card-title>
+              <mat-card-subtitle>Stocks</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="pt-3">
+              @if (isFetchFailure(marketDataOfMarkets)) {
+                🔴 {{ marketDataOfMarkets.fetchError }}
+              } @else if (marketDataOfMarkets) {
+                <gf-fear-and-greed-index
+                  [fearAndGreedIndex]="
+                    marketDataOfMarkets.fearAndGreedIndex.STOCKS.marketPrice
+                  "
+                />
+              } @else {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ height: '2.5rem', width: '100%' }"
+                />
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <mat-card appearance="outlined" class="mb-3">
+            <mat-card-header>
+              <mat-card-title class="mb-0">Markets</mat-card-title>
+              <mat-card-subtitle>Cryptocurrencies</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="pt-3">
+              @if (isFetchFailure(marketDataOfMarkets)) {
+                🔴 {{ marketDataOfMarkets.fetchError }}
+              } @else if (marketDataOfMarkets) {
+                <gf-fear-and-greed-index
+                  [fearAndGreedIndex]="
+                    marketDataOfMarkets.fearAndGreedIndex.CRYPTOCURRENCIES
+                      .marketPrice
+                  "
+                />
+              } @else {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  [theme]="{ height: '2.5rem', width: '100%' }"
+                />
+              }
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </div>
   </div>
 </div>

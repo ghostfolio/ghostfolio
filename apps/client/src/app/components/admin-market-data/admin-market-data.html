@@ -147,7 +147,13 @@
               <ng-container i18n>First Activity</ng-container>
             </th>
             <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ (element.date | date: defaultDateFormat) ?? '' }}
+              @if (element.date) {
+                <gf-value
+                  [isDate]="true"
+                  [locale]="user?.settings?.locale"
+                  [value]="element.date"
+                />
+              }
             </td>
           </ng-container>
 

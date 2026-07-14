@@ -192,6 +192,6 @@ export class UserService extends ObservableStore<UserStoreState> {
       return throwError(errMessage);
     }
 
-    return throwError(error || 'Server error');
+    return throwError(error ?? 'Server error');
   }
 }

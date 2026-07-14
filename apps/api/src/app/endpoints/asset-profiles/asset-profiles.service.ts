@@ -198,6 +198,7 @@ export class AssetProfilesService {
             take: 1
           },
           assetClass: true,
+          assetProfileOverrides: true,
           assetSubClass: true,
           comment: true,
           countries: true,
@@ -210,8 +211,7 @@ export class AssetProfilesService {
           name: true,
           scraperConfiguration: true,
           sectors: true,
-          symbol: true,
-          SymbolProfileOverrides: true
+          symbol: true
         }
       }),
       this.prismaService.symbolProfile.count({ where })
@@ -268,7 +268,7 @@ export class AssetProfilesService {
         const { assetClass, assetSubClass, countries, name, sectors } =
           applyAssetProfileOverrides(
             assetProfile,
-            assetProfile.SymbolProfileOverrides
+            assetProfile.assetProfileOverrides
           );
 
         const countriesCount = countries ? Object.keys(countries).length : 0;

@@ -200,12 +200,12 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance')?.value,
-      comment: this.accountForm.get('comment')?.value || null,
+      comment: this.accountForm.get('comment')?.value ?? null,
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,
       isExcluded: this.accountForm.get('isExcluded')?.value,
       name: this.accountForm.get('name')?.value,
-      platformId: this.accountForm.get('platformId')?.value?.id || null,
+      platformId: this.accountForm.get('platformId')?.value?.id ?? null,
       tags: this.accountForm
         .get('tags')
         ?.value?.filter(({ id }: Tag) => {

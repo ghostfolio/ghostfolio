@@ -376,12 +376,16 @@ ngx-skeleton-loader {
   visibility: hidden;
 }
 
+.lead {
+  font-weight: unset;
+}
+
 .line-height-1 {
   line-height: 1;
 }
 
-.lead {
-  font-weight: unset;
+.line-height-normal {
+  line-height: normal;
 }
 
 .mat-mdc-button-base {

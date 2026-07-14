@@ -15,10 +15,12 @@ import { GfToggleComponent } from '@ghostfolio/ui/toggle';
 import { GfTreemapChartComponent } from '@ghostfolio/ui/treemap-chart';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
+  inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -32,6 +34,7 @@ import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     GfHoldingsTableComponent,
@@ -51,32 +54,34 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class GfHomeHoldingsComponent implements OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
-  public deviceType: string;
-  public hasImpersonationId: boolean;
-  public hasPermissionToAccessHoldingsChart: boolean;
-  public hasPermissionToCreateActivity: boolean;
-  public holdings: PortfolioPosition[];
-  public holdingType: HoldingType = 'ACTIVE';
-  public holdingTypeOptions: ToggleOption[] = [
+  protected deviceType: string;
+  protected hasImpersonationId: boolean;
+  protected hasPermissionToAccessHoldingsChart: boolean;
+  protected hasPermissionToCreateActivity: boolean;
+  protected holdings: PortfolioPosition[] | undefined;
+  protected holdingType: HoldingType = 'ACTIVE';
+  protected readonly holdingTypeOptions: ToggleOption[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
-  public routerLinkPortfolioActivities =
+  protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
-  public user: User;
-  public viewModeFormControl = new FormControl<HoldingsViewMode>(
+  protected user: User;
+  protected readonly viewModeFormControl = new FormControl<HoldingsViewMode>(
     GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
   );
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
-    private router: Router,
-    private userService: UserService
-  ) {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     addIcons({ gridOutline, reorderFourOutline });
   }
 
@@ -88,6 +93,8 @@ export class GfHomeHoldingsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
@@ -107,14 +114,18 @@ export class GfHomeHoldingsComponent implements OnInit {
           );
 
           this.initialize();
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.viewModeFormControl.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((holdingsViewMode) => {
+        if (!holdingsViewMode) {
+          return;
+        }
+
         this.dataService
           .putUserSetting({ holdingsViewMode })
           .pipe(takeUntilDestroyed(this.destroyRef))
@@ -131,13 +142,13 @@ export class GfHomeHoldingsComponent implements OnInit {
       });
   }
 
-  public onChangeHoldingType(aHoldingType: HoldingType) {
+  protected onChangeHoldingType(aHoldingType: HoldingType) {
     this.holdingType = aHoldingType;
 
     this.initialize();
   }
 
-  public onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
+  protected onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
@@ -170,8 +181,8 @@ export class GfHomeHoldingsComponent implements OnInit {
       this.viewModeFormControl.setValue(
         this.deviceType === 'mobile'
           ? GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
-          : this.user?.settings?.holdingsViewMode ||
-              GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+          : (this.user?.settings?.holdingsViewMode ??
+              GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE),
         { emitEvent: false }
       );
     } else if (this.holdingType === 'CLOSED') {

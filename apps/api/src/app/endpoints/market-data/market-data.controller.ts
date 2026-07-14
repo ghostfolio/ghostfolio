@@ -3,12 +3,6 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
-  ghostfolioFearAndGreedIndexDataSourceStocks,
-  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
-  ghostfolioFearAndGreedIndexSymbolStocks
-} from '@ghostfolio/common/config';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/common/dtos';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import { MarketDataOfMarketsResponse } from '@ghostfolio/common/interfaces';
@@ -49,38 +43,9 @@ export class MarketDataController {
     @Query('includeHistoricalData', new ParseIntPipe({ optional: true }))
     includeHistoricalData = 0
   ): Promise<MarketDataOfMarketsResponse> {
-    const [
-      marketDataFearAndGreedIndexCryptocurrencies,
-      marketDataFearAndGreedIndexStocks
-    ] = await Promise.all([
-      this.symbolService.get({
-        includeHistoricalData,
-        dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
-          symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
-        },
-        useIntradayData: true
-      }),
-      this.symbolService.get({
-        includeHistoricalData,
-        dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
-          symbol: ghostfolioFearAndGreedIndexSymbolStocks
-        },
-        useIntradayData: true
-      })
-    ]);
-
-    return {
-      fearAndGreedIndex: {
-        CRYPTOCURRENCIES: {
-          ...marketDataFearAndGreedIndexCryptocurrencies
-        },
-        STOCKS: {
-          ...marketDataFearAndGreedIndexStocks
-        }
-      }
-    };
+    return this.symbolService.getMarketDataOfMarkets({
+      includeHistoricalData
+    });
   }
 
   @Post(':dataSource/:symbol')

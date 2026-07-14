@@ -7,8 +7,8 @@
 >
   <div class="py-3" mat-dialog-content>
     @if (
-      data.rule.configuration.thresholdMin &&
-      data.rule.configuration.thresholdMax
+      data.rule.configuration?.thresholdMin &&
+      data.rule.configuration?.thresholdMax
     ) {
       <div class="w-100">
         <h6 class="d-flex mb-0">

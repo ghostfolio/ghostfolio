@@ -535,6 +535,14 @@ export class UserService {
         user.subscription.offer.label = undefined;
       }
 
+      if (
+        !hasRole(user, Role.DEMO) &&
+        (user.provider !== 'ANONYMOUS' ||
+          user.subscription?.type === SubscriptionType.Premium)
+      ) {
+        currentPermissions.push(permissions.requestOwnUserDeletion);
+      }
+
       if (hasRole(user, Role.ADMIN)) {
         currentPermissions.push(permissions.syncDemoUserAccount);
       }

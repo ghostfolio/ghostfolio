@@ -4,7 +4,7 @@ import {
   TabConfiguration
 } from '@ghostfolio/ui/page-tabs';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { addIcons } from 'ionicons';
 import {
   bookOutline,
@@ -14,6 +14,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-resources-page',

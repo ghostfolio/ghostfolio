@@ -1,3 +1,4 @@
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
@@ -10,6 +11,7 @@ import {
   DividendsResponse,
   HistoricalResponse,
   LookupResponse,
+  MarketDataOfMarketsResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
 
@@ -32,7 +34,12 @@ import { FetchFailure, FetchResult } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'page' },
-  imports: [CommonModule, MatCardModule, NgxSkeletonLoaderModule],
+  imports: [
+    CommonModule,
+    GfFearAndGreedIndexComponent,
+    MatCardModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-api-page',
   styleUrls: ['./api-page.scss'],
   templateUrl: './api-page.html'
@@ -48,6 +55,9 @@ export class GfApiPageComponent implements OnInit {
   >;
   protected isinLookupItems$: Observable<FetchResult<LookupResponse['items']>>;
   protected lookupItems$: Observable<FetchResult<LookupResponse['items']>>;
+  protected marketDataOfMarkets$: Observable<
+    FetchResult<MarketDataOfMarketsResponse>
+  >;
   protected quotes$: Observable<FetchResult<QuotesResponse['quotes']>>;
   protected status$: Observable<
     FetchResult<DataProviderGhostfolioStatusResponse>
@@ -68,6 +78,7 @@ export class GfApiPageComponent implements OnInit {
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
     this.isinLookupItems$ = this.fetchLookupItems({ query: 'US0378331005' });
     this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });
+    this.marketDataOfMarkets$ = this.fetchMarketDataOfMarkets();
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO'] });
     this.status$ = this.fetchStatus();
   }
@@ -170,6 +181,15 @@ export class GfApiPageComponent implements OnInit {
         this.catchFetchFailure(),
         takeUntilDestroyed(this.destroyRef)
       );
+  }
+
+  private fetchMarketDataOfMarkets() {
+    return this.http
+      .get<MarketDataOfMarketsResponse>(
+        '/api/v1/data-providers/ghostfolio/markets',
+        { headers: this.getHeaders() }
+      )
+      .pipe(this.catchFetchFailure(), takeUntilDestroyed(this.destroyRef));
   }
 
   private fetchQuotes({ symbols }: { symbols: string[] }) {

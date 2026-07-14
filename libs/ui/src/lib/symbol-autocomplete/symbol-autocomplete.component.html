@@ -25,7 +25,10 @@
           }
         </span>
         <small class="text-muted"
-          >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency }}
+          >{{ lookupItem.symbol | gfSymbol }}
+          @if (lookupItem.currency) {
+            · {{ lookupItem.currency }}
+          }
           @if (lookupItem.assetSubClass) {
             · {{ lookupItem.assetSubClassString }}
           }

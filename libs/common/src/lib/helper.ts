@@ -1,10 +1,10 @@
 import { NumberParser } from '@internationalized/number';
 import {
   Type as ActivityType,
+  AssetProfileOverrides,
   MarketData,
   Prisma,
-  SymbolProfile,
-  SymbolProfileOverrides
+  SymbolProfile
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISO4217CurrencyCode } from 'class-validator';
@@ -56,7 +56,7 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 
 export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
   assetProfile: T,
-  assetProfileOverrides: SymbolProfileOverrides | null
+  assetProfileOverrides: AssetProfileOverrides | null
 ): T {
   if (!assetProfileOverrides) {
     return assetProfile;
@@ -161,6 +161,16 @@ export function canDeleteAssetProfile({
     symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
     watchedByCount === 0
   );
+}
+
+export function canDeleteUser({
+  currentUserId,
+  userId
+}: {
+  currentUserId: string;
+  userId: string;
+}): boolean {
+  return currentUserId !== userId;
 }
 
 export function capitalize(aString: string) {

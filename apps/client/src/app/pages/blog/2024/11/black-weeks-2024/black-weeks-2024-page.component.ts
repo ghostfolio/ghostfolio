@@ -1,11 +1,12 @@
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPremiumIndicatorComponent, MatButtonModule, RouterModule],
   selector: 'gf-black-weeks-2024-page',

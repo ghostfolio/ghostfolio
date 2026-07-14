@@ -4,10 +4,7 @@ import {
   DEFAULT_LOCALE,
   DEFAULT_PAGE_SIZE
 } from '@ghostfolio/common/config';
-import {
-  canDeleteAssetProfile,
-  getDateFormatString
-} from '@ghostfolio/common/helper';
+import { canDeleteAssetProfile } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   AssetProfileItem,
@@ -153,7 +150,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   ];
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected dataSource = new MatTableDataSource<AssetProfileItem>();
-  protected defaultDateFormat: string;
   protected readonly displayedColumns: string[] = [];
   protected readonly filters$ = new Subject<Filter[]>();
   protected isLoading = true;
@@ -236,10 +232,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.defaultDateFormat = getDateFormatString(
-            this.user.settings.locale
-          );
         }
       });
 

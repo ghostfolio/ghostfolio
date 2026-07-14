@@ -713,7 +713,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       return {
         routerLink,
         mode: SearchMode.QUICK_LINK as const,
-        name: title
+        name: title ?? ''
       };
     });
   }

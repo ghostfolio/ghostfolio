@@ -11,7 +11,6 @@ export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
 
 export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
   DataSource.MANUAL;
-export const ghostfolioFearAndGreedIndexDataSourceStocks = DataSource.RAPID_API;
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
 export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
 
@@ -107,13 +106,20 @@ export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].valueInBaseCurrency',
   'activities[*].account.balance',
   'activities[*].account.comment',
+  'activities[*].assetProfile.symbolMapping',
+  'activities[*].assetProfile.watchedByCount',
   'activities[*].comment',
   'activities[*].fee',
   'activities[*].feeInAssetProfileCurrency',
   'activities[*].feeInBaseCurrency',
   'activities[*].quantity',
+
+  /* @deprecated */
   'activities[*].SymbolProfile.symbolMapping',
+
+  /* @deprecated */
   'activities[*].SymbolProfile.watchedByCount',
+
   'activities[*].value',
   'activities[*].valueInBaseCurrency',
   'balance',
@@ -144,8 +150,13 @@ export const DEFAULT_REDACTED_PATHS = [
   'platforms[*].balance',
   'platforms[*].valueInBaseCurrency',
   'quantity',
+
+  /* @deprecated */
   'SymbolProfile.symbolMapping',
+
+  /* @deprecated */
   'SymbolProfile.watchedByCount',
+
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',
@@ -329,5 +340,10 @@ export const TAG_ID_EMERGENCY_FUND = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 export const TAG_ID_EXCLUDE_FROM_ANALYSIS =
   'f2e868af-8333-459f-b161-cbc6544c24bd';
 export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
+
+export const THROTTLE_DEFAULT_LIMIT = 10;
+export const THROTTLE_DEFAULT_TTL = ms('1 minute');
+export const THROTTLE_SIGNUP_LIMIT = 5;
+export const THROTTLE_SIGNUP_TTL = ms('1 hour');
 
 export const UNKNOWN_KEY = 'UNKNOWN';

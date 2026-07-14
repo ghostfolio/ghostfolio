@@ -11,6 +11,95 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Included cash in the performance calculation of the portfolio on the home page
 
+## 3.26.0 - 2026-07-14
+
+### Added
+
+- Added the markets endpoint for the _Fear & Greed Index_ (market mood) to the `GHOSTFOLIO` data provider
+
+### Changed
+
+- Hardened the validation of the countries in the asset profile endpoints
+- Hardened the validation of the holdings in the asset profile endpoints
+- Hardened the validation of the scraper configuration in the asset profile endpoint
+- Hardened the validation of the sectors in the asset profile endpoints
+- Rounded the value of the _Fear & Greed Index_ (market mood) in the twitter bot service
+- Set the change detection strategy to `OnPush` in the _X-ray_ page
+- Deprecated `SymbolProfile` in favor of `assetProfile` in the activity interface
+- Upgraded `countries-list` from version `3.3.0` to `3.4.0`
+- Upgraded `Nx` from version `23.0.1` to `23.0.2`
+
+## 3.25.0 - 2026-07-12
+
+### Changed
+
+- Changed the default value of the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable from `RAPID_API` to `MANUAL`
+- Improved the language localization for Dutch (`nl`)
+- Upgraded `helmet` from version `7.0.0` to `8.2.0`
+
+### Fixed
+
+- Fixed the layout of the page tabs component by truncating long labels
+- Fixed the display of assets without a currency in the search results of the assistant
+- Fixed the display of assets without a currency in the symbol autocomplete component
+
+### Todo
+
+- **Breaking Change**: Set the environment variable `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS=RAPID_API` to keep using _Rapid API_ as the data source of the _Fear & Greed Index_ (market mood)
+
+## 3.24.0 - 2026-07-11
+
+### Added
+
+- Exposed the `DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS` environment variable to set the data source of the _Fear & Greed Index_ (market mood)
+- Exposed the `ENABLE_FEATURE_RATE_LIMITING` environment variable to control rate limiting for authentication and sign-up endpoints
+- Exposed the `TRUST_PROXY` environment variable to determine the client IP address when running behind a reverse proxy
+
+### Changed
+
+- Rounded the value of the _Fear & Greed Index_ (market mood)
+- Improved the language localization for Korean (`ko`)
+
+## 3.23.0 - 2026-07-10
+
+### Changed
+
+- Migrated the deprecated `@nx/webpack:webpack` executor to `@nx/webpack/plugin`
+- Set the change detection strategy to `OnPush` in the about page
+- Set the change detection strategy to `OnPush` in the admin control panel
+- Set the change detection strategy to `OnPush` in the blog page components
+- Set the change detection strategy to `OnPush` in the Frequently Asked Questions (FAQ) page
+- Set the change detection strategy to `OnPush` in the home page
+- Set the change detection strategy to `OnPush` in the markets overview
+- Set the change detection strategy to `OnPush` in the resources page
+- Set the change detection strategy to `OnPush` in the user account page
+- Set the change detection strategy to `OnPush` in the _Zen Mode_
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for German (`de`)
+
+## 3.22.0 - 2026-07-08
+
+### Added
+
+- Added support for a copy-to-clipboard action in the alert dialog component
+
+### Changed
+
+- Improved the user account deletion flow in the user settings of the user account page
+- Improved the date formatting of the first activity in the historical market data table of the admin control panel
+- Set the change detection strategy to `OnPush` in the activities page
+- Set the change detection strategy to `OnPush` in the allocations page
+- Set the change detection strategy to `OnPush` in the analysis page
+- Set the change detection strategy to `OnPush` in the portfolio holdings page
+- Set the change detection strategy to `OnPush` in the activities page
+- Set the change detection strategy to `OnPush` in the _FIRE_ page
+- Set the change detection strategy to `OnPush` in the users section of the admin control panel
+- Hardened the endpoint to update a property of the admin control panel by validating the `key` path parameter
+- Renamed the `SymbolProfileOverrides` _Prisma_ data model to `AssetProfileOverrides` while keeping the database table name
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
+
 ## 3.21.0 - 2026-07-05
 
 ### Added

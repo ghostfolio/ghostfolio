@@ -22,6 +22,7 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -42,6 +43,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
+import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import {
   closeOutline,
@@ -315,10 +317,15 @@ export class GfHeaderComponent implements OnChanges {
           this.dataService
             .loginAnonymous(data?.accessToken)
             .pipe(
-              catchError(() => {
-                this.notificationService.alert({
-                  title: $localize`Oops! Incorrect Security Token.`
-                });
+              catchError((error: HttpErrorResponse) => {
+                if (error.status !== StatusCodes.TOO_MANY_REQUESTS) {
+                  // The notification for too many requests is handled in the
+                  // HttpResponseInterceptor
+
+                  this.notificationService.alert({
+                    title: $localize`Oops! Incorrect Security Token.`
+                  });
+                }
 
                 return EMPTY;
               }),

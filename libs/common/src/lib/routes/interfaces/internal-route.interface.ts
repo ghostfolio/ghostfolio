@@ -5,5 +5,5 @@ export interface InternalRoute {
   path?: string;
   routerLink: string[];
   subRoutes?: Record<string, InternalRoute>;
-  title: string;
+  title?: string;
 }

@@ -63,6 +63,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import ms, { StringValue } from 'ms';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,6 +80,7 @@ import ms, { StringValue } from 'ms';
     MatSnackBarModule,
     MatSlideToggleModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     ReactiveFormsModule,
     RouterModule
   ],
@@ -90,13 +92,19 @@ export class GfAdminOverviewComponent implements OnInit {
   protected activitiesCount: number;
   protected couponDuration: StringValue = '14 days';
   protected readonly couponsDataSource = new MatTableDataSource<Coupon>();
-  protected readonly couponsDisplayedColumns = ['code', 'duration', 'actions'];
+  protected readonly couponsDisplayedColumns = [
+    'code',
+    'duration',
+    'createdAt',
+    'actions'
+  ];
   protected hasPermissionForSubscription: boolean;
   protected hasPermissionForSystemMessage: boolean;
   protected hasPermissionToSyncDemoUserAccount: boolean;
   protected hasPermissionToToggleReadOnlyMode: boolean;
   protected readonly info: InfoItem;
   protected isDataGatheringEnabled: boolean;
+  protected isLoading = false;
   protected readonly permissions = permissions;
   protected systemMessage: SystemMessage;
   protected userCount: number;
@@ -201,6 +209,7 @@ export class GfAdminOverviewComponent implements OnInit {
   protected onAddCoupon() {
     const newCoupon: Coupon = {
       code: `${ghostfolioPrefix}${this.generateCouponCode(14)}`,
+      createdAt: new Date().toISOString(),
       duration: this.couponDuration
     };
 
@@ -314,6 +323,8 @@ export class GfAdminOverviewComponent implements OnInit {
   }
 
   private fetchAdminData() {
+    this.isLoading = true;
+
     this.adminService
       .fetchAdminData()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -329,6 +340,8 @@ export class GfAdminOverviewComponent implements OnInit {
         this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
         this.userCount = userCount;
         this.version = version;
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

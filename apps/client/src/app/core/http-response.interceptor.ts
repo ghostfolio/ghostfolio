@@ -98,15 +98,23 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             });
           }
         } else if (error.status === StatusCodes.TOO_MANY_REQUESTS) {
-          if (!this.snackBarRef) {
-            this.snackBarRef = this.snackBar.open(
-              $localize`Oops! It looks like you’re making too many requests. Please slow down a bit.`
-            );
+          // Replace an already visible snack bar so that the rate limiting
+          // feedback is not swallowed
+          const snackBarRef = this.snackBar.open(
+            $localize`Oops! It looks like you’re making too many requests. Please slow down a bit.`,
+            undefined,
+            {
+              duration: ms('6 seconds')
+            }
+          );
 
-            this.snackBarRef?.afterDismissed().subscribe(() => {
+          snackBarRef.afterDismissed().subscribe(() => {
+            if (this.snackBarRef === snackBarRef) {
               this.snackBarRef = undefined;
-            });
-          }
+            }
+          });
+
+          this.snackBarRef = snackBarRef;
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
           if (!error.url?.includes('/data-providers/ghostfolio/status')) {
             if (this.webAuthnService.isEnabled()) {
