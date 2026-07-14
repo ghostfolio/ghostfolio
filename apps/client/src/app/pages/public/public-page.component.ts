@@ -17,6 +17,7 @@ import { GfWorldMapChartComponent } from '@ghostfolio/ui/world-map-chart';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -38,6 +39,7 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [
     GfActivitiesTableComponent,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -8,6 +8,7 @@ import { arrowForwardOutline } from 'ionicons/icons';
 const ossFriends = require('../../../../assets/oss-friends.json');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [IonIcon, MatButtonModule, MatCardModule],
   selector: 'gf-oss-friends-page',
   styleUrls: ['./oss-friends-page.scss'],

@@ -1,11 +1,16 @@
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPremiumIndicatorComponent, MatCardModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

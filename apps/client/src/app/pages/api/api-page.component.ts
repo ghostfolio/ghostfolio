@@ -22,7 +22,13 @@ import {
   HttpHeaders,
   HttpParams
 } from '@angular/common/http';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { format, startOfYear } from 'date-fns';
@@ -33,6 +39,7 @@ import { catchError, map, Observable, of, OperatorFunction } from 'rxjs';
 import { FetchFailure, FetchResult } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [
     CommonModule,
