@@ -20,7 +20,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  ViewChild
+  viewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
@@ -61,11 +61,11 @@ export class GfTreemapChartComponent
 
   @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild('chartCanvas') private chartCanvas: ElementRef<HTMLCanvasElement>;
-
   protected isLoading = true;
 
   private chart: Chart<'treemap'>;
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
@@ -307,7 +307,7 @@ export class GfTreemapChartComponent
       ]
     };
 
-    if (this.chartCanvas) {
+    if (this.chartCanvas()) {
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins ??= {};
@@ -316,7 +316,7 @@ export class GfTreemapChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart<'treemap'>(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'treemap'>(this.chartCanvas().nativeElement, {
           data,
           options: {
             animation: false,
