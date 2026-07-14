@@ -47,7 +47,7 @@ export class LogoService {
   private async getBuffer(aUrl: string) {
     const blob = await this.fetchService
       .fetch(
-        `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
+        `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(aUrl)}&size=64`,
         {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(

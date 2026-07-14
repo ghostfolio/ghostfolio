@@ -12,6 +12,7 @@ import {
 import { DataSource } from '@prisma/client';
 import { Response } from 'express';
 
+import { GetLogoDto } from './get-logo.dto';
 import { LogoService } from './logo.service';
 
 @Controller('logo')
@@ -41,7 +42,7 @@ export class LogoController {
 
   @Get()
   public async getLogoByUrl(
-    @Query('url') url: string,
+    @Query() { url }: GetLogoDto,
     @Res() response: Response
   ) {
     try {
