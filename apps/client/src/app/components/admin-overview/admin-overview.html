@@ -248,6 +248,17 @@
                   mat-row
                 ></tr>
               </table>
+
+              @if (isLoading) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="px-4 py-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              }
             </div>
           </mat-card-content>
           <mat-card-actions align="end">
