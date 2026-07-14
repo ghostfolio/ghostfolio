@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Set the change detection strategy to `OnPush` in the about pages
+- Set the change detection strategy to `OnPush` in the accounts page
+- Set the change detection strategy to `OnPush` in the demo page
+- Set the change detection strategy to `OnPush` in the features page
+- Set the change detection strategy to `OnPush` in the Frequently Asked Questions (FAQ) pages
+- Set the change detection strategy to `OnPush` in the landing page
+- Set the change detection strategy to `OnPush` in the markets page
+- Set the change detection strategy to `OnPush` in the _Open Startup_ (`/open`) page
+- Set the change detection strategy to `OnPush` in the pricing page
+- Set the change detection strategy to `OnPush` in the public page
+- Set the change detection strategy to `OnPush` in the registration page
+- Set the change detection strategy to `OnPush` in the resources pages
+
 ## 3.26.0 - 2026-07-14
 
 ### Added
