@@ -15,7 +15,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
+  input,
   OnChanges,
   OnDestroy,
   output,
@@ -50,12 +50,12 @@ const { gray, green, red } = OpenColor;
 export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency: string;
-  @Input() colorScheme: ColorScheme;
-  @Input() cursor: string;
-  @Input() dateRange: DateRange;
-  @Input() holdings: PortfolioPosition[] | undefined;
-  @Input() locale = getLocale();
+  public readonly baseCurrency = input.required<string>();
+  public readonly colorScheme = input.required<ColorScheme>();
+  public readonly cursor = input.required<string>();
+  public readonly dateRange = input.required<DateRange>();
+  public readonly holdings = input<PortfolioPosition[]>();
+  public readonly locale = input<string>(getLocale());
 
   public readonly treemapChartClicked = output<AssetProfileIdentifier>();
 
@@ -68,6 +68,7 @@ export class GfTreemapChartComponent
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
+
   public ngAfterViewInit() {
     this.initialize();
   }
@@ -154,17 +155,19 @@ export class GfTreemapChartComponent
   }
 
   private initialize() {
-    if (!this.holdings) {
+    const holdings = this.holdings();
+
+    if (!holdings) {
       return;
     }
 
     this.isLoading = true;
 
     const { endDate, startDate } = getIntervalFromDateRange({
-      dateRange: this.dateRange
+      dateRange: this.dateRange()
     });
 
-    const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
+    const netPerformancePercentsWithCurrencyEffect = holdings.map(
       ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {
         return getAnnualizedPerformancePercent({
           daysInMarket: differenceInDays(
@@ -300,7 +303,7 @@ export class GfTreemapChartComponent
           },
           spacing: 1,
           // @ts-expect-error: should be PortfolioPosition[]
-          tree: this.holdings
+          tree: this.holdings()
         }
       ]
     };
@@ -338,9 +341,9 @@ export class GfTreemapChartComponent
               } catch {}
             },
             onHover: (event, chartElement) => {
-              if (this.cursor) {
+              if (this.cursor()) {
                 (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor : 'default';
+                  chartElement[0] ? this.cursor() : 'default';
               }
             },
             plugins: {
@@ -358,9 +361,9 @@ export class GfTreemapChartComponent
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'treemap'>> {
     return {
       ...getTooltipOptions({
-        colorScheme: this.colorScheme,
-        currency: this.baseCurrency,
-        locale: this.locale
+        colorScheme: this.colorScheme(),
+        currency: this.baseCurrency(),
+        locale: this.locale()
       }),
       // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
@@ -380,19 +383,19 @@ export class GfTreemapChartComponent
 
             return [
               `${name ?? symbol} (${allocationInPercentage})`,
-              `${value?.toLocaleString(this.locale, {
+              `${value?.toLocaleString(this.locale(), {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
-              })} ${this.baseCurrency}`,
+              })} ${this.baseCurrency()}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
               `${sign}${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
-                this.locale,
+                this.locale(),
                 {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2
                 }
-              )} ${this.baseCurrency} (${netPerformanceInPercentageWithSign})`
+              )} ${this.baseCurrency()} (${netPerformanceInPercentageWithSign})`
             ];
           } else {
             return [
