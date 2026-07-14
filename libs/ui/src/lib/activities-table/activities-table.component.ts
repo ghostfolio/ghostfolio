@@ -267,7 +267,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
 
   public isExcludedFromAnalysis(activity: Activity) {
     return (
-      (activity.account && isAccountExcluded(activity.account)) ||
+      (activity.account && isAccountExcluded(activity.account)) ??
       activity.tags?.some(({ id }) => {
         return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
       }) === true

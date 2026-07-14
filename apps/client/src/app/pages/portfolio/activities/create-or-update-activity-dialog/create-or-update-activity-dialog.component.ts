@@ -493,7 +493,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       accountId: this.activityForm.get('accountId')?.value,
       assetClass: this.activityForm.get('assetClass')?.value,
       assetSubClass: this.activityForm.get('assetSubClass')?.value,
-      comment: this.activityForm.get('comment')?.value || null,
+      comment: this.activityForm.get('comment')?.value ?? null,
       currency: this.activityForm.get('currency')?.value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,
       dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
