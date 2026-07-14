@@ -61,10 +61,11 @@ export class GfTreemapChartComponent
 
   @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('chartCanvas') private chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart<'treemap'>;
-  public isLoading = true;
+  protected isLoading = true;
+
+  private chart: Chart<'treemap'>;
 
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
