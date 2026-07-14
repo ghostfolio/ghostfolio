@@ -124,8 +124,8 @@ export class ExportService {
 
     const customAssetProfiles = uniqBy(
       activities
-        .map(({ SymbolProfile }) => {
-          return SymbolProfile;
+        .map(({ assetProfile }) => {
+          return assetProfile;
         })
         .filter(({ userId: assetProfileUserId }) => {
           return assetProfileUserId === userId;
@@ -224,13 +224,13 @@ export class ExportService {
       activities: activities.map(
         ({
           accountId,
+          assetProfile,
           comment,
           currency,
           date,
           fee,
           id,
           quantity,
-          SymbolProfile,
           tags: currentTags,
           type,
           unitPrice
@@ -243,10 +243,10 @@ export class ExportService {
             quantity,
             type,
             unitPrice,
-            currency: currency ?? SymbolProfile.currency,
-            dataSource: SymbolProfile.dataSource,
+            currency: currency ?? assetProfile.currency,
+            dataSource: assetProfile.dataSource,
             date: date.toISOString(),
-            symbol: SymbolProfile.symbol,
+            symbol: assetProfile.symbol,
             tags: currentTags.map(({ id: tagId }) => {
               return tagId;
             })

@@ -119,7 +119,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   }
 
   public ngOnInit() {
-    this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
+    this.currencyOfAssetProfile = this.data.activity?.assetProfile?.currency;
     this.hasPermissionToCreateOwnTag =
       this.data.user?.settings?.isExperimentalFeatures &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
@@ -185,31 +185,31 @@ export class GfCreateOrUpdateActivityDialogComponent {
           ? this.data.accounts[0].id
           : this.data.activity?.accountId
       ],
-      assetClass: [this.data.activity?.SymbolProfile?.assetClass],
-      assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
+      assetClass: [this.data.activity?.assetProfile?.assetClass],
+      assetSubClass: [this.data.activity?.assetProfile?.assetSubClass],
       comment: [this.data.activity?.comment],
       currency: [
-        this.data.activity?.SymbolProfile?.currency,
+        this.data.activity?.assetProfile?.currency,
         Validators.required
       ],
       currencyOfUnitPrice: [
         this.data.activity?.currency ??
-          this.data.activity?.SymbolProfile?.currency,
+          this.data.activity?.assetProfile?.currency,
         Validators.required
       ],
       dataSource: [
-        this.data.activity?.SymbolProfile?.dataSource,
+        this.data.activity?.assetProfile?.dataSource,
         Validators.required
       ],
       date: [this.data.activity?.date, Validators.required],
       fee: [this.data.activity?.fee, Validators.required],
-      name: [this.data.activity?.SymbolProfile?.name, Validators.required],
+      name: [this.data.activity?.assetProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
-        this.data.activity?.SymbolProfile
+        this.data.activity?.assetProfile
           ? {
-              dataSource: this.data.activity?.SymbolProfile?.dataSource,
-              symbol: this.data.activity?.SymbolProfile?.symbol
+              dataSource: this.data.activity?.assetProfile?.dataSource,
+              symbol: this.data.activity?.assetProfile?.symbol
             }
           : null,
         Validators.required
@@ -310,7 +310,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
     this.activityForm.get('searchSymbol')?.valueChanges.subscribe(() => {
       if (this.activityForm.get('searchSymbol')?.invalid) {
-        this.data.activity.SymbolProfile = null;
+        this.data.activity.assetProfile = null;
       } else if (
         ['BUY', 'DIVIDEND', 'SELL'].includes(
           this.activityForm.get('type')?.value
@@ -454,11 +454,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
       this.activityForm.get('type')?.disable();
     }
 
-    if (this.data.activity?.SymbolProfile?.symbol) {
+    if (this.data.activity?.assetProfile?.symbol) {
       this.dataService
         .fetchSymbolItem({
-          dataSource: this.data.activity?.SymbolProfile?.dataSource,
-          symbol: this.data.activity?.SymbolProfile?.symbol
+          dataSource: this.data.activity?.assetProfile?.dataSource,
+          symbol: this.data.activity?.assetProfile?.symbol
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ marketPrice }) => {
@@ -569,7 +569,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       })
       .pipe(
         catchError(() => {
-          this.data.activity.SymbolProfile = null;
+          this.data.activity.assetProfile = null;
 
           this.isLoading = false;
 

@@ -1,7 +1,7 @@
 import {
   activityDummyData,
+  assetProfileDummyData,
   loadExportFile,
-  symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -96,16 +96,16 @@ describe('PortfolioCalculator', () => {
         (activity) => ({
           ...activityDummyData,
           ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: 4.46,
-          feeInBaseCurrency: 4.46,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: activity.dataSource,
             name: 'Bitcoin',
             symbol: activity.symbol
           },
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 4.46,
           unitPriceInAssetProfileCurrency: 44558.42
         })
       );

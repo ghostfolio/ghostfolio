@@ -2,6 +2,11 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
+  ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolStocks
+} from '@ghostfolio/common/config';
+import {
   DATE_FORMAT,
   getAssetProfileIdentifier
 } from '@ghostfolio/common/helper';
@@ -9,6 +14,7 @@ import {
   DataProviderHistoricalResponse,
   HistoricalDataItem,
   LookupResponse,
+  MarketDataOfMarketsResponse,
   SymbolItem
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
@@ -119,6 +125,46 @@ export class SymbolService {
       marketPrice:
         historicalData?.[assetProfileIdentifier]?.[format(date, DATE_FORMAT)]
           ?.marketPrice
+    };
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData: number;
+  }): Promise<MarketDataOfMarketsResponse> {
+    const [
+      marketDataFearAndGreedIndexCryptocurrencies,
+      marketDataFearAndGreedIndexStocks
+    ] = await Promise.all([
+      this.get({
+        includeHistoricalData,
+        dataGatheringItem: {
+          dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
+          symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
+        },
+        useIntradayData: true
+      }),
+      this.get({
+        includeHistoricalData,
+        dataGatheringItem: {
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
+        },
+        useIntradayData: true
+      })
+    ]);
+
+    return {
+      fearAndGreedIndex: {
+        CRYPTOCURRENCIES: {
+          ...marketDataFearAndGreedIndexCryptocurrencies
+        },
+        STOCKS: {
+          ...marketDataFearAndGreedIndexStocks
+        }
+      }
     };
   }
 

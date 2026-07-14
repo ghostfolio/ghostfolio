@@ -1,7 +1,7 @@
 import {
   activityDummyData,
+  assetProfileDummyData,
   loadExportFile,
-  symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -99,16 +99,16 @@ describe('PortfolioCalculator', () => {
         (activity) => ({
           ...activityDummyData,
           ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: activity.fee,
-          feeInBaseCurrency: activity.fee,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: activity.currency,
             dataSource: activity.dataSource,
             name: 'Direxion Daily Junior Gold Miners Index Bull 2X Shares',
             symbol: activity.symbol
           },
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          feeInBaseCurrency: activity.fee,
           unitPriceInAssetProfileCurrency: activity.unitPrice
         })
       );

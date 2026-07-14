@@ -2,7 +2,7 @@ import { Activity } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioOrder extends Pick<Activity, 'tags' | 'type'> {
   assetProfile: Pick<
-    Activity['SymbolProfile'],
+    Activity['assetProfile'],
     'assetSubClass' | 'currency' | 'dataSource' | 'name' | 'symbol' | 'userId'
   >;
   date: string;
