@@ -349,7 +349,11 @@
                 first before your Ghostfolio account can be closed.
               </div>
             } @else if (hasPermissionToRequestOwnUserDeletion) {
-              <a color="warn" i18n mat-flat-button [href]="closeUserAccountMail"
+              <a
+                color="warn"
+                i18n
+                mat-flat-button
+                [href]="closeUserAccountMailHref"
                 >Close Account</a
               >
             }

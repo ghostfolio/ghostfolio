@@ -49,7 +49,10 @@
             }
             <div class="align-items-center d-flex justify-content-center mt-4">
               @if (!user?.subscription?.expiresAt) {
-                <a class="mx-1" mat-stroked-button [href]="trySubscriptionMail"
+                <a
+                  class="mx-1"
+                  mat-stroked-button
+                  [href]="trySubscriptionMailHref"
                   ><span i18n>Try Premium</span>
                   <gf-premium-indicator
                     class="d-inline-block ml-1"

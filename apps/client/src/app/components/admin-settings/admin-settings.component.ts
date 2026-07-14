@@ -2,7 +2,10 @@ import { GfAdminPlatformComponent } from '@ghostfolio/client/components/admin-pl
 import { GfAdminTagComponent } from '@ghostfolio/client/components/admin-tag/admin-tag.component';
 import { GfDataProviderStatusComponent } from '@ghostfolio/client/components/data-provider-status/data-provider-status.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
+import {
+  E_MAIL_LINE_BREAK,
+  PROPERTY_API_KEY_GHOSTFOLIO
+} from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
@@ -80,6 +83,13 @@ export class GfAdminSettingsComponent implements OnInit {
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
+  public readonly premiumDataProviderMailHref = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Data Provider&body=${[
+    'Hello,',
+    '',
+    'I am interested in the Ghostfolio Premium data provider. Could you please give me access so I can try it for some time?',
+    '',
+    'Kind regards'
+  ].join(E_MAIL_LINE_BREAK)}`;
   public pricingUrl: string;
   public user: User;
 
