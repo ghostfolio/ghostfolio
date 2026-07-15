@@ -409,7 +409,7 @@ export class GfActivitiesPageComponent implements OnInit {
             activity: {
               ...aActivity,
               accountId: aActivity?.accountId,
-              assetProfile: null,
+              assetProfile: aActivity?.assetProfile ?? null,
               date: new Date(),
               id: null,
               fee: 0,
