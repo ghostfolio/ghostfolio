@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Hardened the validation of the URL in the logo endpoint
 - Set the change detection strategy to `OnPush` in the about pages
 - Set the change detection strategy to `OnPush` in the accounts page
 - Set the change detection strategy to `OnPush` in the demo page
