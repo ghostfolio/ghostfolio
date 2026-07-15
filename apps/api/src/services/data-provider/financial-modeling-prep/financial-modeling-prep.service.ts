@@ -47,7 +47,7 @@ import {
   isSameDay,
   parseISO
 } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { isArray, uniqBy } from 'lodash';
 
 @Injectable()
 export class FinancialModelingPrepService
@@ -440,10 +440,14 @@ export class FinancialModelingPrepService
               signal: AbortSignal.timeout(requestTimeout)
             }
           )
-          .then(
-            (res) =>
-              res.json() as unknown as { price: number; symbol: string }[]
-          )
+          .then(async (res) => {
+            const json = (await res.json()) as unknown as {
+              price: number;
+              symbol: string;
+            }[];
+
+            return isArray(json) ? json : [];
+          })
       ]);
 
       for (const { currency, symbolTarget } of assetProfileResolutions) {
