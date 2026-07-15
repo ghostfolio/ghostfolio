@@ -9,7 +9,7 @@ import {
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { GfSymbolPipe } from '@ghostfolio/common/pipes';
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
@@ -50,6 +50,7 @@ import {
 } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
@@ -95,7 +96,8 @@ import { GfValueComponent } from '../value/value.component';
     MatTableModule,
     MatTooltipModule,
     NgxSkeletonLoaderModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
@@ -123,8 +125,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
   @Output() activityDeleted = new EventEmitter<string>();
-  @Output() activityToClone = new EventEmitter<OrderWithAccount>();
-  @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
@@ -150,6 +150,9 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public readonly showAccountColumn = input(true);
   public readonly showCheckbox = input(false);
   public readonly showNameColumn = input(true);
+
+  protected readonly activityDialogRoutes =
+    internalRoutes.portfolio.subRoutes.activities.subRoutes;
 
   protected readonly displayedColumns = computed(() => {
     let columns = [
@@ -265,6 +268,14 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     );
   }
 
+  public getActivityDialogRouterLink(aActivity: Activity, aPath: string) {
+    return [
+      ...internalRoutes.portfolio.subRoutes.activities.routerLink,
+      aActivity.id,
+      aPath
+    ];
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
       (activity.account && isAccountExcluded(activity.account)) ??
@@ -289,10 +300,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
         symbol: activity.assetProfile.symbol
       });
     }
-  }
-
-  public onCloneActivity(aActivity: OrderWithAccount) {
-    this.activityToClone.emit(aActivity);
   }
 
   public onDeleteActivities() {
@@ -347,10 +354,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.notificationService.alert({
       title: aComment
     });
-  }
-
-  public onUpdateActivity(aActivity: OrderWithAccount) {
-    this.activityToUpdate.emit(aActivity);
   }
 
   public sortByValue(

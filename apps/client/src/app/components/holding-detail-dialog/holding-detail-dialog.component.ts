@@ -589,17 +589,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.fetchActivities();
   }
 
-  protected onCloneActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, createDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
-  }
-
   protected onClose() {
     this.dialogRef.close();
   }
@@ -659,17 +648,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  protected onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, editDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   private fetchActivities(filters: Filter[] = this.getActivityFilters()) {
