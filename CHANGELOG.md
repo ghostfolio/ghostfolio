@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Resolved a startup error in data gathering caused by uninitialized data provider mappings
 - Improved the error handling in the get quotes functionality of the _Financial Modeling Prep_ service
 
 ## 3.26.0 - 2026-07-14
