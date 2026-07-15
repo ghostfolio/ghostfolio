@@ -1,6 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
+  E_MAIL_LINE_BREAK,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
 } from '@ghostfolio/common/config';
@@ -169,7 +170,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected quantity: number;
   protected quantityPrecision = 2;
-  protected reportDataGlitchMail: string;
+  protected reportDataGlitchMailHref: string;
   protected readonly round = round;
   protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
@@ -456,7 +457,20 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             this.assetProfile?.symbol ? ` (${this.assetProfile.symbol})` : ''
           }`;
 
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.assetProfile?.symbol}%0DData Source: ${this.assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+          this.reportDataGlitchMailHref = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=${[
+            'Hello',
+            '',
+            'I would like to report a data glitch for',
+            '',
+            `Symbol: ${this.assetProfile?.symbol}`,
+            `Data Source: ${this.assetProfile?.dataSource}`,
+            '',
+            'Additional notes:',
+            '',
+            'Can you please take a look?',
+            '',
+            'Kind regards'
+          ].join(E_MAIL_LINE_BREAK)}`;
 
           if (this.assetProfile?.assetClass) {
             this.assetClass = translate(this.assetProfile?.assetClass);
