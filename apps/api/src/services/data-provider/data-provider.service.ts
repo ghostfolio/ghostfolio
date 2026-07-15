@@ -44,7 +44,7 @@ import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
 export class DataProviderService implements OnModuleInit {
   private readonly logger = new Logger(DataProviderService.name);
 
-  private dataProviderMapping: { [dataProviderName: string]: string };
+  private dataProviderMapping: { [dataProviderName: string]: string } = {};
 
   public constructor(
     private readonly configurationService: ConfigurationService,
