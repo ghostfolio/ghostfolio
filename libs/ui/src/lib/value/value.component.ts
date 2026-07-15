@@ -13,13 +13,14 @@ import {
   input,
   Input,
   OnChanges,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { copyOutline } from 'ionicons/icons';
+import { checkmarkOutline, copyOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -32,7 +33,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   styleUrls: ['./value.component.scss'],
   templateUrl: './value.component.html'
 })
-export class GfValueComponent implements AfterViewInit, OnChanges {
+export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() colorizeSign = false;
   @Input() deviceType: string;
   @Input() enableCopyToClipboardButton = false;
@@ -54,9 +55,13 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   public absoluteValue = 0;
   public formattedValue = '';
   public hasLabel = false;
+  public isCopied = false;
   public isNumber = false;
   public isString = false;
   public useAbsoluteValue = false;
+
+  public readonly copiedTitle = $localize`Copied!`;
+  public readonly copyToClipboardTitle = $localize`Copy to clipboard`;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -64,11 +69,14 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
     private snackBar: MatSnackBar
   ) {
     addIcons({
+      checkmarkOutline,
       copyOutline
     });
   }
 
   public readonly precision = input<number>();
+
+  private copyConfirmationTimeout?: ReturnType<typeof setTimeout>;
 
   private readonly formatOptions = computed<Intl.NumberFormatOptions>(() => {
     const digits = this.hasPrecision ? this.precision() : 2;
@@ -175,16 +183,45 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  public ngOnDestroy() {
+    this.clearCopyConfirmation();
+  }
+
   public onCopyValueToClipboard() {
-    this.clipboard.copy(String(this.value));
+    this.clearCopyConfirmation();
+
+    const hasCopied = this.clipboard.copy(String(this.value));
+
+    if (!hasCopied) {
+      this.snackBar.dismiss();
+
+      return;
+    }
+
+    this.isCopied = true;
+    this.copyConfirmationTimeout = setTimeout(() => {
+      this.copyConfirmationTimeout = undefined;
+      this.isCopied = false;
+      this.changeDetectorRef.markForCheck();
+    }, ms('2 seconds'));
 
     this.snackBar.open(
       '✅ ' + $localize`${this.value} has been copied to the clipboard`,
       undefined,
       {
-        duration: ms('3 seconds')
+        duration: ms('3 seconds'),
+        politeness: 'polite'
       }
     );
+  }
+
+  private clearCopyConfirmation() {
+    if (this.copyConfirmationTimeout) {
+      clearTimeout(this.copyConfirmationTimeout);
+      this.copyConfirmationTimeout = undefined;
+    }
+
+    this.isCopied = false;
   }
 
   private initializeVariables() {
