@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization in the historical market data table of the admin control panel
+
 ### Fixed
 
 - Fixed the missing validation of the tags when creating or updating an activity
