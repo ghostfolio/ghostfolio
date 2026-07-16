@@ -202,6 +202,7 @@ export abstract class PortfolioCalculator {
       };
     }
 
+    const cashSymbols = new Set<string>();
     const currencies: { [symbol: string]: string } = {};
     const dataGatheringItems: DataGatheringItem[] = [];
     let firstIndex = transactionPoints.length;
@@ -315,12 +316,11 @@ export abstract class PortfolioCalculator {
     const accumulatedValuesByDate: {
       [date: string]: {
         investmentValueWithCurrencyEffect: Big;
-        totalAccountBalanceWithCurrencyEffect: Big;
+        totalCashValueWithCurrencyEffect: Big;
         totalCurrentValue: Big;
         totalCurrentValueWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
         totalInvestmentValueWithCurrencyEffect: Big;
-        totalLiabilitiesWithCurrencyEffect: Big;
         totalNetPerformanceValue: Big;
         totalNetPerformanceValueWithCurrencyEffect: Big;
         totalTimeWeightedInvestmentValue: Big;
@@ -350,6 +350,8 @@ export abstract class PortfolioCalculator {
           endDateString
         ] ?? 1
       );
+
+      const valueInBaseCurrency = marketPriceInBaseCurrency.mul(item.quantity);
 
       const {
         currentValues,
@@ -444,15 +446,14 @@ export abstract class PortfolioCalculator {
         quantity: item.quantity,
         symbol: item.symbol,
         tags: item.tags,
-        valueInBaseCurrency: new Big(marketPriceInBaseCurrency).mul(
-          item.quantity
-        )
+        valueInBaseCurrency
       });
 
       if (item.assetSubClass === 'CASH') {
-        totalCashInBaseCurrency = totalCashInBaseCurrency.plus(
-          marketPriceInBaseCurrency.mul(item.quantity)
-        );
+        cashSymbols.add(item.symbol);
+
+        totalCashInBaseCurrency =
+          totalCashInBaseCurrency.plus(valueInBaseCurrency);
       }
 
       totalInterestWithCurrencyEffect = totalInterestWithCurrencyEffect.plus(
@@ -474,56 +475,7 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const accountBalanceItemsMap = this.accountBalanceItems.reduce(
-      (map, { date, value }) => {
-        map[date] = new Big(value);
-
-        return map;
-      },
-      {} as { [date: string]: Big }
-    );
-
-    const liabilityItemsMap = this.activities.reduce(
-      (map, { assetProfile, date, quantity, type, unitPrice }) => {
-        if (type === 'LIABILITY') {
-          const exchangeRate =
-            exchangeRatesByCurrency[
-              `${assetProfile.currency}${this.currency}`
-            ]?.[date] ?? 1;
-
-          map[date] = (map[date] ?? new Big(0)).plus(
-            quantity.mul(unitPrice).mul(exchangeRate)
-          );
-        }
-
-        return map;
-      },
-      {} as { [date: string]: Big }
-    );
-
-    const accountBalanceMap: { [date: string]: Big } = {};
-    const liabilitiesMap: { [date: string]: Big } = {};
-
-    let accumulatedLiabilities = new Big(0);
-    let lastKnownBalance = new Big(0);
-
     for (const dateString of chartDates) {
-      if (accountBalanceItemsMap[dateString] !== undefined) {
-        // If there's an exact balance for this date, update lastKnownBalance
-        lastKnownBalance = accountBalanceItemsMap[dateString];
-      }
-
-      // Add the most recent balance to the accountBalanceMap
-      accountBalanceMap[dateString] = lastKnownBalance;
-
-      if (liabilityItemsMap[dateString] !== undefined) {
-        accumulatedLiabilities = accumulatedLiabilities.plus(
-          liabilityItemsMap[dateString]
-        );
-      }
-
-      liabilitiesMap[dateString] = accumulatedLiabilities;
-
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
 
@@ -566,7 +518,14 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.investmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueWithCurrencyEffect),
-          totalAccountBalanceWithCurrencyEffect: accountBalanceMap[dateString],
+          totalCashValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.totalCashValueWithCurrencyEffect ?? new Big(0)
+          ).add(
+            cashSymbols.has(symbol)
+              ? currentValueWithCurrencyEffect
+              : new Big(0)
+          ),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -582,7 +541,6 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalInvestmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueAccumulatedWithCurrencyEffect),
-          totalLiabilitiesWithCurrencyEffect: liabilitiesMap[dateString],
           totalNetPerformanceValue: (
             accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
             new Big(0)
@@ -608,12 +566,11 @@ export abstract class PortfolioCalculator {
     ).map(([date, values]) => {
       const {
         investmentValueWithCurrencyEffect,
-        totalAccountBalanceWithCurrencyEffect,
+        totalCashValueWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
         totalInvestmentValueWithCurrencyEffect,
-        totalLiabilitiesWithCurrencyEffect,
         totalNetPerformanceValue,
         totalNetPerformanceValueWithCurrencyEffect,
         totalTimeWeightedInvestmentValue,
@@ -642,10 +599,8 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        netWorth: totalCurrentValueWithCurrencyEffect
-          .minus(totalLiabilitiesWithCurrencyEffect)
-          .toNumber(),
-        totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
+        netWorth: totalCurrentValueWithCurrencyEffect.toNumber(),
+        totalCashInBaseCurrency: totalCashValueWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:
           totalInvestmentValueWithCurrencyEffect.toNumber(),

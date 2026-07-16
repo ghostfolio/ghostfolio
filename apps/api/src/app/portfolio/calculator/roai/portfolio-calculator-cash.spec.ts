@@ -301,8 +301,10 @@ describe('PortfolioCalculator', () => {
 
       /**
        * Value with currency effect: 2000 USD * 0.91 = 1820 CHF
-       * Net worth: 1820 CHF - 0 CHF (liabilities) = 1820 CHF
-       * Total account balance: 1800 CHF (balance in base currency on 2024-12-31)
+       * Net worth: 1820 CHF (the cash is included in the value and therefore
+       * not added on top of it again)
+       * Cash in base currency: 2000 USD * 0.91 = 1820 CHF (the whole portfolio
+       * consists of cash, hence it matches the value)
        * Net performance with currency effect: 70 CHF / 852.45 CHF ≈ 8.21 %
        */
       expect(lastDataItem).toEqual({
@@ -313,7 +315,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.08211603004634808,
         netPerformanceWithCurrencyEffect: 70,
         netWorth: 1820,
-        totalAccountBalance: 1800,
+        totalCashInBaseCurrency: 1820,
         totalInvestment: 1820,
         totalInvestmentValueWithCurrencyEffect: 1750,
         value: 1820,
