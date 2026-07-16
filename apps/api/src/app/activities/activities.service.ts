@@ -989,19 +989,13 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
 
-    // Remove existing tags
-    await this.prismaService.order.update({
-      where,
-      data: { tags: { set: [] } }
-    });
-
     const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
         isDraft,
         tags: {
-          connect: tags
+          set: tags
         }
       }
     });
