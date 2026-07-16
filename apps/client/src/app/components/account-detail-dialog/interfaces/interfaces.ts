@@ -4,3 +4,7 @@ export interface AccountDetailDialogParams {
   hasImpersonationId: boolean;
   hasPermissionToCreateActivity: boolean;
 }
+
+export interface AccountDetailDialogResult {
+  isNavigating?: boolean;
+}
