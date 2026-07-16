@@ -700,6 +700,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       .filter(isIncludedInAssistant)
       .reduce<InternalRoute[]>((acc, route) => {
         acc.push(route);
+
         if (route.subRoutes) {
           acc.push(
             ...Object.values(route.subRoutes).filter(isIncludedInAssistant)

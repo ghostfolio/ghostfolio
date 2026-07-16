@@ -421,8 +421,8 @@ export const Loading: Story = {
 
 export const Default: Story = {
   args: {
-    baseCurrency: 'USD',
     dataSource,
+    baseCurrency: 'USD',
     deviceType: 'desktop',
     hasActivities: true,
     hasPermissionToCreateActivity: false,
@@ -475,8 +475,8 @@ export const Pagination: Story = {
 
 export const Actions: Story = {
   args: {
-    baseCurrency: 'USD',
     dataSource,
+    baseCurrency: 'USD',
     deviceType: 'desktop',
     hasActivities: true,
     hasPermissionToCreateActivity: false,
