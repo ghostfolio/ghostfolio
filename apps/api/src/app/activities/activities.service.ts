@@ -952,10 +952,6 @@ export class ActivitiesService {
 
     let isDraft = false;
 
-    if (!data.account?.connect?.id_userId?.id) {
-      data.account = { disconnect: true };
-    }
-
     if (
       ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
