@@ -3,10 +3,11 @@ import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.
 import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   Account,
@@ -19,7 +20,6 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -30,7 +30,8 @@ export class AccountService {
     private readonly accountBalanceService: AccountBalanceService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly tagService: TagService
   ) {}
 
   public async account({
@@ -127,7 +128,7 @@ export class AccountService {
     aUserId: string,
     tagIds?: string[]
   ): Promise<Account> {
-    await this.validateTagIds(tagIds, aUserId);
+    await this.tagService.validateTagIds({ tagIds, userId: aUserId });
 
     const account = await this.prismaService.account.create({
       data: {
@@ -259,15 +260,15 @@ export class AccountService {
 
   public async updateAccount(
     params: {
-      where: Prisma.AccountWhereUniqueInput;
       data: Prisma.AccountUpdateInput;
+      where: Prisma.AccountWhereUniqueInput;
     },
     aUserId: string,
     tagIds?: string[]
   ): Promise<Account> {
     const { data, where } = params;
 
-    await this.validateTagIds(tagIds, aUserId);
+    await this.tagService.validateTagIds({ tagIds, userId: aUserId });
 
     const account = await this.prismaService.account.update({
       data: {
@@ -338,28 +339,6 @@ export class AccountService {
         balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber(),
         date: date.toISOString()
       });
-    }
-  }
-
-  private async validateTagIds(tagIds: string[], userId: string) {
-    if (!tagIds?.length) {
-      return;
-    }
-
-    const uniqueTagIds = Array.from(new Set(tagIds));
-
-    const tagsCount = await this.prismaService.tag.count({
-      where: {
-        id: { in: uniqueTagIds },
-        OR: [{ userId }, { userId: null }]
-      }
-    });
-
-    if (tagsCount !== uniqueTagIds.length) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.BAD_REQUEST),
-        StatusCodes.BAD_REQUEST
-      );
     }
   }
 }

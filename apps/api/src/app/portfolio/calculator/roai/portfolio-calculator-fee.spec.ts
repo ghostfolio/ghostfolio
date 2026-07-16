@@ -113,7 +113,7 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
-        hasErrors: true,
+        hasErrors: false,
         positions: [],
         totalFeesWithCurrencyEffect: new Big('49'),
         totalInterestWithCurrencyEffect: new Big('0'),

@@ -233,6 +233,36 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       };
     }
 
+    // The dividends, the interest and the liabilities are derived from the
+    // activities only. Accumulate them upfront so that they survive the bail
+    // out for symbols without a market price below.
+    for (const order of orders) {
+      const exchangeRateAtOrderDate = exchangeRates[order.date];
+
+      if (order.type === 'DIVIDEND') {
+        const dividend = order.quantity.mul(order.unitPrice);
+
+        totalDividend = totalDividend.plus(dividend);
+        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+          dividend.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'INTEREST') {
+        const interest = order.quantity.mul(order.unitPrice);
+
+        totalInterest = totalInterest.plus(interest);
+        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+          interest.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'LIABILITY') {
+        const liabilities = order.quantity.mul(order.unitPrice);
+
+        totalLiabilities = totalLiabilities.plus(liabilities);
+        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
+          liabilities.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      }
+    }
+
     const dateOfFirstTransaction = new Date(orders[0].date);
 
     const endDateString = format(end, DATE_FORMAT);
@@ -260,7 +290,20 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       !unitPriceAtEndDate ||
       (!unitPriceAtStartDate && isBefore(dateOfFirstTransaction, start))
     ) {
+      // A missing market price can only affect the units which are held. The
+      // dividends, the interest and the liabilities do not hold any units and
+      // are therefore not in error.
+      const hasActivitiesWithUnits = orders.some(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      });
+
       return {
+        totalDividend,
+        totalDividendInBaseCurrency,
+        totalInterest,
+        totalInterestInBaseCurrency,
+        totalLiabilities,
+        totalLiabilitiesInBaseCurrency,
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
         feesWithCurrencyEffect: new Big(0),
@@ -268,7 +311,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
-        hasErrors: true,
+        hasErrors: hasActivitiesWithUnits,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
         investmentValuesAccumulated: {},
@@ -285,14 +328,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
         totalAccountBalanceInBaseCurrency: new Big(0),
-        totalDividend: new Big(0),
-        totalDividendInBaseCurrency: new Big(0),
-        totalInterest: new Big(0),
-        totalInterestInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
-        totalInvestmentWithCurrencyEffect: new Big(0),
-        totalLiabilities: new Big(0),
-        totalLiabilitiesInBaseCurrency: new Big(0)
+        totalInvestmentWithCurrencyEffect: new Big(0)
       };
     }
 
@@ -411,29 +448,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
 
       const exchangeRateAtOrderDate = exchangeRates[order.date];
-
-      if (order.type === 'DIVIDEND') {
-        const dividend = order.quantity.mul(order.unitPrice);
-
-        totalDividend = totalDividend.plus(dividend);
-        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
-          dividend.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'INTEREST') {
-        const interest = order.quantity.mul(order.unitPrice);
-
-        totalInterest = totalInterest.plus(interest);
-        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
-          interest.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'LIABILITY') {
-        const liabilities = order.quantity.mul(order.unitPrice);
-
-        totalLiabilities = totalLiabilities.plus(liabilities);
-        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
-          liabilities.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      }
 
       if (order.itemType === 'start') {
         // Take the unit price of the order as the market price if there are no
