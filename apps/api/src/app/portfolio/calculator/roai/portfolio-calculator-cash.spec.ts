@@ -286,6 +286,7 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big(1820),
         hasErrors: false,
+        totalCashInBaseCurrency: new Big(1820),
         totalFeesWithCurrencyEffect: new Big(0),
         totalInterestWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(1820),

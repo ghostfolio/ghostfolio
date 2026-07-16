@@ -113,6 +113,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       createdAt: new Date(),
       errors: [],
       historicalData: [],
+      totalCashInBaseCurrency: new Big(0),
       totalLiabilitiesWithCurrencyEffect: new Big(0)
     };
   }

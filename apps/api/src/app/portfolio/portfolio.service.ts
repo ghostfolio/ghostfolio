@@ -1887,6 +1887,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      totalCashInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect
     } = await portfolioCalculator.getSnapshot();
@@ -2015,6 +2016,7 @@ export class PortfolioService {
       fireWealth: {
         today: {
           valueInBaseCurrency: new Big(currentValueInBaseCurrency)
+            .minus(totalCashInBaseCurrency ?? 0)
             .minus(emergencyFundHoldingsValueInBaseCurrency)
             .toNumber()
         }

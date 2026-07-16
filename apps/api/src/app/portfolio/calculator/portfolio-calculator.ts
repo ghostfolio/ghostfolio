@@ -193,6 +193,7 @@ export abstract class PortfolioCalculator {
         hasErrors: false,
         historicalData: [],
         positions: [],
+        totalCashInBaseCurrency: new Big(0),
         totalFeesWithCurrencyEffect: new Big(0),
         totalInterestWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(0),
@@ -205,6 +206,7 @@ export abstract class PortfolioCalculator {
     const dataGatheringItems: DataGatheringItem[] = [];
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
+    let totalCashInBaseCurrency = new Big(0);
     let totalInterestWithCurrencyEffect = new Big(0);
     let totalLiabilitiesWithCurrencyEffect = new Big(0);
 
@@ -447,6 +449,12 @@ export abstract class PortfolioCalculator {
         )
       });
 
+      if (item.assetSubClass === 'CASH') {
+        totalCashInBaseCurrency = totalCashInBaseCurrency.plus(
+          marketPriceInBaseCurrency.mul(item.quantity)
+        );
+      }
+
       totalInterestWithCurrencyEffect = totalInterestWithCurrencyEffect.plus(
         totalInterestInBaseCurrency
       );
@@ -661,6 +669,7 @@ export abstract class PortfolioCalculator {
       ...overall,
       errors,
       historicalData,
+      totalCashInBaseCurrency,
       totalInterestWithCurrencyEffect,
       totalLiabilitiesWithCurrencyEffect,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors,
