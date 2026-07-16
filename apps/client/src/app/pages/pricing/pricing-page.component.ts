@@ -8,6 +8,7 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -32,6 +33,7 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [
     GfPremiumIndicatorComponent,
@@ -123,9 +125,9 @@ export class GfPricingPageComponent implements OnInit {
           this.label = this.user?.subscription?.offer?.label;
           this.price = this.user?.subscription?.offer?.price;
           this.priceId = this.user?.subscription?.offer?.priceId;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
