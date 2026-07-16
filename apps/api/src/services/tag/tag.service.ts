@@ -131,6 +131,13 @@ export class TagService {
       return;
     }
 
+    if (!userId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
     const uniqueTagIds = Array.from(new Set(tagIds));
 
     const tagsCount = await this.prismaService.tag.count({

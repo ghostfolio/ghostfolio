@@ -109,6 +109,13 @@ export class ActivitiesService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
+    await this.tagService.validateTagIds(
+      tags.map(({ id }) => {
+        return id;
+      }),
+      userId
+    );
+
     const activities = await this.prismaService.order.findMany({
       where: {
         userId,
