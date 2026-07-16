@@ -158,6 +158,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected placeholder = '';
   protected readonly selection = new SelectionModel<AssetProfileItem>(true);
   protected totalItems = 0;
+  protected readonly translate = translate;
   protected user: User;
 
   private activeFilters: Filter[] = [];
