@@ -20,6 +20,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -44,6 +45,7 @@ import { AiService } from './ai.service';
     PropertyModule,
     RedisCacheModule,
     SymbolProfileModule,
+    TagModule,
     UserModule
   ],
   providers: [
