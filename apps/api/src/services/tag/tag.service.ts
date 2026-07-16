@@ -126,7 +126,13 @@ export class TagService {
     });
   }
 
-  public async validateTagIds(tagIds: string[], userId: string) {
+  public async validateTagIds({
+    tagIds,
+    userId
+  }: {
+    tagIds: string[];
+    userId: string;
+  }) {
     if (!tagIds?.length) {
       return;
     }

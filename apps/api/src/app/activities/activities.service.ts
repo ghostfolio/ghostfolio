@@ -109,12 +109,12 @@ export class ActivitiesService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    await this.tagService.validateTagIds(
-      tags.map(({ id }) => {
+    await this.tagService.validateTagIds({
+      userId,
+      tagIds: tags.map(({ id }) => {
         return id;
-      }),
-      userId
-    );
+      })
+    });
 
     const activities = await this.prismaService.order.findMany({
       where: {
@@ -164,12 +164,12 @@ export class ActivitiesService {
   ): Promise<Order> {
     const tags = data.tags ?? [];
 
-    await this.tagService.validateTagIds(
-      tags.map(({ id }) => {
+    await this.tagService.validateTagIds({
+      tagIds: tags.map(({ id }) => {
         return id;
       }),
-      data.userId
-    );
+      userId: data.userId
+    });
 
     let account: Prisma.AccountCreateNestedOneWithoutActivitiesInput;
 
@@ -965,12 +965,12 @@ export class ActivitiesService {
   }): Promise<Order> {
     const tags = data.tags ?? [];
 
-    await this.tagService.validateTagIds(
-      tags.map(({ id }) => {
+    await this.tagService.validateTagIds({
+      userId,
+      tagIds: tags.map(({ id }) => {
         return id;
-      }),
-      userId
-    );
+      })
+    });
 
     if (!data.comment) {
       data.comment = null;
