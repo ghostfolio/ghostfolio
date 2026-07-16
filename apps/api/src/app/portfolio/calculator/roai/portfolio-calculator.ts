@@ -2,7 +2,7 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { DATE_FORMAT, getSum } from '@ghostfolio/common/helper';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   SymbolMetrics
@@ -296,11 +296,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       // A missing market price can only affect the units which are held. The
       // dividends, the interest and the liabilities do not hold any units and
       // are therefore not in error.
-      const totalUnitsOfActivities = getSum(
-        orders.map(({ quantity, type }) => {
-          return quantity.mul(getFactor(type));
-        })
-      );
+      const hasActivitiesWithUnits = orders.some(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      });
 
       return {
         totalDividend,
@@ -316,7 +314,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
-        hasErrors: totalUnitsOfActivities.gt(0),
+        hasErrors: hasActivitiesWithUnits,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
         investmentValuesAccumulated: {},
