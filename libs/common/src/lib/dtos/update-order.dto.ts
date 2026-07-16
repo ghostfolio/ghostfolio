@@ -4,6 +4,7 @@ import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
+  ArrayUnique,
   IsArray,
   IsEnum,
   IsISO8601,
@@ -63,8 +64,10 @@ export class UpdateOrderDto {
   @IsString()
   symbol: string;
 
+  @ArrayUnique()
   @IsArray()
   @IsOptional()
+  @IsString({ each: true })
   tags?: string[];
 
   @IsString()
