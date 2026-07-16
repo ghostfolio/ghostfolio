@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { finalize, map, switchMap } from 'rxjs/operators';
 
 import { GfCreateOrUpdateActivityDialogComponent } from '../create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { CreateOrUpdateActivityDialogParams } from '../create-or-update-activity-dialog/interfaces/interfaces';
@@ -106,22 +106,27 @@ export class GfActivityDialogHostComponent implements OnInit {
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: CreateOrderDto | UpdateOrderDto | null) => {
-        if (result) {
-          const request$: Observable<unknown> = isUpdate
-            ? this.dataService.putActivity(result as UpdateOrderDto)
-            : this.dataService.postActivity(result as CreateOrderDto);
+        if (!result) {
+          this.navigateBack();
 
-          request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: () => {
-              this.userService
-                .get(true)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
-            }
-          });
+          return;
         }
 
-        this.navigateBack();
+        const request$: Observable<unknown> = isUpdate
+          ? this.dataService.putActivity(result as UpdateOrderDto)
+          : this.dataService.postActivity(result as CreateOrderDto);
+
+        request$
+          .pipe(
+            finalize(() => {
+              this.navigateBack();
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.userService.get(true).subscribe();
+            }
+          });
       });
   }
 }

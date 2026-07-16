@@ -127,7 +127,6 @@ export const internalRoutes = {
         routerLink: ['/portfolio', 'activities'],
         subRoutes: {
           clone: {
-            excludeFromAssistant: true,
             path: 'clone',
             title: $localize`Clone Activity`
           },
@@ -137,7 +136,6 @@ export const internalRoutes = {
             title: $localize`Add Activity`
           },
           update: {
-            excludeFromAssistant: true,
             path: 'update',
             title: $localize`Update Activity`
           }

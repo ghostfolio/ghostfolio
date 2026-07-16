@@ -63,7 +63,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Account, MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
@@ -80,7 +80,7 @@ import {
 } from 'ionicons/icons';
 import { isNumber, round, uniqBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
@@ -200,6 +200,17 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
+    this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof NavigationStart;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
+
     addIcons({
       arrowDownCircleOutline,
       createOutline,

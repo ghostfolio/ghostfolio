@@ -40,6 +40,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { NavigationStart, Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
@@ -51,7 +52,7 @@ import {
 } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { forkJoin } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
 
@@ -112,9 +113,21 @@ export class GfAccountDetailDialogComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
     inject<MatDialogRef<GfAccountDetailDialogComponent>>(MatDialogRef);
+  private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
+    this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof NavigationStart;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
+
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
