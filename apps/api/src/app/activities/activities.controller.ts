@@ -315,11 +315,13 @@ export class ActivitiesController {
       data: {
         ...data,
         date,
-        account: {
-          connect: {
-            id_userId: { id: accountId, userId: this.request.user.id }
-          }
-        },
+        account: accountId
+          ? {
+              connect: {
+                id_userId: { id: accountId, userId: this.request.user.id }
+              }
+            }
+          : { disconnect: true },
         SymbolProfile: {
           connect: {
             dataSource_symbol: {

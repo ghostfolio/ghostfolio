@@ -983,10 +983,6 @@ export class ActivitiesService {
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
-      if (data.account?.connect?.id_userId?.id === null) {
-        data.account = { disconnect: true };
-      }
-
       delete data.SymbolProfile.connect;
       delete data.SymbolProfile.update.name;
     } else {
