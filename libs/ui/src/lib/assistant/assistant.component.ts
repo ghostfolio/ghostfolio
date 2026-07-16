@@ -708,7 +708,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         return acc;
       }, [])
       .filter((route): route is InternalRoute & { routerLink: string[] } => {
-        return route.routerLink !== undefined;
+        // Routes with a parameterized router link cannot be linked to without
+        // their parameters and are therefore not offered as quick links
+        return Array.isArray(route.routerLink);
       });
 
     const fuse = new Fuse(allRoutes, {

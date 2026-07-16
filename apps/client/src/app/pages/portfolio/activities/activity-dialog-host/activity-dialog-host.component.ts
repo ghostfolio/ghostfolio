@@ -8,27 +8,29 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  OnDestroy,
   OnInit,
   inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Observable, of } from 'rxjs';
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 import { GfCreateOrUpdateActivityDialogComponent } from '../create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { CreateOrUpdateActivityDialogParams } from '../create-or-update-activity-dialog/interfaces/interfaces';
-
-type ActivityDialogMode = 'clone' | 'create' | 'update';
+import { ActivityDialogMode } from './types/activity-dialog-mode.type';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-activity-dialog-host',
   template: ''
 })
-export class GfActivityDialogHostComponent implements OnInit {
+export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
+  private dialogRef: MatDialogRef<GfCreateOrUpdateActivityDialogComponent>;
+
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -49,7 +51,11 @@ export class GfActivityDialogHostComponent implements OnInit {
       .get()
       .pipe(
         switchMap((user) => {
-          return activity$.pipe(map((activity) => ({ activity, user })));
+          return activity$.pipe(
+            map((activity) => {
+              return { activity, user };
+            })
+          );
         }),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -58,9 +64,47 @@ export class GfActivityDialogHostComponent implements OnInit {
           this.navigateBack();
         },
         next: ({ activity, user }) => {
-          this.openDialog(mode, user, activity);
+          if (mode === 'update') {
+            if (!activity) {
+              this.navigateBack();
+
+              return;
+            }
+
+            this.openDialog({ activity, user, isUpdate: true });
+
+            return;
+          }
+
+          if (mode === 'clone' && !activity) {
+            this.navigateBack();
+
+            return;
+          }
+
+          this.openDialog({
+            user,
+            activity: {
+              ...activity,
+              accountId: activity?.accountId,
+              assetProfile: activity?.assetProfile ?? null,
+              date: new Date(),
+              fee: 0,
+              id: null,
+              type: activity?.type ?? 'BUY',
+              unitPrice: null
+            },
+            isUpdate: false
+          });
         }
       });
+  }
+
+  public ngOnDestroy() {
+    // The dialog lives in an overlay outside of this component, so it needs to
+    // be closed explicitly when leaving the route (for example via the browser
+    // navigation)
+    this.dialogRef?.close();
   }
 
   private navigateBack() {
@@ -69,40 +113,31 @@ export class GfActivityDialogHostComponent implements OnInit {
     );
   }
 
-  private openDialog(
-    aMode: ActivityDialogMode,
-    aUser: User,
-    aActivity?: Activity
-  ) {
+  private openDialog({
+    activity,
+    isUpdate,
+    user
+  }: {
+    activity: CreateOrUpdateActivityDialogParams['activity'];
+    isUpdate: boolean;
+    user: User;
+  }) {
     const deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-    const isUpdate = aMode === 'update';
 
-    const dialogRef = this.dialog.open<
+    this.dialogRef = this.dialog.open<
       GfCreateOrUpdateActivityDialogComponent,
       CreateOrUpdateActivityDialogParams
     >(GfCreateOrUpdateActivityDialogComponent, {
       data: {
-        accounts: aUser?.accounts,
-        activity:
-          isUpdate && aActivity
-            ? aActivity
-            : {
-                ...aActivity,
-                accountId: aActivity?.accountId,
-                assetProfile: aActivity?.assetProfile ?? null,
-                date: new Date(),
-                fee: 0,
-                id: null,
-                type: aActivity?.type ?? 'BUY',
-                unitPrice: null
-              },
-        user: aUser
+        activity,
+        user,
+        accounts: user?.accounts
       },
       height: deviceType === 'mobile' ? '98vh' : '80vh',
       width: deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef
+    this.dialogRef
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: CreateOrderDto | UpdateOrderDto | null) => {
@@ -116,17 +151,19 @@ export class GfActivityDialogHostComponent implements OnInit {
           ? this.dataService.putActivity(result as UpdateOrderDto)
           : this.dataService.postActivity(result as CreateOrderDto);
 
-        request$
-          .pipe(
-            finalize(() => {
-              this.navigateBack();
-            })
-          )
-          .subscribe({
-            next: () => {
-              this.userService.get(true).subscribe();
-            }
-          });
+        request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+          error: () => {
+            this.navigateBack();
+          },
+          next: () => {
+            // Deliberately not bound to the destroy reference: navigating back
+            // destroys this component and the refreshed user is what makes the
+            // activities page reload its data
+            this.userService.get(true).subscribe();
+
+            this.navigateBack();
+          }
+        });
       });
   }
 }

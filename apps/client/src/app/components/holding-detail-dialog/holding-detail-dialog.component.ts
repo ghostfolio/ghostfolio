@@ -82,7 +82,10 @@ import { isNumber, round, uniqBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { filter, switchMap } from 'rxjs/operators';
 
-import { HoldingDetailDialogParams } from './interfaces/interfaces';
+import {
+  HoldingDetailDialogParams,
+  HoldingDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -186,9 +189,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected value: number;
 
   protected readonly data = inject<HoldingDetailDialogParams>(MAT_DIALOG_DATA);
-  protected readonly dialogRef = inject(
-    MatDialogRef<GfHoldingDetailDialogComponent>
-  );
+  protected readonly dialogRef =
+    inject<
+      MatDialogRef<GfHoldingDetailDialogComponent, HoldingDetailDialogResult>
+    >(MatDialogRef);
 
   private tags: Tag[];
 
@@ -208,7 +212,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
-        this.dialogRef.close();
+        this.dialogRef.close({ isNavigating: true });
       });
 
     addIcons({

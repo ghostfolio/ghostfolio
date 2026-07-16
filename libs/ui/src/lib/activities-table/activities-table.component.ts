@@ -151,8 +151,24 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public readonly showCheckbox = input(false);
   public readonly showNameColumn = input(true);
 
-  protected readonly activityDialogRoutes =
-    internalRoutes.portfolio.subRoutes.activities.subRoutes;
+  protected readonly activityDialogRouterLinks = computed(() => {
+    const { clone, update } =
+      internalRoutes.portfolio.subRoutes.activities.subRoutes;
+
+    const routerLinks = new Map<
+      string,
+      { clone: string[]; update: string[] }
+    >();
+
+    for (const { id } of this.dataSource()?.data ?? []) {
+      routerLinks.set(id, {
+        clone: clone.routerLink(id),
+        update: update.routerLink(id)
+      });
+    }
+
+    return routerLinks;
+  });
 
   protected readonly displayedColumns = computed(() => {
     let columns = [
@@ -266,14 +282,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
       activity.isDraft === false &&
       ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     );
-  }
-
-  public getActivityDialogRouterLink(aActivity: Activity, aPath: string) {
-    return [
-      ...internalRoutes.portfolio.subRoutes.activities.routerLink,
-      aActivity.id,
-      aPath
-    ];
   }
 
   public isExcludedFromAnalysis(activity: Activity) {

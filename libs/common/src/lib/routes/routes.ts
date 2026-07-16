@@ -128,6 +128,9 @@ export const internalRoutes = {
         subRoutes: {
           clone: {
             path: 'clone',
+            routerLink: (aActivityId: string) => {
+              return ['/portfolio', 'activities', aActivityId, 'clone'];
+            },
             title: $localize`Clone Activity`
           },
           create: {
@@ -137,6 +140,9 @@ export const internalRoutes = {
           },
           update: {
             path: 'update',
+            routerLink: (aActivityId: string) => {
+              return ['/portfolio', 'activities', aActivityId, 'update'];
+            },
             title: $localize`Update Activity`
           }
         },

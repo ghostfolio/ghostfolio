@@ -478,12 +478,7 @@
           }
           <a
             mat-menu-item
-            [routerLink]="
-              getActivityDialogRouterLink(
-                element,
-                activityDialogRoutes.update.path
-              )
-            "
+            [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
           >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
@@ -492,12 +487,7 @@
           </a>
           <a
             mat-menu-item
-            [routerLink]="
-              getActivityDialogRouterLink(
-                element,
-                activityDialogRoutes.clone.path
-              )
-            "
+            [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"
           >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="copy-outline" />

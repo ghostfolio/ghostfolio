@@ -54,7 +54,10 @@ import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { filter, forkJoin } from 'rxjs';
 
-import { AccountDetailDialogParams } from './interfaces/interfaces';
+import {
+  AccountDetailDialogParams,
+  AccountDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -112,7 +115,9 @@ export class GfAccountDetailDialogComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
-    inject<MatDialogRef<GfAccountDetailDialogComponent>>(MatDialogRef);
+    inject<
+      MatDialogRef<GfAccountDetailDialogComponent, AccountDetailDialogResult>
+    >(MatDialogRef);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
@@ -125,7 +130,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
-        this.dialogRef.close();
+        this.dialogRef.close({ isNavigating: true });
       });
 
     this.userService.stateChanged

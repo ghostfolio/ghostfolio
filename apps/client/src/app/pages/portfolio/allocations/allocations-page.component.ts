@@ -1,5 +1,8 @@
 import { GfAccountDetailDialogComponent } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
-import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import {
+  AccountDetailDialogParams,
+  AccountDetailDialogResult
+} from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
@@ -604,7 +607,8 @@ export class GfAllocationsPageComponent implements OnInit {
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open<
       GfAccountDetailDialogComponent,
-      AccountDetailDialogParams
+      AccountDetailDialogParams,
+      AccountDetailDialogResult
     >(GfAccountDetailDialogComponent, {
       autoFocus: false,
       data: {
@@ -623,7 +627,11 @@ export class GfAllocationsPageComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
+      .subscribe((result) => {
+        if (result?.isNavigating) {
+          return;
+        }
+
         void this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
