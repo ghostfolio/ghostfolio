@@ -139,7 +139,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('Cash Performance', () => {
-    const computePortfolioSnapshot = async () => {
+    it('should calculate performance for cash assets in CHF default currency', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
 
       const accountId = randomUUID();
@@ -219,11 +219,7 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      return portfolioCalculator.computeSnapshot();
-    };
-
-    it('should calculate performance for cash assets in CHF default currency', async () => {
-      const portfolioSnapshot = await computePortfolioSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
       const position = portfolioSnapshot.positions.find(({ symbol }) => {
         return symbol === 'USD';
@@ -294,12 +290,6 @@ describe('PortfolioCalculator', () => {
         totalInvestment: new Big(1820),
         totalLiabilitiesWithCurrencyEffect: new Big(0)
       });
-    });
-
-    it('should include cash in the net worth and performance without counting it twice', async () => {
-      const portfolioSnapshot = await computePortfolioSnapshot();
-
-      const lastDataItem = portfolioSnapshot.historicalData.at(-1);
 
       /**
        * Value with currency effect: 2000 USD * 0.91 = 1820 CHF
@@ -309,7 +299,7 @@ describe('PortfolioCalculator', () => {
        * consists of cash, hence it matches the value)
        * Net performance with currency effect: 70 CHF / 852.45 CHF ≈ 8.21 %
        */
-      expect(lastDataItem).toEqual({
+      expect(portfolioSnapshot.historicalData.at(-1)).toEqual({
         date: '2025-01-01',
         investmentValueWithCurrencyEffect: 0,
         netPerformance: 0,
