@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the clone, create and edit activity dialogs to dedicated routes
 - Improved the language localization in the tag management of the admin control panel
 
 ### Fixed
