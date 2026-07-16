@@ -14,6 +14,7 @@ import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-da
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -36,6 +37,7 @@ import { ActivitiesService } from './activities.service';
     RedactValuesInResponseModule,
     RedisCacheModule,
     SymbolProfileModule,
+    TagModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],

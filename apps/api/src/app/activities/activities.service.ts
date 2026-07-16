@@ -12,6 +12,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
@@ -61,7 +62,8 @@ export class ActivitiesService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly tagService: TagService
   ) {}
 
   public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {
@@ -153,6 +155,15 @@ export class ActivitiesService {
       userId: string;
     }
   ): Promise<Order> {
+    const tags = data.tags ?? [];
+
+    await this.tagService.validateTagIds(
+      tags.map(({ id }) => {
+        return id;
+      }),
+      data.userId
+    );
+
     let account: Prisma.AccountCreateNestedOneWithoutActivitiesInput;
 
     if (data.accountId) {
@@ -167,7 +178,6 @@ export class ActivitiesService {
     }
 
     const accountId = data.accountId;
-    const tags = data.tags ?? [];
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
@@ -932,6 +942,7 @@ export class ActivitiesService {
 
   public async updateActivity({
     data,
+    userId,
     where
   }: {
     data: Prisma.OrderUpdateInput & {
@@ -942,13 +953,21 @@ export class ActivitiesService {
       tags?: { id: string }[];
       type?: ActivityType;
     };
+    userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
+    const tags = data.tags ?? [];
+
+    await this.tagService.validateTagIds(
+      tags.map(({ id }) => {
+        return id;
+      }),
+      userId
+    );
+
     if (!data.comment) {
       data.comment = null;
     }
-
-    const tags = data.tags ?? [];
 
     let isDraft = false;
 

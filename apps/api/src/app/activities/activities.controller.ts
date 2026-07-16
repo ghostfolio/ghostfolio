@@ -338,6 +338,7 @@ export class ActivitiesController {
         }),
         user: { connect: { id: this.request.user.id } }
       },
+      userId: this.request.user.id,
       where: {
         id
       }
