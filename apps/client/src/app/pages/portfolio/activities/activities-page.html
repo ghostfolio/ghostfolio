@@ -25,8 +25,6 @@
         (activitiesDeleted)="onDeleteActivities()"
         (activityClicked)="onClickActivity($event)"
         (activityDeleted)="onDeleteActivity($event)"
-        (activityToClone)="onCloneActivity($event)"
-        (activityToUpdate)="onUpdateActivity($event)"
         (export)="onExport()"
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"
@@ -43,6 +41,13 @@
     hasPermissionToCreateActivity &&
     !user.settings.isRestrictedView
   ) {
-    <gf-fab [queryParams]="{ createDialog: true }" />
+    <gf-fab
+      [routerLink]="
+        internalRoutes.portfolio.subRoutes.activities.subRoutes.create
+          .routerLink
+      "
+    />
   }
 </div>
+
+<router-outlet />

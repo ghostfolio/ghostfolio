@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Migrated the clone, create and edit activity dialogs to dedicated routes
+
 ### Fixed
 
 - Fixed the missing validation of the tags when creating or updating an activity
