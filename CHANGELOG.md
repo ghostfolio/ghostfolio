@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue where the dividends, the interest and the liabilities of asset profiles without market data have been valued at zero in the portfolio calculation
+- Fixed an issue where an error has been reported for asset profiles without market data which do not hold any units
 - Fixed an issue with removing a linked account from a buy, sell or dividend activity
 
 ## 3.27.0 - 2026-07-15
