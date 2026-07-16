@@ -39,7 +39,6 @@ import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
-import { AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
@@ -319,6 +318,7 @@ export abstract class PortfolioCalculator {
         totalCurrentValueWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
         totalInvestmentValueWithCurrencyEffect: Big;
+        totalLiabilitiesWithCurrencyEffect: Big;
         totalNetPerformanceValue: Big;
         totalNetPerformanceValueWithCurrencyEffect: Big;
         totalTimeWeightedInvestmentValue: Big;
@@ -389,9 +389,6 @@ export abstract class PortfolioCalculator {
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
 
-      const includeInTotalAssetValue =
-        item.assetSubClass !== AssetSubClass.CASH;
-
       valuesBySymbol[item.symbol] = {
         currentValues,
         currentValuesWithCurrencyEffect,
@@ -405,7 +402,6 @@ export abstract class PortfolioCalculator {
       };
 
       positions.push({
-        includeInTotalAssetValue,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         activitiesCount: item.activitiesCount,
@@ -479,8 +475,28 @@ export abstract class PortfolioCalculator {
       {} as { [date: string]: Big }
     );
 
-    const accountBalanceMap: { [date: string]: Big } = {};
+    const liabilityItemsMap = this.activities.reduce(
+      (map, { assetProfile, date, quantity, type, unitPrice }) => {
+        if (type === 'LIABILITY') {
+          const exchangeRate =
+            exchangeRatesByCurrency[
+              `${assetProfile.currency}${this.currency}`
+            ]?.[date] ?? 1;
 
+          map[date] = (map[date] ?? new Big(0)).plus(
+            quantity.mul(unitPrice).mul(exchangeRate)
+          );
+        }
+
+        return map;
+      },
+      {} as { [date: string]: Big }
+    );
+
+    const accountBalanceMap: { [date: string]: Big } = {};
+    const liabilitiesMap: { [date: string]: Big } = {};
+
+    let accumulatedLiabilities = new Big(0);
     let lastKnownBalance = new Big(0);
 
     for (const dateString of chartDates) {
@@ -491,6 +507,14 @@ export abstract class PortfolioCalculator {
 
       // Add the most recent balance to the accountBalanceMap
       accountBalanceMap[dateString] = lastKnownBalance;
+
+      if (liabilityItemsMap[dateString] !== undefined) {
+        accumulatedLiabilities = accumulatedLiabilities.plus(
+          liabilityItemsMap[dateString]
+        );
+      }
+
+      liabilitiesMap[dateString] = accumulatedLiabilities;
 
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
@@ -550,6 +574,7 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalInvestmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueAccumulatedWithCurrencyEffect),
+          totalLiabilitiesWithCurrencyEffect: liabilitiesMap[dateString],
           totalNetPerformanceValue: (
             accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
             new Big(0)
@@ -580,6 +605,7 @@ export abstract class PortfolioCalculator {
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
         totalInvestmentValueWithCurrencyEffect,
+        totalLiabilitiesWithCurrencyEffect,
         totalNetPerformanceValue,
         totalNetPerformanceValueWithCurrencyEffect,
         totalTimeWeightedInvestmentValue,
@@ -608,7 +634,9 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        netWorth: totalCurrentValueWithCurrencyEffect.toNumber(),
+        netWorth: totalCurrentValueWithCurrencyEffect
+          .minus(totalLiabilitiesWithCurrencyEffect)
+          .toNumber(),
         totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:
@@ -770,11 +798,6 @@ export abstract class PortfolioCalculator {
               ? 0
               : netPerformanceWithCurrencyEffectSinceStartDate /
                 timeWeightedInvestmentValue
-          // TODO: Add net worth
-          // netWorth: totalCurrentValueWithCurrencyEffect
-          //   .plus(totalAccountBalanceWithCurrencyEffect)
-          //   .toNumber()
-          // netWorth: 0
         });
       }
     }

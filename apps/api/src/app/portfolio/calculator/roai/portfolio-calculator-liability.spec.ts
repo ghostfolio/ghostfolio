@@ -113,6 +113,14 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot.totalLiabilitiesWithCurrencyEffect).toEqual(
         new Big(3000)
       );
+
+      /**
+       * Net worth: 0 USD (current value) - 3000 USD (liabilities) = -3000 USD
+       */
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
+        netWorth: -3000,
+        valueWithCurrencyEffect: 0
+      });
     });
   });
 });

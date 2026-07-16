@@ -541,12 +541,6 @@ export class PortfolioService {
 
     let filteredValueInBaseCurrency = currentValueInBaseCurrency;
 
-    if (!this.activitiesService.areCashActivitiesExcludedByFilters(filters)) {
-      filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
-        cashDetails.balanceInBaseCurrency
-      );
-    }
-
     const assetProfileIdentifiers = positions.map(({ dataSource, symbol }) => {
       return {
         dataSource,
@@ -1969,8 +1963,7 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth = new Big(balanceInBaseCurrency)
-      .plus(currentValueInBaseCurrency)
+    const netWorth = new Big(currentValueInBaseCurrency)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
       .toNumber();
