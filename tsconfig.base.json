@@ -34,7 +34,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "allowUnreachableCode": true
+    "allowUnreachableCode": false
   },
   "exclude": ["node_modules", "tmp"]
 }
