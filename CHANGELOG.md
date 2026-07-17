@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the clone, create and edit activity dialogs to dedicated routes
 - Improved the language localization in the historical market data table of the admin control panel
 - Improved the language localization in the tag management of the admin control panel
+- Removed the deprecated `SymbolProfile` field from the activity interface
 
 ### Fixed
 
