@@ -34,11 +34,9 @@
           @for (tag of tagsSelected(); track tag.id) {
             <mat-chip-row [removable]="true" (removed)="onRemoveTag(tag)">
               {{ tag.name }}
-              <ion-icon
-                matChipRemove
-                matChipTrailingIcon
-                name="close-outline"
-              />
+              <button matChipRemove type="button">
+                <ion-icon name="close-outline" />
+              </button>
             </mat-chip-row>
           }
           <input
