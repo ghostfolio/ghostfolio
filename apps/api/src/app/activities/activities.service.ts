@@ -499,23 +499,6 @@ export class ActivitiesService {
           id: balanceItem.id,
           isDraft: false,
           quantity: 1,
-          SymbolProfile: {
-            activitiesCount: 0,
-            assetClass: AssetClass.LIQUIDITY,
-            assetSubClass: AssetSubClass.CASH,
-            countries: [],
-            createdAt: new Date(balanceItem.date),
-            currency: account.currency,
-            dataSource:
-              this.dataProviderService.getDataSourceForExchangeRates(),
-            holdings: [],
-            id: account.currency,
-            isActive: true,
-            name: account.currency,
-            sectors: [],
-            symbol: account.currency,
-            updatedAt: new Date(balanceItem.date)
-          },
           symbolProfileId: account.currency,
           type: ActivityType.BUY,
           unitPrice: 1,
@@ -862,8 +845,7 @@ export class ActivitiesService {
           feeInBaseCurrency,
           unitPriceInAssetProfileCurrency,
           value,
-          valueInBaseCurrency,
-          SymbolProfile: assetProfile
+          valueInBaseCurrency
         };
       })
     );

@@ -27,12 +27,6 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
     'currency' | 'date' | 'fee' | 'quantity' | 'type' | 'unitPrice'
   > & {
     assetProfile?: EnhancedSymbolProfile;
-
-    /**
-     * @deprecated Use `assetProfile` instead
-     */
-    SymbolProfile?: EnhancedSymbolProfile;
-
     value: number;
     valueInBaseCurrency: number;
   })[];
