@@ -3,6 +3,7 @@ import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptor
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 
 import { Module } from '@nestjs/common';
 
@@ -16,6 +17,7 @@ import { SymbolService } from './symbol.service';
     DataProviderModule,
     MarketDataModule,
     PrismaModule,
+    PropertyModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],

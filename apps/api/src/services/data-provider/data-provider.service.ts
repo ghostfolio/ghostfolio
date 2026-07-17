@@ -27,7 +27,8 @@ import {
   DataProviderHistoricalResponse,
   DataProviderResponse,
   LookupItem,
-  LookupResponse
+  LookupResponse,
+  MarketDataOfMarketsResponse
 } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
@@ -549,6 +550,22 @@ export class DataProviderService implements OnModuleInit {
     }
 
     return result;
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData: number;
+  }): Promise<MarketDataOfMarketsResponse> {
+    const dataProvider = this.getDataProvider(DataSource.GHOSTFOLIO);
+
+    if (!dataProvider.getMarketDataOfMarkets) {
+      throw new Error(
+        `The data provider (${DataSource.GHOSTFOLIO}) does not support the market data of markets`
+      );
+    }
+
+    return dataProvider.getMarketDataOfMarkets({ includeHistoricalData });
   }
 
   public async getQuotes({

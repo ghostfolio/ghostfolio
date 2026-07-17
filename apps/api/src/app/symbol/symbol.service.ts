@@ -1,10 +1,12 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
-  ghostfolioFearAndGreedIndexSymbolStocks
+  ghostfolioFearAndGreedIndexSymbolStocks,
+  PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -28,7 +30,8 @@ export class SymbolService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    private readonly propertyService: PropertyService
   ) {}
 
   public async get({
@@ -133,6 +136,17 @@ export class SymbolService {
   }: {
     includeHistoricalData: number;
   }): Promise<MarketDataOfMarketsResponse> {
+    const hasApiKeyForDataProviderGhostfolio =
+      !!(await this.propertyService.getByKey<string>(
+        PROPERTY_API_KEY_GHOSTFOLIO
+      ));
+
+    if (hasApiKeyForDataProviderGhostfolio) {
+      return this.dataProviderService.getMarketDataOfMarkets({
+        includeHistoricalData
+      });
+    }
+
     const [
       marketDataFearAndGreedIndexCryptocurrencies,
       marketDataFearAndGreedIndexStocks
