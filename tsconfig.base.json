@@ -29,7 +29,7 @@
     "strictPropertyInitialization": false,
     "noImplicitReturns": false,
     "noImplicitAny": false,
-    "noImplicitThis": false,
+    "noImplicitThis": true,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": true,
