@@ -30,7 +30,7 @@
     "noImplicitReturns": false,
     "noImplicitAny": false,
     "noImplicitThis": false,
-    "noImplicitOverride": false,
+    "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
