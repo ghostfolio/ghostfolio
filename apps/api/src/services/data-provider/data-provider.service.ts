@@ -195,11 +195,7 @@ export class DataProviderService implements OnModuleInit {
         return DataSource[dataSource];
       });
 
-    const ghostfolioApiKey = await this.propertyService.getByKey<string>(
-      PROPERTY_API_KEY_GHOSTFOLIO
-    );
-
-    if (ghostfolioApiKey) {
+    if (await this.isDataProviderGhostfolioConfigured()) {
       dataSources.push('GHOSTFOLIO');
     }
 
@@ -822,6 +818,12 @@ export class DataProviderService implements OnModuleInit {
     );
 
     return response;
+  }
+
+  public async isDataProviderGhostfolioConfigured(): Promise<boolean> {
+    return !!(await this.propertyService.getByKey<string>(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    ));
   }
 
   public async search({
