@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the support to get the _Fear & Greed Index_ (market mood) from the `GHOSTFOLIO` data provider for self-hosted environments
+
 ### Changed
 
 - Improved the language localization for German (`de`)
