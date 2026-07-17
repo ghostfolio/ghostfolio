@@ -5,6 +5,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -25,6 +26,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [IonIcon, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-overview-page',
@@ -68,9 +70,9 @@ export class GfAboutOverviewPageComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 }

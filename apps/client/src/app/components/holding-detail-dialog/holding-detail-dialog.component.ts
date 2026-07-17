@@ -1,6 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
+  E_MAIL_LINE_BREAK,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
 } from '@ghostfolio/common/config';
@@ -62,7 +63,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Account, MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
@@ -79,9 +80,12 @@ import {
 } from 'ionicons/icons';
 import { isNumber, round, uniqBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 
-import { HoldingDetailDialogParams } from './interfaces/interfaces';
+import {
+  HoldingDetailDialogParams,
+  HoldingDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -169,7 +173,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected quantity: number;
   protected quantityPrecision = 2;
-  protected reportDataGlitchMail: string;
+  protected reportDataGlitchMailHref: string;
   protected readonly round = round;
   protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
@@ -185,9 +189,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected value: number;
 
   protected readonly data = inject<HoldingDetailDialogParams>(MAT_DIALOG_DATA);
-  protected readonly dialogRef = inject(
-    MatDialogRef<GfHoldingDetailDialogComponent>
-  );
+  protected readonly dialogRef =
+    inject<
+      MatDialogRef<GfHoldingDetailDialogComponent, HoldingDetailDialogResult>
+    >(MatDialogRef);
 
   private tags: Tag[];
 
@@ -199,6 +204,17 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
+    this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof NavigationStart;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close({ isNavigating: true });
+      });
+
     addIcons({
       arrowDownCircleOutline,
       createOutline,
@@ -456,7 +472,20 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             this.assetProfile?.symbol ? ` (${this.assetProfile.symbol})` : ''
           }`;
 
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.assetProfile?.symbol}%0DData Source: ${this.assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+          this.reportDataGlitchMailHref = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=${[
+            'Hello',
+            '',
+            'I would like to report a data glitch for',
+            '',
+            `Symbol: ${this.assetProfile?.symbol}`,
+            `Data Source: ${this.assetProfile?.dataSource}`,
+            '',
+            'Additional notes:',
+            '',
+            'Can you please take a look?',
+            '',
+            'Kind regards'
+          ].join(E_MAIL_LINE_BREAK)}`;
 
           if (this.assetProfile?.assetClass) {
             this.assetClass = translate(this.assetProfile?.assetClass);
@@ -575,17 +604,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.fetchActivities();
   }
 
-  protected onCloneActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, createDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
-  }
-
   protected onClose() {
     this.dialogRef.close();
   }
@@ -645,17 +663,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  protected onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, editDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   private fetchActivities(filters: Filter[] = this.getActivityFilters()) {

@@ -7,6 +7,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -25,6 +26,7 @@ import { AccountService } from './account.service';
     PortfolioModule,
     PrismaModule,
     RedactValuesInResponseModule,
+    TagModule,
     UserModule
   ],
   providers: [AccountService]

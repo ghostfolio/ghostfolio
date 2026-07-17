@@ -374,8 +374,6 @@
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
           [totalItems]="activitiesCount"
-          (activityToClone)="onCloneActivity($event)"
-          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
           (pageChanged)="onChangePage($event)"
         />
@@ -456,7 +454,10 @@
               dataSource?.data.length > 0 &&
               data.hasPermissionToReportDataGlitch === true
             ) {
-              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+              <a
+                color="warn"
+                mat-stroked-button
+                [href]="reportDataGlitchMailHref"
                 ><ion-icon class="mr-1" name="flag-outline" /><span i18n
                   >Report Data Glitch</span
                 >...</a

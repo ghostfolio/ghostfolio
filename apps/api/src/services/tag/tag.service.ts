@@ -1,7 +1,8 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/client';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()
 export class TagService {
@@ -123,5 +124,40 @@ export class TagService {
       data,
       where
     });
+  }
+
+  public async validateTagIds({
+    tagIds,
+    userId
+  }: {
+    tagIds: string[];
+    userId: string;
+  }) {
+    if (!tagIds?.length) {
+      return;
+    }
+
+    if (!userId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const uniqueTagIds = Array.from(new Set(tagIds));
+
+    const tagsCount = await this.prismaService.tag.count({
+      where: {
+        id: { in: uniqueTagIds },
+        OR: [{ userId }, { userId: null }]
+      }
+    });
+
+    if (tagsCount !== uniqueTagIds.length) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
   }
 }

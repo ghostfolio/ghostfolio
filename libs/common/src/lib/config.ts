@@ -184,6 +184,8 @@ export const DERIVED_CURRENCIES = [
   }
 ];
 
+export const E_MAIL_LINE_BREAK = '%0D%0A';
+
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   attempts: 12,
