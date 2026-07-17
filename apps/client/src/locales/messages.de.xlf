@@ -4527,7 +4527,7 @@
       </trans-unit>
       <trans-unit id="5761400233881592893" datatype="html">
         <source>Update Activity</source>
-        <target state="new">Update Activity</target>
+        <target state="translated">Aktivität bearbeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">146</context>
@@ -5407,7 +5407,7 @@
       </trans-unit>
       <trans-unit id="2375397722199009140" datatype="html">
         <source>Add Activity</source>
-        <target state="new">Add Activity</target>
+        <target state="translated">Aktivität hinzufügen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">139</context>
@@ -6698,7 +6698,7 @@
       </trans-unit>
       <trans-unit id="570056762949632344" datatype="html">
         <source>Clone Activity</source>
-        <target state="new">Clone Activity</target>
+        <target state="translated">Aktivität kopieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">134</context>
