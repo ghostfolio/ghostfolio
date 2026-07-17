@@ -1,4 +1,4 @@
-import { Job, JobOptions } from 'bull';
+import type { Job, JobId, JobOptions } from 'bull';
 import { setTimeout } from 'timers/promises';
 
 import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
@@ -10,8 +10,8 @@ export const PortfolioSnapshotServiceMock = {
     data: PortfolioSnapshotQueueJob;
     name: string;
     opts?: JobOptions;
-  }): Promise<Job<any>> {
-    const mockJob: Partial<Job<any>> = {
+  }): Promise<Job> {
+    const mockJob: Partial<Job> = {
       finished: async () => {
         await setTimeout(100);
 
@@ -21,12 +21,12 @@ export const PortfolioSnapshotServiceMock = {
 
     this.jobsStore.set(opts?.jobId, mockJob);
 
-    return Promise.resolve(mockJob as Job<any>);
+    return Promise.resolve(mockJob as Job);
   },
-  getJob(jobId: string): Promise<Job<any>> {
+  getJob(jobId: JobId): Promise<Job> {
     const job = this.jobsStore.get(jobId);
 
-    return Promise.resolve(job as Job<any>);
+    return Promise.resolve(job as Job);
   },
-  jobsStore: new Map<string, Partial<Job<any>>>()
+  jobsStore: new Map<JobId, Partial<Job>>()
 };
