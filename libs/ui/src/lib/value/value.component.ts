@@ -60,7 +60,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   public isString = false;
   public useAbsoluteValue = false;
 
-  public readonly copiedTitle = $localize`Copied!`;
+  public readonly copiedTitle = $localize`The value has been copied to the clipboard`;
   public readonly copyToClipboardTitle = $localize`Copy to clipboard`;
 
   public constructor(
@@ -76,7 +76,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   public readonly precision = input<number>();
 
-  private copyConfirmationTimeout?: ReturnType<typeof setTimeout>;
+  private copyToClipboardTimeout: ReturnType<typeof setTimeout>;
 
   private readonly formatOptions = computed<Intl.NumberFormatOptions>(() => {
     const digits = this.hasPrecision ? this.precision() : 2;
@@ -184,44 +184,33 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.clearCopyConfirmation();
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
   }
 
   public onCopyValueToClipboard() {
-    this.clearCopyConfirmation();
-
-    const hasCopied = this.clipboard.copy(String(this.value));
-
-    if (!hasCopied) {
-      this.snackBar.dismiss();
-
-      return;
-    }
+    this.clipboard.copy(String(this.value));
 
     this.isCopied = true;
-    this.copyConfirmationTimeout = setTimeout(() => {
-      this.copyConfirmationTimeout = undefined;
+
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
+
+    this.copyToClipboardTimeout = setTimeout(() => {
       this.isCopied = false;
+
       this.changeDetectorRef.markForCheck();
-    }, ms('2 seconds'));
+    }, ms('3 seconds'));
 
     this.snackBar.open(
       '✅ ' + $localize`${this.value} has been copied to the clipboard`,
       undefined,
       {
-        duration: ms('3 seconds'),
-        politeness: 'polite'
+        duration: ms('3 seconds')
       }
     );
-  }
-
-  private clearCopyConfirmation() {
-    if (this.copyConfirmationTimeout) {
-      clearTimeout(this.copyConfirmationTimeout);
-      this.copyConfirmationTimeout = undefined;
-    }
-
-    this.isCopied = false;
   }
 
   private initializeVariables() {

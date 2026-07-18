@@ -15,9 +15,9 @@
         class="ml-1 no-height no-min-width p-1"
         mat-button
         type="button"
-        [attr.aria-label]="copyToClipboardTitle"
         [title]="isCopied ? copiedTitle : copyToClipboardTitle"
         (click)="onCopyValueToClipboard()"
+        (mousedown)="$event.preventDefault()"
       >
         <ion-icon
           class="text-muted"
