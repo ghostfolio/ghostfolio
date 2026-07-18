@@ -162,6 +162,17 @@
                     <ng-container i18n>Cancel</ng-container>
                   </button>
                 </form>
+                @if (data.dataSource !== 'MANUAL') {
+                  <p class="my-1" i18n>or</p>
+                  <button
+                    color="accent"
+                    mat-flat-button
+                    type="button"
+                    (click)="onConvertToManualDataSource()"
+                  >
+                    <ng-container i18n>Convert to MANUAL</ng-container>
+                  </button>
+                }
               </div>
             } @else {
               <div class="col-6 mb-3">

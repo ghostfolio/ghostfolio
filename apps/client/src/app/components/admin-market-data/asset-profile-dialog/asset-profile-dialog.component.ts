@@ -75,6 +75,7 @@ import {
   AssetClass,
   AssetSubClass,
   DataGatheringFrequency,
+  DataSource,
   MarketData,
   Prisma,
   SymbolProfile
@@ -465,6 +466,60 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
   protected onClose() {
     this.dialogRef.close();
+  }
+
+  protected onConvertToManualDataSource() {
+    const convertedAssetProfile: UpdateAssetProfileDto = {
+      assetClass: this.assetProfile?.assetClass ?? undefined,
+      assetSubClass: this.assetProfile?.assetSubClass ?? undefined,
+      countries: this.assetProfile?.countries?.map(({ code, weight }) => {
+        return { code, weight };
+      }),
+      dataSource: DataSource.MANUAL,
+      holdings: this.assetProfile?.holdings?.map(
+        ({ allocationInPercentage, name }) => {
+          return { allocationInPercentage, name };
+        }
+      ),
+      name: this.assetProfile?.name ?? undefined,
+      sectors: this.assetProfile?.sectors?.map(({ name, weight }) => {
+        return { name, weight };
+      }),
+      symbol: crypto.randomUUID(),
+      url: this.assetProfile?.url ?? undefined
+    };
+
+    this.adminService
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        convertedAssetProfile
+      )
+      .pipe(
+        catchError(() => {
+          this.snackBar.open(
+            '😞 ' +
+              $localize`An error occurred while converting the asset profile to ${DataSource.MANUAL}.`,
+            undefined,
+            {
+              duration: ms('3 seconds')
+            }
+          );
+
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        const newAssetProfileIdentifier = {
+          dataSource: convertedAssetProfile.dataSource,
+          symbol: convertedAssetProfile.symbol
+        };
+
+        this.dialogRef.close(newAssetProfileIdentifier);
+      });
   }
 
   protected onDeleteProfileData({

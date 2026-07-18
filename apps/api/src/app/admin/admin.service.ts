@@ -19,7 +19,8 @@ import {
   AdminData,
   AdminUserResponse,
   AdminUsersResponse,
-  AssetProfileIdentifier
+  AssetProfileIdentifier,
+  Holding
 } from '@ghostfolio/common/interfaces';
 import { PropertyKey } from '@ghostfolio/common/types';
 
@@ -282,6 +283,35 @@ export class AdminService {
             }
           )
         ]);
+
+        if (DataSource[newDataSource.toString()] === DataSource.MANUAL) {
+          await Promise.all([
+            this.symbolProfileService.deleteAssetProfileOverrides({
+              dataSource: DataSource.MANUAL,
+              symbol: newSymbol as string
+            }),
+            this.symbolProfileService.updateSymbolProfile(
+              {
+                dataSource: DataSource.MANUAL,
+                symbol: newSymbol as string
+              },
+              {
+                assetClass,
+                assetSubClass,
+                countries,
+                name,
+                sectors,
+                url,
+                holdings: (holdings as unknown as Holding[])?.map((holding) => {
+                  return {
+                    name: holding.name,
+                    weight: holding.allocationInPercentage
+                  };
+                })
+              }
+            )
+          ]);
+        }
 
         const [updatedAssetProfile] =
           await this.symbolProfileService.getSymbolProfiles([
