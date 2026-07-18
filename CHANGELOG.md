@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
+
+## 3.28.0 - 2026-07-17
+
+### Changed
+
 - Migrated the clone, create and edit activity dialogs to dedicated routes
+- Improved the language localization in the historical market data table of the admin control panel
 - Improved the language localization in the tag management of the admin control panel
 
 ### Fixed
