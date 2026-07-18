@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the support to get the _Fear & Greed Index_ (market mood) from the `GHOSTFOLIO` data provider for self-hosted environments
+- Added a _Storybook_ story for the copy-to-clipboard functionality in the value component
 
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Upgraded `stripe` from version `22.2.3` to `22.3.2`
 
 ## 3.28.0 - 2026-07-17
 
