@@ -10,6 +10,7 @@ export interface InfoItem {
   currencies: string[];
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
+  fearAndGreedMarketPrice?: number;
   globalPermissions: string[];
   isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;

@@ -6,9 +6,11 @@ import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.s
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  ghostfolioFearAndGreedIndexSymbolStocks,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
   PROPERTY_DOCKER_HUB_PULLS,
@@ -36,6 +38,7 @@ export class InfoService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
+    private readonly marketDataService: MarketDataService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly subscriptionService: SubscriptionService,
@@ -71,6 +74,13 @@ export class InfoService {
       } else {
         info.fearAndGreedDataSource = fearAndGreedIndexDataSource;
       }
+
+      const latestMarketData = await this.marketDataService.getLatest({
+        dataSource: fearAndGreedIndexDataSource,
+        symbol: ghostfolioFearAndGreedIndexSymbolStocks
+      });
+
+      info.fearAndGreedMarketPrice = latestMarketData?.marketPrice;
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
