@@ -183,12 +183,6 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
   }
 
-  public ngOnDestroy() {
-    if (this.copyToClipboardTimeout) {
-      clearTimeout(this.copyToClipboardTimeout);
-    }
-  }
-
   public onCopyValueToClipboard() {
     this.clipboard.copy(String(this.value));
 
@@ -213,12 +207,23 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
     );
   }
 
+  public ngOnDestroy() {
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
+  }
+
   private initializeVariables() {
     this.absoluteValue = 0;
     this.formattedValue = '';
+    this.isCopied = false;
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
     this.useAbsoluteValue = false;
+
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
   }
 }
