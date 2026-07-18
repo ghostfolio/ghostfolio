@@ -27,13 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the delete button in the tags selector component
 - Fixed the missing validation of the tags when creating or updating an activity
 - Fixed the missing validation of the tags when updating the tags of a holding
 - Fixed an issue where the tags of an activity were lost if updating the activity failed
 - Fixed an issue where the dividends, the interest and the liabilities of asset profiles without market data have been valued at zero in the portfolio calculation
 - Fixed an issue where an error has been reported for asset profiles without market data which do not hold any units
 - Fixed an issue with removing a linked account from a buy, sell or dividend activity
-- Fixed the hover styling of the tags selector component
 
 ## 3.27.0 - 2026-07-15
 
