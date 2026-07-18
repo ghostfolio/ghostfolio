@@ -1,5 +1,6 @@
 import '@angular/localize/init';
-import { moduleMetadata } from '@storybook/angular';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -9,6 +10,9 @@ export default {
   title: 'Value',
   component: GfValueComponent,
   decorators: [
+    applicationConfig({
+      providers: [provideNoopAnimations()]
+    }),
     moduleMetadata({
       imports: [NgxSkeletonLoaderModule]
     })
@@ -64,6 +68,15 @@ export const Label: Story = {
     props: args,
     template: `<gf-value [enableCopyToClipboardButton]="enableCopyToClipboardButton" [locale]="locale" [size]="size" [value]="value">Label</gf-value>`
   })
+};
+
+export const WithCopyButton: Story = {
+  args: {
+    enableCopyToClipboardButton: true,
+    locale: 'en-US',
+    value: 1234.56
+  },
+  name: 'With Copy Button'
 };
 
 export const PerformancePositive: Story = {
