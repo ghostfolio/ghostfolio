@@ -172,7 +172,7 @@ export class GhostfolioService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const queryParams = new URLSearchParams({
@@ -198,9 +198,7 @@ export class GhostfolioService implements DataProviderInterface {
 
       const { historicalData } = (await response.json()) as HistoricalResponse;
 
-      return {
-        [symbol]: historicalData
-      };
+      return historicalData;
     } catch (error) {
       if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         error.name = 'RequestError';

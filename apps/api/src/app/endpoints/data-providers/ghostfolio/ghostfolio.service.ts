@@ -171,7 +171,7 @@ export class GhostfolioService {
 
     try {
       const promises: Promise<{
-        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+        [date: string]: DataProviderHistoricalResponse;
       }>[] = [];
 
       for (const dataProviderService of this.getDataProviderServices()) {
@@ -185,7 +185,7 @@ export class GhostfolioService {
               to
             })
             .then((historicalData) => {
-              result.historicalData = historicalData[symbol];
+              result.historicalData = historicalData;
 
               return historicalData;
             })

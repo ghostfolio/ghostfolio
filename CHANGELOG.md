@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Simplified the `getHistorical()` function response in the data provider interface
 - Upgraded `yahoo-finance2` from version `3.15.4` to `4.0.0`
 
 ## 3.29.0 - 2026-07-18
