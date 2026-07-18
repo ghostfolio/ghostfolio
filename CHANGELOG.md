@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a _Storybook_ story for the copy-to-clipboard functionality of the value component
+- Added a _Storybook_ story for the copy-to-clipboard functionality in the value component
 
 ### Changed
 
