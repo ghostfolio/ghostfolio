@@ -92,8 +92,8 @@ export class AlphaVantageService
         historicalData['Time Series (Digital Currency Daily)']
       ).sort()) {
         if (
-          isAfter(from, parse(key, DATE_FORMAT, new Date())) &&
-          isBefore(to, parse(key, DATE_FORMAT, new Date()))
+          isBefore(from, parse(key, DATE_FORMAT, new Date())) &&
+          isAfter(to, parse(key, DATE_FORMAT, new Date()))
         ) {
           response[symbol][key] = {
             marketPrice: parseFloat(timeSeries['4a. close (USD)'])
