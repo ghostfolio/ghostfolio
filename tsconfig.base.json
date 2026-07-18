@@ -29,12 +29,12 @@
     "strictPropertyInitialization": false,
     "noImplicitReturns": false,
     "noImplicitAny": false,
-    "noImplicitThis": false,
+    "noImplicitThis": true,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "allowUnreachableCode": true
+    "allowUnreachableCode": false
   },
   "exclude": ["node_modules", "tmp"]
 }
