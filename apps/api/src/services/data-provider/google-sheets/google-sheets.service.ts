@@ -60,7 +60,7 @@ export class GoogleSheetsService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const sheet = await this.getSheet({
@@ -85,9 +85,7 @@ export class GoogleSheetsService implements DataProviderInterface {
           historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
         });
 
-      return {
-        [symbol]: historicalData
-      };
+      return historicalData;
     } catch (error) {
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(

@@ -508,7 +508,7 @@ export class DataProviderService implements OnModuleInit {
                 requestTimeout: ms('30 seconds')
               })
               .then((data) => {
-                return { dataSource, symbol, data: data?.[symbol] };
+                return { data, dataSource, symbol };
               })
           );
         }

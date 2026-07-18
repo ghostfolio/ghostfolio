@@ -115,7 +115,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const queryParams = new URLSearchParams({
@@ -143,13 +143,11 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
       }
 
       const result: {
-        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
-      } = {
-        [symbol]: {}
-      };
+        [date: string]: DataProviderHistoricalResponse;
+      } = {};
 
       for (const [timestamp, marketPrice] of prices) {
-        result[symbol][format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
+        result[format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
           marketPrice
         };
       }
