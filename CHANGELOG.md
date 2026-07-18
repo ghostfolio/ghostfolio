@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `stripe` from version `22.2.3` to `22.3.2`
 
+### Fixed
+
+- Fixed an issue with the delete button in the tags selector component
+
 ## 3.28.0 - 2026-07-17
 
 ### Changed
@@ -27,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue with the delete button in the tags selector component
 - Fixed the missing validation of the tags when creating or updating an activity
 - Fixed the missing validation of the tags when updating the tags of a holding
 - Fixed an issue where the tags of an activity were lost if updating the activity failed
