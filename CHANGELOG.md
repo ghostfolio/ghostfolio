@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restricted the symbol data endpoint (`GET /api/v1/symbol/:dataSource/:symbol`) to authenticated users
 - Removed the deprecated `auth` endpoint of the login with _Security Token_ (`GET`)
 - Simplified the `getHistorical()` function response in the data provider interface
 
