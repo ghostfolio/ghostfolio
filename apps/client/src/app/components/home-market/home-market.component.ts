@@ -29,10 +29,12 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class GfHomeMarketComponent implements OnInit {
   protected readonly benchmarks = signal<Benchmark[]>([]);
+
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected readonly fearAndGreedIndex = signal<number | undefined>(undefined);
+
+  protected fearAndGreedIndex: number | undefined;
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected user: User;
 
@@ -65,7 +67,7 @@ export class GfHomeMarketComponent implements OnInit {
     );
 
     if (this.hasPermissionToAccessFearAndGreedIndex) {
-      this.fearAndGreedIndex.set(this.info.fearAndGreedMarketPrice);
+      this.fearAndGreedIndex = this.info.fearAndGreedStocksMarketPrice;
     }
 
     this.dataService

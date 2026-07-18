@@ -1,7 +1,6 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -25,6 +24,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { MarketData } from '@prisma/client';
 import { subDays } from 'date-fns';
 import { isNil } from 'lodash';
 
@@ -48,6 +48,7 @@ export class InfoService {
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean;
+    let latestFearAndGreedStocksMarketDataPromise: Promise<MarketData>;
 
     const globalPermissions: string[] = [];
 
@@ -64,23 +65,12 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      const fearAndGreedIndexDataSource =
-        this.dataProviderService.getDataSourceForFearAndGreedIndexStocks();
-
-      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-        info.fearAndGreedDataSource = encodeDataSource(
-          fearAndGreedIndexDataSource
-        );
-      } else {
-        info.fearAndGreedDataSource = fearAndGreedIndexDataSource;
-      }
-
-      const latestMarketData = await this.marketDataService.getLatest({
-        dataSource: fearAndGreedIndexDataSource,
-        symbol: ghostfolioFearAndGreedIndexSymbolStocks
-      });
-
-      info.fearAndGreedMarketPrice = latestMarketData?.marketPrice;
+      latestFearAndGreedStocksMarketDataPromise =
+        this.marketDataService.getLatest({
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
+        });
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
@@ -112,12 +102,14 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       isUserSignupEnabled,
+      latestFearAndGreedStocksMarketData,
       statistics,
       subscriptionOffer
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
       this.propertyService.isUserSignupEnabled(),
+      latestFearAndGreedStocksMarketDataPromise,
       this.getStatistics(),
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
@@ -135,7 +127,9 @@ export class InfoService {
       statistics,
       subscriptionOffer,
       baseCurrency: DEFAULT_CURRENCY,
-      currencies: this.exchangeRateDataService.getCurrencies()
+      currencies: this.exchangeRateDataService.getCurrencies(),
+      fearAndGreedStocksMarketPrice:
+        latestFearAndGreedStocksMarketData?.marketPrice
     };
   }
 
