@@ -5,11 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.29.0 - 2026-07-18
+
+### Added
+
+- Added support for the _Fear & Greed Index_ (market mood) via the `GHOSTFOLIO` data provider in self-hosted environments
+- Added a _Storybook_ story for the copy-to-clipboard functionality in the value component
 
 ### Changed
 
+- Improved the copy-to-clipboard functionality in the value component by providing a visual confirmation
 - Improved the language localization for German (`de`)
+- Upgraded `stripe` from version `22.2.3` to `22.3.2`
+
+### Fixed
+
+- Fixed an issue with the delete button in the tags selector component
 
 ## 3.28.0 - 2026-07-17
 

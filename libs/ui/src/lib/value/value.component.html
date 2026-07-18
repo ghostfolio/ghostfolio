@@ -13,13 +13,16 @@
     @if (enableCopyToClipboardButton) {
       <button
         class="ml-1 no-height no-min-width p-1"
-        i18n-title
         mat-button
-        title="Copy to clipboard"
         type="button"
+        [title]="isCopied ? copiedTitle : copyToClipboardTitle"
         (click)="onCopyValueToClipboard()"
+        (mousedown)="$event.preventDefault()"
       >
-        <ion-icon class="text-muted" name="copy-outline" />
+        <ion-icon
+          class="text-muted"
+          [name]="isCopied ? 'checkmark-outline' : 'copy-outline'"
+        />
       </button>
     }
   </ng-template>
