@@ -70,15 +70,6 @@ export const Label: Story = {
   })
 };
 
-export const WithCopyButton: Story = {
-  args: {
-    enableCopyToClipboardButton: true,
-    locale: 'en-US',
-    value: 1234.56
-  },
-  name: 'With Copy Button'
-};
-
 export const PerformancePositive: Story = {
   args: {
     colorizeSign: true,
@@ -115,4 +106,13 @@ export const Precision: Story = {
     precision: 3,
     value: 7.2534802394809285309
   }
+};
+
+export const WithCopyButton: Story = {
+  args: {
+    enableCopyToClipboardButton: true,
+    locale: 'en-US',
+    value: 1234.56
+  },
+  name: 'With Copy Button'
 };
