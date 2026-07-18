@@ -1,5 +1,4 @@
 import { LookupItem } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -58,7 +57,6 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   imports: [
     FormsModule,
     GfPremiumIndicatorComponent,
-    GfSymbolPipe,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,

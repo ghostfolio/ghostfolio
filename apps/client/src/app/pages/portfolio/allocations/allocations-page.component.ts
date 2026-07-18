@@ -6,7 +6,7 @@ import {
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents,
@@ -495,10 +495,10 @@ export class GfAllocationsPageComponent implements OnInit {
         this.totalValueInEtf += this.holdings[symbol].value;
       }
 
-      this.symbols[prettifySymbol(symbol)] = {
+      this.symbols[symbol] = {
+        symbol,
         dataSource: position.assetProfile.dataSource,
         name: position.assetProfile.name ?? '',
-        symbol: prettifySymbol(symbol),
         value:
           (isNumber(position.valueInBaseCurrency)
             ? position.valueInBaseCurrency
@@ -565,11 +565,11 @@ export class GfAllocationsPageComponent implements OnInit {
                 return currentParentHolding &&
                   isNumber(currentParentHolding.valueInBaseCurrency)
                   ? {
+                      symbol,
                       allocationInPercentage:
                         currentParentHolding.valueInBaseCurrency / value,
                       name: holding.assetProfile.name ?? '',
                       position: holding,
-                      symbol: prettifySymbol(symbol),
                       valueInBaseCurrency:
                         currentParentHolding.valueInBaseCurrency
                     }

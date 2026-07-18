@@ -40,7 +40,6 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
 import {
@@ -525,10 +524,6 @@ export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     ticker,
     exchange: exchange ?? (dataSource === 'YAHOO' ? 'US' : undefined)
   };
-}
-
-export function prettifySymbol(aSymbol: string): string {
-  return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
 }
 
 export function resetHours(aDate: Date) {

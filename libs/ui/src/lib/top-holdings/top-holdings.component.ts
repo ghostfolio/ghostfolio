@@ -3,7 +3,6 @@ import {
   AssetProfileIdentifier,
   HoldingWithParents
 } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import {
   animate,
@@ -43,7 +42,6 @@ import { GfValueComponent } from '../value/value.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    GfSymbolPipe,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
