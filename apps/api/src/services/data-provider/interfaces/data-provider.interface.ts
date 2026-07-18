@@ -35,8 +35,8 @@ export interface DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
-  }>; // TODO: Return only one symbol
+    [date: string]: DataProviderHistoricalResponse;
+  }>;
 
   getMarketDataOfMarkets?({
     includeHistoricalData,
