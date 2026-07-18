@@ -133,6 +133,12 @@ export class SymbolService {
   }: {
     includeHistoricalData: number;
   }): Promise<MarketDataOfMarketsResponse> {
+    if (await this.dataProviderService.isDataProviderGhostfolioConfigured()) {
+      return this.dataProviderService.getMarketDataOfMarkets({
+        includeHistoricalData
+      });
+    }
+
     const [
       marketDataFearAndGreedIndexCryptocurrencies,
       marketDataFearAndGreedIndexStocks
