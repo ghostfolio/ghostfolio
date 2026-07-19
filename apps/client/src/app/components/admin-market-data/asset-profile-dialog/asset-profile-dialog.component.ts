@@ -477,10 +477,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
       getErrorMessage: () => {
         return (
           '😞 ' +
-          $localize`An error occurred while converting the asset profile to ${DataSource.MANUAL}.`
+          $localize`An error occurred while converting the data source to ${DataSource.MANUAL}.`
         );
       },
-      title: $localize`Do you really want to convert this asset profile to ${DataSource.MANUAL} data source?`,
+      title: $localize`Do you really want to convert the data source to ${DataSource.MANUAL}?`,
       updateAssetProfileDto: { dataSource: DataSource.MANUAL }
     });
   }
