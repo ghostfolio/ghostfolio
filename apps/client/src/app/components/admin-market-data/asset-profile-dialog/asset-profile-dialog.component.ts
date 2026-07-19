@@ -473,62 +473,15 @@ export class GfAssetProfileDialogComponent implements OnInit {
   }
 
   protected onConvertToManualDataSource() {
-    this.notificationService.confirm({
-      confirmFn: () => {
-        const newAssetProfileIdentifier: AssetProfileIdentifier = {
-          dataSource: DataSource.MANUAL,
-          symbol: crypto.randomUUID()
-        };
-
-        const convertedAssetProfile: UpdateAssetProfileDto = {
-          assetClass: this.assetProfile?.assetClass ?? undefined,
-          assetSubClass: this.assetProfile?.assetSubClass ?? undefined,
-          countries: this.assetProfile?.countries?.map(({ code, weight }) => {
-            return { code, weight };
-          }),
-          dataSource: newAssetProfileIdentifier.dataSource,
-          holdings: this.assetProfile?.holdings?.map(
-            ({ allocationInPercentage, name }) => {
-              return { allocationInPercentage, name };
-            }
-          ),
-          name: this.assetProfile?.name ?? undefined,
-          sectors: this.assetProfile?.sectors?.map(({ name, weight }) => {
-            return { name, weight };
-          }),
-          symbol: newAssetProfileIdentifier.symbol,
-          url: this.assetProfile?.url ?? undefined
-        };
-
-        this.adminService
-          .patchAssetProfile(
-            {
-              dataSource: this.data.dataSource,
-              symbol: this.data.symbol
-            },
-            convertedAssetProfile
-          )
-          .pipe(
-            catchError(() => {
-              this.snackBar.open(
-                '😞 ' +
-                  $localize`An error occurred while converting the asset profile to ${DataSource.MANUAL}.`,
-                undefined,
-                {
-                  duration: ms('3 seconds')
-                }
-              );
-
-              return EMPTY;
-            }),
-            takeUntilDestroyed(this.destroyRef)
-          )
-          .subscribe(() => {
-            this.dialogRef.close(newAssetProfileIdentifier);
-          });
+    this.patchAssetProfileIdentifier({
+      getErrorMessage: () => {
+        return (
+          '😞 ' +
+          $localize`An error occurred while converting the asset profile to ${DataSource.MANUAL}.`
+        );
       },
-      confirmType: ConfirmationDialogType.Primary,
-      title: $localize`Do you really want to convert this asset profile to ${DataSource.MANUAL} data source?`
+      title: $localize`Do you really want to convert this asset profile to ${DataSource.MANUAL} data source?`,
+      updateAssetProfileDto: { dataSource: DataSource.MANUAL }
     });
   }
 
@@ -755,48 +708,18 @@ export class GfAssetProfileDialogComponent implements OnInit {
       return;
     }
 
-    this.notificationService.confirm({
-      confirmFn: () => {
-        this.adminService
-          .patchAssetProfile(
-            {
-              dataSource: this.data.dataSource,
-              symbol: this.data.symbol
-            },
-            assetProfileIdentifier
-          )
-          .pipe(
-            catchError((error: HttpErrorResponse) => {
-              if (error.status === StatusCodes.CONFLICT) {
-                // TODO: Ask if the user wants to merge the two asset profiles
+    this.patchAssetProfileIdentifier({
+      getErrorMessage: (error) => {
+        if (error.status === StatusCodes.CONFLICT) {
+          // TODO: Ask if the user wants to merge the two asset profiles
 
-                this.snackBar.open(
-                  $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
-                  undefined,
-                  {
-                    duration: ms('3 seconds')
-                  }
-                );
-              } else {
-                this.snackBar.open(
-                  $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
-                  undefined,
-                  {
-                    duration: ms('3 seconds')
-                  }
-                );
-              }
+          return $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`;
+        }
 
-              return EMPTY;
-            }),
-            takeUntilDestroyed(this.destroyRef)
-          )
-          .subscribe(() => {
-            this.dialogRef.close(newAssetProfileIdentifier);
-          });
+        return $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`;
       },
-      confirmType: ConfirmationDialogType.Primary,
-      title: $localize`Do you really want to convert this asset profile to ${newAssetProfileIdentifier.symbol} (${newAssetProfileIdentifier.dataSource})?`
+      title: $localize`Do you really want to convert this asset profile to ${newAssetProfileIdentifier.symbol} (${newAssetProfileIdentifier.dataSource})?`,
+      updateAssetProfileDto: assetProfileIdentifier
     });
   }
 
@@ -894,5 +817,43 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
 
     return null;
+  }
+
+  private patchAssetProfileIdentifier({
+    getErrorMessage,
+    title,
+    updateAssetProfileDto
+  }: {
+    getErrorMessage: (error: HttpErrorResponse) => string;
+    title: string;
+    updateAssetProfileDto: UpdateAssetProfileDto;
+  }) {
+    this.notificationService.confirm({
+      title,
+      confirmFn: () => {
+        this.adminService
+          .patchAssetProfile(
+            {
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            },
+            updateAssetProfileDto
+          )
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              this.snackBar.open(getErrorMessage(error), undefined, {
+                duration: ms('3 seconds')
+              });
+
+              return EMPTY;
+            }),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe(({ dataSource, symbol }) => {
+            this.dialogRef.close({ dataSource, symbol });
+          });
+      },
+      confirmType: ConfirmationDialogType.Primary
+    });
   }
 }

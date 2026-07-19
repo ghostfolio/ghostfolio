@@ -35,7 +35,7 @@ export class SymbolProfileService {
     });
   }
 
-  public async deleteAssetProfileOverrides({
+  public deleteAssetProfileOverrides({
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
