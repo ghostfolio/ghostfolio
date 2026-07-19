@@ -1763,29 +1763,29 @@ export class PortfolioService {
 
         if (country.code === 'JP') {
           marketsAdvanced.japan = new Big(marketsAdvanced.japan)
-            .plus(country.weight)
+            .plus(new Big(country.weight).div(100))
             .toNumber();
         } else if (country.code === 'CA' || country.code === 'US') {
           marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
-            .plus(country.weight)
+            .plus(new Big(country.weight).div(100))
             .toNumber();
         } else if (asiaPacificMarkets.includes(country.code)) {
           marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
-            .plus(country.weight)
+            .plus(new Big(country.weight).div(100))
             .toNumber();
         } else if (emergingMarkets.includes(country.code)) {
           marketsAdvanced.emergingMarkets = new Big(
             marketsAdvanced.emergingMarkets
           )
-            .plus(country.weight)
+            .plus(new Big(country.weight).div(100))
             .toNumber();
         } else if (europeMarkets.includes(country.code)) {
           marketsAdvanced.europe = new Big(marketsAdvanced.europe)
-            .plus(country.weight)
+            .plus(new Big(country.weight).div(100))
             .toNumber();
         } else {
           marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
-            .plus(country.weight)
+            .plus(new Big(country.weight).div(100))
             .toNumber();
         }
       }
