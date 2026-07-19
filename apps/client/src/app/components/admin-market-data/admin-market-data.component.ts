@@ -410,7 +410,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
 
         const dialogRef = this.dialog.open<
           GfAssetProfileDialogComponent,
-          AssetProfileDialogParams
+          AssetProfileDialogParams,
+          AssetProfileIdentifier
         >(GfAssetProfileDialogComponent, {
           autoFocus: false,
           data: {
@@ -428,15 +429,13 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         dialogRef
           .afterClosed()
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(
-            (newAssetProfileIdentifier: AssetProfileIdentifier | undefined) => {
-              if (newAssetProfileIdentifier) {
-                this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
-              } else {
-                this.router.navigate(['.'], { relativeTo: this.route });
-              }
+          .subscribe((newAssetProfileIdentifier) => {
+            if (newAssetProfileIdentifier) {
+              this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
+            } else {
+              this.router.navigate(['.'], { relativeTo: this.route });
             }
-          );
+          });
       });
   }
 

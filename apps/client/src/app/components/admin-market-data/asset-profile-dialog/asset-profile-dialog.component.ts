@@ -5,6 +5,7 @@ import {
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   canDeleteAssetProfile,
   DATE_FORMAT,
@@ -278,7 +279,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) protected data: AssetProfileDialogParams,
     private dataService: DataService,
     private destroyRef: DestroyRef,
-    private dialogRef: MatDialogRef<GfAssetProfileDialogComponent>,
+    private dialogRef: MatDialogRef<
+      GfAssetProfileDialogComponent,
+      AssetProfileIdentifier
+    >,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
@@ -469,57 +473,63 @@ export class GfAssetProfileDialogComponent implements OnInit {
   }
 
   protected onConvertToManualDataSource() {
-    const convertedAssetProfile: UpdateAssetProfileDto = {
-      assetClass: this.assetProfile?.assetClass ?? undefined,
-      assetSubClass: this.assetProfile?.assetSubClass ?? undefined,
-      countries: this.assetProfile?.countries?.map(({ code, weight }) => {
-        return { code, weight };
-      }),
-      dataSource: DataSource.MANUAL,
-      holdings: this.assetProfile?.holdings?.map(
-        ({ allocationInPercentage, name }) => {
-          return { allocationInPercentage, name };
-        }
-      ),
-      name: this.assetProfile?.name ?? undefined,
-      sectors: this.assetProfile?.sectors?.map(({ name, weight }) => {
-        return { name, weight };
-      }),
-      symbol: crypto.randomUUID(),
-      url: this.assetProfile?.url ?? undefined
-    };
-
-    this.adminService
-      .patchAssetProfile(
-        {
-          dataSource: this.data.dataSource,
-          symbol: this.data.symbol
-        },
-        convertedAssetProfile
-      )
-      .pipe(
-        catchError(() => {
-          this.snackBar.open(
-            '😞 ' +
-              $localize`An error occurred while converting the asset profile to ${DataSource.MANUAL}.`,
-            undefined,
-            {
-              duration: ms('3 seconds')
-            }
-          );
-
-          return EMPTY;
-        }),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(() => {
-        const newAssetProfileIdentifier = {
-          dataSource: convertedAssetProfile.dataSource,
-          symbol: convertedAssetProfile.symbol
+    this.notificationService.confirm({
+      confirmFn: () => {
+        const newAssetProfileIdentifier: AssetProfileIdentifier = {
+          dataSource: DataSource.MANUAL,
+          symbol: crypto.randomUUID()
         };
 
-        this.dialogRef.close(newAssetProfileIdentifier);
-      });
+        const convertedAssetProfile: UpdateAssetProfileDto = {
+          assetClass: this.assetProfile?.assetClass ?? undefined,
+          assetSubClass: this.assetProfile?.assetSubClass ?? undefined,
+          countries: this.assetProfile?.countries?.map(({ code, weight }) => {
+            return { code, weight };
+          }),
+          dataSource: newAssetProfileIdentifier.dataSource,
+          holdings: this.assetProfile?.holdings?.map(
+            ({ allocationInPercentage, name }) => {
+              return { allocationInPercentage, name };
+            }
+          ),
+          name: this.assetProfile?.name ?? undefined,
+          sectors: this.assetProfile?.sectors?.map(({ name, weight }) => {
+            return { name, weight };
+          }),
+          symbol: newAssetProfileIdentifier.symbol,
+          url: this.assetProfile?.url ?? undefined
+        };
+
+        this.adminService
+          .patchAssetProfile(
+            {
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            },
+            convertedAssetProfile
+          )
+          .pipe(
+            catchError(() => {
+              this.snackBar.open(
+                '😞 ' +
+                  $localize`An error occurred while converting the asset profile to ${DataSource.MANUAL}.`,
+                undefined,
+                {
+                  duration: ms('3 seconds')
+                }
+              );
+
+              return EMPTY;
+            }),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe(() => {
+            this.dialogRef.close(newAssetProfileIdentifier);
+          });
+      },
+      confirmType: ConfirmationDialogType.Primary,
+      title: $localize`Do you really want to convert this asset profile to ${DataSource.MANUAL}?`
+    });
   }
 
   protected onDeleteProfileData({
@@ -721,13 +731,16 @@ export class GfAssetProfileDialogComponent implements OnInit {
   }
 
   protected async onSubmitAssetProfileIdentifierForm() {
+    const newAssetProfileIdentifier =
+      this.assetProfileIdentifierForm.controls.assetProfileIdentifier.value;
+
+    if (!newAssetProfileIdentifier?.dataSource) {
+      return;
+    }
+
     const assetProfileIdentifier: UpdateAssetProfileDto = {
-      dataSource:
-        this.assetProfileIdentifierForm.controls.assetProfileIdentifier.value
-          ?.dataSource ?? undefined,
-      symbol:
-        this.assetProfileIdentifierForm.controls.assetProfileIdentifier.value
-          ?.symbol ?? undefined
+      dataSource: newAssetProfileIdentifier.dataSource,
+      symbol: newAssetProfileIdentifier.symbol
     };
 
     try {
@@ -742,46 +755,47 @@ export class GfAssetProfileDialogComponent implements OnInit {
       return;
     }
 
-    this.adminService
-      .patchAssetProfile(
-        {
-          dataSource: this.data.dataSource,
-          symbol: this.data.symbol
-        },
-        assetProfileIdentifier
-      )
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === StatusCodes.CONFLICT) {
-            this.snackBar.open(
-              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
-              undefined,
-              {
-                duration: ms('3 seconds')
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.adminService
+          .patchAssetProfile(
+            {
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            },
+            assetProfileIdentifier
+          )
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              if (error.status === StatusCodes.CONFLICT) {
+                this.snackBar.open(
+                  $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
+                  undefined,
+                  {
+                    duration: ms('3 seconds')
+                  }
+                );
+              } else {
+                this.snackBar.open(
+                  $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
+                  undefined,
+                  {
+                    duration: ms('3 seconds')
+                  }
+                );
               }
-            );
-          } else {
-            this.snackBar.open(
-              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
-              undefined,
-              {
-                duration: ms('3 seconds')
-              }
-            );
-          }
 
-          return EMPTY;
-        }),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(() => {
-        const newAssetProfileIdentifier = {
-          dataSource: assetProfileIdentifier.dataSource,
-          symbol: assetProfileIdentifier.symbol
-        };
-
-        this.dialogRef.close(newAssetProfileIdentifier);
-      });
+              return EMPTY;
+            }),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe(() => {
+            this.dialogRef.close(newAssetProfileIdentifier);
+          });
+      },
+      confirmType: ConfirmationDialogType.Primary,
+      title: $localize`Do you really want to convert this asset profile to ${newAssetProfileIdentifier.symbol} (${newAssetProfileIdentifier.dataSource})?`
+    });
   }
 
   protected onTestMarketData() {

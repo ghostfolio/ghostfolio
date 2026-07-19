@@ -242,9 +242,9 @@ export class AdminService {
     }: Prisma.SymbolProfileUpdateInput
   ) {
     if (
-      newSymbol &&
       newDataSource &&
-      (newSymbol !== symbol || newDataSource !== dataSource)
+      newSymbol &&
+      (newDataSource !== dataSource || newSymbol !== symbol)
     ) {
       const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
         {
