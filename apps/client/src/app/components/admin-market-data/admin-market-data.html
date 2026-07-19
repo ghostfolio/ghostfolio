@@ -95,9 +95,7 @@
               <div class="text-truncate">{{ element.name }}</div>
               @if (!isUUID(element.symbol)) {
                 <div>
-                  <small class="text-muted">{{
-                    element.symbol | gfSymbol
-                  }}</small>
+                  <small class="text-muted">{{ element.symbol }}</small>
                 </div>
               }
             </td>

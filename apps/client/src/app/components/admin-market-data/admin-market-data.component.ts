@@ -13,7 +13,6 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -83,7 +82,6 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
     GfActivitiesFilterComponent,
     GfFabComponent,
     GfPremiumIndicatorComponent,
-    GfSymbolPipe,
     GfValueComponent,
     IonIcon,
     MatButtonModule,

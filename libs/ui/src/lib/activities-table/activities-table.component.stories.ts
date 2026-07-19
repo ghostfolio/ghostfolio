@@ -1,5 +1,4 @@
 import { Activity } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -375,7 +374,6 @@ export default {
         GfActivityTypeComponent,
         GfEntityLogoComponent,
         GfNoTransactionsInfoComponent,
-        GfSymbolPipe,
         GfValueComponent,
         IonIcon,
         MatButtonModule,
