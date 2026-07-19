@@ -217,6 +217,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   ];
 
+  protected readonly DataSource = DataSource;
+
   protected readonly dateRangeOptions = [
     {
       label: $localize`Current week` + ' (' + $localize`WTD` + ')',
