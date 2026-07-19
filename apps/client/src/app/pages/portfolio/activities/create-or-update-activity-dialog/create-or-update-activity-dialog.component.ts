@@ -1,3 +1,4 @@
+import { GfLocalizedNumberDirective } from '@ghostfolio/client/directives/localized-number/localized-number.directive';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
@@ -57,6 +58,7 @@ import { ActivityType } from './types/activity-type.type';
   host: { class: 'h-100' },
   imports: [
     GfEntityLogoComponent,
+    GfLocalizedNumberDirective,
     GfSymbolAutocompleteComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
@@ -123,7 +125,8 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.hasPermissionToCreateOwnTag =
       this.data.user?.settings?.isExperimentalFeatures &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
-    this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
+    this.locale =
+      this.data.user.settings.locale ?? this.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
     this.dateAdapter.setLocale(this.locale);

@@ -37,6 +37,27 @@ describe('Helper', () => {
       ).toEqual(99999.99);
     });
 
+    it('Get decimal number with thousands separator (de-DE)', () => {
+      expect(
+        extractNumberFromString({ locale: 'de-DE', value: '1.234,50' })
+      ).toEqual(1234.5);
+      expect(
+        extractNumberFromString({ locale: 'de-DE', value: '1234,50' })
+      ).toEqual(1234.5);
+      expect(
+        extractNumberFromString({ locale: 'de-DE', value: '12.345.678,90' })
+      ).toEqual(12345678.9);
+    });
+
+    it('Get decimal number with thousands separator (en-US)', () => {
+      expect(
+        extractNumberFromString({ locale: 'en-US', value: '1,234.50' })
+      ).toEqual(1234.5);
+      expect(
+        extractNumberFromString({ locale: 'en-US', value: '1234.50' })
+      ).toEqual(1234.5);
+    });
+
     it('Get decimal number (comma notation) for locale where currency is not grouped by default', () => {
       expect(
         extractNumberFromString({ locale: 'es-ES', value: '999,99' })
