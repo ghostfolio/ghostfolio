@@ -72,15 +72,15 @@
               </colgroup>
 
               <ng-container matColumnDef="name">
-                <td *matCellDef="let parentHolding" class="px-2" mat-cell>
-                  <div
-                    class="align-items-center d-flex line-height-1 text-nowrap"
-                  >
-                    <div>{{ parentHolding?.name }}</div>
-                  </div>
+                <td
+                  *matCellDef="let parentHolding"
+                  class="line-height-normal px-2"
+                  mat-cell
+                >
+                  <div class="text-truncate">{{ parentHolding?.name }}</div>
                   <div>
                     <small class="text-muted">{{
-                      parentHolding?.symbol | gfSymbol
+                      parentHolding?.symbol
                     }}</small>
                   </div>
                 </td>

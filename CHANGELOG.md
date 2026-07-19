@@ -5,12 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.30.0 - 2026-07-19
+
+### Added
+
+- Added support for converting an asset profile to the `MANUAL` data source in the asset profile details dialog of the admin control panel
 
 ### Changed
 
+- Extended the `extractNumberFromString()` function to support negative values
+- Restricted the symbol data endpoint (`GET /api/v1/symbol/:dataSource/:symbol`) to authenticated users
 - Removed the deprecated `auth` endpoint of the login with _Security Token_ (`GET`)
 - Simplified the `getHistorical()` function response in the data provider interface
+- Upgraded `bull-board` from version `8.0.1` to `8.1.2`
 
 ## 3.29.0 - 2026-07-18
 
