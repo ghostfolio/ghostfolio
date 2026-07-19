@@ -12,6 +12,7 @@ import {
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
+  applyAssetProfileOverrides,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol
 } from '@ghostfolio/common/helper';
@@ -245,7 +246,6 @@ export class AdminService {
       newDataSource === DataSource.MANUAL && dataSource !== DataSource.MANUAL;
 
     if (isConversionToManualDataSource && !newSymbol) {
-      // The generated symbol avoids collisions in the MANUAL namespace
       newSymbol = randomUUID();
     }
 
@@ -288,13 +288,11 @@ export class AdminService {
       ];
 
       if (isConversionToManualDataSource) {
-        const [currentAssetProfile] =
-          await this.symbolProfileService.getSymbolProfiles([
-            {
-              dataSource,
-              symbol
-            }
-          ]);
+        const currentAssetProfile =
+          await this.prismaService.symbolProfile.findUnique({
+            include: { assetProfileOverrides: true },
+            where: { dataSource_symbol: { dataSource, symbol } }
+          });
 
         if (!currentAssetProfile) {
           throw new HttpException(
@@ -303,33 +301,28 @@ export class AdminService {
           );
         }
 
+        const currentAssetProfileWithOverrides = applyAssetProfileOverrides(
+          currentAssetProfile,
+          currentAssetProfile.assetProfileOverrides
+        );
+
         operations.push(
-          // The overrides are not read for MANUAL asset profiles
+          // The overrides are applied on every read, so delete them and
+          // persist the merged values in the asset profile instead
           this.symbolProfileService.deleteAssetProfileOverrides(
             newAssetProfileIdentifier
           ),
-          // Persist the current values, merged with the overrides
           this.symbolProfileService.updateSymbolProfile(
             newAssetProfileIdentifier,
             {
-              assetClass: currentAssetProfile.assetClass,
-              assetSubClass: currentAssetProfile.assetSubClass,
-              countries: currentAssetProfile.countries?.map(
-                ({ code, weight }) => {
-                  return { code, weight };
-                }
-              ),
-              holdings: currentAssetProfile.holdings?.map((holding) => {
-                return {
-                  name: holding.name,
-                  weight: holding.allocationInPercentage
-                };
-              }),
-              name: currentAssetProfile.name,
-              sectors: currentAssetProfile.sectors?.map((sector) => {
-                return { name: sector.name, weight: sector.weight };
-              }),
-              url: currentAssetProfile.url
+              assetClass: currentAssetProfileWithOverrides.assetClass,
+              assetSubClass: currentAssetProfileWithOverrides.assetSubClass,
+              countries:
+                currentAssetProfileWithOverrides.countries ?? undefined,
+              holdings: currentAssetProfileWithOverrides.holdings ?? undefined,
+              name: currentAssetProfileWithOverrides.name,
+              sectors: currentAssetProfileWithOverrides.sectors ?? undefined,
+              url: currentAssetProfileWithOverrides.url
             }
           )
         );
