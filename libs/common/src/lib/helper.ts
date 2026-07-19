@@ -210,8 +210,9 @@ export function extractNumberFromString({
   value: string;
 }): number | undefined {
   try {
-    // Remove non-numeric characters (excluding international formatting characters)
-    const numericValue = value.replace(/[^\d.,'’\s]/g, '');
+    // Remove non-numeric characters (excluding international formatting
+    // characters and the minus sign to preserve negative values)
+    const numericValue = value.replace(/[^\d.,'’\s-]/g, '');
 
     const parser = new NumberParser(locale);
 

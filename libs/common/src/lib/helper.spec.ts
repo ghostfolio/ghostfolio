@@ -43,6 +43,22 @@ describe('Helper', () => {
       ).toEqual(999.99);
     });
 
+    it('Get negative decimal number', () => {
+      expect(extractNumberFromString({ value: '-999.99' })).toEqual(-999.99);
+    });
+
+    it('Get negative decimal number (with currency)', () => {
+      expect(extractNumberFromString({ value: '-999.99 CHF' })).toEqual(
+        -999.99
+      );
+    });
+
+    it('Get negative decimal number with group (comma notation)', () => {
+      expect(
+        extractNumberFromString({ locale: 'de-DE', value: '-99.999,99' })
+      ).toEqual(-99999.99);
+    });
+
     it('Not a number', () => {
       expect(extractNumberFromString({ value: 'X' })).toEqual(NaN);
     });

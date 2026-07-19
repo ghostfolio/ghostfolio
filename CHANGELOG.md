@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the deprecated `auth` endpoint of the login with _Security Token_ (`GET`)
 - Simplified the `getHistorical()` function response in the data provider interface
 
+### Fixed
+
+- Fixed the parsing of negative numbers in `extractNumberFromString()` (used by the manual data provider) which incorrectly dropped the minus sign
+
 ## 3.29.0 - 2026-07-18
 
 ### Added
