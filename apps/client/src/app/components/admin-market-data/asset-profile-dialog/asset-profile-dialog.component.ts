@@ -528,7 +528,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
           });
       },
       confirmType: ConfirmationDialogType.Primary,
-      title: $localize`Do you really want to convert this asset profile to ${DataSource.MANUAL}?`
+      title: $localize`Do you really want to convert this asset profile to ${DataSource.MANUAL} data source?`
     });
   }
 
@@ -768,6 +768,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
           .pipe(
             catchError((error: HttpErrorResponse) => {
               if (error.status === StatusCodes.CONFLICT) {
+                // TODO: Ask if the user wants to merge the two asset profiles
+
                 this.snackBar.open(
                   $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
                   undefined,
