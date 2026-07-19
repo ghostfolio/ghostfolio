@@ -210,13 +210,17 @@ export function extractNumberFromString({
   value: string;
 }): number | undefined {
   try {
-    // Remove non-numeric characters (excluding international formatting
-    // characters and the minus sign to preserve negative values)
-    const numericValue = value.replace(/[^\d.,'’\s-]/g, '');
+    // Only a leading minus sign indicates a negative value. Detect it before
+    // stripping so that hyphens within the text cannot flip the sign.
+    const isNegative = value.trim().startsWith('-');
+
+    // Remove non-numeric characters (excluding international formatting characters)
+    const numericValue = value.replace(/[^\d.,'’\s]/g, '');
 
     const parser = new NumberParser(locale);
+    const parsedValue = parser.parse(numericValue);
 
-    return parser.parse(numericValue);
+    return isNegative ? -parsedValue : parsedValue;
   } catch {
     return undefined;
   }

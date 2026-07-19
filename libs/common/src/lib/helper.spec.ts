@@ -29,6 +29,10 @@ describe('Helper', () => {
       );
     });
 
+    it('Get decimal number (with hyphenated text)', () => {
+      expect(extractNumberFromString({ value: 'BRK-B 425.30' })).toEqual(425.3);
+    });
+
     it('Get decimal number (comma notation)', () => {
       expect(
         extractNumberFromString({ locale: 'de-DE', value: '999,99' })
