@@ -468,6 +468,13 @@ export class ActivitiesService {
       let currentBalanceInBaseCurrency = 0;
 
       for (const balanceItem of balances) {
+        if (isAfter(new Date(balanceItem.date), endOfToday())) {
+          // Skip account balances dated in the future. Synthesizing an activity
+          // from one books a deposit or withdrawal that has not happened yet,
+          // which distorts the investment and performance of the cash position.
+          continue;
+        }
+
         const syntheticActivityTemplate: Activity = {
           userId,
           accountId: account.id,
