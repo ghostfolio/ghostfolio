@@ -8,7 +8,7 @@ export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
   private totalInvestmentVolumeInBaseCurrency: number;
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     languageCode: string,
     totalInvestmentVolumeInBaseCurrency: number,

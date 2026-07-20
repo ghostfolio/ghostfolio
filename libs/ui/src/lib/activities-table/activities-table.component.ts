@@ -8,7 +8,6 @@ import {
   Activity,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -83,7 +82,6 @@ import { GfValueComponent } from '../value/value.component';
     GfActivityTypeComponent,
     GfEntityLogoComponent,
     GfNoTransactionsInfoComponent,
-    GfSymbolPipe,
     GfValueComponent,
     IonIcon,
     MatButtonModule,

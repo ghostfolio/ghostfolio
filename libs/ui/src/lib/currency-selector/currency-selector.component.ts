@@ -75,22 +75,22 @@ export class GfCurrencySelectorComponent
   private readonly input = viewChild.required(MatInput);
 
   public constructor(
-    public readonly _elementRef: ElementRef,
-    public readonly _focusMonitor: FocusMonitor,
+    public override readonly _elementRef: ElementRef,
+    public override readonly _focusMonitor: FocusMonitor,
     public readonly changeDetectorRef: ChangeDetectorRef,
     private readonly formGroupDirective: FormGroupDirective,
-    public readonly ngControl: NgControl
+    public override readonly ngControl: NgControl
   ) {
     super(_elementRef, _focusMonitor, ngControl);
 
     this.controlType = 'currency-selector';
   }
 
-  public get empty() {
+  public override get empty() {
     return this.input().empty;
   }
 
-  public set value(value: string | null) {
+  public override set value(value: string | null) {
     this.control.setValue(value);
     super.value = value;
   }
@@ -138,7 +138,7 @@ export class GfCurrencySelectorComponent
       });
   }
 
-  public ngDoCheck() {
+  public override ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
       this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);
