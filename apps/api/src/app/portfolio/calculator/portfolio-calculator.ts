@@ -145,8 +145,13 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
-            fee: new Big(feeInAssetProfileCurrency),
-            feeInBaseCurrency: new Big(feeInBaseCurrency),
+            // Fees are converted via the exchange rate data service, which
+            // yields undefined when no rate is available for the activity’s
+            // date. Fees are only ever accumulated, so falling back to 0 keeps
+            // the portfolio computable instead of failing the whole request
+            // with “[big.js] Invalid number”.
+            fee: new Big(feeInAssetProfileCurrency ?? 0),
+            feeInBaseCurrency: new Big(feeInBaseCurrency ?? 0),
             quantity: new Big(quantity),
             unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
