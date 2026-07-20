@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated `SymbolProfile` field from the activity interface
 - Refactored the language redirect of the root path from the static file serving configuration to a dedicated middleware
 - Upgraded `yahoo-finance2` from version `3.15.4` to `4.0.0`
 

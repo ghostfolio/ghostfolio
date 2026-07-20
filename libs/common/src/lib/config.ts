@@ -110,13 +110,6 @@ export const DEFAULT_REDACTED_PATHS = [
   'activities[*].feeInAssetProfileCurrency',
   'activities[*].feeInBaseCurrency',
   'activities[*].quantity',
-
-  /* @deprecated */
-  'activities[*].SymbolProfile.symbolMapping',
-
-  /* @deprecated */
-  'activities[*].SymbolProfile.watchedByCount',
-
   'activities[*].value',
   'activities[*].valueInBaseCurrency',
   'balance',
@@ -147,13 +140,6 @@ export const DEFAULT_REDACTED_PATHS = [
   'platforms[*].balance',
   'platforms[*].valueInBaseCurrency',
   'quantity',
-
-  /* @deprecated */
-  'SymbolProfile.symbolMapping',
-
-  /* @deprecated */
-  'SymbolProfile.watchedByCount',
-
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',

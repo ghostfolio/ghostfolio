@@ -129,8 +129,7 @@ export class PublicController {
               type,
               unitPrice,
               value,
-              valueInBaseCurrency,
-              SymbolProfile: assetProfile
+              valueInBaseCurrency
             };
           }
         );
