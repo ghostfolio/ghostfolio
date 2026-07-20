@@ -1,3 +1,4 @@
+import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   BULL_BOARD_ROUTE,
@@ -99,6 +100,8 @@ async function bootstrap() {
       }
     });
   }
+
+  app.use(languageRedirectMiddleware);
 
   const configurationService = app.get(ConfigurationService);
 
