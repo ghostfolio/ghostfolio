@@ -1,3 +1,4 @@
+import { environment } from '@ghostfolio/api/environments/environment';
 import {
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
@@ -11,7 +12,11 @@ export function languageRedirectMiddleware(
   response: Response,
   next: NextFunction
 ) {
-  if (request.path !== '/' || !['GET', 'HEAD'].includes(request.method)) {
+  if (
+    !environment.production ||
+    request.path !== '/' ||
+    !['GET', 'HEAD'].includes(request.method)
+  ) {
     return next();
   }
 
@@ -25,5 +30,8 @@ export function languageRedirectMiddleware(
     }
   } catch {}
 
-  return response.redirect(StatusCodes.MOVED_PERMANENTLY, `/${languageCode}`);
+  return response.redirect(
+    StatusCodes.MOVED_PERMANENTLY,
+    `/${languageCode}${request.url.slice(1)}`
+  );
 }
