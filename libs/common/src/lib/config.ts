@@ -6,9 +6,6 @@ import { ColorScheme, DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
 
-/* @deprecated */
-export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
-
 export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
   DataSource.MANUAL;
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;

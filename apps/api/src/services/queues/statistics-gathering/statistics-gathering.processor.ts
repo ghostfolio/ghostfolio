@@ -25,6 +25,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 import { format, subDays } from 'date-fns';
 
+import { BetterStackUptimeSlaResponse } from './interfaces/interfaces';
+
+const GATHER_STATISTICS_CONCURRENCY = parseInt(
+  process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
+    DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
+  10
+);
+
 @Injectable()
 @Processor(STATISTICS_GATHERING_QUEUE)
 export class StatisticsGatheringProcessor {
@@ -37,11 +45,7 @@ export class StatisticsGatheringProcessor {
   ) {}
 
   @Process({
-    concurrency: parseInt(
-      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
-        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
-      10
-    ),
+    concurrency: GATHER_STATISTICS_CONCURRENCY,
     name: GATHER_STATISTICS_DOCKER_HUB_PULLS_PROCESS_JOB_NAME
   })
   public async gatherDockerHubPullsStatistics() {
@@ -58,11 +62,7 @@ export class StatisticsGatheringProcessor {
   }
 
   @Process({
-    concurrency: parseInt(
-      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
-        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
-      10
-    ),
+    concurrency: GATHER_STATISTICS_CONCURRENCY,
     name: GATHER_STATISTICS_GITHUB_CONTRIBUTORS_PROCESS_JOB_NAME
   })
   public async gatherGitHubContributorsStatistics() {
@@ -83,11 +83,7 @@ export class StatisticsGatheringProcessor {
   }
 
   @Process({
-    concurrency: parseInt(
-      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
-        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
-      10
-    ),
+    concurrency: GATHER_STATISTICS_CONCURRENCY,
     name: GATHER_STATISTICS_GITHUB_STARGAZERS_PROCESS_JOB_NAME
   })
   public async gatherGitHubStargazersStatistics() {
@@ -106,11 +102,7 @@ export class StatisticsGatheringProcessor {
   }
 
   @Process({
-    concurrency: parseInt(
-      process.env.PROCESSOR_GATHER_STATISTICS_CONCURRENCY ??
-        DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY.toString(),
-      10
-    ),
+    concurrency: GATHER_STATISTICS_CONCURRENCY,
     name: GATHER_STATISTICS_UPTIME_PROCESS_JOB_NAME
   })
   public async gatherUptimeStatistics() {
@@ -140,14 +132,14 @@ export class StatisticsGatheringProcessor {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const { pull_count } = (await this.fetchService
+      const { pull_count } = await this.fetchService
         .fetch('https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio', {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         })
-        .then((res) => res.json())) as { pull_count: number };
+        .then<{ pull_count: number }>((res) => res.json());
 
       return pull_count;
     } catch (error) {
@@ -157,7 +149,7 @@ export class StatisticsGatheringProcessor {
     }
   }
 
-  private async countGitHubContributors(): Promise<number> {
+  private async countGitHubContributors(): Promise<number | undefined> {
     try {
       const body = await this.fetchService
         .fetch('https://github.com/ghostfolio/ghostfolio', {
@@ -189,14 +181,14 @@ export class StatisticsGatheringProcessor {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const { stargazers_count } = (await this.fetchService
+      const { stargazers_count } = await this.fetchService
         .fetch('https://api.github.com/repos/ghostfolio/ghostfolio', {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         })
-        .then((res) => res.json())) as { stargazers_count: number };
+        .then<{ stargazers_count: number }>((res) => res.json());
 
       return stargazers_count;
     } catch (error) {
@@ -213,7 +205,7 @@ export class StatisticsGatheringProcessor {
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
             DATE_FORMAT
-          )}&to${format(new Date(), DATE_FORMAT)}`,
+          )}&to=${format(new Date(), DATE_FORMAT)}`,
           {
             headers: {
               [HEADER_KEY_TOKEN]: `Bearer ${this.configurationService.get(
@@ -225,7 +217,7 @@ export class StatisticsGatheringProcessor {
             )
           }
         )
-        .then((res) => res.json());
+        .then<BetterStackUptimeSlaResponse>((res) => res.json());
 
       return data.attributes.availability / 100;
     } catch (error) {

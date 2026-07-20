@@ -9,7 +9,7 @@ export class CreateAssetProfileWithMarketDataDto extends CreateAssetProfileDto {
   @IsIn([DataSource.MANUAL], {
     message: `dataSource must be '${DataSource.MANUAL}'`
   })
-  dataSource: DataSource;
+  override dataSource: DataSource;
 
   @IsArray()
   @IsOptional()

@@ -5,6 +5,7 @@ import {
   GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
+  GetMarketDataOfMarketsParams,
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
@@ -23,7 +24,9 @@ import {
   DividendsResponse,
   HistoricalResponse,
   LookupResponse,
-  QuotesResponse
+  MarketDataOfMarketsResponse,
+  QuotesResponse,
+  SymbolItem
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -169,7 +172,7 @@ export class GhostfolioService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const queryParams = new URLSearchParams({
@@ -195,9 +198,7 @@ export class GhostfolioService implements DataProviderInterface {
 
       const { historicalData } = (await response.json()) as HistoricalResponse;
 
-      return {
-        [symbol]: historicalData
-      };
+      return historicalData;
     } catch (error) {
       if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         error.name = 'RequestError';
@@ -222,6 +223,63 @@ export class GhostfolioService implements DataProviderInterface {
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
     }
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData = 0,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  }: GetMarketDataOfMarketsParams): Promise<MarketDataOfMarketsResponse> {
+    let marketDataOfMarkets: MarketDataOfMarketsResponse = {
+      fearAndGreedIndex: {
+        CRYPTOCURRENCIES: {} as SymbolItem,
+        STOCKS: {} as SymbolItem
+      }
+    };
+
+    try {
+      const queryParams = new URLSearchParams({
+        includeHistoricalData: includeHistoricalData.toString()
+      });
+
+      const response = await this.fetchService.fetch(
+        `${this.URL}/v1/data-providers/ghostfolio/markets?${queryParams.toString()}`,
+        {
+          headers: await this.getRequestHeaders(),
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      );
+
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
+        });
+      }
+
+      marketDataOfMarkets =
+        (await response.json()) as MarketDataOfMarketsResponse;
+    } catch (error) {
+      let message = error;
+
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to get the market data of markets was aborted because the request to the data provider took more than ${(
+          requestTimeout / 1000
+        ).toFixed(3)} seconds`;
+      } else if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+      }
+
+      this.logger.error(message);
+    }
+
+    return marketDataOfMarkets;
   }
 
   public getMaxNumberOfSymbolsPerRequest() {

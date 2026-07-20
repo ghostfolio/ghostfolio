@@ -40,7 +40,6 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
 import {
@@ -210,12 +209,17 @@ export function extractNumberFromString({
   value: string;
 }): number | undefined {
   try {
+    // Only a leading minus sign indicates a negative value. Detect it before
+    // stripping so that hyphens within the text cannot flip the sign.
+    const isNegative = value.trim().startsWith('-');
+
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
 
     const parser = new NumberParser(locale);
+    const parsedValue = parser.parse(numericValue);
 
-    return parser.parse(numericValue);
+    return isNegative ? -parsedValue : parsedValue;
   } catch {
     return undefined;
   }
@@ -525,10 +529,6 @@ export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     ticker,
     exchange: exchange ?? (dataSource === 'YAHOO' ? 'US' : undefined)
   };
-}
-
-export function prettifySymbol(aSymbol: string): string {
-  return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
 }
 
 export function resetHours(aDate: Date) {
