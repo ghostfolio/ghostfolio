@@ -161,6 +161,14 @@ describe('PortfolioCalculator', () => {
               id: randomUUID(),
               value: 2000,
               valueInBaseCurrency: 1800
+            },
+            {
+              // Ignored future account balance
+              accountId,
+              date: parseDate('2050-12-31'),
+              id: randomUUID(),
+              value: 0,
+              valueInBaseCurrency: 0
             }
           ]
         });
