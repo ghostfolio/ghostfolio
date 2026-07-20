@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Refactored the language redirect of the root path from the static file serving configuration to a dedicated middleware
+
+### Fixed
+
+- Fixed the `RangeNotSatisfiableError` for requests with a `Range` header to the root path caused by the empty `index.html` placeholder
+- Fixed the unresolved template literal in the page title while the app is loading from the service worker cache
+
 ## 3.30.0 - 2026-07-19
 
 ### Added

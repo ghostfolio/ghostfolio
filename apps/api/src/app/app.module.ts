@@ -14,8 +14,6 @@ import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-g
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import {
   BULL_BOARD_ROUTE,
-  DEFAULT_LANGUAGE_CODE,
-  SUPPORTED_LANGUAGE_CODES,
   THROTTLE_DEFAULT_LIMIT,
   THROTTLE_DEFAULT_TTL
 } from '@ghostfolio/common/config';
@@ -143,29 +141,7 @@ import { UserModule } from './user/user.module';
         '/api/*wildcard',
         '/sitemap.xml'
       ],
-      rootPath: join(__dirname, '..', 'client'),
-      serveStaticOptions: {
-        setHeaders: (res) => {
-          if (res.req?.path === '/') {
-            let languageCode = DEFAULT_LANGUAGE_CODE;
-
-            try {
-              const code = res.req.headers['accept-language']
-                .split(',')[0]
-                .split('-')[0];
-
-              if (
-                (SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(code)
-              ) {
-                languageCode = code;
-              }
-            } catch {}
-
-            res.set('Location', `/${languageCode}`);
-            res.statusCode = StatusCodes.MOVED_PERMANENTLY;
-          }
-        }
-      }
+      rootPath: join(__dirname, '..', 'client')
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client', '.well-known'),
