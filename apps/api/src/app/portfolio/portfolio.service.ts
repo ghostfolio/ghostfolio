@@ -787,7 +787,7 @@ export class PortfolioService {
       { dataSource, symbol }
     ]);
 
-    const SymbolProfile =
+    const assetProfile =
       symbolProfile ??
       ({
         dataSource,
@@ -843,9 +843,10 @@ export class PortfolioService {
       timeWeightedInvestmentWithCurrencyEffect
     } = holding;
 
-    const activitiesOfHolding = activities.filter(({ assetProfile }) => {
+    const activitiesOfHolding = activities.filter((activity) => {
       return (
-        assetProfile.dataSource === dataSource && assetProfile.symbol === symbol
+        activity.assetProfile.dataSource === dataSource &&
+        activity.assetProfile.symbol === symbol
       );
     });
 
@@ -959,16 +960,16 @@ export class PortfolioService {
       marketPriceMin,
       tags,
       assetProfile: {
-        assetClass: SymbolProfile.assetClass,
-        assetSubClass: SymbolProfile.assetSubClass,
-        countries: SymbolProfile.countries,
-        currency: SymbolProfile.currency,
-        dataSource: SymbolProfile.dataSource,
-        isin: SymbolProfile.isin,
-        name: SymbolProfile.name,
-        sectors: SymbolProfile.sectors,
-        symbol: SymbolProfile.symbol,
-        userId: SymbolProfile.userId
+        assetClass: assetProfile.assetClass,
+        assetSubClass: assetProfile.assetSubClass,
+        countries: assetProfile.countries,
+        currency: assetProfile.currency,
+        dataSource: assetProfile.dataSource,
+        isin: assetProfile.isin,
+        name: assetProfile.name,
+        sectors: assetProfile.sectors,
+        symbol: assetProfile.symbol,
+        userId: assetProfile.userId
       },
       averagePrice: averagePrice.toNumber(),
       dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
