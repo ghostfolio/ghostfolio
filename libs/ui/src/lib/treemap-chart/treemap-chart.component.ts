@@ -156,7 +156,7 @@ export class GfTreemapChartComponent
   private getHolding(
     chart: Chart<'treemap'>,
     activeElement: ActiveElement
-  ): PortfolioPosition {
+  ): PortfolioPosition | undefined {
     if (!activeElement) {
       return undefined;
     }
