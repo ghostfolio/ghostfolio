@@ -23,7 +23,7 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import { addHours, isAfter, subDays } from 'date-fns';
+import { addHours, isPast, subDays } from 'date-fns';
 import { round, uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -94,7 +94,7 @@ export class BenchmarkService {
 
         this.logger.debug('Fetched benchmarks from cache');
 
-        if (isAfter(new Date(), new Date(expiration))) {
+        if (isPast(new Date(expiration))) {
           this.calculateAndCacheBenchmarks({
             enableSharing
           });
