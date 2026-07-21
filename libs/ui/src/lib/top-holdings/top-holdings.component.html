@@ -120,12 +120,13 @@
               <tr
                 *matRowDef="let row; columns: displayedColumns"
                 mat-row
-                [class.cursor-pointer]="row.position"
+                [class.cursor-pointer]="canShowDetails(row)"
                 (click)="
-                  onClickHolding({
-                    dataSource: row.position.assetProfile.dataSource,
-                    symbol: row.position.assetProfile.symbol
-                  })
+                  canShowDetails(row) &&
+                    onClickHolding({
+                      dataSource: row.position.assetProfile.dataSource,
+                      symbol: row.position.assetProfile.symbol
+                    })
                 "
               ></tr>
               <tr

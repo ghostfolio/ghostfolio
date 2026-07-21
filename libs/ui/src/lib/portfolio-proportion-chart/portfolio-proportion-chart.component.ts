@@ -66,6 +66,7 @@ export class GfPortfolioProportionChartComponent
   @Input() data: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
+      isClickable?: boolean;
       name: string;
       value: number;
     };
@@ -356,6 +357,10 @@ export class GfPortfolioProportionChartComponent
                 const dataIndex = activeElements[0].index;
                 const symbol = chart.data.labels?.[dataIndex] as string;
 
+                if (this.data[symbol]?.isClickable === false) {
+                  return;
+                }
+
                 const dataSource = this.data[symbol]?.dataSource;
 
                 this.proportionChartClicked.emit(
@@ -363,10 +368,16 @@ export class GfPortfolioProportionChartComponent
                 );
               } catch {}
             },
-            onHover: (event, chartElement) => {
+            onHover: (event, chartElement, chart) => {
               if (this.cursor) {
+                const symbol = chartElement[0]
+                  ? (chart.data.labels?.[chartElement[0].index] as string)
+                  : undefined;
+
                 (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor : 'default';
+                  symbol && this.data[symbol]?.isClickable !== false
+                    ? this.cursor
+                    : 'default';
               }
             },
             plugins: {

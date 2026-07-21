@@ -2,6 +2,7 @@ import { NumberParser } from '@internationalized/number';
 import {
   Type as ActivityType,
   AssetProfileOverrides,
+  AssetSubClass,
   MarketData,
   Prisma,
   SymbolProfile
@@ -45,7 +46,8 @@ import {
 import {
   AssetProfileIdentifier,
   AssetProfileItem,
-  Benchmark
+  Benchmark,
+  PortfolioPosition
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
@@ -170,6 +172,12 @@ export function canDeleteUser({
   userId: string;
 }): boolean {
   return currentUserId !== userId;
+}
+
+export function canOpenHoldingDetail({
+  assetProfile
+}: Pick<PortfolioPosition, 'assetProfile'>): boolean {
+  return assetProfile?.assetSubClass !== AssetSubClass.CASH;
 }
 
 export function capitalize(aString: string) {

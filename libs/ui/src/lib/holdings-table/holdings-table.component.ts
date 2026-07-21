@@ -1,4 +1,8 @@
-import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import {
+  canOpenHoldingDetail,
+  getLocale,
+  getLowercase
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -20,7 +24,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -79,10 +82,6 @@ export class GfHoldingsTableComponent {
     return columns;
   });
 
-  protected readonly ignoreAssetSubClasses: AssetSubClass[] = [
-    AssetSubClass.CASH
-  ];
-
   protected readonly isLoading = computed(() => !this.holdings());
 
   public constructor() {
@@ -101,10 +100,7 @@ export class GfHoldingsTableComponent {
   }
 
   protected canShowDetails(holding: PortfolioPosition): boolean {
-    return (
-      this.hasPermissionToOpenDetails() &&
-      !this.ignoreAssetSubClasses.includes(holding.assetProfile.assetSubClass)
-    );
+    return this.hasPermissionToOpenDetails() && canOpenHoldingDetail(holding);
   }
 
   protected onOpenHoldingDialog({

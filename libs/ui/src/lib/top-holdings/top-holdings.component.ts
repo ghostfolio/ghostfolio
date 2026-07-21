@@ -1,7 +1,8 @@
-import { getLocale } from '@ghostfolio/common/helper';
+import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  HoldingWithParents
+  HoldingWithParents,
+  PortfolioPosition
 } from '@ghostfolio/common/interfaces';
 
 import {
@@ -80,6 +81,10 @@ export class GfTopHoldingsComponent implements OnChanges {
     if (this.topHoldings) {
       this.isLoading = false;
     }
+  }
+
+  public canShowDetails(holding: { position?: PortfolioPosition }): boolean {
+    return !!holding?.position && canOpenHoldingDetail(holding.position);
   }
 
   public onClickHolding({ dataSource, symbol }: AssetProfileIdentifier) {
