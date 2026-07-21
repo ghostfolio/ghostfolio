@@ -87,8 +87,15 @@ export class GfTopHoldingsComponent implements OnChanges {
     return !!holding?.position && canOpenHoldingDetail(holding.position);
   }
 
-  public onClickHolding({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.holdingClicked.emit({ dataSource, symbol });
+  public onClickHolding({ position }: { position?: PortfolioPosition }) {
+    if (!position || !canOpenHoldingDetail(position)) {
+      return;
+    }
+
+    this.holdingClicked.emit({
+      dataSource: position.assetProfile.dataSource,
+      symbol: position.assetProfile.symbol
+    });
   }
 
   public onShowAllHoldings() {
