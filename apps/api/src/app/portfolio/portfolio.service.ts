@@ -783,9 +783,23 @@ export class PortfolioService {
       return undefined;
     }
 
-    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       { dataSource, symbol }
     ]);
+
+    const SymbolProfile =
+      symbolProfile ??
+      ({
+        dataSource,
+        symbol,
+        assetClass: AssetClass.LIQUIDITY,
+        assetSubClass: AssetSubClass.CASH,
+        countries: [],
+        currency: symbol,
+        holdings: [],
+        name: symbol,
+        sectors: []
+      } as EnhancedSymbolProfile);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
