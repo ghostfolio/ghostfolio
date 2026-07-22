@@ -20,7 +20,7 @@
 
 ### Dev Container
 
-As an alternative to the manual _Setup_ above, [Visual Studio Code](https://code.visualstudio.com) users can develop inside a [Dev Container](https://containers.dev). It runs the application in a Docker container alongside [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io), pre-installed with the required build tooling (Node.js 22, `g++`, `make`, `python3`).
+As an alternative to the manual _Setup_ above, [Visual Studio Code](https://code.visualstudio.com) users can develop inside a [Dev Container](https://containers.dev). It runs the application in a Docker container alongside [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io), pre-installed with the required build tooling (Node.js 22, `g++`, `git`, `make`, `openssl`, `python3`).
 
 #### Prerequisites
 
