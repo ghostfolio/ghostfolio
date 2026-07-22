@@ -40,7 +40,7 @@ As an alternative to the manual _Setup_ above, [Visual Studio Code](https://code
 1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
-**Info:** The client dev server binds to `localhost` by default, which is only reachable from within the container itself. Passing `--host 0.0.0.0` makes it listen on all interfaces so Visual Studio Code's forwarded port reaches it from your browser on the host. This is not required for the server, which already binds to `0.0.0.0` by default.
+**Info:** The client dev server binds to `localhost` by default, which is only reachable from within the container itself. Passing `--host 0.0.0.0` makes it listen on all interfaces so Visual Studio Code's forwarded port reaches it from your browser on the host. This is not required for the server, which already binds to `0.0.0.0` by default. The `start:client` script also passes `-o` to open a browser automatically; since there is no browser inside the container, this will harmlessly fail and can be ignored.
 
 ### Start Server
 
