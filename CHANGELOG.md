@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Skipped opening the holding detail dialog for cash positions on the allocations page, the analysis page and the portfolio holdings page
 - Resolved an exception in the `GET api/v1/portfolio/holding/:dataSource/:symbol` endpoint for cash positions
 - Improved the error handling in the access endpoints (`POST` and `PUT`) to return `400 Bad Request` when granting access to a non-existent user
 

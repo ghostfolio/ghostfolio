@@ -6,7 +6,10 @@ import {
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getCountryName } from '@ghostfolio/common/helper';
+import {
+  canOpenHoldingDetail,
+  getCountryName
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HoldingWithParents,
@@ -116,6 +119,7 @@ export class GfAllocationsPageComponent implements OnInit {
   protected symbols: {
     [name: string]: {
       dataSource?: DataSource;
+      isClickable?: boolean;
       name: string;
       symbol: string;
       value: number;
@@ -498,6 +502,7 @@ export class GfAllocationsPageComponent implements OnInit {
       this.symbols[symbol] = {
         symbol,
         dataSource: position.assetProfile.dataSource,
+        isClickable: canOpenHoldingDetail(position),
         name: position.assetProfile.name ?? '',
         value:
           (isNumber(position.valueInBaseCurrency)

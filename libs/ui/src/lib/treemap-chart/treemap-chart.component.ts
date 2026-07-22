@@ -3,7 +3,7 @@ import {
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { getLocale } from '@ghostfolio/common/helper';
+import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -21,9 +21,8 @@ import {
   output,
   viewChild
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import type { ChartData, TooltipOptions } from 'chart.js';
+import type { ActiveElement, ChartData, TooltipOptions } from 'chart.js';
 import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
@@ -152,6 +151,23 @@ export class GfTreemapChartComponent
         fontColor: red[backgroundIndex <= 4 ? 9 : 0]
       };
     }
+  }
+
+  private getHolding(
+    chart: Chart<'treemap'>,
+    activeElement: ActiveElement
+  ): PortfolioPosition | undefined {
+    if (!activeElement) {
+      return undefined;
+    }
+
+    const dataset = orderBy(
+      chart.data.datasets[activeElement.datasetIndex].tree,
+      ['allocationInPercentage'],
+      ['desc']
+    ) as PortfolioPosition[];
+
+    return dataset[activeElement.index];
   }
 
   private initialize() {
@@ -323,27 +339,24 @@ export class GfTreemapChartComponent
             animation: false,
             onClick: (_, activeElements, chart: Chart<'treemap'>) => {
               try {
-                const dataIndex = activeElements[0].index;
-                const datasetIndex = activeElements[0].datasetIndex;
+                const holding = this.getHolding(chart, activeElements[0]);
 
-                const dataset = orderBy(
-                  chart.data.datasets[datasetIndex].tree,
-                  ['allocationInPercentage'],
-                  ['desc']
-                ) as PortfolioPosition[];
-
-                const dataSource: DataSource =
-                  dataset[dataIndex].assetProfile.dataSource;
-
-                const symbol: string = dataset[dataIndex].assetProfile.symbol;
-
-                this.treemapChartClicked.emit({ dataSource, symbol });
+                if (holding && canOpenHoldingDetail(holding)) {
+                  this.treemapChartClicked.emit({
+                    dataSource: holding.assetProfile.dataSource,
+                    symbol: holding.assetProfile.symbol
+                  });
+                }
               } catch {}
             },
-            onHover: (event, chartElement) => {
+            onHover: (event, chartElements, chart: Chart<'treemap'>) => {
               if (this.cursor()) {
+                const holding = this.getHolding(chart, chartElements[0]);
+
                 (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor() : 'default';
+                  holding && canOpenHoldingDetail(holding)
+                    ? this.cursor()
+                    : 'default';
               }
             },
             plugins: {
