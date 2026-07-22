@@ -26,9 +26,9 @@ As an alternative to the manual _Setup_ above, [Visual Studio Code](https://code
 
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Visual Studio Code](https://code.visualstudio.com) with the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
-- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
+- Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
-**Info:** Use `.env.example`, not `.env.dev`, as the base for `.env`. Inside the Dev Container, the application and the databases run as separate containers on the same Docker network, so `DATABASE_URL` and `REDIS_HOST` must point to the service names `postgres` and `redis` (as `.env.example` already does), not `localhost`.
+**Info:** Use `.env.dev`, not `.env.example`, as the base for `.env`, since it also sets `NX_ADD_PLUGINS=false` to keep _Nx_ behaving the same as in the manual _Setup_ above. Inside the Dev Container, the application and the databases run as separate containers on the same Docker network, so after copying, change `DATABASE_URL` and `REDIS_HOST` to point to the service names `postgres` and `redis` instead of `localhost`.
 
 #### Setup
 
